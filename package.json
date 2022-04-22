@@ -1,0 +1,81 @@
+{
+	"name": "meem-web-template",
+	"version": "1.0.0",
+	"private": true,
+	"author": "Meem Project",
+	"contributors": [
+		{
+			"name": "James Gadsby",
+			"email": "james.gadsby@gmail.com"
+		},
+		{
+			"name": "Ken Goldfarb",
+			"email": "hello@kengoldfarb.com"
+		}
+	],
+	"scripts": {
+		"local": "next dev -p 3001",
+		"dev": "next dev -p 3001",
+		"build": "next build",
+		"start": "next start",
+		"fetchSchema": "cd apollo && npx apollo schema:download  --endpoint=\"https://dev-gql.meem.wtf/v1/graphql\" ../schema.json && npx apollo codegen:generate --localSchemaFile=../schema.json --target=typescript --includes='../src/**'  --tagName=gql", 
+		"lint": "eslint --max-warnings=0 --ext=.ts,.tsx . && tsc -p . --noEmit",
+		"lint:fix": "eslint --fix --ext=.ts,.tsx .",
+		"release": "semantic-release",
+		"sls": "serverless",
+		"test": "echo \"TODO: Implement tests\"",
+		"localPackageLink": "yarn link @meemproject/api @meemproject/react @meemproject/utils react react-dom"
+	},
+	"dependencies": {
+		"@apollo/client": "^3.5.10",
+		"@celo/wallet-walletconnect": "^3.0.1",
+		"@kengoldfarb/log": "^1.0.5",
+		"@meemproject/api": "^0.1.4",
+		"@meemproject/react": "^0.1.4",
+		"@meemproject/utils": "^0.1.4",
+		"@sentry/browser": "^6.13.2",
+		"@sentry/node": "^6.13.2",
+		"@sentry/react": "^6.13.2",
+		"@walletconnect/web3-provider": "^1.6.5",
+		"ethers": "^5.5.4",
+		"graphql": "^16.3.0",
+		"lodash": "^4.17.21",
+		"next": "^12.0.4",
+		"react": "^18.0.0",
+		"react-dom": "^18.0.0",
+		"react-gtm-module": "^2.0.11",
+		"react-use": "^17.3.2",
+		"sass": "^1.42.1",
+		"superagent": "^6.1.0",
+		"swr": "^1.0.1",
+		"universal-cookie": "^4.0.4",
+		"walletconnect": "^1.6.5",
+		"walletlink": "^2.1.11",
+		"web3": "^1.6.1",
+		"web3modal": "^1.9.4",
+		"yup": "^0.32.9"
+	},
+	"devDependencies": {
+		"@kengoldfarb/semantic-release-config": "^1.0.3",
+		"@next/bundle-analyzer": "^12.1.5",
+		"@sentry/webpack-plugin": "^1.17.1",
+		"@typechain/ethers-v5": "^10.0.0",
+		"@types/fs-extra": "^9.0.13",
+		"@types/graphql": "^14.5.0",
+		"@types/react": "^18.0.4",
+		"@types/react-dom": "^18.0.0",
+		"@types/superagent": "^4.1.13",
+		"@zeit/next-source-maps": "^0.0.3",
+		"apollo": "^2.33.10",
+		"eslint": "7.32.0",
+		"eslint-config-kengoldfarb": "^1.2.1",
+		"eslint-plugin-react-hooks": "^4.2.0",
+		"fs-extra": "^10.0.0",
+		"serverless": "^3.13.0",
+		"serverless-prune-plugin": "^2.0.1",
+		"ts-node": "^10.4.0",
+		"ts-node-dev": "^1.1.8",
+		"typechain": "^6.0.2",
+		"typescript": "^4.6.3"
+	}
+}
