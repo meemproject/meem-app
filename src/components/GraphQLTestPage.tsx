@@ -10,6 +10,7 @@ import {
 	Text,
 	Loader
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import React from 'react'
 import { GetLastMeem } from '../graphql/__generated__/GetLastMeem'
 import { GET_LAST_MEEM } from '../graphql/meems'
@@ -72,6 +73,7 @@ const useStyles = createStyles(theme => ({
 export const GraphQLTestPage: React.FC = () => {
 	const { classes } = useStyles()
 	const { loading, error, data } = useQuery<GetLastMeem>(GET_LAST_MEEM)
+	const wallet = useWallet()
 
 	return (
 		<div>
@@ -105,6 +107,21 @@ export const GraphQLTestPage: React.FC = () => {
 				</div>
 			</Container>
 			<Container>
+				{wallet.isConnected && (
+					<Text mt="md">{`Wallet connected: ${wallet.accounts[0]}`}</Text>
+				)}
+				{!wallet.isConnected && (
+					<Button
+						radius="xl"
+						size="md"
+						className={classes.control}
+						onClick={() => {
+							wallet.connectWallet()
+						}}
+					>
+						Connect Wallet
+					</Button>
+				)}
 				{loading && <Loader />}
 				{!loading && error && <Text mt="md">Error: ${error.message}.</Text>}
 				{!loading && !error && (
