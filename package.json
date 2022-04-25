@@ -1,6 +1,6 @@
 {
-	"name": "meem-web-template",
-	"version": "1.0.0",
+	"name": "@meemproject/clubs-web",
+	"version": "0.0.1",
 	"private": true,
 	"author": "Meem Project",
 	"contributors": [
