@@ -8,7 +8,8 @@ import {
 	Button,
 	Group,
 	Text,
-	Loader
+	Loader,
+	Center
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import React from 'react'
@@ -122,7 +123,11 @@ export const GraphQLTestPage: React.FC = () => {
 						Connect Wallet
 					</Button>
 				)}
-				{loading && <Loader />}
+				{loading && (
+					<Center>
+						<Loader />
+					</Center>
+				)}
 				{!loading && error && <Text mt="md">Error: ${error.message}.</Text>}
 				{!loading && !error && (
 					<Text mt="md">Got meem! ${data?.Meems[0].tokenId}</Text>
