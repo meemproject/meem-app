@@ -3,5 +3,4 @@ node_modules
 local_modules
 .next
 storybook-static
-src/graphql
-src/generated
+generated

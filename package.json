@@ -18,13 +18,17 @@
 		"dev": "next dev -p 3001",
 		"build": "next build",
 		"start": "next start",
-		"fetchSchema": "cd apollo && npx apollo schema:download  --endpoint=\"https://dev-gql.meem.wtf/v1/graphql\" ../schema.json && npx apollo codegen:generate --localSchemaFile=../schema.json --target=typescript --includes='../src/**'  --tagName=gql",
 		"lint": "eslint --max-warnings=0 --ext=.ts,.tsx . && tsc -p . --noEmit",
 		"lint:fix": "eslint --fix --ext=.ts,.tsx .",
 		"release": "semantic-release",
 		"sls": "serverless",
 		"test": "echo \"TODO: Implement tests\"",
-		"localPackageLink": "yarn link @meemproject/api @meemproject/react @meemproject/utils react react-dom"
+		"localPackageLink": "yarn link @meemproject/api @meemproject/react @meemproject/utils react react-dom",
+		"apollo": "apollo",
+		"codegen": "graphql-codegen --config codegen.js"
+	},
+	"resolutions": {
+		"graphql": "^15.7.2"
 	},
 	"dependencies": {
 		"@apollo/client": "^3.5.10",
@@ -48,7 +52,7 @@
 		"@walletconnect/web3-provider": "^1.6.5",
 		"dayjs": "^1.11.1",
 		"ethers": "^5.5.4",
-		"graphql": "^16.3.0",
+		"graphql": "^15.7.2",
 		"iconoir-react": "^4.8.1",
 		"lodash": "^4.17.21",
 		"next": "^12.0.4",
@@ -67,6 +71,11 @@
 		"yup": "^0.32.9"
 	},
 	"devDependencies": {
+		"@graphql-codegen/cli": "^2.6.2",
+		"@graphql-codegen/introspection": "^2.1.1",
+		"@graphql-codegen/typescript": "^2.4.8",
+		"@graphql-codegen/typescript-operations": "^2.3.5",
+		"@graphql-codegen/typescript-react-apollo": "^3.2.11",
 		"@kengoldfarb/semantic-release-config": "^1.0.3",
 		"@next/bundle-analyzer": "^12.1.5",
 		"@sentry/webpack-plugin": "^1.17.1",
@@ -78,6 +87,8 @@
 		"@types/superagent": "^4.1.13",
 		"@zeit/next-source-maps": "^0.0.3",
 		"apollo": "^2.33.10",
+		"apollo-codegen-core": "0.40.3",
+		"apollo-language-server": "1.26.3",
 		"eslint": "^8.13.0",
 		"eslint-config-kengoldfarb": "1.4.1",
 		"eslint-plugin-react-hooks": "^4.2.0",

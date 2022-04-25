@@ -12,7 +12,7 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import React from 'react'
-import { GetLastMeem } from '../graphql/__generated__/GetLastMeem'
+import { GetLastMeemQuery } from '../generated/graphql'
 import { GET_LAST_MEEM } from '../graphql/meems'
 
 const useStyles = createStyles(theme => ({
@@ -72,7 +72,7 @@ const useStyles = createStyles(theme => ({
 
 export const GraphQLTestPage: React.FC = () => {
 	const { classes } = useStyles()
-	const { loading, error, data } = useQuery<GetLastMeem>(GET_LAST_MEEM)
+	const { loading, error, data } = useQuery<GetLastMeemQuery>(GET_LAST_MEEM)
 	const wallet = useWallet()
 
 	return (
