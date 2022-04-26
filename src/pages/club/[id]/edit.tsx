@@ -1,13 +1,17 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { CreateComponent } from '../components/Create/Create'
+import { ClubDetailComponent } from '../../../components/Detail/ClubDetail'
 
-const CreatePage: NextPage = () => {
+interface IProps {
+	id: string
+}
+
+const ClubEditPage: NextPage<IProps> = ({ id }) => {
 	return (
 		<>
 			<Head>
-				<title>Create a club | Clubs</title>
+				<title>{id} - Admin | Clubs</title>
 				<meta name="title" content="Clubs clubs" />
 				<meta name="description" content="Clubs! Clubs!" />
 				<meta property="og:type" content="website" />
@@ -48,9 +52,9 @@ const CreatePage: NextPage = () => {
 					href="/favicon-16x16.png"
 				/> */}
 			</Head>
-			<CreateComponent />
+			<ClubDetailComponent />
 		</>
 	)
 }
 
-export default CreatePage
+export default ClubEditPage
