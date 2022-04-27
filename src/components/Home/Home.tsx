@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import {
 	createStyles,
 	Container,
@@ -86,14 +87,15 @@ export function HomeComponent() {
 	const router = useRouter()
 
 	const timeoutRef = useRef<number>(-1)
-	const [value, setValue] = useState('')
+	const [autocompleteFormValue, setAutocompleteFormValue] = useState('')
 	const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
-	const [data, setData] = useState<any[]>([])
+	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
+	const [showCreateButton, setShowCreateButton] = useState(false)
 
 	const handleChange = (val: string) => {
 		window.clearTimeout(timeoutRef.current)
-		setValue(val)
-		setData([])
+		setAutocompleteFormValue(val)
+		setAutocompleteData([])
 
 		if (val.trim().length === 0) {
 			setIsLoadingSuggestions(false)
@@ -130,8 +132,9 @@ export function HomeComponent() {
 						id: '1'
 					}
 				]
-				setData(clubsList)
-			}, 200)
+				setAutocompleteData(clubsList)
+				setShowCreateButton(clubsList.length === 0)
+			}, 500)
 		}
 	}
 
@@ -154,11 +157,12 @@ export function HomeComponent() {
 				</Text>
 				<Autocomplete
 					className={classes.clubSearch}
-					value={value}
-					data={data}
+					value={autocompleteFormValue}
+					data={autocompleteData}
 					size={'lg'}
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
+					placeholder="Start typing to see suggestions or create a new club..."
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={isLoadingSuggestions ? <Loader size={16} /> : null}
 				/>
