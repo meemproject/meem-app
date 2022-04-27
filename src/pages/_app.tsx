@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
+import log, { LogLevel } from '@kengoldfarb/log'
 import { MantineProvider } from '@mantine/core'
 import { WalletProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
@@ -9,6 +10,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 		uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL,
 		cache: new InMemoryCache()
 	})
+
+	React.useEffect(() => {
+		log.setOptions({
+			level: (process.env.NEXT_PUBLIC_LOG_LEVEL as LogLevel) ?? LogLevel.Warn
+		})
+	}, [])
 
 	return (
 		<ApolloProvider client={client}>
