@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { CreateComponent } from '../components/Create/Create'
+import { HeaderMenu } from '../components/Header/Header'
 
 const CreatePage: NextPage = () => {
 	return (
@@ -48,6 +49,7 @@ const CreatePage: NextPage = () => {
 					href="/favicon-16x16.png"
 				/> */}
 			</Head>
+			<HeaderMenu />
 			<CreateComponent />
 		</>
 	)

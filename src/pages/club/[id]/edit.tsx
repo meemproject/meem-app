@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { ClubDetailComponent } from '../../../components/Detail/ClubDetail'
+import { HeaderMenu } from '../../../components/Header/Header'
 
 interface IProps {
 	id: string
@@ -52,6 +53,7 @@ const ClubEditPage: NextPage<IProps> = ({ id }) => {
 					href="/favicon-16x16.png"
 				/> */}
 			</Head>
+			<HeaderMenu />
 			<ClubDetailComponent />
 		</>
 	)

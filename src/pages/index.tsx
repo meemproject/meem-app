@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
+import { HeaderMenu } from '../components/Header/Header'
 import { HomeComponent } from '../components/Home/Home'
 
 const Home: NextPage = () => {
@@ -48,6 +49,7 @@ const Home: NextPage = () => {
 					href="/favicon-16x16.png"
 				/> */}
 			</Head>
+			<HeaderMenu />
 			<HomeComponent />
 		</>
 	)

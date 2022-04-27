@@ -1,13 +1,6 @@
 import React, { useState } from 'react'
 
-enum CreateStep {
-	Details,
-	Logo
-}
-
 export const CreateComponent: React.FC = () => {
-	const [currentStep, setCurrentStep] = useState<CreateStep>(CreateStep.Details)
-
 	// Club details / image
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
@@ -23,8 +16,8 @@ export const CreateComponent: React.FC = () => {
 
 	return (
 		<>
-			{currentStep == CreateStep.Details && <CreateDetailsStepComponent />}
-			{currentStep == CreateStep.Logo && <CreateLogoStepComponent />}
+			<CreateDetailsStepComponent />
+			<CreateLogoStepComponent />
 		</>
 	)
 }
