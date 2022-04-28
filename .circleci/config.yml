@@ -74,7 +74,7 @@ workflows:
   do_build:
     jobs:
       - test:
-          context: web_sls_dev
+          context: clubs_sls_dev
           filters:
             branches:
               ignore:

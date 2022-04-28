@@ -1884,17 +1884,17 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/api@^0.1.4", "@meemproject/api@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.1.7.tgz#e92d77df5567e3867518ca4eff89f6cccc28f065"
-  integrity sha512-L0GNhgPLO12avKelLL6l9gK8aCl2UTVjk6E6qjdTR0n6gs7fr8gqkcQNj9DyQ+GhnwSlSNFuvRj7gRf5E2dUPw==
+"@meemproject/api@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.2.0.tgz#8f9552e254a0d689b43627766bb7281077a3d05f"
+  integrity sha512-0Qv1jS8YkD8NIMre1hc89q7/pL3piPw1zbAkhVwus3/o3MmDl+Sgs4FaSzFIRgNP3Y8TSAYCXfhvnNNVC66DWQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.1.7"
+    "@meemproject/meem-contracts" "^0.2.0"
     "@typechain/ethers-v5" "^10.0.0"
     "@types/js-cookie" "^3.0.1"
     "@types/luxon" "^2.3.1"
-    ethers "^5.6.2"
+    ethers "^5.6.4"
     js-cookie "^3.0.1"
     luxon "^2.3.1"
     superagent "^7.1.2"
@@ -1902,10 +1902,10 @@
     tsnd "^1.0.2"
     typechain "^8.0.0"
 
-"@meemproject/market-contracts@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/market-contracts/-/market-contracts-0.1.7.tgz#697311b7e0730f20aeb0975d3735e2a9e6293ecf"
-  integrity sha512-CnO2W256j5NyszYS6Ae/FBbs/RLopPwKVrtk3msDoVCWQVqGRbuKBCpH3TnkJBc3BTQm2Zae872pa6Tnc5+9FQ==
+"@meemproject/market-contracts@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/market-contracts/-/market-contracts-0.2.0.tgz#6a3942f09cec11f9373ca89524f5e42ec9db6b42"
+  integrity sha512-lqANPTnSJuX24ASdf5Ocp+ecBD9wRdGLK0JjtWxV8qqFifUmILUs3T4ztimjOmT7EfIeBK27i9fkLw3V07VuiA==
   dependencies:
     "@openzeppelin/contracts" "^4.4.0"
     "@solidstate/contracts" "^0.0.28"
@@ -1914,35 +1914,35 @@
     minimist "^1.2.5"
     solidity-coverage "^0.7.16"
 
-"@meemproject/meem-contracts@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.1.7.tgz#adb45335b381bb805c9686cb9b83673924b49f92"
-  integrity sha512-lTkj33Xt7a1uTElB8Kp/yFdUCdxvgAGuW4IRA2BkLhqY2UW+1JqRiLHWgHSl6YXFkcFWIwCuJGWcFvv+acdgyg==
+"@meemproject/meem-contracts@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.2.0.tgz#71b0c34a3f028fd79c6917b301dc72b5d995a1fb"
+  integrity sha512-n39q3aXY4x19db9c/g58SAX5bCLhJuv9/o2CZrPLuUHzLm2pfG92xvqbvTIA/c70thGg/MXVn9vfRFNgJaG+xA==
+  dependencies:
+    "@kengoldfarb/log" "^1.0.5"
+    ethers "^5.6.4"
+
+"@meemproject/meem-id-contracts@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-id-contracts/-/meem-id-contracts-0.2.0.tgz#36d56bdc3ea530f303dd647767cf9f4919dd2e6e"
+  integrity sha512-vBVRp1LkXf3Cel52EWeYwhMA3ExOAlFGBhY2q8/64YjHtY8iTRdxe1Bo+2/YUFwKiOsXo7FKicNoLMV/I0fJiQ==
   dependencies:
     dotenv "^10.0.0"
     solc-0.8 "npm:solc@^0.8.4"
 
-"@meemproject/meem-id-contracts@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-id-contracts/-/meem-id-contracts-0.1.7.tgz#9a98dd2a0ec80b7d62dc6127361000511a2a28f3"
-  integrity sha512-yu86Jh6R120bSocAuBujjq2BEK2rJoTzIIO4F6WuJF04sy3gj05dphT+GAKeDmMTc87rnXpWzSO2M4VkT/NwcQ==
-  dependencies:
-    dotenv "^10.0.0"
-    solc-0.8 "npm:solc@^0.8.4"
-
-"@meemproject/react@^0.1.4":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.1.7.tgz#91f84b8d4376d37b3c7c6f156d5881bb4099c016"
-  integrity sha512-bHYGnj23ROOAgGChTUVZgOpppBMk222hY6yD+m9S07vPtp2S4hktlyTC6MzCHqx7jowao1pco65SROx51VZRMg==
+"@meemproject/react@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.2.0.tgz#7b9df6d195681ce72a8f96bd50da5af84080c468"
+  integrity sha512-0bxXKjcgRL78VLw5HZafGD8qgRJRKwFB6RnzMEHG/wxSK+6UJIX2nj1n3bWzmhdmiPUOYjEFTq5bDQHrw4mfzw==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/api" "^0.1.7"
-    "@meemproject/market-contracts" "^0.1.7"
-    "@meemproject/meem-contracts" "^0.1.7"
-    "@meemproject/meem-id-contracts" "^0.1.7"
-    "@meemproject/utils" "^0.1.7"
+    "@meemproject/api" "^0.2.0"
+    "@meemproject/market-contracts" "^0.2.0"
+    "@meemproject/meem-contracts" "^0.2.0"
+    "@meemproject/meem-id-contracts" "^0.2.0"
+    "@meemproject/utils" "^0.2.0"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -1953,14 +1953,14 @@
     swr "^1.3.0"
     web3modal "^1.9.6"
 
-"@meemproject/utils@^0.1.4", "@meemproject/utils@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.1.7.tgz#d41f7f7a1f61aa1e7258ea3727d7bf7f534b2f1e"
-  integrity sha512-6xWMla0d8sms1ki1mxHh4pP4eBRCnVMdbrptHghXegy/nTHQkLJaabVpMIIpwWmbfsUzJlNNWle5lyfCdc81Yg==
+"@meemproject/utils@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.2.0.tgz#00e06963d18a7e0aaed17ca97e63cdf5bcc28e91"
+  integrity sha512-8ipM/oUI3ZUSyfGL4kU16pisBwEw2phfBHnVxncjZrltQX+rPhhf06WvDLv5FYp9ELWKCMWScXOMgH2q4UcsCA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.1.7"
-    ethers "^5.6.3"
+    "@meemproject/meem-contracts" "^0.2.0"
+    ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@2.0.0", "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"
@@ -8325,22 +8325,7 @@ ethereumjs-vm@^2.3.4:
     rustbn.js "~0.2.0"
     safe-buffer "^5.1.1"
 
-ethers@^4.0.32:
-  version "4.0.49"
-  resolved "https://registry.yarnpkg.com/ethers/-/ethers-4.0.49.tgz#0eb0e9161a0c8b4761be547396bbe2fb121a8894"
-  integrity sha512-kPltTvWiyu+OktYy1IStSO16i2e7cS9D9OxZ81q2UUaiNPVrm/RTcbxamCXF9VUSKzJIdJV68EAIhTEVBalRWg==
-  dependencies:
-    aes-js "3.0.0"
-    bn.js "^4.11.9"
-    elliptic "6.5.4"
-    hash.js "1.1.3"
-    js-sha3 "0.5.7"
-    scrypt-js "2.0.4"
-    setimmediate "1.0.4"
-    uuid "2.0.1"
-    xmlhttprequest "1.8.0"
-
-ethers@^5.5.4, ethers@^5.6.2, ethers@^5.6.3, ethers@^5.6.4:
+ethers@^4.0.32, ethers@^5.6.4:
   version "5.6.4"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.6.4.tgz#23629e9a7d4bc5802dfb53d4da420d738744b53c"
   integrity sha512-62UIfxAQXdf67TeeOaoOoPctm5hUlYgfd0iW3wxfj7qRYKDcvvy0f+sJ3W2/Pyx77R8dblvejA8jokj+lS+ATQ==
@@ -9669,14 +9654,6 @@ hash-base@^3.0.0:
     readable-stream "^3.6.0"
     safe-buffer "^5.2.0"
 
-hash.js@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/hash.js/-/hash.js-1.1.3.tgz#340dedbe6290187151c1ea1d777a3448935df846"
-  integrity sha512-/UETyP0W22QILqS+6HowevwhEFJ3MBJnwTf75Qob9Wz9t0DPuisL8kW8YZMK62dHAKE1c1p+gY1TtOLY+USEHA==
-  dependencies:
-    inherits "^2.0.3"
-    minimalistic-assert "^1.0.0"
-
 hash.js@1.1.7, hash.js@^1.0.0, hash.js@^1.0.3, hash.js@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/hash.js/-/hash.js-1.1.7.tgz#0babca538e8d4ee4a0f8988d68866537a003cf42"
@@ -10643,15 +10620,15 @@ js-sha256@0.9.0:
   resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
   integrity sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==
 
-js-sha3@0.5.7, js-sha3@^0.5.7:
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.5.7.tgz#0d4ffd8002d5333aabaf4a23eed2f6374c9f28e7"
-  integrity sha1-DU/9gALVMzqrr0oj7tL2N0yfKOc=
-
 js-sha3@0.8.0, js-sha3@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
   integrity sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
+
+js-sha3@^0.5.7:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.5.7.tgz#0d4ffd8002d5333aabaf4a23eed2f6374c9f28e7"
+  integrity sha1-DU/9gALVMzqrr0oj7tL2N0yfKOc=
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
@@ -13926,17 +13903,7 @@ rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.8.6:
-  version "16.14.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.14.0.tgz#7ad838ec29a777fb3c75c3a190f661cf92ab8b89"
-  integrity sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    scheduler "^0.19.1"
-
-react-dom@^18.0.0:
+react-dom@^16.8.6, react-dom@^18.0.0:
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.0.0.tgz#26b88534f8f1dbb80853e1eabe752f24100d8023"
   integrity sha512-XqX7uzmFo0pUceWFCt7Gff6IyIMzFUn7QMZrbrQfGxtaxXZIcGQzoNpRLE3fQLnS4XzLLPMZX2T9TRcSrasicw==
@@ -14039,16 +14006,7 @@ react-use@^17.3.2:
     ts-easing "^0.2.0"
     tslib "^2.1.0"
 
-react@^16.8.6:
-  version "16.14.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
-  integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-
-react@^18.0.0:
+react@^16.8.6, react@^18.0.0:
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.0.0.tgz#b468736d1f4a5891f38585ba8e8fb29f91c3cb96"
   integrity sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==
@@ -14606,14 +14564,6 @@ sc-istanbul@^0.4.5:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
-scheduler@^0.19.1:
-  version "0.19.1"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
-  integrity sha512-n/zwRWRYSUj0/3g/otKDRPMh6qv2SYMWNq85IEa8iZyAv8od9zDYpGSnpBEjNgcMNq6Scbu5KfIPxNF72R/2EA==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-
 scheduler@^0.21.0:
   version "0.21.0"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.21.0.tgz#6fd2532ff5a6d877b6edb12f00d8ab7e8f308820"
@@ -14625,11 +14575,6 @@ screenfull@^5.1.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-5.2.0.tgz#6533d524d30621fc1283b9692146f3f13a93d1ba"
   integrity sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==
-
-scrypt-js@2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-2.0.4.tgz#32f8c5149f0797672e551c07e230f834b6af5f16"
-  integrity sha512-4KsaGcPnuhtCZQCxFxN3GVYIhKFPTdLd8PLC552XwbMndtD0cjRFAhDuuydXQ0h08ZfPgzqe6EKHozpuH74iDw==
 
 scrypt-js@3.0.1, scrypt-js@^3.0.0, scrypt-js@^3.0.1:
   version "3.0.1"
@@ -14878,11 +14823,6 @@ set-immediate-shim@^1.0.1, set-immediate-shim@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/set-immediate-shim/-/set-immediate-shim-1.0.1.tgz#4b2b1b27eb808a9f8dcc481a58e5e56f599f3f61"
   integrity sha1-SysbJ+uAip+NzEgaWOXlb1mfP2E=
-
-setimmediate@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.4.tgz#20e81de622d4a02588ce0c8da8973cbcf1d3138f"
-  integrity sha1-IOgd5iLUoCWIzgyNqJc8vPHTE48=
 
 setimmediate@^1.0.5:
   version "1.0.5"
@@ -16690,11 +16630,6 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.1.tgz#c2a30dedb3e535d72ccf82e343941a50ba8533ac"
-  integrity sha1-wqMN7bPlNdcsz4LjQ5QaULqFM6w=
-
 uuid@3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
@@ -17695,11 +17630,6 @@ xmlhttprequest-ssl@~1.6.2:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/xmlhttprequest-ssl/-/xmlhttprequest-ssl-1.6.3.tgz#03b713873b01659dfa2c1c5d056065b27ddc2de6"
   integrity sha512-3XfeQE/wNkvrIktn2Kf0869fC0BN6UpydVasGIeSm2B1Llihf7/0UfZM+eCkOw3P7bP4+qPgqhm7ZoxuJtFU0Q==
-
-xmlhttprequest@1.8.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
-  integrity sha1-Z/4HXFwk/vOfnWX197f+dRcZaPw=
 
 xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.2"
