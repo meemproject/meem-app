@@ -14,15 +14,10 @@ import { useWallet } from '@meemproject/react'
 import React, { useState } from 'react'
 import {
 	Logout,
-	Heart,
-	Star,
-	Message,
-	Settings,
-	PlayerPause,
-	Trash,
-	SwitchHorizontal,
 	ChevronDown,
-	Dots
+	Dots,
+	BrandDiscord,
+	BrandTwitter
 } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
@@ -125,15 +120,7 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-interface HeaderProps {
-	links?: {
-		link: string
-		label: string
-		links: { link: string; label: string }[]
-	}[]
-}
-
-export function HeaderMenu({ links }: HeaderProps) {
+export function HeaderMenu() {
 	// eslint-disable-next-line no-unused-vars
 	const [isMoreMenuOpened, setMoreMenuOpened] = useState(false)
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
@@ -229,38 +216,16 @@ export function HeaderMenu({ links }: HeaderProps) {
 								</UnstyledButton>
 							}
 						>
-							<Menu.Item icon={<Heart size={14} color={theme.colors.red[6]} />}>
-								Liked posts
+							<Menu.Item>
+								Powered by{' '}
+								<span style={{ textDecoration: 'underline' }}>Meem</span>
 							</Menu.Item>
-							<Menu.Item
-								icon={<Star size={14} color={theme.colors.yellow[6]} />}
-							>
-								Saved posts
-							</Menu.Item>
-							<Menu.Item
-								icon={<Message size={14} color={theme.colors.blue[6]} />}
-							>
-								Your comments
-							</Menu.Item>
-
-							<Menu.Label>Settings</Menu.Label>
-							<Menu.Item icon={<Settings size={14} />}>
-								Account settings
-							</Menu.Item>
-							<Menu.Item icon={<SwitchHorizontal size={14} />}>
-								Change account
-							</Menu.Item>
-							<Menu.Item icon={<Logout size={14} />}>Logout</Menu.Item>
-
+							<Menu.Item>My Clubs</Menu.Item>
+							<Menu.Item>Join Meem</Menu.Item>
 							<Divider />
 
-							<Menu.Label>Danger zone</Menu.Label>
-							<Menu.Item icon={<PlayerPause size={14} />}>
-								Pause subscription
-							</Menu.Item>
-							<Menu.Item color="red" icon={<Trash size={14} />}>
-								Delete account
-							</Menu.Item>
+							<Menu.Item icon={<BrandTwitter size={20} />}>Twitter</Menu.Item>
+							<Menu.Item icon={<BrandDiscord size={20} />}>Discord</Menu.Item>
 						</Menu>
 					</Container>
 				</div>

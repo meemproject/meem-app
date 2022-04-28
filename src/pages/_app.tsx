@@ -3,6 +3,7 @@ import { MantineProvider } from '@mantine/core'
 import { WalletProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React from 'react'
+import '../styles/globals.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const client = new ApolloClient({
@@ -28,7 +29,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 			>
 				<MantineProvider
 					theme={{
-						fontFamily: 'Helvetica',
+						fontFamily: 'Inter',
 						spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 }
 					}}
 				>
