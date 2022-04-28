@@ -1,13 +1,18 @@
 import log from '@kengoldfarb/log'
 import { Button, Select, Switch, TextInput } from '@mantine/core'
+import { MeemAPI } from '@meemproject/api'
 import {
+	Meem,
 	deployProxy,
 	initProxy,
 	versions,
-	upgrade
+	upgrade,
+	defaultMeemProperties
 } from '@meemproject/meem-contracts'
 import { Chain } from '@meemproject/meem-contracts/dist/src/lib/meemStandard'
+import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
+import { Contract } from 'ethers'
 // import { Contract } from 'ethers'
 import React, { useState } from 'react'
 
@@ -20,7 +25,7 @@ export const CreatePage: React.FC = () => {
 	const [txLog, setTxLog] = useState<string[]>([])
 	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
 
-	const { web3Provider } = useWallet()
+	const { web3Provider, accounts, signer } = useWallet()
 
 	const handleCreate = async () => {
 		if (!web3Provider) {
@@ -84,7 +89,34 @@ export const CreatePage: React.FC = () => {
 			toVersion
 		})
 
-		setTxLog([...txLog, `Upgraded proxy w/ tx ${tx.hash}`])
+		setTxLog([...txLog, `Upgraded proxy w/ tx ${tx?.hash}`])
+	}
+
+	const handleMint = async () => {
+		const meemContract = new Contract(
+			proxyAddress,
+			meemABI,
+			signer
+		) as unknown as Meem
+
+		meemContract?.mint(
+			{
+				to: accounts[0],
+				tokenURI: 'ipfs://example',
+				parentChain: MeemAPI.Chain.Polygon,
+				parent: MeemAPI.zeroAddress,
+				parentTokenId: 0,
+				meemType: MeemAPI.MeemType.Original,
+				data: '',
+				isURILocked: false,
+				reactionTypes: ['upvote', 'downvote', 'heart'],
+				uriSource: MeemAPI.UriSource.TokenUri,
+				mintedBy: accounts[0]
+			},
+			defaultMeemProperties,
+			defaultMeemProperties,
+			{ gasLimit: '1000000' }
+		)
 	}
 
 	const displayVersions = [
@@ -164,9 +196,9 @@ export const CreatePage: React.FC = () => {
 					onChange={event => setProxyAddress(event.currentTarget.value)}
 				/>
 			</div>
-			{/* <button onClick={handleInit} disabled={!proxyContract}>
+			<Button onClick={handleMint} disabled={proxyAddress.length === 0}>
 				3. Mint
-			</button> */}
+			</Button>
 			<p>Club status: {status}</p>
 			{txLog.map(l => (
 				<p key={l}>{l}</p>
