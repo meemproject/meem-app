@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Header,
@@ -11,7 +12,8 @@ import {
 	Divider
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
-import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -19,6 +21,8 @@ import {
 	BrandDiscord,
 	BrandTwitter
 } from 'tabler-icons-react'
+import { GetMeemIdQuery } from '../../../generated/graphql'
+import { GET_MEEM_ID } from '../../graphql/meemid'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
@@ -37,7 +41,9 @@ const useStyles = createStyles(theme => ({
 
 	mainLogo: {
 		fontSize: 32,
-		marginRight: 8
+		marginRight: 8,
+		paddingBottom: 4,
+		cursor: 'pointer'
 	},
 
 	inner: {
@@ -124,8 +130,9 @@ export function HeaderMenu() {
 	// eslint-disable-next-line no-unused-vars
 	const [isMoreMenuOpened, setMoreMenuOpened] = useState(false)
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
+	const { classes, cx } = useStyles()
+	const router = useRouter()
 
-	const { classes, theme, cx } = useStyles()
 	const wallet = useWallet()
 
 	function truncatedWalletAddress(): string {
@@ -146,12 +153,18 @@ export function HeaderMenu() {
 		return truncatedWallet.toLowerCase()
 	}
 
+	const navigateHome = () => {
+		router.push({ pathname: '/' })
+	}
+
 	return (
-		<Header height={56} mb={120}>
+		<Header height={56}>
 			<Container>
 				<div className={classes.inner}>
 					<Container className={classes.headerLeftItems}>
-						<Text className={classes.mainLogo}>♣</Text>
+						<a onClick={navigateHome}>
+							<Text className={classes.mainLogo}>♣</Text>
+						</a>
 					</Container>
 
 					<Container className={classes.headerRightItems}>
@@ -221,7 +234,7 @@ export function HeaderMenu() {
 								<span style={{ textDecoration: 'underline' }}>Meem</span>
 							</Menu.Item>
 							<Menu.Item>My Clubs</Menu.Item>
-							<Menu.Item>Join Meem</Menu.Item>
+
 							<Divider />
 
 							<Menu.Item icon={<BrandTwitter size={20} />}>Twitter</Menu.Item>

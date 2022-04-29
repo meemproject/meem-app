@@ -30,7 +30,22 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<MantineProvider
 					theme={{
 						fontFamily: 'Inter',
-						spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 }
+						spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
+						colors: {
+							brand: [
+								'#FAF3F2',
+								'#F0D3D0',
+								'#ECB2AA',
+								'#F18E81',
+								'#FF6651',
+								'#EA5844',
+								'#D44E3C',
+								'#B94B3C',
+								'#9B4C41',
+								'#844B43'
+							]
+						},
+						primaryColor: 'brand'
 					}}
 				>
 					<Component {...pageProps} />

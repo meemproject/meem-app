@@ -11,7 +11,9 @@ import {
 	SelectItemProps,
 	MantineColor,
 	AutocompleteItem,
-	Group
+	Group,
+	Button,
+	Modal
 } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { forwardRef, useRef, useState } from 'react'
@@ -30,6 +32,7 @@ const useStyles = createStyles(theme => ({
 		position: 'relative',
 		paddingTop: 0,
 		paddingBottom: 120,
+		marginTop: 120,
 
 		[BREAKPOINT]: {
 			paddingBottom: 80,
@@ -54,7 +57,37 @@ const useStyles = createStyles(theme => ({
 
 	clubSearch: {
 		marginTop: 16,
-		borderRadius: 16
+		input: {
+			borderRadius: 16
+		}
+	},
+
+	joinMeemLink: {
+		marginTop: 24,
+		a: {
+			color: 'rgba(255, 102, 81, 1)',
+			textDecoration: 'underline',
+			fontWeight: 'bold'
+		}
+	},
+	createButton: {
+		marginRight: 64,
+		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 12
+	},
+	joinButton: {
+		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 12
+	},
+	joinMeemDialogText: {
+		marginBottom: 8,
+		fontSize: 14
 	}
 }))
 
@@ -91,6 +124,7 @@ export function HomeComponent() {
 	const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
 	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
 	const [showCreateButton, setShowCreateButton] = useState(false)
+	const [isJoinMeemDialogOpen, setJoinMeemDialogOpen] = useState(false)
 
 	const handleChange = (val: string) => {
 		window.clearTimeout(timeoutRef.current)
@@ -111,7 +145,6 @@ export function HomeComponent() {
 						description: 'For fans of Bender',
 						id: '1'
 					},
-
 					{
 						image: 'https://img.icons8.com/clouds/256/000000/futurama-mom.png',
 						value: 'Rich Club',
@@ -140,6 +173,26 @@ export function HomeComponent() {
 
 	const handleSuggestionChosen = (suggestion: AutocompleteItem) => {
 		console.log(`Chosen ${suggestion.value} - ${suggestion.description}`)
+		setIsLoadingSuggestions(true)
+		router.push({
+			pathname: `/club/${suggestion.id}`
+		})
+	}
+
+	const goToCreate = () => {
+		//if (hasMeemId) {
+		router.push({
+			pathname: `/create`,
+			query: { clubname: autocompleteFormValue }
+		})
+		// } else {
+		// 	setJoinMeemDialogOpen(true)
+		// }
+	}
+
+	const goToJoinMeem = () => {
+		setJoinMeemDialogOpen(false)
+		window.open('https://meem.wtf/signup/walletconnect')
 	}
 
 	return (
@@ -164,9 +217,34 @@ export function HomeComponent() {
 					onChange={handleChange}
 					placeholder="Start typing to see suggestions or create a new club..."
 					onItemSubmit={handleSuggestionChosen}
-					rightSection={isLoadingSuggestions ? <Loader size={16} /> : null}
+					rightSection={
+						isLoadingSuggestions ? (
+							<Loader size={16} />
+						) : autocompleteFormValue.length > 0 ? (
+							<Button className={classes.createButton} onClick={goToCreate}>
+								Create
+							</Button>
+						) : null
+					}
 				/>
+				<Text className={classes.joinMeemLink}>
+					<a href="https://meem.wtf/signup/walletconnect">
+						Join ClubClub to create
+					</a>
+				</Text>
 			</Container>
+			<Modal
+				opened={isJoinMeemDialogOpen}
+				onClose={() => setJoinMeemDialogOpen(false)}
+				title="Join Meem"
+			>
+				<Text className={classes.joinMeemDialogText}>
+					To create a group, you need a Meem ID. Sign up below!
+				</Text>
+				<Button className={classes.createButton} onClick={goToJoinMeem}>
+					Create Meem ID
+				</Button>
+			</Modal>
 		</div>
 	)
 }

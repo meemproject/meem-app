@@ -1922,6 +1922,13 @@ export type GetLastMeemQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetLastMeemQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', tokenId: string, metadata: any }> };
 
+export type GetMeemIdQueryVariables = Exact<{
+  walletAddress: Scalars['String'];
+}>;
+
+
+export type GetMeemIdQuery = { __typename?: 'query_root', MeemIdentifications: Array<{ __typename?: 'MeemIdentifications', id: any, hasOnboarded: boolean, Wallets: Array<{ __typename?: 'Wallets', address: string }>, Twitters: Array<{ __typename?: 'Twitters', twitterId: string, id: any }> }> };
+
 
 export const GetLastMeemDocument = gql`
     query GetLastMeem {
@@ -1958,3 +1965,46 @@ export function useGetLastMeemLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetLastMeemQueryHookResult = ReturnType<typeof useGetLastMeemQuery>;
 export type GetLastMeemLazyQueryHookResult = ReturnType<typeof useGetLastMeemLazyQuery>;
 export type GetLastMeemQueryResult = Apollo.QueryResult<GetLastMeemQuery, GetLastMeemQueryVariables>;
+export const GetMeemIdDocument = gql`
+    query GetMeemId($walletAddress: String!) {
+  MeemIdentifications(where: {Wallets: {address: {_eq: $walletAddress}}}) {
+    Wallets {
+      address
+    }
+    id
+    hasOnboarded
+    Twitters {
+      twitterId
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMeemIdQuery__
+ *
+ * To run a query within a React component, call `useGetMeemIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeemIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeemIdQuery({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *   },
+ * });
+ */
+export function useGetMeemIdQuery(baseOptions: Apollo.QueryHookOptions<GetMeemIdQuery, GetMeemIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMeemIdQuery, GetMeemIdQueryVariables>(GetMeemIdDocument, options);
+      }
+export function useGetMeemIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMeemIdQuery, GetMeemIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMeemIdQuery, GetMeemIdQueryVariables>(GetMeemIdDocument, options);
+        }
+export type GetMeemIdQueryHookResult = ReturnType<typeof useGetMeemIdQuery>;
+export type GetMeemIdLazyQueryHookResult = ReturnType<typeof useGetMeemIdLazyQuery>;
+export type GetMeemIdQueryResult = Apollo.QueryResult<GetMeemIdQuery, GetMeemIdQueryVariables>;
