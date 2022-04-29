@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { ClubDetailComponent } from '../../../components/Detail/ClubDetail'
+import { ClubEditComponent } from '../../../components/Detail/ClubEdit'
 import { HeaderMenu } from '../../../components/Header/Header'
 
 interface IProps {
@@ -54,7 +54,7 @@ const ClubEditPage: NextPage<IProps> = ({ id }) => {
 				/> */}
 			</Head>
 			<HeaderMenu />
-			<ClubDetailComponent />
+			<ClubEditComponent />
 		</>
 	)
 }

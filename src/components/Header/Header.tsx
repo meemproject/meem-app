@@ -26,7 +26,7 @@ import { GET_MEEM_ID } from '../../graphql/meemid'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
-		marginLeft: 0,
+		marginLeft: 4,
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center'
@@ -160,90 +160,78 @@ export function HeaderMenu() {
 
 	return (
 		<Header height={56}>
-			<Container>
-				<div className={classes.inner}>
-					<Container className={classes.headerLeftItems}>
-						<a onClick={navigateHome}>
-							<Text className={classes.mainLogo}>♣</Text>
-						</a>
-					</Container>
+			<div className={classes.inner}>
+				<Container className={classes.headerLeftItems}>
+					<a onClick={navigateHome}>
+						<Text className={classes.mainLogo}>♣</Text>
+					</a>
+				</Container>
 
-					<Container className={classes.headerRightItems}>
-						{wallet.isConnected && (
-							<Menu
-								size={150}
-								placement="end"
-								transition="pop-top-right"
-								className={classes.userMenu}
-								onClose={() => setUserMenuOpened(false)}
-								onOpen={() => setUserMenuOpened(true)}
-								control={
-									<UnstyledButton
-										className={cx(classes.user, {
-											[classes.userActive]: isUserMenuOpened
-										})}
-									>
-										<Group spacing={7}>
-											<Avatar
-												src={''}
-												alt={'user.name'}
-												radius="xl"
-												size={20}
-											/>
-											<Text
-												weight={500}
-												size="sm"
-												sx={{ lineHeight: 1 }}
-												mr={3}
-											>
-												{truncatedWalletAddress()}
-											</Text>
-											<ChevronDown size={12} />
-										</Group>
-									</UnstyledButton>
-								}
-							>
-								<Menu.Item
-									onClick={wallet.disconnectWallet}
-									color="red"
-									icon={<Logout size={14} />}
-								>
-									Disconnect
-								</Menu.Item>
-							</Menu>
-						)}
-						{!wallet.isConnected && (
-							<Text className={classes.connectWallet}>
-								<a onClick={wallet.connectWallet}>Connect wallet</a>
-							</Text>
-						)}
-
+				<Container className={classes.headerRightItems}>
+					{wallet.isConnected && (
 						<Menu
-							size={260}
+							size={150}
 							placement="end"
 							transition="pop-top-right"
-							onClose={() => setMoreMenuOpened(false)}
-							onOpen={() => setMoreMenuOpened(true)}
+							className={classes.userMenu}
+							onClose={() => setUserMenuOpened(false)}
+							onOpen={() => setUserMenuOpened(true)}
 							control={
-								<UnstyledButton>
-									<Dots className={classes.ellipse} />
+								<UnstyledButton
+									className={cx(classes.user, {
+										[classes.userActive]: isUserMenuOpened
+									})}
+								>
+									<Group spacing={7}>
+										<Avatar src={''} alt={'user.name'} radius="xl" size={20} />
+										<Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+											{truncatedWalletAddress()}
+										</Text>
+										<ChevronDown size={12} />
+									</Group>
 								</UnstyledButton>
 							}
 						>
-							<Menu.Item>
-								Powered by{' '}
-								<span style={{ textDecoration: 'underline' }}>Meem</span>
+							<Menu.Item
+								onClick={wallet.disconnectWallet}
+								color="red"
+								icon={<Logout size={14} />}
+							>
+								Disconnect
 							</Menu.Item>
-							<Menu.Item>My Clubs</Menu.Item>
-
-							<Divider />
-
-							<Menu.Item icon={<BrandTwitter size={20} />}>Twitter</Menu.Item>
-							<Menu.Item icon={<BrandDiscord size={20} />}>Discord</Menu.Item>
 						</Menu>
-					</Container>
-				</div>
-			</Container>
+					)}
+					{!wallet.isConnected && (
+						<Text className={classes.connectWallet}>
+							<a onClick={wallet.connectWallet}>Connect wallet</a>
+						</Text>
+					)}
+
+					<Menu
+						size={260}
+						placement="end"
+						transition="pop-top-right"
+						onClose={() => setMoreMenuOpened(false)}
+						onOpen={() => setMoreMenuOpened(true)}
+						control={
+							<UnstyledButton>
+								<Dots className={classes.ellipse} />
+							</UnstyledButton>
+						}
+					>
+						<Menu.Item>
+							Powered by{' '}
+							<span style={{ textDecoration: 'underline' }}>Meem</span>
+						</Menu.Item>
+						<Menu.Item>My Clubs</Menu.Item>
+
+						<Divider />
+
+						<Menu.Item icon={<BrandTwitter size={20} />}>Twitter</Menu.Item>
+						<Menu.Item icon={<BrandDiscord size={20} />}>Discord</Menu.Item>
+					</Menu>
+				</Container>
+			</div>
 		</Header>
 	)
 }
