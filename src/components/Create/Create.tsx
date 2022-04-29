@@ -32,10 +32,12 @@ const useStyles = createStyles(theme => ({
 	},
 	headerPrompt: {
 		fontSize: 16,
-		marginBottom: 8
+		marginBottom: 8,
+		fontWeight: '500',
+		color: 'rgba(0, 0, 0, 0.6)'
 	},
 	headerClubName: {
-		fontWeight: 'bold',
+		fontWeight: '600',
 		fontSize: 24
 	},
 	clubDescriptionPrompt: { fontSize: 18, marginBottom: 16, fontWeight: '600' },
@@ -83,7 +85,8 @@ const useStyles = createStyles(theme => ({
 	clubLogoDeleteButton: {
 		position: 'absolute',
 		top: '-12px',
-		right: '-105px'
+		right: '-105px',
+		cursor: 'pointer'
 	}
 }))
 

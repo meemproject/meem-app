@@ -34,6 +34,7 @@ const useStyles = createStyles(theme => ({
 
 	headerRightItems: {
 		marginRight: 0,
+		marginBottom: 4,
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center'
