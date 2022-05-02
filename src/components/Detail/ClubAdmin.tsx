@@ -172,15 +172,15 @@ export const ClubAdminComponent: React.FC = () => {
 		setClubAdmins(finalList)
 	}
 
-	const navigateHome = () => {
-		router.push({ pathname: '/' })
+	const navigateToClubDetail = () => {
+		router.push({ pathname: '/club/clubname' })
 	}
 
 	return (
 		<>
 			<div className={classes.header}>
 				<div className={classes.headerTitle}>
-					<a onClick={navigateHome}>
+					<a onClick={navigateToClubDetail}>
 						<ArrowLeft className={classes.headerArrow} size={32} />
 					</a>
 					<Image

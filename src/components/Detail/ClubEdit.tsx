@@ -124,8 +124,8 @@ export const ClubEditComponent: React.FC = () => {
 		maxFileSize: 10
 	})
 
-	const navigateHome = () => {
-		router.push({ pathname: '/' })
+	const navigateToClubDetail = () => {
+		router.push({ pathname: '/club/clubname' })
 	}
 
 	const resizeFile = (file: any) =>
@@ -172,7 +172,7 @@ export const ClubEditComponent: React.FC = () => {
 		<>
 			<div className={classes.header}>
 				<div className={classes.headerTitle}>
-					<a onClick={navigateHome}>
+					<a onClick={navigateToClubDetail}>
 						<ArrowLeft className={classes.headerArrow} size={32} />
 					</a>
 					<Image
