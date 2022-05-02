@@ -5,10 +5,13 @@ import {
 	Image,
 	Button,
 	Tabs,
-	Space
+	Space,
+	Textarea,
+	Chips,
+	Chip
 } from '@mantine/core'
 import React, { useState } from 'react'
-import { Edit, Settings } from 'tabler-icons-react'
+import { Edit, Settings, Lock } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -76,7 +79,7 @@ const useStyles = createStyles(theme => ({
 		color: 'rgba(45, 28, 28, 0.3)',
 		cursor: 'pointer'
 	},
-	membershipText: { fontSize: 20, marginTop: 24, lineHeight: 2 },
+	membershipText: { fontSize: 20, marginBottom: 8, lineHeight: 2 },
 
 	membershipSelector: {
 		padding: 4,
@@ -84,12 +87,41 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 'bold',
 		backgroundColor: 'rgba(255, 102, 81, 0.1)',
 		color: 'rgba(255, 102, 81, 1)'
+	},
+	clubAdminsPrompt: {
+		fontSize: 18,
+		marginBottom: 16,
+		fontWeight: '600',
+		marginTop: 36
+	},
+	clubAdminsInstructions: {
+		fontSize: 18,
+		marginBottom: 16,
+		color: 'rgba(0, 0, 0, 0.6)'
+	},
+	adminsTextAreaContainer: {
+		position: 'relative'
+	},
+	adminsTextArea: {
+		paddingTop: 48,
+		paddingLeft: 32
+	},
+	primaryAdminChip: {
+		position: 'absolute',
+		pointerEvents: 'none',
+		top: 12,
+		left: 12
+	},
+	primaryAdminChipContents: {
+		display: 'flex',
+		alignItems: 'center'
 	}
 }))
 
 enum Tab {
 	Membership,
-	Admins
+	Admins,
+	Integrations
 }
 
 export const ClubEditComponent: React.FC = () => {
@@ -97,11 +129,17 @@ export const ClubEditComponent: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true)
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
 
+	// Membership settings
 	const [whoCanJoin, setWhoCanJoin] = useState('anyone')
 	const [tokenQuantity, setTokenQuantity] = useState('0')
 	const [tokenSymbol, setTokenSymbol] = useState('ETH')
 	const [mintingStart, setMintingStart] = useState('now')
 	const [mintingEnd, setMintingEnd] = useState('never')
+
+	// Club admins
+	const [primaryClubAdmin, setPrimaryClubAdmin] = useState('gadsby.eth')
+	const [clubAdminsString, setClubAdminsString] = useState('')
+	const [clubAdmins, setClubAdmins] = useState<string[]>([])
 
 	const switchToMembership = () => {
 		setCurrentTab(Tab.Membership)
@@ -109,6 +147,23 @@ export const ClubEditComponent: React.FC = () => {
 
 	const switchToClubAdmins = () => {
 		setCurrentTab(Tab.Admins)
+	}
+
+	const switchToIntegrations = () => {
+		setCurrentTab(Tab.Integrations)
+	}
+
+	const parseClubAdmins = (rawString: string) => {
+		setClubAdminsString(rawString)
+		const adminsList = rawString.split('\n')
+		const finalList: string[] = []
+		adminsList.forEach(potentialAdmin => {
+			if (potentialAdmin.length > 0) {
+				finalList.push(potentialAdmin)
+			}
+		})
+		console.log(`admins count = ${finalList.length + 1}`)
+		setClubAdmins(finalList)
 	}
 
 	return (
@@ -158,20 +213,77 @@ export const ClubEditComponent: React.FC = () => {
 							Club Admins
 						</Text>
 					</a>
+					<Space w="lg" />
+					<a onClick={switchToIntegrations}>
+						<Text
+							className={
+								currentTab == Tab.Integrations
+									? classes.activeTab
+									: classes.inactiveTab
+							}
+						>
+							Integrations
+						</Text>
+					</a>
 				</div>
 				{currentTab === Tab.Membership && (
-					<Text className={classes.membershipText}>
-						This club is open for{' '}
-						<span className={classes.membershipSelector}>{whoCanJoin}</span> to
-						join. Our membership token costs{' '}
-						<span className={classes.membershipSelector}>
-							{tokenQuantity} {tokenSymbol}
-						</span>{' '}
-						to mint. Minting starts{' '}
-						<span className={classes.membershipSelector}>{mintingStart}</span>{' '}
-						and ends{' '}
-						<span className={classes.membershipSelector}>{mintingEnd}</span>.
-					</Text>
+					<div>
+						<Space h="lg" />
+
+						<Text className={classes.membershipText}>
+							This club is open for{' '}
+							<span className={classes.membershipSelector}>{whoCanJoin}</span>{' '}
+							to join.
+						</Text>
+						<Text className={classes.membershipText}>
+							Our membership token costs{' '}
+							<span className={classes.membershipSelector}>
+								{tokenQuantity} {tokenSymbol}
+							</span>{' '}
+							to mint.
+						</Text>
+						<Text className={classes.membershipText}>
+							Minting starts{' '}
+							<span className={classes.membershipSelector}>{mintingStart}</span>{' '}
+							and ends{' '}
+							<span className={classes.membershipSelector}>{mintingEnd}</span>.
+						</Text>
+					</div>
+				)}
+
+				{currentTab === Tab.Admins && (
+					<div>
+						<Text className={classes.clubAdminsPrompt}>
+							Who can manage this club’s profile and membership settings?
+						</Text>
+						<Text className={classes.clubAdminsInstructions}>
+							Add a line break between each address. Note that the club creator
+							will always have admin permissions.
+						</Text>
+						<div className={classes.adminsTextAreaContainer}>
+							<Textarea
+								classNames={{ input: classes.adminsTextArea }}
+								radius="lg"
+								size="md"
+								value={clubAdminsString}
+								minRows={10}
+								onChange={event => parseClubAdmins(event.currentTarget.value)}
+							/>
+							<Chips
+								color={'rgba(0, 0, 0, 0.05)'}
+								className={classes.primaryAdminChip}
+								variant="filled"
+							>
+								<Chip size="md" value="" checked={false}>
+									<div className={classes.primaryAdminChipContents}>
+										<Lock width={16} height={16} />
+										<Space w={4} />
+										<Text>{primaryClubAdmin}</Text>
+									</div>
+								</Chip>
+							</Chips>
+						</div>
+					</div>
 				)}
 
 				<Button className={classes.buttonSaveChanges}>Save Changes</Button>

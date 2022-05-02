@@ -19,7 +19,8 @@ import {
 	ChevronDown,
 	Dots,
 	BrandDiscord,
-	BrandTwitter
+	BrandTwitter,
+	MessageCircle
 } from 'tabler-icons-react'
 import { GetMeemIdQuery } from '../../../generated/graphql'
 import { GET_MEEM_ID } from '../../graphql/meemid'
@@ -124,6 +125,15 @@ const useStyles = createStyles(theme => ({
 	userActive: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
+	},
+
+	menuItem: {
+		fontWeight: '600'
+	},
+
+	redMenuItem: {
+		fontWeight: '600',
+		color: 'rgba(255, 102, 81, 1)'
 	}
 }))
 
@@ -193,6 +203,7 @@ export function HeaderMenu() {
 							}
 						>
 							<Menu.Item
+								className={classes.menuItem}
 								onClick={wallet.disconnectWallet}
 								color="red"
 								icon={<Logout size={14} />}
@@ -219,16 +230,33 @@ export function HeaderMenu() {
 							</UnstyledButton>
 						}
 					>
-						<Menu.Item>
+						<Menu.Item className={classes.menuItem}>
 							Powered by{' '}
 							<span style={{ textDecoration: 'underline' }}>Meem</span>
 						</Menu.Item>
-						<Menu.Item>My Clubs</Menu.Item>
+						<Menu.Item className={classes.menuItem}>Join ClubClub</Menu.Item>
+						<Menu.Item className={classes.menuItem}>My Clubs</Menu.Item>
 
 						<Divider />
 
-						<Menu.Item icon={<BrandTwitter size={20} />}>Twitter</Menu.Item>
-						<Menu.Item icon={<BrandDiscord size={20} />}>Discord</Menu.Item>
+						<Menu.Item
+							className={classes.menuItem}
+							icon={<BrandTwitter size={20} />}
+						>
+							Twitter
+						</Menu.Item>
+						<Menu.Item
+							className={classes.menuItem}
+							icon={<BrandDiscord size={20} />}
+						>
+							Discord
+						</Menu.Item>
+						<Menu.Item
+							className={classes.redMenuItem}
+							icon={<MessageCircle size={20} />}
+						>
+							Share Feedback
+						</Menu.Item>
 					</Menu>
 				</Container>
 			</div>
