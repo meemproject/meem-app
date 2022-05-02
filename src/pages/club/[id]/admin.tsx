@@ -8,7 +8,7 @@ interface IProps {
 	id: string
 }
 
-const ClubEditPage: NextPage<IProps> = ({ id }) => {
+const ClubAdminPage: NextPage<IProps> = ({ id }) => {
 	return (
 		<>
 			<Head>
@@ -59,4 +59,4 @@ const ClubEditPage: NextPage<IProps> = ({ id }) => {
 	)
 }
 
-export default ClubEditPage
+export default ClubAdminPage

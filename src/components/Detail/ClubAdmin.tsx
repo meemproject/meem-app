@@ -124,7 +124,7 @@ enum Tab {
 	Integrations
 }
 
-export const ClubEditComponent: React.FC = () => {
+export const ClubAdminComponent: React.FC = () => {
 	const { classes } = useStyles()
 	const [isLoading, setIsLoading] = useState(true)
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)

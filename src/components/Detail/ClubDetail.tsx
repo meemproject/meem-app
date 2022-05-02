@@ -48,7 +48,7 @@ const useStyles = createStyles(theme => ({
 	clubMembersListTitleText: {
 		fontSize: 18,
 		marginBottom: 16,
-		marginTop: 32,
+		marginTop: 40,
 		fontWeight: '600',
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
@@ -118,11 +118,11 @@ export const ClubDetailComponent: React.FC = () => {
 				<Image
 					className={classes.clubLogoImage}
 					src="/exampleclub.png"
-					width={80}
-					height={80}
+					width={100}
+					height={100}
 					fit={'contain'}
 				/>
-				<Space w={'md'} />
+				<Space w={'lg'} />
 				<div>
 					<Text className={classes.headerClubName}>{clubName}</Text>
 					<Text className={classes.headerClubDescription}>
