@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { ClubEditComponent } from '../../../components/Detail/ClubEdit'
+import { ClubAdminComponent } from '../../../components/Detail/ClubAdmin'
 import { HeaderMenu } from '../../../components/Header/Header'
 
 interface IProps {
@@ -12,7 +12,7 @@ const ClubAdminPage: NextPage<IProps> = ({ id }) => {
 	return (
 		<>
 			<Head>
-				<title>{id} - Admin | Clubs</title>
+				<title>{id} | Admin | Clubs</title>
 				<meta name="title" content="Clubs clubs" />
 				<meta name="description" content="Clubs! Clubs!" />
 				<meta property="og:type" content="website" />
@@ -54,7 +54,7 @@ const ClubAdminPage: NextPage<IProps> = ({ id }) => {
 				/> */}
 			</Head>
 			<HeaderMenu />
-			<ClubEditComponent />
+			<ClubAdminComponent />
 		</>
 	)
 }

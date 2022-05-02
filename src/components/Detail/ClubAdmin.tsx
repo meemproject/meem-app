@@ -10,8 +10,9 @@ import {
 	Chips,
 	Chip
 } from '@mantine/core'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { Edit, Settings, Lock } from 'tabler-icons-react'
+import { Edit, Settings, Lock, ArrowLeft } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -26,6 +27,10 @@ const useStyles = createStyles(theme => ({
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
 		paddingLeft: 32
+	},
+	headerArrow: {
+		marginRight: 24,
+		cursor: 'pointer'
 	},
 	headerTitle: {
 		display: 'flex',
@@ -126,6 +131,7 @@ enum Tab {
 
 export const ClubAdminComponent: React.FC = () => {
 	const { classes } = useStyles()
+	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(true)
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
 
@@ -166,10 +172,17 @@ export const ClubAdminComponent: React.FC = () => {
 		setClubAdmins(finalList)
 	}
 
+	const navigateHome = () => {
+		router.push({ pathname: '/' })
+	}
+
 	return (
 		<>
 			<div className={classes.header}>
 				<div className={classes.headerTitle}>
+					<a onClick={navigateHome}>
+						<ArrowLeft className={classes.headerArrow} size={32} />
+					</a>
 					<Image
 						className={classes.clubLogoImage}
 						src="/exampleclub.png"
