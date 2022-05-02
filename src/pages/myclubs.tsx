@@ -3,12 +3,13 @@ import Head from 'next/head'
 import React from 'react'
 import { CreateComponent } from '../components/Create/Create'
 import { HeaderMenu } from '../components/Header/Header'
+import { MyClubsComponent } from '../components/MyClubs/MyClubs'
 
 const CreatePage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Create a Club | Clubs</title>
+				<title>My Clubs | Clubs</title>
 				<meta name="title" content="Clubs clubs" />
 				<meta name="description" content="Clubs! Clubs!" />
 				<meta property="og:type" content="website" />
@@ -50,7 +51,7 @@ const CreatePage: NextPage = () => {
 				/> */}
 			</Head>
 			<HeaderMenu />
-			<CreateComponent />
+			<MyClubsComponent />
 		</>
 	)
 }
