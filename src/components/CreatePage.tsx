@@ -35,7 +35,7 @@ export const CreatePage: React.FC = () => {
 		setTxLog([...txLog, 'Creating proxy...'])
 
 		const contract = await deployProxy({
-			provider: web3Provider
+			signer: web3Provider.getSigner()
 		})
 		// setProxyContract(contract)
 		setProxyAddress(contract.address)
@@ -54,7 +54,7 @@ export const CreatePage: React.FC = () => {
 		setTxLog([...txLog, `Initializing proxy...`])
 
 		const tx = await initProxy({
-			provider: web3Provider,
+			signer: web3Provider.getSigner(),
 			proxyContractAddress: proxyAddress,
 			name: 'Test',
 			symbol: 'TEST',
@@ -82,7 +82,7 @@ export const CreatePage: React.FC = () => {
 		])
 
 		const tx = await upgrade({
-			provider: web3Provider,
+			signer: web3Provider.getSigner(),
 			proxyContractAddress: proxyAddress,
 			chain: Chain.Rinkeby,
 			fromVersion,
