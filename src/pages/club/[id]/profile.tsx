@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { ClubEditComponent } from '../../../components/Detail/ClubEdit'
+import { ClubEditComponent } from '../../../components/Edit/ClubEdit'
 import { HeaderMenu } from '../../../components/Header/Header'
 
 interface IProps {
