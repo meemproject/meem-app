@@ -1,21 +1,17 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	createStyles,
 	Container,
 	Text,
-	Center,
 	Image,
-	Loader,
 	Button,
-	Textarea,
 	Space,
 	Grid
 } from '@mantine/core'
-import { base64StringToBlob } from 'blob-util'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
-import Resizer from 'react-image-file-resizer'
-import { ArrowLeft, CircleCheck, Upload } from 'tabler-icons-react'
-import { useFilePicker } from 'use-file-picker'
+import React, { useState } from 'react'
+import { CircleCheck } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
 	header: {

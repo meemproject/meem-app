@@ -1,14 +1,11 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable import/named */
 import log from '@kengoldfarb/log'
 import { Button, Select, Switch, TextInput } from '@mantine/core'
 import { MeemAPI } from '@meemproject/api'
-import {
-	Meem,
-	deployProxy,
-	initProxy,
-	versions,
-	upgrade,
-	defaultMeemProperties
-} from '@meemproject/meem-contracts'
+import * as meemContracts from '@meemproject/meem-contracts'
 import { Chain } from '@meemproject/meem-contracts/dist/src/lib/meemStandard'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
@@ -34,7 +31,7 @@ export const CreatePage: React.FC = () => {
 
 		setTxLog([...txLog, 'Creating proxy...'])
 
-		const contract = await deployProxy({
+		const contract = await meemContracts.deployProxy({
 			signer: web3Provider.getSigner()
 		})
 		// setProxyContract(contract)
@@ -53,7 +50,7 @@ export const CreatePage: React.FC = () => {
 
 		setTxLog([...txLog, `Initializing proxy...`])
 
-		const tx = await initProxy({
+		const tx = await meemContracts.initProxy({
 			signer: web3Provider.getSigner(),
 			proxyContractAddress: proxyAddress,
 			name: 'Test',
@@ -81,7 +78,7 @@ export const CreatePage: React.FC = () => {
 			`Upgrading proxy from version: ${fromVersion} to version: ${toVersion}...`
 		])
 
-		const tx = await upgrade({
+		const tx = await meemContracts.upgrade({
 			signer: web3Provider.getSigner(),
 			proxyContractAddress: proxyAddress,
 			chain: Chain.Rinkeby,
@@ -97,7 +94,7 @@ export const CreatePage: React.FC = () => {
 			proxyAddress,
 			meemABI,
 			signer
-		) as unknown as Meem
+		) as unknown as meemContracts.Meem
 
 		meemContract?.mint(
 			{
@@ -113,8 +110,8 @@ export const CreatePage: React.FC = () => {
 				uriSource: MeemAPI.UriSource.TokenUri,
 				mintedBy: accounts[0]
 			},
-			defaultMeemProperties,
-			defaultMeemProperties,
+			meemContracts.defaultMeemProperties,
+			meemContracts.defaultMeemProperties,
 			{ gasLimit: '1000000' }
 		)
 	}
@@ -122,17 +119,17 @@ export const CreatePage: React.FC = () => {
 	const displayVersions = [
 		{
 			version: 'latest',
-			displayName: `latest (${versions[Chain.Rinkeby].latest})`
+			displayName: `latest (${meemContracts.versions[Chain.Rinkeby].latest})`
 		},
 		{
 			version: 'beta',
-			displayName: `beta (${versions[Chain.Rinkeby].beta})`
+			displayName: `beta (${meemContracts.versions[Chain.Rinkeby].beta})`
 		},
 		{
 			version: 'alpha',
-			displayName: `alpha (${versions[Chain.Rinkeby].alpha})`
+			displayName: `alpha (${meemContracts.versions[Chain.Rinkeby].alpha})`
 		},
-		...Object.keys(versions[Chain.Rinkeby].history).map(k => ({
+		...Object.keys(meemContracts.versions[Chain.Rinkeby].history).map(k => ({
 			version: k,
 			displayName: k
 		}))
