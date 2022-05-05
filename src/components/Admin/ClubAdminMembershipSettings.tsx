@@ -16,6 +16,12 @@ const useStyles = createStyles(theme => ({
 	},
 	// Membership tab
 	membershipText: { fontSize: 20, marginBottom: 8, lineHeight: 2 },
+	membershipTextAdditionalReq: {
+		fontSize: 20,
+		marginBottom: 16,
+		lineHeight: 2
+	},
+
 	membershipSelector: {
 		padding: 4,
 		borderRadius: 8,
@@ -33,6 +39,12 @@ const useStyles = createStyles(theme => ({
 			backgroundColor: 'rgba(255, 102, 81, 0.05)'
 		},
 		marginBottom: 8
+	},
+	membershipSettingHeader: {
+		fontSize: 16,
+		color: 'rgba(0, 0, 0, 0.5)',
+		fontWeight: '600',
+		marginBottom: 12
 	}
 }))
 
@@ -109,7 +121,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		<>
 			<div>
 				<Space h="lg" />
-
+				<Text className={classes.membershipSettingHeader}>Requirements</Text>
 				<Text className={classes.membershipText}>
 					This club is open for{' '}
 					<a onClick={chooseMembershipReqType}>
@@ -117,15 +129,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					</a>{' '}
 					to join.
 				</Text>
-				<Button
-					onClick={addAdditionalRequirement}
-					className={classes.addRequirementButton}
-					size={'md'}
-					leftIcon={<Plus size={14} />}
-				>
-					Add another requirement
-				</Button>
-				<Text className={classes.membershipText}>
+				<Text className={classes.membershipTextAdditionalReq}>
 					<a onClick={chooseAdditionalMembershipReqAndOr}>
 						<span className={classes.membershipSelector}>In addition</span>
 					</a>
@@ -135,15 +139,37 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					</a>
 					.
 				</Text>
+				<Button
+					onClick={addAdditionalRequirement}
+					className={classes.addRequirementButton}
+					size={'md'}
+					leftIcon={<Plus size={14} />}
+				>
+					Add another requirement
+				</Button>
+				<Space h="lg" />
+
+				<Text className={classes.membershipSettingHeader}>Price</Text>
+
 				<Text className={classes.membershipText}>
-					Our membership token costs{' '}
+					Our club costs{' '}
 					<a onClick={chooseMembershipMintQuantity}>
 						<span className={classes.membershipSelector}>1 ETH</span>
 					</a>{' '}
-					to mint. There are
-					<span className={classes.membershipSelector}>unlimited</span> tokens
-					available.
+					to join.
 				</Text>
+				<Space h="lg" />
+
+				<Text className={classes.membershipSettingHeader}>Capacity</Text>
+
+				<Text className={classes.membershipText}>
+					There are{' '}
+					<span className={classes.membershipSelector}>unlimited</span>{' '}
+					memberships available.
+				</Text>
+				<Space h="lg" />
+				<Text className={classes.membershipSettingHeader}>Timing</Text>
+
 				<Text className={classes.membershipText}>
 					Minting starts <span className={classes.membershipSelector}>now</span>{' '}
 					and ends <span className={classes.membershipSelector}>never</span>.
