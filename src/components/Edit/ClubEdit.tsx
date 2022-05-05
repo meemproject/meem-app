@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	createStyles,
 	Container,
 	Text,
-	Center,
 	Image,
 	Loader,
 	Button,

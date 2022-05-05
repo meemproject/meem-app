@@ -12,6 +12,8 @@ import { Settings, ArrowLeft } from 'tabler-icons-react'
 import { ClubAdminAdminsSettingsComponent } from './ClubAdminAdminsSettings'
 import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
 import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 const useStyles = createStyles(theme => ({
 	header: {

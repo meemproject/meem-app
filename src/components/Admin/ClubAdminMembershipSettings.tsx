@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createStyles, Text, Button, Space } from '@mantine/core'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Plus } from 'tabler-icons-react'
 
@@ -65,14 +66,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		// TODO
 	}
 
-	const [membershipReqTypeModalOpened, setMembershipReqTypeModalOpened] =
+	const [isMembershipReqTypeModalOpened, setMembershipReqTypeModalOpened] =
 		useState(false)
 	const chooseMembershipReqType = () => {
 		// e.g. anyone, approved applicants
 		setMembershipReqTypeModalOpened(true)
 	}
-
-	const [tokenHolderReqsModalOpened, setTokenHolderReqsModalOpened] =
+	const [isTokenHolderReqsModalOpened, setTokenHolderReqsModalOpened] =
 		useState(false)
 	const chooseTokenHolderReqs = () => {
 		// e.g members must hold 1 MATIC
@@ -80,14 +80,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		setTokenHolderReqsModalOpened(true)
 	}
 
-	const [mintingDatesModalOpened, setMintingDatesModalOpened] = useState(false)
+	const [isMintingDatesModalOpened, setMintingDatesModalOpened] =
+		useState(false)
 	const chooseMintingDates = () => {
 		// e.g. now or later (w/ calendar)
 		setMintingDatesModalOpened(true)
 	}
 
 	const [
-		addtionalMembershipReqAndOrModalOpened,
+		isAddtionalMembershipReqAndOrModalOpened,
 		setAddtionalMembershipReqAndOrModalOpened
 	] = useState(false)
 	const chooseAdditionalMembershipReqAndOr = () => {
@@ -95,13 +96,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		setAddtionalMembershipReqAndOrModalOpened(true)
 	}
 
-	const [additionalReqTypeModalOpened, setAdditionalReqTypeModalOpened] =
+	const [isAdditionalReqTypeModalOpened, setAdditionalReqTypeModalOpened] =
 		useState(false)
 	const chooseAdditionalMembershipReqType = () => {
 		// e.g. choose an application, hold a token, hold an NFT
 		setAdditionalReqTypeModalOpened(true)
 	}
-	const [membershipMintCostModalOpened, setMembershipMintCostModalOpened] =
+	const [isMembershipMintCostModalOpened, setMembershipMintCostModalOpened] =
 		useState(false)
 	const chooseMembershipMintCost = () => {
 		// e.g. our tokens costs X to mint
@@ -109,7 +110,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 	}
 
 	const [
-		membershipMintQuantityModalOpened,
+		isMembershipMintQuantityModalOpened,
 		setMembershipMintQuantityModalOpened
 	] = useState(false)
 	const chooseMembershipMintQuantity = () => {
