@@ -275,7 +275,7 @@ export const CreateComponent: React.FC = () => {
 			<Center>
 				<Button
 					onClick={() => {
-						router.push({ pathname: `/clubs/${clubNamespace}/admin` })
+						router.push({ pathname: `/club/${clubNamespace}/admin` })
 					}}
 					disabled={clubDescription.length === 0 || smallClubLogo.length === 0}
 					className={classes.buttonCreate}
