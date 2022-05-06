@@ -170,7 +170,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		}
 	])
 
+	// Cost to join
 	const [costToJoin, setCostToJoin] = useState(0)
+
+	// Membership quantity
+	const [membershipQuantity, setMembershipQuantity] = useState(0)
+
+	// Membership timing / dates
+	const [membershipStartDate, setMembershipStartDate] = useState<
+		Date | undefined
+	>(undefined)
+
+	const [membershipEndDate, setMembershipEndDate] = useState<Date | undefined>(
+		undefined
+	)
 
 	const lockedApprovedAddress = 'gadsby.eth' // TODO: use club main admin here
 
@@ -240,11 +253,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		setSecondReqTypeModalOpened(true)
 	}
 
-	const [isMembershipTimingModalOpened, setMembershipTimingModalOpened] =
+	const [
+		isMembershipTimingStartModalOpened,
+		setMembershipTimingStartModalOpened
+	] = useState(false)
+	const openMembershipStartTimingModal = () => {
+		// e.g. start now or later (w/ calendar)
+		setMembershipTimingStartModalOpened(true)
+	}
+
+	const [isMembershipTimingEndModalOpened, setMembershipTimingEndModalOpened] =
 		useState(false)
-	const openMembershipTimingModal = () => {
-		// e.g. now or later (w/ calendar)
-		setMembershipTimingModalOpened(true)
+	const openMembershipTimingEndModal = () => {
+		// e.g. end now or later (w/ calendar)
+		setMembershipTimingEndModalOpened(true)
 	}
 
 	const [isMembershipCostModalOpened, setMembershipCostModalOpened] =
@@ -394,28 +416,30 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						/>
 					</Text>
 				)}
-				{membershipRequirements.length === 1 && (
-					<Button
-						onClick={() => {
-							addMembershipRequirement()
-						}}
-						className={classes.addRequirementButton}
-						size={'md'}
-						leftIcon={<Plus size={14} />}
-					>
-						Add another requirement
-					</Button>
-				)}
+				{membershipRequirements[0].type !== MembershipReqType.None &&
+					membershipRequirements.length === 1 && (
+						<Button
+							onClick={() => {
+								addMembershipRequirement()
+							}}
+							className={classes.addRequirementButton}
+							size={'md'}
+							leftIcon={<Plus size={14} />}
+						>
+							Add another requirement
+						</Button>
+					)}
 
 				<Space h="lg" />
 
 				<Text className={classes.membershipSettingHeader}>Price</Text>
 
 				<Text className={classes.membershipText}>
-					Our club costs{' '}
+					Our club {isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
 						<span className={classes.membershipSelector}>
-							{isNaN(costToJoin) ? '0' : costToJoin} MATIC
+							{isNaN(costToJoin) || costToJoin === 0 ? 'free' : costToJoin}
+							{isNaN(costToJoin) || costToJoin === 0 ? '' : ' MATIC'}
 						</span>
 					</a>{' '}
 					to join.
@@ -423,25 +447,28 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 				<Space h="lg" />
 
 				<Text className={classes.membershipSettingHeader}>Capacity</Text>
-
 				<Text className={classes.membershipText}>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={classes.membershipSelector}>unlimited</span>
+						<span className={classes.membershipSelector}>
+							{membershipQuantity === 0 || isNaN(membershipQuantity)
+								? 'unlimited'
+								: membershipQuantity}
+						</span>
 					</a>{' '}
-					memberships available.
+					memberships available in total.
 				</Text>
 				<Space h="lg" />
 				<Text className={classes.membershipSettingHeader}>Timing</Text>
 
 				<Text className={classes.membershipText}>
-					Minting starts{' '}
-					<a onClick={openMembershipTimingModal}>
+					Memberships are available starting{' '}
+					<a onClick={openMembershipStartTimingModal}>
 						<span className={classes.membershipSelector}>now</span>
 					</a>{' '}
-					and ends{' '}
-					<a onClick={openMembershipTimingModal}>
-						<span className={classes.membershipSelector}>never</span>
+					until{' '}
+					<a onClick={openMembershipStartTimingModal}>
+						<span className={classes.membershipSelector}>forever</span>
 					</a>
 					.
 				</Text>
@@ -703,7 +730,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						}}
 						className={classes.buttonModalSave}
 					>
-						Save
+						Done
 					</Button>
 				</Modal>
 				<Modal
@@ -751,7 +778,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						}}
 						className={classes.buttonModalSave}
 					>
-						Save
+						Done
 					</Button>
 				</Modal>
 				<Modal
@@ -764,7 +791,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={classes.modalHeaderText}>Enter Quantity</Text>
+					<Text className={classes.modalHeaderText}>Enter cost to join</Text>
 					<TextInput
 						radius="lg"
 						size="md"
@@ -786,7 +813,131 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						}}
 						className={classes.buttonModalSave}
 					>
-						Save
+						Done
+					</Button>
+				</Modal>
+				<Modal
+					withCloseButton={false}
+					centered
+					closeOnClickOutside={false}
+					closeOnEscape={false}
+					radius={16}
+					padding={'sm'}
+					opened={isMembershipQuantityModalOpened}
+					onClose={() => setMembershipQuantityModalOpened(false)}
+				>
+					<RadioGroup
+						classNames={{ label: classes.radio }}
+						orientation="vertical"
+						spacing={12}
+						size="lg"
+						color="dark"
+						value={
+							isNaN(membershipQuantity) || membershipQuantity === 0
+								? 'unlimited'
+								: 'finite'
+						}
+						onChange={value => {
+							switch (value) {
+								case 'unlimited':
+									setMembershipQuantity(0)
+									break
+								case 'finite':
+									setMembershipQuantity(100)
+									break
+							}
+						}}
+						required
+					>
+						<Radio value="unlimited" label="unlimited" />
+						<Radio value="finite" label="finite" />
+					</RadioGroup>
+					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
+						<>
+							<Text className={classes.modalHeaderText}>
+								Enter total memberships
+							</Text>
+
+							<TextInput
+								radius="lg"
+								size="md"
+								value={isNaN(membershipQuantity) ? '' : membershipQuantity}
+								onChange={event => {
+									setMembershipQuantity(parseInt(event.target.value))
+								}}
+							/>
+						</>
+					)}
+					<Space h={'md'} />
+					<Button
+						onClick={() => {
+							setMembershipQuantityModalOpened(false)
+						}}
+						className={classes.buttonModalSave}
+					>
+						Done
+					</Button>
+				</Modal>
+				<Modal
+					withCloseButton={false}
+					centered
+					closeOnClickOutside={false}
+					closeOnEscape={false}
+					radius={16}
+					padding={'sm'}
+					opened={isMembershipTimingStartModalOpened}
+					onClose={() => setMembershipTimingStartModalOpened(false)}
+				>
+					<RadioGroup
+						classNames={{ label: classes.radio }}
+						orientation="vertical"
+						spacing={12}
+						size="lg"
+						color="dark"
+						value={
+							isNaN(membershipQuantity) || membershipQuantity === 0
+								? 'unlimited'
+								: 'finite'
+						}
+						onChange={value => {
+							switch (value) {
+								case 'unlimited':
+									setMembershipQuantity(0)
+									break
+								case 'finite':
+									setMembershipQuantity(100)
+									break
+							}
+						}}
+						required
+					>
+						<Radio value="unlimited" label="unlimited" />
+						<Radio value="finite" label="finite" />
+					</RadioGroup>
+					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
+						<>
+							<Text className={classes.modalHeaderText}>
+								Enter total memberships
+							</Text>
+
+							<TextInput
+								radius="lg"
+								size="md"
+								value={isNaN(membershipQuantity) ? '' : membershipQuantity}
+								onChange={event => {
+									setMembershipQuantity(parseInt(event.target.value))
+								}}
+							/>
+						</>
+					)}
+					<Space h={'md'} />
+					<Button
+						onClick={() => {
+							setMembershipQuantityModalOpened(false)
+						}}
+						className={classes.buttonModalSave}
+					>
+						Done
 					</Button>
 				</Modal>
 			</div>

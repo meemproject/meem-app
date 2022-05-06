@@ -127,7 +127,7 @@ export const ClubAdminComponent: React.FC = () => {
 						fit={'contain'}
 					/>
 					{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-					<Text className={classes.headerClubName}>Harry Potter Fan Club</Text>
+					<Text className={classes.headerClubName}>Worst Club Ever</Text>
 				</div>
 				<Button
 					leftIcon={<Settings size={14} />}
