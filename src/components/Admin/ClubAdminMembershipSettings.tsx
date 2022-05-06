@@ -1004,7 +1004,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 							const now = new Date()
 							if (
 								membershipStartDate !== undefined &&
-								membershipStartDate.getMilliseconds() < now.getMilliseconds()
+								membershipStartDate.getTime() < now.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',
@@ -1091,7 +1091,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 
 							if (
 								membershipEndDate !== undefined &&
-								membershipEndDate.getMilliseconds() < now.getMilliseconds()
+								membershipEndDate.getTime() < now.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',
