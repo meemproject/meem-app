@@ -53,11 +53,11 @@ const useStyles = createStyles(() => ({
 	},
 	// Integrations tab
 	clubIntegrationsHeader: {
-		fontSize: 18,
-		marginBottom: 16,
+		fontSize: 16,
+		color: 'rgba(0, 0, 0, 0.5)',
 		fontWeight: '600',
-		marginTop: 36,
-		color: 'rgba(0, 0, 0, 0.6)'
+		marginTop: 32,
+		marginBottom: 8
 	},
 	clubIntegrationItem: {
 		display: 'flex',
