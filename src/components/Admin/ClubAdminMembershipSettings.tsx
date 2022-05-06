@@ -109,27 +109,40 @@ const useStyles = createStyles(theme => ({
 }))
 
 enum MembershipReqType {
-	Anyone,
+	None,
 	ApprovedApplicants,
 	TokenHolders,
-	NftHolders
+	NftHolders,
+	OtherClubMember
+}
+
+enum MembershipReqAndor {
+	None,
+	And,
+	Or
 }
 
 interface MembershipRequirement {
+	// Currently hardcoded as there is only one additional req.
+	// 0 = first req
+	// 1 = optional second req
 	index: number
+	// For additional reqs, whether they are 'alternatively' or 'in addition'
+	andor: MembershipReqAndor
+	// Type of requirement
 	type: MembershipReqType
 	// Applicants
 	applicationLink: string
 	approvedAddresses: string[]
 	approvedAddressesString: string
-	// NFT holders
-	nftChain: string
-	nftContractAddress: string
-	nftTokenStandard: string
-	// Token holders
-	tokenChain: string
-	tokenAddress: string
+	// NFT / Token holders
+	tokenName: string // Resolved from contract
+	tokenContractAddress: string
+	tokenChain: string // Not used for V1
 	tokenMinQuantity: number
+	// Club membership
+	clubSlug: string
+	clubName: string
 }
 
 export const ClubAdminMembershipSettingsComponent: React.FC = () => {
@@ -143,18 +156,21 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 	>([
 		{
 			index: 0,
-			type: MembershipReqType.Anyone,
+			andor: MembershipReqAndor.None,
+			type: MembershipReqType.None,
 			applicationLink: '',
 			approvedAddresses: [],
 			approvedAddressesString: '',
-			nftChain: '',
-			nftContractAddress: '',
-			nftTokenStandard: '',
-			tokenChain: '',
-			tokenAddress: '',
-			tokenMinQuantity: 0
+			tokenName: '',
+			tokenChain: 'matic',
+			tokenContractAddress: '',
+			tokenMinQuantity: 0,
+			clubSlug: '',
+			clubName: ''
 		}
 	])
+
+	const [costToJoin, setCostToJoin] = useState(0)
 
 	const lockedApprovedAddress = 'gadsby.eth' // TODO: use club main admin here
 
@@ -174,24 +190,26 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 	const addMembershipRequirement = () => {
 		const newReqs = [...membershipRequirements]
 		newReqs.push({
-			index: membershipRequirements.length + 1,
-			type: MembershipReqType.Anyone,
+			index: membershipRequirements.length,
+			andor: MembershipReqAndor.And,
+			type: MembershipReqType.None,
 			applicationLink: '',
 			approvedAddresses: [],
 			approvedAddressesString: '',
-			nftChain: '',
-			nftContractAddress: '',
-			nftTokenStandard: '',
-			tokenChain: '',
-			tokenAddress: '',
-			tokenMinQuantity: 0
+			tokenName: '',
+			tokenChain: 'matic',
+			tokenContractAddress: '',
+			tokenMinQuantity: 0,
+			clubSlug: '',
+			clubName: ''
 		})
 		setMembershipRequirements(newReqs)
 	}
 
 	const removeMembershipRequirement = (index: number) => {
-		const newReqs = membershipRequirements.filter(item => item.index == index)
+		const newReqs = membershipRequirements.filter(item => item.index !== index)
 		setMembershipRequirements(newReqs)
+		updateReqCurrentlyEditing(membershipRequirements[0])
 	}
 
 	const parseApprovedAddresses = (rawString: string): string[] => {
@@ -218,6 +236,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		useState(false)
 	const openSecondReqTypeModal = () => {
 		// e.g. in addition vs alternatively
+		updateReqCurrentlyEditing(membershipRequirements[1])
 		setSecondReqTypeModalOpened(true)
 	}
 
@@ -242,6 +261,43 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		setMembershipQuantityModalOpened(true)
 	}
 
+	const membershipTypeStringForFirstReq = (
+		req: MembershipRequirement
+	): string => {
+		switch (req.type) {
+			case MembershipReqType.None:
+				return 'anyone'
+			case MembershipReqType.ApprovedApplicants:
+				return 'approved applicants'
+			case MembershipReqType.NftHolders:
+				return 'NFT holders'
+			case MembershipReqType.TokenHolders:
+				return 'token holders'
+			case MembershipReqType.OtherClubMember:
+				return 'join another club' // Note: currently not an option for v1
+		}
+	}
+
+	const membershipTypeStringForSecondReq = (
+		req: MembershipRequirement
+	): string => {
+		switch (req.type) {
+			case MembershipReqType.None:
+				return '...'
+			case MembershipReqType.ApprovedApplicants:
+				return 'submit an approved application'
+			case MembershipReqType.NftHolders:
+				return `hold one ${membershipRequirements[1].tokenName}`
+			case MembershipReqType.TokenHolders:
+				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
+			case MembershipReqType.OtherClubMember:
+				return `join ${membershipRequirements[1].clubName}`
+		}
+	}
+
+	// Is the req we're currently editing the first requirement or not? This affects language and modal options
+	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
+
 	return (
 		<>
 			<div>
@@ -254,24 +310,81 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 							openMembershipReqModal(0)
 						}}
 					>
-						<span className={classes.membershipSelector}>anyone</span>
+						<span className={classes.membershipSelector}>
+							{membershipTypeStringForFirstReq(membershipRequirements[0])}
+						</span>
 					</a>{' '}
-					to join.
+					to join.{' '}
+					{membershipRequirements[0].type ===
+						MembershipReqType.ApprovedApplicants && (
+						<>
+							Members can apply{' '}
+							<a
+								onClick={() => {
+									openMembershipReqModal(0)
+								}}
+							>
+								<span className={classes.membershipSelector}>at this link</span>
+							</a>
+							.
+						</>
+					)}
+					{membershipRequirements[0].type ===
+						MembershipReqType.TokenHolders && (
+						<>
+							Members must hold{' '}
+							<a
+								onClick={() => {
+									openMembershipReqModal(0)
+								}}
+							>
+								<span className={classes.membershipSelector}>
+									{membershipRequirements[0].tokenMinQuantity}{' '}
+									{membershipRequirements[0].tokenName}
+								</span>
+							</a>
+							.
+						</>
+					)}
+					{membershipRequirements[0].type === MembershipReqType.NftHolders && (
+						<>
+							Members must hold one{' '}
+							<a
+								onClick={() => {
+									openMembershipReqModal(0)
+								}}
+							>
+								<span className={classes.membershipSelector}>
+									{membershipRequirements[0].tokenName}
+								</span>
+							</a>
+							.
+						</>
+					)}
 				</Text>
 				{membershipRequirements.length > 1 && (
 					<Text className={classes.membershipTextAdditionalReq}>
 						<a onClick={openSecondReqTypeModal}>
-							<span className={classes.membershipSelector}>In addition</span>
+							<span className={classes.membershipSelector}>
+								{membershipRequirements[1].andor === MembershipReqAndor.And
+									? 'In addition'
+									: 'Alternatively'}
+							</span>
 						</a>
-						, members must{' '}
+						, members{' '}
+						{membershipRequirements[1].andor === MembershipReqAndor.Or
+							? 'can'
+							: 'must'}{' '}
 						<a
 							onClick={() => {
 								openMembershipReqModal(1)
 							}}
 						>
-							<span className={classes.membershipSelector}>...</span>
-						</a>
-						.
+							<span className={classes.membershipSelector}>
+								{membershipTypeStringForSecondReq(membershipRequirements[1])}
+							</span>
+						</a>{' '}
+						to join.
 						<CircleMinus
 							onClick={() => {
 								// Hardcoded for now as there's only one additional req in v1
@@ -281,7 +394,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						/>
 					</Text>
 				)}
-				{membershipRequirements.length === 0 && (
+				{membershipRequirements.length === 1 && (
 					<Button
 						onClick={() => {
 							addMembershipRequirement()
@@ -301,7 +414,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 				<Text className={classes.membershipText}>
 					Our club costs{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={classes.membershipSelector}>1 ETH</span>
+						<span className={classes.membershipSelector}>
+							{isNaN(costToJoin) ? '0' : costToJoin} MATIC
+						</span>
 					</a>{' '}
 					to join.
 				</Text>
@@ -350,19 +465,21 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						size="lg"
 						color="dark"
 						value={
-							reqCurrentlyEditing.type === MembershipReqType.Anyone
+							reqCurrentlyEditing.type === MembershipReqType.None
 								? 'anyone'
 								: reqCurrentlyEditing.type ===
 								  MembershipReqType.ApprovedApplicants
 								? 'approved-applicants'
 								: reqCurrentlyEditing.type === MembershipReqType.TokenHolders
 								? 'token-holders'
-								: 'nft-holders'
+								: reqCurrentlyEditing.type === MembershipReqType.NftHolders
+								? 'nft-holders'
+								: 'other-club-member'
 						}
 						onChange={value => {
 							switch (value) {
 								case 'anyone':
-									reqCurrentlyEditing.type = MembershipReqType.Anyone
+									reqCurrentlyEditing.type = MembershipReqType.None
 									updateMembershipRequirement(reqCurrentlyEditing)
 									break
 								case 'approved-applicants':
@@ -378,14 +495,34 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 									reqCurrentlyEditing.type = MembershipReqType.NftHolders
 									updateMembershipRequirement(reqCurrentlyEditing)
 									break
+								case 'other-club-member':
+									reqCurrentlyEditing.type = MembershipReqType.OtherClubMember
+									updateMembershipRequirement(reqCurrentlyEditing)
+									break
 							}
 						}}
 						required
 					>
-						<Radio value="anyone" label="anyone" />
-						<Radio value="approved-applicants" label="approved applicants" />
-						<Radio value="token-holders" label="token holders" />
-						<Radio value="nft-holders" label="NFT holders" />
+						{isEditedReqFirstReq && <Radio value="anyone" label="anyone" />}
+						<Radio
+							value="approved-applicants"
+							label={
+								isEditedReqFirstReq
+									? 'approved applicants'
+									: 'submit an approved application'
+							}
+						/>
+						<Radio
+							value="token-holders"
+							label={isEditedReqFirstReq ? 'token holders' : 'hold a token'}
+						/>
+						<Radio
+							value="nft-holders"
+							label={isEditedReqFirstReq ? 'NFT holders' : 'hold an NFT'}
+						/>
+						{!isEditedReqFirstReq && (
+							<Radio value="other-club-member" label="join another club" />
+						)}
 					</RadioGroup>
 					<div
 						className={
@@ -443,16 +580,43 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 								: classes.invisible
 						}
 					>
-						<Text className={classes.modalHeaderText}>Chain</Text>
+						{/* <Text className={classes.modalHeaderText}>Chain</Text>
 						<Select
-							data={[{ value: 'eth', label: 'Ethereum' }]}
+							data={[
+								{
+									value: 'eth',
+									label: 'Ethereum'
+								},
+								{ value: 'matic', label: 'MATIC' }
+							]}
 							size={'md'}
-							radius={'md'}
-							value={'eth'}
+							radius={'lg'}
+							onChange={value => {
+								reqCurrentlyEditing.tokenChain = value ?? 'eth'
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+							value={reqCurrentlyEditing.tokenChain}
+						/> */}
+						<Text className={classes.modalHeaderText}>Token Name</Text>
+						<TextInput
+							radius="lg"
+							size="md"
+							value={reqCurrentlyEditing.tokenName}
+							onChange={event => {
+								reqCurrentlyEditing.tokenName = event.target.value
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
 						/>
-
 						<Text className={classes.modalHeaderText}>Contract Address</Text>
-						<Text className={classes.modalHeaderText}>Token Standard</Text>
+						<TextInput
+							radius="lg"
+							size="md"
+							value={reqCurrentlyEditing.tokenContractAddress}
+							onChange={event => {
+								reqCurrentlyEditing.tokenContractAddress = event.target.value
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+						/>
 					</div>
 					<div
 						className={
@@ -460,12 +624,165 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 								? classes.visible
 								: classes.invisible
 						}
-					></div>
+					>
+						{/* <Text className={classes.modalHeaderText}>Chain</Text>
+						<Select
+							data={[
+								{
+									value: 'eth',
+									label: 'Ethereum'
+								},
+								{ value: 'matic', label: 'MATIC' }
+							]}
+							size={'md'}
+							radius={'lg'}
+							onChange={value => {
+								reqCurrentlyEditing.tokenChain = value ?? 'eth'
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+							value={reqCurrentlyEditing.tokenChain}
+						/> */}
+						<Text className={classes.modalHeaderText}>Token Name</Text>
+						<TextInput
+							radius="lg"
+							size="md"
+							value={reqCurrentlyEditing.tokenName}
+							onChange={event => {
+								reqCurrentlyEditing.tokenName = event.target.value
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+						/>
+						<Text className={classes.modalHeaderText}>Token Address</Text>
+						<TextInput
+							radius="lg"
+							size="md"
+							value={reqCurrentlyEditing.tokenContractAddress}
+							onChange={event => {
+								reqCurrentlyEditing.tokenContractAddress = event.target.value
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+						/>
+						<Text className={classes.modalHeaderText}>Minimum Quantity</Text>
+						<TextInput
+							radius="lg"
+							size="md"
+							type="number"
+							value={reqCurrentlyEditing.tokenMinQuantity}
+							onChange={event => {
+								reqCurrentlyEditing.tokenMinQuantity = parseInt(
+									event.target.value
+								)
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+						/>
+					</div>
+					<div
+						className={
+							reqCurrentlyEditing.type == MembershipReqType.OtherClubMember
+								? classes.visible
+								: classes.invisible
+						}
+					>
+						<Text className={classes.modalHeaderText}>Club Name</Text>
+
+						<TextInput
+							radius="lg"
+							size="md"
+							value={reqCurrentlyEditing.clubName}
+							onChange={event => {
+								// TODO: Look up club and retrive club slug!
+								reqCurrentlyEditing.clubName = event.target.value
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+						/>
+					</div>
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
-							updateMembershipRequirement(reqCurrentlyEditing)
 							setMembershipReqModalOpened(false)
+						}}
+						className={classes.buttonModalSave}
+					>
+						Save
+					</Button>
+				</Modal>
+				<Modal
+					withCloseButton={false}
+					centered
+					closeOnClickOutside={false}
+					closeOnEscape={false}
+					radius={16}
+					padding={'sm'}
+					opened={isSecondReqTypeModalOpened}
+					onClose={() => setSecondReqTypeModalOpened(false)}
+				>
+					<RadioGroup
+						classNames={{ label: classes.radio }}
+						orientation="vertical"
+						spacing={12}
+						size="lg"
+						color="dark"
+						value={
+							reqCurrentlyEditing.andor === MembershipReqAndor.And
+								? 'and'
+								: 'or'
+						}
+						onChange={value => {
+							switch (value) {
+								case 'and':
+									reqCurrentlyEditing.andor = MembershipReqAndor.And
+									updateMembershipRequirement(reqCurrentlyEditing)
+									break
+								case 'or':
+									reqCurrentlyEditing.andor = MembershipReqAndor.Or
+									updateMembershipRequirement(reqCurrentlyEditing)
+									break
+							}
+						}}
+						required
+					>
+						<Radio value="and" label="In addition" />
+						<Radio value="or" label="Alternatively" />
+					</RadioGroup>
+					<Space h={'md'} />
+					<Button
+						onClick={() => {
+							setSecondReqTypeModalOpened(false)
+						}}
+						className={classes.buttonModalSave}
+					>
+						Save
+					</Button>
+				</Modal>
+				<Modal
+					withCloseButton={false}
+					centered
+					closeOnClickOutside={false}
+					closeOnEscape={false}
+					radius={16}
+					padding={'sm'}
+					opened={isMembershipCostModalOpened}
+					onClose={() => setMembershipCostModalOpened(false)}
+				>
+					<Text className={classes.modalHeaderText}>Enter Quantity</Text>
+					<TextInput
+						radius="lg"
+						size="md"
+						type="number"
+						rightSectionWidth={80}
+						rightSection={<Text>MATIC</Text>}
+						value={costToJoin}
+						onChange={event => {
+							setCostToJoin(parseInt(event.target.value))
+						}}
+					/>
+					<Space h={'md'} />
+					<Button
+						onClick={() => {
+							if (isNaN(costToJoin)) {
+								setCostToJoin(0)
+							}
+							setMembershipCostModalOpened(false)
 						}}
 						className={classes.buttonModalSave}
 					>
