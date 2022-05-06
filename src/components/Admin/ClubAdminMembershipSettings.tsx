@@ -12,10 +12,12 @@ import {
 	Textarea,
 	Chips,
 	Chip,
-	Select
+	Select,
+	Center
 } from '@mantine/core'
+import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import React, { useState } from 'react'
-import { CircleMinus, Plus, Lock } from 'tabler-icons-react'
+import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
 	buttonSaveChanges: {
@@ -464,11 +466,27 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 				<Text className={classes.membershipText}>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={classes.membershipSelector}>now</span>
+						<span className={classes.membershipSelector}>
+							{membershipStartDate === undefined
+								? 'now'
+								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
+										membershipStartDate.getMinutes() > 9
+											? membershipStartDate.getMinutes()
+											: `0${membershipStartDate.getMinutes()}`
+								  }`}
+						</span>
 					</a>{' '}
 					until{' '}
-					<a onClick={openMembershipStartTimingModal}>
-						<span className={classes.membershipSelector}>forever</span>
+					<a onClick={openMembershipTimingEndModal}>
+						<span className={classes.membershipSelector}>
+							{membershipEndDate === undefined
+								? 'forever'
+								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
+										membershipEndDate.getMinutes() > 9
+											? membershipEndDate.getMinutes()
+											: `0${membershipEndDate.getMinutes()}`
+								  }`}
+						</span>
 					</a>
 					.
 				</Text>
@@ -894,46 +912,134 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						spacing={12}
 						size="lg"
 						color="dark"
-						value={
-							isNaN(membershipQuantity) || membershipQuantity === 0
-								? 'unlimited'
-								: 'finite'
-						}
+						value={membershipStartDate === undefined ? 'now' : 'later'}
 						onChange={value => {
 							switch (value) {
-								case 'unlimited':
-									setMembershipQuantity(0)
+								case 'now':
+									setMembershipStartDate(undefined)
 									break
-								case 'finite':
-									setMembershipQuantity(100)
+								case 'later':
+									setMembershipStartDate(new Date())
 									break
 							}
 						}}
 						required
 					>
-						<Radio value="unlimited" label="unlimited" />
-						<Radio value="finite" label="finite" />
+						<Radio value="now" label="now" />
+						<Radio value="later" label="at at later date" />
 					</RadioGroup>
-					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
-						<>
-							<Text className={classes.modalHeaderText}>
-								Enter total memberships
-							</Text>
+					<Space h={'sm'} />
 
-							<TextInput
-								radius="lg"
-								size="md"
-								value={isNaN(membershipQuantity) ? '' : membershipQuantity}
-								onChange={event => {
-									setMembershipQuantity(parseInt(event.target.value))
-								}}
-							/>
+					{membershipStartDate !== undefined && (
+						<>
+							<Center>
+								<div>
+									<Calendar
+										value={membershipStartDate}
+										onChange={date => {
+											const hr = membershipStartDate.getHours()
+											const min = membershipStartDate.getMinutes()
+											date.setHours(hr)
+											date.setMinutes(min)
+											setMembershipStartDate(date)
+										}}
+									/>
+									<Space h={16} />
+									<TimeInput
+										format="24"
+										size="md"
+										icon={<Clock size={16} />}
+										radius={'lg'}
+										value={membershipStartDate}
+										onChange={time => {
+											const day = membershipStartDate.getDate()
+											time.setDate(day)
+											setMembershipStartDate(time)
+										}}
+									/>
+								</div>
+							</Center>
 						</>
 					)}
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
-							setMembershipQuantityModalOpened(false)
+							setMembershipTimingStartModalOpened(false)
+						}}
+						className={classes.buttonModalSave}
+					>
+						Done
+					</Button>
+				</Modal>
+				<Modal
+					withCloseButton={false}
+					centered
+					closeOnClickOutside={false}
+					closeOnEscape={false}
+					radius={16}
+					padding={'sm'}
+					opened={isMembershipTimingEndModalOpened}
+					onClose={() => setMembershipTimingEndModalOpened(false)}
+				>
+					<RadioGroup
+						classNames={{ label: classes.radio }}
+						orientation="vertical"
+						spacing={12}
+						size="lg"
+						color="dark"
+						value={membershipEndDate === undefined ? 'forever' : 'end'}
+						onChange={value => {
+							switch (value) {
+								case 'forever':
+									setMembershipEndDate(undefined)
+									break
+								case 'end':
+									setMembershipEndDate(new Date())
+									break
+							}
+						}}
+						required
+					>
+						<Radio value="forever" label="forever" />
+						<Radio value="end" label="on a date" />
+					</RadioGroup>
+					<Space h={'sm'} />
+
+					{membershipEndDate !== undefined && (
+						<>
+							<Center>
+								<div>
+									<Calendar
+										value={membershipEndDate}
+										onChange={date => {
+											const hr = membershipEndDate.getHours()
+											const min = membershipEndDate.getMinutes()
+											date.setHours(hr)
+											date.setMinutes(min)
+											setMembershipEndDate(date)
+										}}
+									/>
+									<Space h={16} />
+									<TimeInput
+										format="24"
+										size="md"
+										icon={<Clock size={16} />}
+										radius={'lg'}
+										value={membershipEndDate}
+										onChange={time => {
+											const day = membershipEndDate.getDate()
+											time.setDate(day)
+											setMembershipEndDate(time)
+										}}
+									/>
+								</div>
+							</Center>
+						</>
+					)}
+					<Space h={'md'} />
+					<Button
+						onClick={() => {
+							setMembershipTimingEndModalOpened(false)
 						}}
 						className={classes.buttonModalSave}
 					>
