@@ -16,6 +16,7 @@ import {
 	Center
 } from '@mantine/core'
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
+import { showNotification } from '@mantine/notifications'
 import React, { useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
 
@@ -744,6 +745,42 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
+							switch (reqCurrentlyEditing.type) {
+								case MembershipReqType.ApprovedApplicants:
+									if (reqCurrentlyEditing.applicationLink.length === 0) {
+										showNotification({
+											title: 'Oops!',
+											message: 'Please enter an application link.'
+										})
+										return
+									}
+									break
+								case MembershipReqType.TokenHolders:
+									if (reqCurrentlyEditing.tokenContractAddress.length < 10) {
+										showNotification({
+											title: 'Oops!',
+											message: 'Please enter a valid contract address.'
+										})
+										return
+									} else if (reqCurrentlyEditing.tokenMinQuantity === 0) {
+										showNotification({
+											title: 'Oops!',
+											message: 'Please enter a minimum token quantity.'
+										})
+										return
+									}
+									break
+								case MembershipReqType.NftHolders:
+									if (reqCurrentlyEditing.tokenContractAddress.length < 10) {
+										showNotification({
+											title: 'Oops!',
+											message: 'Please enter a valid contract address.'
+										})
+										return
+									}
+									break
+							}
+
 							setMembershipReqModalOpened(false)
 						}}
 						className={classes.buttonModalSave}
@@ -964,6 +1001,17 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
+							const now = new Date()
+							if (
+								membershipStartDate !== undefined &&
+								membershipStartDate.getMilliseconds() < now.getMilliseconds()
+							) {
+								showNotification({
+									title: 'Oops!',
+									message: 'Please choose a start date or time later than now.'
+								})
+								return
+							}
 							setMembershipTimingStartModalOpened(false)
 						}}
 						className={classes.buttonModalSave}
@@ -1039,6 +1087,18 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
+							const now = new Date()
+
+							if (
+								membershipEndDate !== undefined &&
+								membershipEndDate.getMilliseconds() < now.getMilliseconds()
+							) {
+								showNotification({
+									title: 'Oops!',
+									message: 'Please choose an end date or time later than now.'
+								})
+								return
+							}
 							setMembershipTimingEndModalOpened(false)
 						}}
 						className={classes.buttonModalSave}
