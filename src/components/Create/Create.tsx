@@ -8,7 +8,9 @@ import {
 	Image,
 	Loader,
 	Button,
-	Textarea
+	Textarea,
+	TextInput,
+	Space
 } from '@mantine/core'
 import { base64StringToBlob } from 'blob-util'
 import { useRouter } from 'next/router'
@@ -41,6 +43,18 @@ const useStyles = createStyles(theme => ({
 	headerClubName: {
 		fontWeight: '600',
 		fontSize: 24
+	},
+	namespaceTextInputContainer: {
+		position: 'relative'
+	},
+	namespaceTextInput: {
+		paddingLeft: 192
+	},
+	namespaceTextInputUrlPrefix: {
+		position: 'absolute',
+		top: 8,
+		left: 24,
+		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	clubDescriptionPrompt: { fontSize: 18, marginBottom: 16, fontWeight: '600' },
 	clubLogoPrompt: {
@@ -97,10 +111,26 @@ export const CreateComponent: React.FC = () => {
 	const { classes } = useStyles()
 
 	const clubName = router.query.clubname
+	const [defaultNamespace, setDefaultNamespace] = useState('')
+	const [clubNamespace, setClubNamespace] = useState('')
+
 	const [clubDescription, setClubDescription] = useState('')
 	const descriptionRef = useRef<HTMLTextAreaElement>()
 
 	const [isLoading, setIsLoading] = useState(true)
+
+	useEffect(() => {
+		if (
+			clubNamespace.length === 0 &&
+			defaultNamespace.length === 0 &&
+			clubName !== undefined
+		) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const name = clubName!.toString().replaceAll(' ', '-').toLowerCase()
+			setDefaultNamespace(name)
+			setClubNamespace(name)
+		}
+	}, [clubName, clubNamespace.length, defaultNamespace.length])
 
 	// Club logo
 	const [smallClubLogo, setSmallClubLogo] = useState('')
@@ -173,6 +203,30 @@ export const CreateComponent: React.FC = () => {
 
 			<Container>
 				<Text className={classes.clubDescriptionPrompt}>
+					{`Set your club's URL.`}
+				</Text>
+				<div className={classes.namespaceTextInputContainer}>
+					<TextInput
+						classNames={{ input: classes.namespaceTextInput }}
+						radius="lg"
+						size="md"
+						value={clubNamespace ?? ''}
+						onChange={event => {
+							setClubNamespace(
+								event.target.value.replaceAll(' ', '').toLowerCase()
+							)
+						}}
+					/>
+					<Text
+						className={classes.namespaceTextInputUrlPrefix}
+					>{`https://clubs.link/club/`}</Text>
+				</div>
+				<Text size="sm" style={{ paddingLeft: 24, paddingTop: 4 }}>
+					{'Lowercase letters, numbers and dashes are allowed.'}
+				</Text>
+
+				<Space h={'md'} />
+				<Text className={classes.clubDescriptionPrompt}>
 					In a sentence, describe what your members do together.
 				</Text>
 				<Textarea
@@ -220,6 +274,9 @@ export const CreateComponent: React.FC = () => {
 			</Container>
 			<Center>
 				<Button
+					onClick={() => {
+						router.push({ pathname: `/clubs/${clubNamespace}/admin` })
+					}}
 					disabled={clubDescription.length === 0 || smallClubLogo.length === 0}
 					className={classes.buttonCreate}
 				>

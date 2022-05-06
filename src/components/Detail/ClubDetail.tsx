@@ -79,7 +79,9 @@ const useStyles = createStyles(theme => ({
 		alignItems: 'center'
 	},
 	memberItem: {
-		border: '1px solid rgba(0, 0, 0, 0.5)',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		fontWeight: '600',
 		borderRadius: 16,
 		padding: 16
 	}
