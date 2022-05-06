@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import log, { LogLevel } from '@kengoldfarb/log'
 import { MantineProvider } from '@mantine/core'
+import { NotificationsProvider } from '@mantine/notifications'
 import { WalletProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React from 'react'
@@ -55,7 +56,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 						primaryColor: 'brand'
 					}}
 				>
-					<Component {...pageProps} />
+					<NotificationsProvider>
+						<Component {...pageProps} />
+					</NotificationsProvider>
 				</MantineProvider>
 			</WalletProvider>
 		</ApolloProvider>

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Header,
@@ -13,7 +12,7 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -22,8 +21,6 @@ import {
 	BrandTwitter,
 	MessageCircle
 } from 'tabler-icons-react'
-import { GetMeemIdQuery } from '../../../generated/graphql'
-import { GET_MEEM_ID } from '../../graphql/meemid'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
