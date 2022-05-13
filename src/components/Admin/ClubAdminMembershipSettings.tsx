@@ -145,7 +145,7 @@ interface MembershipRequirement {
 	tokenMinQuantity: number
 	// Club membership
 	clubSlug: string
-	clubName: string
+	clubName: string // Resolved from contract
 }
 
 export const ClubAdminMembershipSettingsComponent: React.FC = () => {
