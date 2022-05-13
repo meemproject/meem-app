@@ -100,6 +100,10 @@ export const ClubAdminComponent: React.FC = () => {
 		router.push({ pathname: '/club/clubname' })
 	}
 
+	const navigateToClubProfile = () => {
+		router.push({ pathname: `/club/clubname/profile` })
+	}
+
 	const switchToMembership = () => {
 		setCurrentTab(Tab.Membership)
 	}
@@ -130,6 +134,7 @@ export const ClubAdminComponent: React.FC = () => {
 					<Text className={classes.headerClubName}>Worst Club Ever</Text>
 				</div>
 				<Button
+					onClick={navigateToClubProfile}
 					leftIcon={<Settings size={14} />}
 					className={classes.buttonEditProfile}
 				>

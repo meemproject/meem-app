@@ -11,7 +11,12 @@ import {
 } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { CircleCheck } from 'tabler-icons-react'
+import {
+	BrandDiscord,
+	BrandTwitter,
+	CircleCheck,
+	Settings
+} from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -22,7 +27,8 @@ const useStyles = createStyles(theme => ({
 		flexDirection: 'row',
 		paddingTop: 32,
 		paddingBottom: 32,
-		paddingLeft: 32
+		paddingLeft: 32,
+		position: 'relative'
 	},
 	headerClubDescription: {
 		fontSize: 16,
@@ -34,6 +40,32 @@ const useStyles = createStyles(theme => ({
 		fontWeight: '600',
 		fontSize: 24,
 		marginTop: -8
+	},
+	headerLinks: {
+		position: 'absolute',
+		top: '24px',
+		right: '24px',
+		display: 'flex',
+		fontWeight: '600'
+	},
+	headerLink: {
+		display: 'flex',
+		cursor: 'pointer',
+		color: 'black',
+		textDecoration: 'none'
+	},
+	headerButtons: {
+		marginTop: 24,
+		display: 'flex'
+	},
+	outlineButton: {
+		borderRadius: 24,
+		color: 'black',
+		borderColor: 'black',
+		backgroundColor: 'white',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[0]
+		}
 	},
 	clubMemberReqsTitleText: {
 		fontSize: 18,
@@ -49,17 +81,7 @@ const useStyles = createStyles(theme => ({
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
 	buttonJoinClub: {
-		marginTop: 24,
 		backgroundColor: 'black',
 		'&:hover': {
 			backgroundColor: theme.colors.gray[8]
@@ -110,6 +132,10 @@ export const ClubDetailComponent: React.FC = () => {
 
 	const [isLoading, setIsLoading] = useState(true)
 
+	const navigateToSettings = () => {
+		router.push({ pathname: `/club/clubname/admin` })
+	}
+
 	return (
 		<>
 			<div className={classes.header}>
@@ -126,7 +152,33 @@ export const ClubDetailComponent: React.FC = () => {
 					<Text className={classes.headerClubDescription}>
 						{clubDescription}
 					</Text>
-					<Button className={classes.buttonJoinClub}>Join Club</Button>
+					<div className={classes.headerButtons}>
+						<Button className={classes.buttonJoinClub}>Join Club</Button>
+						<Button className={classes.outlineButton}>Leave Club</Button>
+						<Space w={16} />
+						<Button
+							onClick={navigateToSettings}
+							className={classes.outlineButton}
+							leftIcon={<Settings size={14} />}
+						>
+							Settings
+						</Button>
+					</div>
+				</div>
+				<div className={classes.headerLinks}>
+					<a href="twitter.com" className={classes.headerLink}>
+						{' '}
+						<BrandTwitter />
+						<Space w={8} />
+						<Text>Twitter</Text>
+					</a>
+					<Space w={'sm'} />
+					<a href="discord.com" className={classes.headerLink}>
+						{' '}
+						<BrandDiscord />
+						<Space w={8} />
+						<Text>Discord</Text>
+					</a>
 				</div>
 			</div>
 
