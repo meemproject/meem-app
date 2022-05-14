@@ -149,7 +149,6 @@ interface MembershipRequirement {
 }
 
 export const ClubAdminMembershipSettingsComponent: React.FC = () => {
-	// General properties / tab management
 	const { classes } = useStyles()
 
 	// Membership

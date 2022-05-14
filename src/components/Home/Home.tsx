@@ -232,7 +232,7 @@ export function HomeComponent() {
 				/>
 				<Text className={classes.joinMeemLink}>
 					<a href="https://meem.wtf/signup/walletconnect">
-						Join ClubClub to create
+						Join Club Club to create
 					</a>
 				</Text>
 			</Container>
