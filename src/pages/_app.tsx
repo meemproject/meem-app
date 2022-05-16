@@ -36,6 +36,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 				contractAddressMeemId={process.env.NEXT_PUBLIC_MEEM_ID_CONTRACT_ADDRESS}
 			>
 				<MantineProvider
+					withGlobalStyles
+					withNormalizeCSS
 					theme={{
 						fontFamily: 'Inter',
 						spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
