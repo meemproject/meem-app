@@ -19,15 +19,20 @@ const useStyles = createStyles(theme => ({
 		marginBottom: 60,
 		display: 'flex',
 		alignItems: 'center',
-		flexDirection: 'row',
 		justifyContent: 'space-between',
+		flexDirection: 'row',
 		paddingTop: 32,
 		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
 		paddingLeft: 32,
-		paddingRight: 32
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: 32,
+			paddingBottom: 16,
+			paddingLeft: 8,
+			paddingTop: 16
+		}
 	},
 	headerLeftItems: {
 		display: 'flex',
@@ -35,11 +40,19 @@ const useStyles = createStyles(theme => ({
 	},
 	headerArrow: {
 		marginRight: 32,
-		cursor: 'pointer'
+		cursor: 'pointer',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginRight: 16,
+			marginTop: 6,
+			marginLeft: 16
+		}
 	},
 	headerClubName: {
 		fontWeight: '600',
-		fontSize: 24
+		fontSize: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 20
+		}
 	},
 	buttonCreate: {
 		backgroundColor: 'black',

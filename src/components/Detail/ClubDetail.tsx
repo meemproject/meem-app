@@ -28,11 +28,19 @@ const useStyles = createStyles(theme => ({
 		paddingTop: 32,
 		paddingBottom: 32,
 		paddingLeft: 32,
-		position: 'relative'
+		position: 'relative',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: 32,
+			paddingLeft: 8,
+			paddingRight: 8,
+			paddingTop: 24,
+			paddingBottom: 24
+		}
 	},
 	headerClubDescription: {
 		fontSize: 16,
 		marginTop: 8,
+		marginRight: 16,
 		fontWeight: '500',
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
@@ -44,9 +52,26 @@ const useStyles = createStyles(theme => ({
 	headerLinks: {
 		position: 'absolute',
 		top: '24px',
-		right: '24px',
+		right: '64px',
 		display: 'flex',
-		fontWeight: '600'
+		fontWeight: '600',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		},
+		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
+			display: 'flex'
+		}
+	},
+	mobileHeaderLinks: {
+		marginTop: 16,
+		display: 'flex',
+		fontWeight: '600',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'flex'
+		},
+		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
 	},
 	headerLink: {
 		display: 'flex',
@@ -65,6 +90,30 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: 'white',
 		'&:hover': {
 			backgroundColor: theme.colors.gray[0]
+		}
+	},
+	outlineHeaderButton: {
+		borderRadius: 24,
+		color: 'black',
+		borderColor: 'black',
+		backgroundColor: 'white',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[0]
+		},
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 0,
+			marginLeft: 0,
+			marginRight: 0,
+			backgroundColor: 'transparent',
+			borderColor: 'transparent'
+		}
+	},
+	clubSettingsIcon: {
+		width: 16,
+		height: 16,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: 24,
+			height: 24
 		}
 	},
 	clubMemberReqsTitleText: {
@@ -89,7 +138,18 @@ const useStyles = createStyles(theme => ({
 		borderRadius: 24
 	},
 	clubLogoImage: {
-		imageRendering: 'pixelated'
+		imageRendering: 'pixelated',
+		width: 120,
+		height: 120,
+		marginRight: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: 60,
+			height: 60,
+			minHeight: 60,
+			minWidth: 60,
+			marginLeft: 20,
+			marginRight: 20
+		}
 	},
 	requirementsContainer: {
 		border: '1px solid rgba(0, 0, 0, 0.5)',
@@ -139,30 +199,37 @@ export const ClubDetailComponent: React.FC = () => {
 	return (
 		<>
 			<div className={classes.header}>
-				<Image
-					className={classes.clubLogoImage}
-					src="/exampleclub.png"
-					width={100}
-					height={100}
-					fit={'contain'}
-				/>
-				<Space w={'lg'} />
+				<Image className={classes.clubLogoImage} src="/exampleclub.png" />
 				<div>
 					<Text className={classes.headerClubName}>{clubName}</Text>
 					<Text className={classes.headerClubDescription}>
 						{clubDescription}
 					</Text>
 					<div className={classes.headerButtons}>
-						<Button className={classes.buttonJoinClub}>Join Club</Button>
-						<Button className={classes.outlineButton}>Leave Club</Button>
-						<Space w={16} />
+						<Button className={classes.buttonJoinClub}>Join</Button>
+						<Button className={classes.outlineButton}>Leave</Button>
 						<Button
 							onClick={navigateToSettings}
-							className={classes.outlineButton}
-							leftIcon={<Settings size={14} />}
+							className={classes.outlineHeaderButton}
+							leftIcon={<Settings className={classes.clubSettingsIcon} />}
 						>
 							Settings
 						</Button>
+					</div>
+					<div className={classes.mobileHeaderLinks}>
+						<a href="twitter.com" className={classes.headerLink}>
+							{' '}
+							<BrandTwitter />
+							<Space w={8} />
+							<Text>Twitter</Text>
+						</a>
+						<Space w={'sm'} />
+						<a href="discord.com" className={classes.headerLink}>
+							{' '}
+							<BrandDiscord />
+							<Space w={8} />
+							<Text>Discord</Text>
+						</a>
 					</div>
 				</div>
 				<div className={classes.headerLinks}>
@@ -205,12 +272,13 @@ export const ClubDetailComponent: React.FC = () => {
 				{clubMembers.length > 0 && (
 					<Grid>
 						{clubMembers.map(member => (
-							<Grid.Col span={4} key={member}>
+							<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
 								<Text className={classes.memberItem}>{member}</Text>
 							</Grid.Col>
 						))}
 					</Grid>
 				)}
+				<Space h={'xl'} />
 			</Container>
 		</>
 	)

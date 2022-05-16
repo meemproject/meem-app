@@ -32,7 +32,7 @@ const useStyles = createStyles(theme => ({
 	},
 
 	headerRightItems: {
-		marginRight: 0,
+		marginRight: -16,
 		marginBottom: 4,
 		display: 'flex',
 		flexDirection: 'row',
@@ -48,6 +48,7 @@ const useStyles = createStyles(theme => ({
 
 	inner: {
 		height: 56,
+		marginTop: 8,
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center'
@@ -91,9 +92,11 @@ const useStyles = createStyles(theme => ({
 	},
 
 	ellipse: {
-		[theme.fn.smallerThan('xs')]: {
-			marginLeft: 0
+		[theme.fn.smallerThan('md')]: {
+			marginLeft: 0,
+			marginRight: 0
 		},
+		marginRight: 24,
 		marginLeft: 24
 	},
 
