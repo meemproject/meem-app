@@ -1,11 +1,4 @@
-import {
-	createStyles,
-	Container,
-	Text,
-	Image,
-	Button,
-	Space
-} from '@mantine/core'
+import { createStyles, Container, Text, Image, Button } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Settings, ArrowLeft } from 'tabler-icons-react'
@@ -27,11 +20,20 @@ const useStyles = createStyles(theme => ({
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
-		paddingLeft: 32
+		paddingLeft: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: 32,
+			paddingBottom: 16,
+			paddingLeft: 8,
+			paddingTop: 16
+		}
 	},
 	headerArrow: {
 		marginRight: 24,
-		cursor: 'pointer'
+		cursor: 'pointer',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
 	},
 	headerTitle: {
 		display: 'flex',
@@ -42,10 +44,31 @@ const useStyles = createStyles(theme => ({
 	headerClubName: {
 		fontWeight: '600',
 		fontSize: 24,
-		marginLeft: 32
+		marginLeft: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginLeft: 16
+		}
+	},
+	clubSettingsIcon: {
+		width: 16,
+		height: 16,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: 24,
+			height: 24
+		}
 	},
 	clubLogoImage: {
-		imageRendering: 'pixelated'
+		imageRendering: 'pixelated',
+		width: 80,
+		height: 80,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: 40,
+			height: 40,
+			minHeight: 40,
+			minWidth: 40,
+			marginLeft: 16
+		}
 	},
 	buttonEditProfile: {
 		borderRadius: 24,
@@ -55,25 +78,43 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: 'white',
 		'&:hover': {
 			backgroundColor: theme.colors.gray[0]
+		},
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 0,
+			marginLeft: 16,
+			marginRight: 0,
+			borderColor: 'transparent'
 		}
 	},
 	tabs: {
 		display: 'flex',
 		flexDirection: 'row'
 	},
+
 	activeTab: {
 		fontSize: 18,
 		marginBottom: 16,
+		marginRight: 24,
 		fontWeight: '600',
 		color: 'black',
-		textDecoration: 'underline'
+		textDecoration: 'underline',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginRight: 16
+		}
 	},
 	inactiveTab: {
 		fontSize: 18,
 		marginBottom: 16,
+		marginRight: 24,
+
 		fontWeight: '600',
 		color: 'rgba(45, 28, 28, 0.3)',
-		cursor: 'pointer'
+		cursor: 'pointer',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginRight: 16
+		}
 	},
 	visibleTab: {
 		display: 'block'
@@ -100,6 +141,10 @@ export const ClubAdminComponent: React.FC = () => {
 		router.push({ pathname: '/club/clubname' })
 	}
 
+	const navigateToClubProfile = () => {
+		router.push({ pathname: `/club/clubname/profile` })
+	}
+
 	const switchToMembership = () => {
 		setCurrentTab(Tab.Membership)
 	}
@@ -119,18 +164,15 @@ export const ClubAdminComponent: React.FC = () => {
 					<a onClick={navigateToClubDetail}>
 						<ArrowLeft className={classes.headerArrow} size={32} />
 					</a>
-					<Image
-						className={classes.clubLogoImage}
-						src="/exampleclub.png"
-						width={80}
-						height={80}
-						fit={'contain'}
-					/>
+					<Image className={classes.clubLogoImage} src="/exampleclub.png" />
 					{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-					<Text className={classes.headerClubName}>Worst Club Ever</Text>
+					<Text className={classes.headerClubName}>
+						Worst Club Ever That You Can Imagine
+					</Text>
 				</div>
 				<Button
-					leftIcon={<Settings size={14} />}
+					onClick={navigateToClubProfile}
+					leftIcon={<Settings className={classes.clubSettingsIcon} />}
 					className={classes.buttonEditProfile}
 				>
 					Edit profile
@@ -150,7 +192,6 @@ export const ClubAdminComponent: React.FC = () => {
 							Membership Settings
 						</Text>
 					</a>
-					<Space w="lg" />
 					<a onClick={switchToClubAdmins}>
 						<Text
 							className={
@@ -162,7 +203,6 @@ export const ClubAdminComponent: React.FC = () => {
 							Club Admins
 						</Text>
 					</a>
-					<Space w="lg" />
 					<a onClick={switchToIntegrations}>
 						<Text
 							className={

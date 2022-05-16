@@ -25,17 +25,25 @@ const useStyles = createStyles(theme => ({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
+		paddingTop: 32,
 		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
-		paddingTop: 24,
-		paddingBottom: 24,
+		paddingBottom: 32,
 		paddingLeft: 32,
-		paddingRight: 32
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: 32,
+			paddingBottom: 16,
+			paddingLeft: 8,
+			paddingTop: 16
+		}
 	},
 	headerArrow: {
 		marginRight: 24,
-		cursor: 'pointer'
+		cursor: 'pointer',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
 	},
 	headerTitle: {
 		display: 'flex',
@@ -51,23 +59,63 @@ const useStyles = createStyles(theme => ({
 	},
 	headerClubName: {
 		fontWeight: '600',
-		fontSize: 24
+		fontSize: 24,
+		marginLeft: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginLeft: 16
+		}
 	},
-	clubNamePrompt: { fontSize: 18, marginBottom: 16, fontWeight: '600' },
+	clubLogoImage: {
+		imageRendering: 'pixelated',
+		width: 80,
+		height: 80,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: 40,
+			height: 40,
+			minHeight: 40,
+			minWidth: 40,
+			marginLeft: 16
+		}
+	},
+	clubNamePrompt: {
+		fontSize: 18,
+		marginBottom: 16,
+		fontWeight: '600',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginBottom: 8
+		}
+	},
 
-	clubDescriptionPrompt: { fontSize: 18, marginBottom: 16, fontWeight: '600' },
+	clubDescriptionPrompt: {
+		fontSize: 18,
+		marginBottom: 16,
+		fontWeight: '600',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginBottom: 8
+		}
+	},
 	clubLogoPrompt: {
 		marginTop: 32,
 		fontSize: 18,
 		marginBottom: 8,
-		fontWeight: '600'
+		fontWeight: '600',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginBottom: 8
+		}
 	},
 	clubLogoInfo: {
 		fontWeight: '500',
 		fontSize: 14,
 		maxWidth: 650,
 		color: 'rgba(45, 28, 28, 0.6)',
-		marginBottom: 16
+		marginBottom: 16,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 13
+		}
 	},
 	buttonUpload: {
 		borderRadius: 24,
@@ -78,6 +126,16 @@ const useStyles = createStyles(theme => ({
 			backgroundColor: theme.colors.gray[0]
 		}
 	},
+	buttonSaveChangesInHeader: {
+		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
+	},
 	buttonSaveChanges: {
 		backgroundColor: 'black',
 		'&:hover': {
@@ -85,9 +143,7 @@ const useStyles = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
-	clubLogoImage: {
-		imageRendering: 'pixelated'
-	},
+
 	clubLogoImageContainer: {
 		marginTop: 24,
 		width: 108,
@@ -176,17 +232,12 @@ export const ClubEditComponent: React.FC = () => {
 					<a onClick={navigateToClubDetail}>
 						<ArrowLeft className={classes.headerArrow} size={32} />
 					</a>
-					<Image
-						className={classes.clubLogoImage}
-						src="/exampleclub.png"
-						width={80}
-						height={80}
-						fit={'contain'}
-					/>
-					<Space w={'md'} />
+					<Image className={classes.clubLogoImage} src="/exampleclub.png" />
 					<Text className={classes.headerClubName}>Harry Potter Fan Club</Text>
 				</div>
-				<Button className={classes.buttonSaveChanges}>Save Changes</Button>
+				<Button className={classes.buttonSaveChangesInHeader}>
+					Save Changes
+				</Button>
 			</div>
 
 			<Container>
@@ -246,7 +297,7 @@ export const ClubEditComponent: React.FC = () => {
 						</a>
 					</div>
 				)}
-				<Space h={148} />
+				<Space h={smallClubLogo.length > 0 ? 148 : 32} />
 				<Button className={classes.buttonSaveChanges}>Save Changes</Button>
 				<Space h={64} />
 			</Container>

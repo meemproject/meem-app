@@ -19,7 +19,8 @@ import {
 	Dots,
 	BrandDiscord,
 	BrandTwitter,
-	MessageCircle
+	MessageCircle,
+	Mail
 } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
@@ -31,7 +32,7 @@ const useStyles = createStyles(theme => ({
 	},
 
 	headerRightItems: {
-		marginRight: 0,
+		marginRight: -16,
 		marginBottom: 4,
 		display: 'flex',
 		flexDirection: 'row',
@@ -47,6 +48,7 @@ const useStyles = createStyles(theme => ({
 
 	inner: {
 		height: 56,
+		marginTop: 8,
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center'
@@ -90,14 +92,17 @@ const useStyles = createStyles(theme => ({
 	},
 
 	ellipse: {
-		[theme.fn.smallerThan('xs')]: {
-			marginLeft: 0
+		[theme.fn.smallerThan('md')]: {
+			marginLeft: 0,
+			marginRight: 0
 		},
+		marginRight: 24,
 		marginLeft: 24
 	},
 
 	connectWallet: {
 		marginBottom: 4,
+		marginRight: 16,
 		fontWeight: 'bold',
 		color: 'rgba(255, 102, 81, 1)',
 		cursor: 'pointer'
@@ -127,10 +132,17 @@ const useStyles = createStyles(theme => ({
 	menuItem: {
 		fontWeight: '600'
 	},
+	menuItemWithIcon: {
+		fontWeight: '600',
+		marginBottom: '-2px',
+		marginTop: '-2px'
+	},
 
 	redMenuItem: {
 		fontWeight: '600',
-		color: 'rgba(255, 102, 81, 1)'
+		color: 'rgba(255, 102, 81, 1)',
+		marginBottom: '-2px',
+		marginTop: '-2px'
 	}
 }))
 
@@ -163,6 +175,34 @@ export function HeaderMenu() {
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
+	}
+
+	const navigateToMyClubs = () => {
+		router.push({ pathname: '/myclubs' })
+	}
+
+	const handleJoinClubClub = () => {
+		window.open('/club/clubclub')
+	}
+
+	const handlePoweredByMeem = () => {
+		window.open('https://meem.wtf')
+	}
+
+	const handleTwitter = () => {
+		window.open('https://twitter.com')
+	}
+
+	const handleDiscord = () => {
+		window.open('https://discord.gg/jgxuK6662v')
+	}
+
+	const handleContactUs = () => {
+		window.open('https://meem.wtf')
+	}
+
+	const handleShareFeedback = () => {
+		window.open('https://meem.wtf')
 	}
 
 	return (
@@ -227,28 +267,48 @@ export function HeaderMenu() {
 							</UnstyledButton>
 						}
 					>
-						<Menu.Item className={classes.menuItem}>
+						<Menu.Item
+							onClick={handlePoweredByMeem}
+							className={classes.menuItem}
+						>
 							Powered by{' '}
 							<span style={{ textDecoration: 'underline' }}>Meem</span>
 						</Menu.Item>
-						<Menu.Item className={classes.menuItem}>Join ClubClub</Menu.Item>
-						<Menu.Item className={classes.menuItem}>My Clubs</Menu.Item>
+						<Menu.Item
+							onClick={handleJoinClubClub}
+							className={classes.menuItem}
+						>
+							Join Club Club
+						</Menu.Item>
+						<Menu.Item onClick={navigateToMyClubs} className={classes.menuItem}>
+							My Clubs
+						</Menu.Item>
 
 						<Divider />
 
 						<Menu.Item
-							className={classes.menuItem}
+							onClick={handleTwitter}
+							className={classes.menuItemWithIcon}
 							icon={<BrandTwitter size={20} />}
 						>
 							Twitter
 						</Menu.Item>
 						<Menu.Item
-							className={classes.menuItem}
+							onClick={handleDiscord}
+							className={classes.menuItemWithIcon}
 							icon={<BrandDiscord size={20} />}
 						>
 							Discord
 						</Menu.Item>
 						<Menu.Item
+							onClick={handleContactUs}
+							className={classes.menuItemWithIcon}
+							icon={<Mail size={20} />}
+						>
+							Contact Us
+						</Menu.Item>
+						<Menu.Item
+							onClick={handleShareFeedback}
 							className={classes.redMenuItem}
 							icon={<MessageCircle size={20} />}
 						>
