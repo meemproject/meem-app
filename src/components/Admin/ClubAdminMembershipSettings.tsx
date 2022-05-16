@@ -32,12 +32,23 @@ const useStyles = createStyles(theme => ({
 		borderRadius: 24
 	},
 	// Membership tab
-	membershipText: { fontSize: 20, marginBottom: 8, lineHeight: 2 },
+	membershipText: {
+		fontSize: 20,
+		marginBottom: 8,
+		lineHeight: 2,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
+	},
 	membershipTextAdditionalReq: {
 		fontSize: 20,
 		marginBottom: 16,
+		marginTop: 16,
 		lineHeight: 2,
-		position: 'relative'
+		position: 'relative',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
 	},
 
 	membershipSelector: {
@@ -65,11 +76,12 @@ const useStyles = createStyles(theme => ({
 		marginBottom: 12
 	},
 	removeAdditionalReq: {
-		position: 'absolute',
-		top: 8,
-		left: -40,
 		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer'
+		cursor: 'pointer',
+		marginRight: 8,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: -6
+		}
 	},
 	radio: { fontWeight: '600', fontFamily: 'Inter' },
 	visible: {
@@ -80,6 +92,14 @@ const useStyles = createStyles(theme => ({
 	},
 	buttonModalSave: {
 		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 24
+	},
+	buttonModalCancel: {
+		marginLeft: 8,
+		backgroundColor: 'rgba(0, 0, 0, 0.3)',
 		'&:hover': {
 			backgroundColor: theme.colors.gray[8]
 		},
@@ -388,6 +408,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 				</Text>
 				{membershipRequirements.length > 1 && (
 					<Text className={classes.membershipTextAdditionalReq}>
+						<CircleMinus
+							onClick={() => {
+								// Hardcoded for now as there's only one additional req in v1
+								removeMembershipRequirement(1)
+							}}
+							className={classes.removeAdditionalReq}
+						/>
 						<a onClick={openSecondReqTypeModal}>
 							<span className={classes.membershipSelector}>
 								{membershipRequirements[1].andor === MembershipReqAndor.And
@@ -409,13 +436,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 							</span>
 						</a>{' '}
 						to join.
-						<CircleMinus
-							onClick={() => {
-								// Hardcoded for now as there's only one additional req in v1
-								removeMembershipRequirement(1)
-							}}
-							className={classes.removeAdditionalReq}
-						/>
 					</Text>
 				)}
 				{membershipRequirements[0].type !== MembershipReqType.None &&
@@ -786,6 +806,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					>
 						Done
 					</Button>
+					{!isEditedReqFirstReq && (
+						<Button
+							onClick={() => {
+								setMembershipReqModalOpened(false)
+							}}
+							className={classes.buttonModalCancel}
+						>
+							Cancel
+						</Button>
+					)}
 				</Modal>
 				<Modal
 					withCloseButton={false}

@@ -28,21 +28,34 @@ const useStyles = createStyles(theme => ({
 		flexDirection: 'row',
 		paddingTop: 24,
 		paddingBottom: 24,
-		paddingLeft: 32
+		paddingLeft: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingTop: 12,
+			paddingBottom: 12,
+			paddingLeft: 16
+		}
 	},
 	headerArrow: {
 		marginRight: 32,
-		cursor: 'pointer'
+		cursor: 'pointer',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginRight: 16
+		}
 	},
 	headerPrompt: {
 		fontSize: 16,
-		marginBottom: 8,
 		fontWeight: '500',
-		color: 'rgba(0, 0, 0, 0.6)'
+		color: 'rgba(0, 0, 0, 0.6)',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: 0
+		}
 	},
 	headerClubName: {
 		fontWeight: '600',
-		fontSize: 24
+		fontSize: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 20
+		}
 	},
 	namespaceTextInputContainer: {
 		position: 'relative'
@@ -56,7 +69,12 @@ const useStyles = createStyles(theme => ({
 		left: 24,
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
-	clubDescriptionPrompt: { fontSize: 18, marginBottom: 16, fontWeight: '600' },
+	clubNamespaceHint: {
+		paddingLeft: 0,
+		paddingBottom: 16,
+		color: 'rgba(0, 0, 0, 0.5)'
+	},
+	clubDescriptionPrompt: { fontSize: 18, marginBottom: 0, fontWeight: '600' },
 	clubLogoPrompt: {
 		marginTop: 32,
 		fontSize: 18,
@@ -205,6 +223,9 @@ export const CreateComponent: React.FC = () => {
 				<Text className={classes.clubDescriptionPrompt}>
 					{`Set your club's URL.`}
 				</Text>
+				<Text size="sm" className={classes.clubNamespaceHint}>
+					{'Lowercase letters, numbers and dashes are allowed.'}
+				</Text>
 				<div className={classes.namespaceTextInputContainer}>
 					<TextInput
 						classNames={{ input: classes.namespaceTextInput }}
@@ -221,14 +242,13 @@ export const CreateComponent: React.FC = () => {
 						className={classes.namespaceTextInputUrlPrefix}
 					>{`https://clubs.link/club/`}</Text>
 				</div>
-				<Text size="sm" style={{ paddingLeft: 24, paddingTop: 4 }}>
-					{'Lowercase letters, numbers and dashes are allowed.'}
-				</Text>
 
 				<Space h={'md'} />
 				<Text className={classes.clubDescriptionPrompt}>
 					In a sentence, describe what your members do together.
 				</Text>
+				<Space h={8} />
+
 				<Textarea
 					radius="lg"
 					size="md"

@@ -1,7 +1,7 @@
 import { createStyles, Text, Image, Space } from '@mantine/core'
 import React from 'react'
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles(theme => ({
 	// Membership tab
 	membershipText: { fontSize: 20, marginBottom: 8, lineHeight: 2 },
 	membershipSelector: {
@@ -57,13 +57,17 @@ const useStyles = createStyles(() => ({
 		color: 'rgba(0, 0, 0, 0.5)',
 		fontWeight: '600',
 		marginTop: 32,
-		marginBottom: 8
+		marginBottom: 12,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			fontWeight: '400'
+		}
 	},
 	clubIntegrationItem: {
 		display: 'flex',
 		alignItems: 'center',
 		fontWeight: '600',
-		marginBottom: 8,
+		marginBottom: 12,
 		cursor: 'pointer',
 		width: '100px'
 	}

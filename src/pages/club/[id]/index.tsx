@@ -27,14 +27,8 @@ const ClubDetailPage: NextPage<IProps> = ({ id }) => {
 					content="Clubs! clubs clubs! CLUBS!"
 				/>
 				<meta name="viewport" content="initial-scale=1, width=device-width" />
-				<meta
-					property="twitter:image"
-					content="https://meem.wtf/images/clubs-share-twitter.png"
-				/>
-				<meta
-					property="og:image"
-					content="https://meem.wtf/images/clubs-share-twitter.png"
-				/>
+				<meta property="twitter:image" content="/link-preview.png" />
+				<meta property="og:image" content="/link-preview.png" />
 				<link
 					rel="apple-touch-icon"
 					sizes="180x180"

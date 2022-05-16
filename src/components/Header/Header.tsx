@@ -99,6 +99,7 @@ const useStyles = createStyles(theme => ({
 
 	connectWallet: {
 		marginBottom: 4,
+		marginRight: 16,
 		fontWeight: 'bold',
 		color: 'rgba(255, 102, 81, 1)',
 		cursor: 'pointer'

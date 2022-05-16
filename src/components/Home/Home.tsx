@@ -21,8 +21,6 @@ import {
 import { useRouter } from 'next/router'
 import React, { forwardRef, useRef, useState } from 'react'
 
-const BREAKPOINT = '@media (max-width: 755px)'
-
 const useStyles = createStyles(theme => ({
 	wrapper: {
 		position: 'relative',
@@ -37,9 +35,10 @@ const useStyles = createStyles(theme => ({
 		paddingBottom: 120,
 		marginTop: 120,
 
-		[BREAKPOINT]: {
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingBottom: 80,
-			paddingTop: 80
+			paddingTop: 0,
+			marginTop: 80
 		}
 	},
 
@@ -53,7 +52,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 'bold',
 		color: 'black',
 
-		[BREAKPOINT]: {
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 18
 		}
 	},
