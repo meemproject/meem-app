@@ -233,10 +233,9 @@ export const CreateComponent: React.FC = () => {
 
 			Cookies.set(CookieKeys.clubContractAddress, contract.address)
 			Cookies.set(CookieKeys.clubName, clubName ?? '')
-			Cookies.set(
-				CookieKeys.clubContractUri,
-				`{"name": ${clubName},"description": ${clubDescription},"image": "","external_link": "https://clubs.link"}`
-			)
+			Cookies.set(CookieKeys.clubDescription, clubDescription ?? '')
+			Cookies.set(CookieKeys.clubImage, smallClubLogo ?? '')
+			Cookies.set(CookieKeys.clubExternalUrl, 'https://clubs.link')
 			router.push({ pathname: `/create/permissions` })
 		} catch (e) {
 			setIsLoading(false)

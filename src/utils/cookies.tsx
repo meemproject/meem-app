@@ -3,5 +3,9 @@ export class CookieKeys {
 
 	public static clubContractAddress = 'clubContractAddress'
 
-	public static clubContractUri = 'clubContractUri'
+	public static clubDescription = 'clubDescription'
+
+	public static clubImage = 'clubImage'
+
+	public static clubExternalUrl = 'clubExternalUrl'
 }

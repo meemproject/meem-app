@@ -431,13 +431,19 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					.split(' ')[0]
 					.toUpperCase()
 
+				const uri = `{"name": ${Cookies.get(
+					CookieKeys.clubName
+				)},"description": ${CookieKeys.clubDescription},"image": ${Cookies.get(
+					CookieKeys.clubImage
+				)},"external_link": ${Cookies.get(CookieKeys.clubExternalUrl)}}`
+
 				const tx = await meemContracts.initProxy({
 					signer: web3Provider.getSigner(),
 					proxyContractAddress:
 						Cookies.get(CookieKeys.clubContractAddress) ?? '',
 					name: Cookies.get(CookieKeys.clubName) ?? '',
 					symbol: clubSymbol,
-					contractURI: Cookies.get(CookieKeys.clubContractUri) ?? '',
+					contractURI: uri,
 					chain: Chain.Rinkeby,
 					version: 'latest'
 				})
@@ -446,7 +452,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 				Cookies.remove(CookieKeys.clubContractAddress)
 				Cookies.remove(CookieKeys.clubName)
-				Cookies.remove(CookieKeys.clubContractUri)
+				Cookies.remove(CookieKeys.clubDescription)
+				Cookies.remove(CookieKeys.clubImage)
+				Cookies.remove(CookieKeys.clubExternalUrl)
 
 				// TODO
 				router.push({ pathname: `/club/test` })
