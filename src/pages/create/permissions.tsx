@@ -1,18 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { ClubAdminProfileSettings } from '../../../components/Admin/ClubAdminProfileSettings'
-import { HeaderMenu } from '../../../components/Header/Header'
+import { CreatePermissionsComponent } from '../../components/Create/Permissions'
+import { HeaderMenu } from '../../components/Header/Header'
 
-interface IProps {
-	id: string
-}
-
-const ClubProfilePage: NextPage<IProps> = ({ id }) => {
+const CreatePermissionsPage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>{id} | Profile | Clubs</title>
+				<title>New Club Permissions | Clubs</title>
 				<meta name="title" content="Clubs clubs" />
 				<meta name="description" content="Clubs! Clubs!" />
 				<meta property="og:type" content="website" />
@@ -38,9 +34,9 @@ const ClubProfilePage: NextPage<IProps> = ({ id }) => {
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
 			</Head>
 			<HeaderMenu />
-			<ClubAdminProfileSettings />
+			<CreatePermissionsComponent />
 		</>
 	)
 }
 
-export default ClubProfilePage
+export default CreatePermissionsPage

@@ -13,7 +13,8 @@ import {
 	Chips,
 	Chip,
 	Select,
-	Center
+	Center,
+	Divider
 } from '@mantine/core'
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
@@ -31,7 +32,13 @@ const useStyles = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
+
 	// Membership tab
+	manageClubHeader: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
+	},
 	membershipText: {
 		fontSize: 20,
 		marginBottom: 8,
@@ -72,7 +79,7 @@ const useStyles = createStyles(theme => ({
 	membershipSettingHeader: {
 		fontSize: 16,
 		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: '600',
+		fontWeight: 600,
 		marginBottom: 12
 	},
 	removeAdditionalReq: {
@@ -83,7 +90,7 @@ const useStyles = createStyles(theme => ({
 			marginBottom: -6
 		}
 	},
-	radio: { fontWeight: '600', fontFamily: 'Inter' },
+	radio: { fontWeight: 600, fontFamily: 'Inter' },
 	visible: {
 		display: 'block'
 	},
@@ -124,10 +131,39 @@ const useStyles = createStyles(theme => ({
 	},
 	modalHeaderText: {
 		fontSize: 18,
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'rgba(0, 0, 0, 0.3)',
 		marginBottom: 4,
 		marginTop: 16
+	},
+	// Admins
+	clubAdminsPrompt: {
+		fontSize: 18,
+		marginBottom: 16,
+		fontWeight: 600,
+		marginTop: 36
+	},
+	clubAdminsInstructions: {
+		fontSize: 18,
+		marginBottom: 16,
+		color: 'rgba(0, 0, 0, 0.6)'
+	},
+	adminsTextAreaContainer: {
+		position: 'relative'
+	},
+	adminsTextArea: {
+		paddingTop: 48,
+		paddingLeft: 32
+	},
+	primaryAdminChip: {
+		position: 'absolute',
+		pointerEvents: 'none',
+		top: 12,
+		left: 12
+	},
+	primaryAdminChipContents: {
+		display: 'flex',
+		alignItems: 'center'
 	}
 }))
 
@@ -342,10 +378,29 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 	// Is the req we're currently editing the first requirement or not? This affects language and modal options
 	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
 
+	// Club admins
+	const [primaryClubAdmin, setPrimaryClubAdmin] = useState('gadsby.eth')
+	const [clubAdminsString, setClubAdminsString] = useState('')
+	const [clubAdmins, setClubAdmins] = useState<string[]>([])
+
+	const parseClubAdmins = (rawString: string) => {
+		setClubAdminsString(rawString)
+		const adminsList = rawString.split('\n')
+		const finalList: string[] = []
+		adminsList.forEach(potentialAdmin => {
+			if (potentialAdmin.length > 0) {
+				finalList.push(potentialAdmin)
+			}
+		})
+		console.log(`admins count = ${finalList.length + 1}`)
+		setClubAdmins(finalList)
+	}
+
 	return (
 		<>
 			<div>
 				<Space h="lg" />
+				<Text className={classes.manageClubHeader}>Membership</Text>
 				<Text className={classes.membershipSettingHeader}>Requirements</Text>
 				<Text className={classes.membershipText}>
 					This club is open for{' '}
@@ -510,12 +565,51 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					</a>
 					.
 				</Text>
-				<Space h="lg" />
+				<Space h={32} />
+
+				<Divider />
+				<Space h={32} />
+
+				<Text className={classes.manageClubHeader}>Club Admins</Text>
+
+				<div>
+					<Text className={classes.clubAdminsPrompt}>
+						Who can manage this club’s profile and membership settings?
+					</Text>
+					<Text className={classes.clubAdminsInstructions}>
+						Add a line break between each address. Note that the club creator
+						will always have admin permissions.
+					</Text>
+					<div className={classes.adminsTextAreaContainer}>
+						<Textarea
+							classNames={{ input: classes.adminsTextArea }}
+							radius="lg"
+							size="md"
+							value={clubAdminsString}
+							minRows={10}
+							onChange={event => parseClubAdmins(event.currentTarget.value)}
+						/>
+						<Chips
+							color={'rgba(0, 0, 0, 0.05)'}
+							className={classes.primaryAdminChip}
+							variant="filled"
+						>
+							<Chip size="md" value="" checked={false}>
+								<div className={classes.primaryAdminChipContents}>
+									<Lock width={16} height={16} />
+									<Space w={4} />
+									<Text>{primaryClubAdmin}</Text>
+								</div>
+							</Chip>
+						</Chips>
+					</div>
+				</div>
 				<Button className={classes.buttonSaveChanges}>Save Changes</Button>
 				<Space h="lg" />
 				<Modal
 					withCloseButton={false}
 					centered
+					overlayBlur={8}
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					radius={16}
@@ -1003,11 +1097,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 									<Calendar
 										value={membershipStartDate}
 										onChange={date => {
-											const hr = membershipStartDate.getHours()
-											const min = membershipStartDate.getMinutes()
-											date.setHours(hr)
-											date.setMinutes(min)
-											setMembershipStartDate(date)
+											if (date != null) {
+												const hr = membershipStartDate.getHours()
+												const min = membershipStartDate.getMinutes()
+												date.setHours(hr)
+												date.setMinutes(min)
+												setMembershipStartDate(date)
+											}
 										}}
 									/>
 									<Space h={16} />
@@ -1089,11 +1185,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 									<Calendar
 										value={membershipEndDate}
 										onChange={date => {
-											const hr = membershipEndDate.getHours()
-											const min = membershipEndDate.getMinutes()
-											date.setHours(hr)
-											date.setMinutes(min)
-											setMembershipEndDate(date)
+											if (date != null) {
+												const hr = membershipEndDate.getHours()
+												const min = membershipEndDate.getMinutes()
+												date.setHours(hr)
+												date.setMinutes(min)
+												setMembershipEndDate(date)
+											}
 										}}
 									/>
 									<Space h={16} />

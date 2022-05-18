@@ -48,7 +48,7 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 20
@@ -74,7 +74,7 @@ const useStyles = createStyles(theme => ({
 		alignItems: 'center',
 		marginBottom: 24,
 		fontSize: 16,
-		fontWeight: '600',
+		fontWeight: 600,
 		cursor: 'pointer'
 	},
 	clubLogoImage: {

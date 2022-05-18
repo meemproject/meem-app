@@ -44,14 +44,14 @@ const useStyles = createStyles(theme => ({
 	},
 	headerPrompt: {
 		fontSize: 16,
-		fontWeight: '500',
+		fontWeight: 500,
 		color: 'rgba(0, 0, 0, 0.6)',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginBottom: 0
 		}
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 20
@@ -74,15 +74,15 @@ const useStyles = createStyles(theme => ({
 		paddingBottom: 16,
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
-	clubDescriptionPrompt: { fontSize: 18, marginBottom: 0, fontWeight: '600' },
+	clubDescriptionPrompt: { fontSize: 18, marginBottom: 0, fontWeight: 600 },
 	clubLogoPrompt: {
 		marginTop: 32,
 		fontSize: 18,
 		marginBottom: 8,
-		fontWeight: '600'
+		fontWeight: 600
 	},
 	clubLogoInfo: {
-		fontWeight: '500',
+		fontWeight: 500,
 		fontSize: 14,
 		maxWidth: 650,
 		color: 'rgba(45, 28, 28, 0.6)',
@@ -207,6 +207,10 @@ export const CreateComponent: React.FC = () => {
 		setSmallClubLogo('')
 	}
 
+	const createClub = () => {
+		router.push({ pathname: `/create/permissions` })
+	}
+
 	return (
 		<>
 			<div className={classes.header}>
@@ -295,7 +299,7 @@ export const CreateComponent: React.FC = () => {
 			<Center>
 				<Button
 					onClick={() => {
-						router.push({ pathname: `/club/${clubNamespace}/admin` })
+						createClub()
 					}}
 					disabled={clubDescription.length === 0 || smallClubLogo.length === 0}
 					className={classes.buttonCreate}

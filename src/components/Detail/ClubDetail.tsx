@@ -41,11 +41,11 @@ const useStyles = createStyles(theme => ({
 		fontSize: 16,
 		marginTop: 8,
 		marginRight: 16,
-		fontWeight: '500',
+		fontWeight: 500,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		marginTop: -8
 	},
@@ -54,7 +54,7 @@ const useStyles = createStyles(theme => ({
 		top: '24px',
 		right: '64px',
 		display: 'flex',
-		fontWeight: '600',
+		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
 		},
@@ -65,7 +65,7 @@ const useStyles = createStyles(theme => ({
 	mobileHeaderLinks: {
 		marginTop: 16,
 		display: 'flex',
-		fontWeight: '600',
+		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'flex'
 		},
@@ -119,14 +119,14 @@ const useStyles = createStyles(theme => ({
 	clubMemberReqsTitleText: {
 		fontSize: 18,
 		marginBottom: 16,
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 	clubMembersListTitleText: {
 		fontSize: 18,
 		marginBottom: 16,
 		marginTop: 40,
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 
@@ -163,7 +163,7 @@ const useStyles = createStyles(theme => ({
 	memberItem: {
 		border: '1px solid rgba(0, 0, 0, 0.1)',
 		backgroundColor: '#FAFAFA',
-		fontWeight: '600',
+		fontWeight: 600,
 		borderRadius: 16,
 		padding: 16
 	}

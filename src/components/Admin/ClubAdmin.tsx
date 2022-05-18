@@ -1,10 +1,10 @@
-import { createStyles, Container, Text, Image, Button } from '@mantine/core'
+import { createStyles, Container, Text, Image } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { Settings, ArrowLeft } from 'tabler-icons-react'
-import { ClubAdminAdminsSettingsComponent } from './ClubAdminAdminsSettings'
+import { ArrowLeft } from 'tabler-icons-react'
 import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
 import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
+import { ClubAdminProfileSettings } from './ClubAdminProfileSettings'
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -42,20 +42,12 @@ const useStyles = createStyles(theme => ({
 		flexDirection: 'row'
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		marginLeft: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 16,
 			marginLeft: 16
-		}
-	},
-	clubSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
 		}
 	},
 	clubLogoImage: {
@@ -68,6 +60,14 @@ const useStyles = createStyles(theme => ({
 			minHeight: 40,
 			minWidth: 40,
 			marginLeft: 16
+		}
+	},
+	clubSettingsIcon: {
+		width: 16,
+		height: 16,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: 24,
+			height: 24
 		}
 	},
 	buttonEditProfile: {
@@ -95,7 +95,7 @@ const useStyles = createStyles(theme => ({
 		fontSize: 18,
 		marginBottom: 16,
 		marginRight: 24,
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'black',
 		textDecoration: 'underline',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -108,7 +108,7 @@ const useStyles = createStyles(theme => ({
 		marginBottom: 16,
 		marginRight: 24,
 
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'rgba(45, 28, 28, 0.3)',
 		cursor: 'pointer',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -126,7 +126,7 @@ const useStyles = createStyles(theme => ({
 
 enum Tab {
 	Membership,
-	Admins,
+	Profile,
 	Integrations
 }
 
@@ -141,16 +141,12 @@ export const ClubAdminComponent: React.FC = () => {
 		router.push({ pathname: '/club/clubname' })
 	}
 
-	const navigateToClubProfile = () => {
-		router.push({ pathname: `/club/clubname/profile` })
-	}
-
 	const switchToMembership = () => {
 		setCurrentTab(Tab.Membership)
 	}
 
-	const switchToClubAdmins = () => {
-		setCurrentTab(Tab.Admins)
+	const switchToClubProfile = () => {
+		setCurrentTab(Tab.Profile)
 	}
 
 	const switchToIntegrations = () => {
@@ -170,13 +166,6 @@ export const ClubAdminComponent: React.FC = () => {
 						Worst Club Ever That You Can Imagine
 					</Text>
 				</div>
-				<Button
-					onClick={navigateToClubProfile}
-					leftIcon={<Settings className={classes.clubSettingsIcon} />}
-					className={classes.buttonEditProfile}
-				>
-					Edit profile
-				</Button>
 			</div>
 
 			<Container>
@@ -189,18 +178,18 @@ export const ClubAdminComponent: React.FC = () => {
 									: classes.inactiveTab
 							}
 						>
-							Membership Settings
+							Manage Club
 						</Text>
 					</a>
-					<a onClick={switchToClubAdmins}>
+					<a onClick={switchToClubProfile}>
 						<Text
 							className={
-								currentTab == Tab.Admins
+								currentTab == Tab.Profile
 									? classes.activeTab
 									: classes.inactiveTab
 							}
 						>
-							Club Admins
+							Edit Profile
 						</Text>
 					</a>
 					<a onClick={switchToIntegrations}>
@@ -227,12 +216,12 @@ export const ClubAdminComponent: React.FC = () => {
 
 				<div
 					className={
-						currentTab === Tab.Admins
+						currentTab === Tab.Profile
 							? classes.visibleTab
 							: classes.invisibleTab
 					}
 				>
-					<ClubAdminAdminsSettingsComponent />
+					<ClubAdminProfileSettings />
 				</div>
 
 				<div

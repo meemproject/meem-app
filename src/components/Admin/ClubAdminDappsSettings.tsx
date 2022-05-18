@@ -26,7 +26,7 @@ const useStyles = createStyles(theme => ({
 	clubAdminsPrompt: {
 		fontSize: 18,
 		marginBottom: 16,
-		fontWeight: '600',
+		fontWeight: 600,
 		marginTop: 36
 	},
 	clubAdminsInstructions: {
@@ -55,18 +55,18 @@ const useStyles = createStyles(theme => ({
 	clubIntegrationsHeader: {
 		fontSize: 16,
 		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: '600',
+		fontWeight: 600,
 		marginTop: 32,
 		marginBottom: 12,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 16,
-			fontWeight: '400'
+			fontWeight: 400
 		}
 	},
 	clubIntegrationItem: {
 		display: 'flex',
 		alignItems: 'center',
-		fontWeight: '600',
+		fontWeight: 600,
 		marginBottom: 12,
 		cursor: 'pointer',
 		width: '100px'
