@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -12,12 +13,18 @@ import {
 	TextInput,
 	Space
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import * as meemContracts from '@meemproject/meem-contracts'
+import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { CookieKeys } from '../../utils/cookies'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -135,7 +142,8 @@ export const CreateComponent: React.FC = () => {
 	const [clubDescription, setClubDescription] = useState('')
 	const descriptionRef = useRef<HTMLTextAreaElement>()
 
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoading, setIsLoading] = useState(false)
+	const { web3Provider, accounts, signer } = useWallet()
 
 	useEffect(() => {
 		if (
@@ -207,8 +215,36 @@ export const CreateComponent: React.FC = () => {
 		setSmallClubLogo('')
 	}
 
-	const createClub = () => {
-		router.push({ pathname: `/create/permissions` })
+	const createClub = async () => {
+		if (!web3Provider) {
+			return
+		}
+
+		setIsLoading(true)
+
+		try {
+			const contract = await meemContracts.deployProxy({
+				signer: web3Provider.getSigner()
+			})
+
+			log.debug(
+				`Deployed proxy at ${contract.address} w/ tx: ${contract.deployTransaction.hash}`
+			)
+
+			Cookies.set(CookieKeys.clubContractAddress, contract.address)
+			Cookies.set(CookieKeys.clubName, clubName ?? '')
+			Cookies.set(
+				CookieKeys.clubContractUri,
+				`{"name": ${clubName},"description": ${clubDescription},"image": "","external_link": "https://clubs.link"}`
+			)
+			router.push({ pathname: `/create/permissions` })
+		} catch (e) {
+			setIsLoading(false)
+			showNotification({
+				title: 'Error creating club.',
+				message: `${e}`
+			})
+		}
 	}
 
 	return (
@@ -301,10 +337,15 @@ export const CreateComponent: React.FC = () => {
 					onClick={() => {
 						createClub()
 					}}
-					disabled={clubDescription.length === 0 || smallClubLogo.length === 0}
+					loading={isLoading}
+					disabled={
+						clubDescription.length === 0 ||
+						smallClubLogo.length === 0 ||
+						isLoading
+					}
 					className={classes.buttonCreate}
 				>
-					Create Club
+					Establish Club
 				</Button>
 			</Center>
 		</>

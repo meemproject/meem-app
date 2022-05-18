@@ -211,7 +211,7 @@ export const ClubAdminComponent: React.FC = () => {
 							: classes.invisibleTab
 					}
 				>
-					<ClubAdminMembershipSettingsComponent />
+					<ClubAdminMembershipSettingsComponent isCreatingClub={false} />
 				</div>
 
 				<div

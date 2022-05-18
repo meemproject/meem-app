@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -18,8 +19,15 @@ import {
 } from '@mantine/core'
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
+import * as meemContracts from '@meemproject/meem-contracts'
+import { Chain } from '@meemproject/meem-contracts'
+import { useWallet } from '@meemproject/react'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
+import { CookieKeys } from '../../utils/cookies'
 
 const useStyles = createStyles(theme => ({
 	buttonSaveChanges: {
@@ -204,8 +212,19 @@ interface MembershipRequirement {
 	clubName: string // Resolved from contract
 }
 
-export const ClubAdminMembershipSettingsComponent: React.FC = () => {
+interface IProps {
+	isCreatingClub: boolean
+}
+
+export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
+	isCreatingClub
+}) => {
 	const { classes } = useStyles()
+
+	const { web3Provider, accounts, signer } = useWallet()
+	const router = useRouter()
+
+	const [isLoading, setIsLoading] = useState(false)
 
 	// Membership
 	// TODO: hook up to data
@@ -229,6 +248,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 	])
 
 	// Cost to join
+	// Note: Not used in MVP
 	const [costToJoin, setCostToJoin] = useState(0)
 
 	// Membership quantity
@@ -396,6 +416,52 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 		setClubAdmins(finalList)
 	}
 
+	const saveChanges = async () => {
+		// TODO
+		setIsLoading(true)
+
+		if (isCreatingClub) {
+			if (!web3Provider) {
+				setIsLoading(false)
+				return
+			}
+
+			try {
+				const clubSymbol = (Cookies.get(CookieKeys.clubName) ?? '')
+					.split(' ')[0]
+					.toUpperCase()
+
+				const tx = await meemContracts.initProxy({
+					signer: web3Provider.getSigner(),
+					proxyContractAddress:
+						Cookies.get(CookieKeys.clubContractAddress) ?? '',
+					name: Cookies.get(CookieKeys.clubName) ?? '',
+					symbol: clubSymbol,
+					contractURI: Cookies.get(CookieKeys.clubContractUri) ?? '',
+					chain: Chain.Rinkeby,
+					version: 'latest'
+				})
+
+				log.debug(tx)
+
+				Cookies.remove(CookieKeys.clubContractAddress)
+				Cookies.remove(CookieKeys.clubName)
+				Cookies.remove(CookieKeys.clubContractUri)
+
+				// TODO
+				router.push({ pathname: `/club/test` })
+			} catch (e) {
+				setIsLoading(false)
+				showNotification({
+					title: 'Error launching club.',
+					message: `${e}`
+				})
+			}
+		} else {
+			// TODO
+		}
+	}
+
 	return (
 		<>
 			<div>
@@ -509,7 +575,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 
 				<Space h="lg" />
 
-				<Text className={classes.membershipSettingHeader}>Price</Text>
+				{/* <Text className={classes.membershipSettingHeader}>Price</Text>
 
 				<Text className={classes.membershipText}>
 					Our club {isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
@@ -521,7 +587,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 					</a>{' '}
 					to join.
 				</Text>
-				<Space h="lg" />
+				<Space h="lg" /> */}
 
 				<Text className={classes.membershipSettingHeader}>Capacity</Text>
 				<Text className={classes.membershipText}>
@@ -604,7 +670,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC = () => {
 						</Chips>
 					</div>
 				</div>
-				<Button className={classes.buttonSaveChanges}>Save Changes</Button>
+				<Button
+					disabled={isLoading}
+					loading={isLoading}
+					className={classes.buttonSaveChanges}
+					onClick={saveChanges}
+				>
+					{isCreatingClub ? 'Launch Club' : 'Save Changes'}
+				</Button>
 				<Space h="lg" />
 				<Modal
 					withCloseButton={false}

@@ -12,12 +12,17 @@ import {
 	TextInput,
 	Space
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { CookieKeys } from '../../utils/cookies'
+import { ClubAdminMembershipSettingsComponent } from '../Admin/ClubAdminMembershipSettings'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -128,8 +133,6 @@ export const CreatePermissionsComponent: React.FC = () => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
-	const clubName = router.query.clubname
-
 	const [isLoading, setIsLoading] = useState(true)
 
 	const navigateHome = () => {
@@ -139,17 +142,19 @@ export const CreatePermissionsComponent: React.FC = () => {
 	return (
 		<>
 			<div className={classes.header}>
-				<a onClick={navigateHome}>
+				{/* <a onClick={navigateHome}>
 					<ArrowLeft className={classes.headerArrow} size={32} />
-				</a>
+				</a> */}
 				<div>
 					<Text className={classes.headerPrompt}>Create a club</Text>
-					<Text className={classes.headerClubName}>{clubName}</Text>
+					<Text className={classes.headerClubName}>
+						{Cookies.get(CookieKeys.clubName)}
+					</Text>
 				</div>
 			</div>
 
 			<Container>
-				<Text>Hello Club Permissions</Text>
+				<ClubAdminMembershipSettingsComponent isCreatingClub />
 			</Container>
 		</>
 	)
