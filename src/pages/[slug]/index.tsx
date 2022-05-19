@@ -1,18 +1,34 @@
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { ClubDetailComponent } from '../../components/Detail/ClubDetail'
 import { HeaderMenu } from '../../components/Header/Header'
+import { GET_CLUB } from '../../graphql/clubs'
+import { ssrGraphqlClient } from '../../utils/ssr_graphql'
 
-interface IProps {
-	slug: string
+interface SingleClubViewModel {
+	responseBody: any
+	isError: boolean
 }
 
-const ClubDetailPage: NextPage<IProps> = ({ slug }) => {
+interface IProps {
+	club: SingleClubViewModel
+}
+
+const ClubDetailPage: NextPage<IProps> = ({ club }) => {
+	const router = useRouter()
+
+	const clubSlug = router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
-				<title>{slug} | Clubs</title>
+				<title>
+					{club === undefined
+						? 'Not found'
+						: club.responseBody.MeemContracts[0].name}{' '}
+					| Clubs
+				</title>
 				<meta name="title" content="Clubs clubs" />
 				<meta name="description" content="Clubs! Clubs!" />
 				<meta property="og:type" content="website" />
@@ -38,9 +54,54 @@ const ClubDetailPage: NextPage<IProps> = ({ slug }) => {
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
 			</Head>
 			<HeaderMenu />
-			<ClubDetailComponent />
+			<ClubDetailComponent slug={clubSlug} />
 		</>
 	)
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+	let club: SingleClubViewModel | undefined
+	const client = ssrGraphqlClient
+
+	try {
+		if (params?.slug) {
+			const { data } = await client.query({
+				query: GET_CLUB,
+				variables: {
+					slug: params.slug
+				}
+			})
+
+			if (data.MeemContracts.length === 0) {
+				club = {
+					isError: true,
+					responseBody: null
+				}
+			} else {
+				club = {
+					isError: false,
+					responseBody: data
+				}
+			}
+		}
+
+		return {
+			props: {
+				club
+			}
+		}
+	} catch (e) {
+		console.log(e)
+		club = {
+			isError: true,
+			responseBody: null
+		}
+		return {
+			props: {
+				club
+			}
+		}
+	}
 }
 
 export default ClubDetailPage

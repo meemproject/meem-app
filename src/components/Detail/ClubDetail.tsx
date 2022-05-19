@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -10,13 +12,15 @@ import {
 	Grid
 } from '@mantine/core'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	BrandDiscord,
 	BrandTwitter,
 	CircleCheck,
 	Settings
 } from 'tabler-icons-react'
+import { GetClubQuery } from '../../../generated/graphql'
+import { GET_CLUB } from '../../graphql/clubs'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -169,9 +173,21 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export const ClubDetailComponent: React.FC = () => {
+interface IProps {
+	slug: string
+}
+
+export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
 	const { classes } = useStyles()
+
+	const {
+		loading,
+		error,
+		data: clubData
+	} = useQuery<GetClubQuery>(GET_CLUB, {
+		variables: { slug }
+	})
 
 	const [clubName, setClubName] = useState('Harry  Potter Club')
 	const [clubDescription, setClubDescription] = useState(
@@ -189,6 +205,12 @@ export const ClubDetailComponent: React.FC = () => {
 		'gregb.eth',
 		'shoople.eth'
 	])
+
+	useEffect(() => {
+		if (!loading && !error && clubData) {
+			setClubName(clubData.MeemContracts[0].name)
+		}
+	}, [clubData, error, loading])
 
 	const [isLoading, setIsLoading] = useState(true)
 
