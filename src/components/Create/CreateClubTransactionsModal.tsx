@@ -54,13 +54,8 @@ const useStyles = createStyles(theme => ({
 		flexDirection: 'row'
 	},
 	headerClubName: {
-		fontWeight: 600,
 		fontSize: 16,
-		marginLeft: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginLeft: 16
-		}
+		marginLeft: 16
 	},
 	clubLogoImage: {
 		imageRendering: 'pixelated',

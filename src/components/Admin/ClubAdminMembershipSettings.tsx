@@ -1328,6 +1328,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				<CreateClubTransactionsModal
 					isOpened={isTransactionsModalOpened}
 					onModalClosed={() => {
+						setIsLoading(false)
 						setTransactionsModalOpened(false)
 					}}
 				/>

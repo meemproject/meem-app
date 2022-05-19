@@ -231,6 +231,7 @@ export type MeemContracts = {
   name: Scalars['String'];
   originalsPerWallet: Scalars['String'];
   originalsPerWalletLockedBy: Scalars['String'];
+  slug: Scalars['String'];
   splits: Scalars['jsonb'];
   splitsLockedBy: Scalars['String'];
   symbol: Scalars['String'];
@@ -320,6 +321,7 @@ export type MeemContracts_Bool_Exp = {
   name?: InputMaybe<String_Comparison_Exp>;
   originalsPerWallet?: InputMaybe<String_Comparison_Exp>;
   originalsPerWalletLockedBy?: InputMaybe<String_Comparison_Exp>;
+  slug?: InputMaybe<String_Comparison_Exp>;
   splits?: InputMaybe<Jsonb_Comparison_Exp>;
   splitsLockedBy?: InputMaybe<String_Comparison_Exp>;
   symbol?: InputMaybe<String_Comparison_Exp>;
@@ -348,6 +350,7 @@ export type MeemContracts_Max_Fields = {
   name?: Maybe<Scalars['String']>;
   originalsPerWallet?: Maybe<Scalars['String']>;
   originalsPerWalletLockedBy?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
   splitsLockedBy?: Maybe<Scalars['String']>;
   symbol?: Maybe<Scalars['String']>;
   totalOriginalsSupply?: Maybe<Scalars['String']>;
@@ -375,6 +378,7 @@ export type MeemContracts_Min_Fields = {
   name?: Maybe<Scalars['String']>;
   originalsPerWallet?: Maybe<Scalars['String']>;
   originalsPerWalletLockedBy?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
   splitsLockedBy?: Maybe<Scalars['String']>;
   symbol?: Maybe<Scalars['String']>;
   totalOriginalsSupply?: Maybe<Scalars['String']>;
@@ -406,6 +410,7 @@ export type MeemContracts_Order_By = {
   name?: InputMaybe<Order_By>;
   originalsPerWallet?: InputMaybe<Order_By>;
   originalsPerWalletLockedBy?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
   splits?: InputMaybe<Order_By>;
   splitsLockedBy?: InputMaybe<Order_By>;
   symbol?: InputMaybe<Order_By>;
@@ -452,6 +457,8 @@ export enum MeemContracts_Select_Column {
   OriginalsPerWallet = 'originalsPerWallet',
   /** column name */
   OriginalsPerWalletLockedBy = 'originalsPerWalletLockedBy',
+  /** column name */
+  Slug = 'slug',
   /** column name */
   Splits = 'splits',
   /** column name */
@@ -2997,13 +3004,13 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
-export type IsCurrentUserClubClubMemberQueryVariables = Exact<{
+export type GetIsMemberOfClubQueryVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
-  clubContractId?: InputMaybe<Scalars['String']>;
+  clubSlug?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type IsCurrentUserClubClubMemberQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', address: string, name: string, symbol: string } | null }> };
+export type GetIsMemberOfClubQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', address: string, name: string, symbol: string } | null }> };
 
 export type GetClubsAutocompleteQueryVariables = Exact<{
   query?: InputMaybe<Scalars['String']>;
@@ -3011,6 +3018,13 @@ export type GetClubsAutocompleteQueryVariables = Exact<{
 
 
 export type GetClubsAutocompleteQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', id: any, name: string, contractURI: string }> };
+
+export type GetClubQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string }> };
 
 export type MyClubsQueryVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
@@ -3027,10 +3041,10 @@ export type GetMeemIdQueryVariables = Exact<{
 export type GetMeemIdQuery = { __typename?: 'query_root', MeemIdentifications: Array<{ __typename?: 'MeemIdentifications', id: any, hasOnboarded: boolean, Wallets: Array<{ __typename?: 'Wallets', address: string }>, Twitters: Array<{ __typename?: 'Twitters', twitterId: string, id: any }> }> };
 
 
-export const IsCurrentUserClubClubMemberDocument = gql`
-    query IsCurrentUserClubClubMember($walletAddress: String, $clubContractId: String) {
+export const GetIsMemberOfClubDocument = gql`
+    query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, owner: {_eq: $walletAddress}, MeemContract: {address: {_eq: $clubContractId}}}
+    where: {MeemContractId: {_is_null: false}, owner: {_eq: $walletAddress}, MeemContract: {slug: {_eq: $clubSlug}}}
   ) {
     owner
     tokenId
@@ -3045,33 +3059,33 @@ export const IsCurrentUserClubClubMemberDocument = gql`
     `;
 
 /**
- * __useIsCurrentUserClubClubMemberQuery__
+ * __useGetIsMemberOfClubQuery__
  *
- * To run a query within a React component, call `useIsCurrentUserClubClubMemberQuery` and pass it any options that fit your needs.
- * When your component renders, `useIsCurrentUserClubClubMemberQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetIsMemberOfClubQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIsMemberOfClubQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useIsCurrentUserClubClubMemberQuery({
+ * const { data, loading, error } = useGetIsMemberOfClubQuery({
  *   variables: {
  *      walletAddress: // value for 'walletAddress'
- *      clubContractId: // value for 'clubContractId'
+ *      clubSlug: // value for 'clubSlug'
  *   },
  * });
  */
-export function useIsCurrentUserClubClubMemberQuery(baseOptions?: Apollo.QueryHookOptions<IsCurrentUserClubClubMemberQuery, IsCurrentUserClubClubMemberQueryVariables>) {
+export function useGetIsMemberOfClubQuery(baseOptions?: Apollo.QueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<IsCurrentUserClubClubMemberQuery, IsCurrentUserClubClubMemberQueryVariables>(IsCurrentUserClubClubMemberDocument, options);
+        return Apollo.useQuery<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>(GetIsMemberOfClubDocument, options);
       }
-export function useIsCurrentUserClubClubMemberLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IsCurrentUserClubClubMemberQuery, IsCurrentUserClubClubMemberQueryVariables>) {
+export function useGetIsMemberOfClubLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<IsCurrentUserClubClubMemberQuery, IsCurrentUserClubClubMemberQueryVariables>(IsCurrentUserClubClubMemberDocument, options);
+          return Apollo.useLazyQuery<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>(GetIsMemberOfClubDocument, options);
         }
-export type IsCurrentUserClubClubMemberQueryHookResult = ReturnType<typeof useIsCurrentUserClubClubMemberQuery>;
-export type IsCurrentUserClubClubMemberLazyQueryHookResult = ReturnType<typeof useIsCurrentUserClubClubMemberLazyQuery>;
-export type IsCurrentUserClubClubMemberQueryResult = Apollo.QueryResult<IsCurrentUserClubClubMemberQuery, IsCurrentUserClubClubMemberQueryVariables>;
+export type GetIsMemberOfClubQueryHookResult = ReturnType<typeof useGetIsMemberOfClubQuery>;
+export type GetIsMemberOfClubLazyQueryHookResult = ReturnType<typeof useGetIsMemberOfClubLazyQuery>;
+export type GetIsMemberOfClubQueryResult = Apollo.QueryResult<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>;
 export const GetClubsAutocompleteDocument = gql`
     query GetClubsAutocomplete($query: String) {
   MeemContracts(where: {name: {_ilike: $query}}) {
@@ -3109,6 +3123,45 @@ export function useGetClubsAutocompleteLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetClubsAutocompleteQueryHookResult = ReturnType<typeof useGetClubsAutocompleteQuery>;
 export type GetClubsAutocompleteLazyQueryHookResult = ReturnType<typeof useGetClubsAutocompleteLazyQuery>;
 export type GetClubsAutocompleteQueryResult = Apollo.QueryResult<GetClubsAutocompleteQuery, GetClubsAutocompleteQueryVariables>;
+export const GetClubDocument = gql`
+    query GetClub($slug: String) {
+  MeemContracts(where: {slug: {_eq: $slug}}) {
+    slug
+    address
+    contractURI
+    createdAt
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetClubQuery__
+ *
+ * To run a query within a React component, call `useGetClubQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClubQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClubQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetClubQuery(baseOptions?: Apollo.QueryHookOptions<GetClubQuery, GetClubQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClubQuery, GetClubQueryVariables>(GetClubDocument, options);
+      }
+export function useGetClubLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClubQuery, GetClubQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClubQuery, GetClubQueryVariables>(GetClubDocument, options);
+        }
+export type GetClubQueryHookResult = ReturnType<typeof useGetClubQuery>;
+export type GetClubLazyQueryHookResult = ReturnType<typeof useGetClubLazyQuery>;
+export type GetClubQueryResult = Apollo.QueryResult<GetClubQuery, GetClubQueryVariables>;
 export const MyClubsDocument = gql`
     query MyClubs($walletAddress: String) {
   Meems(
