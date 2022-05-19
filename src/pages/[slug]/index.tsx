@@ -5,14 +5,14 @@ import { ClubDetailComponent } from '../../components/Detail/ClubDetail'
 import { HeaderMenu } from '../../components/Header/Header'
 
 interface IProps {
-	id: string
+	slug: string
 }
 
-const ClubDetailPage: NextPage<IProps> = ({ id }) => {
+const ClubDetailPage: NextPage<IProps> = ({ slug }) => {
 	return (
 		<>
 			<Head>
-				<title>{id} | Clubs</title>
+				<title>{slug} | Clubs</title>
 				<meta name="title" content="Clubs clubs" />
 				<meta name="description" content="Clubs! Clubs!" />
 				<meta property="og:type" content="website" />
