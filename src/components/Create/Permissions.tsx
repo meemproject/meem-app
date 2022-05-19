@@ -130,21 +130,11 @@ const useStyles = createStyles(theme => ({
 }))
 
 export const CreatePermissionsComponent: React.FC = () => {
-	const router = useRouter()
 	const { classes } = useStyles()
-
-	const [isLoading, setIsLoading] = useState(true)
-
-	const navigateHome = () => {
-		router.push({ pathname: '/' })
-	}
 
 	return (
 		<>
 			<div className={classes.header}>
-				{/* <a onClick={navigateHome}>
-					<ArrowLeft className={classes.headerArrow} size={32} />
-				</a> */}
 				<div>
 					<Text className={classes.headerPrompt}>Create a club</Text>
 					<Text className={classes.headerClubName}>

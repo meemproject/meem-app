@@ -219,31 +219,7 @@ export const CreateComponent: React.FC = () => {
 		if (!web3Provider) {
 			return
 		}
-
-		setIsLoading(true)
-
-		try {
-			const contract = await meemContracts.deployProxy({
-				signer: web3Provider.getSigner()
-			})
-
-			log.debug(
-				`Deployed proxy at ${contract.address} w/ tx: ${contract.deployTransaction.hash}`
-			)
-
-			Cookies.set(CookieKeys.clubContractAddress, contract.address)
-			Cookies.set(CookieKeys.clubName, clubName ?? '')
-			Cookies.set(CookieKeys.clubDescription, clubDescription ?? '')
-			Cookies.set(CookieKeys.clubImage, smallClubLogo ?? '')
-			Cookies.set(CookieKeys.clubExternalUrl, 'https://clubs.link')
-			router.push({ pathname: `/create/permissions` })
-		} catch (e) {
-			setIsLoading(false)
-			showNotification({
-				title: 'Error creating club.',
-				message: `${e}`
-			})
-		}
+		router.push({ pathname: `/create/permissions` })
 	}
 
 	return (

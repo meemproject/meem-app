@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -19,15 +18,11 @@ import {
 } from '@mantine/core'
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
-import * as meemContracts from '@meemproject/meem-contracts'
-import { Chain } from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
-// eslint-disable-next-line import/no-extraneous-dependencies
-import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
-import { CookieKeys } from '../../utils/cookies'
+import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 
 const useStyles = createStyles(theme => ({
 	buttonSaveChanges: {
@@ -221,7 +216,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 }) => {
 	const { classes } = useStyles()
 
-	const { web3Provider, accounts, signer } = useWallet()
 	const router = useRouter()
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -362,6 +356,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setMembershipQuantityModalOpened(true)
 	}
 
+	const [isTransactionsModalOpened, setTransactionsModalOpened] =
+		useState(false)
+	const openTransactionsModal = () => {
+		// transactions modal for club creation
+		setTransactionsModalOpened(true)
+	}
+
 	const membershipTypeStringForFirstReq = (
 		req: MembershipRequirement
 	): string => {
@@ -436,50 +437,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setIsLoading(true)
 
 		if (isCreatingClub) {
-			if (!web3Provider) {
-				setIsLoading(false)
-				return
-			}
-
-			try {
-				const clubSymbol = (Cookies.get(CookieKeys.clubName) ?? '')
-					.split(' ')[0]
-					.toUpperCase()
-
-				const uri = `{"name": ${Cookies.get(
-					CookieKeys.clubName
-				)},"description": ${CookieKeys.clubDescription},"image": ${Cookies.get(
-					CookieKeys.clubImage
-				)},"external_link": ${Cookies.get(CookieKeys.clubExternalUrl)}}`
-
-				const tx = await meemContracts.initProxy({
-					signer: web3Provider.getSigner(),
-					proxyContractAddress:
-						Cookies.get(CookieKeys.clubContractAddress) ?? '',
-					name: Cookies.get(CookieKeys.clubName) ?? '',
-					symbol: clubSymbol,
-					contractURI: uri,
-					chain: Chain.Rinkeby,
-					version: 'latest'
-				})
-
-				log.debug(tx)
-
-				Cookies.remove(CookieKeys.clubContractAddress)
-				Cookies.remove(CookieKeys.clubName)
-				Cookies.remove(CookieKeys.clubDescription)
-				Cookies.remove(CookieKeys.clubImage)
-				Cookies.remove(CookieKeys.clubExternalUrl)
-
-				// TODO
-				router.push({ pathname: `/club/test` })
-			} catch (e) {
-				setIsLoading(false)
-				showNotification({
-					title: 'Error launching club.',
-					message: `${e}`
-				})
-			}
+			openTransactionsModal()
 		} else {
 			// TODO
 		}
@@ -1021,6 +979,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				<Modal
 					withCloseButton={false}
 					centered
+					overlayBlur={8}
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					radius={16}
@@ -1069,6 +1028,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				<Modal
 					withCloseButton={false}
 					centered
+					overlayBlur={8}
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					radius={16}
@@ -1126,6 +1086,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				<Modal
 					withCloseButton={false}
 					centered
+					overlayBlur={8}
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					radius={16}
@@ -1188,6 +1149,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				<Modal
 					withCloseButton={false}
 					centered
+					overlayBlur={8}
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					radius={16}
@@ -1276,6 +1238,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				<Modal
 					withCloseButton={false}
 					centered
+					overlayBlur={8}
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					radius={16}
@@ -1362,6 +1325,12 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						Done
 					</Button>
 				</Modal>
+				<CreateClubTransactionsModal
+					isOpened={isTransactionsModalOpened}
+					onModalClosed={() => {
+						setTransactionsModalOpened(false)
+					}}
+				/>
 			</div>
 		</>
 	)
