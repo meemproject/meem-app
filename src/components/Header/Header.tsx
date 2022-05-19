@@ -182,7 +182,7 @@ export function HeaderMenu() {
 	}
 
 	const handleJoinClubClub = () => {
-		window.open('/club/clubclub')
+		window.open('/clubclub')
 	}
 
 	const handlePoweredByMeem = () => {

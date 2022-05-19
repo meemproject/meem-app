@@ -255,7 +255,7 @@ export const CreateComponent: React.FC = () => {
 					/>
 					<Text
 						className={classes.namespaceTextInputUrlPrefix}
-					>{`https://clubs.link/club/`}</Text>
+					>{`https://clubs.link/`}</Text>
 				</div>
 
 				<Space h={'md'} />
@@ -320,7 +320,7 @@ export const CreateComponent: React.FC = () => {
 					}
 					className={classes.buttonCreate}
 				>
-					Establish Club
+					Continue
 				</Button>
 			</Center>
 		</>

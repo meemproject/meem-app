@@ -1,8 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { ClubDetailComponent } from '../../../components/Detail/ClubDetail'
-import { HeaderMenu } from '../../../components/Header/Header'
+import { ClubDetailComponent } from '../../components/Detail/ClubDetail'
+import { HeaderMenu } from '../../components/Header/Header'
 
 interface IProps {
 	id: string

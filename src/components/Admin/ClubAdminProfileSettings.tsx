@@ -182,7 +182,7 @@ export const ClubAdminProfileSettings: React.FC = () => {
 	})
 
 	const navigateToClubDetail = () => {
-		router.push({ pathname: '/club/clubname' })
+		router.push({ pathname: '/clubname' })
 	}
 
 	const resizeFile = (file: any) =>

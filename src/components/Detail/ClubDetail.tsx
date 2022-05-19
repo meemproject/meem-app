@@ -193,7 +193,7 @@ export const ClubDetailComponent: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true)
 
 	const navigateToSettings = () => {
-		router.push({ pathname: `/club/clubname/admin` })
+		router.push({ pathname: `/clubname/admin` })
 	}
 
 	return (

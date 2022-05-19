@@ -109,7 +109,7 @@ export const MyClubsComponent: React.FC = () => {
 	}
 
 	const navigateToClub = (club: string) => {
-		router.push({ pathname: `/club/${club}` })
+		router.push({ pathname: `/${club}` })
 	}
 
 	return (

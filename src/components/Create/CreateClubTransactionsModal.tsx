@@ -185,6 +185,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			// TODO: Get club slug
 
 			// Route to the created club detail page
+			router.push({ pathname: '/clubs/club' })
 
 			setStep(Step.Minted)
 		} catch (e) {
