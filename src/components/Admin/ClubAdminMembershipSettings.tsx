@@ -250,6 +250,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	// Cost to join
 	// Note: Not used in MVP
 	const [costToJoin, setCostToJoin] = useState(0)
+	const [membershipFundsAddress, setMembershipFundsAddress] = useState('')
 
 	// Membership quantity
 	const [membershipQuantity, setMembershipQuantity] = useState(0)
@@ -414,6 +415,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		})
 		console.log(`admins count = ${finalList.length + 1}`)
 		setClubAdmins(finalList)
+	}
+
+	function truncatedWalletAddress(address: string): string {
+		if (address.length === 0) {
+			return ''
+		}
+
+		const walletAddressLength = address.length
+		const truncatedWallet = `${address.substring(0, 5)}...${address.substring(
+			walletAddressLength - 5,
+			walletAddressLength
+		)}`
+
+		return truncatedWallet.toLowerCase()
 	}
 
 	const saveChanges = async () => {
@@ -583,7 +598,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 				<Space h="lg" />
 
-				{/* <Text className={classes.membershipSettingHeader}>Price</Text>
+				<Text className={classes.membershipSettingHeader}>Price</Text>
 
 				<Text className={classes.membershipText}>
 					Our club {isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
@@ -593,9 +608,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							{isNaN(costToJoin) || costToJoin === 0 ? '' : ' MATIC'}
 						</span>
 					</a>{' '}
-					to join.
+					to join.{' '}
+					{membershipFundsAddress.length > 0 && costToJoin > 0 && (
+						<>
+							Funds will be sent to{' '}
+							<a onClick={openMembershipCostModal}>
+								<span className={classes.membershipSelector}>
+									{truncatedWalletAddress(membershipFundsAddress)}
+								</span>
+							</a>
+							.
+						</>
+					)}
 				</Text>
-				<Space h="lg" /> */}
+				<Space h="lg" />
 
 				<Text className={classes.membershipSettingHeader}>Capacity</Text>
 				<Text className={classes.membershipText}>
@@ -1063,10 +1089,32 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						}}
 					/>
 					<Space h={'md'} />
+					<Text className={classes.modalHeaderText}>
+						Send Funds to this Address
+					</Text>
+					<TextInput
+						radius="lg"
+						size="md"
+						value={membershipFundsAddress}
+						onChange={event => {
+							setMembershipFundsAddress(event.target.value)
+						}}
+					/>
+					<Space h={'md'} />
 					<Button
 						onClick={() => {
 							if (isNaN(costToJoin)) {
 								setCostToJoin(0)
+							}
+							if (costToJoin > 0) {
+								if (membershipFundsAddress.length < 20) {
+									showNotification({
+										title: 'Oops!',
+										message:
+											'Please enter a wallet address where membership fees will go.'
+									})
+									return
+								}
 							}
 							setMembershipCostModalOpened(false)
 						}}
