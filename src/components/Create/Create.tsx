@@ -68,7 +68,8 @@ const useStyles = createStyles(theme => ({
 		position: 'relative'
 	},
 	namespaceTextInput: {
-		paddingLeft: 192
+		paddingLeft: 154,
+		paddingBottom: 3
 	},
 	namespaceTextInputUrlPrefix: {
 		position: 'absolute',
@@ -219,6 +220,10 @@ export const CreateComponent: React.FC = () => {
 		if (!web3Provider) {
 			return
 		}
+		Cookies.set(CookieKeys.clubName, clubName ?? '')
+		Cookies.set(CookieKeys.clubImage, smallClubLogo)
+		Cookies.set(CookieKeys.clubDescription, clubDescription)
+		Cookies.set(CookieKeys.clubSlug, clubNamespace)
 		router.push({ pathname: `/create/permissions` })
 	}
 

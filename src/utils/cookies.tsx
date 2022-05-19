@@ -5,5 +5,7 @@ export class CookieKeys {
 
 	public static clubImage = 'clubImage'
 
+	public static clubSlug = 'clubSlug'
+
 	public static clubExternalUrl = 'clubExternalUrl'
 }

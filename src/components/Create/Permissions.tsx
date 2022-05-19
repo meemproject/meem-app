@@ -132,14 +132,20 @@ const useStyles = createStyles(theme => ({
 export const CreatePermissionsComponent: React.FC = () => {
 	const { classes } = useStyles()
 
+	const [clubName, setClubName] = useState('')
+
+	useEffect(() => {
+		if (Cookies.get(CookieKeys.clubName) != null) {
+			setClubName(Cookies.get(CookieKeys.clubName) ?? '')
+		}
+	}, [clubName])
+
 	return (
 		<>
 			<div className={classes.header}>
 				<div>
 					<Text className={classes.headerPrompt}>Create a club</Text>
-					<Text className={classes.headerClubName}>
-						{Cookies.get(CookieKeys.clubName)}
-					</Text>
+					<Text className={classes.headerClubName}>{clubName}</Text>
 				</div>
 			</div>
 

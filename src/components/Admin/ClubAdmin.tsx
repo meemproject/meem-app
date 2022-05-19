@@ -138,7 +138,7 @@ export const ClubAdminComponent: React.FC = () => {
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
 
 	const navigateToClubDetail = () => {
-		router.push({ pathname: '/club/clubname' })
+		router.push({ pathname: '/clubname' })
 	}
 
 	const switchToMembership = () => {
