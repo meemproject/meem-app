@@ -9,7 +9,9 @@ import {
 	Image,
 	Button,
 	Space,
-	Grid
+	Grid,
+	Loader,
+	Center
 } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -220,88 +222,105 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	return (
 		<>
-			<div className={classes.header}>
-				<Image className={classes.clubLogoImage} src="/exampleclub.png" />
-				<div>
-					<Text className={classes.headerClubName}>{clubName}</Text>
-					<Text className={classes.headerClubDescription}>
-						{clubDescription}
-					</Text>
-					<div className={classes.headerButtons}>
-						<Button className={classes.buttonJoinClub}>Join</Button>
-						<Button className={classes.outlineButton}>Leave</Button>
-						<Button
-							onClick={navigateToSettings}
-							className={classes.outlineHeaderButton}
-							leftIcon={<Settings className={classes.clubSettingsIcon} />}
-						>
-							Settings
-						</Button>
-					</div>
-					<div className={classes.mobileHeaderLinks}>
-						<a href="twitter.com" className={classes.headerLink}>
-							{' '}
-							<BrandTwitter />
-							<Space w={8} />
-							<Text>Twitter</Text>
-						</a>
-						<Space w={'sm'} />
-						<a href="discord.com" className={classes.headerLink}>
-							{' '}
-							<BrandDiscord />
-							<Space w={8} />
-							<Text>Discord</Text>
-						</a>
-					</div>
-				</div>
-				<div className={classes.headerLinks}>
-					<a href="twitter.com" className={classes.headerLink}>
-						{' '}
-						<BrandTwitter />
-						<Space w={8} />
-						<Text>Twitter</Text>
-					</a>
-					<Space w={'sm'} />
-					<a href="discord.com" className={classes.headerLink}>
-						{' '}
-						<BrandDiscord />
-						<Space w={8} />
-						<Text>Discord</Text>
-					</a>
-				</div>
-			</div>
-
-			<Container>
-				<Text className={classes.clubMemberReqsTitleText}>
-					Membership Requirements
-				</Text>
-				{membershipRequirements.length > 0 && (
-					<div className={classes.requirementsContainer}>
-						{membershipRequirements.map(requirement => (
-							<div className={classes.requirementItem} key={requirement}>
-								<CircleCheck color="green" />
-								<Space w={'xs'} />
-
-								<Text>{requirement}</Text>
+			{loading && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Loader />
+					</Center>
+				</Container>
+			)}
+			{!loading && !clubData && (
+				<Container>
+					<Text>Sorry, that club does not exist!</Text>
+				</Container>
+			)}
+			{!loading && clubData && (
+				<>
+					<div className={classes.header}>
+						<Image className={classes.clubLogoImage} src="/exampleclub.png" />
+						<div>
+							<Text className={classes.headerClubName}>{clubName}</Text>
+							<Text className={classes.headerClubDescription}>
+								{clubDescription}
+							</Text>
+							<div className={classes.headerButtons}>
+								<Button className={classes.buttonJoinClub}>Join</Button>
+								<Button className={classes.outlineButton}>Leave</Button>
+								<Button
+									onClick={navigateToSettings}
+									className={classes.outlineHeaderButton}
+									leftIcon={<Settings className={classes.clubSettingsIcon} />}
+								>
+									Settings
+								</Button>
 							</div>
-						))}
+							<div className={classes.mobileHeaderLinks}>
+								<a href="twitter.com" className={classes.headerLink}>
+									{' '}
+									<BrandTwitter />
+									<Space w={8} />
+									<Text>Twitter</Text>
+								</a>
+								<Space w={'sm'} />
+								<a href="discord.com" className={classes.headerLink}>
+									{' '}
+									<BrandDiscord />
+									<Space w={8} />
+									<Text>Discord</Text>
+								</a>
+							</div>
+						</div>
+						<div className={classes.headerLinks}>
+							<a href="twitter.com" className={classes.headerLink}>
+								{' '}
+								<BrandTwitter />
+								<Space w={8} />
+								<Text>Twitter</Text>
+							</a>
+							<Space w={'sm'} />
+							<a href="discord.com" className={classes.headerLink}>
+								{' '}
+								<BrandDiscord />
+								<Space w={8} />
+								<Text>Discord</Text>
+							</a>
+						</div>
 					</div>
-				)}
 
-				<Text
-					className={classes.clubMembersListTitleText}
-				>{`Members (${clubMembers.length})`}</Text>
-				{clubMembers.length > 0 && (
-					<Grid>
-						{clubMembers.map(member => (
-							<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
-								<Text className={classes.memberItem}>{member}</Text>
-							</Grid.Col>
-						))}
-					</Grid>
-				)}
-				<Space h={'xl'} />
-			</Container>
+					<Container>
+						<Text className={classes.clubMemberReqsTitleText}>
+							Membership Requirements
+						</Text>
+						{membershipRequirements.length > 0 && (
+							<div className={classes.requirementsContainer}>
+								{membershipRequirements.map(requirement => (
+									<div className={classes.requirementItem} key={requirement}>
+										<CircleCheck color="green" />
+										<Space w={'xs'} />
+
+										<Text>{requirement}</Text>
+									</div>
+								))}
+							</div>
+						)}
+
+						<Text
+							className={classes.clubMembersListTitleText}
+						>{`Members (${clubMembers.length})`}</Text>
+						{clubMembers.length > 0 && (
+							<Grid>
+								{clubMembers.map(member => (
+									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
+										<Text className={classes.memberItem}>{member}</Text>
+									</Grid.Col>
+								))}
+							</Grid>
+						)}
+						<Space h={'xl'} />
+					</Container>
+				</>
+			)}
 		</>
 	)
 }
