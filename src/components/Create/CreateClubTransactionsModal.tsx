@@ -384,7 +384,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			})
 
 			// Wait a few seconds to avoid a race condition w/ server
-			await new Promise(f => setTimeout(f, 3000))
+			await new Promise(f => setTimeout(f, 10000))
 
 			const { data } = await client.query({
 				query: GET_CLUB_SLUG,
