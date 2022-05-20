@@ -31,6 +31,14 @@ export const GET_CLUBS_AUTOCOMPLETE = gql`
 	}
 `
 
+export const GET_CLUB_SLUG = gql`
+	query GetClubSlug($contractAddress: String) {
+		MeemContracts(where: { address: { _eq: $contractAddress } }) {
+			slug
+		}
+	}
+`
+
 export const GET_CLUB = gql`
 	query GetClub($slug: String) {
 		MeemContracts(where: { slug: { _eq: $slug } }) {
@@ -39,6 +47,14 @@ export const GET_CLUB = gql`
 			contractURI
 			createdAt
 			name
+			Meems {
+				owner
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+				data
+			}
 		}
 	}
 `

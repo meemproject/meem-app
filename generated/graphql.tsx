@@ -3019,12 +3019,19 @@ export type GetClubsAutocompleteQueryVariables = Exact<{
 
 export type GetClubsAutocompleteQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', id: any, name: string, contractURI: string }> };
 
+export type GetClubSlugQueryVariables = Exact<{
+  contractAddress?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetClubSlugQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string }> };
+
 export type GetClubQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string }> };
+export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }> }> };
 
 export type MyClubsQueryVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
@@ -3123,6 +3130,41 @@ export function useGetClubsAutocompleteLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetClubsAutocompleteQueryHookResult = ReturnType<typeof useGetClubsAutocompleteQuery>;
 export type GetClubsAutocompleteLazyQueryHookResult = ReturnType<typeof useGetClubsAutocompleteLazyQuery>;
 export type GetClubsAutocompleteQueryResult = Apollo.QueryResult<GetClubsAutocompleteQuery, GetClubsAutocompleteQueryVariables>;
+export const GetClubSlugDocument = gql`
+    query GetClubSlug($contractAddress: String) {
+  MeemContracts(where: {address: {_eq: $contractAddress}}) {
+    slug
+  }
+}
+    `;
+
+/**
+ * __useGetClubSlugQuery__
+ *
+ * To run a query within a React component, call `useGetClubSlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClubSlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClubSlugQuery({
+ *   variables: {
+ *      contractAddress: // value for 'contractAddress'
+ *   },
+ * });
+ */
+export function useGetClubSlugQuery(baseOptions?: Apollo.QueryHookOptions<GetClubSlugQuery, GetClubSlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClubSlugQuery, GetClubSlugQueryVariables>(GetClubSlugDocument, options);
+      }
+export function useGetClubSlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClubSlugQuery, GetClubSlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClubSlugQuery, GetClubSlugQueryVariables>(GetClubSlugDocument, options);
+        }
+export type GetClubSlugQueryHookResult = ReturnType<typeof useGetClubSlugQuery>;
+export type GetClubSlugLazyQueryHookResult = ReturnType<typeof useGetClubSlugLazyQuery>;
+export type GetClubSlugQueryResult = Apollo.QueryResult<GetClubSlugQuery, GetClubSlugQueryVariables>;
 export const GetClubDocument = gql`
     query GetClub($slug: String) {
   MeemContracts(where: {slug: {_eq: $slug}}) {
@@ -3131,6 +3173,14 @@ export const GetClubDocument = gql`
     contractURI
     createdAt
     name
+    Meems {
+      owner
+      tokenId
+      tokenURI
+      mintedAt
+      mintedBy
+      data
+    }
   }
 }
     `;

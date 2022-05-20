@@ -24,7 +24,7 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 		<>
 			<Head>
 				<title>
-					{club === undefined
+					{club === undefined || club.isError
 						? 'Not found'
 						: club.responseBody.MeemContracts[0].name}{' '}
 					| Clubs

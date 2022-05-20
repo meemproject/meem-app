@@ -1,5 +1,12 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+	ApolloClient,
+	HttpLink,
+	InMemoryCache,
+	useLazyQuery
+} from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -17,7 +24,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { Chain } from '@meemproject/meem-contracts'
+import { Chain, Permission } from '@meemproject/meem-contracts'
 import * as meemContracts from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
@@ -33,7 +40,12 @@ import {
 	CircleCheck,
 	Settings
 } from 'tabler-icons-react'
+import { GET_CLUB_SLUG } from '../../graphql/clubs'
 import { CookieKeys } from '../../utils/cookies'
+import {
+	MembershipReqType,
+	MembershipSettings
+} from '../Admin/ClubAdminMembershipSettings'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -89,6 +101,7 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
+	membershipSettings?: MembershipSettings
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -105,7 +118,8 @@ enum Step {
 
 export const CreateClubTransactionsModal: React.FC<IProps> = ({
 	isOpened,
-	onModalClosed
+	onModalClosed,
+	membershipSettings
 }) => {
 	const router = useRouter()
 
@@ -153,20 +167,160 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				.split(' ')[0]
 				.toUpperCase()
 
-			const uri = `{"name": ${Cookies.get(
-				CookieKeys.clubName
-			)},"description": ${CookieKeys.clubDescription},"image": ${Cookies.get(
-				CookieKeys.clubImage
-			)},"external_link": ${Cookies.get(CookieKeys.clubExternalUrl)}}`
+			const applicationLinks: string[] = []
+			if (membershipSettings) {
+				membershipSettings.requirements.forEach(requirement => {
+					if (requirement.applicationLink.length > 0) {
+						applicationLinks.push(requirement.applicationLink)
+					}
+				})
+			}
+
+			const uri = JSON.stringify({
+				name: Cookies.get(CookieKeys.clubName),
+				description: Cookies.get(CookieKeys.clubDescription),
+				image: Cookies.get(CookieKeys.clubImage),
+				external_link: Cookies.get(CookieKeys.clubExternalUrl),
+				application_links: applicationLinks
+			})
+
+			let membershipStartUnix = 0
+			let membershipEndUnix = 0
+			if (membershipSettings) {
+				if (membershipSettings.membershipStartDate) {
+					membershipStartUnix = Math.floor(
+						membershipSettings.membershipStartDate.getTime()
+					)
+				}
+				if (membershipSettings.membershipEndDate) {
+					membershipEndUnix = Math.floor(
+						membershipSettings.membershipEndDate.getTime()
+					)
+				}
+			}
+
+			const joinCostInWei = membershipSettings
+				? membershipSettings.costToJoin * 1000000000
+				: 0
+
+			const mintPermissions: any[] = []
+			if (membershipSettings) {
+				membershipSettings.requirements.forEach(requirement => {
+					switch (requirement.type) {
+						case MembershipReqType.None:
+							// Anyone can join for X MATIC
+							mintPermissions.push({
+								permission: Permission.Anyone,
+								addresses: [],
+								numTokens: 0,
+								costWei: joinCostInWei,
+								lockedBy: MeemAPI.zeroAddress
+							})
+							break
+						case MembershipReqType.ApprovedApplicants:
+							// Approved applicants join for X MATIC
+							mintPermissions.push({
+								permission: Permission.Addresses,
+								addresses: requirement.approvedAddresses,
+								numTokens: 0,
+								costWei: joinCostInWei,
+								lockedBy: MeemAPI.zeroAddress
+							})
+							break
+						case MembershipReqType.NftHolders:
+							//NFT holders with 1+ tokens can join for X MATIC
+							mintPermissions.push({
+								permission: Permission.Holders,
+								addresses: [requirement.tokenContractAddress],
+								numTokens: 1,
+								costWei: joinCostInWei,
+								lockedBy: MeemAPI.zeroAddress
+							})
+							break
+						case MembershipReqType.TokenHolders:
+							//Token holders with X tokens can join for X MATIC
+							mintPermissions.push({
+								permission: Permission.Holders,
+								addresses: [requirement.tokenContractAddress],
+								numTokens: requirement.tokenMinQuantity,
+								costWei: joinCostInWei,
+								lockedBy: MeemAPI.zeroAddress
+							})
+							break
+						case MembershipReqType.OtherClubMember:
+							// Members of X club can join for X MATIC
+							mintPermissions.push({
+								permission: Permission.Holders,
+								addresses: [requirement.clubContractAddress],
+								numTokens: requirement.tokenMinQuantity,
+								costWei: joinCostInWei,
+								lockedBy: MeemAPI.zeroAddress
+							})
+							break
+					}
+				})
+			}
+
+			const baseProperties = {
+				// Total # of tokens available. -1 means unlimited.
+				totalOriginalsSupply: membershipSettings
+					? membershipSettings.membershipQuantity === 0
+						? -1
+						: membershipSettings.membershipQuantity
+					: -1,
+				totalOriginalsSupplyLockedBy: MeemAPI.zeroAddress,
+				// Specify who can mint originals
+				mintPermissions,
+				mintPermissionsLockedBy: MeemAPI.zeroAddress,
+				// Payout of minting
+				splits:
+					membershipSettings &&
+					membershipSettings.membershipFundsAddress.length > 0
+						? [
+								{
+									toAddress: membershipSettings
+										? membershipSettings.membershipFundsAddress
+										: accounts[0],
+									// Amount in basis points 10000 == 100%
+									amount: 10000,
+									lockedBy: MeemAPI.zeroAddress
+								}
+						  ]
+						: [],
+				splitsLockedBy: MeemAPI.zeroAddress,
+				// Number of originals allowed to be held by the same wallet
+				originalsPerWallet: -1,
+				originalsPerWalletLockedBy: MeemAPI.zeroAddress,
+				// Whether originals are transferrable
+				isTransferrable: true,
+				isTransferrableLockedBy: MeemAPI.zeroAddress,
+				// Mint start unix timestamp
+				mintStartTimestamp: membershipStartUnix,
+				// Mint end unix timestamp
+				mintEndTimestamp: membershipEndUnix,
+				mintDatesLockedBy: MeemAPI.zeroAddress,
+				// Prevent transfers until this unix timestamp
+				transferLockupUntil: 0,
+				transferLockupUntilLockedBy: MeemAPI.zeroAddress
+			}
+
+			console.log(`baseProperties: ${JSON.stringify(baseProperties)}`)
+			console.log(`club symbol: ${clubSymbol}`)
+			console.log(`club admins: ${membershipSettings?.clubAdmins}`)
 
 			const tx = await meemContracts.initProxy({
 				signer: web3Provider.getSigner(),
 				proxyContractAddress: proxyAddress,
 				name: Cookies.get(CookieKeys.clubName) ?? '',
 				symbol: clubSymbol,
+				admins: membershipSettings ? membershipSettings.clubAdmins : [],
 				contractURI: uri,
-				chain: Chain.Rinkeby,
-				version: 'latest'
+				chain:
+					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
+						? Chain.Rinkeby
+						: Chain.Polygon,
+				version: 'latest',
+				baseProperties
 			})
 
 			log.debug(tx)
@@ -196,6 +350,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			const tx = await meemContract?.mint(
 				{
 					to: accounts[0],
+					// TODO: What goes here?
 					tokenURI: 'ipfs://example',
 					parentChain: MeemAPI.Chain.Polygon,
 					parent: MeemAPI.zeroAddress,
@@ -211,31 +366,57 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				meemContracts.defaultMeemProperties,
 				{ gasLimit: '1000000' }
 			)
-
-			log.debug(tx)
+			//console.log(tx)
 
 			// Remove all metadata cookies!
 			Cookies.remove(CookieKeys.clubName)
 			Cookies.remove(CookieKeys.clubDescription)
 			Cookies.remove(CookieKeys.clubImage)
 			Cookies.remove(CookieKeys.clubExternalUrl)
+			Cookies.remove(CookieKeys.clubSlug)
 
-			// TODO: Get club slug
-
-			// Route to the created club detail page
-			showNotification({
-				title: 'Success!',
-				autoClose: 5000,
-				color: 'green',
-				icon: <Check color="green" />,
-
-				message: `Your club has been published.`
+			// Get actual club slug
+			const client = new ApolloClient({
+				cache: new InMemoryCache(),
+				link: new HttpLink({
+					uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
+				})
 			})
-			router.push({ pathname: '/club' })
 
-			setStep(Step.Minted)
+			// Wait a few seconds to avoid a race condition w/ server
+			await new Promise(f => setTimeout(f, 3000))
+
+			const { data } = await client.query({
+				query: GET_CLUB_SLUG,
+				variables: {
+					contractAddress: proxyAddress
+				}
+			})
+
+			if (data.MeemContracts && data.MeemContracts.length > 0) {
+				// Route to the created club detail page
+				showNotification({
+					title: 'Success!',
+					autoClose: 5000,
+					color: 'green',
+					icon: <Check color="green" />,
+
+					message: `Your club has been published.`
+				})
+				router.push({ pathname: `/${data.MeemContracts[0].slug}` })
+
+				setStep(Step.Minted)
+			} else {
+				// No club slug actually exists, indicating the club failed to be initialized.
+				setStep(Step.Initialized)
+				showNotification({
+					title: 'Error minting club membership.',
+					message: `We were unable to save your club. Please report this!`
+				})
+			}
 		} catch (e) {
 			setStep(Step.Initialized)
+
 			showNotification({
 				title: 'Error minting club membership.',
 				message: `${e as string}`

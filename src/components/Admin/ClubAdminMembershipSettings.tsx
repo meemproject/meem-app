@@ -20,8 +20,9 @@ import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
+import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 
 const useStyles = createStyles(theme => ({
@@ -170,7 +171,17 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-enum MembershipReqType {
+export interface MembershipSettings {
+	requirements: MembershipRequirement[]
+	costToJoin: number
+	membershipFundsAddress: string
+	membershipQuantity: number
+	membershipStartDate?: Date
+	membershipEndDate?: Date
+	clubAdmins: string[]
+}
+
+export enum MembershipReqType {
 	None,
 	ApprovedApplicants,
 	TokenHolders,
@@ -178,7 +189,7 @@ enum MembershipReqType {
 	OtherClubMember
 }
 
-enum MembershipReqAndor {
+export enum MembershipReqAndor {
 	None,
 	And,
 	Or
@@ -203,7 +214,7 @@ interface MembershipRequirement {
 	tokenChain: string // Not used for V1
 	tokenMinQuantity: number
 	// Club membership
-	clubSlug: string
+	clubContractAddress: string
 	clubName: string // Resolved from contract
 }
 
@@ -218,10 +229,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	const router = useRouter()
 
+	const wallet = useWallet()
+
 	const [isLoading, setIsLoading] = useState(false)
 
 	// Membership
 	// TODO: hook up to data
+
+	const [membershipSettings, setMembershipSettings] =
+		useState<MembershipSettings>()
+
 	const [membershipRequirements, setMembershipRequirements] = useState<
 		MembershipRequirement[]
 	>([
@@ -236,7 +253,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			tokenChain: 'matic',
 			tokenContractAddress: '',
 			tokenMinQuantity: 0,
-			clubSlug: '',
+			clubContractAddress: '',
 			clubName: ''
 		}
 	])
@@ -258,7 +275,24 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		undefined
 	)
 
-	const lockedMainAdmin = 'gadsby.eth' // TODO: use club main admin here
+	const [lockedMainAdmin, setLockedMainAdmin] = useState('')
+
+	// Club admins
+	const [clubAdminsString, setClubAdminsString] = useState('')
+	const [clubAdmins, setClubAdmins] = useState<string[]>([])
+
+	const parseClubAdmins = (rawString: string) => {
+		setClubAdminsString(rawString)
+		const adminsList = rawString.split('\n')
+		const finalList: string[] = []
+		adminsList.forEach(potentialAdmin => {
+			if (potentialAdmin.length > 0) {
+				finalList.push(potentialAdmin)
+			}
+		})
+		console.log(`admins count = ${finalList.length + 1}`)
+		setClubAdmins(finalList)
+	}
 
 	const [reqCurrentlyEditing, updateReqCurrentlyEditing] =
 		useState<MembershipRequirement>(membershipRequirements[0])
@@ -286,7 +320,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			tokenChain: 'matic',
 			tokenContractAddress: '',
 			tokenMinQuantity: 0,
-			clubSlug: '',
+			clubContractAddress: '',
 			clubName: ''
 		})
 		setMembershipRequirements(newReqs)
@@ -306,7 +340,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				finalList.push(potentialApprovedAddress)
 			}
 		})
-		finalList.push(lockedMainAdmin)
+		if (!finalList.includes(lockedMainAdmin)) {
+			finalList.push(lockedMainAdmin)
+		}
 		console.log(`approved addresses count = ${finalList.length}`)
 		return finalList
 	}
@@ -360,6 +396,21 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		useState(false)
 	const openTransactionsModal = () => {
 		// transactions modal for club creation
+		// convert current settings and update for the modal
+
+		const finalClubAdmins = Object.assign([], clubAdmins)
+		finalClubAdmins.push(wallet.accounts[0])
+
+		const settings: MembershipSettings = {
+			requirements: membershipRequirements,
+			costToJoin,
+			membershipFundsAddress,
+			membershipQuantity,
+			membershipStartDate,
+			membershipEndDate,
+			clubAdmins: finalClubAdmins
+		}
+		setMembershipSettings(settings)
 		setTransactionsModalOpened(true)
 	}
 
@@ -400,38 +451,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	// Is the req we're currently editing the first requirement or not? This affects language and modal options
 	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
 
-	// Club admins
-	const [primaryClubAdmin, setPrimaryClubAdmin] = useState('gadsby.eth')
-	const [clubAdminsString, setClubAdminsString] = useState('')
-	const [clubAdmins, setClubAdmins] = useState<string[]>([])
-
-	const parseClubAdmins = (rawString: string) => {
-		setClubAdminsString(rawString)
-		const adminsList = rawString.split('\n')
-		const finalList: string[] = []
-		adminsList.forEach(potentialAdmin => {
-			if (potentialAdmin.length > 0) {
-				finalList.push(potentialAdmin)
-			}
-		})
-		console.log(`admins count = ${finalList.length + 1}`)
-		setClubAdmins(finalList)
-	}
-
-	function truncatedWalletAddress(address: string): string {
-		if (address.length === 0) {
-			return ''
-		}
-
-		const walletAddressLength = address.length
-		const truncatedWallet = `${address.substring(0, 5)}...${address.substring(
-			walletAddressLength - 5,
-			walletAddressLength
-		)}`
-
-		return truncatedWallet.toLowerCase()
-	}
-
 	const saveChanges = async () => {
 		// TODO
 		setIsLoading(true)
@@ -442,6 +461,17 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			// TODO
 		}
 	}
+
+	useEffect(() => {
+		if (isCreatingClub) {
+			if (wallet.isConnected) {
+				setLockedMainAdmin(wallet.accounts[0])
+			}
+		} else {
+			setLockedMainAdmin('TODO')
+			// TODO: set locked main admin from club data
+		}
+	}, [isCreatingClub, wallet.accounts, wallet.isConnected])
 
 	return (
 		<>
@@ -656,7 +686,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								<div className={classes.primaryAdminChipContents}>
 									<Lock width={16} height={16} />
 									<Space w={4} />
-									<Text>{primaryClubAdmin}</Text>
+									<Text>{truncatedWalletAddress(lockedMainAdmin)}</Text>
 								</div>
 							</Chip>
 						</Chips>
@@ -745,7 +775,11 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							label={isEditedReqFirstReq ? 'NFT holders' : 'hold an NFT'}
 						/>
 						{!isEditedReqFirstReq && (
-							<Radio value="other-club-member" label="join another club" />
+							<Radio
+								value="other-club-member"
+								label="join another club"
+								disabled
+							/>
 						)}
 					</RadioGroup>
 					<div
@@ -791,7 +825,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									<div className={classes.primaryApprovedAddressChipContents}>
 										<Lock width={16} height={16} />
 										<Space w={4} />
-										<Text>{lockedMainAdmin}</Text>
+										<Text>{truncatedWalletAddress(lockedMainAdmin)}</Text>
 									</div>
 								</Chip>
 							</Chips>
@@ -914,7 +948,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							size="md"
 							value={reqCurrentlyEditing.clubName}
 							onChange={event => {
-								// TODO: Look up club and retrive club slug!
+								// TODO: Look up club and retrive club contract address!
 								reqCurrentlyEditing.clubName = event.target.value
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
@@ -932,6 +966,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										})
 										return
 									}
+
+									// Add locked admin as primary approved address if it doesn't exist
+									if (reqCurrentlyEditing.approvedAddresses.length === 0) {
+										reqCurrentlyEditing.approvedAddresses = [lockedMainAdmin]
+										updateMembershipRequirement(reqCurrentlyEditing)
+									}
+
 									break
 								case MembershipReqType.TokenHolders:
 									if (reqCurrentlyEditing.tokenContractAddress.length < 10) {
@@ -1067,7 +1108,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								setCostToJoin(0)
 							}
 							if (costToJoin > 0) {
-								if (membershipFundsAddress.length < 20) {
+								if (membershipFundsAddress.length < 2) {
 									showNotification({
 										title: 'Oops!',
 										message:
@@ -1326,6 +1367,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</Button>
 				</Modal>
 				<CreateClubTransactionsModal
+					membershipSettings={membershipSettings}
 					isOpened={isTransactionsModalOpened}
 					onModalClosed={() => {
 						setIsLoading(false)

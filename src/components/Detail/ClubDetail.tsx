@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useQuery } from '@apollo/client'
+import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -13,6 +13,7 @@ import {
 	Loader,
 	Center
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
@@ -22,7 +23,9 @@ import {
 	Settings
 } from 'tabler-icons-react'
 import { GetClubQuery } from '../../../generated/graphql'
-import { GET_CLUB } from '../../graphql/clubs'
+import { GET_CLUB, GET_CLUB_SLUG } from '../../graphql/clubs'
+import { clubMetadataFromContractUri } from '../../utils/club_metadata'
+import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -181,6 +184,7 @@ interface IProps {
 
 export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
+	const wallet = useWallet()
 	const { classes } = useStyles()
 
 	const {
@@ -191,30 +195,33 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		variables: { slug }
 	})
 
-	const [clubName, setClubName] = useState('Harry  Potter Club')
-	const [clubDescription, setClubDescription] = useState(
-		'A club to talk about spells and magic'
-	)
-	const [membershipRequirements, setMembershipRequirements] = useState([
-		'Hold a Memesters Union Card'
-	])
+	const [clubName, setClubName] = useState('')
+	const [clubLogo, setClubLogo] = useState('')
+	const [clubDescription, setClubDescription] = useState('')
+	const [membershipRequirements, setMembershipRequirements] = useState([])
+	const [isClubMember, setIsClubMember] = useState(false)
 
-	const [clubMembers, setClubMembers] = useState([
-		'popp.eth',
-		'kateweimer.eth',
-		'kencodes.eth',
-		'gadsby.eth',
-		'gregb.eth',
-		'shoople.eth'
-	])
+	const [clubMembers, setClubMembers] = useState<string[]>([])
 
 	useEffect(() => {
 		if (!loading && !error && clubData) {
-			setClubName(clubData.MeemContracts[0].name)
-		}
-	}, [clubData, error, loading])
+			const club = clubData.MeemContracts[0]
+			const metadata = clubMetadataFromContractUri(club.contractURI)
+			setClubName(club.name)
+			setClubLogo(metadata.image)
+			setClubDescription(metadata.description)
 
-	const [isLoading, setIsLoading] = useState(true)
+			const members: string[] = []
+			club.Meems.forEach(meem => {
+				console.log(meem)
+				if (wallet.isConnected && meem.owner === wallet.accounts[0]) {
+					setIsClubMember(true)
+				}
+				members.push(meem.owner)
+			})
+			setClubMembers(members)
+		}
+	}, [clubData, error, loading, wallet.accounts, wallet.isConnected])
 
 	const navigateToSettings = () => {
 		router.push({ pathname: `/clubname/admin` })
@@ -238,15 +245,20 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			{!loading && clubData && (
 				<>
 					<div className={classes.header}>
-						<Image className={classes.clubLogoImage} src="/exampleclub.png" />
+						<Image className={classes.clubLogoImage} src={clubLogo} />
 						<div>
 							<Text className={classes.headerClubName}>{clubName}</Text>
 							<Text className={classes.headerClubDescription}>
 								{clubDescription}
 							</Text>
 							<div className={classes.headerButtons}>
-								<Button className={classes.buttonJoinClub}>Join</Button>
-								<Button className={classes.outlineButton}>Leave</Button>
+								{isClubMember && (
+									<Button className={classes.outlineButton}>Leave</Button>
+								)}
+								{!isClubMember && (
+									<Button className={classes.buttonJoinClub}>Join</Button>
+								)}
+								<Space w={'xs'} />
 								<Button
 									onClick={navigateToSettings}
 									className={classes.outlineHeaderButton}
@@ -312,7 +324,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							<Grid>
 								{clubMembers.map(member => (
 									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
-										<Text className={classes.memberItem}>{member}</Text>
+										<Text className={classes.memberItem}>
+											{truncatedWalletAddress(member)}
+										</Text>
 									</Grid.Col>
 								))}
 							</Grid>
