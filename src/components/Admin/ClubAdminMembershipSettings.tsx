@@ -258,7 +258,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		undefined
 	)
 
-	const lockedApprovedAddress = 'gadsby.eth' // TODO: use club main admin here
+	const lockedMainAdmin = 'gadsby.eth' // TODO: use club main admin here
 
 	const [reqCurrentlyEditing, updateReqCurrentlyEditing] =
 		useState<MembershipRequirement>(membershipRequirements[0])
@@ -306,7 +306,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				finalList.push(potentialApprovedAddress)
 			}
 		})
-		finalList.push(lockedApprovedAddress)
+		finalList.push(lockedMainAdmin)
 		console.log(`approved addresses count = ${finalList.length}`)
 		return finalList
 	}
@@ -791,7 +791,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									<div className={classes.primaryApprovedAddressChipContents}>
 										<Lock width={16} height={16} />
 										<Space w={4} />
-										<Text>{lockedApprovedAddress}</Text>
+										<Text>{lockedMainAdmin}</Text>
 									</div>
 								</Chip>
 							</Chips>

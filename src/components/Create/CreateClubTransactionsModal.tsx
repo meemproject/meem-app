@@ -12,7 +12,8 @@ import {
 	Modal,
 	Divider,
 	Stepper,
-	Loader
+	Loader,
+	MantineProvider
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -273,89 +274,110 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				<Space h={12} />
 
 				<div className={classes.stepsContainer}>
-					<Stepper
-						size="md"
-						orientation="vertical"
-						active={
-							step === Step.Start || step === Step.Creating
-								? 0
-								: step === Step.Created || step === Step.Initializing
-								? 1
-								: step === Step.Initialized || step === Step.Minting
-								? 2
-								: 3
-						}
+					<MantineProvider
+						theme={{
+							colors: {
+								brand: [
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E',
+									'#1DAD4E'
+								]
+							},
+							primaryColor: 'brand'
+						}}
 					>
-						<Stepper.Step
-							label="Establish Club"
-							loading={step === Step.Creating}
-							description={
-								step !== Step.Start && step !== Step.Creating ? null : (
-									<>
-										{step === Step.Start && (
-											<div>
-												<Space h={12} />
-												<a onClick={create} className={classes.buttonConfirm}>
-													Confirm
-												</a>
-											</div>
-										)}
-									</>
-								)
+						<Stepper
+							size="md"
+							color="green"
+							orientation="vertical"
+							active={
+								step === Step.Start || step === Step.Creating
+									? 0
+									: step === Step.Created || step === Step.Initializing
+									? 1
+									: step === Step.Initialized || step === Step.Minting
+									? 2
+									: 3
 							}
-						/>
-						<Stepper.Step
-							label="Authorize membership settings"
-							loading={step === Step.Initializing}
-							description={
-								step !== Step.Created && step !== Step.Initializing ? (
-									<Text className={classes.stepDescription}>
-										Multiple transactions may occur if several updates were
-										made.
-									</Text>
-								) : (
-									<>
-										{step === Step.Created && (
-											<div>
-												<Space h={12} />
+						>
+							<Stepper.Step
+								label="Establish Club"
+								loading={step === Step.Creating}
+								description={
+									step !== Step.Start && step !== Step.Creating ? null : (
+										<>
+											{step === Step.Start && (
+												<div>
+													<Space h={12} />
+													<a onClick={create} className={classes.buttonConfirm}>
+														Confirm
+													</a>
+												</div>
+											)}
+										</>
+									)
+								}
+							/>
+							<Stepper.Step
+								label="Authorize membership settings"
+								loading={step === Step.Initializing}
+								description={
+									step !== Step.Created && step !== Step.Initializing ? (
+										<Text className={classes.stepDescription}>
+											Multiple transactions may occur if several updates were
+											made.
+										</Text>
+									) : (
+										<>
+											{step === Step.Created && (
+												<div>
+													<Space h={12} />
 
-												<a
-													onClick={initialize}
-													className={classes.buttonConfirm}
-												>
-													Confirm
-												</a>
-											</div>
-										)}
-									</>
-								)
-							}
-						/>
-						<Stepper.Step
-							label="Confirm club creation"
-							loading={step === Step.Minting}
-							description={
-								step !== Step.Initialized && step !== Step.Minting ? (
-									<Text className={classes.stepDescription}>
-										Your club will be published at the URL you selected once
-										this step is complete.
-									</Text>
-								) : (
-									<>
-										{step === Step.Initialized && (
-											<div>
-												<Space h={12} />
+													<a
+														onClick={initialize}
+														className={classes.buttonConfirm}
+													>
+														Confirm
+													</a>
+												</div>
+											)}
+										</>
+									)
+								}
+							/>
+							<Stepper.Step
+								label="Confirm club creation"
+								loading={step === Step.Minting}
+								description={
+									step !== Step.Initialized && step !== Step.Minting ? (
+										<Text className={classes.stepDescription}>
+											Your club will be published at the URL you selected once
+											this step is complete.
+										</Text>
+									) : (
+										<>
+											{step === Step.Initialized && (
+												<div>
+													<Space h={12} />
 
-												<a onClick={mint} className={classes.buttonConfirm}>
-													Confirm
-												</a>
-											</div>
-										)}
-									</>
-								)
-							}
-						/>
-					</Stepper>
+													<a onClick={mint} className={classes.buttonConfirm}>
+														Confirm
+													</a>
+												</div>
+											)}
+										</>
+									)
+								}
+							/>
+						</Stepper>
+					</MantineProvider>
 					{(step === Step.Initialized || step === Step.Minted) && (
 						<Space h={'xs'} />
 					)}
