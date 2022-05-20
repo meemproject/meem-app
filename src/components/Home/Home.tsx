@@ -177,7 +177,7 @@ export function HomeComponent() {
 		console.log(`Chosen ${suggestion.value} - ${suggestion.description}`)
 		setIsLoadingSuggestions(true)
 		router.push({
-			pathname: `/club/${suggestion.id}`
+			pathname: `/${suggestion.id}`
 		})
 	}
 

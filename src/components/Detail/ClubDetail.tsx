@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -7,16 +9,23 @@ import {
 	Image,
 	Button,
 	Space,
-	Grid
+	Grid,
+	Loader,
+	Center
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	BrandDiscord,
 	BrandTwitter,
 	CircleCheck,
 	Settings
 } from 'tabler-icons-react'
+import { GetClubQuery } from '../../../generated/graphql'
+import { GET_CLUB, GET_CLUB_SLUG } from '../../graphql/clubs'
+import { clubMetadataFromContractUri } from '../../utils/club_metadata'
+import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -41,11 +50,11 @@ const useStyles = createStyles(theme => ({
 		fontSize: 16,
 		marginTop: 8,
 		marginRight: 16,
-		fontWeight: '500',
+		fontWeight: 500,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		marginTop: -8
 	},
@@ -54,7 +63,7 @@ const useStyles = createStyles(theme => ({
 		top: '24px',
 		right: '64px',
 		display: 'flex',
-		fontWeight: '600',
+		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
 		},
@@ -65,7 +74,7 @@ const useStyles = createStyles(theme => ({
 	mobileHeaderLinks: {
 		marginTop: 16,
 		display: 'flex',
-		fontWeight: '600',
+		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'flex'
 		},
@@ -119,14 +128,14 @@ const useStyles = createStyles(theme => ({
 	clubMemberReqsTitleText: {
 		fontSize: 18,
 		marginBottom: 16,
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 	clubMembersListTitleText: {
 		fontSize: 18,
 		marginBottom: 16,
 		marginTop: 40,
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 
@@ -163,123 +172,169 @@ const useStyles = createStyles(theme => ({
 	memberItem: {
 		border: '1px solid rgba(0, 0, 0, 0.1)',
 		backgroundColor: '#FAFAFA',
-		fontWeight: '600',
+		fontWeight: 600,
 		borderRadius: 16,
 		padding: 16
 	}
 }))
 
-export const ClubDetailComponent: React.FC = () => {
+interface IProps {
+	slug: string
+}
+
+export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
+	const wallet = useWallet()
 	const { classes } = useStyles()
 
-	const [clubName, setClubName] = useState('Harry  Potter Club')
-	const [clubDescription, setClubDescription] = useState(
-		'A club to talk about spells and magic'
-	)
-	const [membershipRequirements, setMembershipRequirements] = useState([
-		'Hold a Memesters Union Card'
-	])
+	const {
+		loading,
+		error,
+		data: clubData
+	} = useQuery<GetClubQuery>(GET_CLUB, {
+		variables: { slug }
+	})
 
-	const [clubMembers, setClubMembers] = useState([
-		'popp.eth',
-		'kateweimer.eth',
-		'kencodes.eth',
-		'gadsby.eth',
-		'gregb.eth',
-		'shoople.eth'
-	])
+	const [clubName, setClubName] = useState('')
+	const [clubLogo, setClubLogo] = useState('')
+	const [clubDescription, setClubDescription] = useState('')
+	const [membershipRequirements, setMembershipRequirements] = useState([])
+	const [isClubMember, setIsClubMember] = useState(false)
 
-	const [isLoading, setIsLoading] = useState(true)
+	const [clubMembers, setClubMembers] = useState<string[]>([])
+
+	useEffect(() => {
+		if (!loading && !error && clubData) {
+			const club = clubData.MeemContracts[0]
+			const metadata = clubMetadataFromContractUri(club.contractURI)
+			setClubName(club.name)
+			setClubLogo(metadata.image)
+			setClubDescription(metadata.description)
+
+			const members: string[] = []
+			club.Meems.forEach(meem => {
+				console.log(meem)
+				if (wallet.isConnected && meem.owner === wallet.accounts[0]) {
+					setIsClubMember(true)
+				}
+				members.push(meem.owner)
+			})
+			setClubMembers(members)
+		}
+	}, [clubData, error, loading, wallet.accounts, wallet.isConnected])
 
 	const navigateToSettings = () => {
-		router.push({ pathname: `/club/clubname/admin` })
+		router.push({ pathname: `/clubname/admin` })
 	}
 
 	return (
 		<>
-			<div className={classes.header}>
-				<Image className={classes.clubLogoImage} src="/exampleclub.png" />
-				<div>
-					<Text className={classes.headerClubName}>{clubName}</Text>
-					<Text className={classes.headerClubDescription}>
-						{clubDescription}
-					</Text>
-					<div className={classes.headerButtons}>
-						<Button className={classes.buttonJoinClub}>Join</Button>
-						<Button className={classes.outlineButton}>Leave</Button>
-						<Button
-							onClick={navigateToSettings}
-							className={classes.outlineHeaderButton}
-							leftIcon={<Settings className={classes.clubSettingsIcon} />}
-						>
-							Settings
-						</Button>
-					</div>
-					<div className={classes.mobileHeaderLinks}>
-						<a href="twitter.com" className={classes.headerLink}>
-							{' '}
-							<BrandTwitter />
-							<Space w={8} />
-							<Text>Twitter</Text>
-						</a>
-						<Space w={'sm'} />
-						<a href="discord.com" className={classes.headerLink}>
-							{' '}
-							<BrandDiscord />
-							<Space w={8} />
-							<Text>Discord</Text>
-						</a>
-					</div>
-				</div>
-				<div className={classes.headerLinks}>
-					<a href="twitter.com" className={classes.headerLink}>
-						{' '}
-						<BrandTwitter />
-						<Space w={8} />
-						<Text>Twitter</Text>
-					</a>
-					<Space w={'sm'} />
-					<a href="discord.com" className={classes.headerLink}>
-						{' '}
-						<BrandDiscord />
-						<Space w={8} />
-						<Text>Discord</Text>
-					</a>
-				</div>
-			</div>
-
-			<Container>
-				<Text className={classes.clubMemberReqsTitleText}>
-					Membership Requirements
-				</Text>
-				{membershipRequirements.length > 0 && (
-					<div className={classes.requirementsContainer}>
-						{membershipRequirements.map(requirement => (
-							<div className={classes.requirementItem} key={requirement}>
-								<CircleCheck color="green" />
+			{loading && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Loader />
+					</Center>
+				</Container>
+			)}
+			{!loading && !clubData && (
+				<Container>
+					<Text>Sorry, that club does not exist!</Text>
+				</Container>
+			)}
+			{!loading && clubData && (
+				<>
+					<div className={classes.header}>
+						<Image className={classes.clubLogoImage} src={clubLogo} />
+						<div>
+							<Text className={classes.headerClubName}>{clubName}</Text>
+							<Text className={classes.headerClubDescription}>
+								{clubDescription}
+							</Text>
+							<div className={classes.headerButtons}>
+								{isClubMember && (
+									<Button className={classes.outlineButton}>Leave</Button>
+								)}
+								{!isClubMember && (
+									<Button className={classes.buttonJoinClub}>Join</Button>
+								)}
 								<Space w={'xs'} />
-
-								<Text>{requirement}</Text>
+								<Button
+									onClick={navigateToSettings}
+									className={classes.outlineHeaderButton}
+									leftIcon={<Settings className={classes.clubSettingsIcon} />}
+								>
+									Settings
+								</Button>
 							</div>
-						))}
+							<div className={classes.mobileHeaderLinks}>
+								<a href="twitter.com" className={classes.headerLink}>
+									{' '}
+									<BrandTwitter />
+									<Space w={8} />
+									<Text>Twitter</Text>
+								</a>
+								<Space w={'sm'} />
+								<a href="discord.com" className={classes.headerLink}>
+									{' '}
+									<BrandDiscord />
+									<Space w={8} />
+									<Text>Discord</Text>
+								</a>
+							</div>
+						</div>
+						<div className={classes.headerLinks}>
+							<a href="twitter.com" className={classes.headerLink}>
+								{' '}
+								<BrandTwitter />
+								<Space w={8} />
+								<Text>Twitter</Text>
+							</a>
+							<Space w={'sm'} />
+							<a href="discord.com" className={classes.headerLink}>
+								{' '}
+								<BrandDiscord />
+								<Space w={8} />
+								<Text>Discord</Text>
+							</a>
+						</div>
 					</div>
-				)}
 
-				<Text
-					className={classes.clubMembersListTitleText}
-				>{`Members (${clubMembers.length})`}</Text>
-				{clubMembers.length > 0 && (
-					<Grid>
-						{clubMembers.map(member => (
-							<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
-								<Text className={classes.memberItem}>{member}</Text>
-							</Grid.Col>
-						))}
-					</Grid>
-				)}
-				<Space h={'xl'} />
-			</Container>
+					<Container>
+						<Text className={classes.clubMemberReqsTitleText}>
+							Membership Requirements
+						</Text>
+						{membershipRequirements.length > 0 && (
+							<div className={classes.requirementsContainer}>
+								{membershipRequirements.map(requirement => (
+									<div className={classes.requirementItem} key={requirement}>
+										<CircleCheck color="green" />
+										<Space w={'xs'} />
+
+										<Text>{requirement}</Text>
+									</div>
+								))}
+							</div>
+						)}
+
+						<Text
+							className={classes.clubMembersListTitleText}
+						>{`Members (${clubMembers.length})`}</Text>
+						{clubMembers.length > 0 && (
+							<Grid>
+								{clubMembers.map(member => (
+									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
+										<Text className={classes.memberItem}>
+											{truncatedWalletAddress(member)}
+										</Text>
+									</Grid.Col>
+								))}
+							</Grid>
+						)}
+						<Space h={'xl'} />
+					</Container>
+				</>
+			)}
 		</>
 	)
 }

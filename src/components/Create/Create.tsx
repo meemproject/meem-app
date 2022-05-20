@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -12,12 +13,18 @@ import {
 	TextInput,
 	Space
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import * as meemContracts from '@meemproject/meem-contracts'
+import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { CookieKeys } from '../../utils/cookies'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -44,14 +51,14 @@ const useStyles = createStyles(theme => ({
 	},
 	headerPrompt: {
 		fontSize: 16,
-		fontWeight: '500',
+		fontWeight: 500,
 		color: 'rgba(0, 0, 0, 0.6)',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginBottom: 0
 		}
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 20
@@ -61,7 +68,8 @@ const useStyles = createStyles(theme => ({
 		position: 'relative'
 	},
 	namespaceTextInput: {
-		paddingLeft: 192
+		paddingLeft: 154,
+		paddingBottom: 3
 	},
 	namespaceTextInputUrlPrefix: {
 		position: 'absolute',
@@ -74,15 +82,15 @@ const useStyles = createStyles(theme => ({
 		paddingBottom: 16,
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
-	clubDescriptionPrompt: { fontSize: 18, marginBottom: 0, fontWeight: '600' },
+	clubDescriptionPrompt: { fontSize: 18, marginBottom: 0, fontWeight: 600 },
 	clubLogoPrompt: {
 		marginTop: 32,
 		fontSize: 18,
 		marginBottom: 8,
-		fontWeight: '600'
+		fontWeight: 600
 	},
 	clubLogoInfo: {
-		fontWeight: '500',
+		fontWeight: 500,
 		fontSize: 14,
 		maxWidth: 650,
 		color: 'rgba(45, 28, 28, 0.6)',
@@ -135,7 +143,8 @@ export const CreateComponent: React.FC = () => {
 	const [clubDescription, setClubDescription] = useState('')
 	const descriptionRef = useRef<HTMLTextAreaElement>()
 
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoading, setIsLoading] = useState(false)
+	const { web3Provider, accounts, signer } = useWallet()
 
 	useEffect(() => {
 		if (
@@ -207,6 +216,17 @@ export const CreateComponent: React.FC = () => {
 		setSmallClubLogo('')
 	}
 
+	const createClub = async () => {
+		if (!web3Provider) {
+			return
+		}
+		Cookies.set(CookieKeys.clubName, clubName ?? '')
+		Cookies.set(CookieKeys.clubImage, smallClubLogo)
+		Cookies.set(CookieKeys.clubDescription, clubDescription)
+		Cookies.set(CookieKeys.clubSlug, clubNamespace)
+		router.push({ pathname: `/create/permissions` })
+	}
+
 	return (
 		<>
 			<div className={classes.header}>
@@ -240,7 +260,7 @@ export const CreateComponent: React.FC = () => {
 					/>
 					<Text
 						className={classes.namespaceTextInputUrlPrefix}
-					>{`https://clubs.link/club/`}</Text>
+					>{`https://clubs.link/`}</Text>
 				</div>
 
 				<Space h={'md'} />
@@ -295,12 +315,17 @@ export const CreateComponent: React.FC = () => {
 			<Center>
 				<Button
 					onClick={() => {
-						router.push({ pathname: `/club/${clubNamespace}/admin` })
+						createClub()
 					}}
-					disabled={clubDescription.length === 0 || smallClubLogo.length === 0}
+					loading={isLoading}
+					disabled={
+						clubDescription.length === 0 ||
+						smallClubLogo.length === 0 ||
+						isLoading
+					}
 					className={classes.buttonCreate}
 				>
-					Create Club
+					Continue
 				</Button>
 			</Center>
 		</>

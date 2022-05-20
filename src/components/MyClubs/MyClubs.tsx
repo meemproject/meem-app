@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
+import { useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -10,9 +11,12 @@ import {
 	Button,
 	Space
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
+import { MyClubsQuery } from '../../../generated/graphql'
+import { GET_MY_CLUBS } from '../../graphql/clubs'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -48,7 +52,7 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 20
@@ -74,7 +78,7 @@ const useStyles = createStyles(theme => ({
 		alignItems: 'center',
 		marginBottom: 24,
 		fontSize: 16,
-		fontWeight: '600',
+		fontWeight: 600,
 		cursor: 'pointer'
 	},
 	clubLogoImage: {
@@ -87,6 +91,12 @@ const useStyles = createStyles(theme => ({
 export const MyClubsComponent: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
+	const wallet = useWallet()
+
+	const { loading, error, data } = useQuery<MyClubsQuery>(GET_MY_CLUBS, {
+		variables: { walletAddress: wallet.accounts[0] }
+	})
+
 	const [clubs, setClubs] = useState(['Harry Potter Club', 'ClubClub'])
 	const [isLoading, setIsLoading] = useState(true)
 
@@ -99,7 +109,7 @@ export const MyClubsComponent: React.FC = () => {
 	}
 
 	const navigateToClub = (club: string) => {
-		router.push({ pathname: `/club/${club}` })
+		router.push({ pathname: `/${club}` })
 	}
 
 	return (

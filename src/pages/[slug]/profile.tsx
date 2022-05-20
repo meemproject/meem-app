@@ -1,18 +1,18 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { ClubDetailComponent } from '../../../components/Detail/ClubDetail'
-import { HeaderMenu } from '../../../components/Header/Header'
+import { ClubAdminProfileSettings } from '../../components/Admin/ClubAdminProfileSettings'
+import { HeaderMenu } from '../../components/Header/Header'
 
 interface IProps {
 	id: string
 }
 
-const ClubDetailPage: NextPage<IProps> = ({ id }) => {
+const ClubProfilePage: NextPage<IProps> = ({ id }) => {
 	return (
 		<>
 			<Head>
-				<title>{id} | Clubs</title>
+				<title>{id} | Profile | Clubs</title>
 				<meta name="title" content="Clubs clubs" />
 				<meta name="description" content="Clubs! Clubs!" />
 				<meta property="og:type" content="website" />
@@ -38,9 +38,9 @@ const ClubDetailPage: NextPage<IProps> = ({ id }) => {
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
 			</Head>
 			<HeaderMenu />
-			<ClubDetailComponent />
+			<ClubAdminProfileSettings />
 		</>
 	)
 }
 
-export default ClubDetailPage
+export default ClubProfilePage

@@ -130,16 +130,16 @@ const useStyles = createStyles(theme => ({
 	},
 
 	menuItem: {
-		fontWeight: '600'
+		fontWeight: 600
 	},
 	menuItemWithIcon: {
-		fontWeight: '600',
+		fontWeight: 600,
 		marginBottom: '-2px',
 		marginTop: '-2px'
 	},
 
 	redMenuItem: {
-		fontWeight: '600',
+		fontWeight: 600,
 		color: 'rgba(255, 102, 81, 1)',
 		marginBottom: '-2px',
 		marginTop: '-2px'
@@ -182,7 +182,7 @@ export function HeaderMenu() {
 	}
 
 	const handleJoinClubClub = () => {
-		window.open('/club/clubclub')
+		window.open('/clubclub')
 	}
 
 	const handlePoweredByMeem = () => {

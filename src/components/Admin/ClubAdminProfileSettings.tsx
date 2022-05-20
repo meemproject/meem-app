@@ -54,11 +54,11 @@ const useStyles = createStyles(theme => ({
 	headerPrompt: {
 		fontSize: 16,
 		marginBottom: 8,
-		fontWeight: '500',
+		fontWeight: 500,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
 	headerClubName: {
-		fontWeight: '600',
+		fontWeight: 600,
 		fontSize: 24,
 		marginLeft: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -81,7 +81,7 @@ const useStyles = createStyles(theme => ({
 	clubNamePrompt: {
 		fontSize: 18,
 		marginBottom: 16,
-		fontWeight: '600',
+		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 16,
 			marginBottom: 8
@@ -91,7 +91,7 @@ const useStyles = createStyles(theme => ({
 	clubDescriptionPrompt: {
 		fontSize: 18,
 		marginBottom: 16,
-		fontWeight: '600',
+		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 16,
 			marginBottom: 8
@@ -101,14 +101,14 @@ const useStyles = createStyles(theme => ({
 		marginTop: 32,
 		fontSize: 18,
 		marginBottom: 8,
-		fontWeight: '600',
+		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 16,
 			marginBottom: 8
 		}
 	},
 	clubLogoInfo: {
-		fontWeight: '500',
+		fontWeight: 500,
 		fontSize: 14,
 		maxWidth: 650,
 		color: 'rgba(45, 28, 28, 0.6)',
@@ -158,7 +158,7 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export const ClubEditComponent: React.FC = () => {
+export const ClubAdminProfileSettings: React.FC = () => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
@@ -182,7 +182,7 @@ export const ClubEditComponent: React.FC = () => {
 	})
 
 	const navigateToClubDetail = () => {
-		router.push({ pathname: '/club/clubname' })
+		router.push({ pathname: '/clubname' })
 	}
 
 	const resizeFile = (file: any) =>
@@ -227,80 +227,66 @@ export const ClubEditComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={classes.header}>
-				<div className={classes.headerTitle}>
-					<a onClick={navigateToClubDetail}>
-						<ArrowLeft className={classes.headerArrow} size={32} />
-					</a>
-					<Image className={classes.clubLogoImage} src="/exampleclub.png" />
-					<Text className={classes.headerClubName}>Harry Potter Fan Club</Text>
-				</div>
-				<Button className={classes.buttonSaveChangesInHeader}>
-					Save Changes
+			<Space h={'lg'} />
+			<Text
+				className={classes.clubNamePrompt}
+			>{`What's your club called?`}</Text>
+			<TextInput
+				radius="lg"
+				size="md"
+				value={clubName}
+				onChange={event => setClubName(event.currentTarget.value)}
+			/>
+			<Space h={'xl'} />
+			<Text className={classes.clubDescriptionPrompt}>
+				In a sentence, describe what your members do together.
+			</Text>
+			<Textarea
+				radius="lg"
+				size="md"
+				value={clubDescription}
+				onChange={event => setClubDescription(event.currentTarget.value)}
+			/>
+			<Text className={classes.clubLogoPrompt}>
+				Upload an icon for your club.
+			</Text>
+			<Text className={classes.clubLogoInfo}>
+				This will be your club’s membership token. You can change it anytime.
+				Icons should be square and either JPG or PNG files. Note that all
+				uploads will be rendered at 24x24 px.
+			</Text>
+			{smallClubLogo.length === 0 && !isLoadingImage && (
+				<Button
+					leftIcon={<Upload size={14} />}
+					className={classes.buttonUpload}
+					onClick={() => openFileSelector()}
+				>
+					Upload
 				</Button>
-			</div>
-
-			<Container>
-				<Text
-					className={classes.clubNamePrompt}
-				>{`What's your club called?`}</Text>
-				<TextInput
-					radius="lg"
-					size="md"
-					value={clubName}
-					onChange={event => setClubName(event.currentTarget.value)}
-				/>
-				<Space h={'xl'} />
-				<Text className={classes.clubDescriptionPrompt}>
-					In a sentence, describe what your members do together.
-				</Text>
-				<Textarea
-					radius="lg"
-					size="md"
-					value={clubDescription}
-					onChange={event => setClubDescription(event.currentTarget.value)}
-				/>
-				<Text className={classes.clubLogoPrompt}>
-					Upload an icon for your club.
-				</Text>
-				<Text className={classes.clubLogoInfo}>
-					This will be your club’s membership token. You can change it anytime.
-					Icons should be square and either JPG or PNG files. Note that all
-					uploads will be rendered at 24x24 px.
-				</Text>
-				{smallClubLogo.length === 0 && !isLoadingImage && (
-					<Button
-						leftIcon={<Upload size={14} />}
-						className={classes.buttonUpload}
-						onClick={() => openFileSelector()}
-					>
-						Upload
-					</Button>
-				)}
-				{isLoadingImage && <Loader />}
-				{!isLoadingImage && smallClubLogo.length > 0 && (
-					<div className={classes.clubLogoImageContainer}>
+			)}
+			{isLoadingImage && <Loader />}
+			{!isLoadingImage && smallClubLogo.length > 0 && (
+				<div className={classes.clubLogoImageContainer}>
+					<Image
+						className={classes.clubLogoImage}
+						src={smallClubLogo}
+						width={200}
+						height={200}
+						fit={'contain'}
+					/>
+					<a onClick={deleteImage}>
 						<Image
-							className={classes.clubLogoImage}
-							src={smallClubLogo}
-							width={200}
-							height={200}
-							fit={'contain'}
+							className={classes.clubLogoDeleteButton}
+							src="/delete.png"
+							width={24}
+							height={24}
 						/>
-						<a onClick={deleteImage}>
-							<Image
-								className={classes.clubLogoDeleteButton}
-								src="/delete.png"
-								width={24}
-								height={24}
-							/>
-						</a>
-					</div>
-				)}
-				<Space h={smallClubLogo.length > 0 ? 148 : 32} />
-				<Button className={classes.buttonSaveChanges}>Save Changes</Button>
-				<Space h={64} />
-			</Container>
+					</a>
+				</div>
+			)}
+			<Space h={smallClubLogo.length > 0 ? 148 : 32} />
+			<Button className={classes.buttonSaveChanges}>Save Changes</Button>
+			<Space h={64} />
 		</>
 	)
 }
