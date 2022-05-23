@@ -129,7 +129,7 @@ export const CreatePage: React.FC = () => {
 			version: 'alpha',
 			displayName: `alpha (${meemContracts.versions[Chain.Rinkeby].alpha})`
 		},
-		...Object.keys(meemContracts.versions[Chain.Rinkeby].history).map(k => ({
+		...Object.keys(meemContracts.versions[Chain.Rinkeby]).map(k => ({
 			version: k,
 			displayName: k
 		}))
