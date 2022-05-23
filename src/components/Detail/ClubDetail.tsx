@@ -224,7 +224,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	}, [clubData, error, loading, wallet.accounts, wallet.isConnected])
 
 	const navigateToSettings = () => {
-		router.push({ pathname: `/clubname/admin` })
+		router.push({ pathname: `/${slug}/admin` })
 	}
 
 	return (
@@ -267,7 +267,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									Settings
 								</Button>
 							</div>
-							<div className={classes.mobileHeaderLinks}>
+							{/* <div className={classes.mobileHeaderLinks}>
 								<a href="twitter.com" className={classes.headerLink}>
 									{' '}
 									<BrandTwitter />
@@ -281,9 +281,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									<Space w={8} />
 									<Text>Discord</Text>
 								</a>
-							</div>
+							</div> */}
 						</div>
-						<div className={classes.headerLinks}>
+						{/* <div className={classes.headerLinks}>
 							<a href="twitter.com" className={classes.headerLink}>
 								{' '}
 								<BrandTwitter />
@@ -297,7 +297,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								<Space w={8} />
 								<Text>Discord</Text>
 							</a>
-						</div>
+						</div> */}
 					</div>
 
 					<Container>
