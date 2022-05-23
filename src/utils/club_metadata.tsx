@@ -1,6 +1,7 @@
 interface ClubMetadata {
 	image: string
 	description: string
+	applicationLink: string
 }
 
 export function clubMetadataFromContractUri(uri: string): ClubMetadata {
@@ -11,7 +12,8 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 	console.log(contractURIObject)
 	const metadata: ClubMetadata = {
 		image: contractURIObject.image,
-		description: contractURIObject.description
+		description: contractURIObject.description,
+		applicationLink: contractURIObject.applicationLink
 	}
 
 	return metadata

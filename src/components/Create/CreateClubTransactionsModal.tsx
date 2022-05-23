@@ -41,11 +41,8 @@ import {
 	Settings
 } from 'tabler-icons-react'
 import { GET_CLUB_SLUG } from '../../graphql/clubs'
+import { MembershipReqType, MembershipSettings } from '../../model/club/club'
 import { CookieKeys } from '../../utils/cookies'
-import {
-	MembershipReqType,
-	MembershipSettings
-} from '../Admin/ClubAdminMembershipSettings'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -384,7 +381,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			})
 
 			// Wait a few seconds to avoid a race condition w/ server
-			await new Promise(f => setTimeout(f, 10000))
+			await new Promise(f => setTimeout(f, 15000))
 
 			const { data } = await client.query({
 				query: GET_CLUB_SLUG,

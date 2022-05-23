@@ -55,6 +55,13 @@ export const GET_CLUB = gql`
 				mintedBy
 				data
 			}
+			splits
+			mintEndAt
+			mintStartAt
+			mintPermissions
+			originalsPerWallet
+			totalOriginalsSupply
+			symbol
 		}
 	}
 `

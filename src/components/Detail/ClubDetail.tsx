@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -15,15 +16,19 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import {
 	BrandDiscord,
 	BrandTwitter,
 	CircleCheck,
 	Settings
 } from 'tabler-icons-react'
-import { GetClubQuery } from '../../../generated/graphql'
+import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
 import { GET_CLUB, GET_CLUB_SLUG } from '../../graphql/clubs'
+import clubFromMeemContract, {
+	Club,
+	MembershipReqType
+} from '../../model/club/club'
 import { clubMetadataFromContractUri } from '../../utils/club_metadata'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 
@@ -169,6 +174,9 @@ const useStyles = createStyles(theme => ({
 		display: 'flex',
 		alignItems: 'center'
 	},
+	requirementLink: {
+		color: 'rgba(255, 102, 81, 1)'
+	},
 	memberItem: {
 		border: '1px solid rgba(0, 0, 0, 0.1)',
 		backgroundColor: '#FAFAFA',
@@ -180,6 +188,12 @@ const useStyles = createStyles(theme => ({
 
 interface IProps {
 	slug: string
+}
+
+interface RequirementString {
+	requirementComponent: ReactNode
+	requirementKey: string
+	meetsRequirement: boolean
 }
 
 export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
@@ -198,30 +212,128 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [clubName, setClubName] = useState('')
 	const [clubLogo, setClubLogo] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
-	const [membershipRequirements, setMembershipRequirements] = useState([])
+	const [membershipRequirements, setMembershipRequirements] = useState<
+		RequirementString[]
+	>([])
 	const [isClubMember, setIsClubMember] = useState(false)
+	const [costToJoin, setCostToJoin] = useState(0)
 
 	const [clubMembers, setClubMembers] = useState<string[]>([])
 
+	const parseRequirements = useCallback(
+		async (club: Club) => {
+			const reqs: RequirementString[] = []
+			let index = 0
+			club.membershipSettings?.requirements.forEach(req => {
+				index++
+
+				const tokenUrl =
+					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
+						? `https://rinkeby.etherscan.com/address/${req.tokenContractAddress}`
+						: `https://polygonscan.com/address/${req.tokenContractAddress}`
+				switch (req.type) {
+					case MembershipReqType.None:
+						reqs.push({
+							requirementKey: `Anyone${index}`,
+							requirementComponent: <Text>Anyone can join this club.</Text>,
+							meetsRequirement: true
+						})
+						break
+					case MembershipReqType.ApprovedApplicants:
+						reqs.push({
+							requirementKey: `Applicants${index}`,
+							requirementComponent: (
+								<Text>
+									Membership is available to approved applicants. Applicants can
+									apply{' '}
+									<a
+										className={classes.requirementLink}
+										href={req.applicationLink}
+									>
+										here
+									</a>
+								</Text>
+							),
+
+							meetsRequirement: true
+						})
+						break
+					case MembershipReqType.NftHolders:
+						reqs.push({
+							requirementKey: `NFT${index}`,
+							requirementComponent: (
+								<Text>
+									Members must hold a <a href={tokenUrl}>NFT.</a>
+								</Text>
+							),
+							meetsRequirement: true
+						})
+						break
+					case MembershipReqType.TokenHolders:
+						reqs.push({
+							requirementKey: `Token${index}`,
+							requirementComponent: (
+								<Text>
+									Members must hold <a href={tokenUrl}>token</a>
+								</Text>
+							),
+							meetsRequirement: true
+						})
+						break
+					case MembershipReqType.OtherClubMember:
+						reqs.push({
+							requirementKey: `OtherClub${index}`,
+							requirementComponent: (
+								<Text>
+									Members must also be a member of{' '}
+									<a href="/club">{req.clubName}</a>
+								</Text>
+							),
+							meetsRequirement: true
+						})
+						break
+				}
+			})
+			setMembershipRequirements(reqs)
+		},
+		[classes.requirementLink]
+	)
+
 	useEffect(() => {
 		if (!loading && !error && clubData) {
-			const club = clubData.MeemContracts[0]
-			const metadata = clubMetadataFromContractUri(club.contractURI)
-			setClubName(club.name)
-			setClubLogo(metadata.image)
-			setClubDescription(metadata.description)
+			const club = clubFromMeemContract(
+				wallet.isConnected ? wallet.accounts[0] : undefined,
+				clubData.MeemContracts[0] as MeemContracts
+			)
 
-			const members: string[] = []
-			club.Meems.forEach(meem => {
-				console.log(meem)
-				if (wallet.isConnected && meem.owner === wallet.accounts[0]) {
-					setIsClubMember(true)
-				}
-				members.push(meem.owner)
-			})
-			setClubMembers(members)
+			if (club) {
+				setClubName(club.name!)
+				setClubLogo(club.image!)
+				setClubDescription(club.description!)
+				setCostToJoin(club.membershipSettings!.costToJoin)
+
+				// Parse requirements
+				parseRequirements(club)
+
+				const members: string[] = []
+				clubData.MeemContracts[0].Meems.forEach(meem => {
+					console.log(meem)
+					if (wallet.isConnected && meem.owner === wallet.accounts[0]) {
+						setIsClubMember(true)
+					}
+					members.push(meem.owner)
+				})
+				setClubMembers(members)
+			}
 		}
-	}, [clubData, error, loading, wallet.accounts, wallet.isConnected])
+	}, [
+		clubData,
+		error,
+		loading,
+		parseRequirements,
+		wallet.accounts,
+		wallet.isConnected
+	])
 
 	const navigateToSettings = () => {
 		router.push({ pathname: `/${slug}/admin` })
@@ -256,7 +368,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									<Button className={classes.outlineButton}>Leave</Button>
 								)}
 								{!isClubMember && (
-									<Button className={classes.buttonJoinClub}>Join</Button>
+									<Button className={classes.buttonJoinClub}>
+										{costToJoin > 0 ? `Join (${costToJoin} MATIC)` : `Join`}
+									</Button>
 								)}
 								<Space w={'xs'} />
 								<Button
@@ -307,11 +421,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						{membershipRequirements.length > 0 && (
 							<div className={classes.requirementsContainer}>
 								{membershipRequirements.map(requirement => (
-									<div className={classes.requirementItem} key={requirement}>
+									<div
+										className={classes.requirementItem}
+										key={requirement.requirementKey}
+									>
 										<CircleCheck color="green" />
 										<Space w={'xs'} />
-
-										<Text>{requirement}</Text>
+										{requirement.requirementComponent}
 									</div>
 								))}
 							</div>

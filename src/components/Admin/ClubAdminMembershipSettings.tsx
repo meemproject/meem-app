@@ -22,6 +22,12 @@ import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
+import {
+	MembershipSettings,
+	MembershipReqAndor,
+	MembershipReqType,
+	MembershipRequirement
+} from '../../model/club/club'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 
@@ -170,53 +176,6 @@ const useStyles = createStyles(theme => ({
 		alignItems: 'center'
 	}
 }))
-
-export interface MembershipSettings {
-	requirements: MembershipRequirement[]
-	costToJoin: number
-	membershipFundsAddress: string
-	membershipQuantity: number
-	membershipStartDate?: Date
-	membershipEndDate?: Date
-	clubAdmins: string[]
-}
-
-export enum MembershipReqType {
-	None,
-	ApprovedApplicants,
-	TokenHolders,
-	NftHolders,
-	OtherClubMember
-}
-
-export enum MembershipReqAndor {
-	None,
-	And,
-	Or
-}
-
-interface MembershipRequirement {
-	// Currently hardcoded as there is only one additional req.
-	// 0 = first req
-	// 1 = optional second req
-	index: number
-	// For additional reqs, whether they are 'alternatively' or 'in addition'
-	andor: MembershipReqAndor
-	// Type of requirement
-	type: MembershipReqType
-	// Applicants
-	applicationLink: string
-	approvedAddresses: string[]
-	approvedAddressesString: string
-	// NFT / Token holders
-	tokenName: string // Resolved from contract
-	tokenContractAddress: string
-	tokenChain: string // Not used for V1
-	tokenMinQuantity: number
-	// Club membership
-	clubContractAddress: string
-	clubName: string // Resolved from contract
-}
 
 interface IProps {
 	isCreatingClub: boolean
