@@ -47,7 +47,7 @@
 		"@mantine/notifications": "^4.1.4",
 		"@mantine/rte": "^4.1.4",
 		"@meemproject/api": "^0.3.0",
-		"@meemproject/meem-contracts": "^0.3.0",
+		"@meemproject/meem-contracts": "^0.4.1",
 		"@meemproject/react": "^0.3.0",
 		"@meemproject/utils": "^0.3.0",
 		"@sentry/browser": "^6.13.2",
