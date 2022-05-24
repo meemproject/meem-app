@@ -3033,12 +3033,12 @@ export type GetClubQueryVariables = Exact<{
 
 export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }> }> };
 
-export type ClubSubscriptionQueryVariables = Exact<{
+export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ClubSubscriptionQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }> }> };
+export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }> }> };
 
 export type MyClubsQueryVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
@@ -3227,7 +3227,7 @@ export type GetClubQueryHookResult = ReturnType<typeof useGetClubQuery>;
 export type GetClubLazyQueryHookResult = ReturnType<typeof useGetClubLazyQuery>;
 export type GetClubQueryResult = Apollo.QueryResult<GetClubQuery, GetClubQueryVariables>;
 export const ClubSubscriptionDocument = gql`
-    query ClubSubscription($address: String) {
+    subscription ClubSubscription($address: String) {
   MeemContracts(where: {address: {_eq: $address}}) {
     slug
     address
@@ -3254,32 +3254,27 @@ export const ClubSubscriptionDocument = gql`
     `;
 
 /**
- * __useClubSubscriptionQuery__
+ * __useClubSubscriptionSubscription__
  *
- * To run a query within a React component, call `useClubSubscriptionQuery` and pass it any options that fit your needs.
- * When your component renders, `useClubSubscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useClubSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useClubSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useClubSubscriptionQuery({
+ * const { data, loading, error } = useClubSubscriptionSubscription({
  *   variables: {
  *      address: // value for 'address'
  *   },
  * });
  */
-export function useClubSubscriptionQuery(baseOptions?: Apollo.QueryHookOptions<ClubSubscriptionQuery, ClubSubscriptionQueryVariables>) {
+export function useClubSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<ClubSubscriptionSubscription, ClubSubscriptionSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ClubSubscriptionQuery, ClubSubscriptionQueryVariables>(ClubSubscriptionDocument, options);
+        return Apollo.useSubscription<ClubSubscriptionSubscription, ClubSubscriptionSubscriptionVariables>(ClubSubscriptionDocument, options);
       }
-export function useClubSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ClubSubscriptionQuery, ClubSubscriptionQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ClubSubscriptionQuery, ClubSubscriptionQueryVariables>(ClubSubscriptionDocument, options);
-        }
-export type ClubSubscriptionQueryHookResult = ReturnType<typeof useClubSubscriptionQuery>;
-export type ClubSubscriptionLazyQueryHookResult = ReturnType<typeof useClubSubscriptionLazyQuery>;
-export type ClubSubscriptionQueryResult = Apollo.QueryResult<ClubSubscriptionQuery, ClubSubscriptionQueryVariables>;
+export type ClubSubscriptionSubscriptionHookResult = ReturnType<typeof useClubSubscriptionSubscription>;
+export type ClubSubscriptionSubscriptionResult = Apollo.SubscriptionResult<ClubSubscriptionSubscription>;
 export const MyClubsDocument = gql`
     query MyClubs($walletAddress: String) {
   Meems(

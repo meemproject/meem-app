@@ -170,6 +170,8 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
+	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
+
 	const descriptionRef = useRef<HTMLTextAreaElement>()
 
 	// Club logo
@@ -186,10 +188,13 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	})
 
 	useEffect(() => {
-		setClubName(club.name!)
-		setClubDescription(club.description!)
-		setSmallClubLogo(club.image!)
-	}, [club])
+		if (!hasLoadedClubData) {
+			setHasLoadedClubData(true)
+			setClubName(club.name!)
+			setClubDescription(club.description!)
+			setSmallClubLogo(club.image!)
+		}
+	}, [club, hasLoadedClubData])
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: '/clubname' })

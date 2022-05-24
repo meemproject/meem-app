@@ -194,7 +194,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	const wallet = useWallet()
 
-	const [isLoading, setIsLoading] = useState(false)
+	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 
 	// Membership
 	const [membershipSettings, setMembershipSettings] =
@@ -414,7 +414,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	const saveChanges = async () => {
 		// TODO
-		setIsLoading(true)
+		setHasLoadedClubData(true)
 
 		if (isCreatingClub) {
 			openTransactionsModal()
@@ -429,7 +429,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setLockedMainAdmin(wallet.accounts[0])
 			}
 		} else {
-			if (club) {
+			if (club && !hasLoadedClubData) {
+				setHasLoadedClubData(true)
 				setClubAdmins(club.admins!)
 				if (club.admins && club.admins!.length > 0) {
 					setLockedMainAdmin(club.admins![0])
@@ -440,6 +441,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setMembershipQuantity(club.membershipSettings!.membershipQuantity)
 				setMembershipRequirements(club.membershipSettings!.requirements)
 				setMembershipSettings(club.membershipSettings)
+				console.log(club.membershipSettings!.membershipStartDate)
 				// if (club.membershipSettings!.membershipStartDate) {
 				// 	setMembershipStartDate(club.membershipSettings!.membershipStartDate)
 				// }
@@ -449,7 +451,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				)
 			}
 		}
-	}, [club, isCreatingClub, wallet.accounts, wallet.isConnected])
+	}, [
+		club,
+		hasLoadedClubData,
+		isCreatingClub,
+		wallet.accounts,
+		wallet.isConnected
+	])
 
 	return (
 		<>
@@ -671,8 +679,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</div>
 				</div>
 				<Button
-					disabled={isLoading}
-					loading={isLoading}
+					disabled={hasLoadedClubData}
+					loading={hasLoadedClubData}
 					className={classes.buttonSaveChanges}
 					onClick={saveChanges}
 				>
@@ -1348,7 +1356,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					membershipSettings={membershipSettings}
 					isOpened={isTransactionsModalOpened}
 					onModalClosed={() => {
-						setIsLoading(false)
+						setHasLoadedClubData(false)
 						setTransactionsModalOpened(false)
 					}}
 				/>

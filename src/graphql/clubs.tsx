@@ -67,7 +67,7 @@ export const GET_CLUB = gql`
 `
 
 export const SUB_CLUB = gql`
-	query ClubSubscription($address: String) {
+	subscription ClubSubscription($address: String) {
 		MeemContracts(where: { address: { _eq: $address } }) {
 			slug
 			address

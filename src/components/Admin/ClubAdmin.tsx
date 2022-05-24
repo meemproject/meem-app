@@ -184,7 +184,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const [club, setClub] = useState<Club>()
 
 	useEffect(() => {
-		if (!loading && !error && clubData) {
+		if (!loading && !error && !club && clubData) {
 			const possibleClub = clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
 				clubData.MeemContracts[0] as MeemContracts

@@ -1,6 +1,6 @@
 import { Permission } from '@meemproject/meem-contracts'
 import { MeemContracts } from '../../../generated/graphql'
-import { clubMetadataFromContractUri } from '../../utils/club_metadata'
+import { clubMetadataFromContractUri } from './club_metadata'
 
 export interface Club {
 	id?: string

@@ -31,7 +31,6 @@ import clubFromMeemContract, {
 	Club,
 	MembershipReqType
 } from '../../model/club/club'
-import { clubMetadataFromContractUri } from '../../utils/club_metadata'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
