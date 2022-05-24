@@ -54,9 +54,8 @@ const useStyles = createStyles(theme => ({
 		minWidth: 40
 	},
 	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
 		borderRadius: 16,
-		padding: 16
+		marginBottom: 24
 	},
 	buttonConfirm: {
 		paddingTop: 8,
@@ -77,7 +76,7 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
-	club: Club
+	club?: Club
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -103,7 +102,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 	const [proxyAddress, setProxyAddress] = useState('')
 
 	const reinitialize = async () => {
-		if (!web3Provider) {
+		if (!web3Provider || !club) {
 			return
 		}
 
@@ -299,8 +298,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				<Space h={12} />
 				<div className={classes.header}>
 					<div className={classes.headerTitle}>
-						<Image className={classes.clubLogoImage} src={club.image} />
-						<Text className={classes.headerClubName}>{club.name}</Text>
+						<Image className={classes.clubLogoImage} src={club?.image} />
+						<Text className={classes.headerClubName}>{club?.name}</Text>
 					</div>
 				</div>
 				<Space h={12} />
@@ -332,7 +331,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							active={step === Step.Start || step === Step.Initialized ? 0 : 1}
 						>
 							<Stepper.Step
-								label="Establish Club"
+								label="Tap below to confirm"
 								loading={step === Step.Initializing}
 								description={
 									<>

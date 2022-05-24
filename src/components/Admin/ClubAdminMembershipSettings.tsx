@@ -32,6 +32,7 @@ import {
 } from '../../model/club/club'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
+import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
 	buttonSaveChanges: {
@@ -193,6 +194,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const router = useRouter()
 
 	const wallet = useWallet()
+
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 
@@ -375,6 +378,31 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setTransactionsModalOpened(true)
 	}
 
+	const [newClubData, setNewClubData] = useState<Club>()
+	const [isSaveChangesModalOpened, setSaveChangesModalOpened] = useState(false)
+	const openSaveChangesModal = () => {
+		// 'save changes' modal for execution club settings updates
+		// convert current settings and update for the modal
+
+		const finalClubAdmins = Object.assign([], clubAdmins)
+		finalClubAdmins.push(wallet.accounts[0])
+
+		const settings: MembershipSettings = {
+			requirements: membershipRequirements,
+			costToJoin,
+			membershipFundsAddress,
+			membershipQuantity,
+			membershipStartDate,
+			membershipEndDate,
+			clubAdmins: finalClubAdmins
+		}
+
+		const newClub = club!
+		newClub.membershipSettings = settings
+		setNewClubData(newClub)
+		setSaveChangesModalOpened(true)
+	}
+
 	const membershipTypeStringForFirstReq = (
 		req: MembershipRequirement
 	): string => {
@@ -413,13 +441,12 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
 
 	const saveChanges = async () => {
-		// TODO
-		setHasLoadedClubData(true)
+		setIsSavingChanges(true)
 
 		if (isCreatingClub) {
 			openTransactionsModal()
 		} else {
-			// TODO
+			openSaveChangesModal()
 		}
 	}
 
@@ -442,10 +469,17 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setMembershipRequirements(club.membershipSettings!.requirements)
 				setMembershipSettings(club.membershipSettings)
 				console.log(club.membershipSettings!.membershipStartDate)
-				// if (club.membershipSettings!.membershipStartDate) {
-				// 	setMembershipStartDate(club.membershipSettings!.membershipStartDate)
-				// }
-				// setMembershipEndDate(club.membershipSettings!.membershipEndDate)
+				if (club.membershipSettings!.membershipStartDate) {
+					setMembershipStartDate(
+						new Date(club.membershipSettings!.membershipStartDate)
+					)
+				}
+				if (club.membershipSettings!.membershipEndDate) {
+					setMembershipEndDate(
+						new Date(club.membershipSettings!.membershipEndDate)
+					)
+				}
+
 				setMembershipFundsAddress(
 					club.membershipSettings!.membershipFundsAddress
 				)
@@ -679,8 +713,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</div>
 				</div>
 				<Button
-					disabled={hasLoadedClubData}
-					loading={hasLoadedClubData}
+					disabled={isSavingChanges}
+					loading={isSavingChanges}
 					className={classes.buttonSaveChanges}
 					onClick={saveChanges}
 				>
@@ -1356,8 +1390,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					membershipSettings={membershipSettings}
 					isOpened={isTransactionsModalOpened}
 					onModalClosed={() => {
-						setHasLoadedClubData(false)
+						setIsSavingChanges(false)
 						setTransactionsModalOpened(false)
+					}}
+				/>
+				<ClubAdminChangesModal
+					club={newClubData}
+					isOpened={isSaveChangesModalOpened}
+					onModalClosed={() => {
+						setIsSavingChanges(false)
+						setSaveChangesModalOpened(false)
 					}}
 				/>
 			</div>
