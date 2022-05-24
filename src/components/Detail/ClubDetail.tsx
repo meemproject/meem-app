@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
@@ -21,6 +22,7 @@ import {
 	BrandDiscord,
 	BrandTwitter,
 	CircleCheck,
+	CircleX,
 	Settings
 } from 'tabler-icons-react'
 import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
@@ -216,21 +218,45 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		RequirementString[]
 	>([])
 	const [isClubMember, setIsClubMember] = useState(false)
+	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 	const [costToJoin, setCostToJoin] = useState(0)
 
 	const [clubMembers, setClubMembers] = useState<string[]>([])
+
+	const checkEligibility = useCallback(() => {
+		if (membershipRequirements.length === 0) {
+			setMeetsAllRequirements(false)
+		} else {
+			let reqsMet = 0
+			membershipRequirements.forEach(req => {
+				if (req.meetsRequirement) {
+					reqsMet++
+				}
+			})
+			if (reqsMet === membershipRequirements.length) {
+				setMeetsAllRequirements(true)
+			}
+		}
+	}, [membershipRequirements])
 
 	const parseRequirements = useCallback(
 		async (club: Club) => {
 			const reqs: RequirementString[] = []
 			let index = 0
-			club.membershipSettings?.requirements.forEach(req => {
+			club.membershipSettings?.requirements.forEach(async req => {
 				index++
+
+				const tokenBalance =
+					req.tokenContractAddress.length > 0 && wallet.web3Provider
+						? await wallet.web3Provider?.getBalance(req.tokenContractAddress)
+						: 0
+
+				console.log(`token balance = ${tokenBalance}`)
 
 				const tokenUrl =
 					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
-						? `https://rinkeby.etherscan.com/address/${req.tokenContractAddress}`
-						: `https://polygonscan.com/address/${req.tokenContractAddress}`
+						? `https://rinkeby.etherscan.io/address/${req.tokenContractAddress}`
+						: `https://polygonscan.io/address/${req.tokenContractAddress}`
 				switch (req.type) {
 					case MembershipReqType.None:
 						reqs.push({
@@ -238,6 +264,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							requirementComponent: <Text>Anyone can join this club.</Text>,
 							meetsRequirement: true
 						})
+						setMembershipRequirements(reqs)
+						checkEligibility()
 						break
 					case MembershipReqType.ApprovedApplicants:
 						reqs.push({
@@ -252,33 +280,48 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									>
 										here
 									</a>
+									.
 								</Text>
 							),
 
 							meetsRequirement: true
 						})
+						setMembershipRequirements(reqs)
+						checkEligibility()
 						break
 					case MembershipReqType.NftHolders:
 						reqs.push({
 							requirementKey: `NFT${index}`,
 							requirementComponent: (
 								<Text>
-									Members must hold a <a href={tokenUrl}>NFT.</a>
+									Members must hold this{' '}
+									<a className={classes.requirementLink} href={tokenUrl}>
+										NFT
+									</a>
+									.
 								</Text>
 							),
-							meetsRequirement: true
+							meetsRequirement: (tokenBalance ?? 0) !== 0
 						})
+						setMembershipRequirements(reqs)
+						checkEligibility()
 						break
 					case MembershipReqType.TokenHolders:
 						reqs.push({
 							requirementKey: `Token${index}`,
 							requirementComponent: (
 								<Text>
-									Members must hold <a href={tokenUrl}>token</a>
+									Members must hold this{' '}
+									<a className={classes.requirementLink} href={tokenUrl}>
+										token
+									</a>
+									.
 								</Text>
 							),
-							meetsRequirement: true
+							meetsRequirement: (tokenBalance ?? 0) !== 0
 						})
+						setMembershipRequirements(reqs)
+						checkEligibility()
 						break
 					case MembershipReqType.OtherClubMember:
 						reqs.push({
@@ -286,17 +329,20 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							requirementComponent: (
 								<Text>
 									Members must also be a member of{' '}
-									<a href="/club">{req.clubName}</a>
+									<a className={classes.requirementLink} href="/club">
+										{req.clubName}
+									</a>
 								</Text>
 							),
 							meetsRequirement: true
 						})
+						setMembershipRequirements(reqs)
+
 						break
 				}
 			})
-			setMembershipRequirements(reqs)
 		},
-		[classes.requirementLink]
+		[checkEligibility, classes.requirementLink, wallet.web3Provider]
 	)
 
 	useEffect(() => {
@@ -315,15 +361,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				// Parse requirements
 				parseRequirements(club)
 
-				const members: string[] = []
-				clubData.MeemContracts[0].Meems.forEach(meem => {
-					console.log(meem)
-					if (wallet.isConnected && meem.owner === wallet.accounts[0]) {
-						setIsClubMember(true)
-					}
-					members.push(meem.owner)
-				})
-				setClubMembers(members)
+				setIsClubMember(club.isClubMember!)
+				setClubMembers(club.members!)
 			}
 		}
 	}, [
@@ -368,7 +407,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									<Button className={classes.outlineButton}>Leave</Button>
 								)}
 								{!isClubMember && (
-									<Button className={classes.buttonJoinClub}>
+									<Button
+										disabled={!meetsAllRequirements}
+										className={classes.buttonJoinClub}
+									>
 										{costToJoin > 0 ? `Join (${costToJoin} MATIC)` : `Join`}
 									</Button>
 								)}
@@ -425,7 +467,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										className={classes.requirementItem}
 										key={requirement.requirementKey}
 									>
-										<CircleCheck color="green" />
+										{requirement.meetsRequirement && (
+											<CircleCheck color="green" />
+										)}
+
+										{!requirement.meetsRequirement && <CircleX color="red" />}
+
 										<Space w={'xs'} />
 										{requirement.requirementComponent}
 									</div>

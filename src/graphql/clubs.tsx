@@ -66,6 +66,33 @@ export const GET_CLUB = gql`
 	}
 `
 
+export const SUB_CLUB = gql`
+	query ClubSubscription($address: String) {
+		MeemContracts(where: { address: { _eq: $address } }) {
+			slug
+			address
+			contractURI
+			createdAt
+			name
+			Meems {
+				owner
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+				data
+			}
+			splits
+			mintEndAt
+			mintStartAt
+			mintPermissions
+			originalsPerWallet
+			totalOriginalsSupply
+			symbol
+		}
+	}
+`
+
 export const GET_MY_CLUBS = gql`
 	query MyClubs($walletAddress: String) {
 		Meems(

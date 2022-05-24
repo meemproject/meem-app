@@ -138,7 +138,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				signer: web3Provider.getSigner()
 			})
 
-			log.debug(
+			console.log(
 				`Deployed proxy at ${contract.address} w/ tx: ${contract.deployTransaction.hash}`
 			)
 			setProxyAddress(contract.address)
