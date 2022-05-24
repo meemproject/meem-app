@@ -5,7 +5,8 @@ import {
 	ApolloClient,
 	HttpLink,
 	InMemoryCache,
-	useLazyQuery
+	useLazyQuery,
+	useSubscription
 } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
@@ -32,7 +33,7 @@ import { Contract } from 'ethers'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	BrandDiscord,
 	BrandTwitter,
@@ -40,8 +41,15 @@ import {
 	CircleCheck,
 	Settings
 } from 'tabler-icons-react'
-import { GET_CLUB_SLUG } from '../../graphql/clubs'
-import { MembershipReqType, MembershipSettings } from '../../model/club/club'
+import {
+	ClubSubscriptionQuery,
+	MeemContracts
+} from '../../../generated/graphql'
+import { GET_CLUB_SLUG, SUB_CLUB } from '../../graphql/clubs'
+import clubFromMeemContract, {
+	MembershipReqType,
+	MembershipSettings
+} from '../../model/club/club'
 import { CookieKeys } from '../../utils/cookies'
 
 const useStyles = createStyles(theme => ({
@@ -151,6 +159,58 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			})
 		}
 	}
+
+	// Club subscription - watch for specific changes in order to update correctly
+	const { data: clubData, loading } = useSubscription<ClubSubscriptionQuery>(
+		SUB_CLUB,
+		{
+			variables: { address: proxyAddress }
+		}
+	)
+
+	// When club data is available, use this to guide to the next step
+	// when initializing, check if the club exists yet > Initialized
+	// when minting, check if user is a club member yet > Minted
+	useEffect(() => {
+		if (clubData && accounts.length > 0) {
+			console.log('New club detected in the DB via subscription')
+			if (clubData.MeemContracts.length > 0 && step === Step.Initializing) {
+				// Successfully initialized club
+				console.log('init complete')
+				setStep(Step.Initialized)
+			} else if (clubData.MeemContracts.length > 0 && step === Step.Minting) {
+				const club = clubFromMeemContract(
+					accounts[0],
+					clubData.MeemContracts[0] as MeemContracts
+				)
+				console.log('minting...')
+				if (club.isClubMember) {
+					console.log('mint complete')
+					// Remove all metadata cookies!
+					Cookies.remove(CookieKeys.clubName)
+					Cookies.remove(CookieKeys.clubDescription)
+					Cookies.remove(CookieKeys.clubImage)
+					Cookies.remove(CookieKeys.clubExternalUrl)
+					Cookies.remove(CookieKeys.clubSlug)
+
+					// Route to the created club detail page
+					showNotification({
+						title: 'Success!',
+						autoClose: 5000,
+						color: 'green',
+						icon: <Check color="green" />,
+
+						message: `Your club has been published.`
+					})
+					router.push({ pathname: `/${club.slug}` })
+
+					setStep(Step.Minted)
+				}
+			}
+		} else {
+			console.log('No club data (yet) or wallet not connected...')
+		}
+	}, [accounts, accounts.length, clubData, router, step])
 
 	const initialize = async () => {
 		if (!web3Provider) {
@@ -321,8 +381,6 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			})
 
 			log.debug(tx)
-
-			setStep(Step.Initialized)
 		} catch (e) {
 			setStep(Step.Created)
 			showNotification({
@@ -364,53 +422,6 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				{ gasLimit: '1000000' }
 			)
 			//console.log(tx)
-
-			// Remove all metadata cookies!
-			Cookies.remove(CookieKeys.clubName)
-			Cookies.remove(CookieKeys.clubDescription)
-			Cookies.remove(CookieKeys.clubImage)
-			Cookies.remove(CookieKeys.clubExternalUrl)
-			Cookies.remove(CookieKeys.clubSlug)
-
-			// Get actual club slug
-			const client = new ApolloClient({
-				cache: new InMemoryCache(),
-				link: new HttpLink({
-					uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
-				})
-			})
-
-			// Wait a few seconds to avoid a race condition w/ server
-			await new Promise(f => setTimeout(f, 15000))
-
-			const { data } = await client.query({
-				query: GET_CLUB_SLUG,
-				variables: {
-					contractAddress: proxyAddress
-				}
-			})
-
-			if (data.MeemContracts && data.MeemContracts.length > 0) {
-				// Route to the created club detail page
-				showNotification({
-					title: 'Success!',
-					autoClose: 5000,
-					color: 'green',
-					icon: <Check color="green" />,
-
-					message: `Your club has been published.`
-				})
-				router.push({ pathname: `/${data.MeemContracts[0].slug}` })
-
-				setStep(Step.Minted)
-			} else {
-				// No club slug actually exists, indicating the club failed to be initialized.
-				setStep(Step.Initialized)
-				showNotification({
-					title: 'Error minting club membership.',
-					message: `We were unable to save your club. Please report this!`
-				})
-			}
 		} catch (e) {
 			setStep(Step.Initialized)
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
@@ -196,8 +197,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const [isLoading, setIsLoading] = useState(false)
 
 	// Membership
-	// TODO: hook up to data
-
 	const [membershipSettings, setMembershipSettings] =
 		useState<MembershipSettings>()
 
@@ -430,10 +429,27 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setLockedMainAdmin(wallet.accounts[0])
 			}
 		} else {
-			setLockedMainAdmin('TODO')
-			// TODO: set locked main admin from club data
+			if (club) {
+				setClubAdmins(club.admins!)
+				if (club.admins && club.admins!.length > 0) {
+					setLockedMainAdmin(club.admins![0])
+				} else {
+					setLockedMainAdmin('null')
+				}
+				setCostToJoin(club.membershipSettings!.costToJoin)
+				setMembershipQuantity(club.membershipSettings!.membershipQuantity)
+				setMembershipRequirements(club.membershipSettings!.requirements)
+				setMembershipSettings(club.membershipSettings)
+				// if (club.membershipSettings!.membershipStartDate) {
+				// 	setMembershipStartDate(club.membershipSettings!.membershipStartDate)
+				// }
+				// setMembershipEndDate(club.membershipSettings!.membershipEndDate)
+				setMembershipFundsAddress(
+					club.membershipSettings!.membershipFundsAddress
+				)
+			}
 		}
-	}, [isCreatingClub, wallet.accounts, wallet.isConnected])
+	}, [club, isCreatingClub, wallet.accounts, wallet.isConnected])
 
 	return (
 		<>
