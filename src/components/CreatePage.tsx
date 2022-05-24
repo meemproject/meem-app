@@ -116,6 +116,8 @@ export const CreatePage: React.FC = () => {
 		)
 	}
 
+	console.log(meemContracts.versionList())
+
 	const displayVersions = [
 		{
 			version: 'latest',
@@ -129,9 +131,9 @@ export const CreatePage: React.FC = () => {
 			version: 'alpha',
 			displayName: `alpha (${meemContracts.versions[Chain.Rinkeby].alpha})`
 		},
-		...Object.keys(meemContracts.versions[Chain.Rinkeby].history).map(k => ({
-			version: k,
-			displayName: k
+		...meemContracts.versionList().map(v => ({
+			version: v,
+			displayName: v
 		}))
 	]
 
