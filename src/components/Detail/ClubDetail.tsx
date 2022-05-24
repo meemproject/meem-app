@@ -199,10 +199,9 @@ interface RequirementString {
 }
 
 export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
+	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { classes } = useStyles()
-
 	const {
 		loading,
 		error,
@@ -217,6 +216,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [membershipRequirements, setMembershipRequirements] = useState<
 		RequirementString[]
 	>([])
+	const [requirementsParsed, setRequirementsParsed] = useState(false)
 	const [isClubMember, setIsClubMember] = useState(false)
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 	const [costToJoin, setCostToJoin] = useState(0)
@@ -241,108 +241,111 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const parseRequirements = useCallback(
 		async (club: Club) => {
+			if (requirementsParsed) {
+				return
+			}
 			const reqs: RequirementString[] = []
 			let index = 0
-			club.membershipSettings?.requirements.forEach(async req => {
-				index++
+			await Promise.all(
+				club.membershipSettings!.requirements.map(function (req) {
+					index++
 
-				const tokenBalance =
-					req.tokenContractAddress.length > 0 && wallet.web3Provider
-						? await wallet.web3Provider?.getBalance(req.tokenContractAddress)
-						: 0
+					const tokenBalance =
+						req.tokenContractAddress.length > 0 && wallet.web3Provider
+							? wallet.web3Provider?.getBalance(req.tokenContractAddress)
+							: 0
 
-				console.log(`token balance = ${tokenBalance}`)
+					console.log(`token balance = ${tokenBalance}`)
 
-				const tokenUrl =
-					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
-						? `https://rinkeby.etherscan.io/address/${req.tokenContractAddress}`
-						: `https://polygonscan.io/address/${req.tokenContractAddress}`
-				switch (req.type) {
-					case MembershipReqType.None:
-						reqs.push({
-							requirementKey: `Anyone${index}`,
-							requirementComponent: <Text>Anyone can join this club.</Text>,
-							meetsRequirement: true
-						})
-						setMembershipRequirements(reqs)
-						checkEligibility()
-						break
-					case MembershipReqType.ApprovedApplicants:
-						reqs.push({
-							requirementKey: `Applicants${index}`,
-							requirementComponent: (
-								<Text>
-									Membership is available to approved applicants. Applicants can
-									apply{' '}
-									<a
-										className={classes.requirementLink}
-										href={req.applicationLink}
-									>
-										here
-									</a>
-									.
-								</Text>
-							),
+					const tokenUrl =
+						process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
+							? `https://rinkeby.etherscan.io/address/${req.tokenContractAddress}`
+							: `https://polygonscan.io/address/${req.tokenContractAddress}`
+					switch (req.type) {
+						case MembershipReqType.None:
+							reqs.push({
+								requirementKey: `Anyone${index}`,
+								requirementComponent: <Text>Anyone can join this club.</Text>,
+								meetsRequirement: true
+							})
+							break
+						case MembershipReqType.ApprovedApplicants:
+							reqs.push({
+								requirementKey: `Applicants${index}`,
+								requirementComponent: (
+									<Text>
+										Membership is available to approved applicants. Applicants
+										can apply{' '}
+										<a
+											className={classes.requirementLink}
+											href={req.applicationLink}
+										>
+											here
+										</a>
+										.
+									</Text>
+								),
 
-							meetsRequirement: true
-						})
-						setMembershipRequirements(reqs)
-						checkEligibility()
-						break
-					case MembershipReqType.NftHolders:
-						reqs.push({
-							requirementKey: `NFT${index}`,
-							requirementComponent: (
-								<Text>
-									Members must hold this{' '}
-									<a className={classes.requirementLink} href={tokenUrl}>
-										NFT
-									</a>
-									.
-								</Text>
-							),
-							meetsRequirement: (tokenBalance ?? 0) !== 0
-						})
-						setMembershipRequirements(reqs)
-						checkEligibility()
-						break
-					case MembershipReqType.TokenHolders:
-						reqs.push({
-							requirementKey: `Token${index}`,
-							requirementComponent: (
-								<Text>
-									Members must hold this{' '}
-									<a className={classes.requirementLink} href={tokenUrl}>
-										token
-									</a>
-									.
-								</Text>
-							),
-							meetsRequirement: (tokenBalance ?? 0) !== 0
-						})
-						setMembershipRequirements(reqs)
-						checkEligibility()
-						break
-					case MembershipReqType.OtherClubMember:
-						reqs.push({
-							requirementKey: `OtherClub${index}`,
-							requirementComponent: (
-								<Text>
-									Members must also be a member of{' '}
-									<a className={classes.requirementLink} href="/club">
-										{req.clubName}
-									</a>
-								</Text>
-							),
-							meetsRequirement: true
-						})
-						setMembershipRequirements(reqs)
-
-						break
-				}
-			})
+								meetsRequirement: true
+							})
+							break
+						case MembershipReqType.NftHolders:
+							reqs.push({
+								requirementKey: `NFT${index}`,
+								requirementComponent: (
+									<Text>
+										Members must hold this{' '}
+										<a className={classes.requirementLink} href={tokenUrl}>
+											NFT
+										</a>
+										.
+									</Text>
+								),
+								meetsRequirement: (tokenBalance ?? 0) !== 0
+							})
+							break
+						case MembershipReqType.TokenHolders:
+							reqs.push({
+								requirementKey: `Token${index}`,
+								requirementComponent: (
+									<Text>
+										Members must hold this{' '}
+										<a className={classes.requirementLink} href={tokenUrl}>
+											token
+										</a>
+										.
+									</Text>
+								),
+								meetsRequirement: (tokenBalance ?? 0) !== 0
+							})
+							break
+						case MembershipReqType.OtherClubMember:
+							reqs.push({
+								requirementKey: `OtherClub${index}`,
+								requirementComponent: (
+									<Text>
+										Members must also be a member of{' '}
+										<a className={classes.requirementLink} href="/club">
+											{req.clubName}
+										</a>
+									</Text>
+								),
+								meetsRequirement: true
+							})
+							break
+					}
+				})
+			)
+			setMembershipRequirements(reqs)
+			setRequirementsParsed(true)
+			checkEligibility()
 		},
-		[checkEligibility, classes.requirementLink, wallet.web3Provider]
+		[
+			checkEligibility,
+			classes.requirementLink,
+			requirementsParsed,
+			wallet.web3Provider
+		]
 	)
 
 	useEffect(() => {
@@ -390,7 +393,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			)}
 			{!loading && !clubData && (
 				<Container>
-					<Text>Sorry, that club does not exist!</Text>
+					<Space h={120} />
+					<Center>
+						<Text>Sorry, that club does not exist!</Text>
+					</Center>
 				</Container>
 			)}
 			{!loading && clubData && (

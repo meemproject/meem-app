@@ -26,7 +26,8 @@ import {
 	MembershipSettings,
 	MembershipReqAndor,
 	MembershipReqType,
-	MembershipRequirement
+	MembershipRequirement,
+	Club
 } from '../../model/club/club'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
@@ -179,10 +180,12 @@ const useStyles = createStyles(theme => ({
 
 interface IProps {
 	isCreatingClub: boolean
+	club?: Club
 }
 
 export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
-	isCreatingClub
+	isCreatingClub,
+	club
 }) => {
 	const { classes } = useStyles()
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
@@ -17,6 +18,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { Club } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -158,15 +160,17 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export const ClubAdminProfileSettings: React.FC = () => {
+interface IProps {
+	club: Club
+}
+
+export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
 	const descriptionRef = useRef<HTMLTextAreaElement>()
-
-	const [isLoading, setIsLoading] = useState(true)
 
 	// Club logo
 	const [smallClubLogo, setSmallClubLogo] = useState('')
@@ -180,6 +184,12 @@ export const ClubAdminProfileSettings: React.FC = () => {
 		multiple: false,
 		maxFileSize: 10
 	})
+
+	useEffect(() => {
+		setClubName(club.name!)
+		setClubDescription(club.description!)
+		setSmallClubLogo(club.image!)
+	}, [club])
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: '/clubname' })
