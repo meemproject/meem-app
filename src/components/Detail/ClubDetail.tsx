@@ -16,6 +16,7 @@ import {
 	Center
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import { BigNumber } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import {
@@ -240,13 +241,17 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			const reqs: RequirementString[] = []
 			let index = 0
 			await Promise.all(
-				possibleClub.membershipSettings!.requirements.map(function (req) {
+				possibleClub.membershipSettings!.requirements.map(async function (req) {
 					index++
 
-					const tokenBalance =
-						req.tokenContractAddress.length > 0 && wallet.web3Provider
-							? wallet.web3Provider?.getBalance(req.tokenContractAddress)
-							: 0
+					let tokenBalance = BigNumber.from(0)
+					if (req.tokenContractAddress.length > 0 && wallet.web3Provider) {
+						const balance = await wallet.web3Provider?.getBalance(
+							req.tokenContractAddress
+						)
+
+						tokenBalance = balance
+					}
 
 					console.log(`token balance = ${tokenBalance}`)
 
@@ -294,7 +299,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										.
 									</Text>
 								),
-								meetsRequirement: (tokenBalance ?? 0) !== 0
+								meetsRequirement: tokenBalance !== BigNumber.from(0)
 							})
 							break
 						case MembershipReqType.TokenHolders:
@@ -309,7 +314,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										.
 									</Text>
 								),
-								meetsRequirement: (tokenBalance ?? 0) !== 0
+								meetsRequirement: tokenBalance !== BigNumber.from(0)
 							})
 							break
 						case MembershipReqType.OtherClubMember:
