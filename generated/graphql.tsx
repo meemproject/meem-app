@@ -3017,7 +3017,7 @@ export type GetClubsAutocompleteQueryVariables = Exact<{
 }>;
 
 
-export type GetClubsAutocompleteQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', id: any, name: string, contractURI: string }> };
+export type GetClubsAutocompleteQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', id: any, name: string, contractURI: string, slug: string }> };
 
 export type GetClubSlugQueryVariables = Exact<{
   contractAddress?: InputMaybe<Scalars['String']>;
@@ -3106,6 +3106,7 @@ export const GetClubsAutocompleteDocument = gql`
     id
     name
     contractURI
+    slug
   }
 }
     `;

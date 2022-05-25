@@ -27,6 +27,7 @@ export const GET_CLUBS_AUTOCOMPLETE = gql`
 			id
 			name
 			contractURI
+			slug
 		}
 	}
 `

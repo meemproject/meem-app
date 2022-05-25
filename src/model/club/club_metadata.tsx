@@ -10,6 +10,9 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 	}
 	const base64Data = uri.substring(29)
 	const contractURIJSONString = atob(base64Data)
+	if (contractURIJSONString.length === 0) {
+		return { image: '', description: '', applicationLink: '' }
+	}
 	const contractURIObject = JSON.parse(contractURIJSONString)
 	const metadata: ClubMetadata = {
 		image: contractURIObject.image,
