@@ -196,8 +196,9 @@ export default function clubFromMeemContract(
 				requirements: reqs,
 				costToJoin,
 				membershipFundsAddress: fundsAddress,
-				membershipStartDate: clubData.mintStartAt ? clubData.mintStartAt : null,
-				membershipEndDate: clubData.mintEndAt ? clubData.mintEndAt : null,
+				membershipStartDate:
+					clubData.mintStartAt === 0 ? clubData.mintStartAt : null,
+				membershipEndDate: clubData.mintEndAt === 0 ? clubData.mintEndAt : null,
 				membershipQuantity: totalMemberships,
 				clubAdmins: []
 			},

@@ -359,12 +359,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 												</a>
 											</div>
 										)}
-										{step === Step.Initializing && (
-											<div>
-												<Space h={12} />
-												<Text>Saving changes...</Text>
-											</div>
-										)}
+
 										{step === Step.Initialized && (
 											<div>
 												<Space h={12} />
