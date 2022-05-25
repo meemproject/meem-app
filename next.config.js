@@ -49,9 +49,7 @@ const config = {
     //   use: 'raw-loader',
     // })
 
-    // Workaround to enable support for ws library
-    config.resolve.fallback = { fs: false, net: false, tls: false };
-    
+
     // In `pages/_app.js`, Sentry is imported from @sentry/browser. While
     // @sentry/node will run in a Node.js environment. @sentry/node will use
     // Node.js-only APIs to catch even more unhandled exceptions.

@@ -15,36 +15,40 @@ import { createClient } from 'graphql-ws'
 import type { AppProps } from 'next/app'
 import React from 'react'
 import '../styles/globals.scss'
-import WebSocket from 'ws'
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const httpLink = new HttpLink({
 		uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
 	})
 
-	const wsLink = new GraphQLWsLink(
-		createClient({
-			url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? '',
-			webSocketImpl: WebSocket
-		})
-	)
+	const wsLink =
+		typeof window !== 'undefined'
+			? new GraphQLWsLink(
+					createClient({
+						url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? ''
+					})
+			  )
+			: null
 
 	// The split function takes three parameters:
 	//
 	// * A function that's called for each operation to execute
 	// * The Link to use for an operation if the function returns a "truthy" value
 	// * The Link to use for an operation if the function returns a "falsy" value
-	const splitLink = split(
-		({ query }) => {
-			const definition = getMainDefinition(query)
-			return (
-				definition.kind === 'OperationDefinition' &&
-				definition.operation === 'subscription'
-			)
-		},
-		wsLink,
-		httpLink
-	)
+	const splitLink =
+		typeof window !== 'undefined' && wsLink != null
+			? split(
+					({ query }) => {
+						const definition = getMainDefinition(query)
+						return (
+							definition.kind === 'OperationDefinition' &&
+							definition.operation === 'subscription'
+						)
+					},
+					wsLink,
+					httpLink
+			  )
+			: httpLink
 
 	const client = new ApolloClient({
 		link: splitLink,

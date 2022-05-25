@@ -161,54 +161,54 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 	}
 
 	// Club subscription - watch for specific changes in order to update correctly
-	// const { data: clubData, loading } =
-	// 	useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
-	// 		variables: { address: proxyAddress }
-	// 	})
+	const { data: clubData, loading } =
+		useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
+			variables: { address: proxyAddress }
+		})
 
 	// When club data is available, use this to guide to the next step
 	// when initializing, check if the club exists yet > Initialized
 	// when minting, check if user is a club member yet > Minted
-	// useEffect(() => {
-	// 	if (clubData && accounts.length > 0) {
-	// 		console.log('New club detected in the DB via subscription')
-	// 		if (clubData.MeemContracts.length > 0 && step === Step.Initializing) {
-	// 			// Successfully initialized club
-	// 			console.log('init complete')
-	// 			setStep(Step.Initialized)
-	// 		} else if (clubData.MeemContracts.length > 0 && step === Step.Minting) {
-	// 			const club = clubFromMeemContract(
-	// 				accounts[0],
-	// 				clubData.MeemContracts[0] as MeemContracts
-	// 			)
-	// 			console.log('minting...')
-	// 			if (club.isClubMember) {
-	// 				console.log('mint complete')
-	// 				// Remove all metadata cookies!
-	// 				Cookies.remove(CookieKeys.clubName)
-	// 				Cookies.remove(CookieKeys.clubDescription)
-	// 				Cookies.remove(CookieKeys.clubImage)
-	// 				Cookies.remove(CookieKeys.clubExternalUrl)
-	// 				Cookies.remove(CookieKeys.clubSlug)
+	useEffect(() => {
+		if (clubData && accounts.length > 0) {
+			console.log('New club detected in the DB via subscription')
+			if (clubData.MeemContracts.length > 0 && step === Step.Initializing) {
+				// Successfully initialized club
+				console.log('init complete')
+				setStep(Step.Initialized)
+			} else if (clubData.MeemContracts.length > 0 && step === Step.Minting) {
+				const club = clubFromMeemContract(
+					accounts[0],
+					clubData.MeemContracts[0] as MeemContracts
+				)
+				console.log('minting...')
+				if (club.isClubMember) {
+					console.log('mint complete')
+					// Remove all metadata cookies!
+					Cookies.remove(CookieKeys.clubName)
+					Cookies.remove(CookieKeys.clubDescription)
+					Cookies.remove(CookieKeys.clubImage)
+					Cookies.remove(CookieKeys.clubExternalUrl)
+					Cookies.remove(CookieKeys.clubSlug)
 
-	// 				// Route to the created club detail page
-	// 				showNotification({
-	// 					title: 'Success!',
-	// 					autoClose: 5000,
-	// 					color: 'green',
-	// 					icon: <Check color="green" />,
+					// Route to the created club detail page
+					showNotification({
+						title: 'Success!',
+						autoClose: 5000,
+						color: 'green',
+						icon: <Check color="green" />,
 
-	// 					message: `Your club has been published.`
-	// 				})
-	// 				router.push({ pathname: `/${club.slug}` })
+						message: `Your club has been published.`
+					})
+					router.push({ pathname: `/${club.slug}` })
 
-	// 				setStep(Step.Minted)
-	// 			}
-	// 		}
-	// 	} else {
-	// 		console.log('No club data (yet) or wallet not connected...')
-	// 	}
-	// }, [accounts, accounts.length, clubData, router, step])
+					setStep(Step.Minted)
+				}
+			}
+		} else {
+			console.log('No club data (yet) or wallet not connected...')
+		}
+	}, [accounts, accounts.length, clubData, router, step])
 
 	const initialize = async () => {
 		if (!web3Provider) {
