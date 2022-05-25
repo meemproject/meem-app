@@ -63,6 +63,12 @@ export const GET_CLUB = gql`
 			originalsPerWallet
 			totalOriginalsSupply
 			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					address
+				}
+			}
 		}
 	}
 `
@@ -90,6 +96,12 @@ export const SUB_CLUB = gql`
 			originalsPerWallet
 			totalOriginalsSupply
 			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					address
+				}
+			}
 		}
 	}
 `
@@ -119,6 +131,12 @@ export const GET_MY_CLUBS = gql`
 				originalsPerWallet
 				totalOriginalsSupply
 				symbol
+				MeemContractWallets {
+					role
+					Wallet {
+						address
+					}
+				}
 			}
 		}
 	}

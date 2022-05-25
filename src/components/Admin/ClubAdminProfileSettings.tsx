@@ -19,6 +19,7 @@ import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Club } from '../../model/club/club'
+import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -171,6 +172,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const descriptionRef = useRef<HTMLTextAreaElement>()
 
@@ -240,6 +242,24 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 		setSmallClubLogo('')
 	}
 
+	const [newClubData, setNewClubData] = useState<Club>()
+	const [isSaveChangesModalOpened, setSaveChangesModalOpened] = useState(false)
+	const openSaveChangesModal = () => {
+		// 'save changes' modal for execution club settings updates
+		// convert current settings and update for the modal
+		const newClub = club!
+		newClub.name = clubName
+		newClub.description = clubDescription
+		newClub.image = smallClubLogo
+		setNewClubData(newClub)
+		setSaveChangesModalOpened(true)
+	}
+
+	const saveChanges = async () => {
+		setIsSavingChanges(true)
+		openSaveChangesModal()
+	}
+
 	return (
 		<>
 			<Space h={'lg'} />
@@ -300,8 +320,22 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 				</div>
 			)}
 			<Space h={smallClubLogo.length > 0 ? 148 : 32} />
-			<Button className={classes.buttonSaveChanges}>Save Changes</Button>
+			<Button
+				className={classes.buttonSaveChanges}
+				loading={isSavingChanges}
+				onClick={saveChanges}
+			>
+				Save Changes
+			</Button>
 			<Space h={64} />
+			<ClubAdminChangesModal
+				club={newClubData}
+				isOpened={isSaveChangesModalOpened}
+				onModalClosed={() => {
+					setIsSavingChanges(false)
+					setSaveChangesModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }

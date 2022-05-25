@@ -203,6 +203,98 @@ export type Int_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['Int']>>;
 };
 
+/** columns and relationships of "MeemContractWallets" */
+export type MeemContractWallets = {
+  __typename?: 'MeemContractWallets';
+  /** An object relationship */
+  MeemContract?: Maybe<MeemContracts>;
+  MeemContractId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  Wallet?: Maybe<Wallets>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  role: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** order by aggregate values of table "MeemContractWallets" */
+export type MeemContractWallets_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<MeemContractWallets_Max_Order_By>;
+  min?: InputMaybe<MeemContractWallets_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "MeemContractWallets". All fields are combined with a logical 'AND'. */
+export type MeemContractWallets_Bool_Exp = {
+  MeemContract?: InputMaybe<MeemContracts_Bool_Exp>;
+  MeemContractId?: InputMaybe<Uuid_Comparison_Exp>;
+  Wallet?: InputMaybe<Wallets_Bool_Exp>;
+  WalletId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<MeemContractWallets_Bool_Exp>>;
+  _not?: InputMaybe<MeemContractWallets_Bool_Exp>;
+  _or?: InputMaybe<Array<MeemContractWallets_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  role?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** order by max() on columns of table "MeemContractWallets" */
+export type MeemContractWallets_Max_Order_By = {
+  MeemContractId?: InputMaybe<Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  role?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "MeemContractWallets" */
+export type MeemContractWallets_Min_Order_By = {
+  MeemContractId?: InputMaybe<Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  role?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "MeemContractWallets". */
+export type MeemContractWallets_Order_By = {
+  MeemContract?: InputMaybe<MeemContracts_Order_By>;
+  MeemContractId?: InputMaybe<Order_By>;
+  Wallet?: InputMaybe<Wallets_Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  role?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "MeemContractWallets" */
+export enum MeemContractWallets_Select_Column {
+  /** column name */
+  MeemContractId = 'MeemContractId',
+  /** column name */
+  WalletId = 'WalletId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Role = 'role',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
 /** columns and relationships of "MeemContracts" */
 export type MeemContracts = {
   __typename?: 'MeemContracts';
@@ -212,6 +304,8 @@ export type MeemContracts = {
   /** An object relationship */
   DefaultProperties?: Maybe<MeemProperties>;
   DefaultPropertiesId?: Maybe<Scalars['uuid']>;
+  /** An array relationship */
+  MeemContractWallets: Array<MeemContractWallets>;
   /** An array relationship */
   Meems: Array<Meems>;
   /** An aggregate relationship */
@@ -240,6 +334,16 @@ export type MeemContracts = {
   transferLockupUntil?: Maybe<Scalars['timestamp']>;
   transferLockupUntilLockedBy: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "MeemContracts" */
+export type MeemContractsMeemContractWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
+  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
 };
 
 
@@ -302,6 +406,7 @@ export type MeemContracts_Bool_Exp = {
   DefaultChildPropertiesId?: InputMaybe<Uuid_Comparison_Exp>;
   DefaultProperties?: InputMaybe<MeemProperties_Bool_Exp>;
   DefaultPropertiesId?: InputMaybe<Uuid_Comparison_Exp>;
+  MeemContractWallets?: InputMaybe<MeemContractWallets_Bool_Exp>;
   Meems?: InputMaybe<Meems_Bool_Exp>;
   _and?: InputMaybe<Array<MeemContracts_Bool_Exp>>;
   _not?: InputMaybe<MeemContracts_Bool_Exp>;
@@ -394,6 +499,7 @@ export type MeemContracts_Order_By = {
   DefaultChildPropertiesId?: InputMaybe<Order_By>;
   DefaultProperties?: InputMaybe<MeemProperties_Order_By>;
   DefaultPropertiesId?: InputMaybe<Order_By>;
+  MeemContractWallets_aggregate?: InputMaybe<MeemContractWallets_Aggregate_Order_By>;
   Meems_aggregate?: InputMaybe<Meems_Aggregate_Order_By>;
   address?: InputMaybe<Order_By>;
   contractURI?: InputMaybe<Order_By>;
@@ -2419,6 +2525,10 @@ export type Query_Root = {
   Hashtags: Array<Hashtags>;
   /** fetch data from the table: "Hashtags" using primary key columns */
   Hashtags_by_pk?: Maybe<Hashtags>;
+  /** An array relationship */
+  MeemContractWallets: Array<MeemContractWallets>;
+  /** fetch data from the table: "MeemContractWallets" using primary key columns */
+  MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
   /** fetch data from the table: "MeemContracts" */
   MeemContracts: Array<MeemContracts>;
   /** fetch aggregated fields from the table: "MeemContracts" */
@@ -2498,6 +2608,20 @@ export type Query_RootHashtagsArgs = {
 
 
 export type Query_RootHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootMeemContractWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
+  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
+};
+
+
+export type Query_RootMeemContractWallets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -2697,6 +2821,10 @@ export type Subscription_Root = {
   Hashtags: Array<Hashtags>;
   /** fetch data from the table: "Hashtags" using primary key columns */
   Hashtags_by_pk?: Maybe<Hashtags>;
+  /** An array relationship */
+  MeemContractWallets: Array<MeemContractWallets>;
+  /** fetch data from the table: "MeemContractWallets" using primary key columns */
+  MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
   /** fetch data from the table: "MeemContracts" */
   MeemContracts: Array<MeemContracts>;
   /** fetch aggregated fields from the table: "MeemContracts" */
@@ -2776,6 +2904,20 @@ export type Subscription_RootHashtagsArgs = {
 
 
 export type Subscription_RootHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeemContractWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
+  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemContractWallets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3031,21 +3173,21 @@ export type GetClubQueryVariables = Exact<{
 }>;
 
 
-export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }> }> };
+export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }> }> };
+export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
 
 export type MyClubsQueryVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type MyClubsQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string } | null }> };
+export type MyClubsQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> } | null }> };
 
 export type GetMeemIdQueryVariables = Exact<{
   walletAddress: Scalars['String'];
@@ -3196,6 +3338,12 @@ export const GetClubDocument = gql`
     originalsPerWallet
     totalOriginalsSupply
     symbol
+    MeemContractWallets {
+      role
+      Wallet {
+        address
+      }
+    }
   }
 }
     `;
@@ -3250,6 +3398,12 @@ export const ClubSubscriptionDocument = gql`
     originalsPerWallet
     totalOriginalsSupply
     symbol
+    MeemContractWallets {
+      role
+      Wallet {
+        address
+      }
+    }
   }
 }
     `;
@@ -3298,6 +3452,12 @@ export const MyClubsDocument = gql`
       originalsPerWallet
       totalOriginalsSupply
       symbol
+      MeemContractWallets {
+        role
+        Wallet {
+          address
+        }
+      }
     }
   }
 }

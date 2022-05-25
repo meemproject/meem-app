@@ -2,6 +2,9 @@ import { Permission } from '@meemproject/meem-contracts'
 import { MeemContracts } from '../../../generated/graphql'
 import { clubMetadataFromContractUri } from './club_metadata'
 
+export const ClubAdminRole =
+	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
+
 export interface Club {
 	id?: string
 	name?: string
@@ -13,7 +16,9 @@ export interface Club {
 	membershipSettings?: MembershipSettings
 	members?: string[]
 	isClubMember?: boolean
+	isClubAdmin?: boolean
 	isValid?: boolean
+	rawClub?: MeemContracts
 }
 
 export interface MembershipSettings {
@@ -157,10 +162,31 @@ export default function clubFromMeemContract(
 			})
 		}
 
+		// Set up club admins
+		// Is the current user a club admin?
+		const admins: string[] = []
+		let isClubAdmin = false
+		if (clubData.MeemContractWallets.length > 0) {
+			clubData.MeemContractWallets.forEach(wallet => {
+				if (wallet.Wallet) {
+					admins.push(wallet.Wallet.address)
+				}
+				if (
+					wallet.Wallet?.address.toLowerCase() ===
+						walletAddress?.toLowerCase() &&
+					wallet.role === ClubAdminRole
+				) {
+					isClubAdmin = true
+				}
+			})
+		}
+
 		return {
 			id: clubData.id,
 			name: clubData.name,
 			address: clubData.address,
+			admins,
+			isClubAdmin,
 			slug: clubData.slug,
 			description: metadata.description,
 			image: metadata.image,
@@ -175,7 +201,8 @@ export default function clubFromMeemContract(
 				membershipQuantity: totalMemberships,
 				clubAdmins: []
 			},
-			isValid: clubData.mintPermissions !== undefined
+			isValid: clubData.mintPermissions !== undefined,
+			rawClub: clubData
 		}
 	} else {
 		return {}

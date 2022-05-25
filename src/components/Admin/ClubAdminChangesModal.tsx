@@ -94,12 +94,11 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 }) => {
 	const router = useRouter()
 
-	const { web3Provider, accounts, signer } = useWallet()
+	const { web3Provider, accounts, signer, meemContract } = useWallet()
 
 	const { classes } = useStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
-	const [proxyAddress, setProxyAddress] = useState('')
 
 	const reinitialize = async () => {
 		if (!web3Provider || !club) {
@@ -252,21 +251,25 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			console.log(`club symbol: ${clubSymbol}`)
 			console.log(`club admins: ${club.membershipSettings?.clubAdmins}`)
 
-			const tx = await meemContracts.initProxy({
-				signer: web3Provider.getSigner(),
-				proxyContractAddress: proxyAddress,
+			const contract = await meemContracts.getMeemContract({
+				contractAddress: club.address!,
+				signer: web3Provider.getSigner()
+			})
+			const tx = await contract.reInitialize({
 				name: club.name ?? '',
 				symbol: clubSymbol,
 				admins: club.membershipSettings
 					? club.membershipSettings.clubAdmins
+						? club.membershipSettings.clubAdmins
+						: []
 					: [],
 				contractURI: uri,
-				chain:
-					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
-						? Chain.Rinkeby
-						: Chain.Polygon,
-				version: 'latest',
-				baseProperties
+				baseProperties,
+				defaultProperties: meemContracts.defaultMeemProperties,
+				defaultChildProperties: meemContracts.defaultMeemProperties,
+				tokenCounterStart: 1,
+				childDepth: -1,
+				nonOwnerSplitAllocationAmount: 0
 			})
 
 			log.debug(tx)
@@ -274,6 +277,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			onModalClosed()
 		} catch (e) {
 			setStep(Step.Start)
+			console.log(e)
 			showNotification({
 				title: 'Error saving club settings',
 				message: `${e as string}`

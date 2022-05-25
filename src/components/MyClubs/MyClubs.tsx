@@ -109,6 +109,9 @@ export const MyClubsComponent: React.FC = () => {
 	const [clubs, setClubs] = useState<Club[]>([])
 
 	useEffect(() => {
+		if (error) {
+			console.log(error)
+		}
 		if (!loading && !error && clubs.length === 0 && clubData) {
 			const tempClubs: Club[] = []
 			clubData.Meems.forEach(meem => {
@@ -173,7 +176,7 @@ export const MyClubsComponent: React.FC = () => {
 					<>
 						{clubs.map(club => (
 							<div
-								key={club.id}
+								key={club.address}
 								className={classes.clubItem}
 								onClick={() => {
 									navigateToClub(club.slug!)
