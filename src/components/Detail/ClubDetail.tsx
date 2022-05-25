@@ -217,21 +217,26 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [requirementsParsed, setRequirementsParsed] = useState(false)
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 
-	const checkEligibility = useCallback(() => {
-		if (parsedRequirements.length === 0) {
-			setMeetsAllRequirements(false)
-		} else {
-			let reqsMet = 0
-			parsedRequirements.forEach(req => {
-				if (req.meetsRequirement) {
-					reqsMet++
+	const checkEligibility = useCallback(
+		(reqs: RequirementString[]) => {
+			if (reqs.length === 0) {
+				setMeetsAllRequirements(false)
+			} else {
+				let reqsMet = 0
+				parsedRequirements.forEach(req => {
+					if (req.meetsRequirement) {
+						reqsMet++
+					}
+				})
+				console.log(`reqs met = ${reqsMet}`)
+				console.log(`total reqs = ${parsedRequirements.length}`)
+				if (reqsMet === parsedRequirements.length) {
+					setMeetsAllRequirements(true)
 				}
-			})
-			if (reqsMet === parsedRequirements.length) {
-				setMeetsAllRequirements(true)
 			}
-		}
-	}, [parsedRequirements])
+		},
+		[parsedRequirements]
+	)
 
 	const parseRequirements = useCallback(
 		async (possibleClub: Club) => {
@@ -334,9 +339,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					}
 				})
 			)
+			console.log('set parsed reqs')
 			setParsedRequirements(reqs)
 			setRequirementsParsed(true)
-			checkEligibility()
+			checkEligibility(reqs)
 		},
 		[
 			checkEligibility,
@@ -465,7 +471,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						<Text className={classes.clubMemberReqsTitleText}>
 							Membership Requirements
 						</Text>
-						{parsedRequirements.length > 0 && (
+						{!requirementsParsed && (
+							<div className={classes.requirementsContainer}>
+								<Loader />
+							</div>
+						)}
+						{parsedRequirements.length > 0 && requirementsParsed && (
 							<div className={classes.requirementsContainer}>
 								{parsedRequirements.map(requirement => (
 									<div
