@@ -106,8 +106,17 @@ export const GET_MY_CLUBS = gql`
 			tokenId
 			MeemContractId
 			MeemContract {
+				slug
 				address
+				contractURI
+				createdAt
 				name
+				splits
+				mintEndAt
+				mintStartAt
+				mintPermissions
+				originalsPerWallet
+				totalOriginalsSupply
 				symbol
 			}
 		}

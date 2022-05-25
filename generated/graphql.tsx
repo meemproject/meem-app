@@ -3045,7 +3045,7 @@ export type MyClubsQueryVariables = Exact<{
 }>;
 
 
-export type MyClubsQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', address: string, name: string, symbol: string } | null }> };
+export type MyClubsQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string } | null }> };
 
 export type GetMeemIdQueryVariables = Exact<{
   walletAddress: Scalars['String'];
@@ -3285,8 +3285,17 @@ export const MyClubsDocument = gql`
     tokenId
     MeemContractId
     MeemContract {
+      slug
       address
+      contractURI
+      createdAt
       name
+      splits
+      mintEndAt
+      mintStartAt
+      mintPermissions
+      originalsPerWallet
+      totalOriginalsSupply
       symbol
     }
   }

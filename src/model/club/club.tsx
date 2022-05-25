@@ -13,6 +13,7 @@ export interface Club {
 	membershipSettings?: MembershipSettings
 	members?: string[]
 	isClubMember?: boolean
+	isValid?: boolean
 }
 
 export interface MembershipSettings {
@@ -74,61 +75,64 @@ export default function clubFromMeemContract(
 		const reqs: MembershipRequirement[] = []
 		let costToJoin = 0
 		let index = 0
-		clubData.mintPermissions.forEach((permission: any) => {
-			costToJoin = Number(permission.costWei / 1000000000)
 
-			let type = MembershipReqType.None
-			let approvedAddresses: string[] = []
-			const tokenName = 'TOKEN'
-			let tokenContractAddress = ''
-			let tokenMinQuantity = 0
+		if (clubData.mintPermissions) {
+			clubData.mintPermissions.forEach((permission: any) => {
+				costToJoin = Number(permission.costWei / 1000000000)
 
-			// Used for the 'other club' additional req, TODO
-			const clubContractAddress = ''
-			const clubName = ''
+				let type = MembershipReqType.None
+				let approvedAddresses: string[] = []
+				const tokenName = 'TOKEN'
+				let tokenContractAddress = ''
+				let tokenMinQuantity = 0
 
-			switch (permission.permission) {
-				case Permission.Anyone:
-					type = MembershipReqType.None
-					break
-				case Permission.Addresses:
-					type = MembershipReqType.ApprovedApplicants
-					approvedAddresses = permission.addresses
-					break
-				case Permission.Holders:
-					tokenMinQuantity = Number(permission.numTokens)
-					// Use other properties to determine whether using NFT or Token holders
-					if (tokenMinQuantity > 1) {
-						type = MembershipReqType.NftHolders
-					} else {
-						type = MembershipReqType.TokenHolders
-					}
-					tokenContractAddress = permission.addresses[0]
-					break
-			}
+				// Used for the 'other club' additional req, TODO
+				const clubContractAddress = ''
+				const clubName = ''
 
-			// Construct a requirement
-			reqs.push({
-				index,
-				andor: MembershipReqAndor.Or,
-				type,
-				applicationLink: metadata.applicationLink,
-				approvedAddresses,
-				approvedAddressesString: '',
-				tokenName,
-				tokenMinQuantity,
-				tokenChain: '',
-				clubContractAddress,
-				tokenContractAddress,
-				clubName
+				switch (permission.permission) {
+					case Permission.Anyone:
+						type = MembershipReqType.None
+						break
+					case Permission.Addresses:
+						type = MembershipReqType.ApprovedApplicants
+						approvedAddresses = permission.addresses
+						break
+					case Permission.Holders:
+						tokenMinQuantity = Number(permission.numTokens)
+						// Use other properties to determine whether using NFT or Token holders
+						if (tokenMinQuantity > 1) {
+							type = MembershipReqType.NftHolders
+						} else {
+							type = MembershipReqType.TokenHolders
+						}
+						tokenContractAddress = permission.addresses[0]
+						break
+				}
+
+				// Construct a requirement
+				reqs.push({
+					index,
+					andor: MembershipReqAndor.Or,
+					type,
+					applicationLink: metadata.applicationLink,
+					approvedAddresses,
+					approvedAddressesString: '',
+					tokenName,
+					tokenMinQuantity,
+					tokenChain: '',
+					clubContractAddress,
+					tokenContractAddress,
+					clubName
+				})
+
+				index++
 			})
-
-			index++
-		})
+		}
 
 		// Membership funds address
 		let fundsAddress = ''
-		if (clubData.splits.length > 0) {
+		if (clubData.splits && clubData.splits.length > 0) {
 			const split = clubData.splits[0]
 			fundsAddress = split.toAddress
 		}
@@ -144,12 +148,14 @@ export default function clubFromMeemContract(
 
 		// Is the current user a club member?
 		let isClubMember = false
-		clubData.Meems.forEach(meem => {
-			if (walletAddress) {
-				isClubMember = true
-			}
-			members.push(meem.owner)
-		})
+		if (clubData.Meems) {
+			clubData.Meems.forEach(meem => {
+				if (walletAddress) {
+					isClubMember = true
+				}
+				members.push(meem.owner)
+			})
+		}
 
 		return {
 			id: clubData.id,
@@ -168,7 +174,8 @@ export default function clubFromMeemContract(
 				membershipEndDate: clubData.mintEndAt ? clubData.mintEndAt : null,
 				membershipQuantity: totalMemberships,
 				clubAdmins: []
-			}
+			},
+			isValid: clubData.mintPermissions !== undefined
 		}
 	} else {
 		return {}

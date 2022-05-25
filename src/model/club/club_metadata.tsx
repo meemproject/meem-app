@@ -5,6 +5,9 @@ interface ClubMetadata {
 }
 
 export function clubMetadataFromContractUri(uri: string): ClubMetadata {
+	if (uri == undefined) {
+		return { image: '', description: '', applicationLink: '' }
+	}
 	const base64Data = uri.substring(29)
 	const contractURIJSONString = atob(base64Data)
 	const contractURIObject = JSON.parse(contractURIJSONString)

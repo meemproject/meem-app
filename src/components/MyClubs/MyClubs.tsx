@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -9,14 +10,17 @@ import {
 	Text,
 	Image,
 	Button,
-	Space
+	Space,
+	Center,
+	Loader
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
-import { MyClubsQuery } from '../../../generated/graphql'
+import { MeemContracts, MyClubsQuery } from '../../../generated/graphql'
 import { GET_MY_CLUBS } from '../../graphql/clubs'
+import clubFromMeemContract, { Club } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -44,10 +48,10 @@ const useStyles = createStyles(theme => ({
 	},
 	headerArrow: {
 		marginRight: 32,
+		marginTop: 6,
 		cursor: 'pointer',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginRight: 16,
-			marginTop: 6,
 			marginLeft: 16
 		}
 	},
@@ -63,7 +67,8 @@ const useStyles = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: theme.colors.gray[8]
 		},
-		borderRadius: 24
+		borderRadius: 24,
+		marginRight: 24
 	},
 	createClubLink: {
 		marginTop: 24,
@@ -93,12 +98,31 @@ export const MyClubsComponent: React.FC = () => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const { loading, error, data } = useQuery<MyClubsQuery>(GET_MY_CLUBS, {
+	const {
+		loading,
+		error,
+		data: clubData
+	} = useQuery<MyClubsQuery>(GET_MY_CLUBS, {
 		variables: { walletAddress: wallet.accounts[0] }
 	})
 
-	const [clubs, setClubs] = useState(['Harry Potter Club', 'ClubClub'])
-	const [isLoading, setIsLoading] = useState(true)
+	const [clubs, setClubs] = useState<Club[]>([])
+
+	useEffect(() => {
+		if (!loading && !error && clubs.length === 0 && clubData) {
+			const tempClubs: Club[] = []
+			clubData.Meems.forEach(meem => {
+				const possibleClub = clubFromMeemContract(
+					wallet.isConnected ? wallet.accounts[0] : undefined,
+					meem.MeemContract as MeemContracts
+				)
+				if (possibleClub) {
+					tempClubs.push(possibleClub)
+				}
+			})
+			setClubs(tempClubs)
+		}
+	}, [clubs, clubData, error, loading, wallet.accounts, wallet.isConnected])
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -127,7 +151,15 @@ export const MyClubsComponent: React.FC = () => {
 			</div>
 
 			<Container>
-				{clubs.length === 0 && (
+				{loading && (
+					<Container>
+						<Space h={60} />
+						<Center>
+							<Loader />
+						</Center>
+					</Container>
+				)}
+				{clubs.length === 0 && !loading && (
 					<>
 						<Text className={classes.myClubsPrompt}>
 							{`You haven't joined any clubs!`}
@@ -137,25 +169,25 @@ export const MyClubsComponent: React.FC = () => {
 						</Text>
 					</>
 				)}
-				{clubs.length > 0 && (
+				{clubs.length > 0 && !loading && (
 					<>
 						{clubs.map(club => (
 							<div
-								key={club}
+								key={club.id}
 								className={classes.clubItem}
 								onClick={() => {
-									navigateToClub(club)
+									navigateToClub(club.slug!)
 								}}
 							>
 								<Image
 									className={classes.clubLogoImage}
-									src="/exampleclub.png"
+									src={club.image!}
 									width={40}
 									height={40}
 									fit={'contain'}
 								/>
 								<Space w="xs" />
-								<Text>{club}</Text>
+								<Text>{club.name!}</Text>
 							</div>
 						))}
 					</>
