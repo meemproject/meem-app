@@ -244,12 +244,12 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			if (membershipSettings) {
 				if (membershipSettings.membershipStartDate) {
 					membershipStartUnix = Math.floor(
-						membershipSettings.membershipStartDate.getTime() / 1000
+						new Date(membershipSettings.membershipStartDate).getTime() / 1000
 					)
 				}
 				if (membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
-						membershipSettings.membershipEndDate.getTime() / 1000
+						new Date(membershipSettings.membershipEndDate).getTime() / 1000
 					)
 				}
 			}

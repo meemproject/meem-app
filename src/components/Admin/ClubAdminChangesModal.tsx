@@ -113,8 +113,10 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			const applicationLinks: string[] = []
 			if (club.membershipSettings) {
 				club.membershipSettings.requirements.forEach(requirement => {
-					if (requirement.applicationLink.length > 0) {
-						applicationLinks.push(requirement.applicationLink)
+					if (requirement.applicationLink) {
+						if (requirement.applicationLink.length > 0) {
+							applicationLinks.push(requirement.applicationLink)
+						}
 					}
 				})
 			}
@@ -132,12 +134,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			if (club.membershipSettings) {
 				if (club.membershipSettings.membershipStartDate) {
 					membershipStartUnix = Math.floor(
-						club.membershipSettings.membershipStartDate.getTime()
+						new Date(club.membershipSettings.membershipStartDate).getTime() /
+							1000
 					)
 				}
 				if (club.membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
-						club.membershipSettings.membershipEndDate.getTime()
+						new Date(club.membershipSettings.membershipEndDate).getTime() / 1000
 					)
 				}
 			}

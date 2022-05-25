@@ -209,44 +209,38 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		variables: { slug }
 	})
 
-	const [clubName, setClubName] = useState('')
-	const [clubLogo, setClubLogo] = useState('')
-	const [clubDescription, setClubDescription] = useState('')
-	const [membershipRequirements, setMembershipRequirements] = useState<
+	const [club, setClub] = useState<Club>()
+	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
 	>([])
 	const [requirementsParsed, setRequirementsParsed] = useState(false)
-	const [isClubMember, setIsClubMember] = useState(false)
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
-	const [costToJoin, setCostToJoin] = useState(0)
-
-	const [clubMembers, setClubMembers] = useState<string[]>([])
 
 	const checkEligibility = useCallback(() => {
-		if (membershipRequirements.length === 0) {
+		if (parsedRequirements.length === 0) {
 			setMeetsAllRequirements(false)
 		} else {
 			let reqsMet = 0
-			membershipRequirements.forEach(req => {
+			parsedRequirements.forEach(req => {
 				if (req.meetsRequirement) {
 					reqsMet++
 				}
 			})
-			if (reqsMet === membershipRequirements.length) {
+			if (reqsMet === parsedRequirements.length) {
 				setMeetsAllRequirements(true)
 			}
 		}
-	}, [membershipRequirements])
+	}, [parsedRequirements])
 
 	const parseRequirements = useCallback(
-		async (club: Club) => {
-			if (requirementsParsed) {
+		async (possibleClub: Club) => {
+			if (requirementsParsed || !possibleClub) {
 				return
 			}
 			const reqs: RequirementString[] = []
 			let index = 0
 			await Promise.all(
-				club.membershipSettings!.requirements.map(function (req) {
+				possibleClub.membershipSettings!.requirements.map(function (req) {
 					index++
 
 					const tokenBalance =
@@ -335,7 +329,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					}
 				})
 			)
-			setMembershipRequirements(reqs)
+			setParsedRequirements(reqs)
 			setRequirementsParsed(true)
 			checkEligibility()
 		},
@@ -348,26 +342,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
-		if (!loading && !error && clubData) {
-			const club = clubFromMeemContract(
+		if (!loading && !error && !club && clubData) {
+			const possibleClub = clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
 				clubData.MeemContracts[0] as MeemContracts
 			)
 
-			if (club) {
-				setClubName(club.name!)
-				setClubLogo(club.image!)
-				setClubDescription(club.description!)
-				setCostToJoin(club.membershipSettings!.costToJoin)
-
-				// Parse requirements
-				parseRequirements(club)
-
-				setIsClubMember(club.isClubMember!)
-				setClubMembers(club.members!)
+			if (possibleClub) {
+				setClub(possibleClub)
+				parseRequirements(possibleClub)
 			}
 		}
 	}, [
+		club,
 		clubData,
 		error,
 		loading,
@@ -390,7 +377,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && !clubData && (
+			{!loading && !club && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -398,35 +385,43 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && clubData && (
+			{!loading && club && (
 				<>
 					<div className={classes.header}>
-						<Image className={classes.clubLogoImage} src={clubLogo} />
+						<Image className={classes.clubLogoImage} src={club.image} />
 						<div>
-							<Text className={classes.headerClubName}>{clubName}</Text>
+							<Text className={classes.headerClubName}>{club.name}</Text>
 							<Text className={classes.headerClubDescription}>
-								{clubDescription}
+								{club.description}
 							</Text>
 							<div className={classes.headerButtons}>
-								{isClubMember && (
+								{club.isClubMember && (
 									<Button className={classes.outlineButton}>Leave</Button>
 								)}
-								{!isClubMember && (
+								{!club.isClubMember && (
 									<Button
 										disabled={!meetsAllRequirements}
 										className={classes.buttonJoinClub}
 									>
-										{costToJoin > 0 ? `Join (${costToJoin} MATIC)` : `Join`}
+										{club.membershipSettings!.costToJoin > 0
+											? `Join (${club.membershipSettings!.costToJoin} MATIC)`
+											: `Join`}
 									</Button>
 								)}
-								<Space w={'xs'} />
-								<Button
-									onClick={navigateToSettings}
-									className={classes.outlineHeaderButton}
-									leftIcon={<Settings className={classes.clubSettingsIcon} />}
-								>
-									Settings
-								</Button>
+								{club.isClubAdmin && (
+									<>
+										<Space w={'xs'} />
+										<Button
+											onClick={navigateToSettings}
+											className={classes.outlineHeaderButton}
+											leftIcon={
+												<Settings className={classes.clubSettingsIcon} />
+											}
+										>
+											Settings
+										</Button>
+									</>
+								)}
 							</div>
 							{/* <div className={classes.mobileHeaderLinks}>
 								<a href="twitter.com" className={classes.headerLink}>
@@ -465,9 +460,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						<Text className={classes.clubMemberReqsTitleText}>
 							Membership Requirements
 						</Text>
-						{membershipRequirements.length > 0 && (
+						{parsedRequirements.length > 0 && (
 							<div className={classes.requirementsContainer}>
-								{membershipRequirements.map(requirement => (
+								{parsedRequirements.map(requirement => (
 									<div
 										className={classes.requirementItem}
 										key={requirement.requirementKey}
@@ -485,12 +480,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</div>
 						)}
 
-						<Text
-							className={classes.clubMembersListTitleText}
-						>{`Members (${clubMembers.length})`}</Text>
-						{clubMembers.length > 0 && (
+						<Text className={classes.clubMembersListTitleText}>{`Members (${
+							club.members!.length
+						})`}</Text>
+						{club.members!.length > 0 && (
 							<Grid>
-								{clubMembers.map(member => (
+								{club.members!.map(member => (
 									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
 										<Text className={classes.memberItem}>
 											{truncatedWalletAddress(member)}

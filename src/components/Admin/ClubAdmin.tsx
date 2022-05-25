@@ -214,6 +214,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
+
 			{!loading && club?.name && (
 				<>
 					<div className={classes.header}>
@@ -227,76 +228,89 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</div>
 					</div>
 
-					<Container>
-						<div className={classes.tabs}>
-							<a onClick={switchToMembership}>
-								<Text
-									className={
-										currentTab == Tab.Membership
-											? classes.activeTab
-											: classes.inactiveTab
-									}
-								>
-									Manage Club
+					{!club?.isClubAdmin && (
+						<Container>
+							<Space h={120} />
+							<Center>
+								<Text>
+									Sorry, you do not have permission to view this page. Contact
+									the club owner for help.
 								</Text>
-							</a>
-							<a onClick={switchToClubProfile}>
-								<Text
-									className={
-										currentTab == Tab.Profile
-											? classes.activeTab
-											: classes.inactiveTab
-									}
-								>
-									Edit Profile
-								</Text>
-							</a>
-							<a onClick={switchToIntegrations}>
-								<Text
-									className={
-										currentTab == Tab.Integrations
-											? classes.activeTab
-											: classes.inactiveTab
-									}
-								>
-									dApps
-								</Text>
-							</a>
-						</div>
-						<div
-							className={
-								currentTab === Tab.Membership
-									? classes.visibleTab
-									: classes.invisibleTab
-							}
-						>
-							<ClubAdminMembershipSettingsComponent
-								isCreatingClub={false}
-								club={club}
-							/>
-						</div>
+							</Center>
+						</Container>
+					)}
+					{club?.isClubAdmin && (
+						<Container>
+							<div className={classes.tabs}>
+								<a onClick={switchToMembership}>
+									<Text
+										className={
+											currentTab == Tab.Membership
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										Manage Club
+									</Text>
+								</a>
+								<a onClick={switchToClubProfile}>
+									<Text
+										className={
+											currentTab == Tab.Profile
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										Edit Profile
+									</Text>
+								</a>
+								<a onClick={switchToIntegrations}>
+									<Text
+										className={
+											currentTab == Tab.Integrations
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										dApps
+									</Text>
+								</a>
+							</div>
+							<div
+								className={
+									currentTab === Tab.Membership
+										? classes.visibleTab
+										: classes.invisibleTab
+								}
+							>
+								<ClubAdminMembershipSettingsComponent
+									isCreatingClub={false}
+									club={club}
+								/>
+							</div>
 
-						<div
-							className={
-								currentTab === Tab.Profile
-									? classes.visibleTab
-									: classes.invisibleTab
-							}
-						>
-							<ClubAdminProfileSettings club={club} />
-						</div>
+							<div
+								className={
+									currentTab === Tab.Profile
+										? classes.visibleTab
+										: classes.invisibleTab
+								}
+							>
+								<ClubAdminProfileSettings club={club} />
+							</div>
 
-						<div
-							className={
-								currentTab === Tab.Integrations
-									? classes.visibleTab
-									: classes.invisibleTab
-							}
-						>
-							{' '}
-							<ClubAdminDappSettingsComponent club={club} />
-						</div>
-					</Container>
+							<div
+								className={
+									currentTab === Tab.Integrations
+										? classes.visibleTab
+										: classes.invisibleTab
+								}
+							>
+								{' '}
+								<ClubAdminDappSettingsComponent club={club} />
+							</div>
+						</Container>
+					)}
 				</>
 			)}
 		</>
