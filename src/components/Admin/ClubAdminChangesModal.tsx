@@ -19,6 +19,7 @@ import { Chain, Permission } from '@meemproject/meem-contracts'
 import * as meemContracts from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { BigNumber } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Club, MembershipReqType } from '../../model/club/club'
@@ -210,7 +211,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			const baseProperties = {
 				// Total # of tokens available. -1 means unlimited.
 				totalOriginalsSupply: club.membershipSettings
-					? club.membershipSettings.membershipQuantity === 0
+					? club.membershipSettings.membershipQuantity === 0 ||
+					  isNaN(club.membershipSettings.membershipQuantity)
 						? -1
 						: club.membershipSettings.membershipQuantity
 					: -1,
@@ -258,7 +260,9 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				contractAddress: club.address!,
 				signer: web3Provider.getSigner()
 			})
-			const tx = await contract.reInitialize({
+			console.log('contract found')
+
+			const data = {
 				name: club.name ?? '',
 				symbol: clubSymbol,
 				admins: club.membershipSettings
@@ -270,10 +274,12 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				baseProperties,
 				defaultProperties: meemContracts.defaultMeemProperties,
 				defaultChildProperties: meemContracts.defaultMeemProperties,
-				tokenCounterStart: 1,
-				childDepth: -1,
-				nonOwnerSplitAllocationAmount: 0
-			})
+				tokenCounterStart: BigNumber.from(1),
+				childDepth: BigNumber.from(-1),
+				nonOwnerSplitAllocationAmount: BigNumber.from(0)
+			}
+			console.log(data)
+			const tx = await contract.reInitialize(data, { gasLimit: '1000000' })
 
 			log.debug(tx)
 

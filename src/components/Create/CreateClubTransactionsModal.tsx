@@ -319,7 +319,8 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			const baseProperties = {
 				// Total # of tokens available. -1 means unlimited.
 				totalOriginalsSupply: membershipSettings
-					? membershipSettings.membershipQuantity === 0
+					? membershipSettings.membershipQuantity === 0 ||
+					  isNaN(membershipSettings.membershipQuantity)
 						? -1
 						: membershipSettings.membershipQuantity
 					: -1,
