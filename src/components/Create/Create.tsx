@@ -240,7 +240,7 @@ export const CreateComponent: React.FC = () => {
 			</div>
 
 			<Container>
-				<Text className={classes.clubDescriptionPrompt}>
+				{/* <Text className={classes.clubDescriptionPrompt}>
 					{`Set your club's URL.`}
 				</Text>
 				<Text size="sm" className={classes.clubNamespaceHint}>
@@ -263,7 +263,7 @@ export const CreateComponent: React.FC = () => {
 					>{`https://clubs.link/`}</Text>
 				</div>
 
-				<Space h={'md'} />
+				<Space h={'md'} /> */}
 				<Text className={classes.clubDescriptionPrompt}>
 					In a sentence, describe what your members do together.
 				</Text>

@@ -2,7 +2,6 @@
 import {
 	createStyles,
 	Header,
-	Container,
 	Text,
 	Menu,
 	UnstyledButton,
@@ -32,15 +31,19 @@ const useStyles = createStyles(theme => ({
 	},
 
 	headerRightItems: {
-		marginRight: -16,
 		marginBottom: 4,
+		marginRight: 0,
 		display: 'flex',
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginRight: 20
+		}
 	},
 
 	mainLogo: {
 		fontSize: 32,
+		marginLeft: 16,
 		marginRight: 8,
 		paddingBottom: 4,
 		cursor: 'pointer'
@@ -109,7 +112,7 @@ const useStyles = createStyles(theme => ({
 	},
 
 	userMenu: {
-		marginBottom: 2
+		marginBottom: 6
 	},
 
 	user: {
@@ -208,13 +211,13 @@ export function HeaderMenu() {
 	return (
 		<Header height={56}>
 			<div className={classes.inner}>
-				<Container className={classes.headerLeftItems}>
+				<div className={classes.headerLeftItems}>
 					<a onClick={navigateHome}>
 						<Text className={classes.mainLogo}>♣</Text>
 					</a>
-				</Container>
+				</div>
 
-				<Container className={classes.headerRightItems}>
+				<div className={classes.headerRightItems}>
 					{wallet.isConnected && (
 						<Menu
 							size={150}
@@ -315,7 +318,7 @@ export function HeaderMenu() {
 							Share Feedback
 						</Menu.Item>
 					</Menu>
-				</Container>
+				</div>
 			</div>
 		</Header>
 	)

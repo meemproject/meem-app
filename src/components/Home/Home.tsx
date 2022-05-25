@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -20,6 +21,9 @@ import {
 } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { forwardRef, useRef, useState } from 'react'
+import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
+import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
+import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 
 const useStyles = createStyles(theme => ({
 	wrapper: {
@@ -96,6 +100,7 @@ const useStyles = createStyles(theme => ({
 interface ItemProps extends SelectItemProps {
 	color: MantineColor
 	description: string
+	slug: string
 	image: string
 }
 
@@ -121,14 +126,23 @@ export function HomeComponent() {
 	const { classes } = useStyles()
 	const router = useRouter()
 
+	const autocompleteClient = new ApolloClient({
+		cache: new InMemoryCache(),
+		link: new HttpLink({
+			uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
+		}),
+		ssrMode: typeof window === 'undefined'
+	})
+
 	const timeoutRef = useRef<number>(-1)
 	const [autocompleteFormValue, setAutocompleteFormValue] = useState('')
 	const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
+	const [isFetchingData, setIsFetchingData] = useState(false)
 	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
 	const [showCreateButton, setShowCreateButton] = useState(false)
 	const [isJoinMeemDialogOpen, setJoinMeemDialogOpen] = useState(false)
 
-	const handleChange = (val: string) => {
+	const handleChange = async (val: string) => {
 		window.clearTimeout(timeoutRef.current)
 		setAutocompleteFormValue(val)
 		setAutocompleteData([])
@@ -137,39 +151,48 @@ export function HomeComponent() {
 			setIsLoadingSuggestions(false)
 		} else {
 			setIsLoadingSuggestions(true)
-			timeoutRef.current = window.setTimeout(() => {
-				setIsLoadingSuggestions(false)
-				const clubsList = [
-					{
-						image:
-							'https://img.icons8.com/clouds/256/000000/futurama-bender.png',
-						value: 'Futurama Club',
-						description: 'For fans of Bender',
-						id: '1'
-					},
-					{
-						image: 'https://img.icons8.com/clouds/256/000000/futurama-mom.png',
-						value: 'Rich Club',
-						description: 'For the richest people on Earth',
-						id: '1'
-					},
-					{
-						image: 'https://img.icons8.com/clouds/256/000000/homer-simpson.png',
-						value: 'The Simpsons Club',
-						description: 'Fans of the Simpsons',
-						id: '1'
-					},
-					{
-						image:
-							'https://img.icons8.com/clouds/256/000000/spongebob-squarepants.png',
-						value: 'Spongebob Club',
-						description: 'Not just a sponge',
-						id: '1'
+			timeoutRef.current = window.setTimeout(async () => {
+				if (isFetchingData) {
+					return
+				}
+				setIsFetchingData(true)
+				const { data } = await autocompleteClient.query({
+					query: GET_CLUBS_AUTOCOMPLETE,
+					variables: {
+						query: val.trim()
 					}
-				]
-				setAutocompleteData(clubsList)
-				setShowCreateButton(clubsList.length === 0)
-			}, 500)
+				})
+
+				const typedData = data as GetClubsAutocompleteQuery
+
+				if (typedData.MeemContracts.length === 0) {
+					setAutocompleteData([])
+					setIsFetchingData(false)
+					setIsLoadingSuggestions(false)
+					setShowCreateButton(true)
+					console.log('allowing create button = true')
+				} else {
+					const clubsList: React.SetStateAction<any[]> = []
+					typedData.MeemContracts.forEach(club => {
+						const metadata = clubMetadataFromContractUri(club.contractURI)
+						if (metadata.image.length > 0) {
+							const clubData = {
+								image: metadata.image,
+								value: club.name,
+								description: metadata.description,
+								slug: club.slug,
+								id: club.id
+							}
+							clubsList.push(clubData)
+						}
+					})
+					setAutocompleteData(clubsList)
+					setIsFetchingData(false)
+					setIsLoadingSuggestions(false)
+					console.log(`allowing create button = ${clubsList.length === 0}`)
+					setShowCreateButton(clubsList.length === 0)
+				}
+			}, 250)
 		}
 	}
 
@@ -177,7 +200,7 @@ export function HomeComponent() {
 		console.log(`Chosen ${suggestion.value} - ${suggestion.description}`)
 		setIsLoadingSuggestions(true)
 		router.push({
-			pathname: `/${suggestion.id}`
+			pathname: `/${suggestion.slug}`
 		})
 	}
 
@@ -222,7 +245,7 @@ export function HomeComponent() {
 					rightSection={
 						isLoadingSuggestions ? (
 							<Loader size={16} />
-						) : autocompleteFormValue.length > 0 ? (
+						) : autocompleteFormValue.length > 0 && showCreateButton ? (
 							<Button className={classes.createButton} onClick={goToCreate}>
 								Create
 							</Button>

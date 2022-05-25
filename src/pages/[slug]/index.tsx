@@ -7,13 +7,13 @@ import { HeaderMenu } from '../../components/Header/Header'
 import { GET_CLUB } from '../../graphql/clubs'
 import { ssrGraphqlClient } from '../../utils/ssr_graphql'
 
-interface SingleClubViewModel {
+export interface ClubPropViewModel {
 	responseBody: any
 	isError: boolean
 }
 
 interface IProps {
-	club: SingleClubViewModel
+	club: ClubPropViewModel
 }
 
 const ClubDetailPage: NextPage<IProps> = ({ club }) => {
@@ -60,7 +60,7 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-	let club: SingleClubViewModel | undefined
+	let club: ClubPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {

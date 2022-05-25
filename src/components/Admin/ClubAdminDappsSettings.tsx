@@ -1,5 +1,8 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createStyles, Text, Image, Space } from '@mantine/core'
 import React from 'react'
+import { Club } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -73,7 +76,11 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export const ClubAdminDappSettingsComponent: React.FC = () => {
+interface IProps {
+	club: Club
+}
+
+export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 

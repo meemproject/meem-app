@@ -27,6 +27,7 @@ export const GET_CLUBS_AUTOCOMPLETE = gql`
 			id
 			name
 			contractURI
+			slug
 		}
 	}
 `
@@ -55,6 +56,52 @@ export const GET_CLUB = gql`
 				mintedBy
 				data
 			}
+			splits
+			mintEndAt
+			mintStartAt
+			mintPermissions
+			originalsPerWallet
+			totalOriginalsSupply
+			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					address
+				}
+			}
+		}
+	}
+`
+
+export const SUB_CLUB = gql`
+	subscription ClubSubscription($address: String) {
+		MeemContracts(where: { address: { _eq: $address } }) {
+			slug
+			address
+			contractURI
+			createdAt
+			name
+			Meems {
+				owner
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+				data
+			}
+			splits
+			mintEndAt
+			mintStartAt
+			mintPermissions
+			originalsPerWallet
+			totalOriginalsSupply
+			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					address
+				}
+			}
 		}
 	}
 `
@@ -72,9 +119,24 @@ export const GET_MY_CLUBS = gql`
 			tokenId
 			MeemContractId
 			MeemContract {
+				slug
 				address
+				contractURI
+				createdAt
 				name
+				splits
+				mintEndAt
+				mintStartAt
+				mintPermissions
+				originalsPerWallet
+				totalOriginalsSupply
 				symbol
+				MeemContractWallets {
+					role
+					Wallet {
+						address
+					}
+				}
 			}
 		}
 	}

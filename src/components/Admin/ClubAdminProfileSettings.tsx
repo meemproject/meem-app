@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
@@ -17,6 +18,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { Club } from '../../model/club/club'
+import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -158,15 +161,20 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-export const ClubAdminProfileSettings: React.FC = () => {
+interface IProps {
+	club: Club
+}
+
+export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
-	const descriptionRef = useRef<HTMLTextAreaElement>()
+	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [isLoading, setIsLoading] = useState(true)
+	const descriptionRef = useRef<HTMLTextAreaElement>()
 
 	// Club logo
 	const [smallClubLogo, setSmallClubLogo] = useState('')
@@ -180,6 +188,15 @@ export const ClubAdminProfileSettings: React.FC = () => {
 		multiple: false,
 		maxFileSize: 10
 	})
+
+	useEffect(() => {
+		if (!hasLoadedClubData) {
+			setHasLoadedClubData(true)
+			setClubName(club.name!)
+			setClubDescription(club.description!)
+			setSmallClubLogo(club.image!)
+		}
+	}, [club, hasLoadedClubData])
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: '/clubname' })
@@ -223,6 +240,24 @@ export const ClubAdminProfileSettings: React.FC = () => {
 
 	const deleteImage = () => {
 		setSmallClubLogo('')
+	}
+
+	const [newClubData, setNewClubData] = useState<Club>()
+	const [isSaveChangesModalOpened, setSaveChangesModalOpened] = useState(false)
+	const openSaveChangesModal = () => {
+		// 'save changes' modal for execution club settings updates
+		// convert current settings and update for the modal
+		const newClub = club!
+		newClub.name = clubName
+		newClub.description = clubDescription
+		newClub.image = smallClubLogo
+		setNewClubData(newClub)
+		setSaveChangesModalOpened(true)
+	}
+
+	const saveChanges = async () => {
+		setIsSavingChanges(true)
+		openSaveChangesModal()
 	}
 
 	return (
@@ -285,8 +320,22 @@ export const ClubAdminProfileSettings: React.FC = () => {
 				</div>
 			)}
 			<Space h={smallClubLogo.length > 0 ? 148 : 32} />
-			<Button className={classes.buttonSaveChanges}>Save Changes</Button>
+			<Button
+				className={classes.buttonSaveChanges}
+				loading={isSavingChanges}
+				onClick={saveChanges}
+			>
+				Save Changes
+			</Button>
 			<Space h={64} />
+			<ClubAdminChangesModal
+				club={newClubData}
+				isOpened={isSaveChangesModalOpened}
+				onModalClosed={() => {
+					setIsSavingChanges(false)
+					setSaveChangesModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }

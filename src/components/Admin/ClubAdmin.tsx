@@ -1,7 +1,22 @@
-import { createStyles, Container, Text, Image } from '@mantine/core'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/naming-convention */
+import { useQuery } from '@apollo/client'
+import {
+	createStyles,
+	Container,
+	Text,
+	Image,
+	Space,
+	Center,
+	Loader
+} from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
+import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
+import { GET_CLUB } from '../../graphql/clubs'
+import clubFromMeemContract, { Club } from '../../model/club/club'
 import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
 import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
 import { ClubAdminProfileSettings } from './ClubAdminProfileSettings'
@@ -130,15 +145,20 @@ enum Tab {
 	Integrations
 }
 
-export const ClubAdminComponent: React.FC = () => {
+interface IProps {
+	slug: string
+}
+
+export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 	const router = useRouter()
-	const [isLoading, setIsLoading] = useState(true)
+	const wallet = useWallet()
+
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
 
 	const navigateToClubDetail = () => {
-		router.push({ pathname: '/clubname' })
+		router.push({ pathname: `/${slug}` })
 	}
 
 	const switchToMembership = () => {
@@ -153,88 +173,146 @@ export const ClubAdminComponent: React.FC = () => {
 		setCurrentTab(Tab.Integrations)
 	}
 
+	const {
+		loading,
+		error,
+		data: clubData
+	} = useQuery<GetClubQuery>(GET_CLUB, {
+		variables: { slug }
+	})
+
+	const [club, setClub] = useState<Club>()
+
+	useEffect(() => {
+		if (!loading && !error && !club && clubData) {
+			const possibleClub = clubFromMeemContract(
+				wallet.isConnected ? wallet.accounts[0] : undefined,
+				clubData.MeemContracts[0] as MeemContracts
+			)
+
+			if (possibleClub && possibleClub.name) {
+				setClub(possibleClub)
+			}
+		}
+	}, [club, clubData, error, loading, wallet.accounts, wallet.isConnected])
+
 	return (
 		<>
-			<div className={classes.header}>
-				<div className={classes.headerTitle}>
-					<a onClick={navigateToClubDetail}>
-						<ArrowLeft className={classes.headerArrow} size={32} />
-					</a>
-					<Image className={classes.clubLogoImage} src="/exampleclub.png" />
-					{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-					<Text className={classes.headerClubName}>
-						Worst Club Ever That You Can Imagine
-					</Text>
-				</div>
-			</div>
+			{loading && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Loader />
+					</Center>
+				</Container>
+			)}
+			{!loading && !club?.name && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Text>Sorry, that club does not exist!</Text>
+					</Center>
+				</Container>
+			)}
 
-			<Container>
-				<div className={classes.tabs}>
-					<a onClick={switchToMembership}>
-						<Text
-							className={
-								currentTab == Tab.Membership
-									? classes.activeTab
-									: classes.inactiveTab
-							}
-						>
-							Manage Club
-						</Text>
-					</a>
-					<a onClick={switchToClubProfile}>
-						<Text
-							className={
-								currentTab == Tab.Profile
-									? classes.activeTab
-									: classes.inactiveTab
-							}
-						>
-							Edit Profile
-						</Text>
-					</a>
-					<a onClick={switchToIntegrations}>
-						<Text
-							className={
-								currentTab == Tab.Integrations
-									? classes.activeTab
-									: classes.inactiveTab
-							}
-						>
-							dApps
-						</Text>
-					</a>
-				</div>
-				<div
-					className={
-						currentTab === Tab.Membership
-							? classes.visibleTab
-							: classes.invisibleTab
-					}
-				>
-					<ClubAdminMembershipSettingsComponent isCreatingClub={false} />
-				</div>
+			{!loading && club?.name && (
+				<>
+					<div className={classes.header}>
+						<div className={classes.headerTitle}>
+							<a onClick={navigateToClubDetail}>
+								<ArrowLeft className={classes.headerArrow} size={32} />
+							</a>
+							<Image className={classes.clubLogoImage} src={club.image!} />
+							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
+							<Text className={classes.headerClubName}>{club.name!}</Text>
+						</div>
+					</div>
 
-				<div
-					className={
-						currentTab === Tab.Profile
-							? classes.visibleTab
-							: classes.invisibleTab
-					}
-				>
-					<ClubAdminProfileSettings />
-				</div>
+					{!club?.isClubAdmin && (
+						<Container>
+							<Space h={120} />
+							<Center>
+								<Text>
+									Sorry, you do not have permission to view this page. Contact
+									the club owner for help.
+								</Text>
+							</Center>
+						</Container>
+					)}
+					{club?.isClubAdmin && (
+						<Container>
+							<div className={classes.tabs}>
+								<a onClick={switchToMembership}>
+									<Text
+										className={
+											currentTab == Tab.Membership
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										Manage Club
+									</Text>
+								</a>
+								<a onClick={switchToClubProfile}>
+									<Text
+										className={
+											currentTab == Tab.Profile
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										Edit Profile
+									</Text>
+								</a>
+								<a onClick={switchToIntegrations}>
+									<Text
+										className={
+											currentTab == Tab.Integrations
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										dApps
+									</Text>
+								</a>
+							</div>
+							<div
+								className={
+									currentTab === Tab.Membership
+										? classes.visibleTab
+										: classes.invisibleTab
+								}
+							>
+								<ClubAdminMembershipSettingsComponent
+									isCreatingClub={false}
+									club={club}
+								/>
+							</div>
 
-				<div
-					className={
-						currentTab === Tab.Integrations
-							? classes.visibleTab
-							: classes.invisibleTab
-					}
-				>
-					{' '}
-					<ClubAdminDappSettingsComponent />
-				</div>
-			</Container>
+							<div
+								className={
+									currentTab === Tab.Profile
+										? classes.visibleTab
+										: classes.invisibleTab
+								}
+							>
+								<ClubAdminProfileSettings club={club} />
+							</div>
+
+							<div
+								className={
+									currentTab === Tab.Integrations
+										? classes.visibleTab
+										: classes.invisibleTab
+								}
+							>
+								{' '}
+								<ClubAdminDappSettingsComponent club={club} />
+							</div>
+						</Container>
+					)}
+				</>
+			)}
 		</>
 	)
 }
