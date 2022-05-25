@@ -348,7 +348,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				clubData.MeemContracts[0] as MeemContracts
 			)
 
-			if (possibleClub) {
+			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
 				parseRequirements(possibleClub)
 			}
@@ -377,7 +377,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && !club && (
+			{!loading && !club?.name && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -385,7 +385,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && club && (
+			{!loading && club?.name && (
 				<>
 					<div className={classes.header}>
 						<Image className={classes.clubLogoImage} src={club.image} />

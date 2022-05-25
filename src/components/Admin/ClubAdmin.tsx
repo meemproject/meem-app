@@ -190,7 +190,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				clubData.MeemContracts[0] as MeemContracts
 			)
 
-			if (possibleClub) {
+			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
 			}
 		}
