@@ -3,7 +3,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
+import {
+	ApolloClient,
+	HttpLink,
+	InMemoryCache,
+	useQuery,
+	useSubscription
+} from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -30,8 +36,12 @@ import {
 	CircleX,
 	Settings
 } from 'tabler-icons-react'
-import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
-import { GET_CLUB, GET_CLUB_SLUG } from '../../graphql/clubs'
+import {
+	ClubSubscriptionSubscription,
+	GetClubQuery,
+	MeemContracts
+} from '../../../generated/graphql'
+import { GET_CLUB, GET_CLUB_SLUG, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	MembershipReqType
@@ -215,6 +225,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	})
 
 	const [club, setClub] = useState<Club>()
+
+	const { data: clubSubData, loading: loadingClub } =
+		useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
+			variables: { address: club ? club!.address! : '' }
+		})
+
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
@@ -278,14 +294,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				meemContracts.defaultMeemProperties,
 				{ gasLimit: '1000000' }
 			)
-			//console.log(tx)
-			setIsJoiningClub(false)
-
-			// Set some local variables
-			const clubCopy = club!
-			clubCopy.members!.push(wallet.accounts[0])
-			clubCopy.isClubMember = true
-			setClub(clubCopy)
 		} catch (e) {
 			setIsJoiningClub(false)
 			showNotification({
@@ -421,10 +429,34 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				parseRequirements(possibleClub)
 			}
 		}
+
+		if (isJoiningClub && clubSubData) {
+			const possibleClub = clubFromMeemContract(
+				wallet.isConnected ? wallet.accounts[0] : undefined,
+				clubSubData.MeemContracts[0] as MeemContracts
+			)
+			if (possibleClub.isClubMember) {
+				console.log('current user has joined the club!')
+				console.log()
+				setIsJoiningClub(false)
+
+				// Set the updated local copy of the club
+				setClub(possibleClub)
+
+				showNotification({
+					title: `Welcome to ${possibleClub.name}!`,
+					color: 'green',
+					autoClose: 5000,
+					message: `You now have access to this club.`
+				})
+			}
+		}
 	}, [
 		club,
 		clubData,
+		clubSubData,
 		error,
+		isJoiningClub,
 		loading,
 		parseRequirements,
 		wallet.accounts,
