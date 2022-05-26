@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -19,10 +19,17 @@ import {
 	Button,
 	Modal
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { forwardRef, useRef, useState } from 'react'
-import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
-import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import {
+	GetClubsAutocompleteQuery,
+	GetIsMemberOfClubQuery
+} from '../../../generated/graphql'
+import {
+	GET_CLUBS_AUTOCOMPLETE,
+	GET_IS_MEMBER_OF_CLUB
+} from '../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 
 const useStyles = createStyles(theme => ({
@@ -133,6 +140,40 @@ export function HomeComponent() {
 		}),
 		ssrMode: typeof window === 'undefined'
 	})
+
+	const wallet = useWallet()
+	const [hasCheckedClubClubMembership, setHasCheckedClubClubMembership] =
+		useState(false)
+	const [isClubClubMember, setIsClubClubMember] = useState(false)
+	const {
+		loading: loadingIsClubClub,
+		error: errorFetchingIsClubClub,
+		data: clubClubData
+	} = useQuery<GetIsMemberOfClubQuery>(GET_IS_MEMBER_OF_CLUB, {
+		variables: {
+			walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+			clubSlug: 'club-club'
+		}
+	})
+
+	useEffect(() => {
+		if (
+			!loadingIsClubClub &&
+			!errorFetchingIsClubClub &&
+			!hasCheckedClubClubMembership &&
+			clubClubData
+		) {
+			if (clubClubData.Meems.length > 0) {
+				console.log('Current user is ClubClub member')
+				setIsClubClubMember(true)
+			}
+		}
+	}, [
+		clubClubData,
+		errorFetchingIsClubClub,
+		hasCheckedClubClubMembership,
+		loadingIsClubClub
+	])
 
 	const timeoutRef = useRef<number>(-1)
 	const [autocompleteFormValue, setAutocompleteFormValue] = useState('')
@@ -253,9 +294,7 @@ export function HomeComponent() {
 					}
 				/>
 				<Text className={classes.joinMeemLink}>
-					<a href="https://meem.wtf/signup/walletconnect">
-						Join Club Club to create
-					</a>
+					<a href="/club-club">Join Club Club to create</a>
 				</Text>
 			</Container>
 			<Modal
