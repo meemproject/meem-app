@@ -21,7 +21,7 @@ import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
 import {
 	MembershipSettings,
@@ -32,6 +32,7 @@ import {
 } from '../../model/club/club'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
+import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
@@ -194,6 +195,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const router = useRouter()
 
 	const wallet = useWallet()
+
+	const clubclub = useContext(ClubClubContext)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -444,6 +447,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setIsSavingChanges(true)
 
 		if (isCreatingClub) {
+			if (!clubclub.isMember) {
+				showNotification({
+					title: 'No Club Club membership found.',
+					message: `Join Club Club to continue.`
+				})
+				router.push({ pathname: '/' })
+				return
+			}
 			openTransactionsModal()
 		} else {
 			openSaveChangesModal()

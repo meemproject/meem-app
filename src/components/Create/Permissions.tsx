@@ -12,6 +12,7 @@ import {
 	TextInput,
 	Space
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -133,12 +134,20 @@ export const CreatePermissionsComponent: React.FC = () => {
 	const { classes } = useStyles()
 
 	const [clubName, setClubName] = useState('')
+	const router = useRouter()
 
 	useEffect(() => {
 		if (Cookies.get(CookieKeys.clubName) != null) {
 			setClubName(Cookies.get(CookieKeys.clubName) ?? '')
+		} else {
+			showNotification({
+				title: 'Unable to create this club.',
+				message: `Some data is missing. Try again!`,
+				autoClose: 5000
+			})
+			router.push({ pathname: '/' })
 		}
-	}, [clubName])
+	}, [clubName, router])
 
 	return (
 		<>

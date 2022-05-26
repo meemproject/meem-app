@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	createStyles,
@@ -11,7 +12,7 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -21,6 +22,7 @@ import {
 	MessageCircle,
 	Mail
 } from 'tabler-icons-react'
+import ClubClubContext from '../Detail/ClubClubProvider'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
@@ -156,6 +158,7 @@ export function HeaderMenu() {
 	const { classes, cx } = useStyles()
 	const router = useRouter()
 
+	const clubclub = useContext(ClubClubContext)
 	const wallet = useWallet()
 
 	function truncatedWalletAddress(): string {
@@ -277,15 +280,22 @@ export function HeaderMenu() {
 							Powered by{' '}
 							<span style={{ textDecoration: 'underline' }}>Meem</span>
 						</Menu.Item>
-						<Menu.Item
-							onClick={handleJoinClubClub}
-							className={classes.menuItem}
-						>
-							Join Club Club
-						</Menu.Item>
-						<Menu.Item onClick={navigateToMyClubs} className={classes.menuItem}>
-							My Clubs
-						</Menu.Item>
+						{!clubclub.isMember && (
+							<Menu.Item
+								onClick={handleJoinClubClub}
+								className={classes.menuItem}
+							>
+								Join Club Club
+							</Menu.Item>
+						)}
+						{clubclub.isMember && (
+							<Menu.Item
+								onClick={navigateToMyClubs}
+								className={classes.menuItem}
+							>
+								My Clubs
+							</Menu.Item>
+						)}
 
 						<Divider />
 
