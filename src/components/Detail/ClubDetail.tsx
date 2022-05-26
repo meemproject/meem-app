@@ -232,6 +232,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		})
 
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
+	const [isLeavingClub, setIsLeavingClub] = useState(false)
+
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
 	>([])
@@ -298,6 +300,32 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			setIsJoiningClub(false)
 			showNotification({
 				title: 'Error minting club membership.',
+				message: `${e as string}`
+			})
+		}
+	}
+
+	const leaveClub = async () => {
+		if (!wallet.web3Provider || !wallet.isConnected) {
+			showNotification({
+				title: 'Unable to leave this club.',
+				message: `Did you connect your wallet?`
+			})
+		}
+
+		setIsLeavingClub(true)
+		try {
+			const meemContract = new Contract(
+				club?.address ?? '',
+				meemABI,
+				wallet.signer
+			) as unknown as meemContracts.Meem
+
+			//const tx = await meemContract?.burn()
+		} catch (e) {
+			setIsLeavingClub(false)
+			showNotification({
+				title: 'Error leaving this club.',
 				message: `${e as string}`
 			})
 		}
@@ -437,7 +465,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			)
 			if (possibleClub.isClubMember) {
 				console.log('current user has joined the club!')
-				console.log()
 				setIsJoiningClub(false)
 
 				// Set the updated local copy of the club
@@ -447,7 +474,26 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					title: `Welcome to ${possibleClub.name}!`,
 					color: 'green',
 					autoClose: 5000,
-					message: `You now have access to this club.`
+					message: `You now have access to this club's tools and resources.`
+				})
+			}
+		} else if (isLeavingClub && clubSubData) {
+			const possibleClub = clubFromMeemContract(
+				wallet.isConnected ? wallet.accounts[0] : undefined,
+				clubSubData.MeemContracts[0] as MeemContracts
+			)
+			if (!possibleClub.isClubMember) {
+				console.log('current user has left the club')
+				setIsLeavingClub(false)
+
+				// Set the updated local copy of the club
+				setClub(possibleClub)
+
+				showNotification({
+					title: 'Successfully left the club.',
+					color: 'green',
+					autoClose: 5000,
+					message: `You'll be missed!`
 				})
 			}
 		}
@@ -457,6 +503,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		clubSubData,
 		error,
 		isJoiningClub,
+		isLeavingClub,
 		loading,
 		parseRequirements,
 		wallet.accounts,
@@ -496,7 +543,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</Text>
 							<div className={classes.headerButtons}>
 								{club.isClubMember && (
-									<Button className={classes.outlineButton}>Leave</Button>
+									<Button
+										onClick={leaveClub}
+										loading={isLeavingClub}
+										className={classes.outlineButton}
+									>
+										Leave
+									</Button>
 								)}
 								{!club.isClubMember && (
 									<Button
