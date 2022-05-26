@@ -297,18 +297,6 @@ export function HomeComponent() {
 					<a href="/club-club">Join Club Club to create</a>
 				</Text>
 			</Container>
-			<Modal
-				opened={isJoinMeemDialogOpen}
-				onClose={() => setJoinMeemDialogOpen(false)}
-				title="Join Meem"
-			>
-				<Text className={classes.joinMeemDialogText}>
-					To create a group, you need a Meem ID. Sign up below!
-				</Text>
-				<Button className={classes.createButton} onClick={goToJoinMeem}>
-					Create Meem ID
-				</Button>
-			</Modal>
 		</div>
 	)
 }

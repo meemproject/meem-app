@@ -15,8 +15,12 @@ import {
 	Loader,
 	Center
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import * as meemContracts from '@meemproject/meem-contracts'
+import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
-import { BigNumber } from 'ethers'
+import { BigNumber, Contract } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import {
@@ -211,6 +215,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	})
 
 	const [club, setClub] = useState<Club>()
+	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
 	>([])
@@ -237,6 +242,58 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		},
 		[parsedRequirements]
 	)
+
+	const joinClub = async () => {
+		if (!wallet.web3Provider || !wallet.isConnected) {
+			showNotification({
+				title: 'Unable to join this club.',
+				message: `Did you connect your wallet?`
+			})
+		}
+
+		setIsJoiningClub(true)
+		try {
+			const meemContract = new Contract(
+				club?.address ?? '',
+				meemABI,
+				wallet.signer
+			) as unknown as meemContracts.Meem
+
+			const tx = await meemContract?.mint(
+				{
+					to: wallet.accounts[0],
+					// TODO: What goes here?
+					tokenURI: 'ipfs://example',
+					parentChain: MeemAPI.Chain.Polygon,
+					parent: MeemAPI.zeroAddress,
+					parentTokenId: 0,
+					meemType: MeemAPI.MeemType.Original,
+					data: '',
+					isURILocked: false,
+					reactionTypes: ['upvote', 'downvote', 'heart'],
+					uriSource: MeemAPI.UriSource.TokenUri,
+					mintedBy: wallet.accounts[0]
+				},
+				meemContracts.defaultMeemProperties,
+				meemContracts.defaultMeemProperties,
+				{ gasLimit: '1000000' }
+			)
+			//console.log(tx)
+			setIsJoiningClub(false)
+
+			// Set some local variables
+			const clubCopy = club!
+			clubCopy.members!.push(wallet.accounts[0])
+			clubCopy.isClubMember = true
+			setClub(clubCopy)
+		} catch (e) {
+			setIsJoiningClub(false)
+			showNotification({
+				title: 'Error minting club membership.',
+				message: `${e as string}`
+			})
+		}
+	}
 
 	const parseRequirements = useCallback(
 		async (possibleClub: Club) => {
@@ -412,6 +469,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								{!club.isClubMember && (
 									<Button
 										disabled={!meetsAllRequirements}
+										loading={isJoiningClub}
+										onClick={joinClub}
 										className={classes.buttonJoinClub}
 									>
 										{club.membershipSettings!.costToJoin > 0
