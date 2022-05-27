@@ -243,8 +243,8 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				application_links: applicationLinks
 			})
 
-			let membershipStartUnix = 0
-			let membershipEndUnix = 0
+			let membershipStartUnix = -1
+			let membershipEndUnix = -1
 			if (membershipSettings) {
 				if (membershipSettings.membershipStartDate) {
 					membershipStartUnix = Math.floor(

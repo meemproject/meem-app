@@ -50,7 +50,7 @@ export async function tokenFromContractAddress(
 		return undefined
 	}
 
-	console.log('get token balance')
+	console.log(`get token balance (${tokenBalance})`)
 
 	let symbol = '$TOKEN'
 	let name = 'Token'

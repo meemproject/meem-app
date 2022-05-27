@@ -185,12 +185,16 @@ const useStyles = createStyles(theme => ({
 	},
 	requirementsContainer: {
 		border: '1px solid rgba(0, 0, 0, 0.5)',
-		borderRadius: 16,
-		padding: 16
+		paddingTop: 24,
+		paddingBottom: 16,
+		paddingLeft: 16,
+		paddingRight: 16,
+		borderRadius: 16
 	},
 	requirementItem: {
 		display: 'flex',
-		alignItems: 'center'
+		alignItems: 'center',
+		marginBottom: 8
 	},
 	requirementLink: {
 		color: 'rgba(255, 102, 81, 1)'
@@ -248,23 +252,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
-				parsedRequirements.forEach(req => {
+				reqs.forEach(req => {
 					if (req.meetsRequirement) {
 						reqsMet++
 					}
 				})
 				console.log(`reqs met = ${reqsMet}`)
-				console.log(`total reqs = ${parsedRequirements.length}`)
-				if (
-					reqsMet === parsedRequirements.length &&
-					slotsLeft !== -1 &&
-					slotsLeft > 0
-				) {
+				console.log(`total reqs = ${reqs.length}`)
+				if (reqsMet === reqs.length && slotsLeft !== -1 && slotsLeft > 0) {
 					setMeetsAllRequirements(true)
 				}
 			}
 		},
-		[parsedRequirements]
+		[]
 	)
 
 	const joinClub = async () => {
@@ -352,7 +352,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 					let tokenBalance = BigNumber.from(0)
 					let tokenUrl = ''
-					let tokenName = ''
+					let tokenName = 'Unknown Token'
 					let tokenSymbol = ''
 					if (wallet.web3Provider && wallet.signer) {
 						const token = await tokenFromContractAddress(
@@ -364,8 +364,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							tokenUrl = token.url
 							tokenName = token.name
 							tokenSymbol = token.symbol
-						} else {
-							return
 						}
 					}
 
@@ -405,7 +403,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									</Text>
 								),
 
-								meetsRequirement: true
+								meetsRequirement: wallet.isConnected
+									? req.approvedAddresses.includes(wallet.accounts[0])
+									: false
 							})
 							break
 						case MembershipReqType.NftHolders:
@@ -420,7 +420,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										.
 									</Text>
 								),
-								meetsRequirement: tokenBalance !== BigNumber.from(0)
+								meetsRequirement: tokenBalance > BigNumber.from(0)
 							})
 							break
 						case MembershipReqType.TokenHolders:
@@ -428,14 +428,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								requirementKey: `Token${index}`,
 								requirementComponent: (
 									<Text>
-										Members must hold {req.tokenMinQuantity}
+										Members must hold {req.tokenMinQuantity}{' '}
 										<a className={classes.requirementLink} href={tokenUrl}>
 											{tokenName}
 										</a>
 										.
 									</Text>
 								),
-								meetsRequirement: tokenBalance !== BigNumber.from(0)
+								meetsRequirement: tokenBalance > BigNumber.from(0)
 							})
 							break
 						case MembershipReqType.OtherClubMember:
@@ -466,9 +466,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				})
 			}
 			setParsedRequirements(reqs)
+			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
 
 			setRequirementsParsed(true)
-			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
 		},
 		[checkEligibility, classes.requirementLink, requirementsParsed, wallet]
 	)
