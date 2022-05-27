@@ -407,19 +407,23 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				signer
 			) as unknown as meemContracts.Meem
 
+			const data = {
+				to: accounts[0],
+				tokenURI: contractURI,
+				parentChain: MeemAPI.Chain.Polygon,
+				parent: MeemAPI.zeroAddress,
+				parentTokenId: 0,
+				meemType: MeemAPI.MeemType.Original,
+				uriSource: UriSource.Json,
+				isURILocked: false,
+				reactionTypes: ['upvote', 'downvote', 'heart'],
+				mintedBy: accounts[0]
+			}
+
+			console.log(data)
+
 			const tx = await meemContract?.mint(
-				{
-					to: accounts[0],
-					tokenURI: contractURI,
-					parentChain: MeemAPI.Chain.Polygon,
-					parent: MeemAPI.zeroAddress,
-					parentTokenId: 0,
-					meemType: MeemAPI.MeemType.Original,
-					uriSource: UriSource.Json,
-					isURILocked: false,
-					reactionTypes: ['upvote', 'downvote', 'heart'],
-					mintedBy: accounts[0]
-				},
+				data,
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{ gasLimit: '1000000' }
@@ -431,7 +435,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 			showNotification({
 				title: 'Error minting club membership.',
-				message: `${e as string}`
+				message: `Please get in touch!`
 			})
 		}
 	}
@@ -443,7 +447,6 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				radius={16}
-				overlayBlur={8}
 				size={'lg'}
 				padding={'sm'}
 				opened={isOpened}
