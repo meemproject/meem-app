@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -19,11 +19,25 @@ import {
 	Button,
 	Modal
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { forwardRef, useRef, useState } from 'react'
-import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
-import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
+import React, {
+	forwardRef,
+	useContext,
+	useEffect,
+	useRef,
+	useState
+} from 'react'
+import {
+	GetClubsAutocompleteQuery,
+	GetIsMemberOfClubQuery
+} from '../../../generated/graphql'
+import {
+	GET_CLUBS_AUTOCOMPLETE,
+	GET_IS_MEMBER_OF_CLUB
+} from '../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
+import ClubClubContext from '../Detail/ClubClubProvider'
 
 const useStyles = createStyles(theme => ({
 	wrapper: {
@@ -134,13 +148,14 @@ export function HomeComponent() {
 		ssrMode: typeof window === 'undefined'
 	})
 
+	const clubclub = useContext(ClubClubContext)
+
 	const timeoutRef = useRef<number>(-1)
 	const [autocompleteFormValue, setAutocompleteFormValue] = useState('')
 	const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
 	const [isFetchingData, setIsFetchingData] = useState(false)
 	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
 	const [showCreateButton, setShowCreateButton] = useState(false)
-	const [isJoinMeemDialogOpen, setJoinMeemDialogOpen] = useState(false)
 
 	const handleChange = async (val: string) => {
 		window.clearTimeout(timeoutRef.current)
@@ -215,11 +230,6 @@ export function HomeComponent() {
 		// }
 	}
 
-	const goToJoinMeem = () => {
-		setJoinMeemDialogOpen(false)
-		window.open('https://meem.wtf/signup/walletconnect')
-	}
-
 	return (
 		<div className={classes.wrapper}>
 			<Container size={700} className={classes.inner}>
@@ -240,36 +250,30 @@ export function HomeComponent() {
 					size={'lg'}
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
-					placeholder="Start typing to see suggestions or create a new club..."
+					placeholder={
+						clubclub.isMember
+							? 'Start typing to see suggestions or create a new club...'
+							: 'Start typing to see suggestions...'
+					}
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={
 						isLoadingSuggestions ? (
 							<Loader size={16} />
-						) : autocompleteFormValue.length > 0 && showCreateButton ? (
+						) : autocompleteFormValue.length > 0 &&
+						  showCreateButton &&
+						  clubclub.isMember ? (
 							<Button className={classes.createButton} onClick={goToCreate}>
 								Create
 							</Button>
 						) : null
 					}
 				/>
-				<Text className={classes.joinMeemLink}>
-					<a href="https://meem.wtf/signup/walletconnect">
-						Join Club Club to create
-					</a>
-				</Text>
+				{!clubclub.isMember && (
+					<Text className={classes.joinMeemLink}>
+						<a href="/club-club">Join Club Club to create</a>
+					</Text>
+				)}
 			</Container>
-			<Modal
-				opened={isJoinMeemDialogOpen}
-				onClose={() => setJoinMeemDialogOpen(false)}
-				title="Join Meem"
-			>
-				<Text className={classes.joinMeemDialogText}>
-					To create a group, you need a Meem ID. Sign up below!
-				</Text>
-				<Button className={classes.createButton} onClick={goToJoinMeem}>
-					Create Meem ID
-				</Button>
-			</Modal>
 		</div>
 	)
 }

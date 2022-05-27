@@ -20,11 +20,12 @@ import { base64StringToBlob } from 'blob-util'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
+import ClubClubContext from '../Detail/ClubClubProvider'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -136,6 +137,8 @@ export const CreateComponent: React.FC = () => {
 	const router = useRouter()
 	const { classes } = useStyles()
 
+	const clubclub = useContext(ClubClubContext)
+
 	const clubName = router.query.clubname
 	const [defaultNamespace, setDefaultNamespace] = useState('')
 	const [clubNamespace, setClubNamespace] = useState('')
@@ -210,7 +213,7 @@ export const CreateComponent: React.FC = () => {
 		} else {
 			console.log('no current club image')
 		}
-	}, [clubLogo])
+	}, [clubLogo, clubclub.isMember, router])
 
 	const deleteImage = () => {
 		setSmallClubLogo('')
@@ -218,6 +221,15 @@ export const CreateComponent: React.FC = () => {
 
 	const createClub = async () => {
 		if (!web3Provider) {
+			return
+		}
+
+		if (!clubclub.isMember) {
+			showNotification({
+				title: 'No Club Club membership found.',
+				message: `Join Club Club to continue.`
+			})
+			router.push({ pathname: '/' })
 			return
 		}
 		Cookies.set(CookieKeys.clubName, clubName ?? '')
