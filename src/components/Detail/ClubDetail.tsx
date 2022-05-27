@@ -263,10 +263,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const joinClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
-			showNotification({
-				title: 'Unable to join this club.',
-				message: `Did you connect your wallet?`
-			})
+			wallet.connectWallet()
+			return
 		}
 
 		setIsJoiningClub(true)

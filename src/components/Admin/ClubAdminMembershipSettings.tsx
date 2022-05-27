@@ -100,9 +100,7 @@ const useStyles = createStyles(theme => ({
 		color: 'rgba(255, 102, 81, 1)',
 		cursor: 'pointer',
 		marginRight: 8,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: -6
-		}
+		marginBottom: -4
 	},
 	radio: { fontWeight: 600, fontFamily: 'Inter' },
 	visible: {
@@ -578,14 +576,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}}
 							className={classes.removeAdditionalReq}
 						/>
-						<a onClick={openSecondReqTypeModal}>
+						{/* <a onClick={openSecondReqTypeModal}>
 							<span className={classes.membershipSelector}>
 								{membershipRequirements[1].andor === MembershipReqAndor.And
 									? 'In addition'
 									: 'Alternatively'}
 							</span>
-						</a>
-						, members{' '}
+						</a> */}
+						in addition, members{' '}
 						{membershipRequirements[1].andor === MembershipReqAndor.Or
 							? 'can'
 							: 'must'}{' '}
@@ -1041,6 +1039,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						<Button
 							onClick={() => {
 								setMembershipReqModalOpened(false)
+								membershipRequirements[1].type = MembershipReqType.None
+								setMembershipRequirements(membershipRequirements)
 							}}
 							className={classes.buttonModalCancel}
 						>

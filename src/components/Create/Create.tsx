@@ -147,7 +147,8 @@ export const CreateComponent: React.FC = () => {
 	const descriptionRef = useRef<HTMLTextAreaElement>()
 
 	const [isLoading, setIsLoading] = useState(false)
-	const { web3Provider, accounts, signer } = useWallet()
+	const { web3Provider, accounts, signer, isConnected, connectWallet } =
+		useWallet()
 
 	useEffect(() => {
 		if (
@@ -220,7 +221,8 @@ export const CreateComponent: React.FC = () => {
 	}
 
 	const createClub = async () => {
-		if (!web3Provider) {
+		if (!web3Provider || !isConnected) {
+			connectWallet()
 			return
 		}
 
