@@ -14,8 +14,10 @@ export interface Club {
 	image?: string
 	admins?: string[]
 	membershipSettings?: MembershipSettings
+	slotsLeft?: number
 	members?: string[]
 	isClubMember?: boolean
+	membershipToken?: string
 	isClubAdmin?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
@@ -153,13 +155,27 @@ export default function clubFromMeemContract(
 
 		// Is the current user a club member?
 		let isClubMember = false
+
+		// If so, what's their tokenId?
+		let membershipToken = undefined
 		if (clubData.Meems) {
 			clubData.Meems.forEach(meem => {
-				if (walletAddress) {
+				if (
+					walletAddress &&
+					walletAddress?.toLowerCase() === meem.owner.toLowerCase()
+				) {
 					isClubMember = true
+					membershipToken = meem.tokenId
 				}
 				members.push(meem.owner)
 			})
+		}
+
+		// Calculate slots left if totalOriginSupply > 0
+		let slotsLeft = -1
+		if (totalMemberships > 0) {
+			const membersCount = members.length
+			slotsLeft = totalMemberships - membersCount
 		}
 
 		// Set up club admins
@@ -191,7 +207,9 @@ export default function clubFromMeemContract(
 			description: metadata.description,
 			image: metadata.image,
 			isClubMember,
+			membershipToken,
 			members,
+			slotsLeft,
 			membershipSettings: {
 				requirements: reqs,
 				costToJoin,

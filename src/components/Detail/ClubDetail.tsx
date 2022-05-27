@@ -24,6 +24,7 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import * as meemContracts from '@meemproject/meem-contracts'
+import { Chain, MeemType, UriSource } from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract } from 'ethers'
@@ -46,6 +47,7 @@ import clubFromMeemContract, {
 	Club,
 	MembershipReqType
 } from '../../model/club/club'
+import { tokenFromContractAddress } from '../../model/token/token'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
@@ -241,9 +243,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 
 	const checkEligibility = useCallback(
-		(reqs: RequirementString[]) => {
+		(reqs: RequirementString[], slotsLeft: number) => {
 			if (reqs.length === 0) {
-				setMeetsAllRequirements(false)
+				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
 				parsedRequirements.forEach(req => {
@@ -253,7 +255,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				})
 				console.log(`reqs met = ${reqsMet}`)
 				console.log(`total reqs = ${parsedRequirements.length}`)
-				if (reqsMet === parsedRequirements.length) {
+				if (
+					reqsMet === parsedRequirements.length &&
+					slotsLeft !== -1 &&
+					slotsLeft > 0
+				) {
 					setMeetsAllRequirements(true)
 				}
 			}
@@ -278,22 +284,23 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			const tx = await meemContract?.mint(
 				{
 					to: wallet.accounts[0],
-					// TODO: What goes here?
-					tokenURI: 'ipfs://example',
-					parentChain: MeemAPI.Chain.Polygon,
+					tokenURI: club?.rawClub?.contractURI ?? '',
+					parentChain: Chain.Polygon,
 					parent: MeemAPI.zeroAddress,
 					parentTokenId: 0,
-					meemType: MeemAPI.MeemType.Original,
-					data: '',
+					meemType: MeemType.Original,
 					isURILocked: false,
 					reactionTypes: ['upvote', 'downvote', 'heart'],
-					uriSource: MeemAPI.UriSource.TokenUri,
+					uriSource: UriSource.Json,
 					mintedBy: wallet.accounts[0]
 				},
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{ gasLimit: '1000000' }
 			)
+
+			// @ts-ignore
+			await tx.wait()
 		} catch (e) {
 			setIsJoiningClub(false)
 			showNotification({
@@ -318,8 +325,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				meemABI,
 				wallet.signer
 			) as unknown as meemContracts.Meem
-
-			//const tx = await meemContract?.burn()
+			if (club && club.membershipToken) {
+				const tx = await meemContract?.burn(club?.membershipToken)
+				// @ts-ignore
+				await tx.wait()
+			}
 		} catch (e) {
 			setIsLeavingClub(false)
 			showNotification({
@@ -340,21 +350,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				possibleClub.membershipSettings!.requirements.map(async function (req) {
 					index++
 
-					let tokenBalance = BigNumber.from(0)
-					if (req.tokenContractAddress.length > 0 && wallet.web3Provider) {
-						const balance = await wallet.web3Provider?.getBalance(
-							req.tokenContractAddress
-						)
-
-						tokenBalance = balance
-					}
+					const tokenBalance = BigNumber.from(0)
+					const tokenUrl = ''
+					const tokenName = ''
+					const tokenSymbol = ''
+					// if (wallet.web3Provider && wallet.signer) {
+					// 	const token = await tokenFromContractAddress(
+					// 		req.tokenContractAddress,
+					// 		wallet.web3Provider!,
+					// 		wallet.signer!
+					// 	)
+					// 	tokenBalance = token.balance
+					// 	tokenUrl = token.url
+					// 	tokenName = token.name
+					// 	tokenSymbol = token.symbol
+					// }
 
 					console.log(`token balance = ${tokenBalance}`)
+					console.log(`application link = ${req.applicationLink}`)
 
-					const tokenUrl =
-						process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
-							? `https://rinkeby.etherscan.io/address/${req.tokenContractAddress}`
-							: `https://polygonscan.io/address/${req.tokenContractAddress}`
 					switch (req.type) {
 						case MembershipReqType.None:
 							reqs.push({
@@ -388,9 +402,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								requirementKey: `NFT${index}`,
 								requirementComponent: (
 									<Text>
-										Members must hold this{' '}
+										Members must hold one{' '}
 										<a className={classes.requirementLink} href={tokenUrl}>
-											NFT
+											{tokenName}
 										</a>
 										.
 									</Text>
@@ -403,9 +417,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								requirementKey: `Token${index}`,
 								requirementComponent: (
 									<Text>
-										Members must hold this{' '}
+										Members must hold {req.tokenMinQuantity}
 										<a className={classes.requirementLink} href={tokenUrl}>
-											token
+											{tokenName}
 										</a>
 										.
 									</Text>
@@ -433,14 +447,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			console.log('set parsed reqs')
 			setParsedRequirements(reqs)
 			setRequirementsParsed(true)
-			checkEligibility(reqs)
+			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
 		},
-		[
-			checkEligibility,
-			classes.requirementLink,
-			requirementsParsed,
-			wallet.web3Provider
-		]
+		[checkEligibility, classes.requirementLink, requirementsParsed]
 	)
 
 	useEffect(() => {

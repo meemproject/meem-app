@@ -25,7 +25,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { Chain, Permission } from '@meemproject/meem-contracts'
+import { Chain, Permission, UriSource } from '@meemproject/meem-contracts'
 import * as meemContracts from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
@@ -134,6 +134,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 	const [step, setStep] = useState<Step>(Step.Start)
 	const [proxyAddress, setProxyAddress] = useState('')
+	let contractURI = ''
 
 	const create = async () => {
 		if (!web3Provider) {
@@ -231,7 +232,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				})
 			}
 
-			const uri = JSON.stringify({
+			contractURI = JSON.stringify({
 				name: Cookies.get(CookieKeys.clubName),
 				description: Cookies.get(CookieKeys.clubDescription),
 				image: Cookies.get(CookieKeys.clubImage),
@@ -370,7 +371,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				name: Cookies.get(CookieKeys.clubName) ?? '',
 				symbol: clubSymbol,
 				admins: membershipSettings ? membershipSettings.clubAdmins : [],
-				contractURI: uri,
+				contractURI,
 				chain:
 					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
 						? Chain.Rinkeby
@@ -378,6 +379,8 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				version: 'latest',
 				baseProperties
 			})
+			// @ts-ignore
+			await tx.wait()
 
 			log.debug(tx)
 		} catch (e) {
@@ -404,23 +407,22 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			const tx = await meemContract?.mint(
 				{
 					to: accounts[0],
-					// TODO: What goes here?
-					tokenURI: 'ipfs://example',
+					tokenURI: contractURI,
 					parentChain: MeemAPI.Chain.Polygon,
 					parent: MeemAPI.zeroAddress,
 					parentTokenId: 0,
 					meemType: MeemAPI.MeemType.Original,
-					data: '',
+					uriSource: UriSource.Json,
 					isURILocked: false,
 					reactionTypes: ['upvote', 'downvote', 'heart'],
-					uriSource: MeemAPI.UriSource.TokenUri,
 					mintedBy: accounts[0]
 				},
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{ gasLimit: '1000000' }
 			)
-			//console.log(tx)
+
+			await tx.wait()
 		} catch (e) {
 			setStep(Step.Initialized)
 
