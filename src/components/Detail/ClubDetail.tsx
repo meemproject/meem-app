@@ -350,24 +350,24 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				possibleClub.membershipSettings!.requirements.map(async function (req) {
 					index++
 
-					const tokenBalance = BigNumber.from(0)
-					const tokenUrl = ''
-					const tokenName = ''
-					const tokenSymbol = ''
-					// if (wallet.web3Provider && wallet.signer) {
-					// 	const token = await tokenFromContractAddress(
-					// 		req.tokenContractAddress,
-					// 		wallet.web3Provider!,
-					// 		wallet.signer!
-					// 	)
-					// 	tokenBalance = token.balance
-					// 	tokenUrl = token.url
-					// 	tokenName = token.name
-					// 	tokenSymbol = token.symbol
-					// }
-
-					console.log(`token balance = ${tokenBalance}`)
-					console.log(`application link = ${req.applicationLink}`)
+					let tokenBalance = BigNumber.from(0)
+					let tokenUrl = ''
+					let tokenName = ''
+					let tokenSymbol = ''
+					if (wallet.web3Provider && wallet.signer) {
+						const token = await tokenFromContractAddress(
+							req.tokenContractAddress,
+							wallet
+						)
+						if (token) {
+							tokenBalance = token.balance
+							tokenUrl = token.url
+							tokenName = token.name
+							tokenSymbol = token.symbol
+						} else {
+							return
+						}
+					}
 
 					switch (req.type) {
 						case MembershipReqType.None:
@@ -382,15 +382,26 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								requirementKey: `Applicants${index}`,
 								requirementComponent: (
 									<Text>
-										Membership is available to approved applicants. Applicants
-										can apply{' '}
-										<a
-											className={classes.requirementLink}
-											href={req.applicationLink}
-										>
-											here
-										</a>
-										.
+										Membership is available to approved applicants.
+										{!req.applicationLink && (
+											<span>
+												{' '}
+												Contact a Club Admin for the application link.
+											</span>
+										)}
+										{req.applicationLink && (
+											<span>
+												{' '}
+												Applicants can apply{' '}
+												<a
+													className={classes.requirementLink}
+													href={req.applicationLink}
+												>
+													here
+												</a>
+												.
+											</span>
+										)}
 									</Text>
 								),
 
@@ -445,11 +456,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				})
 			)
 			console.log('set parsed reqs')
+			if (reqs.length === 0) {
+				reqs.push({
+					requirementKey: `Error${index}`,
+					requirementComponent: (
+						<Text>This club has invalid membership requirements.</Text>
+					),
+					meetsRequirement: false
+				})
+			}
 			setParsedRequirements(reqs)
+
 			setRequirementsParsed(true)
 			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
 		},
-		[checkEligibility, classes.requirementLink, requirementsParsed]
+		[checkEligibility, classes.requirementLink, requirementsParsed, wallet]
 	)
 
 	useEffect(() => {

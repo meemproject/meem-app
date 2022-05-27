@@ -226,7 +226,10 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			const applicationLinks: string[] = []
 			if (membershipSettings) {
 				membershipSettings.requirements.forEach(requirement => {
-					if (requirement.applicationLink.length > 0) {
+					if (
+						requirement.applicationLink &&
+						requirement.applicationLink?.length > 0
+					) {
 						applicationLinks.push(requirement.applicationLink)
 					}
 				})
@@ -440,6 +443,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				radius={16}
+				overlayBlur={8}
 				size={'lg'}
 				padding={'sm'}
 				opened={isOpened}

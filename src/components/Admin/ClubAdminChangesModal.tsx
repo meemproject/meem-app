@@ -303,6 +303,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				radius={16}
+				overlayBlur={8}
 				size={'lg'}
 				padding={'sm'}
 				opened={isOpened}

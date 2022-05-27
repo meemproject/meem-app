@@ -1,23 +1,23 @@
 interface ClubMetadata {
 	image: string
 	description: string
-	applicationLink: string
+	applicationLinks: string[]
 }
 
 export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 	if (uri == undefined) {
-		return { image: '', description: '', applicationLink: '' }
+		return { image: '', description: '', applicationLinks: [] }
 	}
 	const base64Data = uri.substring(29)
 	const contractURIJSONString = atob(base64Data)
 	if (contractURIJSONString.length === 0) {
-		return { image: '', description: '', applicationLink: '' }
+		return { image: '', description: '', applicationLinks: [] }
 	}
 	const contractURIObject = JSON.parse(contractURIJSONString)
 	const metadata: ClubMetadata = {
 		image: contractURIObject.image,
 		description: contractURIObject.description,
-		applicationLink: contractURIObject.applicationLink
+		applicationLinks: contractURIObject.application_links
 	}
 
 	return metadata
