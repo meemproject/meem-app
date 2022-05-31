@@ -234,7 +234,7 @@ export function HomeComponent() {
 		<div className={classes.wrapper}>
 			<Container size={700} className={classes.inner}>
 				<Center>
-					<Image src="/clubs-home.png" height={150} width={150} fit={'contain'}>
+					<Image src="/clubs-home.svg" height={150} width={150} fit={'contain'}>
 						{' '}
 						className={classes.title}{' '}
 					</Image>

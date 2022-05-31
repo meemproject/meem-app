@@ -171,16 +171,16 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 	// when initializing, check if the club exists yet > Initialized
 	// when minting, check if user is a club member yet > Minted
 	useEffect(() => {
-		if (clubData && accounts.length > 0) {
+		async function checkClubState(data: ClubSubscriptionSubscription) {
 			console.log('New club detected in the DB via subscription')
-			if (clubData.MeemContracts.length > 0 && step === Step.Initializing) {
+			if (data.MeemContracts.length > 0 && step === Step.Initializing) {
 				// Successfully initialized club
 				console.log('init complete')
 				setStep(Step.Initialized)
-			} else if (clubData.MeemContracts.length > 0 && step === Step.Minting) {
-				const club = clubFromMeemContract(
+			} else if (data.MeemContracts.length > 0 && step === Step.Minting) {
+				const club = await clubFromMeemContract(
 					accounts[0],
-					clubData.MeemContracts[0] as MeemContracts
+					data.MeemContracts[0] as MeemContracts
 				)
 				console.log('minting...')
 				if (club.isClubMember) {
@@ -206,6 +206,10 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					setStep(Step.Minted)
 				}
 			}
+		}
+
+		if (clubData && accounts.length > 0) {
+			checkClubState(clubData)
 		} else {
 			console.log('No club data (yet) or wallet not connected...')
 		}

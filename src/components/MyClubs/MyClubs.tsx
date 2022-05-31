@@ -20,7 +20,10 @@ import React, { useEffect, useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
 import { MeemContracts, MyClubsQuery } from '../../../generated/graphql'
 import { GET_MY_CLUBS } from '../../graphql/clubs'
-import clubFromMeemContract, { Club } from '../../model/club/club'
+import clubFromMeemContract, {
+	Club,
+	clubSummaryFrommeemContract
+} from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -112,20 +115,30 @@ export const MyClubsComponent: React.FC = () => {
 		if (error) {
 			console.log(error)
 		}
+
 		if (!loading && !error && clubs.length === 0 && clubData) {
 			const tempClubs: Club[] = []
+
 			clubData.Meems.forEach(meem => {
-				const possibleClub = clubFromMeemContract(
-					wallet.isConnected ? wallet.accounts[0] : undefined,
+				const possibleClub = clubSummaryFrommeemContract(
 					meem.MeemContract as MeemContracts
 				)
-				if (possibleClub) {
+				if (possibleClub.name) {
 					tempClubs.push(possibleClub)
 				}
 			})
+
 			setClubs(tempClubs)
 		}
-	}, [clubs, clubData, error, loading, wallet.accounts, wallet.isConnected])
+	}, [
+		clubs,
+		clubData,
+		error,
+		loading,
+		wallet.accounts,
+		wallet.isConnected,
+		wallet.web3Provider
+	])
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })

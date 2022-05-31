@@ -32,7 +32,10 @@ import {
 	Club
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { truncatedWalletAddress } from '../../utils/truncated_wallet'
+import {
+	quickTruncate,
+	truncatedWalletAddress
+} from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
@@ -635,7 +638,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
 								<span className={classes.membershipSelector}>
-									{truncatedWalletAddress(membershipFundsAddress)}
+									{quickTruncate(membershipFundsAddress)}
 								</span>
 							</a>
 							.
@@ -719,7 +722,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								<div className={classes.primaryAdminChipContents}>
 									<Lock width={16} height={16} />
 									<Space w={4} />
-									<Text>{truncatedWalletAddress(lockedMainAdmin)}</Text>
+									<Text>{quickTruncate(lockedMainAdmin)}</Text>
 								</div>
 							</Chip>
 						</Chips>
@@ -858,7 +861,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									<div className={classes.primaryApprovedAddressChipContents}>
 										<Lock width={16} height={16} />
 										<Space w={4} />
-										<Text>{truncatedWalletAddress(lockedMainAdmin)}</Text>
+										<Text>{quickTruncate(lockedMainAdmin)}</Text>
 									</div>
 								</Chip>
 							</Chips>

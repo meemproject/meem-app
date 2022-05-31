@@ -12,7 +12,7 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -22,6 +22,7 @@ import {
 	MessageCircle,
 	Mail
 } from 'tabler-icons-react'
+import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
 
 const useStyles = createStyles(theme => ({
@@ -158,26 +159,22 @@ export function HeaderMenu() {
 	const { classes, cx } = useStyles()
 	const router = useRouter()
 
+	const [username, setUsername] = useState('')
 	const clubclub = useContext(ClubClubContext)
 	const wallet = useWallet()
 
-	function truncatedWalletAddress(): string {
-		if (!wallet.isConnected || wallet.accounts.length === 0) {
-			return ''
+	useEffect(() => {
+		async function getName() {
+			if (wallet.isConnected && wallet.web3Provider) {
+				const name = await truncatedWalletAddress(
+					wallet.accounts[0],
+					wallet.web3Provider
+				)
+				setUsername(name)
+			}
 		}
-
-		const walletAddress = wallet.accounts[0]
-		const walletAddressLength = wallet.accounts[0].length
-		const truncatedWallet =
-			walletAddress !== undefined
-				? `${walletAddress.substring(0, 5)}...${walletAddress.substring(
-						walletAddressLength - 5,
-						walletAddressLength
-				  )}`
-				: ''
-
-		return truncatedWallet.toLowerCase()
-	}
+		getName()
+	}, [wallet.accounts, wallet.isConnected, wallet.web3Provider])
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -238,7 +235,7 @@ export function HeaderMenu() {
 									<Group spacing={7}>
 										<Avatar src={''} alt={'user.name'} radius="xl" size={20} />
 										<Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
-											{truncatedWalletAddress()}
+											{username}
 										</Text>
 										<ChevronDown size={12} />
 									</Group>

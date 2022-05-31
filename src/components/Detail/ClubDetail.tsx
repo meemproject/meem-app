@@ -230,9 +230,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		variables: { slug }
 	})
 
-	const [club, setClub] = useState<Club>()
+	const [club, setClub] = useState<Club | undefined>()
+	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
-	const { data: clubSubData, loading: loadingClub } =
+	const { data: clubSubData, loading: loadingClubSub } =
 		useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
 			variables: { address: club ? club!.address! : '' }
 		})
@@ -474,22 +475,26 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
-		if (!loading && !error && !club && clubData) {
-			const possibleClub = clubFromMeemContract(
+		async function getClub(data: GetClubQuery) {
+			setIsLoadingClub(true)
+			const possibleClub = await clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
-				clubData.MeemContracts[0] as MeemContracts
+				data.MeemContracts[0] as MeemContracts,
+				wallet.web3Provider
 			)
 
 			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
 				parseRequirements(possibleClub)
 			}
+			setIsLoadingClub(false)
 		}
 
-		if (isJoiningClub && clubSubData) {
-			const possibleClub = clubFromMeemContract(
+		async function join(data: ClubSubscriptionSubscription) {
+			const possibleClub = await clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
-				clubSubData.MeemContracts[0] as MeemContracts
+				data.MeemContracts[0] as MeemContracts,
+				wallet.web3Provider
 			)
 			if (possibleClub.isClubMember) {
 				console.log('current user has joined the club!')
@@ -505,10 +510,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					message: `You now have access to this club's tools and resources.`
 				})
 			}
-		} else if (isLeavingClub && clubSubData) {
-			const possibleClub = clubFromMeemContract(
+		}
+
+		async function leave(data: ClubSubscriptionSubscription) {
+			const possibleClub = await clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
-				clubSubData.MeemContracts[0] as MeemContracts
+				data.MeemContracts[0] as MeemContracts,
+				wallet.web3Provider
 			)
 			if (!possibleClub.isClubMember) {
 				console.log('current user has left the club')
@@ -525,6 +533,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				})
 			}
 		}
+
+		if (!loading && !error && !club && clubData) {
+			getClub(clubData)
+		}
+
+		if (isJoiningClub && clubSubData) {
+			join(clubSubData)
+		} else if (isLeavingClub && clubSubData) {
+			leave(clubSubData)
+		}
 	}, [
 		club,
 		clubData,
@@ -535,7 +553,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		loading,
 		parseRequirements,
 		wallet.accounts,
-		wallet.isConnected
+		wallet.isConnected,
+		wallet.web3Provider
 	])
 
 	const navigateToSettings = () => {
@@ -544,7 +563,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	return (
 		<>
-			{loading && (
+			{isLoadingClub && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -552,7 +571,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && !club?.name && (
+			{!isLoadingClub && !club?.name && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -560,7 +579,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && club?.name && (
+			{!isLoadingClub && club?.name && (
 				<>
 					<div className={classes.header}>
 						<Image className={classes.clubLogoImage} src={club.image} />
@@ -675,9 +694,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							<Grid>
 								{club.members!.map(member => (
 									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
-										<Text className={classes.memberItem}>
-											{truncatedWalletAddress(member)}
-										</Text>
+										<Text className={classes.memberItem}>{member}</Text>
 									</Grid.Col>
 								))}
 							</Grid>

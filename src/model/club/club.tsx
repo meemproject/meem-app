@@ -1,5 +1,7 @@
 import { Permission } from '@meemproject/meem-contracts'
+import { providers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
+import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { clubMetadataFromContractUri } from './club_metadata'
 
 export const ClubAdminRole =
@@ -70,10 +72,45 @@ export interface MembershipRequirement {
 	clubName: string // Resolved from contract
 }
 
-export default function clubFromMeemContract(
+// The club's basic metadata, doesn't require async
+export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
+	if (clubData) {
+		const metadata = clubMetadataFromContractUri(clubData.contractURI)
+		return {
+			id: clubData.id,
+			name: clubData.name,
+			address: clubData.address,
+			admins: [],
+			isClubAdmin: false,
+			slug: clubData.slug,
+			description: metadata.description,
+			image: metadata.image,
+			isClubMember: true,
+			membershipToken: '',
+			members: [],
+			slotsLeft: 0,
+			membershipSettings: {
+				requirements: [],
+				costToJoin: 0,
+				membershipFundsAddress: '',
+				membershipStartDate: undefined,
+				membershipEndDate: undefined,
+				membershipQuantity: 0,
+				clubAdmins: []
+			},
+			isValid: clubData.mintPermissions !== undefined,
+			rawClub: clubData
+		}
+	} else {
+		return {}
+	}
+}
+
+export default async function clubFromMeemContract(
 	walletAddress?: string,
-	clubData?: MeemContracts
-): Club {
+	clubData?: MeemContracts,
+	provider?: providers.Web3Provider
+): Promise<Club> {
 	if (clubData != null && clubData) {
 		// Parse the contract URI
 		const metadata = clubMetadataFromContractUri(clubData.contractURI)
@@ -162,7 +199,7 @@ export default function clubFromMeemContract(
 		// If so, what's their tokenId?
 		let membershipToken = undefined
 		if (clubData.Meems) {
-			clubData.Meems.forEach(meem => {
+			for (const meem of clubData.Meems) {
 				if (
 					walletAddress &&
 					walletAddress?.toLowerCase() === meem.owner.toLowerCase()
@@ -170,8 +207,10 @@ export default function clubFromMeemContract(
 					isClubMember = true
 					membershipToken = meem.tokenId
 				}
-				members.push(meem.owner)
-			})
+
+				const name = await truncatedWalletAddress(meem.owner, provider)
+				members.push(name)
+			}
 		}
 
 		// Calculate slots left if totalOriginSupply > 0
@@ -185,10 +224,17 @@ export default function clubFromMeemContract(
 		// Is the current user a club admin?
 		const admins: string[] = []
 		let isClubAdmin = false
-		if (clubData.MeemContractWallets.length > 0) {
-			clubData.MeemContractWallets.forEach(wallet => {
+		if (
+			clubData.MeemContractWallets &&
+			clubData.MeemContractWallets.length > 0
+		) {
+			for (const wallet of clubData.MeemContractWallets) {
 				if (wallet.Wallet) {
-					admins.push(wallet.Wallet.address)
+					const name = await truncatedWalletAddress(
+						wallet.Wallet.address,
+						provider
+					)
+					admins.push(name)
 				}
 				if (
 					wallet.Wallet?.address.toLowerCase() ===
@@ -197,7 +243,7 @@ export default function clubFromMeemContract(
 				) {
 					isClubAdmin = true
 				}
-			})
+			}
 		}
 
 		return {
