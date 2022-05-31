@@ -264,8 +264,9 @@ export default async function clubFromMeemContract(
 				costToJoin,
 				membershipFundsAddress: fundsAddress,
 				membershipStartDate:
-					clubData.mintStartAt === 0 ? clubData.mintStartAt : null,
-				membershipEndDate: clubData.mintEndAt === 0 ? clubData.mintEndAt : null,
+					clubData.mintStartAt !== 0 ? clubData.mintStartAt : undefined,
+				membershipEndDate:
+					clubData.mintEndAt !== 0 ? clubData.mintEndAt : undefined,
 				membershipQuantity: totalMemberships,
 				clubAdmins: []
 			},

@@ -134,7 +134,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 	const [step, setStep] = useState<Step>(Step.Start)
 	const [proxyAddress, setProxyAddress] = useState('')
-	let contractURI = ''
+	const [contractUri, setContractUri] = useState('')
 
 	const create = async () => {
 		if (!web3Provider) {
@@ -238,14 +238,14 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					}
 				})
 			}
-
-			contractURI = JSON.stringify({
+			const uri = JSON.stringify({
 				name: Cookies.get(CookieKeys.clubName),
 				description: Cookies.get(CookieKeys.clubDescription),
 				image: Cookies.get(CookieKeys.clubImage),
 				external_link: Cookies.get(CookieKeys.clubExternalUrl),
 				application_links: applicationLinks
 			})
+			setContractUri(uri)
 
 			let membershipStartUnix = -1
 			let membershipEndUnix = -1
@@ -389,7 +389,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				name: Cookies.get(CookieKeys.clubName) ?? '',
 				symbol: clubSymbol,
 				admins: membershipSettings ? membershipSettings.clubAdmins : [],
-				contractURI,
+				contractURI: contractUri,
 				chain:
 					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
 						? Chain.Rinkeby
@@ -424,7 +424,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 			const data = {
 				to: accounts[0],
-				tokenURI: contractURI,
+				tokenURI: contractUri,
 				parentChain: MeemAPI.Chain.Polygon,
 				parent: MeemAPI.zeroAddress,
 				parentTokenId: 0,
