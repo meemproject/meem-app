@@ -448,8 +448,8 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 			await tx.wait()
 		} catch (e) {
+			console.log(e)
 			setStep(Step.Initialized)
-
 			showNotification({
 				title: 'Error minting club membership.',
 				message: `Please get in touch!`

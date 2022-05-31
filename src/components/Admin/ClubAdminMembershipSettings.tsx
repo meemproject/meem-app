@@ -393,7 +393,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		// convert current settings and update for the modal
 
 		const finalClubAdmins = Object.assign([], clubAdmins)
-		finalClubAdmins.push(wallet.accounts[0])
+		if (!clubAdmins.includes(wallet.accounts[0])) {
+			finalClubAdmins.push(wallet.accounts[0])
+		}
 
 		const settings: MembershipSettings = {
 			requirements: membershipRequirements,
@@ -474,12 +476,29 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		} else {
 			if (club && !hasLoadedClubData) {
 				setHasLoadedClubData(true)
+
+				// Set club admins
 				setClubAdmins(club.admins!)
+
+				// Get the main admin of the club
+				let tempLockedMainAdmin = ''
 				if (club.admins && club.admins!.length > 0) {
-					setLockedMainAdmin(club.admins![0])
+					tempLockedMainAdmin = club.admins![0]
+					setLockedMainAdmin(tempLockedMainAdmin)
 				} else {
 					setLockedMainAdmin('null')
 				}
+
+				// Set the club admins string, used by the club admins textfield
+				let adminsString = ''
+				if (club.admins) {
+					club.admins.forEach(admin => {
+						if (admin.toLowerCase() !== tempLockedMainAdmin)
+							adminsString = adminsString + `${admin}\n`
+					})
+				}
+				setClubAdminsString(adminsString)
+
 				setCostToJoin(club.membershipSettings!.costToJoin)
 				setMembershipQuantity(club.membershipSettings!.membershipQuantity)
 				setMembershipRequirements(club.membershipSettings!.requirements)
@@ -505,6 +524,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		club,
 		hasLoadedClubData,
 		isCreatingClub,
+		lockedMainAdmin,
 		wallet.accounts,
 		wallet.isConnected
 	])
@@ -722,7 +742,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								<div className={classes.primaryAdminChipContents}>
 									<Lock width={16} height={16} />
 									<Space w={4} />
-									<Text>{quickTruncate(lockedMainAdmin)}</Text>
+									<Text>{lockedMainAdmin}</Text>
 								</div>
 							</Chip>
 						</Chips>

@@ -230,10 +230,7 @@ export default async function clubFromMeemContract(
 		) {
 			for (const wallet of clubData.MeemContractWallets) {
 				if (wallet.Wallet) {
-					const name = await truncatedWalletAddress(
-						wallet.Wallet.address,
-						provider
-					)
+					const name = wallet.Wallet.address
 					admins.push(name)
 				}
 				if (
