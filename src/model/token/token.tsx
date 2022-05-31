@@ -1,9 +1,8 @@
-/* eslint-disable import/named */
-import { ERC20 } from '@meemproject/api/build/abis/ERC20'
-import erc20ABI from '@meemproject/api/build/abis/ERC20.json'
-import erc165ABI from '@meemproject/meem-contracts/artifacts/@solidstate/contracts/introspection/ERC165.sol/ERC165.json'
-import { ERC165 } from '@meemproject/meem-contracts/typechain/@solidstate/contracts/introspection/ERC165'
-import { Contract, BigNumber } from 'ethers'
+import {
+	getERC165Contract,
+	getERC721Contract
+} from '@meemproject/meem-contracts'
+import { BigNumber } from 'ethers'
 
 // Convenience class for tokens and NFTs
 export enum TokenType {
@@ -28,11 +27,10 @@ export async function tokenFromContractAddress(
 		return undefined
 	}
 
-	const contract = new Contract(
+	const contract = await getERC165Contract({
 		contractAddress,
-		erc165ABI.abi,
-		wallet.signer
-	) as unknown as ERC165
+		signer: wallet.signer
+	})
 
 	// URL
 	const tokenUrl =
@@ -67,14 +65,13 @@ export async function tokenFromContractAddress(
 	try {
 		is20Contract = await contract.supportsInterface('0x36372b07')
 		console.log('check is 20')
-		const the20Contract = new Contract(
+		const contractToCheck = await getERC721Contract({
 			contractAddress,
-			erc20ABI,
-			wallet.signer
-		) as ERC20
-		symbol = await the20Contract.symbol()
+			signer: wallet.signer
+		})
+		symbol = await contractToCheck.symbol()
 		console.log('get symbol')
-		name = await the20Contract.name()
+		name = await contractToCheck.name()
 		console.log('get name')
 	} catch (e) {
 		return undefined
