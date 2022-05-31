@@ -389,7 +389,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				name: Cookies.get(CookieKeys.clubName) ?? '',
 				symbol: clubSymbol,
 				admins: membershipSettings ? membershipSettings.clubAdmins : [],
-				contractURI: contractUri,
+				contractURI: uri,
 				chain:
 					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
 						? Chain.Rinkeby
