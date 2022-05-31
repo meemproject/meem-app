@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -30,6 +31,7 @@ import {
 	MembershipRequirement,
 	Club
 } from '../../model/club/club'
+import { tokenFromContractAddress } from '../../model/token/token'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
@@ -100,9 +102,7 @@ const useStyles = createStyles(theme => ({
 		color: 'rgba(255, 102, 81, 1)',
 		cursor: 'pointer',
 		marginRight: 8,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: -6
-		}
+		marginBottom: -4
 	},
 	radio: { fontWeight: 600, fontFamily: 'Inter' },
 	visible: {
@@ -199,6 +199,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const clubclub = useContext(ClubClubContext)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
+
+	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 
@@ -578,14 +580,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}}
 							className={classes.removeAdditionalReq}
 						/>
-						<a onClick={openSecondReqTypeModal}>
+						{/* <a onClick={openSecondReqTypeModal}>
 							<span className={classes.membershipSelector}>
 								{membershipRequirements[1].andor === MembershipReqAndor.And
 									? 'In addition'
 									: 'Alternatively'}
 							</span>
-						</a>
-						, members{' '}
+						</a> */}
+						in addition, members{' '}
 						{membershipRequirements[1].andor === MembershipReqAndor.Or
 							? 'can'
 							: 'must'}{' '}
@@ -886,16 +888,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}}
 							value={reqCurrentlyEditing.tokenChain}
 						/> */}
-						<Text className={classes.modalHeaderText}>Token Name</Text>
-						<TextInput
-							radius="lg"
-							size="md"
-							value={reqCurrentlyEditing.tokenName}
-							onChange={event => {
-								reqCurrentlyEditing.tokenName = event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
 						<Text className={classes.modalHeaderText}>Contract Address</Text>
 						<TextInput
 							radius="lg"
@@ -931,16 +923,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}}
 							value={reqCurrentlyEditing.tokenChain}
 						/> */}
-						<Text className={classes.modalHeaderText}>Token Name</Text>
-						<TextInput
-							radius="lg"
-							size="md"
-							value={reqCurrentlyEditing.tokenName}
-							onChange={event => {
-								reqCurrentlyEditing.tokenName = event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
 						<Text className={classes.modalHeaderText}>Token Address</Text>
 						<TextInput
 							radius="lg"
@@ -987,10 +969,41 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</div>
 					<Space h={'md'} />
 					<Button
-						onClick={() => {
+						disabled={isCheckingRequirement}
+						loading={isCheckingRequirement}
+						onClick={async () => {
+							if (
+								reqCurrentlyEditing.type === MembershipReqType.TokenHolders ||
+								reqCurrentlyEditing.type === MembershipReqType.NftHolders
+							) {
+								// Validate token
+								setIsCheckingRequirement(true)
+
+								const token = await tokenFromContractAddress(
+									reqCurrentlyEditing.tokenContractAddress,
+									wallet
+								)
+								if (!token) {
+									showNotification({
+										title: 'Oops!',
+										message:
+											'That token is not valid. Check the contract address and try again.'
+									})
+									setIsCheckingRequirement(false)
+									return
+								} else {
+									setIsCheckingRequirement(false)
+									reqCurrentlyEditing.tokenName = token.name
+									updateMembershipRequirement(reqCurrentlyEditing)
+								}
+							}
+
 							switch (reqCurrentlyEditing.type) {
 								case MembershipReqType.ApprovedApplicants:
-									if (reqCurrentlyEditing.applicationLink.length === 0) {
+									if (
+										reqCurrentlyEditing.applicationLink &&
+										reqCurrentlyEditing.applicationLink.length === 0
+									) {
 										showNotification({
 											title: 'Oops!',
 											message: 'Please enter an application link.'
@@ -1006,13 +1019,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 									break
 								case MembershipReqType.TokenHolders:
-									if (reqCurrentlyEditing.tokenContractAddress.length < 10) {
-										showNotification({
-											title: 'Oops!',
-											message: 'Please enter a valid contract address.'
-										})
-										return
-									} else if (reqCurrentlyEditing.tokenMinQuantity === 0) {
+									if (reqCurrentlyEditing.tokenMinQuantity === 0) {
 										showNotification({
 											title: 'Oops!',
 											message: 'Please enter a minimum token quantity.'
@@ -1021,13 +1028,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									}
 									break
 								case MembershipReqType.NftHolders:
-									if (reqCurrentlyEditing.tokenContractAddress.length < 10) {
-										showNotification({
-											title: 'Oops!',
-											message: 'Please enter a valid contract address.'
-										})
-										return
-									}
 									break
 							}
 
@@ -1041,6 +1041,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						<Button
 							onClick={() => {
 								setMembershipReqModalOpened(false)
+								membershipRequirements[1].type = MembershipReqType.None
+								setMembershipRequirements(membershipRequirements)
 							}}
 							className={classes.buttonModalCancel}
 						>

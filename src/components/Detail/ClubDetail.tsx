@@ -24,6 +24,7 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import * as meemContracts from '@meemproject/meem-contracts'
+import { Chain, MeemType, UriSource } from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract } from 'ethers'
@@ -46,6 +47,7 @@ import clubFromMeemContract, {
 	Club,
 	MembershipReqType
 } from '../../model/club/club'
+import { tokenFromContractAddress } from '../../model/token/token'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
@@ -183,12 +185,16 @@ const useStyles = createStyles(theme => ({
 	},
 	requirementsContainer: {
 		border: '1px solid rgba(0, 0, 0, 0.5)',
-		borderRadius: 16,
-		padding: 16
+		paddingTop: 24,
+		paddingBottom: 16,
+		paddingLeft: 16,
+		paddingRight: 16,
+		borderRadius: 16
 	},
 	requirementItem: {
 		display: 'flex',
-		alignItems: 'center'
+		alignItems: 'center',
+		marginBottom: 8
 	},
 	requirementLink: {
 		color: 'rgba(255, 102, 81, 1)'
@@ -241,32 +247,30 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 
 	const checkEligibility = useCallback(
-		(reqs: RequirementString[]) => {
+		(reqs: RequirementString[], slotsLeft: number) => {
 			if (reqs.length === 0) {
-				setMeetsAllRequirements(false)
+				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
-				parsedRequirements.forEach(req => {
+				reqs.forEach(req => {
 					if (req.meetsRequirement) {
 						reqsMet++
 					}
 				})
 				console.log(`reqs met = ${reqsMet}`)
-				console.log(`total reqs = ${parsedRequirements.length}`)
-				if (reqsMet === parsedRequirements.length) {
+				console.log(`total reqs = ${reqs.length}`)
+				if (reqsMet === reqs.length && slotsLeft !== -1 && slotsLeft > 0) {
 					setMeetsAllRequirements(true)
 				}
 			}
 		},
-		[parsedRequirements]
+		[]
 	)
 
 	const joinClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
-			showNotification({
-				title: 'Unable to join this club.',
-				message: `Did you connect your wallet?`
-			})
+			wallet.connectWallet()
+			return
 		}
 
 		setIsJoiningClub(true)
@@ -280,22 +284,23 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			const tx = await meemContract?.mint(
 				{
 					to: wallet.accounts[0],
-					// TODO: What goes here?
-					tokenURI: 'ipfs://example',
-					parentChain: MeemAPI.Chain.Polygon,
+					tokenURI: club?.rawClub?.contractURI ?? '',
+					parentChain: Chain.Polygon,
 					parent: MeemAPI.zeroAddress,
 					parentTokenId: 0,
-					meemType: MeemAPI.MeemType.Original,
-					data: '',
+					meemType: MeemType.Original,
 					isURILocked: false,
 					reactionTypes: ['upvote', 'downvote', 'heart'],
-					uriSource: MeemAPI.UriSource.TokenUri,
+					uriSource: UriSource.Json,
 					mintedBy: wallet.accounts[0]
 				},
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{ gasLimit: '1000000' }
 			)
+
+			// @ts-ignore
+			await tx.wait()
 		} catch (e) {
 			setIsJoiningClub(false)
 			showNotification({
@@ -320,8 +325,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				meemABI,
 				wallet.signer
 			) as unknown as meemContracts.Meem
-
-			//const tx = await meemContract?.burn()
+			if (club && club.membershipToken) {
+				const tx = await meemContract?.burn(club?.membershipToken)
+				// @ts-ignore
+				await tx.wait()
+			}
 		} catch (e) {
 			setIsLeavingClub(false)
 			showNotification({
@@ -343,20 +351,22 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					index++
 
 					let tokenBalance = BigNumber.from(0)
-					if (req.tokenContractAddress.length > 0 && wallet.web3Provider) {
-						const balance = await wallet.web3Provider?.getBalance(
-							req.tokenContractAddress
+					let tokenUrl = ''
+					let tokenName = 'Unknown Token'
+					let tokenSymbol = ''
+					if (wallet.web3Provider && wallet.signer) {
+						const token = await tokenFromContractAddress(
+							req.tokenContractAddress,
+							wallet
 						)
-
-						tokenBalance = balance
+						if (token) {
+							tokenBalance = token.balance
+							tokenUrl = token.url
+							tokenName = token.name
+							tokenSymbol = token.symbol
+						}
 					}
 
-					console.log(`token balance = ${tokenBalance}`)
-
-					const tokenUrl =
-						process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
-							? `https://rinkeby.etherscan.io/address/${req.tokenContractAddress}`
-							: `https://polygonscan.io/address/${req.tokenContractAddress}`
 					switch (req.type) {
 						case MembershipReqType.None:
 							reqs.push({
@@ -370,19 +380,32 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								requirementKey: `Applicants${index}`,
 								requirementComponent: (
 									<Text>
-										Membership is available to approved applicants. Applicants
-										can apply{' '}
-										<a
-											className={classes.requirementLink}
-											href={req.applicationLink}
-										>
-											here
-										</a>
-										.
+										Membership is available to approved applicants.
+										{!req.applicationLink && (
+											<span>
+												{' '}
+												Contact a Club Admin for the application link.
+											</span>
+										)}
+										{req.applicationLink && (
+											<span>
+												{' '}
+												Applicants can apply{' '}
+												<a
+													className={classes.requirementLink}
+													href={req.applicationLink}
+												>
+													here
+												</a>
+												.
+											</span>
+										)}
 									</Text>
 								),
 
-								meetsRequirement: true
+								meetsRequirement: wallet.isConnected
+									? req.approvedAddresses.includes(wallet.accounts[0])
+									: false
 							})
 							break
 						case MembershipReqType.NftHolders:
@@ -390,14 +413,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								requirementKey: `NFT${index}`,
 								requirementComponent: (
 									<Text>
-										Members must hold this{' '}
+										Members must hold one{' '}
 										<a className={classes.requirementLink} href={tokenUrl}>
-											NFT
+											{tokenName}
 										</a>
 										.
 									</Text>
 								),
-								meetsRequirement: tokenBalance !== BigNumber.from(0)
+								meetsRequirement: tokenBalance > BigNumber.from(0)
 							})
 							break
 						case MembershipReqType.TokenHolders:
@@ -405,14 +428,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								requirementKey: `Token${index}`,
 								requirementComponent: (
 									<Text>
-										Members must hold this{' '}
+										Members must hold {req.tokenMinQuantity}{' '}
 										<a className={classes.requirementLink} href={tokenUrl}>
-											token
+											{tokenName}
 										</a>
 										.
 									</Text>
 								),
-								meetsRequirement: tokenBalance !== BigNumber.from(0)
+								meetsRequirement: tokenBalance > BigNumber.from(0)
 							})
 							break
 						case MembershipReqType.OtherClubMember:
@@ -433,16 +456,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				})
 			)
 			console.log('set parsed reqs')
+			if (reqs.length === 0) {
+				reqs.push({
+					requirementKey: `Error${index}`,
+					requirementComponent: (
+						<Text>This club has invalid membership requirements.</Text>
+					),
+					meetsRequirement: false
+				})
+			}
 			setParsedRequirements(reqs)
+			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
+
 			setRequirementsParsed(true)
-			checkEligibility(reqs)
 		},
-		[
-			checkEligibility,
-			classes.requirementLink,
-			requirementsParsed,
-			wallet.web3Provider
-		]
+		[checkEligibility, classes.requirementLink, requirementsParsed, wallet]
 	)
 
 	useEffect(() => {

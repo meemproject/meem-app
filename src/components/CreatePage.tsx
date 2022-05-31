@@ -6,7 +6,11 @@ import log from '@kengoldfarb/log'
 import { Button, Select, Switch, TextInput } from '@mantine/core'
 import { MeemAPI } from '@meemproject/api'
 import * as meemContracts from '@meemproject/meem-contracts'
-import { Chain } from '@meemproject/meem-contracts/dist/src/lib/meemStandard'
+import {
+	Chain,
+	MeemType,
+	UriSource
+} from '@meemproject/meem-contracts/dist/src/lib/meemStandard'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
 import { Contract } from 'ethers'
@@ -100,14 +104,13 @@ export const CreatePage: React.FC = () => {
 			{
 				to: accounts[0],
 				tokenURI: 'ipfs://example',
-				parentChain: MeemAPI.Chain.Polygon,
+				parentChain: Chain.Polygon,
 				parent: MeemAPI.zeroAddress,
 				parentTokenId: 0,
-				meemType: MeemAPI.MeemType.Original,
-				data: '',
+				meemType: MeemType.Original,
 				isURILocked: false,
 				reactionTypes: ['upvote', 'downvote', 'heart'],
-				uriSource: MeemAPI.UriSource.TokenUri,
+				uriSource: UriSource.Json,
 				mintedBy: accounts[0]
 			},
 			meemContracts.defaultMeemProperties,

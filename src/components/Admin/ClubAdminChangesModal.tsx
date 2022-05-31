@@ -282,6 +282,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			const tx = await contract.reInitialize(data, { gasLimit: '1000000' })
 
 			log.debug(tx)
+			// @ts-ignore
+			await tx.wait()
 
 			onModalClosed()
 		} catch (e) {
