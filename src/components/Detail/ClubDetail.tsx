@@ -27,7 +27,7 @@ import * as meemContracts from '@meemproject/meem-contracts'
 import { Chain, MeemType, UriSource } from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
-import { BigNumber, Contract } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import {
@@ -114,6 +114,12 @@ const useStyles = createStyles(theme => ({
 	headerButtons: {
 		marginTop: 24,
 		display: 'flex'
+	},
+	headerSlotsLeft: {
+		fontSize: 14,
+		marginTop: 8,
+		marginLeft: 16,
+		fontWeight: 500
 	},
 	outlineButton: {
 		borderRadius: 24,
@@ -291,22 +297,31 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					parentTokenId: 0,
 					meemType: MeemType.Original,
 					isURILocked: false,
+
 					reactionTypes: ['upvote', 'downvote', 'heart'],
 					uriSource: UriSource.Json,
 					mintedBy: wallet.accounts[0]
 				},
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
-				{ gasLimit: '1000000' }
+				{
+					gasLimit: '1000000',
+					value: ethers.utils.parseEther(
+						club?.membershipSettings
+							? `${club.membershipSettings.costToJoin}`
+							: '0'
+					)
+				}
 			)
 
 			// @ts-ignore
 			await tx.wait()
 		} catch (e) {
+			console.log(e)
 			setIsJoiningClub(false)
 			showNotification({
 				title: 'Error minting club membership.',
-				message: `${e as string}`
+				message: `Please get in touch!`
 			})
 		}
 	}
@@ -605,11 +620,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										onClick={joinClub}
 										className={classes.buttonJoinClub}
 									>
-										{club.membershipSettings!.costToJoin > 0
-											? `Join (${club.membershipSettings!.costToJoin} MATIC)`
-											: `Join`}
+										{meetsAllRequirements &&
+											(club.membershipSettings!.costToJoin > 0
+												? `Join - ${club.membershipSettings!.costToJoin} MATIC`
+												: `Join`)}
+										{!meetsAllRequirements && 'Requirements not met'}
 									</Button>
 								)}
+								{club.membershipSettings &&
+									club.membershipSettings?.membershipQuantity > 0 && (
+										<Text
+											className={classes.headerSlotsLeft}
+										>{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}</Text>
+									)}
 								{club.isClubAdmin && (
 									<>
 										<Space w={'xs'} />

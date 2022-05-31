@@ -29,7 +29,7 @@ import { Chain, Permission, UriSource } from '@meemproject/meem-contracts'
 import * as meemContracts from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
-import { Contract } from 'ethers'
+import { Contract, ethers } from 'ethers'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
@@ -254,16 +254,18 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					membershipStartUnix = Math.floor(
 						new Date(membershipSettings.membershipStartDate).getTime() / 1000
 					)
+					console.log(membershipStartUnix)
 				}
 				if (membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
 						new Date(membershipSettings.membershipEndDate).getTime() / 1000
 					)
+					console.log(membershipEndUnix)
 				}
 			}
 
 			const joinCostInWei = membershipSettings
-				? membershipSettings.costToJoin * 1000000000
+				? ethers.utils.parseEther(`${membershipSettings.costToJoin}`)
 				: 0
 
 			const mintPermissions: any[] = []
@@ -321,6 +323,15 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 							})
 							break
 					}
+				})
+
+				// Now push a special 'admin mint' permission which bypasses the other requirements
+				mintPermissions.push({
+					permission: Permission.Addresses,
+					addresses: [accounts[0]],
+					numTokens: 0,
+					costWei: 0,
+					lockedBy: MeemAPI.zeroAddress
 				})
 			}
 
@@ -430,7 +441,9 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				data,
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
-				{ gasLimit: '1000000' }
+				{
+					gasLimit: '1000000'
+				}
 			)
 
 			await tx.wait()
