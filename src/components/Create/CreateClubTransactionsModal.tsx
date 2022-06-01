@@ -316,6 +316,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				})
 
 				// Now push a special 'admin mint' permission which bypasses the other requirements
+				console.log('adding admin permission')
 				mintPermissions.push({
 					permission: Permission.Addresses,
 					addresses: [wallet.accounts[0]],
@@ -432,7 +433,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{
-					gasLimit: '2500000'
+					gasLimit: '5000000'
 				}
 			)
 
@@ -441,7 +442,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			console.log(e)
 			setStep(Step.Initialized)
 			showNotification({
-				title: 'Error minting club membership.',
+				title: 'Error joining this club.',
 				message: `Please get in touch!`
 			})
 		}

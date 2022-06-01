@@ -1,5 +1,6 @@
 import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
+import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { tokenFromContractAddress } from '../token/token'
@@ -145,7 +146,7 @@ export default async function clubFromMeemContract(
 		}
 
 		if (clubData.mintPermissions) {
-			console.log('club has mint permissions')
+			//console.log('club has mint permissions')
 
 			// clubData.mintPermissions.forEach((permission: any) => {
 			// 	console.log(permission)
@@ -161,10 +162,17 @@ export default async function clubFromMeemContract(
 							mainClubAdminAddress?.toLowerCase()
 					) {
 						// Don't do anything
-						console.log('ignoring admin mint permission')
+						//console.log('ignoring admin mint permission')
 					} else {
 						const cost = isNaN(permission.costWei) ? 0 : permission.costWei
-						costToJoin = cost === 0 ? cost : Number(cost / 1000000000)
+						//console.log(`cost to join (wei) = ${cost}`)
+						if (cost === 0) {
+							costToJoin = cost
+						} else {
+							const matic = ethers.utils.formatEther(cost)
+							costToJoin = Number(matic)
+						}
+						//console.log(`cost to join (matic) = ${costToJoin}`)
 
 						let type = MembershipReqType.None
 						let approvedAddresses: string[] = []
@@ -196,7 +204,7 @@ export default async function clubFromMeemContract(
 
 								if (tokenDetails !== undefined) {
 									tokenName = tokenDetails.name
-									console.log('got token name')
+									//console.log('got token name')
 								}
 
 								tokenContractAddress = permission.addresses[0]
@@ -215,7 +223,7 @@ export default async function clubFromMeemContract(
 							}
 						})
 						if (!didReqTypeExist) {
-							console.log('pushing req')
+							//console.log('pushing req')
 
 							reqs.push({
 								index,
@@ -241,7 +249,7 @@ export default async function clubFromMeemContract(
 				})
 			)
 		} else {
-			console.log('this club has no mint permissions')
+			//console.log('this club has no mint permissions')
 		}
 
 		// Membership funds address

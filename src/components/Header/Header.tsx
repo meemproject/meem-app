@@ -165,12 +165,16 @@ export function HeaderMenu() {
 
 	useEffect(() => {
 		async function getName() {
-			if (wallet.isConnected && wallet.web3Provider) {
-				const name = await truncatedWalletAddress(
-					wallet.accounts[0],
-					wallet.web3Provider
-				)
-				setUsername(name)
+			try {
+				if (wallet.isConnected && wallet.web3Provider) {
+					const name = await truncatedWalletAddress(
+						wallet.accounts[0],
+						wallet.web3Provider
+					)
+					setUsername(name)
+				}
+			} catch (e) {
+				// ignore
 			}
 		}
 		getName()
@@ -201,11 +205,11 @@ export function HeaderMenu() {
 	}
 
 	const handleContactUs = () => {
-		window.open('https://meem.wtf')
+		window.open('mailto:help@weareprosocial.com')
 	}
 
 	const handleShareFeedback = () => {
-		window.open('https://meem.wtf')
+		window.open('https://airtable.com/shrM296vRoDWmK8Rm')
 	}
 
 	return (

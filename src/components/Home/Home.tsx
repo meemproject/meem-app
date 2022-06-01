@@ -84,6 +84,7 @@ const useStyles = createStyles(theme => ({
 
 	joinMeemLink: {
 		marginTop: 24,
+		cursor: 'pointer',
 		a: {
 			color: 'rgba(255, 102, 81, 1)',
 			textDecoration: 'underline',
@@ -282,7 +283,13 @@ export function HomeComponent() {
 				/>
 				{!clubclub.isMember && (
 					<Text className={classes.joinMeemLink}>
-						<a href="/club-club">Join Club Club to create</a>
+						<a
+							onClick={() => {
+								router.push({ pathname: '/club-club' })
+							}}
+						>
+							Join Club Club to create
+						</a>
 					</Text>
 				)}
 			</Container>

@@ -266,7 +266,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				})
 				console.log(`reqs met = ${reqsMet}`)
 				console.log(`total reqs = ${reqs.length}`)
-				if (reqsMet === reqs.length && slotsLeft !== -1 && slotsLeft > 0) {
+				console.log(`slots left = ${slotsLeft}`)
+				if (reqsMet === reqs.length && (slotsLeft === -1 || slotsLeft > 0)) {
 					setMeetsAllRequirements(true)
 				}
 			}
@@ -305,7 +306,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{
-					gasLimit: '1000000',
+					gasLimit: '5000000',
 					value: ethers.utils.parseEther(
 						club?.membershipSettings
 							? `${club.membershipSettings.costToJoin}`
@@ -320,7 +321,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			console.log(e)
 			setIsJoiningClub(false)
 			showNotification({
-				title: 'Error minting club membership.',
+				title: 'Error joining this club.',
 				message: `Please get in touch!`
 			})
 		}
@@ -669,7 +670,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											(club.membershipSettings!.costToJoin > 0
 												? `Join - ${club.membershipSettings!.costToJoin} MATIC`
 												: `Join`)}
-										{!meetsAllRequirements && 'Requirements not met'}
+										{!meetsAllRequirements &&
+											wallet.isConnected &&
+											'Requirements not met'}
+										{!wallet.isConnected && 'Connect wallet to join'}
 									</Button>
 								)}
 								{club.membershipSettings &&

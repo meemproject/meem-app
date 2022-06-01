@@ -21,6 +21,7 @@ import {
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
+import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
@@ -446,6 +447,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	// Is the req we're currently editing the first requirement or not? This affects language and modal options
 	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
+
+	async function isAddress(address: string) {
+		try {
+			await wallet.web3Provider?._getAddress(address)
+		} catch (e) {
+			return false
+		}
+		return true
+	}
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
@@ -1094,7 +1104,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					/>
 					<Space h={'md'} />
 					<Text className={classes.modalHeaderText}>
-						Send Funds to this Address
+						Send funds to this address
 					</Text>
 					<TextInput
 						radius="lg"
@@ -1106,16 +1116,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					/>
 					<Space h={'md'} />
 					<Button
-						onClick={() => {
+						loading={isCheckingRequirement}
+						disabled={isCheckingRequirement}
+						onClick={async () => {
 							if (isNaN(costToJoin)) {
 								setCostToJoin(0)
 							}
 							if (costToJoin > 0) {
-								if (membershipFundsAddress.length < 2) {
+								setIsCheckingRequirement(true)
+								const isValid = await isAddress(membershipFundsAddress)
+								setIsCheckingRequirement(false)
+								if (!isValid) {
 									showNotification({
 										title: 'Oops!',
-										message:
-											'Please enter a wallet address where membership fees will go.'
+										message: 'Please enter a valid wallet address.'
 									})
 									return
 								}
