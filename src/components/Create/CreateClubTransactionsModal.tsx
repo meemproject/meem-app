@@ -442,7 +442,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{
-					gasLimit: '1000000'
+					gasLimit: '2500000'
 				}
 			)
 
