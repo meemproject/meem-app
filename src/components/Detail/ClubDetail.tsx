@@ -255,7 +255,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const checkEligibility = useCallback(
 		(reqs: RequirementString[], slotsLeft: number) => {
-			if (reqs.length === 0) {
+			if (reqs.length === 0 || club?.isClubAdmin) {
 				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
@@ -271,7 +271,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			}
 		},
-		[]
+		[club?.isClubAdmin]
 	)
 
 	const joinClub = async () => {
@@ -360,6 +360,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			if (requirementsParsed || !possibleClub) {
 				return
 			}
+
 			const reqs: RequirementString[] = []
 			let index = 0
 			await Promise.all(
