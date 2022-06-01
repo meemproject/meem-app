@@ -47,6 +47,7 @@ import clubFromMeemContract, {
 	Club,
 	MembershipReqType
 } from '../../model/club/club'
+import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 
@@ -288,21 +289,32 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				meemABI,
 				wallet.signer
 			) as unknown as meemContracts.Meem
+			const metadata = clubMetadataFromContractUri(
+				club?.rawClub?.contractURI ?? ''
+			)
+			const uri = JSON.stringify({
+				name: club?.name ?? '',
+				description: metadata.description,
+				image: metadata.image,
+				external_link: '',
+				application_links: []
+			})
+			const data = {
+				to: wallet.accounts[0],
+				tokenURI: uri,
+				parentChain: MeemAPI.Chain.Polygon,
+				parent: MeemAPI.zeroAddress,
+				parentTokenId: 0,
+				meemType: MeemAPI.MeemType.Original,
+				uriSource: UriSource.Json,
+				isURILocked: false,
+				reactionTypes: ['upvote', 'downvote', 'heart'],
+				mintedBy: wallet.accounts[0]
+			}
 
+			console.log(data)
 			const tx = await meemContract?.mint(
-				{
-					to: wallet.accounts[0],
-					tokenURI: club?.rawClub?.contractURI ?? '',
-					parentChain: Chain.Polygon,
-					parent: MeemAPI.zeroAddress,
-					parentTokenId: 0,
-					meemType: MeemType.Original,
-					isURILocked: false,
-
-					reactionTypes: ['upvote', 'downvote', 'heart'],
-					uriSource: UriSource.Json,
-					mintedBy: wallet.accounts[0]
-				},
+				data,
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
 				{

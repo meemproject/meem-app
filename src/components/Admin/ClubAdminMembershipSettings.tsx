@@ -1235,7 +1235,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						required
 					>
 						<Radio value="now" label="now" />
-						<Radio value="later" label="at at later date" />
+						<Radio value="later" label="from a different date" />
 					</RadioGroup>
 					<Space h={'sm'} />
 
