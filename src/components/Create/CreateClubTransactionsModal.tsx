@@ -128,7 +128,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 }) => {
 	const router = useRouter()
 
-	const { web3Provider, accounts, signer } = useWallet()
+	const wallet = useWallet()
 
 	const { classes } = useStyles()
 
@@ -137,14 +137,14 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 	const [contractUri, setContractUri] = useState('')
 
 	const create = async () => {
-		if (!web3Provider) {
+		if (!wallet.web3Provider) {
 			return
 		}
 
 		setStep(Step.Creating)
 		try {
 			const contract = await meemContracts.deployProxy({
-				signer: web3Provider.getSigner()
+				signer: wallet.web3Provider?.getSigner()
 			})
 
 			console.log(
@@ -172,14 +172,14 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 	// when minting, check if user is a club member yet > Minted
 	useEffect(() => {
 		async function checkClubState(data: ClubSubscriptionSubscription) {
-			console.log('New club detected in the DB via subscription')
 			if (data.MeemContracts.length > 0 && step === Step.Initializing) {
 				// Successfully initialized club
 				console.log('init complete')
 				setStep(Step.Initialized)
 			} else if (data.MeemContracts.length > 0 && step === Step.Minting) {
 				const club = await clubFromMeemContract(
-					accounts[0],
+					wallet,
+					wallet.accounts[0],
 					data.MeemContracts[0] as MeemContracts
 				)
 				console.log('minting...')
@@ -208,15 +208,15 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			}
 		}
 
-		if (clubData && accounts.length > 0) {
+		if (clubData && wallet.accounts.length > 0) {
 			checkClubState(clubData)
 		} else {
 			console.log('No club data (yet) or wallet not connected...')
 		}
-	}, [accounts, accounts.length, clubData, router, step])
+	}, [clubData, router, step, wallet])
 
 	const initialize = async () => {
-		if (!web3Provider) {
+		if (!wallet.web3Provider) {
 			return
 		}
 
@@ -292,16 +292,6 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 								lockedBy: MeemAPI.zeroAddress
 							})
 							break
-						case MembershipReqType.NftHolders:
-							//NFT holders with 1+ tokens can join for X MATIC
-							mintPermissions.push({
-								permission: Permission.Holders,
-								addresses: [requirement.tokenContractAddress],
-								numTokens: 1,
-								costWei: joinCostInWei,
-								lockedBy: MeemAPI.zeroAddress
-							})
-							break
 						case MembershipReqType.TokenHolders:
 							//Token holders with X tokens can join for X MATIC
 							mintPermissions.push({
@@ -328,7 +318,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				// Now push a special 'admin mint' permission which bypasses the other requirements
 				mintPermissions.push({
 					permission: Permission.Addresses,
-					addresses: [accounts[0]],
+					addresses: [wallet.accounts[0]],
 					numTokens: 0,
 					costWei: 0,
 					lockedBy: MeemAPI.zeroAddress
@@ -355,7 +345,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 								{
 									toAddress: membershipSettings
 										? membershipSettings.membershipFundsAddress
-										: accounts[0],
+										: wallet.accounts[0],
 									// Amount in basis points 10000 == 100%
 									amount: 10000,
 									lockedBy: MeemAPI.zeroAddress
@@ -384,7 +374,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			console.log(`club admins: ${membershipSettings?.clubAdmins}`)
 
 			const tx = await meemContracts.initProxy({
-				signer: web3Provider.getSigner(),
+				signer: wallet.web3Provider.getSigner(),
 				proxyContractAddress: proxyAddress,
 				name: Cookies.get(CookieKeys.clubName) ?? '',
 				symbol: clubSymbol,
@@ -411,7 +401,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 	}
 
 	const mint = async () => {
-		if (!web3Provider) {
+		if (!wallet.web3Provider) {
 			return
 		}
 		setStep(Step.Minting)
@@ -419,11 +409,11 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			const meemContract = new Contract(
 				proxyAddress,
 				meemABI,
-				signer
+				wallet.signer
 			) as unknown as meemContracts.Meem
 
 			const data = {
-				to: accounts[0],
+				to: wallet.accounts[0],
 				tokenURI: contractUri,
 				parentChain: MeemAPI.Chain.Polygon,
 				parent: MeemAPI.zeroAddress,
@@ -432,7 +422,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				uriSource: UriSource.Json,
 				isURILocked: false,
 				reactionTypes: ['upvote', 'downvote', 'heart'],
-				mintedBy: accounts[0]
+				mintedBy: wallet.accounts[0]
 			}
 
 			console.log(data)

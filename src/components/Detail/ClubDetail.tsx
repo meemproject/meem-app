@@ -424,21 +424,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									: false
 							})
 							break
-						case MembershipReqType.NftHolders:
-							reqs.push({
-								requirementKey: `NFT${index}`,
-								requirementComponent: (
-									<Text>
-										Members must hold one{' '}
-										<a className={classes.requirementLink} href={tokenUrl}>
-											{tokenName}
-										</a>
-										.
-									</Text>
-								),
-								meetsRequirement: tokenBalance > BigNumber.from(0)
-							})
-							break
+
 						case MembershipReqType.TokenHolders:
 							reqs.push({
 								requirementKey: `Token${index}`,
@@ -515,17 +501,17 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					: ''
 				if (mintStart && !mintEnd) {
 					if (afterMintStart) {
-						mintDatesText = `Minting started ${mintEndString}.`
+						mintDatesText = `Membership opened ${mintEndString}.`
 					} else {
-						mintDatesText = `Minting starts ${mintEndString}.`
+						mintDatesText = `Membership opens ${mintEndString}.`
 					}
 				} else if (mintStart && mintEnd) {
 					if (!afterMintStart) {
-						mintDatesText = `Minting starts ${mintStartString} and ends ${mintEndString}.`
+						mintDatesText = `Membership opens ${mintStartString} and closes ${mintEndString}.`
 					} else if (afterMintStart && beforeMintEnd) {
-						mintDatesText = `Minting started ${mintStartString} and ends ${mintEndString}.`
+						mintDatesText = `Membership opened ${mintStartString} and closes ${mintEndString}.`
 					} else if (!beforeMintEnd) {
-						mintDatesText = `Minting ended ${mintEndString}.`
+						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (!mintStart && !mintEnd) {
 					mintDatesText = 'Minting can be done at any time.'
@@ -550,9 +536,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		async function getClub(data: GetClubQuery) {
 			setIsLoadingClub(true)
 			const possibleClub = await clubFromMeemContract(
-				wallet.isConnected ? wallet.accounts[0] : undefined,
-				data.MeemContracts[0] as MeemContracts,
-				wallet.web3Provider
+				wallet,
+				wallet.isConnected ? wallet.accounts[0] : '',
+				data.MeemContracts[0] as MeemContracts
 			)
 
 			if (possibleClub && possibleClub.name) {
@@ -564,9 +550,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		async function join(data: ClubSubscriptionSubscription) {
 			const possibleClub = await clubFromMeemContract(
-				wallet.isConnected ? wallet.accounts[0] : undefined,
-				data.MeemContracts[0] as MeemContracts,
-				wallet.web3Provider
+				wallet,
+				wallet.isConnected ? wallet.accounts[0] : '',
+				data.MeemContracts[0] as MeemContracts
 			)
 			if (possibleClub.isClubMember) {
 				console.log('current user has joined the club!')
@@ -586,9 +572,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		async function leave(data: ClubSubscriptionSubscription) {
 			const possibleClub = await clubFromMeemContract(
-				wallet.isConnected ? wallet.accounts[0] : undefined,
-				data.MeemContracts[0] as MeemContracts,
-				wallet.web3Provider
+				wallet,
+				wallet.isConnected ? wallet.accounts[0] : '',
+				data.MeemContracts[0] as MeemContracts
 			)
 			if (!possibleClub.isClubMember) {
 				console.log('current user has left the club')
@@ -624,6 +610,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		isLeavingClub,
 		loading,
 		parseRequirements,
+		wallet,
 		wallet.accounts,
 		wallet.isConnected,
 		wallet.web3Provider

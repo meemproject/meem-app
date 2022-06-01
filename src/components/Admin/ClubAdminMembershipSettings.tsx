@@ -421,8 +421,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				return 'anyone'
 			case MembershipReqType.ApprovedApplicants:
 				return 'approved applicants'
-			case MembershipReqType.NftHolders:
-				return 'NFT holders'
+
 			case MembershipReqType.TokenHolders:
 				return 'token holders'
 			case MembershipReqType.OtherClubMember:
@@ -438,8 +437,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				return '...'
 			case MembershipReqType.ApprovedApplicants:
 				return 'submit an approved application'
-			case MembershipReqType.NftHolders:
-				return `hold one ${membershipRequirements[1].tokenName}`
 			case MembershipReqType.TokenHolders:
 				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
 			case MembershipReqType.OtherClubMember:
@@ -572,21 +569,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							>
 								<span className={classes.membershipSelector}>
 									{membershipRequirements[0].tokenMinQuantity}{' '}
-									{membershipRequirements[0].tokenName}
-								</span>
-							</a>
-							.
-						</>
-					)}
-					{membershipRequirements[0].type === MembershipReqType.NftHolders && (
-						<>
-							Members must hold one{' '}
-							<a
-								onClick={() => {
-									openMembershipReqModal(0)
-								}}
-							>
-								<span className={classes.membershipSelector}>
 									{membershipRequirements[0].tokenName}
 								</span>
 							</a>
@@ -782,8 +764,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								? 'approved-applicants'
 								: reqCurrentlyEditing.type === MembershipReqType.TokenHolders
 								? 'token-holders'
-								: reqCurrentlyEditing.type === MembershipReqType.NftHolders
-								? 'nft-holders'
 								: 'other-club-member'
 						}
 						onChange={value => {
@@ -799,10 +779,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									break
 								case 'token-holders':
 									reqCurrentlyEditing.type = MembershipReqType.TokenHolders
-									updateMembershipRequirement(reqCurrentlyEditing)
-									break
-								case 'nft-holders':
-									reqCurrentlyEditing.type = MembershipReqType.NftHolders
 									updateMembershipRequirement(reqCurrentlyEditing)
 									break
 								case 'other-club-member':
@@ -826,10 +802,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							value="token-holders"
 							label={isEditedReqFirstReq ? 'token holders' : 'hold a token'}
 						/>
-						<Radio
-							value="nft-holders"
-							label={isEditedReqFirstReq ? 'NFT holders' : 'hold an NFT'}
-						/>
+
 						{!isEditedReqFirstReq && (
 							<Radio
 								value="other-club-member"
@@ -887,41 +860,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							</Chips>
 						</div>
 					</div>
-					<div
-						className={
-							reqCurrentlyEditing.type == MembershipReqType.NftHolders
-								? classes.visible
-								: classes.invisible
-						}
-					>
-						{/* <Text className={classes.modalHeaderText}>Chain</Text>
-						<Select
-							data={[
-								{
-									value: 'eth',
-									label: 'Ethereum'
-								},
-								{ value: 'matic', label: 'MATIC' }
-							]}
-							size={'md'}
-							radius={'lg'}
-							onChange={value => {
-								reqCurrentlyEditing.tokenChain = value ?? 'eth'
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-							value={reqCurrentlyEditing.tokenChain}
-						/> */}
-						<Text className={classes.modalHeaderText}>Contract Address</Text>
-						<TextInput
-							radius="lg"
-							size="md"
-							value={reqCurrentlyEditing.tokenContractAddress}
-							onChange={event => {
-								reqCurrentlyEditing.tokenContractAddress = event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
-					</div>
+
 					<div
 						className={
 							reqCurrentlyEditing.type == MembershipReqType.TokenHolders
@@ -995,17 +934,27 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						disabled={isCheckingRequirement}
 						loading={isCheckingRequirement}
 						onClick={async () => {
-							if (
-								reqCurrentlyEditing.type === MembershipReqType.TokenHolders ||
-								reqCurrentlyEditing.type === MembershipReqType.NftHolders
-							) {
+							if (reqCurrentlyEditing.type === MembershipReqType.TokenHolders) {
 								// Validate token
 								setIsCheckingRequirement(true)
+
+								if (reqCurrentlyEditing.tokenMinQuantity === 0) {
+									showNotification({
+										title: 'Oops!',
+										message: 'Please enter a quantity greater than 0.'
+									})
+									setIsCheckingRequirement(false)
+
+									return
+								}
+
+								setIsCheckingRequirement(false)
 
 								const token = await tokenFromContractAddress(
 									reqCurrentlyEditing.tokenContractAddress,
 									wallet
 								)
+
 								if (!token) {
 									showNotification({
 										title: 'Oops!',
@@ -1049,8 +998,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										})
 										return
 									}
-									break
-								case MembershipReqType.NftHolders:
 									break
 							}
 

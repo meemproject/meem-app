@@ -180,28 +180,38 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	} = useQuery<GetClubQuery>(GET_CLUB, {
 		variables: { slug }
 	})
-
+	const [isLoadingClub, setIsLoadingClub] = useState(true)
 	const [club, setClub] = useState<Club>()
 
 	useEffect(() => {
 		async function getClub(data: GetClubQuery) {
 			const possibleClub = await clubFromMeemContract(
-				wallet.isConnected ? wallet.accounts[0] : undefined,
+				wallet,
+				wallet.isConnected ? wallet.accounts[0] : '',
 				data.MeemContracts[0] as MeemContracts
 			)
 
 			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
 			}
+			setIsLoadingClub(false)
 		}
 		if (!loading && !error && !club && clubData) {
 			getClub(clubData)
 		}
-	}, [club, clubData, error, loading, wallet.accounts, wallet.isConnected])
+	}, [
+		club,
+		clubData,
+		error,
+		loading,
+		wallet,
+		wallet.accounts,
+		wallet.isConnected
+	])
 
 	return (
 		<>
-			{loading && (
+			{isLoadingClub && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -209,7 +219,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && !club?.name && (
+			{!isLoadingClub && !club?.name && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -218,7 +228,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				</Container>
 			)}
 
-			{!loading && club?.name && (
+			{!isLoadingClub && club?.name && (
 				<>
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
