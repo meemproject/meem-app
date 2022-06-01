@@ -1,8 +1,9 @@
 import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
-import { providers } from 'ethers'
+import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
 import { truncatedWalletAddress } from '../../utils/truncated_wallet'
+import { tokenFromContractAddress } from '../token/token'
 import { clubMetadataFromContractUri } from './club_metadata'
 
 export const ClubAdminRole =
@@ -40,7 +41,6 @@ export enum MembershipReqType {
 	None,
 	ApprovedApplicants,
 	TokenHolders,
-	NftHolders,
 	OtherClubMember
 }
 
@@ -108,9 +108,9 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 }
 
 export default async function clubFromMeemContract(
-	walletAddress?: string,
-	clubData?: MeemContracts,
-	provider?: providers.Web3Provider
+	wallet: any,
+	walletAddress: string,
+	clubData: MeemContracts
 ): Promise<Club> {
 	if (clubData != null && clubData) {
 		// Parse the contract URI
@@ -130,16 +130,15 @@ export default async function clubFromMeemContract(
 			clubData.MeemContractWallets &&
 			clubData.MeemContractWallets.length > 0
 		) {
-			for (const wallet of clubData.MeemContractWallets) {
-				if (wallet.Wallet) {
-					const name = wallet.Wallet.address
+			for (const wall of clubData.MeemContractWallets) {
+				if (wall.Wallet) {
+					const name = wall.Wallet.address
 					mainClubAdminAddress = name
 					admins.push(name)
 				}
 				if (
-					wallet.Wallet?.address.toLowerCase() ===
-						walletAddress?.toLowerCase() &&
-					wallet.role === ClubAdminRole
+					wall.Wallet?.address.toLowerCase() === walletAddress?.toLowerCase() &&
+					wall.role === ClubAdminRole
 				) {
 					isClubAdmin = true
 				}
@@ -147,81 +146,110 @@ export default async function clubFromMeemContract(
 		}
 
 		if (clubData.mintPermissions) {
-			clubData.mintPermissions.forEach((permission: any) => {
-				// Filter out the admin-exclusive permission
-				if (
-					permission.permission === Permission.Addresses &&
-					permission.addresses.length === 1 &&
-					permission.addresses[0].toLowerCase() ===
-						mainClubAdminAddress?.toLowerCase()
-				) {
-					return
-				}
+			//console.log('club has mint permissions')
 
-				costToJoin = Number(permission.costWei / 1000000000)
-
-				let type = MembershipReqType.None
-				let approvedAddresses: string[] = []
-				const tokenName = 'TOKEN'
-				let tokenContractAddress = ''
-				let tokenMinQuantity = 0
-
-				// Used for the 'other club' additional req, TODO
-				const clubContractAddress = ''
-				const clubName = ''
-
-				switch (permission.permission) {
-					case Permission.Anyone:
-						type = MembershipReqType.None
-						break
-					case Permission.Addresses:
-						type = MembershipReqType.ApprovedApplicants
-						approvedAddresses = permission.addresses
-						break
-					case Permission.Holders:
-						tokenMinQuantity = Number(permission.numTokens)
-						// Use other properties to determine whether using NFT or Token holders
-						if (tokenMinQuantity > 1) {
-							type = MembershipReqType.NftHolders
-						} else {
-							type = MembershipReqType.TokenHolders
-						}
-						tokenContractAddress = permission.addresses[0]
-						break
-				}
-
-				// Construct a requirement
-				// (check to make sure there isn't already an 'anyone' req type)
-				let didReqTypeExist = false
-				reqs.forEach(req => {
+			// clubData.mintPermissions.forEach((permission: any) => {
+			// 	console.log(permission)
+			// })
+			await Promise.all(
+				clubData.mintPermissions.map(async (permission: any) => {
+					console.log(permission)
+					// Filter out the admin-exclusive permission
 					if (
-						req.type === MembershipReqType.None &&
-						type === MembershipReqType.None
+						permission.permission === Permission.Addresses &&
+						permission.addresses.length === 1 &&
+						permission.addresses[0].toLowerCase() ===
+							mainClubAdminAddress?.toLowerCase()
 					) {
-						didReqTypeExist = true
+						// Don't do anything
+						//console.log('ignoring admin mint permission')
+					} else {
+						const cost = isNaN(permission.costWei) ? 0 : permission.costWei
+						//console.log(`cost to join (wei) = ${cost}`)
+						if (cost === 0) {
+							costToJoin = cost
+						} else {
+							const matic = ethers.utils.formatEther(cost)
+							costToJoin = Number(matic)
+						}
+						//console.log(`cost to join (matic) = ${costToJoin}`)
+
+						let type = MembershipReqType.None
+						let approvedAddresses: string[] = []
+						let tokenName = 'TOKEN'
+						let tokenContractAddress = ''
+						let tokenMinQuantity = 0
+
+						// Used for the 'other club' additional req, TODO
+						const clubContractAddress = ''
+						const clubName = ''
+
+						const tokenDetails = await tokenFromContractAddress(
+							permission.addresses ? permission.addresses[0] : '',
+							wallet
+						)
+
+						switch (permission.permission) {
+							case Permission.Anyone:
+								type = MembershipReqType.None
+								break
+							case Permission.Addresses:
+								type = MembershipReqType.ApprovedApplicants
+								approvedAddresses = permission.addresses
+								break
+							case Permission.Holders:
+								tokenMinQuantity = Number(permission.numTokens)
+								// eslint-disable-next-line no-case-declarations
+								type = MembershipReqType.TokenHolders
+
+								if (tokenDetails !== undefined) {
+									tokenName = tokenDetails.name
+									//console.log('got token name')
+								}
+
+								tokenContractAddress = permission.addresses[0]
+								break
+						}
+
+						// Construct a requirement
+						// (check to make sure there isn't already an 'anyone' req type)
+						let didReqTypeExist = false
+						reqs.forEach(req => {
+							if (
+								req.type === MembershipReqType.None &&
+								type === MembershipReqType.None
+							) {
+								didReqTypeExist = true
+							}
+						})
+						if (!didReqTypeExist) {
+							//console.log('pushing req')
+
+							reqs.push({
+								index,
+								andor: MembershipReqAndor.Or,
+								type,
+								applicationLink:
+									metadata.applicationLinks.length > 0
+										? metadata.applicationLinks[0]
+										: undefined,
+								approvedAddresses,
+								approvedAddressesString: '',
+								tokenName,
+								tokenMinQuantity,
+								tokenChain: '',
+								clubContractAddress,
+								tokenContractAddress,
+								clubName
+							})
+						}
+
+						index++
 					}
 				})
-				if (!didReqTypeExist)
-					reqs.push({
-						index,
-						andor: MembershipReqAndor.Or,
-						type,
-						applicationLink:
-							metadata.applicationLinks.length > 0
-								? metadata.applicationLinks[0]
-								: undefined,
-						approvedAddresses,
-						approvedAddressesString: '',
-						tokenName,
-						tokenMinQuantity,
-						tokenChain: '',
-						clubContractAddress,
-						tokenContractAddress,
-						clubName
-					})
-
-				index++
-			})
+			)
+		} else {
+			//console.log('this club has no mint permissions')
 		}
 
 		// Membership funds address
@@ -261,7 +289,7 @@ export default async function clubFromMeemContract(
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					const name = await truncatedWalletAddress(meem.owner, provider)
+					const name = await truncatedWalletAddress(meem.owner, wallet.provider)
 					members.push(name)
 				}
 			}

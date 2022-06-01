@@ -152,9 +152,14 @@ export const CreateComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (clubName === undefined) {
+			showNotification({
+				title: 'Unable to create this club.',
+				message: `Some data is missing. Try again!`,
+				autoClose: 5000
+			})
 			router.push({ pathname: '/' })
 		}
-	}, [clubName, router])
+	}, [accounts.length, clubName, router])
 
 	useEffect(() => {
 		if (
@@ -292,6 +297,10 @@ export const CreateComponent: React.FC = () => {
 				<Textarea
 					radius="lg"
 					size="md"
+					autosize
+					minRows={2}
+					maxRows={4}
+					maxLength={140}
 					onChange={event => setClubDescription(event.currentTarget.value)}
 				/>
 				<Text className={classes.clubLogoPrompt}>

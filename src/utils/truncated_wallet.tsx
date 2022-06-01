@@ -22,7 +22,7 @@ export async function truncatedWalletAddress(
 }
 
 export function quickTruncate(address: string): string {
-	if (address.length === 0) {
+	if (!address || address.length === 0) {
 		return ''
 	}
 

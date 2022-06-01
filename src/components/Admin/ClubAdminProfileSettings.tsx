@@ -279,6 +279,9 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 			<Textarea
 				radius="lg"
 				size="md"
+				minRows={2}
+				maxRows={4}
+				maxLength={140}
 				value={clubDescription}
 				onChange={event => setClubDescription(event.currentTarget.value)}
 			/>

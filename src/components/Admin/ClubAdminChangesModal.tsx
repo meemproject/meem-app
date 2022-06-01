@@ -19,7 +19,7 @@ import { Chain, Permission } from '@meemproject/meem-contracts'
 import * as meemContracts from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Club, MembershipReqType } from '../../model/club/club'
@@ -114,10 +114,11 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			const applicationLinks: string[] = []
 			if (club.membershipSettings) {
 				club.membershipSettings.requirements.forEach(requirement => {
-					if (requirement.applicationLink) {
-						if (requirement.applicationLink.length > 0) {
-							applicationLinks.push(requirement.applicationLink)
-						}
+					if (
+						requirement.applicationLink &&
+						requirement.applicationLink?.length > 0
+					) {
+						applicationLinks.push(requirement.applicationLink)
 					}
 				})
 			}
@@ -130,24 +131,26 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				application_links: applicationLinks
 			})
 
-			let membershipStartUnix = 0
-			let membershipEndUnix = 0
+			let membershipStartUnix = -1
+			let membershipEndUnix = -1
 			if (club.membershipSettings) {
 				if (club.membershipSettings.membershipStartDate) {
 					membershipStartUnix = Math.floor(
 						new Date(club.membershipSettings.membershipStartDate).getTime() /
 							1000
 					)
+					console.log(membershipStartUnix)
 				}
 				if (club.membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
 						new Date(club.membershipSettings.membershipEndDate).getTime() / 1000
 					)
+					console.log(membershipEndUnix)
 				}
 			}
 
 			const joinCostInWei = club.membershipSettings
-				? club.membershipSettings.costToJoin * 1000000000
+				? ethers.utils.parseEther(`${club.membershipSettings.costToJoin}`)
 				: 0
 
 			const mintPermissions: any[] = []
@@ -174,16 +177,6 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 								lockedBy: MeemAPI.zeroAddress
 							})
 							break
-						case MembershipReqType.NftHolders:
-							//NFT holders with 1+ tokens can join for X MATIC
-							mintPermissions.push({
-								permission: Permission.Holders,
-								addresses: [requirement.tokenContractAddress],
-								numTokens: 1,
-								costWei: joinCostInWei,
-								lockedBy: MeemAPI.zeroAddress
-							})
-							break
 						case MembershipReqType.TokenHolders:
 							//Token holders with X tokens can join for X MATIC
 							mintPermissions.push({
@@ -205,6 +198,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							})
 							break
 					}
+				})
+
+				// Now push a special 'admin mint' permission which bypasses the other requirements
+				console.log('adding admin permission')
+				mintPermissions.push({
+					permission: Permission.Addresses,
+					addresses: [accounts[0]],
+					numTokens: 0,
+					costWei: 0,
+					lockedBy: MeemAPI.zeroAddress
 				})
 			}
 
@@ -279,12 +282,12 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				nonOwnerSplitAllocationAmount: BigNumber.from(0)
 			}
 			console.log(data)
-			const tx = await contract.reInitialize(data, { gasLimit: '1000000' })
+			const tx = await contract.reInitialize(data, { gasLimit: '5000000' })
 
 			log.debug(tx)
 			// @ts-ignore
 			await tx.wait()
-
+			setStep(Step.Start)
 			onModalClosed()
 		} catch (e) {
 			setStep(Step.Start)
