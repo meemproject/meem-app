@@ -122,6 +122,13 @@ export default async function clubFromMeemContract(
 
 		if (clubData.mintPermissions) {
 			clubData.mintPermissions.forEach((permission: any) => {
+				if (
+					permission.permission === Permission.Addresses &&
+					permission.addresses.length === 1 &&
+					permission.addresses[0].toLowerCase() === walletAddress?.toLowerCase()
+				) {
+					return
+				}
 				costToJoin = Number(permission.costWei / 1000000000)
 
 				let type = MembershipReqType.None
