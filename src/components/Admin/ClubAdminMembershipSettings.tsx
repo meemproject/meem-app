@@ -1317,11 +1317,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							const now = new Date()
 							if (
 								membershipStartDate !== undefined &&
-								membershipStartDate.getTime() < now.getTime()
+								membershipEndDate !== undefined &&
+								membershipStartDate.getTime() > membershipEndDate.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',
-									message: 'Please choose a start date or time later than now.'
+									message:
+										'Please choose a start date or time earlier than the end date.'
 								})
 								return
 							}
@@ -1406,12 +1408,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							const now = new Date()
 
 							if (
+								membershipStartDate !== undefined &&
 								membershipEndDate !== undefined &&
-								membershipEndDate.getTime() < now.getTime()
+								membershipStartDate.getTime() > membershipEndDate.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',
-									message: 'Please choose an end date or time later than now.'
+									message:
+										'Please choose an end date or time later than the start date.'
 								})
 								return
 							}

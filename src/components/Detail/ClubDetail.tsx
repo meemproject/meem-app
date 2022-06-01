@@ -481,6 +481,63 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					meetsRequirement: false
 				})
 			}
+
+			// If mint start or end are valid,
+			// determine whether the user falls within the date range.
+			if (possibleClub.membershipSettings) {
+				const mintStart = possibleClub.membershipSettings.membershipStartDate
+				const mintEnd = possibleClub.membershipSettings.membershipEndDate
+
+				const afterMintStart =
+					Date.now() > (mintStart ? new Date(mintStart).getTime() : 0)
+				const beforeMintEnd =
+					Date.now() < (mintEnd ? new Date(mintEnd).getTime() : 200000000000000)
+
+				let mintDatesText = 'Minting is available now'
+				const mintStartString = mintStart
+					? `${new Date(mintStart).toDateString()} at ${new Date(
+							mintStart
+					  ).getHours()}:${
+							new Date(mintStart).getMinutes() > 9
+								? new Date(mintStart).getMinutes()
+								: `0${new Date(mintStart).getMinutes()}`
+					  }`
+					: ''
+
+				const mintEndString = mintEnd
+					? `${new Date(mintEnd).toDateString()} at ${new Date(
+							mintEnd
+					  ).getHours()}:${
+							new Date(mintEnd).getMinutes() > 9
+								? new Date(mintEnd).getMinutes()
+								: `0${new Date(mintEnd).getMinutes()}`
+					  }`
+					: ''
+				if (mintStart && !mintEnd) {
+					if (afterMintStart) {
+						mintDatesText = `Minting started ${mintEndString}.`
+					} else {
+						mintDatesText = `Minting starts ${mintEndString}.`
+					}
+				} else if (mintStart && mintEnd) {
+					if (!afterMintStart) {
+						mintDatesText = `Minting starts ${mintStartString} and ends ${mintEndString}.`
+					} else if (afterMintStart && beforeMintEnd) {
+						mintDatesText = `Minting started ${mintStartString} and ends ${mintEndString}.`
+					} else if (!beforeMintEnd) {
+						mintDatesText = `Minting ended ${mintEndString}.`
+					}
+				} else if (!mintStart && !mintEnd) {
+					mintDatesText = 'Minting can be done at any time.'
+				}
+
+				reqs.push({
+					requirementKey: `mintDates${index}`,
+					requirementComponent: <Text>{mintDatesText}</Text>,
+					meetsRequirement: afterMintStart && beforeMintEnd
+				})
+			}
+
 			setParsedRequirements(reqs)
 			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
 
