@@ -3200,7 +3200,7 @@ export type GetMeemIdQuery = { __typename?: 'query_root', MeemIdentifications: A
 export const GetIsMemberOfClubDocument = gql`
     query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, owner: {_eq: $walletAddress}, MeemContract: {slug: {_eq: $clubSlug}}}
+    where: {MeemContractId: {_is_null: false}, owner: {_ilike: $walletAddress}, MeemContract: {slug: {_eq: $clubSlug}}}
   ) {
     owner
     tokenId
