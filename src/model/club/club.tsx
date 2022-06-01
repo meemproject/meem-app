@@ -1,3 +1,4 @@
+import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
 import { providers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
@@ -120,15 +121,43 @@ export default async function clubFromMeemContract(
 		let costToJoin = 0
 		let index = 0
 
+		// Set up club admins
+		// Is the current user a club admin?
+		const admins: string[] = []
+		let isClubAdmin = false
+		let mainClubAdminAddress = ''
+		if (
+			clubData.MeemContractWallets &&
+			clubData.MeemContractWallets.length > 0
+		) {
+			for (const wallet of clubData.MeemContractWallets) {
+				if (wallet.Wallet) {
+					const name = wallet.Wallet.address
+					mainClubAdminAddress = name
+					admins.push(name)
+				}
+				if (
+					wallet.Wallet?.address.toLowerCase() ===
+						walletAddress?.toLowerCase() &&
+					wallet.role === ClubAdminRole
+				) {
+					isClubAdmin = true
+				}
+			}
+		}
+
 		if (clubData.mintPermissions) {
 			clubData.mintPermissions.forEach((permission: any) => {
+				// Filter out the admin-exclusive permission
 				if (
 					permission.permission === Permission.Addresses &&
 					permission.addresses.length === 1 &&
-					permission.addresses[0].toLowerCase() === walletAddress?.toLowerCase()
+					permission.addresses[0].toLowerCase() ===
+						mainClubAdminAddress?.toLowerCase()
 				) {
 					return
 				}
+
 				costToJoin = Number(permission.costWei / 1000000000)
 
 				let type = MembershipReqType.None
@@ -162,23 +191,34 @@ export default async function clubFromMeemContract(
 				}
 
 				// Construct a requirement
-				reqs.push({
-					index,
-					andor: MembershipReqAndor.Or,
-					type,
-					applicationLink:
-						metadata.applicationLinks.length > 0
-							? metadata.applicationLinks[0]
-							: undefined,
-					approvedAddresses,
-					approvedAddressesString: '',
-					tokenName,
-					tokenMinQuantity,
-					tokenChain: '',
-					clubContractAddress,
-					tokenContractAddress,
-					clubName
+				// (check to make sure there isn't already an 'anyone' req type)
+				let reqTypeExists = false
+				reqs.forEach(req => {
+					if (
+						req.type === MembershipReqType.None &&
+						type === MembershipReqType.None
+					) {
+						reqTypeExists = true
+					}
 				})
+				if (!reqTypeExists)
+					reqs.push({
+						index,
+						andor: MembershipReqAndor.Or,
+						type,
+						applicationLink:
+							metadata.applicationLinks.length > 0
+								? metadata.applicationLinks[0]
+								: undefined,
+						approvedAddresses,
+						approvedAddressesString: '',
+						tokenName,
+						tokenMinQuantity,
+						tokenChain: '',
+						clubContractAddress,
+						tokenContractAddress,
+						clubName
+					})
 
 				index++
 			})
@@ -215,8 +255,15 @@ export default async function clubFromMeemContract(
 					membershipToken = meem.tokenId
 				}
 
-				const name = await truncatedWalletAddress(meem.owner, provider)
-				members.push(name)
+				if (
+					meem.owner.toLowerCase() !== MeemAPI.zeroAddress.toLowerCase() &&
+					// 0xfurnace address
+					meem.owner.toLowerCase() !==
+						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
+				) {
+					const name = await truncatedWalletAddress(meem.owner, provider)
+					members.push(name)
+				}
 			}
 		}
 
@@ -225,29 +272,6 @@ export default async function clubFromMeemContract(
 		if (totalMemberships > 0) {
 			const membersCount = members.length
 			slotsLeft = totalMemberships - membersCount
-		}
-
-		// Set up club admins
-		// Is the current user a club admin?
-		const admins: string[] = []
-		let isClubAdmin = false
-		if (
-			clubData.MeemContractWallets &&
-			clubData.MeemContractWallets.length > 0
-		) {
-			for (const wallet of clubData.MeemContractWallets) {
-				if (wallet.Wallet) {
-					const name = wallet.Wallet.address
-					admins.push(name)
-				}
-				if (
-					wallet.Wallet?.address.toLowerCase() ===
-						walletAddress?.toLowerCase() &&
-					wallet.role === ClubAdminRole
-				) {
-					isClubAdmin = true
-				}
-			}
 		}
 
 		return {
