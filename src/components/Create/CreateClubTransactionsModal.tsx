@@ -29,7 +29,7 @@ import { Chain, Permission, UriSource } from '@meemproject/meem-contracts'
 import * as meemContracts from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
-import { Contract } from 'ethers'
+import { Contract, ethers } from 'ethers'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
@@ -134,7 +134,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 	const [step, setStep] = useState<Step>(Step.Start)
 	const [proxyAddress, setProxyAddress] = useState('')
-	let contractURI = ''
+	const [contractUri, setContractUri] = useState('')
 
 	const create = async () => {
 		if (!web3Provider) {
@@ -171,16 +171,16 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 	// when initializing, check if the club exists yet > Initialized
 	// when minting, check if user is a club member yet > Minted
 	useEffect(() => {
-		if (clubData && accounts.length > 0) {
+		async function checkClubState(data: ClubSubscriptionSubscription) {
 			console.log('New club detected in the DB via subscription')
-			if (clubData.MeemContracts.length > 0 && step === Step.Initializing) {
+			if (data.MeemContracts.length > 0 && step === Step.Initializing) {
 				// Successfully initialized club
 				console.log('init complete')
 				setStep(Step.Initialized)
-			} else if (clubData.MeemContracts.length > 0 && step === Step.Minting) {
-				const club = clubFromMeemContract(
+			} else if (data.MeemContracts.length > 0 && step === Step.Minting) {
+				const club = await clubFromMeemContract(
 					accounts[0],
-					clubData.MeemContracts[0] as MeemContracts
+					data.MeemContracts[0] as MeemContracts
 				)
 				console.log('minting...')
 				if (club.isClubMember) {
@@ -206,6 +206,10 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					setStep(Step.Minted)
 				}
 			}
+		}
+
+		if (clubData && accounts.length > 0) {
+			checkClubState(clubData)
 		} else {
 			console.log('No club data (yet) or wallet not connected...')
 		}
@@ -234,14 +238,14 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					}
 				})
 			}
-
-			contractURI = JSON.stringify({
+			const uri = JSON.stringify({
 				name: Cookies.get(CookieKeys.clubName),
 				description: Cookies.get(CookieKeys.clubDescription),
 				image: Cookies.get(CookieKeys.clubImage),
 				external_link: Cookies.get(CookieKeys.clubExternalUrl),
 				application_links: applicationLinks
 			})
+			setContractUri(uri)
 
 			let membershipStartUnix = -1
 			let membershipEndUnix = -1
@@ -250,16 +254,18 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					membershipStartUnix = Math.floor(
 						new Date(membershipSettings.membershipStartDate).getTime() / 1000
 					)
+					console.log(membershipStartUnix)
 				}
 				if (membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
 						new Date(membershipSettings.membershipEndDate).getTime() / 1000
 					)
+					console.log(membershipEndUnix)
 				}
 			}
 
 			const joinCostInWei = membershipSettings
-				? membershipSettings.costToJoin * 1000000000
+				? ethers.utils.parseEther(`${membershipSettings.costToJoin}`)
 				: 0
 
 			const mintPermissions: any[] = []
@@ -318,6 +324,15 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 							break
 					}
 				})
+
+				// Now push a special 'admin mint' permission which bypasses the other requirements
+				mintPermissions.push({
+					permission: Permission.Addresses,
+					addresses: [accounts[0]],
+					numTokens: 0,
+					costWei: 0,
+					lockedBy: MeemAPI.zeroAddress
+				})
 			}
 
 			const baseProperties = {
@@ -374,7 +389,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				name: Cookies.get(CookieKeys.clubName) ?? '',
 				symbol: clubSymbol,
 				admins: membershipSettings ? membershipSettings.clubAdmins : [],
-				contractURI,
+				contractURI: uri,
 				chain:
 					process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
 						? Chain.Rinkeby
@@ -409,7 +424,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 			const data = {
 				to: accounts[0],
-				tokenURI: contractURI,
+				tokenURI: contractUri,
 				parentChain: MeemAPI.Chain.Polygon,
 				parent: MeemAPI.zeroAddress,
 				parentTokenId: 0,
@@ -426,13 +441,15 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				data,
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
-				{ gasLimit: '1000000' }
+				{
+					gasLimit: '2500000'
+				}
 			)
 
 			await tx.wait()
 		} catch (e) {
+			console.log(e)
 			setStep(Step.Initialized)
-
 			showNotification({
 				title: 'Error minting club membership.',
 				message: `Please get in touch!`

@@ -151,6 +151,12 @@ export const CreateComponent: React.FC = () => {
 		useWallet()
 
 	useEffect(() => {
+		if (clubName === undefined) {
+			router.push({ pathname: '/' })
+		}
+	}, [clubName, router])
+
+	useEffect(() => {
 		if (
 			clubNamespace.length === 0 &&
 			defaultNamespace.length === 0 &&

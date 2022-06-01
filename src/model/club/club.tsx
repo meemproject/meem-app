@@ -1,5 +1,8 @@
+import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
+import { providers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
+import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 import { clubMetadataFromContractUri } from './club_metadata'
 
 export const ClubAdminRole =
@@ -70,10 +73,45 @@ export interface MembershipRequirement {
 	clubName: string // Resolved from contract
 }
 
-export default function clubFromMeemContract(
+// The club's basic metadata, doesn't require async
+export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
+	if (clubData) {
+		const metadata = clubMetadataFromContractUri(clubData.contractURI)
+		return {
+			id: clubData.id,
+			name: clubData.name,
+			address: clubData.address,
+			admins: [],
+			isClubAdmin: false,
+			slug: clubData.slug,
+			description: metadata.description,
+			image: metadata.image,
+			isClubMember: true,
+			membershipToken: '',
+			members: [],
+			slotsLeft: 0,
+			membershipSettings: {
+				requirements: [],
+				costToJoin: 0,
+				membershipFundsAddress: '',
+				membershipStartDate: undefined,
+				membershipEndDate: undefined,
+				membershipQuantity: 0,
+				clubAdmins: []
+			},
+			isValid: clubData.mintPermissions !== undefined,
+			rawClub: clubData
+		}
+	} else {
+		return {}
+	}
+}
+
+export default async function clubFromMeemContract(
 	walletAddress?: string,
-	clubData?: MeemContracts
-): Club {
+	clubData?: MeemContracts,
+	provider?: providers.Web3Provider
+): Promise<Club> {
 	if (clubData != null && clubData) {
 		// Parse the contract URI
 		const metadata = clubMetadataFromContractUri(clubData.contractURI)
@@ -83,8 +121,43 @@ export default function clubFromMeemContract(
 		let costToJoin = 0
 		let index = 0
 
+		// Set up club admins
+		// Is the current user a club admin?
+		const admins: string[] = []
+		let isClubAdmin = false
+		let mainClubAdminAddress = ''
+		if (
+			clubData.MeemContractWallets &&
+			clubData.MeemContractWallets.length > 0
+		) {
+			for (const wallet of clubData.MeemContractWallets) {
+				if (wallet.Wallet) {
+					const name = wallet.Wallet.address
+					mainClubAdminAddress = name
+					admins.push(name)
+				}
+				if (
+					wallet.Wallet?.address.toLowerCase() ===
+						walletAddress?.toLowerCase() &&
+					wallet.role === ClubAdminRole
+				) {
+					isClubAdmin = true
+				}
+			}
+		}
+
 		if (clubData.mintPermissions) {
 			clubData.mintPermissions.forEach((permission: any) => {
+				// Filter out the admin-exclusive permission
+				if (
+					permission.permission === Permission.Addresses &&
+					permission.addresses.length === 1 &&
+					permission.addresses[0].toLowerCase() ===
+						mainClubAdminAddress?.toLowerCase()
+				) {
+					return
+				}
+
 				costToJoin = Number(permission.costWei / 1000000000)
 
 				let type = MembershipReqType.None
@@ -118,23 +191,34 @@ export default function clubFromMeemContract(
 				}
 
 				// Construct a requirement
-				reqs.push({
-					index,
-					andor: MembershipReqAndor.Or,
-					type,
-					applicationLink:
-						metadata.applicationLinks.length > 0
-							? metadata.applicationLinks[0]
-							: undefined,
-					approvedAddresses,
-					approvedAddressesString: '',
-					tokenName,
-					tokenMinQuantity,
-					tokenChain: '',
-					clubContractAddress,
-					tokenContractAddress,
-					clubName
+				// (check to make sure there isn't already an 'anyone' req type)
+				let didReqTypeExist = false
+				reqs.forEach(req => {
+					if (
+						req.type === MembershipReqType.None &&
+						type === MembershipReqType.None
+					) {
+						didReqTypeExist = true
+					}
 				})
+				if (!didReqTypeExist)
+					reqs.push({
+						index,
+						andor: MembershipReqAndor.Or,
+						type,
+						applicationLink:
+							metadata.applicationLinks.length > 0
+								? metadata.applicationLinks[0]
+								: undefined,
+						approvedAddresses,
+						approvedAddressesString: '',
+						tokenName,
+						tokenMinQuantity,
+						tokenChain: '',
+						clubContractAddress,
+						tokenContractAddress,
+						clubName
+					})
 
 				index++
 			})
@@ -162,7 +246,7 @@ export default function clubFromMeemContract(
 		// If so, what's their tokenId?
 		let membershipToken = undefined
 		if (clubData.Meems) {
-			clubData.Meems.forEach(meem => {
+			for (const meem of clubData.Meems) {
 				if (
 					walletAddress &&
 					walletAddress?.toLowerCase() === meem.owner.toLowerCase()
@@ -170,8 +254,17 @@ export default function clubFromMeemContract(
 					isClubMember = true
 					membershipToken = meem.tokenId
 				}
-				members.push(meem.owner)
-			})
+
+				if (
+					meem.owner.toLowerCase() !== MeemAPI.zeroAddress.toLowerCase() &&
+					// 0xfurnace address
+					meem.owner.toLowerCase() !==
+						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
+				) {
+					const name = await truncatedWalletAddress(meem.owner, provider)
+					members.push(name)
+				}
+			}
 		}
 
 		// Calculate slots left if totalOriginSupply > 0
@@ -179,25 +272,6 @@ export default function clubFromMeemContract(
 		if (totalMemberships > 0) {
 			const membersCount = members.length
 			slotsLeft = totalMemberships - membersCount
-		}
-
-		// Set up club admins
-		// Is the current user a club admin?
-		const admins: string[] = []
-		let isClubAdmin = false
-		if (clubData.MeemContractWallets.length > 0) {
-			clubData.MeemContractWallets.forEach(wallet => {
-				if (wallet.Wallet) {
-					admins.push(wallet.Wallet.address)
-				}
-				if (
-					wallet.Wallet?.address.toLowerCase() ===
-						walletAddress?.toLowerCase() &&
-					wallet.role === ClubAdminRole
-				) {
-					isClubAdmin = true
-				}
-			})
 		}
 
 		return {
@@ -218,8 +292,9 @@ export default function clubFromMeemContract(
 				costToJoin,
 				membershipFundsAddress: fundsAddress,
 				membershipStartDate:
-					clubData.mintStartAt === 0 ? clubData.mintStartAt : null,
-				membershipEndDate: clubData.mintEndAt === 0 ? clubData.mintEndAt : null,
+					clubData.mintStartAt !== 0 ? clubData.mintStartAt : undefined,
+				membershipEndDate:
+					clubData.mintEndAt !== 0 ? clubData.mintEndAt : undefined,
 				membershipQuantity: totalMemberships,
 				clubAdmins: []
 			},

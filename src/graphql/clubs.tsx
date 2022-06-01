@@ -5,7 +5,7 @@ export const GET_IS_MEMBER_OF_CLUB = gql`
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				owner: { _eq: $walletAddress }
+				owner: { _ilike: $walletAddress }
 				MeemContract: { slug: { _eq: $clubSlug } }
 			}
 		) {

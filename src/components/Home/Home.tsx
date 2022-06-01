@@ -174,7 +174,7 @@ export function HomeComponent() {
 				const { data } = await autocompleteClient.query({
 					query: GET_CLUBS_AUTOCOMPLETE,
 					variables: {
-						query: val.trim()
+						query: `%${val.trim()}%`
 					}
 				})
 
@@ -204,8 +204,20 @@ export function HomeComponent() {
 					setAutocompleteData(clubsList)
 					setIsFetchingData(false)
 					setIsLoadingSuggestions(false)
-					console.log(`allowing create button = ${clubsList.length === 0}`)
-					setShowCreateButton(clubsList.length === 0)
+
+					// Now look through the returned clubs to see if a club of the same name exists
+					let shouldAllow = true
+					clubsList.forEach(club => {
+						if (
+							club.value &&
+							club.value.toLowerCase() === val.trim().toLowerCase()
+						) {
+							shouldAllow = false
+							return
+						}
+					})
+					setShowCreateButton(shouldAllow)
+					console.log(`allowing create button = ${shouldAllow}`)
 				}
 			}, 250)
 		}
@@ -234,7 +246,7 @@ export function HomeComponent() {
 		<div className={classes.wrapper}>
 			<Container size={700} className={classes.inner}>
 				<Center>
-					<Image src="/clubs-home.png" height={150} width={150} fit={'contain'}>
+					<Image src="/clubs-home.svg" height={150} width={150} fit={'contain'}>
 						{' '}
 						className={classes.title}{' '}
 					</Image>

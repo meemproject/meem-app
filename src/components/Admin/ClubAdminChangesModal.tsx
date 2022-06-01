@@ -291,7 +291,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			console.log(e)
 			showNotification({
 				title: 'Error saving club settings',
-				message: `${e as string}`
+				message: `Please get in touch!`
 			})
 		}
 	}
@@ -346,7 +346,11 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							active={step === Step.Start || step === Step.Initialized ? 0 : 1}
 						>
 							<Stepper.Step
-								label="Tap below to confirm"
+								label={
+									step === Step.Initializing
+										? 'Please wait...'
+										: 'Tap below to confirm'
+								}
 								loading={step === Step.Initializing}
 								description={
 									<>

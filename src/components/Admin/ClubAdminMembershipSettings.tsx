@@ -32,7 +32,10 @@ import {
 	Club
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { truncatedWalletAddress } from '../../utils/truncated_wallet'
+import {
+	quickTruncate,
+	truncatedWalletAddress
+} from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
@@ -390,7 +393,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		// convert current settings and update for the modal
 
 		const finalClubAdmins = Object.assign([], clubAdmins)
-		finalClubAdmins.push(wallet.accounts[0])
+		if (!clubAdmins.includes(wallet.accounts[0])) {
+			finalClubAdmins.push(wallet.accounts[0])
+		}
 
 		const settings: MembershipSettings = {
 			requirements: membershipRequirements,
@@ -471,12 +476,29 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		} else {
 			if (club && !hasLoadedClubData) {
 				setHasLoadedClubData(true)
+
+				// Set club admins
 				setClubAdmins(club.admins!)
+
+				// Get the main admin of the club
+				let tempLockedMainAdmin = ''
 				if (club.admins && club.admins!.length > 0) {
-					setLockedMainAdmin(club.admins![0])
+					tempLockedMainAdmin = club.admins![0]
+					setLockedMainAdmin(tempLockedMainAdmin)
 				} else {
 					setLockedMainAdmin('null')
 				}
+
+				// Set the club admins string, used by the club admins textfield
+				let adminsString = ''
+				if (club.admins) {
+					club.admins.forEach(admin => {
+						if (admin.toLowerCase() !== tempLockedMainAdmin)
+							adminsString = adminsString + `${admin}\n`
+					})
+				}
+				setClubAdminsString(adminsString)
+
 				setCostToJoin(club.membershipSettings!.costToJoin)
 				setMembershipQuantity(club.membershipSettings!.membershipQuantity)
 				setMembershipRequirements(club.membershipSettings!.requirements)
@@ -502,6 +524,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		club,
 		hasLoadedClubData,
 		isCreatingClub,
+		lockedMainAdmin,
 		wallet.accounts,
 		wallet.isConnected
 	])
@@ -635,7 +658,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
 								<span className={classes.membershipSelector}>
-									{truncatedWalletAddress(membershipFundsAddress)}
+									{quickTruncate(membershipFundsAddress)}
 								</span>
 							</a>
 							.
@@ -719,7 +742,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								<div className={classes.primaryAdminChipContents}>
 									<Lock width={16} height={16} />
 									<Space w={4} />
-									<Text>{truncatedWalletAddress(lockedMainAdmin)}</Text>
+									<Text>{lockedMainAdmin}</Text>
 								</div>
 							</Chip>
 						</Chips>
@@ -858,7 +881,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									<div className={classes.primaryApprovedAddressChipContents}>
 										<Lock width={16} height={16} />
 										<Space w={4} />
-										<Text>{truncatedWalletAddress(lockedMainAdmin)}</Text>
+										<Text>{quickTruncate(lockedMainAdmin)}</Text>
 									</div>
 								</Chip>
 							</Chips>
@@ -1294,11 +1317,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							const now = new Date()
 							if (
 								membershipStartDate !== undefined &&
-								membershipStartDate.getTime() < now.getTime()
+								membershipEndDate !== undefined &&
+								membershipStartDate.getTime() > membershipEndDate.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',
-									message: 'Please choose a start date or time later than now.'
+									message:
+										'Please choose a start date or time earlier than the end date.'
 								})
 								return
 							}
@@ -1383,12 +1408,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							const now = new Date()
 
 							if (
+								membershipStartDate !== undefined &&
 								membershipEndDate !== undefined &&
-								membershipEndDate.getTime() < now.getTime()
+								membershipStartDate.getTime() > membershipEndDate.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',
-									message: 'Please choose an end date or time later than now.'
+									message:
+										'Please choose an end date or time later than the start date.'
 								})
 								return
 							}

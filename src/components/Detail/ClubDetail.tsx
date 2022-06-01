@@ -27,7 +27,7 @@ import * as meemContracts from '@meemproject/meem-contracts'
 import { Chain, MeemType, UriSource } from '@meemproject/meem-contracts'
 import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
-import { BigNumber, Contract } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import {
@@ -114,6 +114,12 @@ const useStyles = createStyles(theme => ({
 	headerButtons: {
 		marginTop: 24,
 		display: 'flex'
+	},
+	headerSlotsLeft: {
+		fontSize: 14,
+		marginTop: 8,
+		marginLeft: 16,
+		fontWeight: 500
 	},
 	outlineButton: {
 		borderRadius: 24,
@@ -230,9 +236,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		variables: { slug }
 	})
 
-	const [club, setClub] = useState<Club>()
+	const [club, setClub] = useState<Club | undefined>()
+	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
-	const { data: clubSubData, loading: loadingClub } =
+	const { data: clubSubData, loading: loadingClubSub } =
 		useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
 			variables: { address: club ? club!.address! : '' }
 		})
@@ -290,22 +297,31 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					parentTokenId: 0,
 					meemType: MeemType.Original,
 					isURILocked: false,
+
 					reactionTypes: ['upvote', 'downvote', 'heart'],
 					uriSource: UriSource.Json,
 					mintedBy: wallet.accounts[0]
 				},
 				meemContracts.defaultMeemProperties,
 				meemContracts.defaultMeemProperties,
-				{ gasLimit: '1000000' }
+				{
+					gasLimit: '1000000',
+					value: ethers.utils.parseEther(
+						club?.membershipSettings
+							? `${club.membershipSettings.costToJoin}`
+							: '0'
+					)
+				}
 			)
 
 			// @ts-ignore
 			await tx.wait()
 		} catch (e) {
+			console.log(e)
 			setIsJoiningClub(false)
 			showNotification({
 				title: 'Error minting club membership.',
-				message: `${e as string}`
+				message: `Please get in touch!`
 			})
 		}
 	}
@@ -465,6 +481,63 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					meetsRequirement: false
 				})
 			}
+
+			// If mint start or end are valid,
+			// determine whether the user falls within the date range.
+			if (possibleClub.membershipSettings) {
+				const mintStart = possibleClub.membershipSettings.membershipStartDate
+				const mintEnd = possibleClub.membershipSettings.membershipEndDate
+
+				const afterMintStart =
+					Date.now() > (mintStart ? new Date(mintStart).getTime() : 0)
+				const beforeMintEnd =
+					Date.now() < (mintEnd ? new Date(mintEnd).getTime() : 200000000000000)
+
+				let mintDatesText = 'Minting is available now'
+				const mintStartString = mintStart
+					? `${new Date(mintStart).toDateString()} at ${new Date(
+							mintStart
+					  ).getHours()}:${
+							new Date(mintStart).getMinutes() > 9
+								? new Date(mintStart).getMinutes()
+								: `0${new Date(mintStart).getMinutes()}`
+					  }`
+					: ''
+
+				const mintEndString = mintEnd
+					? `${new Date(mintEnd).toDateString()} at ${new Date(
+							mintEnd
+					  ).getHours()}:${
+							new Date(mintEnd).getMinutes() > 9
+								? new Date(mintEnd).getMinutes()
+								: `0${new Date(mintEnd).getMinutes()}`
+					  }`
+					: ''
+				if (mintStart && !mintEnd) {
+					if (afterMintStart) {
+						mintDatesText = `Minting started ${mintEndString}.`
+					} else {
+						mintDatesText = `Minting starts ${mintEndString}.`
+					}
+				} else if (mintStart && mintEnd) {
+					if (!afterMintStart) {
+						mintDatesText = `Minting starts ${mintStartString} and ends ${mintEndString}.`
+					} else if (afterMintStart && beforeMintEnd) {
+						mintDatesText = `Minting started ${mintStartString} and ends ${mintEndString}.`
+					} else if (!beforeMintEnd) {
+						mintDatesText = `Minting ended ${mintEndString}.`
+					}
+				} else if (!mintStart && !mintEnd) {
+					mintDatesText = 'Minting can be done at any time.'
+				}
+
+				reqs.push({
+					requirementKey: `mintDates${index}`,
+					requirementComponent: <Text>{mintDatesText}</Text>,
+					meetsRequirement: afterMintStart && beforeMintEnd
+				})
+			}
+
 			setParsedRequirements(reqs)
 			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
 
@@ -474,22 +547,26 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
-		if (!loading && !error && !club && clubData) {
-			const possibleClub = clubFromMeemContract(
+		async function getClub(data: GetClubQuery) {
+			setIsLoadingClub(true)
+			const possibleClub = await clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
-				clubData.MeemContracts[0] as MeemContracts
+				data.MeemContracts[0] as MeemContracts,
+				wallet.web3Provider
 			)
 
 			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
 				parseRequirements(possibleClub)
 			}
+			setIsLoadingClub(false)
 		}
 
-		if (isJoiningClub && clubSubData) {
-			const possibleClub = clubFromMeemContract(
+		async function join(data: ClubSubscriptionSubscription) {
+			const possibleClub = await clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
-				clubSubData.MeemContracts[0] as MeemContracts
+				data.MeemContracts[0] as MeemContracts,
+				wallet.web3Provider
 			)
 			if (possibleClub.isClubMember) {
 				console.log('current user has joined the club!')
@@ -505,10 +582,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					message: `You now have access to this club's tools and resources.`
 				})
 			}
-		} else if (isLeavingClub && clubSubData) {
-			const possibleClub = clubFromMeemContract(
+		}
+
+		async function leave(data: ClubSubscriptionSubscription) {
+			const possibleClub = await clubFromMeemContract(
 				wallet.isConnected ? wallet.accounts[0] : undefined,
-				clubSubData.MeemContracts[0] as MeemContracts
+				data.MeemContracts[0] as MeemContracts,
+				wallet.web3Provider
 			)
 			if (!possibleClub.isClubMember) {
 				console.log('current user has left the club')
@@ -525,6 +605,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				})
 			}
 		}
+
+		if (!loading && !error && !club && clubData) {
+			getClub(clubData)
+		}
+
+		if (isJoiningClub && clubSubData) {
+			join(clubSubData)
+		} else if (isLeavingClub && clubSubData) {
+			leave(clubSubData)
+		}
 	}, [
 		club,
 		clubData,
@@ -535,7 +625,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		loading,
 		parseRequirements,
 		wallet.accounts,
-		wallet.isConnected
+		wallet.isConnected,
+		wallet.web3Provider
 	])
 
 	const navigateToSettings = () => {
@@ -544,7 +635,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	return (
 		<>
-			{loading && (
+			{isLoadingClub && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -552,7 +643,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && !club?.name && (
+			{!isLoadingClub && !club?.name && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -560,7 +651,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!loading && club?.name && (
+			{!isLoadingClub && club?.name && (
 				<>
 					<div className={classes.header}>
 						<Image className={classes.clubLogoImage} src={club.image} />
@@ -586,11 +677,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										onClick={joinClub}
 										className={classes.buttonJoinClub}
 									>
-										{club.membershipSettings!.costToJoin > 0
-											? `Join (${club.membershipSettings!.costToJoin} MATIC)`
-											: `Join`}
+										{meetsAllRequirements &&
+											(club.membershipSettings!.costToJoin > 0
+												? `Join - ${club.membershipSettings!.costToJoin} MATIC`
+												: `Join`)}
+										{!meetsAllRequirements && 'Requirements not met'}
 									</Button>
 								)}
+								{club.membershipSettings &&
+									club.membershipSettings?.membershipQuantity > 0 && (
+										<Text
+											className={classes.headerSlotsLeft}
+										>{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}</Text>
+									)}
 								{club.isClubAdmin && (
 									<>
 										<Space w={'xs'} />
@@ -675,9 +774,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							<Grid>
 								{club.members!.map(member => (
 									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
-										<Text className={classes.memberItem}>
-											{truncatedWalletAddress(member)}
-										</Text>
+										<Text className={classes.memberItem}>{member}</Text>
 									</Grid.Col>
 								))}
 							</Grid>
