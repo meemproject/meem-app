@@ -192,16 +192,16 @@ export default async function clubFromMeemContract(
 
 				// Construct a requirement
 				// (check to make sure there isn't already an 'anyone' req type)
-				let reqTypeExists = false
+				let didReqTypeExist = false
 				reqs.forEach(req => {
 					if (
 						req.type === MembershipReqType.None &&
 						type === MembershipReqType.None
 					) {
-						reqTypeExists = true
+						didReqTypeExist = true
 					}
 				})
-				if (!reqTypeExists)
+				if (!didReqTypeExist)
 					reqs.push({
 						index,
 						andor: MembershipReqAndor.Or,
