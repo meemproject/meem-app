@@ -137,8 +137,6 @@ export const CreatePage: React.FC = () => {
 		)
 	}
 
-	console.log(meemContracts.versionList())
-
 	const displayVersions = [
 		{
 			version: 'latest',
