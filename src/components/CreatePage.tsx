@@ -101,7 +101,7 @@ export const CreatePage: React.FC = () => {
 				signer: web3Provider.getSigner(),
 				proxyContractAddress: proxyAddress,
 				chain: Chain.Rinkeby,
-				fromVersion: from,
+				fromVersion: from.toString(),
 				toVersion
 			})
 
