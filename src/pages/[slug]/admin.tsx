@@ -5,6 +5,7 @@ import React from 'react'
 import { ClubAdminComponent } from '../../components/Admin/ClubAdmin'
 import { HeaderMenu } from '../../components/Header/Header'
 import { GET_CLUB } from '../../graphql/clubs'
+import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { ssrGraphqlClient } from '../../utils/ssr_graphql'
 import { ClubPropViewModel } from '.'
 
@@ -25,18 +26,52 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 						: club.responseBody.MeemContracts[0].name}{' '}
 					| Admin | Clubs
 				</title>
-				<meta name="title" content="Clubs clubs" />
-				<meta name="description" content="Clubs! Clubs!" />
+				<meta
+					name="title"
+					content={`${
+						club === undefined || club.isError
+							? 'Not found'
+							: club.responseBody.MeemContracts[0].name
+					}{' '}
+					| Clubs}`}
+				/>
+				<meta
+					name="description"
+					content={`Admin page for ${
+						club === undefined || club.isError
+							? 'an unknown club'
+							: club.responseBody.MeemContracts[0].name
+					}`}
+				/>
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
-				<meta property="og:title" content="Clubs! clubs clubs" />
-				<meta property="og:description" content="Clubs! Clubs!" />
+				<meta
+					property="og:title"
+					content={`${
+						club === undefined || club.isError
+							? 'Not found'
+							: club.responseBody.MeemContracts[0].name
+					}{' '}
+					| Clubs}`}
+				/>
+				<meta
+					property="og:description"
+					content={`Admin page for ${
+						club === undefined || club.isError
+							? 'an unknown club'
+							: club.responseBody.MeemContracts[0].name
+					}`}
+				/>
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
-				<meta property="twitter:title" content="Clubs! Clubs" />
 				<meta
-					property="twitter:description"
-					content="Clubs! clubs clubs! CLUBS!"
+					property="twitter:title"
+					content={`${
+						club === undefined || club.isError
+							? 'Not found'
+							: club.responseBody.MeemContracts[0].name
+					}{' '}
+					| Clubs}`}
 				/>
 				<meta name="viewport" content="initial-scale=1, width=device-width" />
 				<meta property="twitter:image" content="/link-preview.png" />
@@ -71,12 +106,17 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 			if (data.MeemContracts.length === 0) {
 				club = {
 					isError: true,
+					description: 'This club does not exist. Yet.',
 					responseBody: null
 				}
 			} else {
+				const metadata = clubMetadataFromContractUri(
+					data.MeemContracts[0].contractURI
+				)
 				club = {
 					isError: false,
-					responseBody: data
+					responseBody: data,
+					description: metadata.description
 				}
 			}
 		}
@@ -90,7 +130,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 		console.log(e)
 		club = {
 			isError: true,
-			responseBody: null
+			responseBody: null,
+			description: 'This club does not exist. Yet.'
 		}
 		return {
 			props: {

@@ -197,7 +197,7 @@ export function HeaderMenu() {
 	}
 
 	const handleTwitter = () => {
-		window.open('https://twitter.com')
+		window.open('https://twitter.com/0xmeem')
 	}
 
 	const handleDiscord = () => {

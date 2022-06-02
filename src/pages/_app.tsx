@@ -57,65 +57,71 @@ function MyApp({ Component, pageProps }: AppProps) {
 	})
 
 	React.useEffect(() => {
+		const jssStyles = document.querySelector('#jss-server-side')
+		if (jssStyles) {
+			jssStyles.parentElement?.removeChild(jssStyles)
+		}
 		log.setOptions({
 			level: (process.env.NEXT_PUBLIC_LOG_LEVEL as LogLevel) ?? LogLevel.Warn
 		})
 	}, [])
 
 	return (
-		<ApolloProvider client={client}>
-			<WalletProvider
-				infuraId={process.env.NEXT_PUBLIC_INFURA_ID ?? ''}
-				networkName={process.env.NEXT_PUBLIC_NETWORK ?? ''}
-				contractAddressMeem={
-					process.env.NEXT_PUBLIC_MEEM_CONTRACT_ADDRESS ?? ''
-				}
-				contractAddressAuction={
-					process.env.NEXT_PUBLIC_AUCTION_CONTRACT_ADDRESS
-				}
-				auctionCurrencyAddress={
-					process.env.NEXT_PUBLIC_AUCTION_CURRENCY_ADDRESS
-				}
-				contractAddressMeemId={process.env.NEXT_PUBLIC_MEEM_ID_CONTRACT_ADDRESS}
-			>
-				<MantineProvider
-					withGlobalStyles
-					withNormalizeCSS
-					theme={{
-						fontFamily: 'Inter',
-						spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
-						breakpoints: {
-							xs: 500,
-							sm: 800,
-							md: 1000,
-							lg: 1200,
-							xl: 1400
-						},
-						colors: {
-							brand: [
-								'#FAF3F2',
-								'#F0D3D0',
-								'#ECB2AA',
-								'#F18E81',
-								'#FF6651',
-								'#EA5844',
-								'#D44E3C',
-								'#B94B3C',
-								'#9B4C41',
-								'#844B43'
-							]
-						},
-						primaryColor: 'brand'
-					}}
+		<MantineProvider
+			withGlobalStyles
+			withNormalizeCSS
+			theme={{
+				fontFamily: 'Inter',
+				spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
+				breakpoints: {
+					xs: 500,
+					sm: 800,
+					md: 1000,
+					lg: 1200,
+					xl: 1400
+				},
+				colors: {
+					brand: [
+						'#FAF3F2',
+						'#F0D3D0',
+						'#ECB2AA',
+						'#F18E81',
+						'#FF6651',
+						'#EA5844',
+						'#D44E3C',
+						'#B94B3C',
+						'#9B4C41',
+						'#844B43'
+					]
+				},
+				primaryColor: 'brand'
+			}}
+		>
+			<ApolloProvider client={client}>
+				<WalletProvider
+					infuraId={process.env.NEXT_PUBLIC_INFURA_ID ?? ''}
+					networkName={process.env.NEXT_PUBLIC_NETWORK ?? ''}
+					contractAddressMeem={
+						process.env.NEXT_PUBLIC_MEEM_CONTRACT_ADDRESS ?? ''
+					}
+					contractAddressAuction={
+						process.env.NEXT_PUBLIC_AUCTION_CONTRACT_ADDRESS
+					}
+					auctionCurrencyAddress={
+						process.env.NEXT_PUBLIC_AUCTION_CURRENCY_ADDRESS
+					}
+					contractAddressMeemId={
+						process.env.NEXT_PUBLIC_MEEM_ID_CONTRACT_ADDRESS
+					}
 				>
 					<NotificationsProvider>
 						<ClubClubProvider>
 							<Component {...pageProps} />
 						</ClubClubProvider>
 					</NotificationsProvider>
-				</MantineProvider>
-			</WalletProvider>
-		</ApolloProvider>
+				</WalletProvider>
+			</ApolloProvider>
+		</MantineProvider>
 	)
 }
 export default MyApp

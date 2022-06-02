@@ -1,9 +1,22 @@
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import { createGetInitialProps } from '@mantine/next'
-import Document from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
+import React from 'react'
 
 const getInitialProps = createGetInitialProps()
 
 export default class _Document extends Document {
-	// eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
 	static getInitialProps = getInitialProps
+
+	render() {
+		return (
+			<Html>
+				<Head />
+				<body>
+					<Main />
+					<NextScript />
+				</body>
+			</Html>
+		)
+	}
 }
