@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -127,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 			}
 		}
 	} catch (e) {
-		console.log(e)
+		log.debug(e)
 		club = {
 			isError: true,
 			responseBody: null,

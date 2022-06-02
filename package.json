@@ -27,7 +27,12 @@
 		"apollo": "apollo",
 		"codegen": "graphql-codegen --config codegen.js"
 	},
-
+	"resolutions": {
+		"graphql": "^15.7.2",
+		"react": "^18.1.0",
+		"react-dom": "^18.1.0",
+		"ethers": "^5.6.4"
+	},
 	"dependencies": {
 	  "@mantine/core": "4.2.2",
 	  "@mantine/dates": "4.2.2",
@@ -82,7 +87,7 @@
 	  "@testing-library/user-event": "^14.0.4",
 	  "@types/jest": "^27.4.1",
 	  "@types/node": "^17.0.23",
-	  "@types/react": "17.0.43",
+	  "@types/react": "18.0.0",
 	  "@typescript-eslint/eslint-plugin": "^5.16.0",
 	  "@typescript-eslint/parser": "^5.16.0",
 	  "babel-loader": "^8.2.4",
@@ -126,7 +131,6 @@
 	  "ts-node": "^10.4.0",
 	  "ts-node-dev": "^1.1.8",
 	  "typechain": "^6.0.2"
-
 	}
   }
   

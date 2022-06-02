@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -246,7 +247,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				finalList.push(potentialAdmin)
 			}
 		})
-		console.log(`admins count = ${finalList.length + 1}`)
+		log.debug(`admins count = ${finalList.length + 1}`)
 		setClubAdmins(finalList)
 	}
 
@@ -490,7 +491,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setMembershipQuantity(club.membershipSettings!.membershipQuantity)
 				setMembershipRequirements(club.membershipSettings!.requirements)
 				setMembershipSettings(club.membershipSettings)
-				console.log(club.membershipSettings!.membershipStartDate)
+				log.debug(club.membershipSettings!.membershipStartDate)
 				if (club.membershipSettings!.membershipStartDate) {
 					setMembershipStartDate(
 						new Date(club.membershipSettings!.membershipStartDate)

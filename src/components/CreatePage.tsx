@@ -6,6 +6,7 @@ import log from '@kengoldfarb/log'
 import { Button, Select, Switch, TextInput } from '@mantine/core'
 import { MeemAPI } from '@meemproject/api'
 import * as meemContracts from '@meemproject/meem-contracts'
+import { IVersion } from '@meemproject/meem-contracts'
 import {
 	Chain,
 	MeemType,
@@ -15,12 +16,12 @@ import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
 import { Contract } from 'ethers'
 // import { Contract } from 'ethers'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export const CreatePage: React.FC = () => {
 	// const [proxyContract, setProxyContract] = useState<Contract | undefined>()
 	const [proxyAddress, setProxyAddress] = useState<string>('')
-	const [fromVersion, setFromVersion] = useState<string>('latest')
+	// const [fromVersion, setFromVersion] = useState<string>('latest')
 	const [toVersion, setToVersion] = useState<string>('latest')
 	const [status, setStatus] = useState<string>('Not created')
 	const [txLog, setTxLog] = useState<string[]>([])
@@ -62,7 +63,7 @@ export const CreatePage: React.FC = () => {
 			contractURI:
 				'{"name": "Test","description": "testing","image": "","external_link": ""}',
 			chain: Chain.Rinkeby,
-			version: fromVersion
+			version: toVersion
 		})
 
 		log.debug(tx)
@@ -73,24 +74,41 @@ export const CreatePage: React.FC = () => {
 	}
 
 	const handleUpgrade = async () => {
-		if (!web3Provider) {
-			return
+		try {
+			if (!web3Provider) {
+				return
+			}
+
+			setTxLog([...txLog, `Upgrading proxy to version: ${toVersion}...`])
+
+			const contract = await meemContracts.getMeemContract({
+				contractAddress: proxyAddress,
+				signer
+			})
+
+			const result = await contract.facets()
+			const from: IVersion = {}
+			result.forEach(facet => {
+				const facetAddress = facet[0]
+				const functionSelectors = facet[1]
+				from[facetAddress] = {
+					functionSelectors,
+					address: facetAddress
+				}
+			})
+
+			const tx = await meemContracts.upgrade({
+				signer: web3Provider.getSigner(),
+				proxyContractAddress: proxyAddress,
+				chain: Chain.Rinkeby,
+				fromVersion: from,
+				toVersion
+			})
+
+			setTxLog([...txLog, `Upgraded proxy w/ tx ${tx?.hash}`])
+		} catch (e) {
+			log.crit(e)
 		}
-
-		setTxLog([
-			...txLog,
-			`Upgrading proxy from version: ${fromVersion} to version: ${toVersion}...`
-		])
-
-		const tx = await meemContracts.upgrade({
-			signer: web3Provider.getSigner(),
-			proxyContractAddress: proxyAddress,
-			chain: Chain.Rinkeby,
-			fromVersion,
-			toVersion
-		})
-
-		setTxLog([...txLog, `Upgraded proxy w/ tx ${tx?.hash}`])
 	}
 
 	const handleMint = async () => {
@@ -118,8 +136,6 @@ export const CreatePage: React.FC = () => {
 			{ gasLimit: '1000000' }
 		)
 	}
-
-	console.log(meemContracts.versionList())
 
 	const displayVersions = [
 		{
@@ -151,8 +167,8 @@ export const CreatePage: React.FC = () => {
 			/>
 			<div>
 				<Select
-					label={shouldShowUpgrade ? 'From version' : 'Version'}
-					onChange={v => setFromVersion(v ?? 'latest')}
+					label={shouldShowUpgrade ? 'To version' : 'Version'}
+					onChange={v => setToVersion(v ?? 'latest')}
 					data={displayVersions.map(dv => ({
 						value: dv.version,
 						label: dv.displayName
@@ -160,19 +176,6 @@ export const CreatePage: React.FC = () => {
 					defaultValue="latest"
 				/>
 			</div>
-			{shouldShowUpgrade && (
-				<div>
-					<Select
-						label="To version"
-						onChange={v => setToVersion(v ?? 'latest')}
-						data={displayVersions.map(dv => ({
-							value: dv.version,
-							label: dv.displayName
-						}))}
-						defaultValue="latest"
-					/>
-				</div>
-			)}
 			<div>
 				<Button onClick={shouldShowUpgrade ? handleUpgrade : handleCreate}>
 					{shouldShowUpgrade ? 'Upgrade Club' : '1. Create Club'}
@@ -186,11 +189,6 @@ export const CreatePage: React.FC = () => {
 				</div>
 			)}
 			<div>
-				{/* <input
-					type="text"
-					value={proxyAddress}
-					onChange={e => setProxyAddress(e.target.value)}
-				/> */}
 				<TextInput
 					label="Contract Address"
 					placeholder="0x..."

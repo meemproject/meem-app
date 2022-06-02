@@ -147,7 +147,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				signer: wallet.web3Provider?.getSigner()
 			})
 
-			console.log(
+			log.debug(
 				`Deployed proxy at ${contract.address} w/ tx: ${contract.deployTransaction.hash}`
 			)
 			setProxyAddress(contract.address)
@@ -174,7 +174,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 		async function checkClubState(data: ClubSubscriptionSubscription) {
 			if (data.MeemContracts.length > 0 && step === Step.Initializing) {
 				// Successfully initialized club
-				console.log('init complete')
+				log.debug('init complete')
 				setStep(Step.Initialized)
 			} else if (data.MeemContracts.length > 0 && step === Step.Minting) {
 				const club = await clubFromMeemContract(
@@ -182,9 +182,9 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					wallet.accounts[0],
 					data.MeemContracts[0] as MeemContracts
 				)
-				console.log('minting...')
+				log.debug('minting...')
 				if (club.isClubMember) {
-					console.log('mint complete')
+					log.debug('mint complete')
 					// Remove all metadata cookies!
 					Cookies.remove(CookieKeys.clubName)
 					Cookies.remove(CookieKeys.clubDescription)
@@ -211,7 +211,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 		if (clubData && wallet.accounts.length > 0) {
 			checkClubState(clubData)
 		} else {
-			console.log('No club data (yet) or wallet not connected...')
+			log.debug('No club data (yet) or wallet not connected...')
 		}
 	}, [clubData, router, step, wallet])
 
@@ -254,13 +254,13 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					membershipStartUnix = Math.floor(
 						new Date(membershipSettings.membershipStartDate).getTime() / 1000
 					)
-					console.log(membershipStartUnix)
+					log.debug(membershipStartUnix)
 				}
 				if (membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
 						new Date(membershipSettings.membershipEndDate).getTime() / 1000
 					)
-					console.log(membershipEndUnix)
+					log.debug(membershipEndUnix)
 				}
 			}
 
@@ -316,7 +316,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				})
 
 				// Now push a special 'admin mint' permission which bypasses the other requirements
-				console.log('adding admin permission')
+				log.debug('adding admin permission')
 				mintPermissions.push({
 					permission: Permission.Addresses,
 					addresses: [wallet.accounts[0]],
@@ -370,9 +370,9 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				transferLockupUntilLockedBy: MeemAPI.zeroAddress
 			}
 
-			console.log(`baseProperties: ${JSON.stringify(baseProperties)}`)
-			console.log(`club symbol: ${clubSymbol}`)
-			console.log(`club admins: ${membershipSettings?.clubAdmins}`)
+			log.debug(`baseProperties: ${JSON.stringify(baseProperties)}`)
+			log.debug(`club symbol: ${clubSymbol}`)
+			log.debug(`club admins: ${membershipSettings?.clubAdmins}`)
 
 			const tx = await meemContracts.initProxy({
 				signer: wallet.web3Provider.getSigner(),
@@ -426,7 +426,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				mintedBy: wallet.accounts[0]
 			}
 
-			console.log(data)
+			log.debug(data)
 
 			const tx = await meemContract?.mint(
 				data,
@@ -439,7 +439,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 			await tx.wait()
 		} catch (e) {
-			console.log(e)
+			log.debug(e)
 			setStep(Step.Initialized)
 			showNotification({
 				title: 'Error joining this club.',

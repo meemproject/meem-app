@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
 import { ethers } from 'ethers'
@@ -148,11 +149,11 @@ export default async function clubFromMeemContract(
 			console.log('club has mint permissions')
 
 			// clubData.mintPermissions.forEach((permission: any) => {
-			// 	console.log(permission)
+			// 	log.debug(permission)
 			// })
 			await Promise.all(
 				clubData.mintPermissions.map(async (permission: any) => {
-					console.log(permission)
+					log.debug(permission)
 					// Filter out the admin-exclusive permission
 					if (
 						permission.permission === Permission.Addresses &&
@@ -160,17 +161,17 @@ export default async function clubFromMeemContract(
 						admins.includes(permission.addresses[0].toLowerCase())
 					) {
 						// Don't do anything
-						//console.log('ignoring admin mint permission')
+						//log.debug('ignoring admin mint permission')
 					} else {
 						const cost = isNaN(permission.costWei) ? 0 : permission.costWei
-						//console.log(`cost to join (wei) = ${cost}`)
+						//log.debug(`cost to join (wei) = ${cost}`)
 						if (cost === 0) {
 							costToJoin = cost
 						} else {
 							const matic = ethers.utils.formatEther(cost)
 							costToJoin = Number(matic)
 						}
-						//console.log(`cost to join (matic) = ${costToJoin}`)
+						//log.debug(`cost to join (matic) = ${costToJoin}`)
 
 						let type = MembershipReqType.None
 						let approvedAddresses: string[] = []
@@ -202,7 +203,7 @@ export default async function clubFromMeemContract(
 
 								if (tokenDetails !== undefined) {
 									tokenName = tokenDetails.name
-									//console.log('got token name')
+									//log.debug('got token name')
 								}
 
 								tokenContractAddress = permission.addresses[0]
@@ -221,7 +222,7 @@ export default async function clubFromMeemContract(
 							}
 						})
 						if (!didReqTypeExist) {
-							//console.log('pushing req')
+							//log.debug('pushing req')
 
 							reqs.push({
 								index,
@@ -247,7 +248,7 @@ export default async function clubFromMeemContract(
 				})
 			)
 		} else {
-			//console.log('this club has no mint permissions')
+			//log.debug('this club has no mint permissions')
 		}
 
 		// Membership funds address

@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import { ERC20 } from '@meemproject/api/build/abis/ERC20'
 import erc20ABI from '@meemproject/api/build/abis/ERC20.json'
 import {
@@ -45,7 +46,7 @@ export async function tokenFromContractAddress(
 			? `https://rinkeby.etherscan.io/address/${contractAddress}`
 			: `https://polygonscan.io/address/${contractAddress}`
 
-	console.log('set tokenurl')
+	log.debug('set tokenurl')
 
 	// Balance
 	let tokenBalance = BigNumber.from(0)
@@ -55,7 +56,7 @@ export async function tokenFromContractAddress(
 		return undefined
 	}
 
-	console.log(`get token balance (${tokenBalance})`)
+	log.debug(`get token balance (${tokenBalance})`)
 
 	let symbol = ''
 	let name = ''
@@ -64,11 +65,11 @@ export async function tokenFromContractAddress(
 
 	try {
 		is20Contract = await contract.supportsInterface('0x36372b07')
-		console.log(`is 20 contract = ${is20Contract}`)
+		log.debug(`is 20 contract = ${is20Contract}`)
 		is721Contract = await contract.supportsInterface('0x80ac58cd')
-		console.log(`is 721 contract = ${is721Contract}`)
+		log.debug(`is 721 contract = ${is721Contract}`)
 	} catch (e) {
-		console.log(e)
+		log.debug(e)
 		return undefined
 	}
 
@@ -80,9 +81,9 @@ export async function tokenFromContractAddress(
 			wallet.web3Provider
 		) as ERC20
 		symbol = await contractToCheck.symbol()
-		console.log('get symbol')
+		log.debug('get symbol')
 		name = await contractToCheck.name()
-		console.log('get name')
+		log.debug('get name')
 	} catch (e) {
 		// Ignore, continue
 	}
@@ -95,9 +96,9 @@ export async function tokenFromContractAddress(
 				signer: wallet.signer
 			})
 			symbol = await contractToCheck.symbol()
-			console.log('get symbol')
+			log.debug('get symbol')
 			name = await contractToCheck.name()
-			console.log('get name')
+			log.debug('get name')
 		}
 	} catch (e) {
 		// Ignore, continue

@@ -214,16 +214,15 @@ export const CreateComponent: React.FC = () => {
 				'image/png'
 			)
 			const file = await resizeFile(clubLogoBlob)
-			console.log(file)
 			setSmallClubLogo(file as string)
 		}
 		if (clubLogo.length > 0) {
-			console.log('Found an image...')
-			console.log(clubLogo[0].content)
+			log.debug('Found an image...')
+			log.debug(clubLogo[0].content)
 
 			createResizedFile()
 		} else {
-			console.log('no current club image')
+			log.debug('no current club image')
 		}
 	}, [clubLogo, clubclub.isMember, router])
 

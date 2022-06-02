@@ -10,6 +10,7 @@ import {
 	useQuery,
 	useSubscription
 } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -265,9 +266,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						reqsMet++
 					}
 				})
-				console.log(`reqs met = ${reqsMet}`)
-				console.log(`total reqs = ${reqs.length}`)
-				console.log(`slots left = ${slotsLeft}`)
+				log.debug(`reqs met = ${reqsMet}`)
+				log.debug(`total reqs = ${reqs.length}`)
+				log.debug(`slots left = ${slotsLeft}`)
 				if (reqsMet === reqs.length && (slotsLeft === -1 || slotsLeft > 0)) {
 					setMeetsAllRequirements(true)
 				}
@@ -312,7 +313,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				mintedBy: wallet.accounts[0]
 			}
 
-			console.log(data)
+			log.debug(data)
 			const tx = await meemContract?.mint(
 				data,
 				meemContracts.defaultMeemProperties,
@@ -330,7 +331,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			// @ts-ignore
 			await tx.wait()
 		} catch (e) {
-			console.log(e)
+			log.debug(e)
 			setIsJoiningClub(false)
 			showNotification({
 				title: 'Error joining this club.',
@@ -471,7 +472,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					}
 				})
 			)
-			console.log('set parsed reqs')
+			log.debug('set parsed reqs')
 			if (reqs.length === 0) {
 				reqs.push({
 					requirementKey: `Error${index}`,
@@ -569,7 +570,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				data.MeemContracts[0] as MeemContracts
 			)
 			if (possibleClub.isClubMember) {
-				console.log('current user has joined the club!')
+				log.debug('current user has joined the club!')
 				setIsJoiningClub(false)
 
 				// Set the updated local copy of the club
@@ -591,7 +592,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				data.MeemContracts[0] as MeemContracts
 			)
 			if (!possibleClub.isClubMember) {
-				console.log('current user has left the club')
+				log.debug('current user has left the club')
 				setIsLeavingClub(false)
 
 				// Set the updated local copy of the club

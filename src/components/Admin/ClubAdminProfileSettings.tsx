@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -225,16 +226,15 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 				'image/png'
 			)
 			const file = await resizeFile(clubLogoBlob)
-			console.log(file)
 			setSmallClubLogo(file as string)
 		}
 		if (clubLogo.length > 0) {
-			console.log('Found an image...')
-			console.log(clubLogo[0].content)
+			log.debug('Found an image...')
+			log.debug(clubLogo[0].content)
 
 			createResizedFile()
 		} else {
-			console.log('no current club image')
+			log.debug('no current club image')
 		}
 	}, [clubLogo])
 
