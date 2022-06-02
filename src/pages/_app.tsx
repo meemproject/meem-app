@@ -15,9 +15,10 @@ import { createClient } from 'graphql-ws'
 import type { AppProps } from 'next/app'
 import React from 'react'
 import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
-import '../styles/globals.scss'
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp(props: AppProps) {
+	const { Component, pageProps } = props
+
 	const httpLink = new HttpLink({
 		uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
 	})
@@ -67,11 +68,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 	}, [])
 
 	return (
+		// eslint-disable-next-line
 		<MantineProvider
 			withGlobalStyles
 			withNormalizeCSS
 			theme={{
-				fontFamily: 'Inter',
+				fontFamily: 'Inter, sans-serif',
 				spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
 				breakpoints: {
 					xs: 500,
