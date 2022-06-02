@@ -197,7 +197,7 @@ export function HeaderMenu() {
 	}
 
 	const handleTwitter = () => {
-		window.open('https://twitter.com')
+		window.open('https://twitter.com/0xmeem')
 	}
 
 	const handleDiscord = () => {
@@ -248,7 +248,10 @@ export function HeaderMenu() {
 						>
 							<Menu.Item
 								className={classes.menuItem}
-								onClick={wallet.disconnectWallet}
+								onClick={() => {
+									wallet.disconnectWallet()
+									window.location.href = '/'
+								}}
 								color="red"
 								icon={<Logout size={14} />}
 							>

@@ -131,23 +131,6 @@ const useStyles = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
-	approvedAddressesTextAreaContainer: {
-		position: 'relative'
-	},
-	approvedAddressesTextArea: {
-		paddingTop: 48,
-		paddingLeft: 32
-	},
-	primaryApprovedAddressChip: {
-		position: 'absolute',
-		pointerEvents: 'none',
-		top: 12,
-		left: 12
-	},
-	primaryApprovedAddressChipContents: {
-		display: 'flex',
-		alignItems: 'center'
-	},
 	modalHeaderText: {
 		fontSize: 18,
 		fontWeight: 600,
@@ -314,10 +297,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				finalList.push(potentialApprovedAddress)
 			}
 		})
-		if (!finalList.includes(lockedMainAdmin)) {
-			finalList.push(lockedMainAdmin)
-		}
-		log.debug(`approved addresses count = ${finalList.length}`)
+		console.log(`approved addresses count = ${finalList.length}`)
 		return finalList
 	}
 
@@ -841,35 +821,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						/>
 						<Text className={classes.modalHeaderText}>Approved Addresses</Text>
 
-						<div className={classes.approvedAddressesTextAreaContainer}>
-							<Textarea
-								classNames={{ input: classes.approvedAddressesTextArea }}
-								radius="lg"
-								size="md"
-								value={reqCurrentlyEditing.approvedAddressesString}
-								minRows={5}
-								onChange={event => {
-									reqCurrentlyEditing.approvedAddressesString =
-										event.currentTarget.value
-									reqCurrentlyEditing.approvedAddresses =
-										parseApprovedAddresses(event.currentTarget.value)
-									updateMembershipRequirement(reqCurrentlyEditing)
-								}}
-							/>
-							<Chips
-								color={'rgba(0, 0, 0, 0.05)'}
-								className={classes.primaryApprovedAddressChip}
-								variant="filled"
-							>
-								<Chip size="md" value="" checked={false}>
-									<div className={classes.primaryApprovedAddressChipContents}>
-										<Lock width={16} height={16} />
-										<Space w={4} />
-										<Text>{quickTruncate(lockedMainAdmin)}</Text>
-									</div>
-								</Chip>
-							</Chips>
-						</div>
+						<Textarea
+							radius="lg"
+							size="md"
+							value={reqCurrentlyEditing.approvedAddressesString}
+							minRows={5}
+							onChange={event => {
+								reqCurrentlyEditing.approvedAddressesString =
+									event.currentTarget.value
+								reqCurrentlyEditing.approvedAddresses = parseApprovedAddresses(
+									event.currentTarget.value
+								)
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+						/>
 					</div>
 
 					<div
@@ -993,11 +958,24 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										})
 										return
 									}
+									let isApplicantsListInvalid = false
+									clubAdmins.forEach(admin => {
+										if (
+											reqCurrentlyEditing.approvedAddressesString
+												.toLowerCase()
+												.includes(admin.toLowerCase())
+										) {
+											isApplicantsListInvalid = true
+										}
+									})
 
-									// Add locked admin as primary approved address if it doesn't exist
-									if (reqCurrentlyEditing.approvedAddresses.length === 0) {
-										reqCurrentlyEditing.approvedAddresses = [lockedMainAdmin]
-										updateMembershipRequirement(reqCurrentlyEditing)
+									if (isApplicantsListInvalid) {
+										showNotification({
+											title: 'Oops!',
+											message:
+												'You cannot add a club admin as an approved address.'
+										})
+										return
 									}
 
 									break
