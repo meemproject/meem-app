@@ -248,7 +248,10 @@ export function HeaderMenu() {
 						>
 							<Menu.Item
 								className={classes.menuItem}
-								onClick={wallet.disconnectWallet}
+								onClick={() => {
+									wallet.disconnectWallet()
+									window.location.href = '/'
+								}}
 								color="red"
 								icon={<Logout size={14} />}
 							>
