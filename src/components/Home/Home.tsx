@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
 import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -186,7 +187,7 @@ export function HomeComponent() {
 					setIsFetchingData(false)
 					setIsLoadingSuggestions(false)
 					setShowCreateButton(true)
-					console.log('allowing create button = true')
+					log.debug('allowing create button = true')
 				} else {
 					const clubsList: React.SetStateAction<any[]> = []
 					typedData.MeemContracts.forEach(club => {
@@ -218,14 +219,14 @@ export function HomeComponent() {
 						}
 					})
 					setShowCreateButton(shouldAllow)
-					console.log(`allowing create button = ${shouldAllow}`)
+					log.debug(`allowing create button = ${shouldAllow}`)
 				}
 			}, 250)
 		}
 	}
 
 	const handleSuggestionChosen = (suggestion: AutocompleteItem) => {
-		console.log(`Chosen ${suggestion.value} - ${suggestion.description}`)
+		log.debug(`Chosen ${suggestion.value} - ${suggestion.description}`)
 		setIsLoadingSuggestions(true)
 		router.push({
 			pathname: `/${suggestion.slug}`

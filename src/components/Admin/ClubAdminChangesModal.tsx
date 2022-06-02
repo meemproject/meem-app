@@ -139,13 +139,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						new Date(club.membershipSettings.membershipStartDate).getTime() /
 							1000
 					)
-					console.log(membershipStartUnix)
+					log.debug(membershipStartUnix)
 				}
 				if (club.membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
 						new Date(club.membershipSettings.membershipEndDate).getTime() / 1000
 					)
-					console.log(membershipEndUnix)
+					log.debug(membershipEndUnix)
 				}
 			}
 
@@ -201,7 +201,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				})
 
 				// Now push a special 'admin mint' permission which bypasses the other requirements
-				console.log('adding admin permission')
+				log.debug('adding admin permission')
 				mintPermissions.push({
 					permission: Permission.Addresses,
 					addresses: [accounts[0]],
@@ -255,15 +255,15 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				transferLockupUntilLockedBy: MeemAPI.zeroAddress
 			}
 
-			console.log(`baseProperties: ${JSON.stringify(baseProperties)}`)
-			console.log(`club symbol: ${clubSymbol}`)
-			console.log(`club admins: ${club.membershipSettings?.clubAdmins}`)
+			log.debug(`baseProperties: ${JSON.stringify(baseProperties)}`)
+			log.debug(`club symbol: ${clubSymbol}`)
+			log.debug(`club admins: ${club.membershipSettings?.clubAdmins}`)
 
 			const contract = await meemContracts.getMeemContract({
 				contractAddress: club.address!,
 				signer: web3Provider.getSigner()
 			})
-			console.log('contract found')
+			log.debug('contract found')
 
 			const data = {
 				name: club.name ?? '',
@@ -281,7 +281,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				childDepth: BigNumber.from(-1),
 				nonOwnerSplitAllocationAmount: BigNumber.from(0)
 			}
-			console.log(data)
+			log.debug(data)
 			const tx = await contract.reInitialize(data, { gasLimit: '5000000' })
 
 			log.debug(tx)
@@ -291,7 +291,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			onModalClosed()
 		} catch (e) {
 			setStep(Step.Start)
-			console.log(e)
+			log.debug(e)
 			showNotification({
 				title: 'Error saving club settings',
 				message: `Please get in touch!`

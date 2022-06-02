@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -113,7 +114,7 @@ export const MyClubsComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (error) {
-			console.log(error)
+			log.warn(error)
 		}
 
 		if (!loading && !error && clubs.length === 0 && clubData) {
