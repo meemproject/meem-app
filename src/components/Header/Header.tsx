@@ -167,10 +167,7 @@ export function HeaderMenu() {
 		async function getName() {
 			try {
 				if (wallet.isConnected && wallet.web3Provider) {
-					const name = await truncatedWalletAddress(
-						wallet.accounts[0],
-						wallet.web3Provider
-					)
+					const name = await truncatedWalletAddress(wallet.accounts[0])
 					setUsername(name)
 				}
 			} catch (e) {
