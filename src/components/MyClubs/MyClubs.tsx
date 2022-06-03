@@ -207,6 +207,7 @@ export const MyClubsComponent: React.FC = () => {
 								<Text>{club.name!}</Text>
 							</div>
 						))}
+						<Space h={60} />
 					</>
 				)}
 			</Container>

@@ -289,7 +289,9 @@ export default async function clubFromMeemContract(
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
 					const name = await truncatedWalletAddress(meem.owner)
-					members.push(name)
+					if (!members.includes(name)) {
+						members.push(name)
+					}
 				}
 			}
 		}
