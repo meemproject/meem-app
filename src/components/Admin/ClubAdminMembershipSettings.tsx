@@ -1073,12 +1073,25 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<TextInput
 						radius="lg"
 						size="md"
-						type="number"
+						type="text"
 						rightSectionWidth={80}
 						rightSection={<Text>MATIC</Text>}
-						value={costToJoin}
+						defaultValue={costToJoin}
 						onChange={event => {
-							setCostToJoin(parseInt(event.target.value))
+							if (event.target.value.length === 0) {
+								setCostToJoin(0)
+							} else {
+								const potentialNumber = parseFloat(event.target.value)
+								if (isNaN(potentialNumber)) {
+									showNotification({
+										title: 'Oops!',
+										message: 'Please enter a number, not text.'
+									})
+									setCostToJoin(0)
+									return
+								}
+								setCostToJoin(parseFloat(event.target.value))
+							}
 						}}
 					/>
 					<Space h={'md'} />
