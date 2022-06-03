@@ -235,6 +235,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	// Club admins
 	const [clubAdminsString, setClubAdminsString] = useState('')
 	const [clubAdmins, setClubAdmins] = useState<string[]>([])
+	const [hasAddedInitialAdmin, setHasAddedInitialAdmin] = useState(false)
 
 	const parseClubAdmins = (rawString: string) => {
 		setClubAdminsString(rawString)
@@ -466,7 +467,11 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isCreatingClub) {
-			// Do nothing here
+			if (wallet.isConnected && !hasAddedInitialAdmin) {
+				setHasAddedInitialAdmin(true)
+				setClubAdmins([wallet.accounts[0]])
+				setClubAdminsString(`${wallet.accounts[0]}\n`)
+			}
 		} else {
 			if (club && !hasLoadedClubData) {
 				setHasLoadedClubData(true)
@@ -506,6 +511,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		}
 	}, [
 		club,
+		clubAdmins.length,
+		hasAddedInitialAdmin,
 		hasLoadedClubData,
 		isCreatingClub,
 		wallet.accounts,

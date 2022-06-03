@@ -457,7 +457,6 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				radius={16}
-				size={'lg'}
 				padding={'sm'}
 				opened={isOpened}
 				title={
