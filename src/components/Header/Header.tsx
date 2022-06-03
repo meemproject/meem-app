@@ -167,10 +167,7 @@ export function HeaderMenu() {
 		async function getName() {
 			try {
 				if (wallet.isConnected && wallet.web3Provider) {
-					const name = await truncatedWalletAddress(
-						wallet.accounts[0],
-						wallet.web3Provider
-					)
+					const name = await truncatedWalletAddress(wallet.accounts[0])
 					setUsername(name)
 				}
 			} catch (e) {
@@ -248,9 +245,9 @@ export function HeaderMenu() {
 						>
 							<Menu.Item
 								className={classes.menuItem}
-								onClick={() => {
-									wallet.disconnectWallet()
-									window.location.href = '/'
+								onClick={async () => {
+									await wallet.disconnectWallet()
+									router.reload()
 								}}
 								color="red"
 								icon={<Logout size={14} />}
@@ -261,7 +258,14 @@ export function HeaderMenu() {
 					)}
 					{!wallet.isConnected && (
 						<Text className={classes.connectWallet}>
-							<a onClick={wallet.connectWallet}>Connect wallet</a>
+							<a
+								onClick={async () => {
+									await wallet.connectWallet()
+									router.reload()
+								}}
+							>
+								Connect wallet
+							</a>
 						</Text>
 					)}
 

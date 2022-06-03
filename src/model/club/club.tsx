@@ -288,8 +288,10 @@ export default async function clubFromMeemContract(
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					const name = await truncatedWalletAddress(meem.owner, wallet.provider)
-					members.push(name)
+					const name = await truncatedWalletAddress(meem.owner)
+					if (!members.includes(name)) {
+						members.push(name)
+					}
 				}
 			}
 		}

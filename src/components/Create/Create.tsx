@@ -232,7 +232,8 @@ export const CreateComponent: React.FC = () => {
 
 	const createClub = async () => {
 		if (!web3Provider || !isConnected) {
-			connectWallet()
+			await connectWallet()
+			router.reload()
 			return
 		}
 

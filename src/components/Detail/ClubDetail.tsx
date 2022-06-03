@@ -279,7 +279,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const joinClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
-			wallet.connectWallet()
+			await wallet.connectWallet()
+			router.reload()
 			return
 		}
 
@@ -516,9 +517,15 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					: ''
 				if (mintStart && !mintEnd) {
 					if (afterMintStart) {
-						mintDatesText = `Membership opened ${mintEndString}.`
+						mintDatesText = `Membership opened ${mintStartString}.`
 					} else {
-						mintDatesText = `Membership opens ${mintEndString}.`
+						mintDatesText = `Membership opens ${mintStartString}.`
+					}
+				} else if (!mintStart && mintEnd) {
+					if (beforeMintEnd) {
+						mintDatesText = `Membership closes ${mintEndString}.`
+					} else {
+						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (mintStart && mintEnd) {
 					if (!afterMintStart) {
