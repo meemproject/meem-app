@@ -98,6 +98,10 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
+				<Text className={classes.clubIntegrationsHeader}>
+					Club Contract Address
+				</Text>
+				<Text>{club.address}</Text>
 				<Text className={classes.clubIntegrationsHeader}>Social</Text>
 				<a onClick={handleTwitterIntegration}>
 					<div className={classes.clubIntegrationItem}>

@@ -154,7 +154,7 @@ export default async function clubFromMeemContract(
 			await Promise.all(
 				clubData.mintPermissions.map(async (permission: any) => {
 					log.debug(permission)
-					// Filter out the admin-exclusive permission
+					// Filter out the admin-exclusive permissions
 					if (
 						permission.permission === Permission.Addresses &&
 						permission.addresses.length === 1 &&
