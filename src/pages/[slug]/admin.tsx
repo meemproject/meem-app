@@ -24,17 +24,15 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 				<title>
 					{club === undefined || club.isError
 						? 'Not found'
-						: club.responseBody.MeemContracts[0].name}{' '}
-					| Admin | Clubs
+						: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`}
 				</title>
 				<meta
 					name="title"
-					content={`${
+					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: club.responseBody.MeemContracts[0].name
-					}{' '}
-					| Clubs}`}
+							: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`
+					}
 				/>
 				<meta
 					name="description"
@@ -48,12 +46,11 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta
 					property="og:title"
-					content={`${
+					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: club.responseBody.MeemContracts[0].name
-					}{' '}
-					| Clubs}`}
+							: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`
+					}
 				/>
 				<meta
 					property="og:description"
@@ -67,12 +64,11 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 				<meta property="twitter:url" content="https://clubs.link/" />
 				<meta
 					property="twitter:title"
-					content={`${
+					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: club.responseBody.MeemContracts[0].name
-					}{' '}
-					| Clubs}`}
+							: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`
+					}
 				/>
 				<meta name="viewport" content="initial-scale=1, width=device-width" />
 				<meta property="twitter:image" content="/link-preview.png" />

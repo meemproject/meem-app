@@ -672,7 +672,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										Leave
 									</Button>
 								)}
-								{!club.isClubMember && (
+								{!club.isClubMember && wallet.isConnected && (
 									<Button
 										disabled={!meetsAllRequirements}
 										loading={isJoiningClub}
@@ -683,10 +683,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											(club.membershipSettings!.costToJoin > 0
 												? `Join - ${club.membershipSettings!.costToJoin} MATIC`
 												: `Join`)}
-										{!meetsAllRequirements &&
-											wallet.isConnected &&
-											'Requirements not met'}
+										{!meetsAllRequirements && 'Requirements not met'}
 										{!wallet.isConnected && 'Connect wallet to join'}
+									</Button>
+								)}
+								{!wallet.isConnected && (
+									<Button
+										onClick={wallet.connectWallet}
+										className={classes.buttonJoinClub}
+									>
+										Connect wallet to join
 									</Button>
 								)}
 								{club.membershipSettings &&

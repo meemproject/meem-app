@@ -29,41 +29,37 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 				<title>
 					{club === undefined || club.isError
 						? 'Not found'
-						: club.responseBody.MeemContracts[0].name}{' '}
-					| Clubs
+						: `${club.responseBody.MeemContracts[0].name} | Clubs`}
 				</title>
 				<meta
 					name="title"
-					content={`${
+					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: club.responseBody.MeemContracts[0].name
-					}{' '}
-					| Clubs}`}
+							: `${club.responseBody.MeemContracts[0].name} | Clubs`
+					}
 				/>
 				<meta name="description" content={club.description} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta
 					property="og:title"
-					content={`${
+					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: club.responseBody.MeemContracts[0].name
-					}{' '}
-					| Clubs}`}
+							: `${club.responseBody.MeemContracts[0].name} | Clubs`
+					}
 				/>
 				<meta property="og:description" content={club.description} />
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
 				<meta
 					property="twitter:title"
-					content={`${
+					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: club.responseBody.MeemContracts[0].name
-					}{' '}
-					| Clubs}`}
+							: `${club.responseBody.MeemContracts[0].name} | Clubs`
+					}
 				/>
 				<meta name="viewport" content="initial-scale=1, width=device-width" />
 				<meta property="twitter:image" content="/link-preview.png" />
