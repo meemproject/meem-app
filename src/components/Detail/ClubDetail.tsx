@@ -279,7 +279,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const joinClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
-			wallet.connectWallet()
+			await wallet.connectWallet()
+			router.reload()
 			return
 		}
 
