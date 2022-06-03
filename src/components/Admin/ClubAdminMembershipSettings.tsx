@@ -232,8 +232,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		undefined
 	)
 
-	const [lockedMainAdmin, setLockedMainAdmin] = useState('')
-
 	// Club admins
 	const [clubAdminsString, setClubAdminsString] = useState('')
 	const [clubAdmins, setClubAdmins] = useState<string[]>([])
@@ -374,10 +372,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		// 'save changes' modal for execution club settings updates
 		// convert current settings and update for the modal
 
-		const finalClubAdmins = Object.assign([], clubAdmins)
-		if (!clubAdmins.includes(wallet.accounts[0])) {
-			finalClubAdmins.push(wallet.accounts[0])
+		if (clubAdmins.length === 0) {
+			showNotification({
+				title: 'Oops!',
+				message: 'At least one club admin is required.'
+			})
+			return
 		}
+
+		setIsSavingChanges(true)
 
 		const settings: MembershipSettings = {
 			requirements: membershipRequirements,
@@ -386,7 +389,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			membershipQuantity,
 			membershipStartDate,
 			membershipEndDate,
-			clubAdmins: finalClubAdmins
+			clubAdmins
 		}
 
 		const newClub = club!
@@ -438,8 +441,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	}
 
 	const saveChanges = async () => {
-		setIsSavingChanges(true)
-
 		if (isCreatingClub) {
 			if (!clubclub.isMember) {
 				showNotification({
@@ -449,6 +450,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				router.push({ pathname: '/' })
 				return
 			}
+			if (clubAdmins.length === 0) {
+				showNotification({
+					title: 'Oops!',
+					message: 'At least one club admin is required.'
+				})
+				return
+			}
+			setIsSavingChanges(true)
 			openTransactionsModal()
 		} else {
 			openSaveChangesModal()
@@ -457,9 +466,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isCreatingClub) {
-			if (wallet.isConnected) {
-				setLockedMainAdmin(wallet.accounts[0])
-			}
+			// Do nothing here
 		} else {
 			if (club && !hasLoadedClubData) {
 				setHasLoadedClubData(true)
@@ -467,21 +474,11 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				// Set club admins
 				setClubAdmins(club.admins!)
 
-				// Get the main admin of the club
-				let tempLockedMainAdmin = ''
-				if (club.admins && club.admins!.length > 0) {
-					tempLockedMainAdmin = club.admins![0]
-					setLockedMainAdmin(tempLockedMainAdmin)
-				} else {
-					setLockedMainAdmin('null')
-				}
-
 				// Set the club admins string, used by the club admins textfield
 				let adminsString = ''
 				if (club.admins) {
 					club.admins.forEach(admin => {
-						if (admin.toLowerCase() !== tempLockedMainAdmin)
-							adminsString = adminsString + `${admin}\n`
+						adminsString = adminsString + `${admin}\n`
 					})
 				}
 				setClubAdminsString(adminsString)
@@ -511,7 +508,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		club,
 		hasLoadedClubData,
 		isCreatingClub,
-		lockedMainAdmin,
 		wallet.accounts,
 		wallet.isConnected
 	])
@@ -696,32 +692,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						Who can manage this club’s profile and membership settings?
 					</Text>
 					<Text className={classes.clubAdminsInstructions}>
-						Add a line break between each address. Note that the club creator
-						will always have admin permissions.
+						Add a line break between each address. Note that at least one club
+						admin is required at all times.
 					</Text>
-					<div className={classes.adminsTextAreaContainer}>
-						<Textarea
-							classNames={{ input: classes.adminsTextArea }}
-							radius="lg"
-							size="md"
-							value={clubAdminsString}
-							minRows={10}
-							onChange={event => parseClubAdmins(event.currentTarget.value)}
-						/>
-						<Chips
-							color={'rgba(0, 0, 0, 0.05)'}
-							className={classes.primaryAdminChip}
-							variant="filled"
-						>
-							<Chip size="md" value="" checked={false}>
-								<div className={classes.primaryAdminChipContents}>
-									<Lock width={16} height={16} />
-									<Space w={4} />
-									<Text>{lockedMainAdmin}</Text>
-								</div>
-							</Chip>
-						</Chips>
-					</div>
+					<Textarea
+						radius="lg"
+						size="md"
+						value={clubAdminsString}
+						minRows={10}
+						onChange={event => parseClubAdmins(event.currentTarget.value)}
+					/>
 				</div>
 				<Button
 					disabled={isSavingChanges}
