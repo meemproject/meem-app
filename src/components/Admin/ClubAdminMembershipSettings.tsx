@@ -402,8 +402,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			case MembershipReqType.None:
 				return 'anyone'
 			case MembershipReqType.ApprovedApplicants:
-				return 'approved applicants'
-
+				return 'approved addresses'
 			case MembershipReqType.TokenHolders:
 				return 'token holders'
 			case MembershipReqType.OtherClubMember:
@@ -418,7 +417,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			case MembershipReqType.None:
 				return '...'
 			case MembershipReqType.ApprovedApplicants:
-				return 'submit an approved application'
+				return `own an address on this list`
 			case MembershipReqType.TokenHolders:
 				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
 			case MembershipReqType.OtherClubMember:
@@ -536,19 +535,22 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</a>{' '}
 					to join.{' '}
 					{membershipRequirements[0].type ===
-						MembershipReqType.ApprovedApplicants && (
-						<>
-							Members can apply{' '}
-							<a
-								onClick={() => {
-									openMembershipReqModal(0)
-								}}
-							>
-								<span className={classes.membershipSelector}>at this link</span>
-							</a>
-							.
-						</>
-					)}
+						MembershipReqType.ApprovedApplicants &&
+						membershipRequirements[0].applicationLink && (
+							<>
+								Members can apply{' '}
+								<a
+									onClick={() => {
+										openMembershipReqModal(0)
+									}}
+								>
+									<span className={classes.membershipSelector}>
+										at this link
+									</span>
+								</a>
+								.
+							</>
+						)}
 					{membershipRequirements[0].type ===
 						MembershipReqType.TokenHolders && (
 						<>
@@ -785,8 +787,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							value="approved-applicants"
 							label={
 								isEditedReqFirstReq
-									? 'approved applicants'
-									: 'submit an approved application'
+									? 'approved addresses'
+									: 'own an address on this list'
 							}
 						/>
 						<Radio
@@ -948,16 +950,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 							switch (reqCurrentlyEditing.type) {
 								case MembershipReqType.ApprovedApplicants:
-									if (
-										reqCurrentlyEditing.applicationLink &&
-										reqCurrentlyEditing.applicationLink.length === 0
-									) {
-										showNotification({
-											title: 'Oops!',
-											message: 'Please enter an application link.'
-										})
-										return
-									}
 									let isApplicantsListInvalid = false
 									clubAdmins.forEach(admin => {
 										if (
