@@ -61,6 +61,7 @@ const useStyles = createStyles(theme => ({
 		flexDirection: 'row',
 		paddingTop: 32,
 		paddingBottom: 32,
+		paddingRight: 32,
 		paddingLeft: 32,
 		position: 'relative',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -73,6 +74,7 @@ const useStyles = createStyles(theme => ({
 	},
 	headerClubDescription: {
 		fontSize: 16,
+		wordBreak: 'break-all',
 		marginTop: 8,
 		marginRight: 16,
 		fontWeight: 500,
@@ -81,6 +83,7 @@ const useStyles = createStyles(theme => ({
 	headerClubName: {
 		fontWeight: 600,
 		fontSize: 24,
+		wordBreak: 'break-all',
 		marginTop: -8
 	},
 	headerLinks: {
