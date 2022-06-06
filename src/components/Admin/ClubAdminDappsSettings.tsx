@@ -73,6 +73,10 @@ const useStyles = createStyles(theme => ({
 		marginBottom: 12,
 		cursor: 'pointer',
 		width: '100px'
+	},
+	clubContractAddress: {
+		wordBreak: 'break-all',
+		fontWeight: 600
 	}
 }))
 
@@ -137,7 +141,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				<Text className={classes.clubIntegrationsHeader}>
 					Club Contract Address
 				</Text>
-				<Text>{club.address}</Text>
+				<Text className={classes.clubContractAddress}>{club.address}</Text>
 				<Text className={classes.clubIntegrationsHeader}>Social</Text>
 				<a onClick={handleTwitterIntegration}>
 					<div className={classes.clubIntegrationItem}>

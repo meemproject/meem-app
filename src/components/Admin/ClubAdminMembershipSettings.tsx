@@ -1168,6 +1168,21 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
+							if (membershipQuantity > 10000000) {
+								showNotification({
+									title: 'Oops!',
+									message:
+										'Total memberships is too large. Choose unlimited instead.'
+								})
+								return
+							}
+							if (membershipQuantity < 0) {
+								showNotification({
+									title: 'Oops!',
+									message: 'How can you have negative total memberships?!'
+								})
+								return
+							}
 							setMembershipQuantityModalOpened(false)
 						}}
 						className={classes.buttonModalSave}
