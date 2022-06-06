@@ -237,6 +237,34 @@ export const CreateComponent: React.FC = () => {
 			return
 		}
 
+		// Some basic validation
+		if (!clubName || clubName.length < 3 || clubName.length > 50) {
+			// Club name invalid
+			showNotification({
+				title: 'Oops!',
+				message:
+					'You entered an invalid club name. Please choose a longer or shorter name.'
+			})
+			return
+		}
+
+		if (clubDescription.length < 3 || clubDescription.length > 140) {
+			// Club name invalid
+			showNotification({
+				title: 'Oops!',
+				message:
+					'You entered an invalid club description. Please choose a longer or shorter description.'
+			})
+			return
+		}
+
+		if (smallClubLogo.length === 0) {
+			showNotification({
+				title: 'Oops!',
+				message: 'Please provide a club logo.'
+			})
+		}
+
 		if (!clubclub.isMember) {
 			showNotification({
 				title: 'No Club Club membership found.',
