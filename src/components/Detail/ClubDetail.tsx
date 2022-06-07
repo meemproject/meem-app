@@ -61,6 +61,7 @@ const useStyles = createStyles(theme => ({
 		flexDirection: 'row',
 		paddingTop: 32,
 		paddingBottom: 32,
+		paddingRight: 32,
 		paddingLeft: 32,
 		position: 'relative',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -73,6 +74,7 @@ const useStyles = createStyles(theme => ({
 	},
 	headerClubDescription: {
 		fontSize: 16,
+		wordBreak: 'break-all',
 		marginTop: 8,
 		marginRight: 16,
 		fontWeight: 500,
@@ -81,6 +83,7 @@ const useStyles = createStyles(theme => ({
 	headerClubName: {
 		fontWeight: 600,
 		fontSize: 24,
+		wordBreak: 'break-all',
 		marginTop: -8
 	},
 	headerLinks: {
@@ -279,7 +282,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const joinClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
-			wallet.connectWallet()
+			await wallet.connectWallet()
+			router.reload()
 			return
 		}
 
@@ -516,9 +520,15 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					: ''
 				if (mintStart && !mintEnd) {
 					if (afterMintStart) {
-						mintDatesText = `Membership opened ${mintEndString}.`
+						mintDatesText = `Membership opened ${mintStartString}.`
 					} else {
-						mintDatesText = `Membership opens ${mintEndString}.`
+						mintDatesText = `Membership opens ${mintStartString}.`
+					}
+				} else if (!mintStart && mintEnd) {
+					if (beforeMintEnd) {
+						mintDatesText = `Membership closes ${mintEndString}.`
+					} else {
+						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (mintStart && mintEnd) {
 					if (!afterMintStart) {
@@ -672,7 +682,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										Leave
 									</Button>
 								)}
-								{!club.isClubMember && (
+								{!club.isClubMember && wallet.isConnected && (
 									<Button
 										disabled={!meetsAllRequirements}
 										loading={isJoiningClub}
@@ -683,10 +693,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											(club.membershipSettings!.costToJoin > 0
 												? `Join - ${club.membershipSettings!.costToJoin} MATIC`
 												: `Join`)}
-										{!meetsAllRequirements &&
-											wallet.isConnected &&
-											'Requirements not met'}
+										{!meetsAllRequirements && 'Requirements not met'}
 										{!wallet.isConnected && 'Connect wallet to join'}
+									</Button>
+								)}
+								{!wallet.isConnected && (
+									<Button
+										onClick={wallet.connectWallet}
+										className={classes.buttonJoinClub}
+									>
+										Connect wallet to join
 									</Button>
 								)}
 								{club.membershipSettings &&

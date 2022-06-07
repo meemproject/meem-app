@@ -265,9 +265,7 @@ export function HomeComponent() {
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
 					placeholder={
-						clubclub.isMember
-							? 'Start typing to see suggestions or create a new club...'
-							: 'Start typing to see suggestions...'
+						'Start typing to see suggestions or create a new club...'
 					}
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={

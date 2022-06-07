@@ -13,6 +13,7 @@ import {
 	Space,
 	TextInput
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { base64StringToBlob } from 'blob-util'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
@@ -245,6 +246,34 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	const [newClubData, setNewClubData] = useState<Club>()
 	const [isSaveChangesModalOpened, setSaveChangesModalOpened] = useState(false)
 	const openSaveChangesModal = () => {
+		// Some basic validation
+		if (clubName.length < 3 || clubName.length > 50) {
+			// Club name invalid
+			showNotification({
+				title: 'Oops!',
+				message:
+					'You entered an invalid club name. Please choose a longer or shorter name.'
+			})
+			return
+		}
+
+		if (clubDescription.length < 3 || clubDescription.length > 140) {
+			// Club name invalid
+			showNotification({
+				title: 'Oops!',
+				message:
+					'You entered an invalid club description. Please choose a longer or shorter description.'
+			})
+			return
+		}
+
+		if (smallClubLogo.length === 0) {
+			showNotification({
+				title: 'Oops!',
+				message: 'Please provide a club logo.'
+			})
+		}
+
 		// 'save changes' modal for execution club settings updates
 		// convert current settings and update for the modal
 		const newClub = club!

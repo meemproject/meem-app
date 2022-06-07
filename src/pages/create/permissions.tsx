@@ -9,19 +9,26 @@ const CreatePermissionsPage: NextPage = () => {
 		<>
 			<Head>
 				<title>New Club Permissions | Clubs</title>
-				<meta name="title" content="Clubs clubs" />
-				<meta name="description" content="Clubs! Clubs!" />
+				<meta name="title" content="Clubs" />
+				<meta
+					name="description"
+					content="Welcome to the free, unstoppable association of humankind."
+				/>
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
-				<meta property="og:title" content="Clubs! clubs clubs" />
-				<meta property="og:description" content="Clubs! Clubs!" />
+				<meta property="og:title" content="Clubs" />
+				<meta
+					property="og:description"
+					content="Welcome to the free, unstoppable association of humankind."
+				/>
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
-				<meta property="twitter:title" content="Clubs! Clubs" />
+				<meta property="twitter:title" content="Clubs!" />
 				<meta
-					property="twitter:description"
-					content="Clubs! clubs clubs! CLUBS!"
+					property="twitter:title"
+					content="Welcome to the free, unstoppable association of humankind."
 				/>
+
 				<meta name="viewport" content="initial-scale=1, width=device-width" />
 				<meta property="twitter:image" content="/link-preview.png" />
 				<meta property="og:image" content="/link-preview.png" />

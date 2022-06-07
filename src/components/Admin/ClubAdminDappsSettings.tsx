@@ -73,6 +73,10 @@ const useStyles = createStyles(theme => ({
 		marginBottom: 12,
 		cursor: 'pointer',
 		width: '100px'
+	},
+	clubContractAddress: {
+		wordBreak: 'break-all',
+		fontWeight: 600
 	}
 }))
 
@@ -85,19 +89,59 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
 
 	// Integrations
-	const handleTwitterIntegration = () => {}
-	const handleDiscordIntegration = () => {}
-	const handleGuildIntegration = () => {}
-	const handleSliksafeIntegration = () => {}
-	const handleTellieIntegration = () => {}
-	const handleClarityIntegration = () => {}
-	const handleGnosisIntegration = () => {}
-	const handleMycoIntegration = () => {}
-	const handleOrcaIntegration = () => {}
+	const handleTwitterIntegration = () => {
+		window.open(
+			'https://www.notion.so/meemproject/Twitter-64d54ac73e994ed4b2304856bb785fce'
+		)
+	}
+	const handleDiscordIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Discord-34561729032f4b9e87058cf1341aefac'
+		)
+	}
+	const handleGuildIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Guild-7c6f030bd5b4485998899d521fc3694a'
+		)
+	}
+	const handleSliksafeIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Sliksafe-9ee759f735ac4f9cb52b5d849292188c'
+		)
+	}
+	const handleTellieIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Tellie-5c176f1036ef4fe3b993b0137eec15a8'
+		)
+	}
+	const handleClarityIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Clarity-b144c6bc1eae4e08b3af870ac87ce60d'
+		)
+	}
+	const handleGnosisIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Gnosis-af38757b9faf486f9900a5ea8f4a805d'
+		)
+	}
+	const handleMycoIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Myco-5425597cd8ca413fa070bc55bf1428f8'
+		)
+	}
+	const handleOrcaIntegration = () => {
+		window.open(
+			'https://meemproject.notion.site/Orca-a67a9137657643609c3ae54183505ecf'
+		)
+	}
 
 	return (
 		<>
 			<div>
+				<Text className={classes.clubIntegrationsHeader}>
+					Club Contract Address
+				</Text>
+				<Text className={classes.clubContractAddress}>{club.address}</Text>
 				<Text className={classes.clubIntegrationsHeader}>Social</Text>
 				<a onClick={handleTwitterIntegration}>
 					<div className={classes.clubIntegrationItem}>

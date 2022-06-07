@@ -131,23 +131,6 @@ const useStyles = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
-	approvedAddressesTextAreaContainer: {
-		position: 'relative'
-	},
-	approvedAddressesTextArea: {
-		paddingTop: 48,
-		paddingLeft: 32
-	},
-	primaryApprovedAddressChip: {
-		position: 'absolute',
-		pointerEvents: 'none',
-		top: 12,
-		left: 12
-	},
-	primaryApprovedAddressChipContents: {
-		display: 'flex',
-		alignItems: 'center'
-	},
 	modalHeaderText: {
 		fontSize: 18,
 		fontWeight: 600,
@@ -249,11 +232,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		undefined
 	)
 
-	const [lockedMainAdmin, setLockedMainAdmin] = useState('')
-
 	// Club admins
 	const [clubAdminsString, setClubAdminsString] = useState('')
 	const [clubAdmins, setClubAdmins] = useState<string[]>([])
+	const [hasAddedInitialAdmin, setHasAddedInitialAdmin] = useState(false)
 
 	const parseClubAdmins = (rawString: string) => {
 		setClubAdminsString(rawString)
@@ -314,10 +296,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				finalList.push(potentialApprovedAddress)
 			}
 		})
-		if (!finalList.includes(lockedMainAdmin)) {
-			finalList.push(lockedMainAdmin)
-		}
-		log.debug(`approved addresses count = ${finalList.length}`)
+		console.log(`approved addresses count = ${finalList.length}`)
 		return finalList
 	}
 
@@ -394,10 +373,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		// 'save changes' modal for execution club settings updates
 		// convert current settings and update for the modal
 
-		const finalClubAdmins = Object.assign([], clubAdmins)
-		if (!clubAdmins.includes(wallet.accounts[0])) {
-			finalClubAdmins.push(wallet.accounts[0])
+		if (clubAdmins.length === 0) {
+			showNotification({
+				title: 'Oops!',
+				message: 'At least one club admin is required.'
+			})
+			return
 		}
+
+		setIsSavingChanges(true)
 
 		const settings: MembershipSettings = {
 			requirements: membershipRequirements,
@@ -406,7 +390,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			membershipQuantity,
 			membershipStartDate,
 			membershipEndDate,
-			clubAdmins: finalClubAdmins
+			clubAdmins
 		}
 
 		const newClub = club!
@@ -422,8 +406,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			case MembershipReqType.None:
 				return 'anyone'
 			case MembershipReqType.ApprovedApplicants:
-				return 'approved applicants'
-
+				return 'approved addresses'
 			case MembershipReqType.TokenHolders:
 				return 'token holders'
 			case MembershipReqType.OtherClubMember:
@@ -438,7 +421,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			case MembershipReqType.None:
 				return '...'
 			case MembershipReqType.ApprovedApplicants:
-				return 'submit an approved application'
+				return `own an address on this list`
 			case MembershipReqType.TokenHolders:
 				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
 			case MembershipReqType.OtherClubMember:
@@ -459,8 +442,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	}
 
 	const saveChanges = async () => {
-		setIsSavingChanges(true)
-
 		if (isCreatingClub) {
 			if (!clubclub.isMember) {
 				showNotification({
@@ -470,6 +451,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				router.push({ pathname: '/' })
 				return
 			}
+			if (clubAdmins.length === 0) {
+				showNotification({
+					title: 'Oops!',
+					message: 'At least one club admin is required.'
+				})
+				return
+			}
+			setIsSavingChanges(true)
 			openTransactionsModal()
 		} else {
 			openSaveChangesModal()
@@ -478,8 +467,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isCreatingClub) {
-			if (wallet.isConnected) {
-				setLockedMainAdmin(wallet.accounts[0])
+			if (wallet.isConnected && !hasAddedInitialAdmin) {
+				setHasAddedInitialAdmin(true)
+				setClubAdmins([wallet.accounts[0]])
+				setClubAdminsString(`${wallet.accounts[0]}\n`)
 			}
 		} else {
 			if (club && !hasLoadedClubData) {
@@ -488,21 +479,11 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				// Set club admins
 				setClubAdmins(club.admins!)
 
-				// Get the main admin of the club
-				let tempLockedMainAdmin = ''
-				if (club.admins && club.admins!.length > 0) {
-					tempLockedMainAdmin = club.admins![0]
-					setLockedMainAdmin(tempLockedMainAdmin)
-				} else {
-					setLockedMainAdmin('null')
-				}
-
 				// Set the club admins string, used by the club admins textfield
 				let adminsString = ''
 				if (club.admins) {
 					club.admins.forEach(admin => {
-						if (admin.toLowerCase() !== tempLockedMainAdmin)
-							adminsString = adminsString + `${admin}\n`
+						adminsString = adminsString + `${admin}\n`
 					})
 				}
 				setClubAdminsString(adminsString)
@@ -530,9 +511,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		}
 	}, [
 		club,
+		clubAdmins.length,
+		hasAddedInitialAdmin,
 		hasLoadedClubData,
 		isCreatingClub,
-		lockedMainAdmin,
 		wallet.accounts,
 		wallet.isConnected
 	])
@@ -556,19 +538,22 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</a>{' '}
 					to join.{' '}
 					{membershipRequirements[0].type ===
-						MembershipReqType.ApprovedApplicants && (
-						<>
-							Members can apply{' '}
-							<a
-								onClick={() => {
-									openMembershipReqModal(0)
-								}}
-							>
-								<span className={classes.membershipSelector}>at this link</span>
-							</a>
-							.
-						</>
-					)}
+						MembershipReqType.ApprovedApplicants &&
+						membershipRequirements[0].applicationLink && (
+							<>
+								Members can apply{' '}
+								<a
+									onClick={() => {
+										openMembershipReqModal(0)
+									}}
+								>
+									<span className={classes.membershipSelector}>
+										at this link
+									</span>
+								</a>
+								.
+							</>
+						)}
 					{membershipRequirements[0].type ===
 						MembershipReqType.TokenHolders && (
 						<>
@@ -714,32 +699,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						Who can manage this club’s profile and membership settings?
 					</Text>
 					<Text className={classes.clubAdminsInstructions}>
-						Add a line break between each address. Note that the club creator
-						will always have admin permissions.
+						Add a line break between each address. Note that at least one club
+						admin is required at all times.
 					</Text>
-					<div className={classes.adminsTextAreaContainer}>
-						<Textarea
-							classNames={{ input: classes.adminsTextArea }}
-							radius="lg"
-							size="md"
-							value={clubAdminsString}
-							minRows={10}
-							onChange={event => parseClubAdmins(event.currentTarget.value)}
-						/>
-						<Chips
-							color={'rgba(0, 0, 0, 0.05)'}
-							className={classes.primaryAdminChip}
-							variant="filled"
-						>
-							<Chip size="md" value="" checked={false}>
-								<div className={classes.primaryAdminChipContents}>
-									<Lock width={16} height={16} />
-									<Space w={4} />
-									<Text>{lockedMainAdmin}</Text>
-								</div>
-							</Chip>
-						</Chips>
-					</div>
+					<Textarea
+						radius="lg"
+						size="md"
+						value={clubAdminsString}
+						minRows={10}
+						onChange={event => parseClubAdmins(event.currentTarget.value)}
+					/>
 				</div>
 				<Button
 					disabled={isSavingChanges}
@@ -805,8 +774,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							value="approved-applicants"
 							label={
 								isEditedReqFirstReq
-									? 'approved applicants'
-									: 'submit an approved application'
+									? 'approved addresses'
+									: 'own an address on this list'
 							}
 						/>
 						<Radio
@@ -841,35 +810,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						/>
 						<Text className={classes.modalHeaderText}>Approved Addresses</Text>
 
-						<div className={classes.approvedAddressesTextAreaContainer}>
-							<Textarea
-								classNames={{ input: classes.approvedAddressesTextArea }}
-								radius="lg"
-								size="md"
-								value={reqCurrentlyEditing.approvedAddressesString}
-								minRows={5}
-								onChange={event => {
-									reqCurrentlyEditing.approvedAddressesString =
-										event.currentTarget.value
-									reqCurrentlyEditing.approvedAddresses =
-										parseApprovedAddresses(event.currentTarget.value)
-									updateMembershipRequirement(reqCurrentlyEditing)
-								}}
-							/>
-							<Chips
-								color={'rgba(0, 0, 0, 0.05)'}
-								className={classes.primaryApprovedAddressChip}
-								variant="filled"
-							>
-								<Chip size="md" value="" checked={false}>
-									<div className={classes.primaryApprovedAddressChipContents}>
-										<Lock width={16} height={16} />
-										<Space w={4} />
-										<Text>{quickTruncate(lockedMainAdmin)}</Text>
-									</div>
-								</Chip>
-							</Chips>
-						</div>
+						<Textarea
+							radius="lg"
+							size="md"
+							value={reqCurrentlyEditing.approvedAddressesString}
+							minRows={5}
+							onChange={event => {
+								reqCurrentlyEditing.approvedAddressesString =
+									event.currentTarget.value
+								reqCurrentlyEditing.approvedAddresses = parseApprovedAddresses(
+									event.currentTarget.value
+								)
+								updateMembershipRequirement(reqCurrentlyEditing)
+							}}
+						/>
 					</div>
 
 					<div
@@ -983,21 +937,24 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 							switch (reqCurrentlyEditing.type) {
 								case MembershipReqType.ApprovedApplicants:
-									if (
-										reqCurrentlyEditing.applicationLink &&
-										reqCurrentlyEditing.applicationLink.length === 0
-									) {
+									let isApplicantsListInvalid = false
+									clubAdmins.forEach(admin => {
+										if (
+											reqCurrentlyEditing.approvedAddressesString
+												.toLowerCase()
+												.includes(admin.toLowerCase())
+										) {
+											isApplicantsListInvalid = true
+										}
+									})
+
+									if (isApplicantsListInvalid) {
 										showNotification({
 											title: 'Oops!',
-											message: 'Please enter an application link.'
+											message:
+												'You cannot add a club admin as an approved address.'
 										})
 										return
-									}
-
-									// Add locked admin as primary approved address if it doesn't exist
-									if (reqCurrentlyEditing.approvedAddresses.length === 0) {
-										reqCurrentlyEditing.approvedAddresses = [lockedMainAdmin]
-										updateMembershipRequirement(reqCurrentlyEditing)
 									}
 
 									break
@@ -1095,12 +1052,25 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<TextInput
 						radius="lg"
 						size="md"
-						type="number"
+						type="text"
 						rightSectionWidth={80}
 						rightSection={<Text>MATIC</Text>}
-						value={costToJoin}
+						defaultValue={costToJoin}
 						onChange={event => {
-							setCostToJoin(parseInt(event.target.value))
+							if (event.target.value.length === 0) {
+								setCostToJoin(0)
+							} else {
+								const potentialNumber = parseFloat(event.target.value)
+								if (isNaN(potentialNumber)) {
+									showNotification({
+										title: 'Oops!',
+										message: 'Please enter a number, not text.'
+									})
+									setCostToJoin(0)
+									return
+								}
+								setCostToJoin(parseFloat(event.target.value))
+							}
 						}}
 					/>
 					<Space h={'md'} />
@@ -1198,6 +1168,21 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
+							if (membershipQuantity > 10000000) {
+								showNotification({
+									title: 'Oops!',
+									message:
+										'Total memberships is too large. Choose unlimited instead.'
+								})
+								return
+							}
+							if (membershipQuantity < 0) {
+								showNotification({
+									title: 'Oops!',
+									message: 'How can you have negative total memberships?!'
+								})
+								return
+							}
 							setMembershipQuantityModalOpened(false)
 						}}
 						className={classes.buttonModalSave}

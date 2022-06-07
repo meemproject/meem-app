@@ -126,7 +126,6 @@ export default async function clubFromMeemContract(
 		// Is the current user a club admin?
 		const admins: string[] = []
 		let isClubAdmin = false
-		let mainClubAdminAddress = ''
 		if (
 			clubData.MeemContractWallets &&
 			clubData.MeemContractWallets.length > 0
@@ -134,9 +133,9 @@ export default async function clubFromMeemContract(
 			for (const wall of clubData.MeemContractWallets) {
 				if (wall.Wallet) {
 					const name = wall.Wallet.address
-					mainClubAdminAddress = name
 					admins.push(name)
 				}
+
 				if (
 					wall.Wallet?.address.toLowerCase() === walletAddress?.toLowerCase() &&
 					wall.role === ClubAdminRole
@@ -147,7 +146,7 @@ export default async function clubFromMeemContract(
 		}
 
 		if (clubData.mintPermissions) {
-			//log.debug('club has mint permissions')
+			console.log('club has mint permissions')
 
 			// clubData.mintPermissions.forEach((permission: any) => {
 			// 	log.debug(permission)
@@ -155,12 +154,11 @@ export default async function clubFromMeemContract(
 			await Promise.all(
 				clubData.mintPermissions.map(async (permission: any) => {
 					log.debug(permission)
-					// Filter out the admin-exclusive permission
+					// Filter out the admin-exclusive permissions
 					if (
 						permission.permission === Permission.Addresses &&
 						permission.addresses.length === 1 &&
-						permission.addresses[0].toLowerCase() ===
-							mainClubAdminAddress?.toLowerCase()
+						admins.includes(permission.addresses[0].toLowerCase())
 					) {
 						// Don't do anything
 						//log.debug('ignoring admin mint permission')
@@ -290,8 +288,10 @@ export default async function clubFromMeemContract(
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					const name = await truncatedWalletAddress(meem.owner, wallet.provider)
-					members.push(name)
+					const name = await truncatedWalletAddress(meem.owner)
+					if (!members.includes(name)) {
+						members.push(name)
+					}
 				}
 			}
 		}

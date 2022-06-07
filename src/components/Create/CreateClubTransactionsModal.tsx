@@ -315,14 +315,16 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					}
 				})
 
-				// Now push a special 'admin mint' permission which bypasses the other requirements
-				log.debug('adding admin permission')
-				mintPermissions.push({
-					permission: Permission.Addresses,
-					addresses: [wallet.accounts[0]],
-					numTokens: 0,
-					costWei: 0,
-					lockedBy: MeemAPI.zeroAddress
+				// Now push special 'admin mint' permissions which bypass the other requirements
+				log.debug('adding admin permissions...')
+				membershipSettings.clubAdmins?.forEach(admin => {
+					mintPermissions.push({
+						permission: Permission.Addresses,
+						addresses: [admin],
+						numTokens: 0,
+						costWei: 0,
+						lockedBy: MeemAPI.zeroAddress
+					})
 				})
 			}
 
@@ -455,7 +457,6 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				radius={16}
-				size={'lg'}
 				padding={'sm'}
 				opened={isOpened}
 				title={
