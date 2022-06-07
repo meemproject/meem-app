@@ -20,7 +20,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { Club } from '../../model/club/club'
+import { Club, Integration } from '../../model/club/club'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
@@ -173,6 +173,8 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
+	const [clubTwitterUrl, setClubTwitterUrl] = useState('')
+	const [clubDiscordUrl, setClubDiscordUrl] = useState('')
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -197,6 +199,13 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 			setClubName(club.name!)
 			setClubDescription(club.description!)
 			setSmallClubLogo(club.image!)
+			club.integrations?.forEach(integration => {
+				if (integration.name === "Discord") {
+					setClubDiscordUrl(integration.url)
+				} else if (integration.name === "Twitter") {
+					setClubTwitterUrl(integration.url)
+				} 
+			})
 		}
 	}, [club, hasLoadedClubData])
 
@@ -280,6 +289,13 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 		newClub.name = clubName
 		newClub.description = clubDescription
 		newClub.image = smallClubLogo
+		const integrations: Integration[] = []
+		if (clubTwitterUrl.length > 0) {
+			integrations.push({name: "Twitter", url: clubTwitterUrl})
+		}
+		if (clubDiscordUrl.length > 0) {
+			integrations.push({name: "Discord", url: clubDiscordUrl})
+		}
 		setNewClubData(newClub)
 		setSaveChangesModalOpened(true)
 	}
@@ -313,6 +329,38 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 				maxLength={140}
 				value={clubDescription}
 				onChange={event => setClubDescription(event.currentTarget.value)}
+			/>
+			<Space h={'lg'} />
+			<Text
+				className={classes.clubNamePrompt}
+			>{`Club Twitter account URL`}</Text>
+			<TextInput
+				radius="lg"
+				size="md"
+				
+				icon={(<Image
+					src="/integration-twitter.png"
+					width={16}
+					height={16}
+					fit={'contain'}
+				/>)}
+				value={clubTwitterUrl}
+				onChange={event => setClubTwitterUrl(event.currentTarget.value)}
+			/>
+			<Text
+				className={classes.clubLogoPrompt}
+			>{`Club Discord Invite URL`}</Text>
+			<TextInput
+				radius="lg"
+				size="md"
+				icon={(<Image
+					src="/integration-discord.png"
+					width={16}
+					height={16}
+					fit={'contain'}
+				/>)}
+				value={clubDiscordUrl}
+				onChange={event => setClubDiscordUrl(event.currentTarget.value)}
 			/>
 			<Text className={classes.clubLogoPrompt}>
 				Upload an icon for your club.

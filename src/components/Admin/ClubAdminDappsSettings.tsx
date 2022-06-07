@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createStyles, Text, Image, Space } from '@mantine/core'
+import { createStyles, Text, Image, Space, TextInput } from '@mantine/core'
 import React from 'react'
 import { Club } from '../../model/club/club'
 
@@ -77,7 +77,7 @@ const useStyles = createStyles(theme => ({
 	clubContractAddress: {
 		wordBreak: 'break-all',
 		fontWeight: 600
-	}
+	},
 }))
 
 interface IProps {
@@ -142,31 +142,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 					Club Contract Address
 				</Text>
 				<Text className={classes.clubContractAddress}>{club.address}</Text>
-				<Text className={classes.clubIntegrationsHeader}>Social</Text>
-				<a onClick={handleTwitterIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-twitter.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Twitter</Text>
-					</div>
-				</a>
-				<a onClick={handleDiscordIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-discord.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Discord</Text>
-					</div>
-				</a>
+				
 				<Text className={classes.clubIntegrationsHeader}>Token Gating</Text>
 				<a onClick={handleGuildIntegration}>
 					<div className={classes.clubIntegrationItem}>

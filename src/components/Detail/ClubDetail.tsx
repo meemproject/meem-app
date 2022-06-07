@@ -143,13 +143,13 @@ const useStyles = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: theme.colors.gray[0]
 		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 0,
-			marginLeft: 0,
-			marginRight: 0,
-			backgroundColor: 'transparent',
-			borderColor: 'transparent'
-		}
+		// [`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		// 	fontSize: 0,
+		// 	marginLeft: 0,
+		// 	marginRight: 0,
+		// 	backgroundColor: 'transparent',
+		// 	borderColor: 'transparent'
+		// }
 	},
 	clubSettingsIcon: {
 		width: 16,
@@ -501,22 +501,20 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				let mintDatesText = 'Minting is available now'
 				const mintStartString = mintStart
 					? `${new Date(mintStart).toDateString()} at ${new Date(
-							mintStart
-					  ).getHours()}:${
-							new Date(mintStart).getMinutes() > 9
-								? new Date(mintStart).getMinutes()
-								: `0${new Date(mintStart).getMinutes()}`
-					  }`
+						mintStart
+					).getHours()}:${new Date(mintStart).getMinutes() > 9
+						? new Date(mintStart).getMinutes()
+						: `0${new Date(mintStart).getMinutes()}`
+					}`
 					: ''
 
 				const mintEndString = mintEnd
 					? `${new Date(mintEnd).toDateString()} at ${new Date(
-							mintEnd
-					  ).getHours()}:${
-							new Date(mintEnd).getMinutes() > 9
-								? new Date(mintEnd).getMinutes()
-								: `0${new Date(mintEnd).getMinutes()}`
-					  }`
+						mintEnd
+					).getHours()}:${new Date(mintEnd).getMinutes() > 9
+						? new Date(mintEnd).getMinutes()
+						: `0${new Date(mintEnd).getMinutes()}`
+					}`
 					: ''
 				if (mintStart && !mintEnd) {
 					if (afterMintStart) {
@@ -726,37 +724,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									</>
 								)}
 							</div>
-							{/* <div className={classes.mobileHeaderLinks}>
-								<a href="twitter.com" className={classes.headerLink}>
-									{' '}
-									<BrandTwitter />
-									<Space w={8} />
-									<Text>Twitter</Text>
-								</a>
-								<Space w={'sm'} />
-								<a href="discord.com" className={classes.headerLink}>
-									{' '}
-									<BrandDiscord />
-									<Space w={8} />
-									<Text>Discord</Text>
-								</a>
-							</div> */}
 						</div>
-						{/* <div className={classes.headerLinks}>
-							<a href="twitter.com" className={classes.headerLink}>
-								{' '}
-								<BrandTwitter />
-								<Space w={8} />
-								<Text>Twitter</Text>
-							</a>
-							<Space w={'sm'} />
-							<a href="discord.com" className={classes.headerLink}>
-								{' '}
-								<BrandDiscord />
-								<Space w={8} />
-								<Text>Discord</Text>
-							</a>
-						</div> */}
+						
 					</div>
 
 					<Container>
@@ -787,10 +756,24 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								))}
 							</div>
 						)}
+						<Text className={classes.clubMembersListTitleText}>{`Integrations (${club.integrations!.length
+							})`}</Text>
+						{club.integrations!.length > 0 && (
+							<Grid>
+								{club.integrations!.filter(inte => inte.url.length > 0).map(integration => (
+									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
+										<>
+										<Text className={classes.memberItem}>{integration.name}</Text>
+										<Text className={classes.memberItem}>{integration.url}</Text>
+										</>
+									</Grid.Col>
+								))}
+							</Grid>
+						)}
+						<Space h={'xl'} />
 
-						<Text className={classes.clubMembersListTitleText}>{`Members (${
-							club.members!.length
-						})`}</Text>
+						<Text className={classes.clubMembersListTitleText}>{`Members (${club.members!.length
+							})`}</Text>
 						{club.members!.length > 0 && (
 							<Grid>
 								{club.members!.map(member => (

@@ -123,10 +123,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				})
 			}
 
+			
+
 			const uri = JSON.stringify({
 				name: club.name!,
 				description: club.description,
 				image: club.image,
+				integrations: JSON.stringify(club.integrations),
 				external_link: `https://clubs.link/${club.slug}`,
 				application_links: applicationLinks
 			})

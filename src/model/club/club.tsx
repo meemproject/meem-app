@@ -10,6 +10,11 @@ import { clubMetadataFromContractUri } from './club_metadata'
 export const ClubAdminRole =
 	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
 
+export interface Integration {
+	name: string,
+	url: string
+}
+
 export interface Club {
 	id?: string
 	name?: string
@@ -26,6 +31,7 @@ export interface Club {
 	isClubAdmin?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
+	integrations?: Integration[]
 }
 
 export interface MembershipSettings {
@@ -101,7 +107,8 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 				clubAdmins: []
 			},
 			isValid: clubData.mintPermissions !== undefined,
-			rawClub: clubData
+			rawClub: clubData,
+			integrations: metadata.integrations
 		}
 	} else {
 		return {}
@@ -328,7 +335,8 @@ export default async function clubFromMeemContract(
 				clubAdmins: []
 			},
 			isValid: clubData.mintPermissions !== undefined,
-			rawClub: clubData
+			rawClub: clubData,
+			integrations: metadata.integrations
 		}
 	} else {
 		return {}

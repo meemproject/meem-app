@@ -8,4 +8,8 @@ export class CookieKeys {
 	public static clubSlug = 'clubSlug'
 
 	public static clubExternalUrl = 'clubExternalUrl'
+
+	public static clubTwitterUrl = 'clubTwitterUrl'
+
+	public static clubDiscordUrl = 'clubDiscordUrl'
 }
