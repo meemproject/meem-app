@@ -210,6 +210,22 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		borderRadius: 16,
 		padding: 16
+	},
+	enabledClubIntegrationItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		marginBottom: 12,
+		cursor: 'pointer',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
+	},
+	intItemHeader: {
+		display: 'flex',
+		alignItems: 'center'
 	}
 }))
 
@@ -769,27 +785,35 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									club.integrations!.length
 								})`}</Text>
 								<Grid>
-									{club
-										.integrations!.filter(inte => inte.url.length > 0)
-										.map(integration => (
-											<Grid.Col
-												xs={6}
-												sm={4}
-												md={4}
-												lg={4}
-												xl={4}
-												key={integration.name}
+									{club.integrations!.map(integration => (
+										<Grid.Col
+											xs={6}
+											sm={4}
+											md={4}
+											lg={4}
+											xl={4}
+											key={integration.name}
+										>
+											<a
+												onClick={() => {
+													window.open(integration.url)
+												}}
 											>
-												<>
-													<Text className={classes.memberItem}>
-														{integration.name}
-													</Text>
-													<Text className={classes.memberItem}>
-														{integration.url}
-													</Text>
-												</>
-											</Grid.Col>
-										))}
+												<div className={classes.enabledClubIntegrationItem}>
+													<div className={classes.intItemHeader}>
+														<Image
+															src={`/${integration.icon}`}
+															width={16}
+															height={16}
+															fit={'contain'}
+														/>
+														<Space w={8} />
+														<Text>{integration.name}</Text>
+													</div>
+												</div>
+											</a>
+										</Grid.Col>
+									))}
 								</Grid>
 							</>
 						)}

@@ -253,34 +253,46 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Text className={classes.clubContractAddress}>{club.address}</Text>
 				<Space h={'xl'} />
-				<Text
-					className={classes.clubIntegrationsSectionTitle}
-				>{`Enabled apps (${enabledIntegrations?.length})`}</Text>
-				<Grid>
-					{enabledIntegrations.map(integration => (
-						<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
-							<a
-								onClick={() => {
-									editIntegration(integration)
-								}}
-							>
-								<div className={classes.enabledClubIntegrationItem}>
-									<div className={classes.intItemHeader}>
-										<Image
-											src={`/${integration.icon}`}
-											width={16}
-											height={16}
-											fit={'contain'}
-										/>
-										<Space w={8} />
-										<Text>{integration.name}</Text>
-									</div>
-								</div>
-							</a>
-						</Grid.Col>
-					))}
-				</Grid>
-				<Space h="xl" />
+				{enabledIntegrations && enabledIntegrations.length > 0 && (
+					<>
+						<Text
+							className={classes.clubIntegrationsSectionTitle}
+						>{`Enabled apps (${enabledIntegrations?.length})`}</Text>
+						<Grid>
+							{enabledIntegrations.map(integration => (
+								<Grid.Col
+									xs={6}
+									sm={4}
+									md={4}
+									lg={4}
+									xl={4}
+									key={integration.name}
+								>
+									<a
+										onClick={() => {
+											editIntegration(integration)
+										}}
+									>
+										<div className={classes.enabledClubIntegrationItem}>
+											<div className={classes.intItemHeader}>
+												<Image
+													src={`/${integration.icon}`}
+													width={16}
+													height={16}
+													fit={'contain'}
+												/>
+												<Space w={8} />
+												<Text>{integration.name}</Text>
+											</div>
+										</div>
+									</a>
+								</Grid.Col>
+							))}
+						</Grid>
+						<Space h="xl" />
+					</>
+				)}
+
 				<Text
 					className={classes.clubIntegrationsSectionTitle}
 				>{`Available apps (${availableIntegrations?.length})`}</Text>
