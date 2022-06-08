@@ -14,6 +14,7 @@ import {
 	Stepper,
 	Textarea
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { allIntegrations, Club, Integration } from '../../model/club/club'
 
@@ -236,6 +237,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 	const editIntegration = (integration: Integration) => {
 		setIntegrationBeingEdited(integration)
+		if (integration.url.length > 0) {
+			setStep(Step.AddUrl)
+		}
 		setIntegrationModalOpened(true)
 	}
 
@@ -337,7 +341,10 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 							className={classes.modalTitle}
 						>{`${integrationBeingEdited?.name} integration`}</Text>
 					}
-					onClose={() => setIntegrationModalOpened(false)}
+					onClose={() => {
+						setStep(Step.FollowGuide)
+						setIntegrationModalOpened(false)
+					}}
 				>
 					<Divider />
 					<Space h={24} />
@@ -396,32 +403,47 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 										active={step === Step.FollowGuide ? 0 : 1}
 									>
 										<Stepper.Step
-											label={
-												step === Step.AddUrl
-													? ''
-													: 'Follow the instructions at the link below.'
-											}
-											loading={step === Step.AddUrl}
+											label={'Follow the instructions at the link below.'}
 											description={
 												<>
-													{step === Step.FollowGuide && (
-														<div>
-															<Space h={12} />
-															<a
-																onClick={() => {
-																	window.open(integrationBeingEdited?.guideUrl)
-																}}
-																className={classes.buttonConfirm}
-															>
-																View guide
-															</a>
-														</div>
-													)}
-
+													<div>
+														<Space h={12} />
+														<a
+															onClick={() => {
+																setStep(Step.AddUrl)
+																window.open(integrationBeingEdited?.guideUrl)
+															}}
+															className={classes.buttonConfirm}
+														>
+															View guide
+														</a>
+													</div>
+												</>
+											}
+										/>
+										<Stepper.Step
+											label={`Add the URL for the ${integrationBeingEdited.name} integration here.`}
+											description={
+												<>
 													{step === Step.AddUrl && (
 														<div>
-															<Space h={12} />
-															<Text>Done!</Text>
+															<Space h={4} />
+															<TextInput
+																radius="lg"
+																size="md"
+																value={integrationBeingEdited.url}
+																onChange={event => {
+																	const newInte: Integration = {
+																		name: integrationBeingEdited.name,
+																		icon: integrationBeingEdited.icon,
+																		description:
+																			integrationBeingEdited.description,
+																		url: event.target.value,
+																		guideUrl: integrationBeingEdited.guideUrl
+																	}
+																	setIntegrationBeingEdited(newInte)
+																}}
+															/>
 														</div>
 													)}
 												</>
@@ -431,55 +453,73 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								</MantineProvider>
 							</div>
 						)}
+					{integrationBeingEdited &&
+						(integrationBeingEdited?.name === 'Twitter' ||
+							integrationBeingEdited?.name === 'Discord' ||
+							step === Step.AddUrl) && (
+							<a
+								onClick={() => {
+									if (integrationBeingEdited) {
+										let url
 
-					<a
-						onClick={() => {
-							if (integrationBeingEdited) {
-								let isEnabled = false
-								enabledIntegrations.forEach(inte => {
-									if (inte.name === integrationBeingEdited.name) {
-										isEnabled = true
-										return
-									}
-								})
-								if (!isEnabled) {
-									// If not enabled, push this into enabled integrations
-									const newEnabled = enabledIntegrations
-									newEnabled.push(integrationBeingEdited)
-									setEnabledIntegrations(newEnabled)
-
-									availableIntegrations.forEach(inte => {
-										if (inte.name === integrationBeingEdited.name) {
-											const newAvailable = availableIntegrations.filter(
-												integ => integ.name !== integrationBeingEdited.name
-											)
-											setAvailableIntegrations(newAvailable)
+										try {
+											url = new URL(integrationBeingEdited.url)
+										} catch (_) {
+											showNotification({
+												title: 'Oops!',
+												message:
+													'Please enter a valid URL for this integration.'
+											})
 											return
 										}
-									})
-								} else {
-									// If already enabled, modify the existing integration
-									const newIntegrations = [...enabledIntegrations]
-									// Is there a better way of updating an array item in typescript than a C loop?
-									for (let i = 0; i < newIntegrations.length; i++) {
-										if (
-											newIntegrations[i].name === integrationBeingEdited.name
-										) {
-											newIntegrations[i] = integrationBeingEdited
-											break
+
+										let isEnabled = false
+										enabledIntegrations.forEach(inte => {
+											if (inte.name === integrationBeingEdited.name) {
+												isEnabled = true
+												return
+											}
+										})
+										if (!isEnabled) {
+											// If not enabled, push this into enabled integrations
+											const newEnabled = enabledIntegrations
+											newEnabled.push(integrationBeingEdited)
+											setEnabledIntegrations(newEnabled)
+
+											availableIntegrations.forEach(inte => {
+												if (inte.name === integrationBeingEdited.name) {
+													const newAvailable = availableIntegrations.filter(
+														integ => integ.name !== integrationBeingEdited.name
+													)
+													setAvailableIntegrations(newAvailable)
+													return
+												}
+											})
+										} else {
+											// If already enabled, modify the existing integration
+											const newIntegrations = [...enabledIntegrations]
+											// Is there a better way of updating an array item in typescript than a C loop?
+											for (let i = 0; i < newIntegrations.length; i++) {
+												if (
+													newIntegrations[i].name ===
+													integrationBeingEdited.name
+												) {
+													newIntegrations[i] = integrationBeingEdited
+													break
+												}
+											}
+
+											setEnabledIntegrations(newIntegrations)
 										}
 									}
-
-									setEnabledIntegrations(newIntegrations)
-								}
-							}
-
-							setIntegrationModalOpened(false)
-						}}
-						className={classes.buttonConfirm}
-					>
-						Done
-					</a>
+									setStep(Step.FollowGuide)
+									setIntegrationModalOpened(false)
+								}}
+								className={classes.buttonConfirm}
+							>
+								Done
+							</a>
+						)}
 				</Modal>
 			</div>
 		</>
