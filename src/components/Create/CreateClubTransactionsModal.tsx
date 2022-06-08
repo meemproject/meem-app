@@ -191,8 +191,6 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					Cookies.remove(CookieKeys.clubDescription)
 					Cookies.remove(CookieKeys.clubImage)
 					Cookies.remove(CookieKeys.clubExternalUrl)
-					Cookies.remove(CookieKeys.clubTwitterUrl)
-					Cookies.remove(CookieKeys.clubDiscordUrl)
 					Cookies.remove(CookieKeys.clubSlug)
 
 					// Route to the created club detail page
@@ -242,21 +240,10 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				})
 			}
 
-			const integrations: Integration[] = [
-				{
-					name: "Twitter",
-					url: Cookies.get(CookieKeys.clubTwitterUrl) ?? ''
-				},
-				{
-					name: "Discord",
-					url: Cookies.get(CookieKeys.clubDiscordUrl) ?? ''
-				}
-			]	
 			const uri = JSON.stringify({
 				name: Cookies.get(CookieKeys.clubName),
 				description: Cookies.get(CookieKeys.clubDescription),
 				image: Cookies.get(CookieKeys.clubImage),
-				integrations: JSON.stringify(integrations),
 				external_link: Cookies.get(CookieKeys.clubExternalUrl),
 				application_links: applicationLinks
 			})

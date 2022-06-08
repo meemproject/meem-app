@@ -55,7 +55,6 @@ import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 const useStyles = createStyles(theme => ({
 	header: {
 		backgroundColor: 'rgba(160, 160, 160, 0.05)',
-		marginBottom: 60,
 		display: 'flex',
 		alignItems: 'start',
 		flexDirection: 'row',
@@ -142,7 +141,7 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: 'white',
 		'&:hover': {
 			backgroundColor: theme.colors.gray[0]
-		},
+		}
 		// [`@media (max-width: ${theme.breakpoints.md}px)`]: {
 		// 	fontSize: 0,
 		// 	marginLeft: 0,
@@ -159,13 +158,8 @@ const useStyles = createStyles(theme => ({
 			height: 24
 		}
 	},
-	clubMemberReqsTitleText: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	clubMembersListTitleText: {
+
+	clubDetailSectionTitle: {
 		fontSize: 18,
 		marginBottom: 16,
 		marginTop: 40,
@@ -259,8 +253,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 
 	const checkEligibility = useCallback(
-		(reqs: RequirementString[], slotsLeft: number) => {
-			if (reqs.length === 0 || club?.isClubAdmin) {
+		(reqs: RequirementString[], isClubAdmin: boolean, slotsLeft: number) => {
+			if (reqs.length === 0 || isClubAdmin) {
 				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
@@ -277,7 +271,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			}
 		},
-		[club?.isClubAdmin]
+		[]
 	)
 
 	const joinClub = async () => {
@@ -501,20 +495,22 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				let mintDatesText = 'Minting is available now'
 				const mintStartString = mintStart
 					? `${new Date(mintStart).toDateString()} at ${new Date(
-						mintStart
-					).getHours()}:${new Date(mintStart).getMinutes() > 9
-						? new Date(mintStart).getMinutes()
-						: `0${new Date(mintStart).getMinutes()}`
-					}`
+							mintStart
+					  ).getHours()}:${
+							new Date(mintStart).getMinutes() > 9
+								? new Date(mintStart).getMinutes()
+								: `0${new Date(mintStart).getMinutes()}`
+					  }`
 					: ''
 
 				const mintEndString = mintEnd
 					? `${new Date(mintEnd).toDateString()} at ${new Date(
-						mintEnd
-					).getHours()}:${new Date(mintEnd).getMinutes() > 9
-						? new Date(mintEnd).getMinutes()
-						: `0${new Date(mintEnd).getMinutes()}`
-					}`
+							mintEnd
+					  ).getHours()}:${
+							new Date(mintEnd).getMinutes() > 9
+								? new Date(mintEnd).getMinutes()
+								: `0${new Date(mintEnd).getMinutes()}`
+					  }`
 					: ''
 				if (mintStart && !mintEnd) {
 					if (afterMintStart) {
@@ -548,7 +544,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 
 			setParsedRequirements(reqs)
-			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
+			checkEligibility(
+				reqs,
+				possibleClub.isClubAdmin ?? false,
+				possibleClub.slotsLeft ?? -1
+			)
 
 			setRequirementsParsed(true)
 		},
@@ -725,55 +725,79 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 							</div>
 						</div>
-						
 					</div>
 
 					<Container>
-						<Text className={classes.clubMemberReqsTitleText}>
-							Membership Requirements
-						</Text>
-						{!requirementsParsed && (
-							<div className={classes.requirementsContainer}>
-								<Loader />
-							</div>
-						)}
-						{parsedRequirements.length > 0 && requirementsParsed && (
-							<div className={classes.requirementsContainer}>
-								{parsedRequirements.map(requirement => (
-									<div
-										className={classes.requirementItem}
-										key={requirement.requirementKey}
-									>
-										{requirement.meetsRequirement && (
-											<CircleCheck color="green" />
-										)}
-
-										{!requirement.meetsRequirement && <CircleX color="red" />}
-
-										<Space w={'xs'} />
-										{requirement.requirementComponent}
+						{!club.isClubMember && (
+							<>
+								<Text className={classes.clubDetailSectionTitle}>
+									Membership Requirements
+								</Text>
+								{!requirementsParsed && (
+									<div className={classes.requirementsContainer}>
+										<Loader />
 									</div>
-								))}
-							</div>
+								)}
+
+								{parsedRequirements.length > 0 && requirementsParsed && (
+									<div className={classes.requirementsContainer}>
+										{parsedRequirements.map(requirement => (
+											<div
+												className={classes.requirementItem}
+												key={requirement.requirementKey}
+											>
+												{requirement.meetsRequirement && (
+													<CircleCheck color="green" />
+												)}
+
+												{!requirement.meetsRequirement && (
+													<CircleX color="red" />
+												)}
+
+												<Space w={'xs'} />
+												{requirement.requirementComponent}
+											</div>
+										))}
+									</div>
+								)}
+							</>
 						)}
-						<Text className={classes.clubMembersListTitleText}>{`Integrations (${club.integrations!.length
-							})`}</Text>
+
 						{club.integrations!.length > 0 && (
-							<Grid>
-								{club.integrations!.filter(inte => inte.url.length > 0).map(integration => (
-									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
-										<>
-										<Text className={classes.memberItem}>{integration.name}</Text>
-										<Text className={classes.memberItem}>{integration.url}</Text>
-										</>
-									</Grid.Col>
-								))}
-							</Grid>
+							<>
+								<Text className={classes.clubDetailSectionTitle}>{`Apps (${
+									club.integrations!.length
+								})`}</Text>
+								<Grid>
+									{club
+										.integrations!.filter(inte => inte.url.length > 0)
+										.map(integration => (
+											<Grid.Col
+												xs={6}
+												sm={4}
+												md={4}
+												lg={4}
+												xl={4}
+												key={integration.name}
+											>
+												<>
+													<Text className={classes.memberItem}>
+														{integration.name}
+													</Text>
+													<Text className={classes.memberItem}>
+														{integration.url}
+													</Text>
+												</>
+											</Grid.Col>
+										))}
+								</Grid>
+							</>
 						)}
 						<Space h={'xl'} />
 
-						<Text className={classes.clubMembersListTitleText}>{`Members (${club.members!.length
-							})`}</Text>
+						<Text className={classes.clubDetailSectionTitle}>{`Members (${
+							club.members!.length
+						})`}</Text>
 						{club.members!.length > 0 && (
 							<Grid>
 								{club.members!.map(member => (

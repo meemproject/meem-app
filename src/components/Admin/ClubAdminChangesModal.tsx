@@ -22,7 +22,7 @@ import { useWallet } from '@meemproject/react'
 import { BigNumber, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { Club, MembershipReqType } from '../../model/club/club'
+import { Club, Integration, MembershipReqType } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -123,13 +123,21 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				})
 			}
 
-			
+			// Scrub integrations of excess metadata before being added to contractUri
+			const cleanedIntegrations: Integration[] = []
+			club.integrations?.forEach(inte => {
+				const cleanInte: Integration = {
+					name: inte.name,
+					url: inte.url
+				}
+				cleanedIntegrations.push(cleanInte)
+			})
 
 			const uri = JSON.stringify({
 				name: club.name!,
 				description: club.description,
 				image: club.image,
-				integrations: JSON.stringify(club.integrations),
+				integrations: JSON.stringify(cleanedIntegrations),
 				external_link: `https://clubs.link/${club.slug}`,
 				application_links: applicationLinks
 			})

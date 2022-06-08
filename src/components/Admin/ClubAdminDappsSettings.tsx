@@ -1,8 +1,21 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { createStyles, Text, Image, Space, TextInput } from '@mantine/core'
-import React from 'react'
-import { Club } from '../../model/club/club'
+import log from '@kengoldfarb/log'
+import {
+	createStyles,
+	Text,
+	Image,
+	Space,
+	TextInput,
+	Grid,
+	Modal,
+	Divider,
+	MantineProvider,
+	Stepper,
+	Textarea
+} from '@mantine/core'
+import React, { useEffect, useState } from 'react'
+import { allIntegrations, Club, Integration } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -68,168 +81,394 @@ const useStyles = createStyles(theme => ({
 	},
 	clubIntegrationItem: {
 		display: 'flex',
-		alignItems: 'center',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		minHeight: 110,
+		marginBottom: 12,
+		cursor: 'pointer',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
+	},
+	enabledClubIntegrationItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
 		fontWeight: 600,
 		marginBottom: 12,
 		cursor: 'pointer',
-		width: '100px'
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
+	},
+	intItemHeader: {
+		display: 'flex',
+		alignItems: 'center'
+	},
+	intItemDescription: {
+		fontWeight: 400,
+		marginTop: 4,
+		fontSize: 14
+	},
+	clubIntegrationsSectionTitle: {
+		fontSize: 18,
+		marginBottom: 16,
+		fontWeight: 600,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginBottom: 8
+		}
 	},
 	clubContractAddress: {
 		wordBreak: 'break-all',
-		fontWeight: 600
+		color: 'rgba(0, 0, 0, 0.5)'
 	},
+	header: {
+		display: 'flex',
+		alignItems: 'start',
+		flexDirection: 'row',
+		paddingTop: 8,
+		paddingBottom: 8,
+		position: 'relative'
+	},
+	modalTitle: {
+		fontWeight: 600,
+		fontSize: 18
+	},
+	headerTitle: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		flexDirection: 'row'
+	},
+	headerClubName: {
+		fontSize: 16,
+		marginLeft: 16
+	},
+	clubLogoImage: {
+		imageRendering: 'pixelated',
+		width: 40,
+		height: 40,
+		minHeight: 40,
+		minWidth: 40
+	},
+	stepsContainer: {
+		borderRadius: 16,
+		marginBottom: 24
+	},
+	buttonConfirm: {
+		paddingTop: 8,
+		paddingLeft: 16,
+		paddingBottom: 8,
+		paddingRight: 16,
+		color: 'white',
+		backgroundColor: 'black',
+		cursor: 'pointer',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 24
+	},
+	stepDescription: {
+		fontSize: 14
+	}
 }))
 
 interface IProps {
 	club: Club
 }
 
+enum Step {
+	FollowGuide,
+	AddUrl
+}
+
 export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 
-	// Integrations
-	const handleTwitterIntegration = () => {
-		window.open(
-			'https://www.notion.so/meemproject/Twitter-64d54ac73e994ed4b2304856bb785fce'
-		)
+	const [hasSetupIntegrations, setHasSetUpIntegrations] = useState(false)
+
+	const [enabledIntegrations, setEnabledIntegrations] = useState<Integration[]>(
+		[]
+	)
+	const [availableIntegrations, setAvailableIntegrations] = useState<
+		Integration[]
+	>([])
+
+	const [integrationBeingEdited, setIntegrationBeingEdited] =
+		useState<Integration>()
+
+	const [isIntegrationModalOpened, setIntegrationModalOpened] = useState(false)
+	const openIntegrationModal = () => {
+		// e.g. end now or later (w/ calendar)
+		setIntegrationModalOpened(true)
 	}
-	const handleDiscordIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Discord-34561729032f4b9e87058cf1341aefac'
-		)
+	const [step, setStep] = useState<Step>(Step.FollowGuide)
+
+	useEffect(() => {
+		if (!hasSetupIntegrations) {
+			// Set up available integrations
+			const available: Integration[] = []
+			allIntegrations.forEach(inte => {
+				let isIntegrationEnabled = false
+				club.integrations?.forEach(enabledInte => {
+					if (enabledInte.name === inte.name) {
+						isIntegrationEnabled = true
+						return
+					}
+				})
+				if (!isIntegrationEnabled) {
+					available.push(inte)
+				}
+			})
+			setAvailableIntegrations(available)
+
+			// Set up enabled integrations
+			setEnabledIntegrations(club.integrations ?? [])
+
+			setHasSetUpIntegrations(true)
+		}
+	}, [club.integrations, hasSetupIntegrations])
+
+	const editIntegration = (integration: Integration) => {
+		setIntegrationBeingEdited(integration)
+		setIntegrationModalOpened(true)
 	}
-	const handleGuildIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Guild-7c6f030bd5b4485998899d521fc3694a'
-		)
-	}
-	const handleSliksafeIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Sliksafe-9ee759f735ac4f9cb52b5d849292188c'
-		)
-	}
-	const handleTellieIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Tellie-5c176f1036ef4fe3b993b0137eec15a8'
-		)
-	}
-	const handleClarityIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Clarity-b144c6bc1eae4e08b3af870ac87ce60d'
-		)
-	}
-	const handleGnosisIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Gnosis-af38757b9faf486f9900a5ea8f4a805d'
-		)
-	}
-	const handleMycoIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Myco-5425597cd8ca413fa070bc55bf1428f8'
-		)
-	}
-	const handleOrcaIntegration = () => {
-		window.open(
-			'https://meemproject.notion.site/Orca-a67a9137657643609c3ae54183505ecf'
-		)
-	}
+
+	// Unused for now
+	const removeIntegration = (integration: Integration) => {}
+
+	const saveChanges = () => {}
 
 	return (
 		<>
 			<div>
-				<Text className={classes.clubIntegrationsHeader}>
+				<Space h={30} />
+				<Text className={classes.clubIntegrationsSectionTitle}>
 					Club Contract Address
 				</Text>
 				<Text className={classes.clubContractAddress}>{club.address}</Text>
-				
-				<Text className={classes.clubIntegrationsHeader}>Token Gating</Text>
-				<a onClick={handleGuildIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-guild.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Guild</Text>
-					</div>
-				</a>
-				<a onClick={handleSliksafeIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-sliksafe.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Sliksafe</Text>
-					</div>
-				</a>
-				<a onClick={handleTellieIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-tellie.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Tellie</Text>
-					</div>
-				</a>
-				<a onClick={handleClarityIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-clarity.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Clarity</Text>
-					</div>
-				</a>
-				<Text className={classes.clubIntegrationsHeader}>DAO Tools</Text>
-				<a onClick={handleGnosisIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-gnosis.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Gnosis</Text>
-					</div>
-				</a>
-				<a onClick={handleMycoIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-myco.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Myco</Text>
-					</div>
-				</a>
-				<a onClick={handleOrcaIntegration}>
-					<div className={classes.clubIntegrationItem}>
-						<Image
-							src="/integration-orca.png"
-							width={16}
-							height={16}
-							fit={'contain'}
-						/>
-						<Space w={'xs'} />
-						<Text>Orca</Text>
-					</div>
-				</a>
+				<Space h={'xl'} />
+				<Text
+					className={classes.clubIntegrationsSectionTitle}
+				>{`Enabled apps (${enabledIntegrations?.length})`}</Text>
+				<Grid>
+					{enabledIntegrations.map(integration => (
+						<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
+							<a
+								onClick={() => {
+									editIntegration(integration)
+								}}
+							>
+								<div className={classes.enabledClubIntegrationItem}>
+									<div className={classes.intItemHeader}>
+										<Image
+											src={`/${integration.icon}`}
+											width={16}
+											height={16}
+											fit={'contain'}
+										/>
+										<Space w={8} />
+										<Text>{integration.name}</Text>
+									</div>
+								</div>
+							</a>
+						</Grid.Col>
+					))}
+				</Grid>
 				<Space h="xl" />
+				<Text
+					className={classes.clubIntegrationsSectionTitle}
+				>{`Available apps (${availableIntegrations?.length})`}</Text>
+				<Grid>
+					{availableIntegrations.map(integration => (
+						<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
+							<a
+								onClick={() => {
+									editIntegration(integration)
+								}}
+							>
+								<div className={classes.clubIntegrationItem}>
+									<div className={classes.intItemHeader}>
+										<Image
+											src={`/${integration.icon}`}
+											width={16}
+											height={16}
+											fit={'contain'}
+										/>
+										<Space w={8} />
+										<Text>{integration.name}</Text>
+									</div>
+									<Text className={classes.intItemDescription}>
+										{integration.description}
+									</Text>
+								</div>
+							</a>
+						</Grid.Col>
+					))}
+				</Grid>
+				<Space h="xl" />
+				<Modal
+					centered
+					closeOnClickOutside={false}
+					closeOnEscape={false}
+					radius={16}
+					size={'lg'}
+					padding={'sm'}
+					opened={isIntegrationModalOpened}
+					title={
+						<Text
+							className={classes.modalTitle}
+						>{`${integrationBeingEdited?.name} integration`}</Text>
+					}
+					onClose={() => setIntegrationModalOpened(false)}
+				>
+					<Divider />
+					<Space h={24} />
+					{integrationBeingEdited &&
+						(integrationBeingEdited?.name === 'Twitter' ||
+							integrationBeingEdited?.name === 'Discord') && (
+							<>
+								<Text>{integrationBeingEdited.description}</Text>
+								<Space h={8} />
+								<TextInput
+									radius="lg"
+									size="md"
+									value={integrationBeingEdited.url}
+									onChange={event => {
+										const newInte: Integration = {
+											name: integrationBeingEdited.name,
+											icon: integrationBeingEdited.icon,
+											description: integrationBeingEdited.description,
+											url: event.target.value,
+											guideUrl: integrationBeingEdited.guideUrl
+										}
+										setIntegrationBeingEdited(newInte)
+									}}
+								/>
+								<Space h={24} />
+							</>
+						)}
+
+					{integrationBeingEdited &&
+						integrationBeingEdited?.name !== 'Twitter' &&
+						integrationBeingEdited?.name !== 'Discord' && (
+							<div className={classes.stepsContainer}>
+								<MantineProvider
+									theme={{
+										colors: {
+											brand: [
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E',
+												'#1DAD4E'
+											]
+										},
+										primaryColor: 'brand'
+									}}
+								>
+									<Stepper
+										size="md"
+										color="green"
+										orientation="vertical"
+										active={step === Step.FollowGuide ? 0 : 1}
+									>
+										<Stepper.Step
+											label={
+												step === Step.AddUrl
+													? ''
+													: 'Follow the instructions at the link below.'
+											}
+											loading={step === Step.AddUrl}
+											description={
+												<>
+													{step === Step.FollowGuide && (
+														<div>
+															<Space h={12} />
+															<a
+																onClick={() => {
+																	window.open(integrationBeingEdited?.guideUrl)
+																}}
+																className={classes.buttonConfirm}
+															>
+																View guide
+															</a>
+														</div>
+													)}
+
+													{step === Step.AddUrl && (
+														<div>
+															<Space h={12} />
+															<Text>Done!</Text>
+														</div>
+													)}
+												</>
+											}
+										/>
+									</Stepper>
+								</MantineProvider>
+							</div>
+						)}
+
+					<a
+						onClick={() => {
+							if (integrationBeingEdited) {
+								let isEnabled = false
+								enabledIntegrations.forEach(inte => {
+									if (inte.name === integrationBeingEdited.name) {
+										isEnabled = true
+										return
+									}
+								})
+								if (!isEnabled) {
+									// If not enabled, push this into enabled integrations
+									const newEnabled = enabledIntegrations
+									newEnabled.push(integrationBeingEdited)
+									setEnabledIntegrations(newEnabled)
+
+									availableIntegrations.forEach(inte => {
+										if (inte.name === integrationBeingEdited.name) {
+											const newAvailable = availableIntegrations.filter(
+												integ => integ.name !== integrationBeingEdited.name
+											)
+											setAvailableIntegrations(newAvailable)
+											return
+										}
+									})
+								} else {
+									// If already enabled, modify the existing integration
+									const newIntegrations = [...enabledIntegrations]
+									// Is there a better way of updating an array item in typescript than a C loop?
+									for (let i = 0; i < newIntegrations.length; i++) {
+										if (
+											newIntegrations[i].name === integrationBeingEdited.name
+										) {
+											newIntegrations[i] = integrationBeingEdited
+											break
+										}
+									}
+
+									setEnabledIntegrations(newIntegrations)
+								}
+							}
+
+							setIntegrationModalOpened(false)
+						}}
+						className={classes.buttonConfirm}
+					>
+						Done
+					</a>
+				</Modal>
 			</div>
 		</>
 	)

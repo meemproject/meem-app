@@ -278,8 +278,6 @@ export const CreateComponent: React.FC = () => {
 		Cookies.set(CookieKeys.clubName, clubName ?? '')
 		Cookies.set(CookieKeys.clubImage, smallClubLogo)
 		Cookies.set(CookieKeys.clubDescription, clubDescription)
-		Cookies.set(CookieKeys.clubDiscordUrl, clubDiscordUrl)
-		Cookies.set(CookieKeys.clubTwitterUrl, clubTwitterUrl)
 		Cookies.set(CookieKeys.clubSlug, clubNamespace)
 		router.push({ pathname: `/create/permissions` })
 	}
@@ -335,38 +333,7 @@ export const CreateComponent: React.FC = () => {
 					maxLength={140}
 					onChange={event => setClubDescription(event.currentTarget.value)}
 				/>
-				<Space h={'lg'} />
-			<Text
-				className={classes.clubDescriptionPrompt}
-			>{`Club Twitter account URL (optional)`}</Text>
-			<TextInput
-				radius="lg"
-				size="md"
-				
-				icon={(<Image
-					src="/integration-twitter.png"
-					width={16}
-					height={16}
-					fit={'contain'}
-				/>)}
-				value={clubTwitterUrl}
-				onChange={event => setClubTwitterUrl(event.currentTarget.value)}
-			/>
-			<Text
-				className={classes.clubLogoPrompt}
-			>{`Club Discord Invite URL (optional)`}</Text>
-			<TextInput
-				radius="lg"
-				size="md"
-				icon={(<Image
-					src="/integration-discord.png"
-					width={16}
-					height={16}
-					fit={'contain'}
-				/>)}
-				value={clubDiscordUrl}
-				onChange={event => setClubDiscordUrl(event.currentTarget.value)}
-			/>
+
 				<Text className={classes.clubLogoPrompt}>
 					Upload an icon for your club.
 				</Text>

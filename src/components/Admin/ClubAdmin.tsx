@@ -285,7 +285,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												: classes.inactiveTab
 										}
 									>
-										dApps
+										Apps
 									</Text>
 								</a>
 							</div>
