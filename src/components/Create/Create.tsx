@@ -139,7 +139,7 @@ export const CreateComponent: React.FC = () => {
 
 	const clubclub = useContext(ClubClubContext)
 
-	const clubName = router.query.clubname
+	const clubName = router.query.clubname?.toString()
 	const [defaultNamespace, setDefaultNamespace] = useState('')
 	const [clubNamespace, setClubNamespace] = useState('')
 
