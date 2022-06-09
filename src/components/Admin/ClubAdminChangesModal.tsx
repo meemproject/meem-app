@@ -22,7 +22,7 @@ import { useWallet } from '@meemproject/react'
 import { BigNumber, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { Club, MembershipReqType } from '../../model/club/club'
+import { Club, Integration, MembershipReqType } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
