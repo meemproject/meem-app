@@ -24,27 +24,25 @@
 		"typescriptreact"
 	],
 	"[javascript]": {
-		"editor.formatOnSave": false
+		"editor.formatOnSave": true
 	},
 	"[javascriptreact]": {
-		"editor.formatOnSave": false
+		"editor.formatOnSave": true
 	},
 	"[typescript]": {
-		"editor.formatOnSave": false
+		"editor.formatOnSave": true
 	},
 	"[typescriptreact]": {
-		"editor.formatOnSave": false
+		"editor.formatOnSave": true
 	},
 	"[handlebars]": {
-		"editor.formatOnSave": false
+		"editor.formatOnSave": true
 	},
 	"eslint.options": {
 		"extensions": [".js", ".jsx", ".ts", ".tsx"]
 	},
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.preferences.importModuleSpecifier": "relative",
-	"editor.formatOnSaveTimeout": 5000,
-	"editor.codeActionsOnSaveTimeout": 5000,
 	"editor.hover.delay": 1000,
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": true

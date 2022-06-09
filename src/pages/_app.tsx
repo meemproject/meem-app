@@ -116,6 +116,8 @@ function MyApp(props: AppProps) {
 					contractAddressMeemId={
 						process.env.NEXT_PUBLIC_MEEM_ID_CONTRACT_ADDRESS
 					}
+					polygonRpcUrl={process.env.NEXT_PUBLIC_MATIC_RPC_URL ?? ''}
+					rinkebyRpcUrl={process.env.NEXT_PUBLIC_RINKEBY_RPC_URL ?? ''}
 				>
 					<NotificationsProvider>
 						<ClubClubProvider>

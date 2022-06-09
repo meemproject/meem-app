@@ -47,6 +47,7 @@ import {
 } from '../../../generated/graphql'
 import { GET_CLUB_SLUG, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
+	Integration,
 	MembershipReqType,
 	MembershipSettings
 } from '../../model/club/club'
@@ -238,6 +239,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 					}
 				})
 			}
+
 			const uri = JSON.stringify({
 				name: Cookies.get(CookieKeys.clubName),
 				description: Cookies.get(CookieKeys.clubDescription),
