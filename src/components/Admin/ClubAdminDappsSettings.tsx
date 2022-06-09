@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -15,11 +16,15 @@ import {
 	MantineProvider,
 	Stepper,
 	Textarea,
-	Loader
+	Loader,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import request from 'superagent'
 import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
 import { Club, Integration } from '../../model/club/club'
@@ -181,6 +186,16 @@ const useStyles = createStyles(theme => ({
 	},
 	stepDescription: {
 		fontSize: 14
+	},
+	buttonSaveChanges: {
+		marginTop: 16,
+		marginBottom: 0,
+
+		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 24
 	}
 }))
 
@@ -224,6 +239,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	}
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
 
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
+
 	// Setup available integrations
 	useEffect(() => {
 		if (!loading && inteData && availableIntegrations.length === 0) {
@@ -263,7 +280,39 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	// Unused for now
 	const removeIntegration = (integration: Integration) => {}
 
-	const saveChanges = () => {}
+	const saveChanges = async () => {
+		// Loop through each enabled integration and call a MeemAPI endpoint to change or update it.
+		setIsSavingChanges(true)
+		await Promise.all(
+			enabledIntegrations.map(async (integration: Integration) => {
+				try {
+					const jwtToken = Cookies.get('meemJwtToken')
+					const { body } = await request
+						.post(
+							`${
+								process.env.NEXT_PUBLIC_API_URL
+							}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
+								meemContractId: club.address ?? '',
+								integrationId: integration.integrationId
+							})}`
+						)
+						.set('Authorization', `JWT ${jwtToken}`)
+						.set('Access-Control-Allow-Origin', '*')
+						.send({
+							isEnabled: true,
+							metadata: { externalUrl: integration.url ?? '' }
+						})
+					log.debug(body)
+
+					return body
+				} catch (e) {
+					log.debug(e)
+					return null
+				}
+			})
+		)
+		setIsSavingChanges(false)
+	}
 
 	return (
 		<>
@@ -274,6 +323,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Text className={classes.clubContractAddress}>{club.address}</Text>
 				<Space h={'xl'} />
+
 				{enabledIntegrations && enabledIntegrations.length > 0 && (
 					<>
 						<Text
@@ -310,6 +360,13 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								</Grid.Col>
 							))}
 						</Grid>
+						<Button
+							className={classes.buttonSaveChanges}
+							loading={isSavingChanges}
+							onClick={saveChanges}
+						>
+							Save Changes
+						</Button>
 						<Space h="xl" />
 					</>
 				)}
@@ -562,6 +619,18 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 							</a>
 						)}
 				</Modal>
+				{enabledIntegrations.length === 0 && (
+					<>
+						<Button
+							className={classes.buttonSaveChanges}
+							loading={isSavingChanges}
+							onClick={saveChanges}
+						>
+							Save Changes
+						</Button>
+						<Space h={32} />
+					</>
+				)}
 			</div>
 		</>
 	)
