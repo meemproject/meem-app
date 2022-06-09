@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -12,11 +14,14 @@ import {
 	Divider,
 	MantineProvider,
 	Stepper,
-	Textarea
+	Textarea,
+	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
-import { allIntegrations, Club, Integration } from '../../model/club/club'
+import { GetIntegrationsQuery } from '../../../generated/graphql'
+import { GET_INTEGRATIONS } from '../../graphql/clubs'
+import { Club, Integration } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -191,7 +196,13 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 
-	const [hasSetupIntegrations, setHasSetUpIntegrations] = useState(false)
+	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] = useState(false)
+
+	const {
+		loading,
+		error,
+		data: inteData
+	} = useQuery<GetIntegrationsQuery>(GET_INTEGRATIONS)
 
 	const [enabledIntegrations, setEnabledIntegrations] = useState<Integration[]>(
 		[]
@@ -210,34 +221,37 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	}
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
 
+	// Setup available integrations
 	useEffect(() => {
-		if (!hasSetupIntegrations) {
+		if (!loading && inteData && availableIntegrations.length === 0) {
 			// Set up available integrations
 			const available: Integration[] = []
-			allIntegrations.forEach(inte => {
-				let isIntegrationEnabled = false
-				club.integrations?.forEach(enabledInte => {
-					if (enabledInte.name === inte.name) {
-						isIntegrationEnabled = true
-						return
-					}
-				})
-				if (!isIntegrationEnabled) {
-					available.push(inte)
+			inteData.Integrations.forEach(inte => {
+				const integration: Integration = {
+					integrationId: inte.id,
+					name: inte.name,
+					description: inte.description,
+					guideUrl: inte.guideUrl,
+					icon: inte.icon
 				}
+				available.push(integration)
 			})
 			setAvailableIntegrations(available)
+		}
+	}, [availableIntegrations.length, club.integrations, inteData, loading])
 
+	// Setup enabled integrations
+	useEffect(() => {
+		if (!hasSetupEnabledIntegrations) {
 			// Set up enabled integrations
 			setEnabledIntegrations(club.integrations ?? [])
-
 			setHasSetUpIntegrations(true)
 		}
-	}, [club.integrations, hasSetupIntegrations])
+	}, [club.integrations, hasSetupEnabledIntegrations])
 
 	const editIntegration = (integration: Integration) => {
 		setIntegrationBeingEdited(integration)
-		if (integration.url.length > 0) {
+		if (integration.url && integration.url.length > 0) {
 			setStep(Step.AddUrl)
 		}
 		setIntegrationModalOpened(true)
@@ -296,37 +310,58 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						<Space h="xl" />
 					</>
 				)}
+				{!loading && inteData && (
+					<>
+						<Text
+							className={classes.clubIntegrationsSectionTitle}
+						>{`Available apps (${availableIntegrations?.length})`}</Text>
+						<Grid>
+							{availableIntegrations.map(integration => (
+								<Grid.Col
+									xs={6}
+									sm={4}
+									md={4}
+									lg={4}
+									xl={4}
+									key={integration.name}
+								>
+									<a
+										onClick={() => {
+											editIntegration(integration)
+										}}
+									>
+										<div className={classes.clubIntegrationItem}>
+											<div className={classes.intItemHeader}>
+												<Image
+													src={`/${integration.icon}`}
+													width={16}
+													height={16}
+													fit={'contain'}
+												/>
+												<Space w={8} />
+												<Text>{integration.name}</Text>
+											</div>
+											<Text className={classes.intItemDescription}>
+												{integration.description}
+											</Text>
+										</div>
+									</a>
+								</Grid.Col>
+							))}
+						</Grid>
+					</>
+				)}
+				{loading && !inteData && (
+					<>
+						<Loader />
+					</>
+				)}
+				{!loading && error && (
+					<>
+						<Text>Unable to load available apps :(</Text>
+					</>
+				)}
 
-				<Text
-					className={classes.clubIntegrationsSectionTitle}
-				>{`Available apps (${availableIntegrations?.length})`}</Text>
-				<Grid>
-					{availableIntegrations.map(integration => (
-						<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
-							<a
-								onClick={() => {
-									editIntegration(integration)
-								}}
-							>
-								<div className={classes.clubIntegrationItem}>
-									<div className={classes.intItemHeader}>
-										<Image
-											src={`/${integration.icon}`}
-											width={16}
-											height={16}
-											fit={'contain'}
-										/>
-										<Space w={8} />
-										<Text>{integration.name}</Text>
-									</div>
-									<Text className={classes.intItemDescription}>
-										{integration.description}
-									</Text>
-								</div>
-							</a>
-						</Grid.Col>
-					))}
-				</Grid>
 				<Space h="xl" />
 				<Modal
 					centered
@@ -362,6 +397,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 										const newInte: Integration = {
 											name: integrationBeingEdited.name,
 											icon: integrationBeingEdited.icon,
+											integrationId: integrationBeingEdited.integrationId,
 											description: integrationBeingEdited.description,
 											url: event.target.value,
 											guideUrl: integrationBeingEdited.guideUrl
@@ -438,6 +474,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 																		icon: integrationBeingEdited.icon,
 																		description:
 																			integrationBeingEdited.description,
+																		integrationId:
+																			integrationBeingEdited.integrationId,
 																		url: event.target.value,
 																		guideUrl: integrationBeingEdited.guideUrl
 																	}
@@ -463,7 +501,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 										let url
 
 										try {
-											url = new URL(integrationBeingEdited.url)
+											url = new URL(integrationBeingEdited.url ?? '')
 										} catch (_) {
 											showNotification({
 												title: 'Oops!',

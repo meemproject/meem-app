@@ -11,83 +11,15 @@ export const ClubAdminRole =
 	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
 
 export interface Integration {
+	id?: string
+	integrationId: string
 	name: string
-	url: string
+	isEnabled?: boolean
+	url?: string
 	icon?: string
 	description?: string
 	guideUrl?: string
 }
-
-export const allIntegrations: Integration[] = [
-	{
-		name: 'Twitter',
-		url: '',
-		icon: 'integration-twitter.png',
-		description: "Add a link to your Club's Twitter account."
-	},
-	{
-		name: 'Discord',
-		url: '',
-		icon: 'integration-discord.png',
-		description: 'Add a link to invite Club members to your Discord server.'
-	},
-	{
-		name: 'Guild',
-		url: '',
-		icon: 'integration-guild.png',
-		description: 'Create a Guild for your Club.',
-		guideUrl:
-			'https://meemproject.notion.site/Guild-7c6f030bd5b4485998899d521fc3694a'
-	},
-	{
-		name: 'SlikSafe',
-		url: '',
-		icon: 'integration-sliksafe.png',
-		description: 'File storage and backup for Club members.',
-		guideUrl:
-			'https://meemproject.notion.site/Sliksafe-9ee759f735ac4f9cb52b5d849292188c'
-	},
-	{
-		name: 'Tellie',
-		url: '',
-		icon: 'integration-tellie.png',
-		description: 'Website builder for your Club.',
-		guideUrl:
-			'https://meemproject.notion.site/Tellie-5c176f1036ef4fe3b993b0137eec15a8'
-	},
-	{
-		name: 'Clarity',
-		url: '',
-		icon: 'integration-clarity.png',
-		description: 'Manage contributions and rewards for Club members.',
-		guideUrl:
-			'https://meemproject.notion.site/Clarity-b144c6bc1eae4e08b3af870ac87ce60d'
-	},
-	{
-		name: 'Gnosis',
-		url: '',
-		icon: 'integration-gnosis.png',
-		description: 'Manage Club funds in a secure way.',
-		guideUrl:
-			'https://meemproject.notion.site/Gnosis-af38757b9faf486f9900a5ea8f4a805d'
-	},
-	{
-		name: 'Myco',
-		url: '',
-		icon: 'integration-myco.png',
-		description: 'Turn your Club into a legal entity.',
-		guideUrl:
-			'https://meemproject.notion.site/Myco-5425597cd8ca413fa070bc55bf1428f8'
-	},
-	{
-		name: 'Orca',
-		url: '',
-		icon: 'integration-orca.png',
-		description: 'Organize working groups for your Club',
-		guideUrl:
-			'https://meemproject.notion.site/Orca-a67a9137657643609c3ae54183505ecf'
-	}
-]
 
 export interface Club {
 	id?: string
@@ -182,7 +114,7 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			integrations: metadata.integrations
+			integrations: []
 		}
 	} else {
 		return {}
@@ -351,7 +283,7 @@ export default async function clubFromMeemContract(
 		// Is the current user a club member?
 		let isClubMember = false
 
-		// If so, what's their tokenId?
+		// If so, what's their tokenId? / parse members
 		let membershipToken = undefined
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
@@ -376,6 +308,21 @@ export default async function clubFromMeemContract(
 				}
 			}
 		}
+
+		// Integrations
+		const integrations: Integration[] = []
+		clubData.MeemContractIntegrations.forEach(inte => {
+			const integration: Integration = {
+				id: inte.id,
+				integrationId: inte.IntegrationId,
+				name: inte.Integration?.name ?? 'Unknown',
+				description: inte.Integration?.description ?? 'Unknown',
+				isEnabled: inte.isEnabled,
+				guideUrl: inte.Integration?.guideUrl,
+				url: inte.metadata.externalUrl ?? ''
+			}
+			integrations.push(integration)
+		})
 
 		// Calculate slots left if totalOriginSupply > 0
 		let slotsLeft = -1
@@ -410,7 +357,7 @@ export default async function clubFromMeemContract(
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			integrations: metadata.integrations
+			integrations
 		}
 	} else {
 		return {}

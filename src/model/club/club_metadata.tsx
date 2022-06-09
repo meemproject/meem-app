@@ -1,11 +1,7 @@
-import log from '@kengoldfarb/log'
-import { allIntegrations, Integration } from './club'
-
 interface ClubMetadata {
 	image: string
 	description: string
 	applicationLinks: string[]
-	integrations: Integration[]
 }
 
 export function clubMetadataFromContractUri(uri: string): ClubMetadata {
@@ -13,8 +9,7 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 		return {
 			image: '',
 			description: '',
-			applicationLinks: [],
-			integrations: []
+			applicationLinks: []
 		}
 	}
 
@@ -25,48 +20,22 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 			return {
 				image: '',
 				description: '',
-				applicationLinks: [],
-				integrations: []
+				applicationLinks: []
 			}
 		}
 		const contractURIObject = JSON.parse(contractURIJSONString)
-		const finalIntegrations: Integration[] = []
-		if (contractURIObject.integrations) {
-			const integrations = JSON.parse(contractURIObject.integrations)
-			log.debug(`contract has ${integrations.length} integrations`)
-			integrations.forEach((inte: any) => {
-				// Apply integration metadata here
-				let relevantInte: Integration = { name: '', url: '' }
-				allIntegrations.forEach(richInte => {
-					if (richInte.name === inte.name) {
-						relevantInte = richInte
-						return
-					}
-				})
-
-				finalIntegrations.push({
-					name: inte.name,
-					url: inte.url,
-					description: relevantInte.description,
-					icon: relevantInte.icon,
-					guideUrl: relevantInte.guideUrl
-				})
-			})
-		}
 
 		const metadata: ClubMetadata = {
 			image: contractURIObject.image,
 			description: contractURIObject.description,
-			applicationLinks: contractURIObject.application_links,
-			integrations: finalIntegrations
+			applicationLinks: contractURIObject.application_links
 		}
 		return metadata
 	} catch (e) {
 		return {
 			image: '',
 			description: '',
-			applicationLinks: [],
-			integrations: []
+			applicationLinks: []
 		}
 	}
 }
