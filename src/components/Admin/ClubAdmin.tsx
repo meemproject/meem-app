@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
@@ -11,6 +12,7 @@ import {
 	Loader
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
@@ -182,6 +184,21 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	})
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 	const [club, setClub] = useState<Club>()
+
+	useEffect(() => {
+		if (
+			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
+			Cookies.get('meemJwtToken') === undefined ||
+			Cookies.get('walletAddress') === undefined
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/${slug}/admin`
+				}
+			})
+		}
+	}, [router, slug])
 
 	useEffect(() => {
 		async function getClub(data: GetClubQuery) {

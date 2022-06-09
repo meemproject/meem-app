@@ -18,6 +18,7 @@ import {
 	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
@@ -195,6 +196,8 @@ enum Step {
 export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
+
+	const router = useRouter()
 
 	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] = useState(false)
 
