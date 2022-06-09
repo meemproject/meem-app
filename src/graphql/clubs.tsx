@@ -69,6 +69,19 @@ export const GET_CLUB = gql`
 					address
 				}
 			}
+			MeemContractIntegrations {
+				IntegrationId
+				id
+				isEnabled
+				metadata
+				Integration {
+					description
+					guideUrl
+					icon
+					id
+					name
+				}
+			}
 		}
 	}
 `
@@ -138,6 +151,21 @@ export const GET_MY_CLUBS = gql`
 					}
 				}
 			}
+		}
+	}
+`
+
+export const GET_INTEGRATIONS = gql`
+	query GetIntegrations {
+		Integrations {
+			createdAt
+			deletedAt
+			description
+			guideUrl
+			icon
+			id
+			name
+			updatedAt
 		}
 	}
 `
