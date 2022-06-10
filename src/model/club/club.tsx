@@ -328,25 +328,27 @@ export default async function clubFromMeemContract(
 		const privateIntegrations: Integration[] = []
 		if (clubData.MeemContractIntegrations) {
 			clubData.MeemContractIntegrations.forEach(inte => {
-				const integration: Integration = {
-					id: inte.id,
-					integrationId: inte.IntegrationId,
-					name: inte.Integration?.name ?? 'Unknown',
-					description: inte.Integration?.description ?? 'Unknown',
-					icon: inte.Integration?.icon ?? '',
-					isEnabled: inte.isEnabled,
-					isPublic: inte.isPublic,
-					guideUrl: inte.Integration?.guideUrl,
-					url: inte.metadata.externalUrl ?? '',
-					isExistingIntegration: true
-				}
+				if (inte.isEnabled) {
+					const integration: Integration = {
+						id: inte.id,
+						integrationId: inte.IntegrationId,
+						name: inte.Integration?.name ?? 'Unknown',
+						description: inte.Integration?.description ?? 'Unknown',
+						icon: inte.Integration?.icon ?? '',
+						isEnabled: inte.isEnabled,
+						isPublic: inte.isPublic,
+						guideUrl: inte.Integration?.guideUrl,
+						url: inte.metadata.externalUrl ?? '',
+						isExistingIntegration: true
+					}
 
-				if (inte.isPublic) {
-					publicIntegrations.push(integration)
-				} else {
-					privateIntegrations.push(integration)
+					if (inte.isPublic) {
+						publicIntegrations.push(integration)
+					} else {
+						privateIntegrations.push(integration)
+					}
+					allIntegrations.push(integration)
 				}
-				allIntegrations.push(integration)
 			})
 		}
 

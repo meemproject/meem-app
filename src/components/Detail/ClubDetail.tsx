@@ -218,7 +218,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		marginBottom: 12,
 		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
+		border: '1px solid rgba(255, 102, 81, 1)',
 		backgroundColor: '#FAFAFA',
 		borderRadius: 16,
 		padding: 16
@@ -798,7 +798,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							<>
 								<Text className={classes.clubDetailSectionTitle}>{`Apps (${
 									club.publicIntegrations!.length
-								})`}</Text>
+								})${
+									club.allIntegrations!.length > club.publicIntegrations!.length
+										? `, plus ${
+												club.allIntegrations!.length -
+												club.publicIntegrations!.length
+										  } hidden member-only app(s)`
+										: ``
+								}`}</Text>
 								<Grid>
 									{club.publicIntegrations!.map(integration => (
 										<>
@@ -829,13 +836,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													</div>
 												</a>
 											</Grid.Col>
-											{club.allIntegrations!.length >
-												club.publicIntegrations!.length && (
-												<Text>{`(Plus ${
-													club.allIntegrations!.length -
-													club.publicIntegrations!.length
-												}) more apps for Club members.`}</Text>
-											)}
 										</>
 									))}
 								</Grid>
