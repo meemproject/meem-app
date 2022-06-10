@@ -7030,10 +7030,10 @@ eslint-config-airbnb-typescript@^17.0.0:
   dependencies:
     eslint-config-airbnb-base "^15.0.0"
 
-eslint-config-kengoldfarb@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-kengoldfarb/-/eslint-config-kengoldfarb-1.4.1.tgz#224873dc6d6a3d7552ddd4f4c5b940b59c85fafe"
-  integrity sha512-Ei/7hJ2aBWis+Lj6ZPd3JjCpQ5rvkDmRA2q7ecuA5ffMHxz8C3LRPyffaQjOPQfo5Yf+mWeoCq7ZiSOJh/f9GQ==
+eslint-config-kengoldfarb@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/eslint-config-kengoldfarb/-/eslint-config-kengoldfarb-1.4.2.tgz#1da52d05c5844933cedba5b78608bbd7edf48132"
+  integrity sha512-Sa8QNs/qceGbTKnCbHt1M5GsiSOeCAU0yc7s3sGVGh9zTrxhM+ujpCRJ7Ja61UKrZmrNxSPSu4V8QL2yGQAy+g==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.19.0"
     "@typescript-eslint/parser" "^5.19.0"
@@ -7041,7 +7041,7 @@ eslint-config-kengoldfarb@1.4.1:
     eslint-config-prettier "^8.5.0"
     eslint-plugin-import "^2.26.0"
     eslint-plugin-jsx-a11y "^6.3.1"
-    eslint-plugin-kengoldfarb "^1.4.1"
+    eslint-plugin-kengoldfarb "^1.4.2"
     eslint-plugin-prettier "^4.0.0"
     eslint-plugin-react "^7.29.4"
     eslint-plugin-react-hooks "^4.4.0"
@@ -7105,10 +7105,10 @@ eslint-plugin-jsx-a11y@^6.3.1:
     language-tags "^1.0.5"
     minimatch "^3.0.4"
 
-eslint-plugin-kengoldfarb@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-kengoldfarb/-/eslint-plugin-kengoldfarb-1.4.1.tgz#32cfd07e98f688b28aa14ed5954c68a944662319"
-  integrity sha512-Q1hdwJKearSUc3FpFnXG7QC6Em/XEgrZ97vNYLNf2b7fw/yg1DMdI6Z2ITEQzyha1bBgh1LL9fWvGJM1QuqYUA==
+eslint-plugin-kengoldfarb@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-kengoldfarb/-/eslint-plugin-kengoldfarb-1.4.2.tgz#17fb4450e97ecf72273b51d7d515cde2ad1c3d19"
+  integrity sha512-1tsn+etNKJ1W8N90KSnb7GiZt/PHBnNkuOd0Lh2F+m/MdRNKrMzeZO89lpyOop1l4VjQEXz7noqjubALW/Hmwg==
   dependencies:
     pascal-case "^3"
 
@@ -7177,7 +7177,7 @@ eslint-visitor-keys@^3.3.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.3.0.tgz#f6480fa6b1f30efe2d1968aa8ac745b862469826"
   integrity sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==
 
-eslint@^8.11.0:
+eslint@^8.13.0:
   version "8.17.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.17.0.tgz#1cfc4b6b6912f77d24b874ca1506b0fe09328c21"
   integrity sha512-gq0m0BTJfci60Fz4nczYxNAlED+sMcihltndR8t9t1evnU/azx53x3t2UHXC/uRjcbvRw/XctpaNygSTcQD+Iw==

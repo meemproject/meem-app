@@ -150,7 +150,8 @@ export default async function clubFromMeemContract(
 				}
 
 				if (
-					wall.Wallet?.address.toLowerCase() === walletAddress?.toLowerCase() &&
+					wall.Wallet?.address.toLowerCase() ===
+						walletAddress?.toLowerCase() &&
 					wall.role === ClubAdminRole
 				) {
 					isClubAdmin = true
@@ -176,7 +177,9 @@ export default async function clubFromMeemContract(
 						// Don't do anything
 						//log.debug('ignoring admin mint permission')
 					} else {
-						const cost = isNaN(permission.costWei) ? 0 : permission.costWei
+						const cost = isNaN(permission.costWei)
+							? 0
+							: permission.costWei
 						//log.debug(`cost to join (wei) = ${cost}`)
 						if (cost === 0) {
 							costToJoin = cost
@@ -296,7 +299,8 @@ export default async function clubFromMeemContract(
 				}
 
 				if (
-					meem.owner.toLowerCase() !== MeemAPI.zeroAddress.toLowerCase() &&
+					meem.owner.toLowerCase() !==
+						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
@@ -349,7 +353,9 @@ export default async function clubFromMeemContract(
 				costToJoin,
 				membershipFundsAddress: fundsAddress,
 				membershipStartDate:
-					clubData.mintStartAt !== 0 ? clubData.mintStartAt : undefined,
+					clubData.mintStartAt !== 0
+						? clubData.mintStartAt
+						: undefined,
 				membershipEndDate:
 					clubData.mintEndAt !== 0 ? clubData.mintEndAt : undefined,
 				membershipQuantity: totalMemberships,

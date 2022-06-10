@@ -97,11 +97,13 @@ export const CreatePage: React.FC = () => {
 				}
 			})
 
+			console.log(from)
+
 			const tx = await meemContracts.upgrade({
 				signer: web3Provider.getSigner(),
 				proxyContractAddress: proxyAddress,
 				chain: Chain.Rinkeby,
-				fromVersion: from.toString(),
+				fromVersion: from,
 				toVersion
 			})
 
@@ -112,35 +114,55 @@ export const CreatePage: React.FC = () => {
 	}
 
 	const handleMint = async () => {
-		const meemContract = new Contract(
-			proxyAddress,
-			meemABI,
-			signer
-		) as unknown as meemContracts.Meem
+		try {
+			const meemContract = new Contract(
+				proxyAddress,
+				meemABI,
+				signer
+			) as unknown as meemContracts.Meem
 
-		meemContract?.mint(
-			{
-				to: accounts[0],
-				tokenURI: 'ipfs://example',
-				parentChain: Chain.Polygon,
-				parent: MeemAPI.zeroAddress,
-				parentTokenId: 0,
-				meemType: MeemType.Original,
-				isURILocked: false,
-				reactionTypes: ['upvote', 'downvote', 'heart'],
-				uriSource: UriSource.Json,
-				mintedBy: accounts[0]
-			},
-			meemContracts.defaultMeemProperties,
-			meemContracts.defaultMeemProperties,
-			{ gasLimit: '1000000' }
-		)
+			await meemContract?.mint(
+				{
+					to: accounts[0],
+					tokenURI: 'ipfs://example',
+					parentChain: Chain.Polygon,
+					parent: MeemAPI.zeroAddress,
+					parentTokenId: 0,
+					meemType: MeemType.Original,
+					isURILocked: false,
+					reactionTypes: ['upvote', 'downvote', 'heart'],
+					uriSource: UriSource.Json,
+					mintedBy: accounts[0]
+				},
+				meemContracts.defaultMeemProperties,
+				meemContracts.defaultMeemProperties,
+				{ gasLimit: '1000000' }
+			)
+		} catch (e) {
+			log.crit(e)
+		}
+	}
+
+	const handleAcceptOwnership = async () => {
+		try {
+			const meemContract = new Contract(
+				proxyAddress,
+				meemABI,
+				signer
+			) as unknown as meemContracts.Meem
+
+			await meemContract?.acceptOwnership()
+		} catch (e) {
+			log.crit(e)
+		}
 	}
 
 	const displayVersions = [
 		{
 			version: 'latest',
-			displayName: `latest (${meemContracts.versions[Chain.Rinkeby].latest})`
+			displayName: `latest (${
+				meemContracts.versions[Chain.Rinkeby].latest
+			})`
 		},
 		{
 			version: 'beta',
@@ -148,7 +170,9 @@ export const CreatePage: React.FC = () => {
 		},
 		{
 			version: 'alpha',
-			displayName: `alpha (${meemContracts.versions[Chain.Rinkeby].alpha})`
+			displayName: `alpha (${
+				meemContracts.versions[Chain.Rinkeby].alpha
+			})`
 		},
 		...meemContracts.versionList().map(v => ({
 			version: v,
@@ -162,7 +186,9 @@ export const CreatePage: React.FC = () => {
 			<Switch
 				label={shouldShowUpgrade ? 'Create a club' : 'Upgrade a club'}
 				checked={shouldShowUpgrade}
-				onChange={event => setShouldShowUpgrade(event.currentTarget.checked)}
+				onChange={event =>
+					setShouldShowUpgrade(event.currentTarget.checked)
+				}
 				size="lg"
 			/>
 			<div>
@@ -177,13 +203,18 @@ export const CreatePage: React.FC = () => {
 				/>
 			</div>
 			<div>
-				<Button onClick={shouldShowUpgrade ? handleUpgrade : handleCreate}>
+				<Button
+					onClick={shouldShowUpgrade ? handleUpgrade : handleCreate}
+				>
 					{shouldShowUpgrade ? 'Upgrade Club' : '1. Create Club'}
 				</Button>
 			</div>
 			{!shouldShowUpgrade && (
 				<div>
-					<Button onClick={handleInit} disabled={proxyAddress.length === 0}>
+					<Button
+						onClick={handleInit}
+						disabled={proxyAddress.length === 0}
+					>
 						2. Initialize Club
 					</Button>
 				</div>
@@ -193,11 +224,19 @@ export const CreatePage: React.FC = () => {
 					label="Contract Address"
 					placeholder="0x..."
 					value={proxyAddress}
-					onChange={event => setProxyAddress(event.currentTarget.value)}
+					onChange={event =>
+						setProxyAddress(event.currentTarget.value)
+					}
 				/>
 			</div>
 			<Button onClick={handleMint} disabled={proxyAddress.length === 0}>
 				3. Mint
+			</Button>
+			<Button
+				onClick={handleAcceptOwnership}
+				disabled={proxyAddress.length === 0}
+			>
+				Accept ownership
 			</Button>
 			<p>Club status: {status}</p>
 			{txLog.map(l => (

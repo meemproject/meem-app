@@ -251,6 +251,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		variables: { slug }
 	})
 
+	console.log({ loading, error, clubData })
+
 	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
@@ -269,7 +271,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 
 	const checkEligibility = useCallback(
-		(reqs: RequirementString[], isClubAdmin: boolean, slotsLeft: number) => {
+		(
+			reqs: RequirementString[],
+			isClubAdmin: boolean,
+			slotsLeft: number
+		) => {
 			if (reqs.length === 0 || isClubAdmin) {
 				setMeetsAllRequirements(true)
 			} else {
@@ -282,7 +288,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				log.debug(`reqs met = ${reqsMet}`)
 				log.debug(`total reqs = ${reqs.length}`)
 				log.debug(`slots left = ${slotsLeft}`)
-				if (reqsMet === reqs.length && (slotsLeft === -1 || slotsLeft > 0)) {
+				if (
+					reqsMet === reqs.length &&
+					(slotsLeft === -1 || slotsLeft > 0)
+				) {
 					setMeetsAllRequirements(true)
 				}
 			}
@@ -392,106 +401,132 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			const reqs: RequirementString[] = []
 			let index = 0
 			await Promise.all(
-				possibleClub.membershipSettings!.requirements.map(async function (req) {
-					index++
+				possibleClub.membershipSettings!.requirements.map(
+					async function (req) {
+						index++
 
-					let tokenBalance = BigNumber.from(0)
-					let tokenUrl = ''
-					let tokenName = 'Unknown Token'
-					let tokenSymbol = ''
-					if (wallet.web3Provider && wallet.signer) {
-						const token = await tokenFromContractAddress(
-							req.tokenContractAddress,
-							wallet
-						)
-						if (token) {
-							tokenBalance = token.balance
-							tokenUrl = token.url
-							tokenName = token.name
-							tokenSymbol = token.symbol
+						let tokenBalance = BigNumber.from(0)
+						let tokenUrl = ''
+						let tokenName = 'Unknown Token'
+						let tokenSymbol = ''
+						if (wallet.web3Provider && wallet.signer) {
+							const token = await tokenFromContractAddress(
+								req.tokenContractAddress,
+								wallet
+							)
+							if (token) {
+								tokenBalance = token.balance
+								tokenUrl = token.url
+								tokenName = token.name
+								tokenSymbol = token.symbol
+							}
+						}
+
+						switch (req.type) {
+							case MembershipReqType.None:
+								reqs.push({
+									requirementKey: `Anyone${index}`,
+									requirementComponent: (
+										<Text>Anyone can join this club.</Text>
+									),
+									meetsRequirement: true
+								})
+								break
+							case MembershipReqType.ApprovedApplicants:
+								reqs.push({
+									requirementKey: `Applicants${index}`,
+									requirementComponent: (
+										<Text>
+											Membership is available to approved
+											applicants.
+											{!req.applicationLink && (
+												<span>
+													{' '}
+													Contact a Club Admin for the
+													application link.
+												</span>
+											)}
+											{req.applicationLink && (
+												<span>
+													{' '}
+													Applicants can apply{' '}
+													<a
+														className={
+															classes.requirementLink
+														}
+														href={
+															req.applicationLink
+														}
+													>
+														here
+													</a>
+													.
+												</span>
+											)}
+										</Text>
+									),
+
+									meetsRequirement: wallet.isConnected
+										? req.approvedAddresses.includes(
+												wallet.accounts[0]
+										  )
+										: false
+								})
+								break
+
+							case MembershipReqType.TokenHolders:
+								reqs.push({
+									requirementKey: `Token${index}`,
+									requirementComponent: (
+										<Text>
+											Members must hold{' '}
+											{req.tokenMinQuantity}{' '}
+											<a
+												className={
+													classes.requirementLink
+												}
+												href={tokenUrl}
+											>
+												{tokenName}
+											</a>
+											.
+										</Text>
+									),
+									meetsRequirement:
+										tokenBalance > BigNumber.from(0)
+								})
+								break
+							case MembershipReqType.OtherClubMember:
+								reqs.push({
+									requirementKey: `OtherClub${index}`,
+									requirementComponent: (
+										<Text>
+											Members must also be a member of{' '}
+											<a
+												className={
+													classes.requirementLink
+												}
+												href="/club"
+											>
+												{req.clubName}
+											</a>
+										</Text>
+									),
+									meetsRequirement: true
+								})
+								break
 						}
 					}
-
-					switch (req.type) {
-						case MembershipReqType.None:
-							reqs.push({
-								requirementKey: `Anyone${index}`,
-								requirementComponent: <Text>Anyone can join this club.</Text>,
-								meetsRequirement: true
-							})
-							break
-						case MembershipReqType.ApprovedApplicants:
-							reqs.push({
-								requirementKey: `Applicants${index}`,
-								requirementComponent: (
-									<Text>
-										Membership is available to approved applicants.
-										{!req.applicationLink && (
-											<span>
-												{' '}
-												Contact a Club Admin for the application link.
-											</span>
-										)}
-										{req.applicationLink && (
-											<span>
-												{' '}
-												Applicants can apply{' '}
-												<a
-													className={classes.requirementLink}
-													href={req.applicationLink}
-												>
-													here
-												</a>
-												.
-											</span>
-										)}
-									</Text>
-								),
-
-								meetsRequirement: wallet.isConnected
-									? req.approvedAddresses.includes(wallet.accounts[0])
-									: false
-							})
-							break
-
-						case MembershipReqType.TokenHolders:
-							reqs.push({
-								requirementKey: `Token${index}`,
-								requirementComponent: (
-									<Text>
-										Members must hold {req.tokenMinQuantity}{' '}
-										<a className={classes.requirementLink} href={tokenUrl}>
-											{tokenName}
-										</a>
-										.
-									</Text>
-								),
-								meetsRequirement: tokenBalance > BigNumber.from(0)
-							})
-							break
-						case MembershipReqType.OtherClubMember:
-							reqs.push({
-								requirementKey: `OtherClub${index}`,
-								requirementComponent: (
-									<Text>
-										Members must also be a member of{' '}
-										<a className={classes.requirementLink} href="/club">
-											{req.clubName}
-										</a>
-									</Text>
-								),
-								meetsRequirement: true
-							})
-							break
-					}
-				})
+				)
 			)
 			log.debug('set parsed reqs')
 			if (reqs.length === 0) {
 				reqs.push({
 					requirementKey: `Error${index}`,
 					requirementComponent: (
-						<Text>This club has invalid membership requirements.</Text>
+						<Text>
+							This club has invalid membership requirements.
+						</Text>
 					),
 					meetsRequirement: false
 				})
@@ -500,13 +535,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			// If mint start or end are valid,
 			// determine whether the user falls within the date range.
 			if (possibleClub.membershipSettings) {
-				const mintStart = possibleClub.membershipSettings.membershipStartDate
-				const mintEnd = possibleClub.membershipSettings.membershipEndDate
+				const mintStart =
+					possibleClub.membershipSettings.membershipStartDate
+				const mintEnd =
+					possibleClub.membershipSettings.membershipEndDate
 
 				const afterMintStart =
 					Date.now() > (mintStart ? new Date(mintStart).getTime() : 0)
 				const beforeMintEnd =
-					Date.now() < (mintEnd ? new Date(mintEnd).getTime() : 200000000000000)
+					Date.now() <
+					(mintEnd ? new Date(mintEnd).getTime() : 200000000000000)
 
 				let mintDatesText = 'Minting is available now'
 				const mintStartString = mintStart
@@ -680,9 +718,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			{!isLoadingClub && club?.name && (
 				<>
 					<div className={classes.header}>
-						<Image className={classes.clubLogoImage} src={club.image} />
+						<Image
+							className={classes.clubLogoImage}
+							src={club.image}
+						/>
 						<div>
-							<Text className={classes.headerClubName}>{club.name}</Text>
+							<Text className={classes.headerClubName}>
+								{club.name}
+							</Text>
 							<Text className={classes.headerClubDescription}>
 								{club.description}
 							</Text>
@@ -704,11 +747,17 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										className={classes.buttonJoinClub}
 									>
 										{meetsAllRequirements &&
-											(club.membershipSettings!.costToJoin > 0
-												? `Join - ${club.membershipSettings!.costToJoin} MATIC`
+											(club.membershipSettings!
+												.costToJoin > 0
+												? `Join - ${
+														club.membershipSettings!
+															.costToJoin
+												  } MATIC`
 												: `Join`)}
-										{!meetsAllRequirements && 'Requirements not met'}
-										{!wallet.isConnected && 'Connect wallet to join'}
+										{!meetsAllRequirements &&
+											'Requirements not met'}
+										{!wallet.isConnected &&
+											'Connect wallet to join'}
 									</Button>
 								)}
 								{!wallet.isConnected && (
@@ -720,7 +769,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									</Button>
 								)}
 								{club.membershipSettings &&
-									club.membershipSettings?.membershipQuantity > 0 && (
+									club.membershipSettings
+										?.membershipQuantity > 0 && (
 										<Text
 											className={classes.headerSlotsLeft}
 										>{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}</Text>
@@ -730,9 +780,15 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										<Space w={'xs'} />
 										<Button
 											onClick={navigateToSettings}
-											className={classes.outlineHeaderButton}
+											className={
+												classes.outlineHeaderButton
+											}
 											leftIcon={
-												<Settings className={classes.clubSettingsIcon} />
+												<Settings
+													className={
+														classes.clubSettingsIcon
+													}
+												/>
 											}
 										>
 											Settings
@@ -746,44 +802,63 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					<Container>
 						{!club.isClubMember && (
 							<>
-								<Text className={classes.clubDetailSectionTitle}>
+								<Text
+									className={classes.clubDetailSectionTitle}
+								>
 									Membership Requirements
 								</Text>
 								{!requirementsParsed && (
-									<div className={classes.requirementsContainer}>
+									<div
+										className={
+											classes.requirementsContainer
+										}
+									>
 										<Loader />
 									</div>
 								)}
 
-								{parsedRequirements.length > 0 && requirementsParsed && (
-									<div className={classes.requirementsContainer}>
-										{parsedRequirements.map(requirement => (
-											<div
-												className={classes.requirementItem}
-												key={requirement.requirementKey}
-											>
-												{requirement.meetsRequirement && (
-													<CircleCheck color="green" />
-												)}
+								{parsedRequirements.length > 0 &&
+									requirementsParsed && (
+										<div
+											className={
+												classes.requirementsContainer
+											}
+										>
+											{parsedRequirements.map(
+												requirement => (
+													<div
+														className={
+															classes.requirementItem
+														}
+														key={
+															requirement.requirementKey
+														}
+													>
+														{requirement.meetsRequirement && (
+															<CircleCheck color="green" />
+														)}
 
-												{!requirement.meetsRequirement && (
-													<CircleX color="red" />
-												)}
+														{!requirement.meetsRequirement && (
+															<CircleX color="red" />
+														)}
 
-												<Space w={'xs'} />
-												{requirement.requirementComponent}
-											</div>
-										))}
-									</div>
-								)}
+														<Space w={'xs'} />
+														{
+															requirement.requirementComponent
+														}
+													</div>
+												)
+											)}
+										</div>
+									)}
 							</>
 						)}
 
 						{club.integrations!.length > 0 && (
 							<>
-								<Text className={classes.clubDetailSectionTitle}>{`Apps (${
-									club.integrations!.length
-								})`}</Text>
+								<Text
+									className={classes.clubDetailSectionTitle}
+								>{`Apps (${club.integrations!.length})`}</Text>
 								<Grid>
 									{club.integrations!.map(integration => (
 										<Grid.Col
@@ -799,8 +874,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													window.open(integration.url)
 												}}
 											>
-												<div className={classes.enabledClubIntegrationItem}>
-													<div className={classes.intItemHeader}>
+												<div
+													className={
+														classes.enabledClubIntegrationItem
+													}
+												>
+													<div
+														className={
+															classes.intItemHeader
+														}
+													>
 														<Image
 															src={`/${integration.icon}`}
 															width={16}
@@ -808,7 +891,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															fit={'contain'}
 														/>
 														<Space w={8} />
-														<Text>{integration.name}</Text>
+														<Text>
+															{integration.name}
+														</Text>
 													</div>
 												</div>
 											</a>
@@ -819,14 +904,23 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						)}
 						<Space h={'xl'} />
 
-						<Text className={classes.clubDetailSectionTitle}>{`Members (${
-							club.members!.length
-						})`}</Text>
+						<Text
+							className={classes.clubDetailSectionTitle}
+						>{`Members (${club.members!.length})`}</Text>
 						{club.members!.length > 0 && (
 							<Grid>
 								{club.members!.map(member => (
-									<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member}>
-										<Text className={classes.memberItem}>{member}</Text>
+									<Grid.Col
+										xs={6}
+										sm={4}
+										md={4}
+										lg={4}
+										xl={4}
+										key={member}
+									>
+										<Text className={classes.memberItem}>
+											{member}
+										</Text>
 									</Grid.Col>
 								))}
 							</Grid>

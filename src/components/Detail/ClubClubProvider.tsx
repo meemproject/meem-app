@@ -55,8 +55,8 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 	const value = useMemo(
 		() => ({
 			isMember:
-				process.env.NEXT_PUBLIC_IGNORE_CLUB_CLUB_MEMBERSHIP === 'true' ||
-				isMember
+				process.env.NEXT_PUBLIC_IGNORE_CLUB_CLUB_MEMBERSHIP ===
+					'true' || isMember
 		}),
 		[isMember]
 	)
