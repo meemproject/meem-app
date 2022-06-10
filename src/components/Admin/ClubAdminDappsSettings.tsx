@@ -197,6 +197,11 @@ const useStyles = createStyles(theme => ({
 			backgroundColor: theme.colors.gray[8]
 		},
 		borderRadius: 24
+	},
+	buttonEndAlign: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'end'
 	}
 }))
 
@@ -238,6 +243,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	const [currentIntegrationUrl, setCurrentIntegrationUrl] = useState('')
 	const [isCurrentIntegrationEnabled, setCurrentIntegrationEnabled] =
 		useState(true)
+	const [isCurrentIntegrationPublic, setCurrentIntegrationPublic] =
+		useState(false)
 
 	const [isIntegrationModalOpened, setIntegrationModalOpened] = useState(false)
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
@@ -277,6 +284,10 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		setIntegrationBeingEdited(integration)
 		setCurrentIntegrationUrl(integration.url ?? '')
 		setCurrentIntegrationEnabled(integration.isEnabled ?? true)
+		setCurrentIntegrationPublic(
+			integration.isPublic ??
+				(integration.name === 'Twitter' || integration.name === 'Discord')
+		)
 		if (integration.url && integration.url.length > 0) {
 			setStep(Step.AddUrl)
 		}
@@ -496,128 +507,146 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								</MantineProvider>
 							</div>
 						)}
+					<Switch
+						checked={isCurrentIntegrationPublic}
+						onChange={event =>
+							setCurrentIntegrationPublic(event.currentTarget.checked)
+						}
+						label="Available to the public"
+					/>
+
 					{integrationBeingEdited?.isExistingIntegration && (
-						<Switch
-							checked={isCurrentIntegrationEnabled}
-							onChange={event =>
-								setCurrentIntegrationEnabled(event.currentTarget.checked)
-							}
-							label="Enable integration"
-						/>
+						<>
+							<Space h={16} />
+							<Switch
+								checked={isCurrentIntegrationEnabled}
+								onChange={event =>
+									setCurrentIntegrationEnabled(event.currentTarget.checked)
+								}
+								label="Enable integration"
+							/>
+						</>
 					)}
+					<Space h={24} />
+
 					{integrationBeingEdited &&
 						(integrationBeingEdited?.name === 'Twitter' ||
 							integrationBeingEdited?.name === 'Discord' ||
 							step === Step.AddUrl) && (
-							<Button
-								loading={isSavingChanges}
-								disabled={isSavingChanges}
-								onClick={async () => {
-									if (integrationBeingEdited) {
-										// Validate URL
-										let url
-										try {
-											url = new URL(currentIntegrationUrl)
-										} catch (_) {
-											showNotification({
-												title: 'Oops!',
-												message:
-													'Please enter a valid URL for this integration.'
-											})
-											return
-										}
-
-										// Mark as saving changes
-										setIsSavingChanges(true)
-
-										// Save the change to the db
-										try {
-											const jwtToken = Cookies.get('meemJwtToken')
-											const { body } = await request
-												.post(
-													`${
-														process.env.NEXT_PUBLIC_API_URL
-													}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
-														{
-															meemContractId: club.id ?? '',
-															integrationId:
-																integrationBeingEdited.integrationId
-														}
-													)}`
-												)
-												.set('Authorization', `JWT ${jwtToken}`)
-												.send({
-													isEnabled: isCurrentIntegrationEnabled,
-													metadata: {
-														externalUrl: currentIntegrationUrl
-													}
+							<div className={classes.buttonEndAlign}>
+								<Button
+									loading={isSavingChanges}
+									disabled={isSavingChanges}
+									onClick={async () => {
+										if (integrationBeingEdited) {
+											// Validate URL
+											let url
+											try {
+												url = new URL(currentIntegrationUrl)
+											} catch (_) {
+												showNotification({
+													title: 'Oops!',
+													message:
+														'Please enter a valid URL for this integration.'
 												})
-											log.debug(body)
-										} catch (e) {
-											log.debug(e)
-											setIsSavingChanges(false)
-											showNotification({
-												title: 'Oops!',
-												message:
-													'Unable to save this integration. Please get in touch!'
-											})
-											return
-											return
-										}
-
-										// Update the integration locally
-										const updatedInte = integrationBeingEdited
-										updatedInte.url = currentIntegrationUrl
-										setIntegrationBeingEdited(updatedInte)
-
-										// Check to see if this integration is an existing integration
-
-										if (!integrationBeingEdited.isExistingIntegration) {
-											// If not an existing integration, push this into existing integrations
-											const newExisting = existingIntegrations
-											integrationBeingEdited.isExistingIntegration = true
-											newExisting.push(integrationBeingEdited)
-											setExistingIntegrations(newExisting)
-
-											availableIntegrations.forEach(inte => {
-												if (
-													inte.integrationId ===
-													integrationBeingEdited.integrationId
-												) {
-													const newAvailable = availableIntegrations.filter(
-														integ =>
-															integ.integrationId !==
-															integrationBeingEdited.integrationId
-													)
-													setAvailableIntegrations(newAvailable)
-													return
-												}
-											})
-										} else {
-											// If already enabled, modify the existing integration
-											const newIntegrations = [...existingIntegrations]
-											// Is there a better way of updating an array item in typescript than a C loop?
-											for (let i = 0; i < newIntegrations.length; i++) {
-												if (
-													newIntegrations[i].integrationId ===
-													integrationBeingEdited.integrationId
-												) {
-													newIntegrations[i] = integrationBeingEdited
-													break
-												}
+												return
 											}
 
-											setExistingIntegrations(newIntegrations)
+											// Mark as saving changes
+											setIsSavingChanges(true)
+
+											// Save the change to the db
+											try {
+												const jwtToken = Cookies.get('meemJwtToken')
+												const { body } = await request
+													.post(
+														`${
+															process.env.NEXT_PUBLIC_API_URL
+														}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
+															{
+																meemContractId: club.id ?? '',
+																integrationId:
+																	integrationBeingEdited.integrationId
+															}
+														)}`
+													)
+													.set('Authorization', `JWT ${jwtToken}`)
+													.send({
+														isEnabled: isCurrentIntegrationEnabled,
+														isPublic: isCurrentIntegrationPublic,
+														metadata: {
+															externalUrl: currentIntegrationUrl
+														}
+													})
+												log.debug(body)
+											} catch (e) {
+												log.debug(e)
+												setIsSavingChanges(false)
+												showNotification({
+													title: 'Oops!',
+													message:
+														'Unable to save this integration. Please get in touch!'
+												})
+												return
+												return
+											}
+
+											// Update the integration locally
+											const updatedInte = integrationBeingEdited
+											updatedInte.url = currentIntegrationUrl
+											updatedInte.isEnabled = isCurrentIntegrationEnabled
+											updatedInte.isPublic = isCurrentIntegrationPublic
+											setIntegrationBeingEdited(updatedInte)
+
+											// Check to see if this integration is an existing integration
+
+											if (!integrationBeingEdited.isExistingIntegration) {
+												// If not an existing integration, push this into existing integrations
+												const newExisting = existingIntegrations
+												integrationBeingEdited.isExistingIntegration = true
+												newExisting.push(integrationBeingEdited)
+												setExistingIntegrations(newExisting)
+
+												availableIntegrations.forEach(inte => {
+													if (
+														inte.integrationId ===
+														integrationBeingEdited.integrationId
+													) {
+														const newAvailable = availableIntegrations.filter(
+															integ =>
+																integ.integrationId !==
+																integrationBeingEdited.integrationId
+														)
+														setAvailableIntegrations(newAvailable)
+														return
+													}
+												})
+											} else {
+												// If already enabled, modify the existing integration
+												const newIntegrations = [...existingIntegrations]
+												// Is there a better way of updating an array item in typescript than a C loop?
+												for (let i = 0; i < newIntegrations.length; i++) {
+													if (
+														newIntegrations[i].integrationId ===
+														integrationBeingEdited.integrationId
+													) {
+														newIntegrations[i] = integrationBeingEdited
+														break
+													}
+												}
+
+												setExistingIntegrations(newIntegrations)
+											}
 										}
-									}
-									setIsSavingChanges(false)
-									setStep(Step.FollowGuide)
-									setIntegrationModalOpened(false)
-								}}
-								className={classes.buttonConfirm}
-							>
-								Save
-							</Button>
+										setIsSavingChanges(false)
+										setStep(Step.FollowGuide)
+										setIntegrationModalOpened(false)
+									}}
+									className={classes.buttonConfirm}
+								>
+									Save
+								</Button>
+							</div>
 						)}
 				</Modal>
 			</div>

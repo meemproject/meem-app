@@ -19,6 +19,7 @@ export interface Integration {
 	integrationId: string
 	name: string
 	isEnabled?: boolean
+	isPublic?: boolean
 	url?: string
 	icon?: string
 	description?: string
@@ -322,6 +323,7 @@ export default async function clubFromMeemContract(
 				name: inte.Integration?.name ?? 'Unknown',
 				description: inte.Integration?.description ?? 'Unknown',
 				isEnabled: inte.isEnabled,
+				isPublic: inte.isPublic,
 				guideUrl: inte.Integration?.guideUrl,
 				url: inte.metadata.externalUrl ?? '',
 				isExistingIntegration: true
