@@ -10,6 +10,17 @@ import { clubMetadataFromContractUri } from './club_metadata'
 export const ClubAdminRole =
 	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
 
+export interface Integration {
+	id?: string
+	integrationId: string
+	name: string
+	isEnabled?: boolean
+	url?: string
+	icon?: string
+	description?: string
+	guideUrl?: string
+}
+
 export interface Club {
 	id?: string
 	name?: string
@@ -26,6 +37,7 @@ export interface Club {
 	isClubAdmin?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
+	integrations?: Integration[]
 }
 
 export interface MembershipSettings {
@@ -101,7 +113,8 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 				clubAdmins: []
 			},
 			isValid: clubData.mintPermissions !== undefined,
-			rawClub: clubData
+			rawClub: clubData,
+			integrations: []
 		}
 	} else {
 		return {}
@@ -270,7 +283,7 @@ export default async function clubFromMeemContract(
 		// Is the current user a club member?
 		let isClubMember = false
 
-		// If so, what's their tokenId?
+		// If so, what's their tokenId? / parse members
 		let membershipToken = undefined
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
@@ -295,6 +308,21 @@ export default async function clubFromMeemContract(
 				}
 			}
 		}
+
+		// Integrations
+		const integrations: Integration[] = []
+		clubData.MeemContractIntegrations.forEach(inte => {
+			const integration: Integration = {
+				id: inte.id,
+				integrationId: inte.IntegrationId,
+				name: inte.Integration?.name ?? 'Unknown',
+				description: inte.Integration?.description ?? 'Unknown',
+				isEnabled: inte.isEnabled,
+				guideUrl: inte.Integration?.guideUrl,
+				url: inte.metadata.externalUrl ?? ''
+			}
+			integrations.push(integration)
+		})
 
 		// Calculate slots left if totalOriginSupply > 0
 		let slotsLeft = -1
@@ -328,7 +356,8 @@ export default async function clubFromMeemContract(
 				clubAdmins: []
 			},
 			isValid: clubData.mintPermissions !== undefined,
-			rawClub: clubData
+			rawClub: clubData,
+			integrations
 		}
 	} else {
 		return {}

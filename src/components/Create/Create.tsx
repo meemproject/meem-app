@@ -144,6 +144,8 @@ export const CreateComponent: React.FC = () => {
 	const [clubNamespace, setClubNamespace] = useState('')
 
 	const [clubDescription, setClubDescription] = useState('')
+	const [clubTwitterUrl, setClubTwitterUrl] = useState('')
+	const [clubDiscordUrl, setClubDiscordUrl] = useState('')
 	const descriptionRef = useRef<HTMLTextAreaElement>()
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -331,6 +333,7 @@ export const CreateComponent: React.FC = () => {
 					maxLength={140}
 					onChange={event => setClubDescription(event.currentTarget.value)}
 				/>
+
 				<Text className={classes.clubLogoPrompt}>
 					Upload an icon for your club.
 				</Text>

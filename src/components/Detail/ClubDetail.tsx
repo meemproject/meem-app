@@ -55,7 +55,6 @@ import { truncatedWalletAddress } from '../../utils/truncated_wallet'
 const useStyles = createStyles(theme => ({
 	header: {
 		backgroundColor: 'rgba(160, 160, 160, 0.05)',
-		marginBottom: 60,
 		display: 'flex',
 		alignItems: 'start',
 		flexDirection: 'row',
@@ -142,14 +141,14 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: 'white',
 		'&:hover': {
 			backgroundColor: theme.colors.gray[0]
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 0,
-			marginLeft: 0,
-			marginRight: 0,
-			backgroundColor: 'transparent',
-			borderColor: 'transparent'
 		}
+		// [`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		// 	fontSize: 0,
+		// 	marginLeft: 0,
+		// 	marginRight: 0,
+		// 	backgroundColor: 'transparent',
+		// 	borderColor: 'transparent'
+		// }
 	},
 	clubSettingsIcon: {
 		width: 16,
@@ -159,13 +158,8 @@ const useStyles = createStyles(theme => ({
 			height: 24
 		}
 	},
-	clubMemberReqsTitleText: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	clubMembersListTitleText: {
+
+	clubDetailSectionTitle: {
 		fontSize: 18,
 		marginBottom: 16,
 		marginTop: 40,
@@ -216,6 +210,22 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		borderRadius: 16,
 		padding: 16
+	},
+	enabledClubIntegrationItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		marginBottom: 12,
+		cursor: 'pointer',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
+	},
+	intItemHeader: {
+		display: 'flex',
+		alignItems: 'center'
 	}
 }))
 
@@ -261,8 +271,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 
 	const checkEligibility = useCallback(
-		(reqs: RequirementString[], slotsLeft: number) => {
-			if (reqs.length === 0 || club?.isClubAdmin) {
+		(reqs: RequirementString[], isClubAdmin: boolean, slotsLeft: number) => {
+			if (reqs.length === 0 || isClubAdmin) {
 				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
@@ -279,7 +289,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			}
 		},
-		[club?.isClubAdmin]
+		[]
 	)
 
 	const joinClub = async () => {
@@ -552,7 +562,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 
 			setParsedRequirements(reqs)
-			checkEligibility(reqs, possibleClub.slotsLeft ?? -1)
+			checkEligibility(
+				reqs,
+				possibleClub.isClubAdmin ?? false,
+				possibleClub.slotsLeft ?? -1
+			)
 
 			setRequirementsParsed(true)
 		},
@@ -728,69 +742,86 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									</>
 								)}
 							</div>
-							{/* <div className={classes.mobileHeaderLinks}>
-								<a href="twitter.com" className={classes.headerLink}>
-									{' '}
-									<BrandTwitter />
-									<Space w={8} />
-									<Text>Twitter</Text>
-								</a>
-								<Space w={'sm'} />
-								<a href="discord.com" className={classes.headerLink}>
-									{' '}
-									<BrandDiscord />
-									<Space w={8} />
-									<Text>Discord</Text>
-								</a>
-							</div> */}
 						</div>
-						{/* <div className={classes.headerLinks}>
-							<a href="twitter.com" className={classes.headerLink}>
-								{' '}
-								<BrandTwitter />
-								<Space w={8} />
-								<Text>Twitter</Text>
-							</a>
-							<Space w={'sm'} />
-							<a href="discord.com" className={classes.headerLink}>
-								{' '}
-								<BrandDiscord />
-								<Space w={8} />
-								<Text>Discord</Text>
-							</a>
-						</div> */}
 					</div>
 
 					<Container>
-						<Text className={classes.clubMemberReqsTitleText}>
-							Membership Requirements
-						</Text>
-						{!requirementsParsed && (
-							<div className={classes.requirementsContainer}>
-								<Loader />
-							</div>
-						)}
-						{parsedRequirements.length > 0 && requirementsParsed && (
-							<div className={classes.requirementsContainer}>
-								{parsedRequirements.map(requirement => (
-									<div
-										className={classes.requirementItem}
-										key={requirement.requirementKey}
-									>
-										{requirement.meetsRequirement && (
-											<CircleCheck color="green" />
-										)}
-
-										{!requirement.meetsRequirement && <CircleX color="red" />}
-
-										<Space w={'xs'} />
-										{requirement.requirementComponent}
+						{!club.isClubMember && (
+							<>
+								<Text className={classes.clubDetailSectionTitle}>
+									Membership Requirements
+								</Text>
+								{!requirementsParsed && (
+									<div className={classes.requirementsContainer}>
+										<Loader />
 									</div>
-								))}
-							</div>
+								)}
+
+								{parsedRequirements.length > 0 && requirementsParsed && (
+									<div className={classes.requirementsContainer}>
+										{parsedRequirements.map(requirement => (
+											<div
+												className={classes.requirementItem}
+												key={requirement.requirementKey}
+											>
+												{requirement.meetsRequirement && (
+													<CircleCheck color="green" />
+												)}
+
+												{!requirement.meetsRequirement && (
+													<CircleX color="red" />
+												)}
+
+												<Space w={'xs'} />
+												{requirement.requirementComponent}
+											</div>
+										))}
+									</div>
+								)}
+							</>
 						)}
 
-						<Text className={classes.clubMembersListTitleText}>{`Members (${
+						{club.integrations!.length > 0 && (
+							<>
+								<Text className={classes.clubDetailSectionTitle}>{`Apps (${
+									club.integrations!.length
+								})`}</Text>
+								<Grid>
+									{club.integrations!.map(integration => (
+										<Grid.Col
+											xs={6}
+											sm={4}
+											md={4}
+											lg={4}
+											xl={4}
+											key={integration.name}
+										>
+											<a
+												onClick={() => {
+													window.open(integration.url)
+												}}
+											>
+												<div className={classes.enabledClubIntegrationItem}>
+													<div className={classes.intItemHeader}>
+														<Image
+															src={`/${integration.icon}`}
+															width={16}
+															height={16}
+															fit={'contain'}
+														/>
+														<Space w={8} />
+														<Text>{integration.name}</Text>
+													</div>
+												</div>
+											</a>
+										</Grid.Col>
+									))}
+								</Grid>
+							</>
+						)}
+						<Space h={'xl'} />
+
+						<Text className={classes.clubDetailSectionTitle}>{`Members (${
 							club.members!.length
 						})`}</Text>
 						{club.members!.length > 0 && (

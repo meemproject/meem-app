@@ -203,6 +203,167 @@ export type Int_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['Int']>>;
 };
 
+/** columns and relationships of "Integrations" */
+export type Integrations = {
+  __typename?: 'Integrations';
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description: Scalars['String'];
+  guideUrl: Scalars['String'];
+  icon: Scalars['String'];
+  id: Scalars['uuid'];
+  name: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** Boolean expression to filter rows from the table "Integrations". All fields are combined with a logical 'AND'. */
+export type Integrations_Bool_Exp = {
+  _and?: InputMaybe<Array<Integrations_Bool_Exp>>;
+  _not?: InputMaybe<Integrations_Bool_Exp>;
+  _or?: InputMaybe<Array<Integrations_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  description?: InputMaybe<String_Comparison_Exp>;
+  guideUrl?: InputMaybe<String_Comparison_Exp>;
+  icon?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** Ordering options when selecting data from "Integrations". */
+export type Integrations_Order_By = {
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  guideUrl?: InputMaybe<Order_By>;
+  icon?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "Integrations" */
+export enum Integrations_Select_Column {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Description = 'description',
+  /** column name */
+  GuideUrl = 'guideUrl',
+  /** column name */
+  Icon = 'icon',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** columns and relationships of "MeemContractIntegrations" */
+export type MeemContractIntegrations = {
+  __typename?: 'MeemContractIntegrations';
+  /** An object relationship */
+  Integration?: Maybe<Integrations>;
+  IntegrationId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  MeemContract?: Maybe<MeemContracts>;
+  MeemContractId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  isEnabled: Scalars['Boolean'];
+  metadata: Scalars['jsonb'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "MeemContractIntegrations" */
+export type MeemContractIntegrationsMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** order by aggregate values of table "MeemContractIntegrations" */
+export type MeemContractIntegrations_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<MeemContractIntegrations_Max_Order_By>;
+  min?: InputMaybe<MeemContractIntegrations_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "MeemContractIntegrations". All fields are combined with a logical 'AND'. */
+export type MeemContractIntegrations_Bool_Exp = {
+  Integration?: InputMaybe<Integrations_Bool_Exp>;
+  IntegrationId?: InputMaybe<Uuid_Comparison_Exp>;
+  MeemContract?: InputMaybe<MeemContracts_Bool_Exp>;
+  MeemContractId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<MeemContractIntegrations_Bool_Exp>>;
+  _not?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+  _or?: InputMaybe<Array<MeemContractIntegrations_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  isEnabled?: InputMaybe<Boolean_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** order by max() on columns of table "MeemContractIntegrations" */
+export type MeemContractIntegrations_Max_Order_By = {
+  IntegrationId?: InputMaybe<Order_By>;
+  MeemContractId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "MeemContractIntegrations" */
+export type MeemContractIntegrations_Min_Order_By = {
+  IntegrationId?: InputMaybe<Order_By>;
+  MeemContractId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "MeemContractIntegrations". */
+export type MeemContractIntegrations_Order_By = {
+  Integration?: InputMaybe<Integrations_Order_By>;
+  IntegrationId?: InputMaybe<Order_By>;
+  MeemContract?: InputMaybe<MeemContracts_Order_By>;
+  MeemContractId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  isEnabled?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "MeemContractIntegrations" */
+export enum MeemContractIntegrations_Select_Column {
+  /** column name */
+  IntegrationId = 'IntegrationId',
+  /** column name */
+  MeemContractId = 'MeemContractId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsEnabled = 'isEnabled',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
 /** columns and relationships of "MeemContractWallets" */
 export type MeemContractWallets = {
   __typename?: 'MeemContractWallets';
@@ -305,6 +466,8 @@ export type MeemContracts = {
   DefaultProperties?: Maybe<MeemProperties>;
   DefaultPropertiesId?: Maybe<Scalars['uuid']>;
   /** An array relationship */
+  MeemContractIntegrations: Array<MeemContractIntegrations>;
+  /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
   /** An array relationship */
   Meems: Array<Meems>;
@@ -334,6 +497,16 @@ export type MeemContracts = {
   transferLockupUntil?: Maybe<Scalars['timestamp']>;
   transferLockupUntilLockedBy: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "MeemContracts" */
+export type MeemContractsMeemContractIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractIntegrations_Order_By>>;
+  where?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
 };
 
 
@@ -406,6 +579,7 @@ export type MeemContracts_Bool_Exp = {
   DefaultChildPropertiesId?: InputMaybe<Uuid_Comparison_Exp>;
   DefaultProperties?: InputMaybe<MeemProperties_Bool_Exp>;
   DefaultPropertiesId?: InputMaybe<Uuid_Comparison_Exp>;
+  MeemContractIntegrations?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
   MeemContractWallets?: InputMaybe<MeemContractWallets_Bool_Exp>;
   Meems?: InputMaybe<Meems_Bool_Exp>;
   _and?: InputMaybe<Array<MeemContracts_Bool_Exp>>;
@@ -499,6 +673,7 @@ export type MeemContracts_Order_By = {
   DefaultChildPropertiesId?: InputMaybe<Order_By>;
   DefaultProperties?: InputMaybe<MeemProperties_Order_By>;
   DefaultPropertiesId?: InputMaybe<Order_By>;
+  MeemContractIntegrations_aggregate?: InputMaybe<MeemContractIntegrations_Aggregate_Order_By>;
   MeemContractWallets_aggregate?: InputMaybe<MeemContractWallets_Aggregate_Order_By>;
   Meems_aggregate?: InputMaybe<Meems_Aggregate_Order_By>;
   address?: InputMaybe<Order_By>;
@@ -2525,6 +2700,14 @@ export type Query_Root = {
   Hashtags: Array<Hashtags>;
   /** fetch data from the table: "Hashtags" using primary key columns */
   Hashtags_by_pk?: Maybe<Hashtags>;
+  /** fetch data from the table: "Integrations" */
+  Integrations: Array<Integrations>;
+  /** fetch data from the table: "Integrations" using primary key columns */
+  Integrations_by_pk?: Maybe<Integrations>;
+  /** An array relationship */
+  MeemContractIntegrations: Array<MeemContractIntegrations>;
+  /** fetch data from the table: "MeemContractIntegrations" using primary key columns */
+  MeemContractIntegrations_by_pk?: Maybe<MeemContractIntegrations>;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
@@ -2608,6 +2791,34 @@ export type Query_RootHashtagsArgs = {
 
 
 export type Query_RootHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<Integrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Integrations_Order_By>>;
+  where?: InputMaybe<Integrations_Bool_Exp>;
+};
+
+
+export type Query_RootIntegrations_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootMeemContractIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractIntegrations_Order_By>>;
+  where?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+};
+
+
+export type Query_RootMeemContractIntegrations_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -2821,6 +3032,14 @@ export type Subscription_Root = {
   Hashtags: Array<Hashtags>;
   /** fetch data from the table: "Hashtags" using primary key columns */
   Hashtags_by_pk?: Maybe<Hashtags>;
+  /** fetch data from the table: "Integrations" */
+  Integrations: Array<Integrations>;
+  /** fetch data from the table: "Integrations" using primary key columns */
+  Integrations_by_pk?: Maybe<Integrations>;
+  /** An array relationship */
+  MeemContractIntegrations: Array<MeemContractIntegrations>;
+  /** fetch data from the table: "MeemContractIntegrations" using primary key columns */
+  MeemContractIntegrations_by_pk?: Maybe<MeemContractIntegrations>;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
@@ -2904,6 +3123,34 @@ export type Subscription_RootHashtagsArgs = {
 
 
 export type Subscription_RootHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<Integrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Integrations_Order_By>>;
+  where?: InputMaybe<Integrations_Bool_Exp>;
+};
+
+
+export type Subscription_RootIntegrations_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeemContractIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractIntegrations_Order_By>>;
+  where?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemContractIntegrations_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3173,7 +3420,7 @@ export type GetClubQueryVariables = Exact<{
 }>;
 
 
-export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
+export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, data: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -3188,6 +3435,11 @@ export type MyClubsQueryVariables = Exact<{
 
 
 export type MyClubsQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', owner: string, tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', slug: string, address: string, contractURI: string, createdAt: any, name: string, splits: any, mintEndAt?: any | null, mintStartAt?: any | null, mintPermissions: any, originalsPerWallet: string, totalOriginalsSupply: string, symbol: string, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> } | null }> };
+
+export type GetIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetIntegrationsQuery = { __typename?: 'query_root', Integrations: Array<{ __typename?: 'Integrations', createdAt: any, deletedAt?: any | null, description: string, guideUrl: string, icon: string, id: any, name: string, updatedAt: any }> };
 
 export type GetMeemIdQueryVariables = Exact<{
   walletAddress: Scalars['String'];
@@ -3344,6 +3596,19 @@ export const GetClubDocument = gql`
         address
       }
     }
+    MeemContractIntegrations {
+      IntegrationId
+      id
+      isEnabled
+      metadata
+      Integration {
+        description
+        guideUrl
+        icon
+        id
+        name
+      }
+    }
   }
 }
     `;
@@ -3490,6 +3755,47 @@ export function useMyClubsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<My
 export type MyClubsQueryHookResult = ReturnType<typeof useMyClubsQuery>;
 export type MyClubsLazyQueryHookResult = ReturnType<typeof useMyClubsLazyQuery>;
 export type MyClubsQueryResult = Apollo.QueryResult<MyClubsQuery, MyClubsQueryVariables>;
+export const GetIntegrationsDocument = gql`
+    query GetIntegrations {
+  Integrations {
+    createdAt
+    deletedAt
+    description
+    guideUrl
+    icon
+    id
+    name
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetIntegrationsQuery__
+ *
+ * To run a query within a React component, call `useGetIntegrationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIntegrationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIntegrationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetIntegrationsQuery(baseOptions?: Apollo.QueryHookOptions<GetIntegrationsQuery, GetIntegrationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIntegrationsQuery, GetIntegrationsQueryVariables>(GetIntegrationsDocument, options);
+      }
+export function useGetIntegrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIntegrationsQuery, GetIntegrationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIntegrationsQuery, GetIntegrationsQueryVariables>(GetIntegrationsDocument, options);
+        }
+export type GetIntegrationsQueryHookResult = ReturnType<typeof useGetIntegrationsQuery>;
+export type GetIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIntegrationsLazyQuery>;
+export type GetIntegrationsQueryResult = Apollo.QueryResult<GetIntegrationsQuery, GetIntegrationsQueryVariables>;
 export const GetMeemIdDocument = gql`
     query GetMeemId($walletAddress: String!) {
   MeemIdentifications(where: {Wallets: {address: {_eq: $walletAddress}}}) {
