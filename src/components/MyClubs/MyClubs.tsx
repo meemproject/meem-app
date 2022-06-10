@@ -162,7 +162,10 @@ export const MyClubsComponent: React.FC = () => {
 					</a>
 					<Text className={classes.headerClubName}>My Clubs</Text>
 				</div>
-				<Button onClick={navigateToCreate} className={classes.buttonCreate}>
+				<Button
+					onClick={navigateToCreate}
+					className={classes.buttonCreate}
+				>
 					Create a Club
 				</Button>
 			</div>

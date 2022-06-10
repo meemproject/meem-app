@@ -220,7 +220,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 	const router = useRouter()
 
-	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] = useState(false)
+	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] =
+		useState(false)
 
 	const {
 		loading,
@@ -247,7 +248,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		useState(false)
 	const [currentIntegrationId, setCurrentIntegrationId] = useState('')
 
-	const [isIntegrationModalOpened, setIntegrationModalOpened] = useState(false)
+	const [isIntegrationModalOpened, setIntegrationModalOpened] =
+		useState(false)
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -288,7 +290,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		setCurrentIntegrationId(integration.integrationId ?? '')
 		setCurrentIntegrationPublic(
 			integration.isPublic ??
-				(integration.name === 'Twitter' || integration.name === 'Discord')
+				(integration.name === 'Twitter' ||
+					integration.name === 'Discord')
 		)
 		if (integration.url && integration.url.length > 0) {
 			setStep(Step.AddUrl)
@@ -303,7 +306,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				<Text className={classes.clubIntegrationsSectionTitle}>
 					Club Contract Address
 				</Text>
-				<Text className={classes.clubContractAddress}>{club.address}</Text>
+				<Text className={classes.clubContractAddress}>
+					{club.address}
+				</Text>
 				<Space h={'xl'} />
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
@@ -326,8 +331,16 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											editIntegration(integration)
 										}}
 									>
-										<div className={classes.enabledClubIntegrationItem}>
-											<div className={classes.intItemHeader}>
+										<div
+											className={
+												classes.enabledClubIntegrationItem
+											}
+										>
+											<div
+												className={
+													classes.intItemHeader
+												}
+											>
 												<Image
 													src={`/${integration.icon}`}
 													width={16}
@@ -366,8 +379,16 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											editIntegration(integration)
 										}}
 									>
-										<div className={classes.clubIntegrationItem}>
-											<div className={classes.intItemHeader}>
+										<div
+											className={
+												classes.clubIntegrationItem
+											}
+										>
+											<div
+												className={
+													classes.intItemHeader
+												}
+											>
 												<Image
 													src={`/${integration.icon}`}
 													width={16}
@@ -377,7 +398,11 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 												<Space w={8} />
 												<Text>{integration.name}</Text>
 											</div>
-											<Text className={classes.intItemDescription}>
+											<Text
+												className={
+													classes.intItemDescription
+												}
+											>
 												{integration.description}
 											</Text>
 										</div>
@@ -423,14 +448,18 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						(integrationBeingEdited?.name === 'Twitter' ||
 							integrationBeingEdited?.name === 'Discord') && (
 							<>
-								<Text>{integrationBeingEdited.description}</Text>
+								<Text>
+									{integrationBeingEdited.description}
+								</Text>
 								<Space h={8} />
 								<TextInput
 									radius="lg"
 									size="md"
 									value={currentIntegrationUrl}
 									onChange={event => {
-										setCurrentIntegrationUrl(event.target.value)
+										setCurrentIntegrationUrl(
+											event.target.value
+										)
 									}}
 								/>
 								<Space h={24} />
@@ -464,20 +493,30 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 										size="md"
 										color="green"
 										orientation="vertical"
-										active={step === Step.FollowGuide ? 0 : 1}
+										active={
+											step === Step.FollowGuide ? 0 : 1
+										}
 									>
 										<Stepper.Step
-											label={'Follow the instructions at the link below.'}
+											label={
+												'Follow the instructions at the link below.'
+											}
 											description={
 												<>
 													<div>
 														<Space h={12} />
 														<a
 															onClick={() => {
-																setStep(Step.AddUrl)
-																window.open(integrationBeingEdited?.guideUrl)
+																setStep(
+																	Step.AddUrl
+																)
+																window.open(
+																	integrationBeingEdited?.guideUrl
+																)
 															}}
-															className={classes.buttonConfirm}
+															className={
+																classes.buttonConfirm
+															}
 														>
 															View guide
 														</a>
@@ -495,9 +534,15 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 															<TextInput
 																radius="lg"
 																size="md"
-																value={currentIntegrationUrl}
+																value={
+																	currentIntegrationUrl
+																}
 																onChange={event => {
-																	setCurrentIntegrationUrl(event.target.value)
+																	setCurrentIntegrationUrl(
+																		event
+																			.target
+																			.value
+																	)
 																}}
 															/>
 														</div>
@@ -517,7 +562,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								<Switch
 									checked={isCurrentIntegrationPublic}
 									onChange={event =>
-										setCurrentIntegrationPublic(event.currentTarget.checked)
+										setCurrentIntegrationPublic(
+											event.currentTarget.checked
+										)
 									}
 									label="Visible to everyone on the Club page"
 								/>
@@ -526,7 +573,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 									<>
 										<Space h={16} />
 										<Switch
-											checked={isCurrentIntegrationEnabled}
+											checked={
+												isCurrentIntegrationEnabled
+											}
 											onChange={event =>
 												setCurrentIntegrationEnabled(
 													event.currentTarget.checked
@@ -553,7 +602,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											// Validate URL
 
 											try {
-												const url = new URL(currentIntegrationUrl)
+												const url = new URL(
+													currentIntegrationUrl
+												)
 											} catch (_) {
 												showNotification({
 													title: 'Oops!',
@@ -566,28 +617,41 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											// Mark as saving changes
 											setIsSavingChanges(true)
 
-											log.debug(`public: ${isCurrentIntegrationPublic}`)
+											log.debug(
+												`public: ${isCurrentIntegrationPublic}`
+											)
 
 											// Save the change to the db
 											try {
-												const jwtToken = Cookies.get('meemJwtToken')
+												const jwtToken =
+													Cookies.get('meemJwtToken')
 												const { body } = await request
 													.post(
 														`${
-															process.env.NEXT_PUBLIC_API_URL
+															process.env
+																.NEXT_PUBLIC_API_URL
 														}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
 															{
-																meemContractId: club.id ?? '',
-																integrationId: currentIntegrationId
+																meemContractId:
+																	club.id ??
+																	'',
+																integrationId:
+																	currentIntegrationId
 															}
 														)}`
 													)
-													.set('Authorization', `JWT ${jwtToken}`)
+													.set(
+														'Authorization',
+														`JWT ${jwtToken}`
+													)
 													.send({
-														isEnabled: isCurrentIntegrationEnabled,
-														isPublic: isCurrentIntegrationPublic,
+														isEnabled:
+															isCurrentIntegrationEnabled,
+														isPublic:
+															isCurrentIntegrationPublic,
 														metadata: {
-															externalUrl: currentIntegrationUrl
+															externalUrl:
+																currentIntegrationUrl
 														}
 													})
 												log.debug(body)
@@ -604,46 +668,79 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											}
 
 											// Update the integration locally
-											const updatedInte = integrationBeingEdited
-											updatedInte.url = currentIntegrationUrl
-											updatedInte.isEnabled = isCurrentIntegrationEnabled
-											updatedInte.isPublic = isCurrentIntegrationPublic
-											setIntegrationBeingEdited(updatedInte)
+											const updatedInte =
+												integrationBeingEdited
+											updatedInte.url =
+												currentIntegrationUrl
+											updatedInte.isEnabled =
+												isCurrentIntegrationEnabled
+											updatedInte.isPublic =
+												isCurrentIntegrationPublic
+											setIntegrationBeingEdited(
+												updatedInte
+											)
 
 											// Check to see if this integration is an existing integration
 
-											if (!integrationBeingEdited.isExistingIntegration) {
+											if (
+												!integrationBeingEdited.isExistingIntegration
+											) {
 												// If not an existing integration, push this into existing integrations
-												const newExisting = existingIntegrations
-												integrationBeingEdited.isExistingIntegration = true
-												newExisting.push(integrationBeingEdited)
-												setExistingIntegrations(newExisting)
+												const newExisting =
+													existingIntegrations
+												integrationBeingEdited.isExistingIntegration =
+													true
+												newExisting.push(
+													integrationBeingEdited
+												)
+												setExistingIntegrations(
+													newExisting
+												)
 
-												availableIntegrations.forEach(inte => {
-													if (inte.integrationId === currentIntegrationId) {
-														const newAvailable = availableIntegrations.filter(
-															integ =>
-																integ.integrationId !== currentIntegrationId
-														)
-														setAvailableIntegrations(newAvailable)
-														return
+												availableIntegrations.forEach(
+													inte => {
+														if (
+															inte.integrationId ===
+															currentIntegrationId
+														) {
+															const newAvailable =
+																availableIntegrations.filter(
+																	integ =>
+																		integ.integrationId !==
+																		currentIntegrationId
+																)
+															setAvailableIntegrations(
+																newAvailable
+															)
+															return
+														}
 													}
-												})
+												)
 											} else {
 												// If already enabled, modify the existing integration
-												const newIntegrations = [...existingIntegrations]
+												const newIntegrations = [
+													...existingIntegrations
+												]
 												// Is there a better way of updating an array item in typescript than a C loop?
-												for (let i = 0; i < newIntegrations.length; i++) {
+												for (
+													let i = 0;
+													i < newIntegrations.length;
+													i++
+												) {
 													if (
-														newIntegrations[i].integrationId ===
+														newIntegrations[i]
+															.integrationId ===
 														currentIntegrationId
 													) {
-														newIntegrations[i] = integrationBeingEdited
+														newIntegrations[i] =
+															integrationBeingEdited
 														break
 													}
 												}
 
-												setExistingIntegrations(newIntegrations)
+												setExistingIntegrations(
+													newIntegrations
+												)
 											}
 										}
 										setIsSavingChanges(false)

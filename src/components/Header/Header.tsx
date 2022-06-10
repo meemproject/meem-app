@@ -119,14 +119,17 @@ const useStyles = createStyles(theme => ({
 	},
 
 	user: {
-		color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+		color:
+			theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
 		borderRadius: theme.radius.sm,
 		transition: 'background-color 100ms ease',
 
 		'&:hover': {
 			backgroundColor:
-				theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
+				theme.colorScheme === 'dark'
+					? theme.colors.dark[8]
+					: theme.white
 		}
 	},
 
@@ -167,7 +170,9 @@ export function HeaderMenu() {
 		async function getName() {
 			try {
 				if (wallet.isConnected && wallet.web3Provider) {
-					const name = await truncatedWalletAddress(wallet.accounts[0])
+					const name = await truncatedWalletAddress(
+						wallet.accounts[0]
+					)
 					setUsername(name)
 				}
 			} catch (e) {
@@ -234,8 +239,18 @@ export function HeaderMenu() {
 									})}
 								>
 									<Group spacing={7}>
-										<Avatar src={''} alt={'user.name'} radius="xl" size={20} />
-										<Text weight={500} size="sm" sx={{ lineHeight: 1 }} mr={3}>
+										<Avatar
+											src={''}
+											alt={'user.name'}
+											radius="xl"
+											size={20}
+										/>
+										<Text
+											weight={500}
+											size="sm"
+											sx={{ lineHeight: 1 }}
+											mr={3}
+										>
 											{username}
 										</Text>
 										<ChevronDown size={12} />
@@ -286,7 +301,9 @@ export function HeaderMenu() {
 							className={classes.menuItem}
 						>
 							Powered by{' '}
-							<span style={{ textDecoration: 'underline' }}>Meem</span>
+							<span style={{ textDecoration: 'underline' }}>
+								Meem
+							</span>
 						</Menu.Item>
 						{!clubclub.isMember && (
 							<Menu.Item
