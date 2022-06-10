@@ -323,7 +323,7 @@ export default async function clubFromMeemContract(
 				name: inte.Integration?.name ?? 'Unknown',
 				description: inte.Integration?.description ?? 'Unknown',
 				isEnabled: inte.isEnabled,
-				isPublic: inte.isPublic,
+				//isPublic: inte.isPublic,
 				guideUrl: inte.Integration?.guideUrl,
 				url: inte.metadata.externalUrl ?? '',
 				isExistingIntegration: true

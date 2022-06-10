@@ -507,27 +507,36 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								</MantineProvider>
 							</div>
 						)}
-					<Switch
-						checked={isCurrentIntegrationPublic}
-						onChange={event =>
-							setCurrentIntegrationPublic(event.currentTarget.checked)
-						}
-						label="Available to the public"
-					/>
+					{integrationBeingEdited &&
+						(integrationBeingEdited?.name === 'Twitter' ||
+							integrationBeingEdited?.name === 'Discord' ||
+							step === Step.AddUrl) && (
+							<>
+								<Switch
+									checked={isCurrentIntegrationPublic}
+									onChange={event =>
+										setCurrentIntegrationPublic(event.currentTarget.checked)
+									}
+									label="Visible to everyone on the Club page"
+								/>
 
-					{integrationBeingEdited?.isExistingIntegration && (
-						<>
-							<Space h={16} />
-							<Switch
-								checked={isCurrentIntegrationEnabled}
-								onChange={event =>
-									setCurrentIntegrationEnabled(event.currentTarget.checked)
-								}
-								label="Enable integration"
-							/>
-						</>
-					)}
-					<Space h={24} />
+								{integrationBeingEdited?.isExistingIntegration && (
+									<>
+										<Space h={16} />
+										<Switch
+											checked={isCurrentIntegrationEnabled}
+											onChange={event =>
+												setCurrentIntegrationEnabled(
+													event.currentTarget.checked
+												)
+											}
+											label="Enable integration"
+										/>
+									</>
+								)}
+								<Space h={24} />
+							</>
+						)}
 
 					{integrationBeingEdited &&
 						(integrationBeingEdited?.name === 'Twitter' ||
