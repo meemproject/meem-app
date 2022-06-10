@@ -250,19 +250,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
 							<a onClick={navigateToClubDetail}>
-								<ArrowLeft
-									className={classes.headerArrow}
-									size={32}
-								/>
+								<ArrowLeft className={classes.headerArrow} size={32} />
 							</a>
-							<Image
-								className={classes.clubLogoImage}
-								src={club.image!}
-							/>
+							<Image className={classes.clubLogoImage} src={club.image!} />
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<Text className={classes.headerClubName}>
-								{club.name!}
-							</Text>
+							<Text className={classes.headerClubName}>{club.name!}</Text>
 						</div>
 					</div>
 
@@ -271,8 +263,8 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							<Space h={120} />
 							<Center>
 								<Text>
-									Sorry, you do not have permission to view
-									this page. Contact the club owner for help.
+									Sorry, you do not have permission to view this page. Contact
+									the club owner for help.
 								</Text>
 							</Center>
 						</Container>

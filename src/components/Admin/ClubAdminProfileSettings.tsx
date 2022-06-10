@@ -244,8 +244,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	}
 
 	const [newClubData, setNewClubData] = useState<Club>()
-	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
-		useState(false)
+	const [isSaveChangesModalOpened, setSaveChangesModalOpened] = useState(false)
 	const openSaveChangesModal = () => {
 		// Some basic validation
 		if (clubName.length < 3 || clubName.length > 50) {
@@ -313,17 +312,15 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 				maxRows={4}
 				maxLength={140}
 				value={clubDescription}
-				onChange={event =>
-					setClubDescription(event.currentTarget.value)
-				}
+				onChange={event => setClubDescription(event.currentTarget.value)}
 			/>
 			<Text className={classes.clubLogoPrompt}>
 				Upload an icon for your club.
 			</Text>
 			<Text className={classes.clubLogoInfo}>
-				This will be your club’s membership token. You can change it
-				anytime. Icons should be square and either JPG or PNG files.
-				Note that all uploads will be rendered at 24x24 px.
+				This will be your club’s membership token. You can change it anytime.
+				Icons should be square and either JPG or PNG files. Note that all
+				uploads will be rendered at 24x24 px.
 			</Text>
 			{smallClubLogo.length === 0 && !isLoadingImage && (
 				<Button

@@ -136,26 +136,21 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			if (club.membershipSettings) {
 				if (club.membershipSettings.membershipStartDate) {
 					membershipStartUnix = Math.floor(
-						new Date(
-							club.membershipSettings.membershipStartDate
-						).getTime() / 1000
+						new Date(club.membershipSettings.membershipStartDate).getTime() /
+							1000
 					)
 					log.debug(membershipStartUnix)
 				}
 				if (club.membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
-						new Date(
-							club.membershipSettings.membershipEndDate
-						).getTime() / 1000
+						new Date(club.membershipSettings.membershipEndDate).getTime() / 1000
 					)
 					log.debug(membershipEndUnix)
 				}
 			}
 
 			const joinCostInWei = club.membershipSettings
-				? ethers.utils.parseEther(
-						`${club.membershipSettings.costToJoin}`
-				  )
+				? ethers.utils.parseEther(`${club.membershipSettings.costToJoin}`)
 				: 0
 
 			const mintPermissions: any[] = []
@@ -237,8 +232,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						? [
 								{
 									toAddress: club.membershipSettings
-										? club.membershipSettings
-												.membershipFundsAddress
+										? club.membershipSettings.membershipFundsAddress
 										: accounts[0],
 									// Amount in basis points 10000 == 100%
 									amount: 10000,
@@ -319,22 +313,15 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				size={'lg'}
 				padding={'sm'}
 				opened={isOpened}
-				title={
-					<Text className={classes.modalTitle}>Confirm changes</Text>
-				}
+				title={<Text className={classes.modalTitle}>Confirm changes</Text>}
 				onClose={() => onModalClosed()}
 			>
 				<Divider />
 				<Space h={12} />
 				<div className={classes.header}>
 					<div className={classes.headerTitle}>
-						<Image
-							className={classes.clubLogoImage}
-							src={club?.image}
-						/>
-						<Text className={classes.headerClubName}>
-							{club?.name}
-						</Text>
+						<Image className={classes.clubLogoImage} src={club?.image} />
+						<Text className={classes.headerClubName}>{club?.name}</Text>
 					</div>
 				</div>
 				<Space h={12} />
@@ -363,11 +350,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							size="md"
 							color="green"
 							orientation="vertical"
-							active={
-								step === Step.Start || step === Step.Initialized
-									? 0
-									: 1
-							}
+							active={step === Step.Start || step === Step.Initialized ? 0 : 1}
 						>
 							<Stepper.Step
 								label={
@@ -383,9 +366,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 												<Space h={12} />
 												<a
 													onClick={reinitialize}
-													className={
-														classes.buttonConfirm
-													}
+													className={classes.buttonConfirm}
 												>
 													Confirm changes
 												</a>

@@ -331,18 +331,16 @@ export const CreateComponent: React.FC = () => {
 					minRows={2}
 					maxRows={4}
 					maxLength={140}
-					onChange={event =>
-						setClubDescription(event.currentTarget.value)
-					}
+					onChange={event => setClubDescription(event.currentTarget.value)}
 				/>
 
 				<Text className={classes.clubLogoPrompt}>
 					Upload an icon for your club.
 				</Text>
 				<Text className={classes.clubLogoInfo}>
-					This will be your club’s membership token. You can change it
-					anytime. Icons should be square and either JPG or PNG files.
-					Note that all uploads will be rendered at 24x24 px.
+					This will be your club’s membership token. You can change it anytime.
+					Icons should be square and either JPG or PNG files. Note that all
+					uploads will be rendered at 24x24 px.
 				</Text>
 				{smallClubLogo.length === 0 && !isLoadingImage && (
 					<Button

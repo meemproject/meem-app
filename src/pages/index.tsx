@@ -30,10 +30,7 @@ const Home: NextPage = () => {
 					content="Welcome to the free, unstoppable association of humankind."
 				/>
 
-				<meta
-					name="viewport"
-					content="initial-scale=1, width=device-width"
-				/>
+				<meta name="viewport" content="initial-scale=1, width=device-width" />
 				<meta property="twitter:image" content="/link-preview.png" />
 				<meta property="og:image" content="/link-preview.png" />
 				<link
@@ -41,18 +38,8 @@ const Home: NextPage = () => {
 					sizes="180x180"
 					href="/apple-touch-icon.png"
 				/>
-				<link
-					rel="icon"
-					type="image/png"
-					sizes="32x32"
-					href="/favicon32.png"
-				/>
-				<link
-					rel="icon"
-					type="image/png"
-					sizes="16x16"
-					href="/favicon.png"
-				/>
+				<link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png" />
+				<link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
 			</Head>
 			<HeaderMenu />
 			<HomeComponent />

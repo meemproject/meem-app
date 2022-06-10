@@ -254,17 +254,13 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 			if (membershipSettings) {
 				if (membershipSettings.membershipStartDate) {
 					membershipStartUnix = Math.floor(
-						new Date(
-							membershipSettings.membershipStartDate
-						).getTime() / 1000
+						new Date(membershipSettings.membershipStartDate).getTime() / 1000
 					)
 					log.debug(membershipStartUnix)
 				}
 				if (membershipSettings.membershipEndDate) {
 					membershipEndUnix = Math.floor(
-						new Date(
-							membershipSettings.membershipEndDate
-						).getTime() / 1000
+						new Date(membershipSettings.membershipEndDate).getTime() / 1000
 					)
 					log.debug(membershipEndUnix)
 				}
@@ -466,9 +462,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
-						Finalize club creation
-					</Text>
+					<Text className={classes.modalTitle}>Finalize club creation</Text>
 				}
 				onClose={() => onModalClosed()}
 			>
@@ -514,11 +508,9 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 							active={
 								step === Step.Start || step === Step.Creating
 									? 0
-									: step === Step.Created ||
-									  step === Step.Initializing
+									: step === Step.Created || step === Step.Initializing
 									? 1
-									: step === Step.Initialized ||
-									  step === Step.Minting
+									: step === Step.Initialized || step === Step.Minting
 									? 2
 									: 3
 							}
@@ -527,18 +519,12 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 								label="Establish Club"
 								loading={step === Step.Creating}
 								description={
-									step !== Step.Start &&
-									step !== Step.Creating ? null : (
+									step !== Step.Start && step !== Step.Creating ? null : (
 										<>
 											{step === Step.Start && (
 												<div>
 													<Space h={12} />
-													<a
-														onClick={create}
-														className={
-															classes.buttonConfirm
-														}
-													>
+													<a onClick={create} className={classes.buttonConfirm}>
 														Confirm
 													</a>
 												</div>
@@ -551,13 +537,10 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 								label="Authorize membership settings"
 								loading={step === Step.Initializing}
 								description={
-									step !== Step.Created &&
-									step !== Step.Initializing ? (
-										<Text
-											className={classes.stepDescription}
-										>
-											Multiple transactions may occur if
-											several updates were made.
+									step !== Step.Created && step !== Step.Initializing ? (
+										<Text className={classes.stepDescription}>
+											Multiple transactions may occur if several updates were
+											made.
 										</Text>
 									) : (
 										<>
@@ -567,9 +550,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 
 													<a
 														onClick={initialize}
-														className={
-															classes.buttonConfirm
-														}
+														className={classes.buttonConfirm}
 													>
 														Confirm
 													</a>
@@ -583,14 +564,10 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 								label="Confirm club creation"
 								loading={step === Step.Minting}
 								description={
-									step !== Step.Initialized &&
-									step !== Step.Minting ? (
-										<Text
-											className={classes.stepDescription}
-										>
-											Your club will be published at the
-											URL you selected once this step is
-											complete.
+									step !== Step.Initialized && step !== Step.Minting ? (
+										<Text className={classes.stepDescription}>
+											Your club will be published at the URL you selected once
+											this step is complete.
 										</Text>
 									) : (
 										<>
@@ -598,12 +575,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 												<div>
 													<Space h={12} />
 
-													<a
-														onClick={mint}
-														className={
-															classes.buttonConfirm
-														}
-													>
+													<a onClick={mint} className={classes.buttonConfirm}>
 														Confirm
 													</a>
 												</div>

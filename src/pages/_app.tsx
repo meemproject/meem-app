@@ -64,8 +64,7 @@ function MyApp(props: AppProps) {
 			jssStyles.parentElement?.removeChild(jssStyles)
 		}
 		log.setOptions({
-			level:
-				(process.env.NEXT_PUBLIC_LOG_LEVEL as LogLevel) ?? LogLevel.Warn
+			level: (process.env.NEXT_PUBLIC_LOG_LEVEL as LogLevel) ?? LogLevel.Warn
 		})
 	}, [])
 
@@ -118,9 +117,7 @@ function MyApp(props: AppProps) {
 						process.env.NEXT_PUBLIC_MEEM_ID_CONTRACT_ADDRESS
 					}
 					polygonRpcUrl={process.env.NEXT_PUBLIC_MATIC_RPC_URL ?? ''}
-					rinkebyRpcUrl={
-						process.env.NEXT_PUBLIC_RINKEBY_RPC_URL ?? ''
-					}
+					rinkebyRpcUrl={process.env.NEXT_PUBLIC_RINKEBY_RPC_URL ?? ''}
 				>
 					<NotificationsProvider>
 						<ClubClubProvider>

@@ -17,8 +17,7 @@ interface IProps {
 const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 	const router = useRouter()
 
-	const clubSlug =
-		router.query.slug === undefined ? '' : `${router.query.slug}`
+	const clubSlug = router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
@@ -71,10 +70,7 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 							: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`
 					}
 				/>
-				<meta
-					name="viewport"
-					content="initial-scale=1, width=device-width"
-				/>
+				<meta name="viewport" content="initial-scale=1, width=device-width" />
 				<meta property="twitter:image" content="/link-preview.png" />
 				<meta property="og:image" content="/link-preview.png" />
 				<link
@@ -82,18 +78,8 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 					sizes="180x180"
 					href="/apple-touch-icon.png"
 				/>
-				<link
-					rel="icon"
-					type="image/png"
-					sizes="32x32"
-					href="/favicon32.png"
-				/>
-				<link
-					rel="icon"
-					type="image/png"
-					sizes="16x16"
-					href="/favicon.png"
-				/>
+				<link rel="icon" type="image/png" sizes="32x32" href="/favicon32.png" />
+				<link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
 			</Head>
 			<HeaderMenu />
 			<ClubAdminComponent slug={clubSlug} />
