@@ -195,6 +195,7 @@ export default async function clubFromMeemContract(
 
 						let type = MembershipReqType.None
 						let approvedAddresses: string[] = []
+						let approvedAddressesString = ''
 						let tokenName = 'TOKEN'
 						let tokenContractAddress = ''
 						let tokenMinQuantity = 0
@@ -215,6 +216,11 @@ export default async function clubFromMeemContract(
 							case Permission.Addresses:
 								type = MembershipReqType.ApprovedApplicants
 								approvedAddresses = permission.addresses
+								permission.addresses.forEach((address: string) => {
+									approvedAddressesString =
+										approvedAddressesString + `${address}\n`
+								})
+
 								break
 							case Permission.Holders:
 								tokenMinQuantity = Number(permission.numTokens)
@@ -253,7 +259,7 @@ export default async function clubFromMeemContract(
 										? metadata.applicationLinks[0]
 										: undefined,
 								approvedAddresses,
-								approvedAddressesString: '',
+								approvedAddressesString,
 								tokenName,
 								tokenMinQuantity,
 								tokenChain: '',
