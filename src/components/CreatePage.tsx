@@ -97,11 +97,13 @@ export const CreatePage: React.FC = () => {
 				}
 			})
 
+			console.log(from)
+
 			const tx = await meemContracts.upgrade({
 				signer: web3Provider.getSigner(),
 				proxyContractAddress: proxyAddress,
 				chain: Chain.Rinkeby,
-				fromVersion: from.toString(),
+				fromVersion: from,
 				toVersion
 			})
 
@@ -112,29 +114,47 @@ export const CreatePage: React.FC = () => {
 	}
 
 	const handleMint = async () => {
-		const meemContract = new Contract(
-			proxyAddress,
-			meemABI,
-			signer
-		) as unknown as meemContracts.Meem
+		try {
+			const meemContract = new Contract(
+				proxyAddress,
+				meemABI,
+				signer
+			) as unknown as meemContracts.Meem
 
-		meemContract?.mint(
-			{
-				to: accounts[0],
-				tokenURI: 'ipfs://example',
-				parentChain: Chain.Polygon,
-				parent: MeemAPI.zeroAddress,
-				parentTokenId: 0,
-				meemType: MeemType.Original,
-				isURILocked: false,
-				reactionTypes: ['upvote', 'downvote', 'heart'],
-				uriSource: UriSource.Json,
-				mintedBy: accounts[0]
-			},
-			meemContracts.defaultMeemProperties,
-			meemContracts.defaultMeemProperties,
-			{ gasLimit: '1000000' }
-		)
+			await meemContract?.mint(
+				{
+					to: accounts[0],
+					tokenURI: 'ipfs://example',
+					parentChain: Chain.Polygon,
+					parent: MeemAPI.zeroAddress,
+					parentTokenId: 0,
+					meemType: MeemType.Original,
+					isURILocked: false,
+					reactionTypes: ['upvote', 'downvote', 'heart'],
+					uriSource: UriSource.Json,
+					mintedBy: accounts[0]
+				},
+				meemContracts.defaultMeemProperties,
+				meemContracts.defaultMeemProperties,
+				{ gasLimit: '1000000' }
+			)
+		} catch (e) {
+			log.crit(e)
+		}
+	}
+
+	const handleAcceptOwnership = async () => {
+		try {
+			const meemContract = new Contract(
+				proxyAddress,
+				meemABI,
+				signer
+			) as unknown as meemContracts.Meem
+
+			await meemContract?.acceptOwnership()
+		} catch (e) {
+			log.crit(e)
+		}
 	}
 
 	const displayVersions = [
@@ -198,6 +218,12 @@ export const CreatePage: React.FC = () => {
 			</div>
 			<Button onClick={handleMint} disabled={proxyAddress.length === 0}>
 				3. Mint
+			</Button>
+			<Button
+				onClick={handleAcceptOwnership}
+				disabled={proxyAddress.length === 0}
+			>
+				Accept ownership
 			</Button>
 			<p>Club status: {status}</p>
 			{txLog.map(l => (
