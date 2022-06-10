@@ -17,7 +17,8 @@ import {
 	Stepper,
 	Textarea,
 	Loader,
-	Button
+	Button,
+	Switch
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -229,14 +230,16 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		Integration[]
 	>([])
 
+	// Used to populate existing integrations when changes are made
 	const [integrationBeingEdited, setIntegrationBeingEdited] =
 		useState<Integration>()
 
+	// Properties that can be edited by the user
+	const [currentIntegrationUrl, setCurrentIntegrationUrl] = useState('')
+	const [isCurrentIntegrationEnabled, setCurrentIntegrationEnabled] =
+		useState(true)
+
 	const [isIntegrationModalOpened, setIntegrationModalOpened] = useState(false)
-	const openIntegrationModal = () => {
-		// e.g. end now or later (w/ calendar)
-		setIntegrationModalOpened(true)
-	}
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -272,6 +275,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 	const editIntegration = (integration: Integration) => {
 		setIntegrationBeingEdited(integration)
+		setCurrentIntegrationUrl(integration.url ?? '')
+		setCurrentIntegrationEnabled(integration.isEnabled ?? true)
 		if (integration.url && integration.url.length > 0) {
 			setStep(Step.AddUrl)
 		}
@@ -410,17 +415,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								<TextInput
 									radius="lg"
 									size="md"
-									value={integrationBeingEdited.url}
+									value={currentIntegrationUrl}
 									onChange={event => {
-										const newInte: Integration = {
-											name: integrationBeingEdited.name,
-											icon: integrationBeingEdited.icon,
-											integrationId: integrationBeingEdited.integrationId,
-											description: integrationBeingEdited.description,
-											url: event.target.value,
-											guideUrl: integrationBeingEdited.guideUrl
-										}
-										setIntegrationBeingEdited(newInte)
+										setCurrentIntegrationUrl(event.target.value)
 									}}
 								/>
 								<Space h={24} />
@@ -485,19 +482,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 															<TextInput
 																radius="lg"
 																size="md"
-																value={integrationBeingEdited.url}
+																value={currentIntegrationUrl}
 																onChange={event => {
-																	const newInte: Integration = {
-																		name: integrationBeingEdited.name,
-																		icon: integrationBeingEdited.icon,
-																		description:
-																			integrationBeingEdited.description,
-																		integrationId:
-																			integrationBeingEdited.integrationId,
-																		url: event.target.value,
-																		guideUrl: integrationBeingEdited.guideUrl
-																	}
-																	setIntegrationBeingEdited(newInte)
+																	setCurrentIntegrationUrl(event.target.value)
 																}}
 															/>
 														</div>
@@ -509,6 +496,15 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								</MantineProvider>
 							</div>
 						)}
+					{integrationBeingEdited?.isExistingIntegration && (
+						<Switch
+							checked={isCurrentIntegrationEnabled}
+							onChange={event =>
+								setCurrentIntegrationEnabled(event.currentTarget.checked)
+							}
+							label="Enable integration"
+						/>
+					)}
 					{integrationBeingEdited &&
 						(integrationBeingEdited?.name === 'Twitter' ||
 							integrationBeingEdited?.name === 'Discord' ||
@@ -521,7 +517,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 										// Validate URL
 										let url
 										try {
-											url = new URL(integrationBeingEdited.url ?? '')
+											url = new URL(currentIntegrationUrl)
 										} catch (_) {
 											showNotification({
 												title: 'Oops!',
@@ -551,9 +547,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 												)
 												.set('Authorization', `JWT ${jwtToken}`)
 												.send({
-													isEnabled: true,
+													isEnabled: isCurrentIntegrationEnabled,
 													metadata: {
-														externalUrl: integrationBeingEdited.url ?? ''
+														externalUrl: currentIntegrationUrl
 													}
 												})
 											log.debug(body)
@@ -568,6 +564,11 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											return
 											return
 										}
+
+										// Update the integration locally
+										const updatedInte = integrationBeingEdited
+										updatedInte.url = currentIntegrationUrl
+										setIntegrationBeingEdited(updatedInte)
 
 										// Check to see if this integration is an existing integration
 
