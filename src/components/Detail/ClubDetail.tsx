@@ -218,7 +218,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		marginBottom: 12,
 		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
+		border: '1px solid rgba(255, 102, 81, 1)',
 		backgroundColor: '#FAFAFA',
 		borderRadius: 16,
 		padding: 16
@@ -243,6 +243,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
+	const [isWrongNetwork, setIsWrongNetwork] = useState(false)
 	const {
 		loading,
 		error,
@@ -250,8 +251,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	} = useQuery<GetClubQuery>(GET_CLUB, {
 		variables: { slug }
 	})
-
-	console.log({ loading, error, clubData })
 
 	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
@@ -369,6 +368,15 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				title: 'Unable to leave this club.',
 				message: `Did you connect your wallet?`
 			})
+			return
+		}
+
+		if (club?.isClubAdmin) {
+			showNotification({
+				title: 'Oops!',
+				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
+			})
+			return
 		}
 
 		setIsLeavingClub(true)
@@ -546,7 +554,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					Date.now() <
 					(mintEnd ? new Date(mintEnd).getTime() : 200000000000000)
 
-				let mintDatesText = 'Minting is available now'
+				let mintDatesText = 'Membership is available now'
 				const mintStartString = mintStart
 					? `${new Date(mintStart).toDateString()} at ${new Date(
 							mintStart
@@ -587,7 +595,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (!mintStart && !mintEnd) {
-					mintDatesText = 'Minting can be done at any time.'
+					mintDatesText = 'Members can join at any time.'
 				}
 
 				reqs.push({
@@ -693,6 +701,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.web3Provider
 	])
 
+	useEffect(() => {
+		if (wallet.isConnected) {
+			const isWrong = wallet.isConnectedToWrongNetwork
+			setIsWrongNetwork(isWrong)
+		}
+	}, [wallet.isConnected, wallet.isConnectedToWrongNetwork])
+
 	const navigateToSettings = () => {
 		router.push({ pathname: `/${slug}/admin` })
 	}
@@ -730,7 +745,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								{club.description}
 							</Text>
 							<div className={classes.headerButtons}>
-								{club.isClubMember && (
+								{club.isClubMember && wallet.isConnected && (
 									<Button
 										onClick={leaveClub}
 										loading={isLeavingClub}
@@ -756,13 +771,17 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												: `Join`)}
 										{!meetsAllRequirements &&
 											'Requirements not met'}
-										{!wallet.isConnected &&
+										{(!wallet.isConnected ||
+											isWrongNetwork) &&
 											'Connect wallet to join'}
 									</Button>
 								)}
 								{!wallet.isConnected && (
 									<Button
-										onClick={wallet.connectWallet}
+										onClick={async () => {
+											await wallet.connectWallet()
+											router.reload()
+										}}
 										className={classes.buttonJoinClub}
 									>
 										Connect wallet to join
@@ -775,7 +794,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											className={classes.headerSlotsLeft}
 										>{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}</Text>
 									)}
-								{club.isClubAdmin && (
+								{club.isClubAdmin && wallet.isConnected && (
 									<>
 										<Space w={'xs'} />
 										<Button
@@ -854,13 +873,97 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</>
 						)}
 
-						{club.integrations!.length > 0 && (
+						{/* Public integrations for club visitors */}
+						{!club.isClubMember &&
+							club.publicIntegrations!.length > 0 && (
+								<>
+									<Text
+										className={
+											classes.clubDetailSectionTitle
+										}
+									>{`Apps (${
+										club.publicIntegrations!.length
+									})${
+										club.allIntegrations!.length >
+										club.publicIntegrations!.length
+											? `, plus ${
+													club.allIntegrations!
+														.length -
+													club.publicIntegrations!
+														.length
+											  } hidden member-only app(s)`
+											: ``
+									}`}</Text>
+									<Grid>
+										{club.publicIntegrations!.map(
+											integration => (
+												<>
+													<Grid.Col
+														xs={6}
+														sm={4}
+														md={4}
+														lg={4}
+														xl={4}
+														key={integration.name}
+													>
+														<a
+															onClick={() => {
+																window.open(
+																	integration.url
+																)
+															}}
+														>
+															<div
+																className={
+																	classes.enabledClubIntegrationItem
+																}
+															>
+																<div
+																	className={
+																		classes.intItemHeader
+																	}
+																>
+																	<Image
+																		src={`/${integration.icon}`}
+																		width={
+																			16
+																		}
+																		height={
+																			16
+																		}
+																		fit={
+																			'contain'
+																		}
+																	/>
+																	<Space
+																		w={8}
+																	/>
+																	<Text>
+																		{
+																			integration.name
+																		}
+																	</Text>
+																</div>
+															</div>
+														</a>
+													</Grid.Col>
+												</>
+											)
+										)}
+									</Grid>
+								</>
+							)}
+
+						{/* All integrations for club members */}
+						{club.isClubMember && club.allIntegrations!.length > 0 && (
 							<>
 								<Text
 									className={classes.clubDetailSectionTitle}
-								>{`Apps (${club.integrations!.length})`}</Text>
+								>{`Apps (${
+									club.allIntegrations!.length
+								})`}</Text>
 								<Grid>
-									{club.integrations!.map(integration => (
+									{club.allIntegrations!.map(integration => (
 										<Grid.Col
 											xs={6}
 											sm={4}
@@ -902,7 +1005,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								</Grid>
 							</>
 						)}
-						<Space h={'xl'} />
 
 						<Text
 							className={classes.clubDetailSectionTitle}

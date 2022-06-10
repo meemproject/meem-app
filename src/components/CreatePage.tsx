@@ -97,8 +97,6 @@ export const CreatePage: React.FC = () => {
 				}
 			})
 
-			console.log(from)
-
 			const tx = await meemContracts.upgrade({
 				signer: web3Provider.getSigner(),
 				proxyContractAddress: proxyAddress,

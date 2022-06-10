@@ -69,7 +69,8 @@ export const GET_CLUB = gql`
 					address
 				}
 			}
-			MeemContractIntegrations {
+			id
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
 				IntegrationId
 				id
 				isEnabled
@@ -81,6 +82,7 @@ export const GET_CLUB = gql`
 					id
 					name
 				}
+				isPublic
 			}
 		}
 	}

@@ -72,7 +72,7 @@ const useStyles = createStyles(theme => ({
 			backgroundColor: theme.colors.gray[8]
 		},
 		borderRadius: 24,
-		marginRight: 24
+		marginRight: 32
 	},
 	createClubLink: {
 		marginTop: 24,
@@ -146,7 +146,7 @@ export const MyClubsComponent: React.FC = () => {
 	}
 
 	const navigateToCreate = () => {
-		router.push({ pathname: '/create' })
+		router.push({ pathname: '/' })
 	}
 
 	const navigateToClub = (club: string) => {

@@ -298,7 +298,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				finalList.push(potentialApprovedAddress)
 			}
 		})
-		console.log(`approved addresses count = ${finalList.length}`)
 		return finalList
 	}
 
