@@ -228,9 +228,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		Date | undefined
 	>(undefined)
 
-	const [membershipEndDate, setMembershipEndDate] = useState<Date | undefined>(
-		undefined
-	)
+	const [membershipEndDate, setMembershipEndDate] = useState<
+		Date | undefined
+	>(undefined)
 
 	// Club admins
 	const [clubAdminsString, setClubAdminsString] = useState('')
@@ -283,7 +283,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	}
 
 	const removeMembershipRequirement = (index: number) => {
-		const newReqs = membershipRequirements.filter(item => item.index !== index)
+		const newReqs = membershipRequirements.filter(
+			item => item.index !== index
+		)
 		setMembershipRequirements(newReqs)
 		updateReqCurrentlyEditing(membershipRequirements[0])
 	}
@@ -324,8 +326,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setMembershipTimingStartModalOpened(true)
 	}
 
-	const [isMembershipTimingEndModalOpened, setMembershipTimingEndModalOpened] =
-		useState(false)
+	const [
+		isMembershipTimingEndModalOpened,
+		setMembershipTimingEndModalOpened
+	] = useState(false)
 	const openMembershipTimingEndModal = () => {
 		// e.g. end now or later (w/ calendar)
 		setMembershipTimingEndModalOpened(true)
@@ -368,7 +372,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	}
 
 	const [newClubData, setNewClubData] = useState<Club>()
-	const [isSaveChangesModalOpened, setSaveChangesModalOpened] = useState(false)
+	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
+		useState(false)
 	const openSaveChangesModal = () => {
 		// 'save changes' modal for execution club settings updates
 		// convert current settings and update for the modal
@@ -489,7 +494,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setClubAdminsString(adminsString)
 
 				setCostToJoin(club.membershipSettings!.costToJoin)
-				setMembershipQuantity(club.membershipSettings!.membershipQuantity)
+				setMembershipQuantity(
+					club.membershipSettings!.membershipQuantity
+				)
 				setMembershipRequirements(club.membershipSettings!.requirements)
 				setMembershipSettings(club.membershipSettings)
 				log.debug(club.membershipSettings!.membershipStartDate)
@@ -524,7 +531,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			<div>
 				<Space h="lg" />
 				<Text className={classes.manageClubHeader}>Membership</Text>
-				<Text className={classes.membershipSettingHeader}>Requirements</Text>
+				<Text className={classes.membershipSettingHeader}>
+					Requirements
+				</Text>
 				<Text className={classes.membershipText}>
 					This club is open for{' '}
 					<a
@@ -533,7 +542,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						}}
 					>
 						<span className={classes.membershipSelector}>
-							{membershipTypeStringForFirstReq(membershipRequirements[0])}
+							{membershipTypeStringForFirstReq(
+								membershipRequirements[0]
+							)}
 						</span>
 					</a>{' '}
 					to join.{' '}
@@ -547,7 +558,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										openMembershipReqModal(0)
 									}}
 								>
-									<span className={classes.membershipSelector}>
+									<span
+										className={classes.membershipSelector}
+									>
 										at this link
 									</span>
 								</a>
@@ -589,7 +602,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							</span>
 						</a> */}
 						in addition, members{' '}
-						{membershipRequirements[1].andor === MembershipReqAndor.Or
+						{membershipRequirements[1].andor ===
+						MembershipReqAndor.Or
 							? 'can'
 							: 'must'}{' '}
 						<a
@@ -598,7 +612,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}}
 						>
 							<span className={classes.membershipSelector}>
-								{membershipTypeStringForSecondReq(membershipRequirements[1])}
+								{membershipTypeStringForSecondReq(
+									membershipRequirements[1]
+								)}
 							</span>
 						</a>{' '}
 						to join.
@@ -623,11 +639,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				<Text className={classes.membershipSettingHeader}>Price</Text>
 
 				<Text className={classes.membershipText}>
-					Our club {isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
+					Our club{' '}
+					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
 						<span className={classes.membershipSelector}>
-							{isNaN(costToJoin) || costToJoin === 0 ? 'free' : costToJoin}
-							{isNaN(costToJoin) || costToJoin === 0 ? '' : ' MATIC'}
+							{isNaN(costToJoin) || costToJoin === 0
+								? 'free'
+								: costToJoin}
+							{isNaN(costToJoin) || costToJoin === 0
+								? ''
+								: ' MATIC'}
 						</span>
 					</a>{' '}
 					to join.{' '}
@@ -645,12 +666,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				</Text>
 				<Space h="lg" />
 
-				<Text className={classes.membershipSettingHeader}>Capacity</Text>
+				<Text className={classes.membershipSettingHeader}>
+					Capacity
+				</Text>
 				<Text className={classes.membershipText}>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
 						<span className={classes.membershipSelector}>
-							{membershipQuantity === 0 || isNaN(membershipQuantity)
+							{membershipQuantity === 0 ||
+							isNaN(membershipQuantity)
 								? 'unlimited'
 								: membershipQuantity}
 						</span>
@@ -696,18 +720,21 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 				<div>
 					<Text className={classes.clubAdminsPrompt}>
-						Who can manage this club’s profile and membership settings?
+						Who can manage this club’s profile and membership
+						settings?
 					</Text>
 					<Text className={classes.clubAdminsInstructions}>
-						Add a line break between each address. Note that at least one club
-						admin is required at all times.
+						Add a line break between each address. Note that at
+						least one club admin is required at all times.
 					</Text>
 					<Textarea
 						radius="lg"
 						size="md"
 						value={clubAdminsString}
 						minRows={10}
-						onChange={event => parseClubAdmins(event.currentTarget.value)}
+						onChange={event =>
+							parseClubAdmins(event.currentTarget.value)
+						}
 					/>
 				</div>
 				<Button
@@ -742,34 +769,48 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								: reqCurrentlyEditing.type ===
 								  MembershipReqType.ApprovedApplicants
 								? 'approved-applicants'
-								: reqCurrentlyEditing.type === MembershipReqType.TokenHolders
+								: reqCurrentlyEditing.type ===
+								  MembershipReqType.TokenHolders
 								? 'token-holders'
 								: 'other-club-member'
 						}
 						onChange={value => {
 							switch (value) {
 								case 'anyone':
-									reqCurrentlyEditing.type = MembershipReqType.None
-									updateMembershipRequirement(reqCurrentlyEditing)
+									reqCurrentlyEditing.type =
+										MembershipReqType.None
+									updateMembershipRequirement(
+										reqCurrentlyEditing
+									)
 									break
 								case 'approved-applicants':
 									reqCurrentlyEditing.type =
 										MembershipReqType.ApprovedApplicants
-									updateMembershipRequirement(reqCurrentlyEditing)
+									updateMembershipRequirement(
+										reqCurrentlyEditing
+									)
 									break
 								case 'token-holders':
-									reqCurrentlyEditing.type = MembershipReqType.TokenHolders
-									updateMembershipRequirement(reqCurrentlyEditing)
+									reqCurrentlyEditing.type =
+										MembershipReqType.TokenHolders
+									updateMembershipRequirement(
+										reqCurrentlyEditing
+									)
 									break
 								case 'other-club-member':
-									reqCurrentlyEditing.type = MembershipReqType.OtherClubMember
-									updateMembershipRequirement(reqCurrentlyEditing)
+									reqCurrentlyEditing.type =
+										MembershipReqType.OtherClubMember
+									updateMembershipRequirement(
+										reqCurrentlyEditing
+									)
 									break
 							}
 						}}
 						required
 					>
-						{isEditedReqFirstReq && <Radio value="anyone" label="anyone" />}
+						{isEditedReqFirstReq && (
+							<Radio value="anyone" label="anyone" />
+						)}
 						<Radio
 							value="approved-applicants"
 							label={
@@ -780,7 +821,11 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						/>
 						<Radio
 							value="token-holders"
-							label={isEditedReqFirstReq ? 'token holders' : 'hold a token'}
+							label={
+								isEditedReqFirstReq
+									? 'token holders'
+									: 'hold a token'
+							}
 						/>
 
 						{!isEditedReqFirstReq && (
@@ -793,22 +838,28 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</RadioGroup>
 					<div
 						className={
-							reqCurrentlyEditing.type == MembershipReqType.ApprovedApplicants
+							reqCurrentlyEditing.type ==
+							MembershipReqType.ApprovedApplicants
 								? classes.visible
 								: classes.invisible
 						}
 					>
-						<Text className={classes.modalHeaderText}>Application Link</Text>
+						<Text className={classes.modalHeaderText}>
+							Application Link
+						</Text>
 						<TextInput
 							radius="lg"
 							size="md"
 							value={reqCurrentlyEditing.applicationLink}
 							onChange={event => {
-								reqCurrentlyEditing.applicationLink = event.target.value
+								reqCurrentlyEditing.applicationLink =
+									event.target.value
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={classes.modalHeaderText}>Approved Addresses</Text>
+						<Text className={classes.modalHeaderText}>
+							Approved Addresses
+						</Text>
 
 						<Textarea
 							radius="lg"
@@ -818,9 +869,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							onChange={event => {
 								reqCurrentlyEditing.approvedAddressesString =
 									event.currentTarget.value
-								reqCurrentlyEditing.approvedAddresses = parseApprovedAddresses(
-									event.currentTarget.value
-								)
+								reqCurrentlyEditing.approvedAddresses =
+									parseApprovedAddresses(
+										event.currentTarget.value
+									)
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
@@ -828,7 +880,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 					<div
 						className={
-							reqCurrentlyEditing.type == MembershipReqType.TokenHolders
+							reqCurrentlyEditing.type ==
+							MembershipReqType.TokenHolders
 								? classes.visible
 								: classes.invisible
 						}
@@ -850,17 +903,22 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}}
 							value={reqCurrentlyEditing.tokenChain}
 						/> */}
-						<Text className={classes.modalHeaderText}>Token Address</Text>
+						<Text className={classes.modalHeaderText}>
+							Token Address
+						</Text>
 						<TextInput
 							radius="lg"
 							size="md"
 							value={reqCurrentlyEditing.tokenContractAddress}
 							onChange={event => {
-								reqCurrentlyEditing.tokenContractAddress = event.target.value
+								reqCurrentlyEditing.tokenContractAddress =
+									event.target.value
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={classes.modalHeaderText}>Minimum Quantity</Text>
+						<Text className={classes.modalHeaderText}>
+							Minimum Quantity
+						</Text>
 						<TextInput
 							radius="lg"
 							size="md"
@@ -876,12 +934,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</div>
 					<div
 						className={
-							reqCurrentlyEditing.type == MembershipReqType.OtherClubMember
+							reqCurrentlyEditing.type ==
+							MembershipReqType.OtherClubMember
 								? classes.visible
 								: classes.invisible
 						}
 					>
-						<Text className={classes.modalHeaderText}>Club Name</Text>
+						<Text className={classes.modalHeaderText}>
+							Club Name
+						</Text>
 
 						<TextInput
 							radius="lg"
@@ -889,7 +950,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							value={reqCurrentlyEditing.clubName}
 							onChange={event => {
 								// TODO: Look up club and retrive club contract address!
-								reqCurrentlyEditing.clubName = event.target.value
+								reqCurrentlyEditing.clubName =
+									event.target.value
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
@@ -899,14 +961,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						disabled={isCheckingRequirement}
 						loading={isCheckingRequirement}
 						onClick={async () => {
-							if (reqCurrentlyEditing.type === MembershipReqType.TokenHolders) {
+							if (
+								reqCurrentlyEditing.type ===
+								MembershipReqType.TokenHolders
+							) {
 								// Validate token
 								setIsCheckingRequirement(true)
 
-								if (reqCurrentlyEditing.tokenMinQuantity === 0) {
+								if (
+									reqCurrentlyEditing.tokenMinQuantity === 0
+								) {
 									showNotification({
 										title: 'Oops!',
-										message: 'Please enter a quantity greater than 0.'
+										message:
+											'Please enter a quantity greater than 0.'
 									})
 									setIsCheckingRequirement(false)
 
@@ -931,7 +999,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								} else {
 									setIsCheckingRequirement(false)
 									reqCurrentlyEditing.tokenName = token.name
-									updateMembershipRequirement(reqCurrentlyEditing)
+									updateMembershipRequirement(
+										reqCurrentlyEditing
+									)
 								}
 							}
 
@@ -959,10 +1029,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 									break
 								case MembershipReqType.TokenHolders:
-									if (reqCurrentlyEditing.tokenMinQuantity === 0) {
+									if (
+										reqCurrentlyEditing.tokenMinQuantity ===
+										0
+									) {
 										showNotification({
 											title: 'Oops!',
-											message: 'Please enter a minimum token quantity.'
+											message:
+												'Please enter a minimum token quantity.'
 										})
 										return
 									}
@@ -979,8 +1053,11 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						<Button
 							onClick={() => {
 								setMembershipReqModalOpened(false)
-								membershipRequirements[1].type = MembershipReqType.None
-								setMembershipRequirements(membershipRequirements)
+								membershipRequirements[1].type =
+									MembershipReqType.None
+								setMembershipRequirements(
+									membershipRequirements
+								)
 							}}
 							className={classes.buttonModalCancel}
 						>
@@ -1013,12 +1090,18 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						onChange={value => {
 							switch (value) {
 								case 'and':
-									reqCurrentlyEditing.andor = MembershipReqAndor.And
-									updateMembershipRequirement(reqCurrentlyEditing)
+									reqCurrentlyEditing.andor =
+										MembershipReqAndor.And
+									updateMembershipRequirement(
+										reqCurrentlyEditing
+									)
 									break
 								case 'or':
-									reqCurrentlyEditing.andor = MembershipReqAndor.Or
-									updateMembershipRequirement(reqCurrentlyEditing)
+									reqCurrentlyEditing.andor =
+										MembershipReqAndor.Or
+									updateMembershipRequirement(
+										reqCurrentlyEditing
+									)
 									break
 							}
 						}}
@@ -1048,7 +1131,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={classes.modalHeaderText}>Enter cost to join</Text>
+					<Text className={classes.modalHeaderText}>
+						Enter cost to join
+					</Text>
 					<TextInput
 						radius="lg"
 						size="md"
@@ -1060,11 +1145,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							if (event.target.value.length === 0) {
 								setCostToJoin(0)
 							} else {
-								const potentialNumber = parseFloat(event.target.value)
+								const potentialNumber = parseFloat(
+									event.target.value
+								)
 								if (isNaN(potentialNumber)) {
 									showNotification({
 										title: 'Oops!',
-										message: 'Please enter a number, not text.'
+										message:
+											'Please enter a number, not text.'
 									})
 									setCostToJoin(0)
 									return
@@ -1095,12 +1183,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}
 							if (costToJoin > 0) {
 								setIsCheckingRequirement(true)
-								const isValid = await isAddress(membershipFundsAddress)
+								const isValid = await isAddress(
+									membershipFundsAddress
+								)
 								setIsCheckingRequirement(false)
 								if (!isValid) {
 									showNotification({
 										title: 'Oops!',
-										message: 'Please enter a valid wallet address.'
+										message:
+											'Please enter a valid wallet address.'
 									})
 									return
 								}
@@ -1130,7 +1221,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						size="lg"
 						color="dark"
 						value={
-							isNaN(membershipQuantity) || membershipQuantity === 0
+							isNaN(membershipQuantity) ||
+							membershipQuantity === 0
 								? 'unlimited'
 								: 'finite'
 						}
@@ -1158,9 +1250,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							<TextInput
 								radius="lg"
 								size="md"
-								value={isNaN(membershipQuantity) ? '' : membershipQuantity}
+								value={
+									isNaN(membershipQuantity)
+										? ''
+										: membershipQuantity
+								}
 								onChange={event => {
-									setMembershipQuantity(parseInt(event.target.value))
+									setMembershipQuantity(
+										parseInt(event.target.value)
+									)
 								}}
 							/>
 						</>
@@ -1179,7 +1277,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							if (membershipQuantity < 0) {
 								showNotification({
 									title: 'Oops!',
-									message: 'How can you have negative total memberships?!'
+									message:
+										'How can you have negative total memberships?!'
 								})
 								return
 							}
@@ -1207,7 +1306,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						spacing={12}
 						size="lg"
 						color="dark"
-						value={membershipStartDate === undefined ? 'now' : 'later'}
+						value={
+							membershipStartDate === undefined ? 'now' : 'later'
+						}
 						onChange={value => {
 							switch (value) {
 								case 'now':
@@ -1233,8 +1334,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										value={membershipStartDate}
 										onChange={date => {
 											if (date != null) {
-												const hr = membershipStartDate.getHours()
-												const min = membershipStartDate.getMinutes()
+												const hr =
+													membershipStartDate.getHours()
+												const min =
+													membershipStartDate.getMinutes()
 												date.setHours(hr)
 												date.setMinutes(min)
 												setMembershipStartDate(date)
@@ -1249,7 +1352,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										radius={'lg'}
 										value={membershipStartDate}
 										onChange={time => {
-											const day = membershipStartDate.getDate()
+											const day =
+												membershipStartDate.getDate()
 											time.setDate(day)
 											setMembershipStartDate(time)
 										}}
@@ -1265,7 +1369,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							if (
 								membershipStartDate !== undefined &&
 								membershipEndDate !== undefined &&
-								membershipStartDate.getTime() > membershipEndDate.getTime()
+								membershipStartDate.getTime() >
+									membershipEndDate.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',
@@ -1298,7 +1403,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						spacing={12}
 						size="lg"
 						color="dark"
-						value={membershipEndDate === undefined ? 'forever' : 'end'}
+						value={
+							membershipEndDate === undefined ? 'forever' : 'end'
+						}
 						onChange={value => {
 							switch (value) {
 								case 'forever':
@@ -1324,8 +1431,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										value={membershipEndDate}
 										onChange={date => {
 											if (date != null) {
-												const hr = membershipEndDate.getHours()
-												const min = membershipEndDate.getMinutes()
+												const hr =
+													membershipEndDate.getHours()
+												const min =
+													membershipEndDate.getMinutes()
 												date.setHours(hr)
 												date.setMinutes(min)
 												setMembershipEndDate(date)
@@ -1340,7 +1449,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										radius={'lg'}
 										value={membershipEndDate}
 										onChange={time => {
-											const day = membershipEndDate.getDate()
+											const day =
+												membershipEndDate.getDate()
 											time.setDate(day)
 											setMembershipEndDate(time)
 										}}
@@ -1357,7 +1467,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							if (
 								membershipStartDate !== undefined &&
 								membershipEndDate !== undefined &&
-								membershipStartDate.getTime() > membershipEndDate.getTime()
+								membershipStartDate.getTime() >
+									membershipEndDate.getTime()
 							) {
 								showNotification({
 									title: 'Oops!',

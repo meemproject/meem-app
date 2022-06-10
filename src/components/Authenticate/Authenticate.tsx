@@ -82,16 +82,17 @@ const MAuthenticate: React.FC = () => {
 				try {
 					setIsLoading(true)
 
-					const loginRequest = await makeRequest<MeemAPI.v1.Login.IDefinition>(
-						MeemAPI.v1.Login.path(),
-						{
-							method: MeemAPI.v1.Login.method,
-							body: {
-								address,
-								signature: walletSig
+					const loginRequest =
+						await makeRequest<MeemAPI.v1.Login.IDefinition>(
+							MeemAPI.v1.Login.path(),
+							{
+								method: MeemAPI.v1.Login.method,
+								body: {
+									address,
+									signature: walletSig
+								}
 							}
-						}
-					)
+						)
 
 					log.debug(`logged in successfully.`)
 
@@ -117,9 +118,12 @@ const MAuthenticate: React.FC = () => {
 		setIsLoading(true)
 
 		try {
-			const { nonce } = await getNonceFetcher(MeemAPI.v1.GetNonce.path(), {
-				address
-			})
+			const { nonce } = await getNonceFetcher(
+				MeemAPI.v1.GetNonce.path(),
+				{
+					address
+				}
+			)
 			log.debug('got nonce')
 			const signature = await wallet.signer?.signMessage(nonce)
 			log.debug({ signature })
@@ -128,7 +132,8 @@ const MAuthenticate: React.FC = () => {
 				log.debug('Unable to authenticate - signature is undefined.')
 				showNotification({
 					title: 'Oops!',
-					message: 'Unable to authenticate with your wallet. Please try again.'
+					message:
+						'Unable to authenticate with your wallet. Please try again.'
 				})
 				setIsLoading(false)
 			} else {
@@ -137,7 +142,8 @@ const MAuthenticate: React.FC = () => {
 		} catch (e) {
 			showNotification({
 				title: 'Oops!',
-				message: 'Unable to authenticate with your wallet. Please get in touch!'
+				message:
+					'Unable to authenticate with your wallet. Please get in touch!'
 			})
 			setIsLoading(false)
 			log.crit(e)
@@ -156,7 +162,8 @@ const MAuthenticate: React.FC = () => {
 			log.debug('Unable to authenticate - wallet address not found.')
 			showNotification({
 				title: 'Oops!',
-				message: 'Unable to authenticate with your wallet. Please try again.'
+				message:
+					'Unable to authenticate with your wallet. Please try again.'
 			})
 		}
 	}, [wallet])
@@ -167,27 +174,35 @@ const MAuthenticate: React.FC = () => {
 				className={classes.authHeader}
 			>{`Let's make sure it's really you.`}</Text>
 			<div>
-				<Text className={classes.authSubHeader}>Connect Your Wallet</Text>
+				<Text className={classes.authSubHeader}>
+					Connect Your Wallet
+				</Text>
 				<Space h={16} />
 			</div>
 
 			<div>
 				<Text>
-					Let&apos;s connect your wallet again. After that, we&apos;ll have you
-					sign a message confirming it&apos;s really you. It might take a moment
-					to pop up - please be patient!
+					Let&apos;s connect your wallet again. After that, we&apos;ll
+					have you sign a message confirming it&apos;s really you. It
+					might take a moment to pop up - please be patient!
 				</Text>
 			</div>
 
 			{isLoading && <Loader className={classes.loader} />}
 			<div>
 				{!isLoading && !isConnected && (
-					<Button className={classes.buttonSaveChanges} onClick={connectWallet}>
+					<Button
+						className={classes.buttonSaveChanges}
+						onClick={connectWallet}
+					>
 						Connect wallet
 					</Button>
 				)}
 				{!isLoading && isConnected && (
-					<Button className={classes.buttonSaveChanges} onClick={sign}>
+					<Button
+						className={classes.buttonSaveChanges}
+						onClick={sign}
+					>
 						Add your signature
 					</Button>
 				)}

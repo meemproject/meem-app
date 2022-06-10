@@ -160,7 +160,9 @@ export const CreatePage: React.FC = () => {
 	const displayVersions = [
 		{
 			version: 'latest',
-			displayName: `latest (${meemContracts.versions[Chain.Rinkeby].latest})`
+			displayName: `latest (${
+				meemContracts.versions[Chain.Rinkeby].latest
+			})`
 		},
 		{
 			version: 'beta',
@@ -168,7 +170,9 @@ export const CreatePage: React.FC = () => {
 		},
 		{
 			version: 'alpha',
-			displayName: `alpha (${meemContracts.versions[Chain.Rinkeby].alpha})`
+			displayName: `alpha (${
+				meemContracts.versions[Chain.Rinkeby].alpha
+			})`
 		},
 		...meemContracts.versionList().map(v => ({
 			version: v,
@@ -182,7 +186,9 @@ export const CreatePage: React.FC = () => {
 			<Switch
 				label={shouldShowUpgrade ? 'Create a club' : 'Upgrade a club'}
 				checked={shouldShowUpgrade}
-				onChange={event => setShouldShowUpgrade(event.currentTarget.checked)}
+				onChange={event =>
+					setShouldShowUpgrade(event.currentTarget.checked)
+				}
 				size="lg"
 			/>
 			<div>
@@ -197,13 +203,18 @@ export const CreatePage: React.FC = () => {
 				/>
 			</div>
 			<div>
-				<Button onClick={shouldShowUpgrade ? handleUpgrade : handleCreate}>
+				<Button
+					onClick={shouldShowUpgrade ? handleUpgrade : handleCreate}
+				>
 					{shouldShowUpgrade ? 'Upgrade Club' : '1. Create Club'}
 				</Button>
 			</div>
 			{!shouldShowUpgrade && (
 				<div>
-					<Button onClick={handleInit} disabled={proxyAddress.length === 0}>
+					<Button
+						onClick={handleInit}
+						disabled={proxyAddress.length === 0}
+					>
 						2. Initialize Club
 					</Button>
 				</div>
@@ -213,7 +224,9 @@ export const CreatePage: React.FC = () => {
 					label="Contract Address"
 					placeholder="0x..."
 					value={proxyAddress}
-					onChange={event => setProxyAddress(event.currentTarget.value)}
+					onChange={event =>
+						setProxyAddress(event.currentTarget.value)
+					}
 				/>
 			</div>
 			<Button onClick={handleMint} disabled={proxyAddress.length === 0}>
