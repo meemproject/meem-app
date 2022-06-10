@@ -370,6 +370,15 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				title: 'Unable to leave this club.',
 				message: `Did you connect your wallet?`
 			})
+			return
+		}
+
+		if (club?.isClubAdmin) {
+			showNotification({
+				title: 'Oops!',
+				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
+			})
+			return
 		}
 
 		setIsLeavingClub(true)
