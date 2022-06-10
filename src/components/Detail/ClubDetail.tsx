@@ -547,7 +547,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					Date.now() <
 					(mintEnd ? new Date(mintEnd).getTime() : 200000000000000)
 
-				let mintDatesText = 'Minting is available now'
+				let mintDatesText = 'Membership is available now'
 				const mintStartString = mintStart
 					? `${new Date(mintStart).toDateString()} at ${new Date(
 							mintStart
@@ -588,7 +588,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (!mintStart && !mintEnd) {
-					mintDatesText = 'Minting can be done at any time.'
+					mintDatesText = 'Members can join at any time.'
 				}
 
 				reqs.push({
