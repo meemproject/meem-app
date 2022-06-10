@@ -202,7 +202,7 @@ export function HeaderMenu() {
 	}
 
 	const handleContactUs = () => {
-		window.open('mailto:help@weareprosocial.com')
+		window.open('mailto:hello@weareprosocial.com')
 	}
 
 	const handleShareFeedback = () => {
