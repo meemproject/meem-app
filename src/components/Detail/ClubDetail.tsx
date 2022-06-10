@@ -252,8 +252,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		variables: { slug }
 	})
 
-	console.log({ loading, error, clubData })
-
 	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 

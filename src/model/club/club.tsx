@@ -167,8 +167,6 @@ export default async function clubFromMeemContract(
 		}
 
 		if (clubData.mintPermissions) {
-			console.log('club has mint permissions')
-
 			// clubData.mintPermissions.forEach((permission: any) => {
 			// 	log.debug(permission)
 			// })
