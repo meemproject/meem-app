@@ -245,6 +245,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		useState(true)
 	const [isCurrentIntegrationPublic, setCurrentIntegrationPublic] =
 		useState(false)
+	const [currentIntegrationId, setCurrentIntegrationId] = useState('')
 
 	const [isIntegrationModalOpened, setIntegrationModalOpened] = useState(false)
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
@@ -269,21 +270,22 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 			})
 			setAvailableIntegrations(available)
 		}
-	}, [availableIntegrations.length, club.integrations, inteData, loading])
+	}, [availableIntegrations.length, club.allIntegrations, inteData, loading])
 
 	// Setup enabled integrations
 	useEffect(() => {
 		if (!hasSetupEnabledIntegrations) {
 			// Set up enabled integrations
-			setExistingIntegrations(club.integrations ?? [])
+			setExistingIntegrations(club.allIntegrations ?? [])
 			setHasSetUpIntegrations(true)
 		}
-	}, [club.integrations, hasSetupEnabledIntegrations])
+	}, [club.allIntegrations, hasSetupEnabledIntegrations])
 
 	const editIntegration = (integration: Integration) => {
 		setIntegrationBeingEdited(integration)
 		setCurrentIntegrationUrl(integration.url ?? '')
 		setCurrentIntegrationEnabled(integration.isEnabled ?? true)
+		setCurrentIntegrationId(integration.integrationId ?? '')
 		setCurrentIntegrationPublic(
 			integration.isPublic ??
 				(integration.name === 'Twitter' || integration.name === 'Discord')
@@ -549,9 +551,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 									onClick={async () => {
 										if (integrationBeingEdited) {
 											// Validate URL
-											let url
+
 											try {
-												url = new URL(currentIntegrationUrl)
+												const url = new URL(currentIntegrationUrl)
 											} catch (_) {
 												showNotification({
 													title: 'Oops!',
@@ -564,6 +566,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											// Mark as saving changes
 											setIsSavingChanges(true)
 
+											log.debug(`public: ${isCurrentIntegrationPublic}`)
+
 											// Save the change to the db
 											try {
 												const jwtToken = Cookies.get('meemJwtToken')
@@ -574,8 +578,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 														}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
 															{
 																meemContractId: club.id ?? '',
-																integrationId:
-																	integrationBeingEdited.integrationId
+																integrationId: currentIntegrationId
 															}
 														)}`
 													)
@@ -617,14 +620,10 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 												setExistingIntegrations(newExisting)
 
 												availableIntegrations.forEach(inte => {
-													if (
-														inte.integrationId ===
-														integrationBeingEdited.integrationId
-													) {
+													if (inte.integrationId === currentIntegrationId) {
 														const newAvailable = availableIntegrations.filter(
 															integ =>
-																integ.integrationId !==
-																integrationBeingEdited.integrationId
+																integ.integrationId !== currentIntegrationId
 														)
 														setAvailableIntegrations(newAvailable)
 														return
@@ -637,7 +636,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 												for (let i = 0; i < newIntegrations.length; i++) {
 													if (
 														newIntegrations[i].integrationId ===
-														integrationBeingEdited.integrationId
+														currentIntegrationId
 													) {
 														newIntegrations[i] = integrationBeingEdited
 														break

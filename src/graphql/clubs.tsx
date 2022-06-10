@@ -43,7 +43,6 @@ export const GET_CLUB_SLUG = gql`
 export const GET_CLUB = gql`
 	query GetClub($slug: String) {
 		MeemContracts(where: { slug: { _eq: $slug } }) {
-			id
 			slug
 			address
 			contractURI
@@ -70,7 +69,8 @@ export const GET_CLUB = gql`
 					address
 				}
 			}
-			MeemContractIntegrations {
+			id
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
 				IntegrationId
 				id
 				isEnabled
@@ -82,6 +82,7 @@ export const GET_CLUB = gql`
 					id
 					name
 				}
+				isPublic
 			}
 		}
 	}

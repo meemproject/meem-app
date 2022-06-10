@@ -70,6 +70,10 @@ const MAuthenticate: React.FC = () => {
 		method: MeemAPI.v1.GetNonce.method
 	})
 
+	useEffect(() => {
+		setIsConnected(wallet.isConnected)
+	}, [wallet.isConnected])
+
 	const login = useCallback(
 		async (walletSig: string) => {
 			const address = Cookies.get('walletAddress')
@@ -167,15 +171,18 @@ const MAuthenticate: React.FC = () => {
 				className={classes.authHeader}
 			>{`Let's make sure it's really you.`}</Text>
 			<div>
-				<Text className={classes.authSubHeader}>Connect Your Wallet</Text>
+				<Text className={classes.authSubHeader}>
+					{wallet.isConnected ? 'Add Your Signature' : 'Connect Your Wallet'}
+				</Text>
 				<Space h={16} />
 			</div>
 
 			<div>
 				<Text>
-					Let&apos;s connect your wallet again. After that, we&apos;ll have you
-					sign a message confirming it&apos;s really you. It might take a moment
-					to pop up - please be patient!
+					{wallet.isConnected
+						? `Let's connect your wallet again.`
+						: `Please sign a message to confirm it's really you. The signature request might take a moment
+					to pop up - please be patient!`}
 				</Text>
 			</div>
 

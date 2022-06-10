@@ -66,13 +66,14 @@ const useStyles = createStyles(theme => ({
 	},
 
 	searchPrompt: {
-		marginTop: theme.spacing.xl,
+		marginTop: 64,
 		fontSize: 20,
 		fontWeight: 'bold',
 		color: 'black',
 
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 18
+			fontSize: 18,
+			marginTop: 48
 		}
 	},
 
@@ -246,7 +247,7 @@ export function HomeComponent() {
 
 	return (
 		<div className={classes.wrapper}>
-			<Container size={700} className={classes.inner}>
+			<Container size={900} className={classes.inner}>
 				<Center>
 					<Image src="/clubs-home.svg" height={150} width={150} fit={'contain'}>
 						{' '}
@@ -261,7 +262,8 @@ export function HomeComponent() {
 					className={classes.clubSearch}
 					value={autocompleteFormValue}
 					data={autocompleteData}
-					size={'lg'}
+					limit={2}
+					size={'xl'}
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
 					placeholder={

@@ -42,7 +42,9 @@ export interface Club {
 	isClubAdmin?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
-	integrations?: Integration[]
+	allIntegrations?: Integration[]
+	publicIntegrations?: Integration[]
+	privateIntegrations?: Integration[]
 }
 
 export interface MembershipSettings {
@@ -119,7 +121,7 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			integrations: []
+			allIntegrations: []
 		}
 	} else {
 		return {}
@@ -315,21 +317,32 @@ export default async function clubFromMeemContract(
 		}
 
 		// Integrations
-		const integrations: Integration[] = []
-		clubData.MeemContractIntegrations.forEach(inte => {
-			const integration: Integration = {
-				id: inte.id,
-				integrationId: inte.IntegrationId,
-				name: inte.Integration?.name ?? 'Unknown',
-				description: inte.Integration?.description ?? 'Unknown',
-				isEnabled: inte.isEnabled,
-				//isPublic: inte.isPublic,
-				guideUrl: inte.Integration?.guideUrl,
-				url: inte.metadata.externalUrl ?? '',
-				isExistingIntegration: true
-			}
-			integrations.push(integration)
-		})
+		const allIntegrations: Integration[] = []
+		const publicIntegrations: Integration[] = []
+		const privateIntegrations: Integration[] = []
+		if (clubData.MeemContractIntegrations) {
+			clubData.MeemContractIntegrations.forEach(inte => {
+				const integration: Integration = {
+					id: inte.id,
+					integrationId: inte.IntegrationId,
+					name: inte.Integration?.name ?? 'Unknown',
+					description: inte.Integration?.description ?? 'Unknown',
+					icon: inte.Integration?.icon ?? '',
+					isEnabled: inte.isEnabled,
+					isPublic: inte.isPublic,
+					guideUrl: inte.Integration?.guideUrl,
+					url: inte.metadata.externalUrl ?? '',
+					isExistingIntegration: true
+				}
+
+				if (inte.isPublic) {
+					publicIntegrations.push(integration)
+				} else {
+					privateIntegrations.push(integration)
+				}
+				allIntegrations.push(integration)
+			})
+		}
 
 		// Calculate slots left if totalOriginSupply > 0
 		let slotsLeft = -1
@@ -364,7 +377,9 @@ export default async function clubFromMeemContract(
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			integrations
+			allIntegrations,
+			publicIntegrations,
+			privateIntegrations
 		}
 	} else {
 		return {}

@@ -724,7 +724,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 								{!wallet.isConnected && (
 									<Button
-										onClick={wallet.connectWallet}
+										onClick={async () => {
+											await wallet.connectWallet()
+											router.reload()
+										}}
 										className={classes.buttonJoinClub}
 									>
 										Connect wallet to join
@@ -790,13 +793,63 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</>
 						)}
 
-						{club.integrations!.length > 0 && (
+						{/* Public integrations for club visitors */}
+						{!club.isClubMember && club.publicIntegrations!.length > 0 && (
 							<>
 								<Text className={classes.clubDetailSectionTitle}>{`Apps (${
-									club.integrations!.length
+									club.publicIntegrations!.length
 								})`}</Text>
 								<Grid>
-									{club.integrations!.map(integration => (
+									{club.publicIntegrations!.map(integration => (
+										<>
+											<Grid.Col
+												xs={6}
+												sm={4}
+												md={4}
+												lg={4}
+												xl={4}
+												key={integration.name}
+											>
+												<a
+													onClick={() => {
+														window.open(integration.url)
+													}}
+												>
+													<div className={classes.enabledClubIntegrationItem}>
+														<div className={classes.intItemHeader}>
+															<Image
+																src={`/${integration.icon}`}
+																width={16}
+																height={16}
+																fit={'contain'}
+															/>
+															<Space w={8} />
+															<Text>{integration.name}</Text>
+														</div>
+													</div>
+												</a>
+											</Grid.Col>
+											{club.allIntegrations!.length >
+												club.publicIntegrations!.length && (
+												<Text>{`(Plus ${
+													club.allIntegrations!.length -
+													club.publicIntegrations!.length
+												}) more apps for Club members.`}</Text>
+											)}
+										</>
+									))}
+								</Grid>
+							</>
+						)}
+
+						{/* All integrations for club members */}
+						{club.isClubMember && club.allIntegrations!.length > 0 && (
+							<>
+								<Text className={classes.clubDetailSectionTitle}>{`Apps (${
+									club.allIntegrations!.length
+								})`}</Text>
+								<Grid>
+									{club.allIntegrations!.map(integration => (
 										<Grid.Col
 											xs={6}
 											sm={4}
@@ -828,7 +881,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								</Grid>
 							</>
 						)}
-						<Space h={'xl'} />
 
 						<Text className={classes.clubDetailSectionTitle}>{`Members (${
 							club.members!.length
