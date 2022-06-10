@@ -11,6 +11,10 @@ export const ClubAdminRole =
 	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
 
 export interface Integration {
+	// Convenience for admin screen
+	isExistingIntegration?: boolean
+
+	// DB properties
 	id?: string
 	integrationId: string
 	name: string
@@ -319,7 +323,8 @@ export default async function clubFromMeemContract(
 				description: inte.Integration?.description ?? 'Unknown',
 				isEnabled: inte.isEnabled,
 				guideUrl: inte.Integration?.guideUrl,
-				url: inte.metadata.externalUrl ?? ''
+				url: inte.metadata.externalUrl ?? '',
+				isExistingIntegration: true
 			}
 			integrations.push(integration)
 		})

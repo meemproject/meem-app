@@ -222,9 +222,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		data: inteData
 	} = useQuery<GetIntegrationsQuery>(GET_INTEGRATIONS)
 
-	const [enabledIntegrations, setEnabledIntegrations] = useState<Integration[]>(
-		[]
-	)
+	const [existingIntegrations, setExistingIntegrations] = useState<
+		Integration[]
+	>([])
 	const [availableIntegrations, setAvailableIntegrations] = useState<
 		Integration[]
 	>([])
@@ -248,6 +248,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 			const available: Integration[] = []
 			inteData.Integrations.forEach(inte => {
 				const integration: Integration = {
+					isExistingIntegration: false,
 					integrationId: inte.id,
 					name: inte.name,
 					description: inte.description,
@@ -264,7 +265,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	useEffect(() => {
 		if (!hasSetupEnabledIntegrations) {
 			// Set up enabled integrations
-			setEnabledIntegrations(club.integrations ?? [])
+			setExistingIntegrations(club.integrations ?? [])
 			setHasSetUpIntegrations(true)
 		}
 	}, [club.integrations, hasSetupEnabledIntegrations])
@@ -277,43 +278,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		setIntegrationModalOpened(true)
 	}
 
-	// Unused for now
-	const removeIntegration = (integration: Integration) => {}
-
-	const saveChanges = async () => {
-		// Loop through each enabled integration and call a MeemAPI endpoint to change or update it.
-		setIsSavingChanges(true)
-		await Promise.all(
-			enabledIntegrations.map(async (integration: Integration) => {
-				try {
-					const jwtToken = Cookies.get('meemJwtToken')
-					const { body } = await request
-						.post(
-							`${
-								process.env.NEXT_PUBLIC_API_URL
-							}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-								meemContractId: club.address ?? '',
-								integrationId: integration.integrationId
-							})}`
-						)
-						.set('Authorization', `JWT ${jwtToken}`)
-						.set('Access-Control-Allow-Origin', '*')
-						.send({
-							isEnabled: true,
-							metadata: { externalUrl: integration.url ?? '' }
-						})
-					log.debug(body)
-
-					return body
-				} catch (e) {
-					log.debug(e)
-					return null
-				}
-			})
-		)
-		setIsSavingChanges(false)
-	}
-
 	return (
 		<>
 			<div>
@@ -324,13 +288,13 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				<Text className={classes.clubContractAddress}>{club.address}</Text>
 				<Space h={'xl'} />
 
-				{enabledIntegrations && enabledIntegrations.length > 0 && (
+				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>
 						<Text
 							className={classes.clubIntegrationsSectionTitle}
-						>{`Enabled apps (${enabledIntegrations?.length})`}</Text>
+						>{`Enabled apps (${existingIntegrations?.length})`}</Text>
 						<Grid>
-							{enabledIntegrations.map(integration => (
+							{existingIntegrations.map(integration => (
 								<Grid.Col
 									xs={6}
 									sm={4}
@@ -360,13 +324,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 								</Grid.Col>
 							))}
 						</Grid>
-						<Button
-							className={classes.buttonSaveChanges}
-							loading={isSavingChanges}
-							onClick={saveChanges}
-						>
-							Save Changes
-						</Button>
+
 						<Space h="xl" />
 					</>
 				)}
@@ -555,11 +513,13 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						(integrationBeingEdited?.name === 'Twitter' ||
 							integrationBeingEdited?.name === 'Discord' ||
 							step === Step.AddUrl) && (
-							<a
-								onClick={() => {
+							<Button
+								loading={isSavingChanges}
+								disabled={isSavingChanges}
+								onClick={async () => {
 									if (integrationBeingEdited) {
+										// Validate URL
 										let url
-
 										try {
 											url = new URL(integrationBeingEdited.url ?? '')
 										} catch (_) {
@@ -571,23 +531,62 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											return
 										}
 
-										let isEnabled = false
-										enabledIntegrations.forEach(inte => {
-											if (inte.name === integrationBeingEdited.name) {
-												isEnabled = true
-												return
-											}
-										})
-										if (!isEnabled) {
-											// If not enabled, push this into enabled integrations
-											const newEnabled = enabledIntegrations
-											newEnabled.push(integrationBeingEdited)
-											setEnabledIntegrations(newEnabled)
+										// Mark as saving changes
+										setIsSavingChanges(true)
+
+										// Save the change to the db
+										try {
+											const jwtToken = Cookies.get('meemJwtToken')
+											const { body } = await request
+												.post(
+													`${
+														process.env.NEXT_PUBLIC_API_URL
+													}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
+														{
+															meemContractId: club.id ?? '',
+															integrationId:
+																integrationBeingEdited.integrationId
+														}
+													)}`
+												)
+												.set('Authorization', `JWT ${jwtToken}`)
+												.send({
+													isEnabled: true,
+													metadata: {
+														externalUrl: integrationBeingEdited.url ?? ''
+													}
+												})
+											log.debug(body)
+										} catch (e) {
+											log.debug(e)
+											setIsSavingChanges(false)
+											showNotification({
+												title: 'Oops!',
+												message:
+													'Unable to save this integration. Please get in touch!'
+											})
+											return
+											return
+										}
+
+										// Check to see if this integration is an existing integration
+
+										if (!integrationBeingEdited.isExistingIntegration) {
+											// If not an existing integration, push this into existing integrations
+											const newExisting = existingIntegrations
+											integrationBeingEdited.isExistingIntegration = true
+											newExisting.push(integrationBeingEdited)
+											setExistingIntegrations(newExisting)
 
 											availableIntegrations.forEach(inte => {
-												if (inte.name === integrationBeingEdited.name) {
+												if (
+													inte.integrationId ===
+													integrationBeingEdited.integrationId
+												) {
 													const newAvailable = availableIntegrations.filter(
-														integ => integ.name !== integrationBeingEdited.name
+														integ =>
+															integ.integrationId !==
+															integrationBeingEdited.integrationId
 													)
 													setAvailableIntegrations(newAvailable)
 													return
@@ -595,42 +594,31 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											})
 										} else {
 											// If already enabled, modify the existing integration
-											const newIntegrations = [...enabledIntegrations]
+											const newIntegrations = [...existingIntegrations]
 											// Is there a better way of updating an array item in typescript than a C loop?
 											for (let i = 0; i < newIntegrations.length; i++) {
 												if (
-													newIntegrations[i].name ===
-													integrationBeingEdited.name
+													newIntegrations[i].integrationId ===
+													integrationBeingEdited.integrationId
 												) {
 													newIntegrations[i] = integrationBeingEdited
 													break
 												}
 											}
 
-											setEnabledIntegrations(newIntegrations)
+											setExistingIntegrations(newIntegrations)
 										}
 									}
+									setIsSavingChanges(false)
 									setStep(Step.FollowGuide)
 									setIntegrationModalOpened(false)
 								}}
 								className={classes.buttonConfirm}
 							>
-								Done
-							</a>
+								Save
+							</Button>
 						)}
 				</Modal>
-				{enabledIntegrations.length === 0 && (
-					<>
-						<Button
-							className={classes.buttonSaveChanges}
-							loading={isSavingChanges}
-							onClick={saveChanges}
-						>
-							Save Changes
-						</Button>
-						<Space h={32} />
-					</>
-				)}
 			</div>
 		</>
 	)
