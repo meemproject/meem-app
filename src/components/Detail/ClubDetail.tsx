@@ -243,6 +243,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
+	const [isWrongNetwork, setIsWrongNetwork] = useState(false)
 	const {
 		loading,
 		error,
@@ -657,6 +658,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.web3Provider
 	])
 
+	useEffect(() => {
+		if (wallet.isConnected) {
+			const isWrong = wallet.isConnectedToWrongNetwork
+			setIsWrongNetwork(isWrong)
+		}
+	}, [wallet.isConnected, wallet.isConnectedToWrongNetwork])
+
 	const navigateToSettings = () => {
 		router.push({ pathname: `/${slug}/admin` })
 	}
@@ -689,7 +697,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								{club.description}
 							</Text>
 							<div className={classes.headerButtons}>
-								{club.isClubMember && (
+								{club.isClubMember && wallet.isConnected && (
 									<Button
 										onClick={leaveClub}
 										loading={isLeavingClub}
@@ -710,7 +718,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												? `Join - ${club.membershipSettings!.costToJoin} MATIC`
 												: `Join`)}
 										{!meetsAllRequirements && 'Requirements not met'}
-										{!wallet.isConnected && 'Connect wallet to join'}
+										{(!wallet.isConnected || isWrongNetwork) &&
+											'Connect wallet to join'}
 									</Button>
 								)}
 								{!wallet.isConnected && (
@@ -727,7 +736,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											className={classes.headerSlotsLeft}
 										>{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}</Text>
 									)}
-								{club.isClubAdmin && (
+								{club.isClubAdmin && wallet.isConnected && (
 									<>
 										<Space w={'xs'} />
 										<Button
