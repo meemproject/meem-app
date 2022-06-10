@@ -15,7 +15,10 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 
 	try {
 		const base64Data = uri.substring(29)
-		const contractURIJSONString = Buffer.from(base64Data, 'base64').toString()
+		const contractURIJSONString = Buffer.from(
+			base64Data,
+			'base64'
+		).toString()
 		if (contractURIJSONString.length === 0) {
 			return {
 				image: '',
