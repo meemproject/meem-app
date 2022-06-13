@@ -446,6 +446,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					isAdminListValid = false
 					return
 				} else {
+					// log.debug(
+					// 	`validated and converted club admin address ${name}`
+					// )
 					clubAdminAddresses.push(name)
 				}
 			})
@@ -479,6 +482,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									isApprovedAddressesInvalid = true
 									return
 								} else {
+									// log.debug(
+									// 	`validated approved address ${address}`
+									// )
 									rawAddresses.push(name)
 								}
 							}
@@ -505,7 +511,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			membershipQuantity,
 			membershipStartDate,
 			membershipEndDate,
-			clubAdmins: finalClubAdmins
+			clubAdmins: clubAdminAddresses
 		}
 		setMembershipSettings(settings)
 
