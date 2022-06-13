@@ -403,7 +403,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 		} catch (e) {
 			setStep(Step.Created)
 			showNotification({
-				title: 'Error initalizing club.',
+				title: 'Error initializing club.',
 				message: `${e as string}`
 			})
 		}

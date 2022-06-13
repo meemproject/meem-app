@@ -22,7 +22,7 @@ import {
 	MessageCircle,
 	Mail
 } from 'tabler-icons-react'
-import { truncatedWalletAddress } from '../../utils/truncated_wallet'
+import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
 
 const useStyles = createStyles(theme => ({
@@ -170,10 +170,8 @@ export function HeaderMenu() {
 		async function getName() {
 			try {
 				if (wallet.isConnected && wallet.web3Provider) {
-					const name = await truncatedWalletAddress(
-						wallet.accounts[0]
-					)
-					setUsername(name)
+					const name = await ensWalletAddress(wallet.accounts[0])
+					setUsername(quickTruncate(name))
 				}
 			} catch (e) {
 				// ignore
@@ -243,7 +241,7 @@ export function HeaderMenu() {
 											src={''}
 											alt={'user.name'}
 											radius="xl"
-											size={20}
+											size={24}
 										/>
 										<Text
 											weight={500}

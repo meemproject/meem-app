@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-export async function truncatedWalletAddress(address: string): Promise<string> {
+export async function ensWalletAddress(address: string): Promise<string> {
 	if (address.length === 0) {
 		return ''
 	}
@@ -11,13 +11,7 @@ export async function truncatedWalletAddress(address: string): Promise<string> {
 	const name = await provider.lookupAddress(address)
 	if (name !== null) return name
 
-	const walletAddressLength = address.length
-	const truncatedWallet = `${address.substring(0, 5)}...${address.substring(
-		walletAddressLength - 5,
-		walletAddressLength
-	)}`
-
-	return truncatedWallet.toLowerCase()
+	return address.toLowerCase()
 }
 
 export function quickTruncate(address: string): string {
@@ -26,10 +20,13 @@ export function quickTruncate(address: string): string {
 	}
 
 	const walletAddressLength = address.length
-	const truncatedWallet = `${address.substring(0, 5)}...${address.substring(
-		walletAddressLength - 5,
-		walletAddressLength
-	)}`
-
-	return truncatedWallet.toLowerCase()
+	if (walletAddressLength > 15) {
+		const truncatedWallet = `${address.substring(
+			0,
+			5
+		)}...${address.substring(walletAddressLength - 5, walletAddressLength)}`
+		return truncatedWallet.toLowerCase()
+	} else {
+		return address.toLowerCase()
+	}
 }
