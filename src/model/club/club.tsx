@@ -3,7 +3,7 @@ import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
 import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
-import { truncatedWalletAddress } from '../../utils/truncated_wallet'
+import { ensWalletAddress } from '../../utils/truncated_wallet'
 import { tokenFromContractAddress } from '../token/token'
 import { clubMetadataFromContractUri } from './club_metadata'
 
@@ -137,6 +137,12 @@ export default async function clubFromMeemContract(
 		// Parse the contract URI
 		const metadata = clubMetadataFromContractUri(clubData.contractURI)
 
+		// Define a provider to look up wallet addresses for admins / approved addresses
+		const provider = new ethers.providers.AlchemyProvider(
+			'mainnet',
+			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+		)
+
 		// Convert minting permissions to membership requirements
 		const reqs: MembershipRequirement[] = []
 		let costToJoin = 0
@@ -144,26 +150,35 @@ export default async function clubFromMeemContract(
 
 		// Set up club admins
 		// Is the current user a club admin?
-		const admins: string[] = []
+		const admins: string[] = [] // ENS-resolved list of admin addresses
+
+		// Raw admin addresses stored on contract, used to filter out admin-only mintPermissions
+		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
+
+		// Look up admin addresses and convert to ENS where necessary
 		if (
 			clubData.MeemContractWallets &&
 			clubData.MeemContractWallets.length > 0
 		) {
-			for (const wall of clubData.MeemContractWallets) {
-				if (wall.Wallet) {
-					const name = wall.Wallet.address
-					admins.push(name)
-				}
+			await Promise.all(
+				clubData.MeemContractWallets.map(async function (wall) {
+					if (wall.Wallet) {
+						const address = wall.Wallet.address
+						adminRawAddresses.push(address)
+						const name = await provider.lookupAddress(address)
+						admins.push(name ?? address)
+					}
 
-				if (
-					wall.Wallet?.address.toLowerCase() ===
-						walletAddress?.toLowerCase() &&
-					wall.role === ClubAdminRole
-				) {
-					isClubAdmin = true
-				}
-			}
+					if (
+						wall.Wallet?.address.toLowerCase() ===
+							walletAddress?.toLowerCase() &&
+						wall.role === ClubAdminRole
+					) {
+						isClubAdmin = true
+					}
+				})
+			)
 		}
 
 		if (clubData.mintPermissions) {
@@ -177,7 +192,9 @@ export default async function clubFromMeemContract(
 					if (
 						permission.permission === Permission.Addresses &&
 						permission.addresses.length === 1 &&
-						admins.includes(permission.addresses[0].toLowerCase())
+						adminRawAddresses.includes(
+							permission.addresses[0].toLowerCase()
+						)
 					) {
 						// Don't do anything
 						//log.debug('ignoring admin mint permission')
@@ -195,7 +212,7 @@ export default async function clubFromMeemContract(
 						//log.debug(`cost to join (matic) = ${costToJoin}`)
 
 						let type = MembershipReqType.None
-						let approvedAddresses: string[] = []
+						const approvedAddresses: string[] = []
 						let approvedAddressesString = ''
 						let tokenName = 'TOKEN'
 						let tokenContractAddress = ''
@@ -216,15 +233,24 @@ export default async function clubFromMeemContract(
 								break
 							case Permission.Addresses:
 								type = MembershipReqType.ApprovedApplicants
-								approvedAddresses = permission.addresses
-								permission.addresses.forEach(
-									(address: string) => {
-										approvedAddressesString =
-											approvedAddressesString +
-											`${address}\n`
-									}
-								)
 
+								// Look up ENS names for approved addresses
+								await Promise.all(
+									permission.addresses.map(
+										async (address: string) => {
+											const name =
+												await provider.lookupAddress(
+													address
+												)
+											approvedAddresses.push(
+												name ?? address
+											)
+											approvedAddressesString =
+												approvedAddressesString +
+												`${name ?? address}\n`
+										}
+									)
+								)
 								break
 							case Permission.Holders:
 								tokenMinQuantity = Number(permission.numTokens)
@@ -285,7 +311,7 @@ export default async function clubFromMeemContract(
 		let fundsAddress = ''
 		if (clubData.splits && clubData.splits.length > 0) {
 			const split = clubData.splits[0]
-			fundsAddress = split.toAddress
+			fundsAddress = (await provider.lookupAddress(split)) ?? split
 		}
 
 		// Total memberships
@@ -319,7 +345,7 @@ export default async function clubFromMeemContract(
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					const name = await truncatedWalletAddress(meem.owner)
+					const name = await ensWalletAddress(meem.owner)
 					if (!members.includes(name)) {
 						members.push(name)
 					}

@@ -50,7 +50,7 @@ import clubFromMeemContract, {
 } from '../../model/club/club'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { truncatedWalletAddress } from '../../utils/truncated_wallet'
+import { quickTruncate } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -886,12 +886,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									})${
 										club.allIntegrations!.length >
 										club.publicIntegrations!.length
-											? `, plus ${
-													club.allIntegrations!
-														.length -
-													club.publicIntegrations!
-														.length
-											  } hidden member-only app(s)`
+											? ` (more apps available for club members)`
 											: ``
 									}`}</Text>
 									<Grid>
@@ -1021,7 +1016,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										key={member}
 									>
 										<Text className={classes.memberItem}>
-											{member}
+											{quickTruncate(member)}
 										</Text>
 									</Grid.Col>
 								))}

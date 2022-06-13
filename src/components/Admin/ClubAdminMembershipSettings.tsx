@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-case-declarations */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
@@ -34,10 +35,7 @@ import {
 	Club
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
-import {
-	quickTruncate,
-	truncatedWalletAddress
-} from '../../utils/truncated_wallet'
+import { quickTruncate, ensWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
@@ -350,56 +348,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	const [isTransactionsModalOpened, setTransactionsModalOpened] =
 		useState(false)
-	const openTransactionsModal = () => {
+	const openTransactionsModal = async () => {
 		// transactions modal for club creation
-		// convert current settings and update for the modal
-
-		const finalClubAdmins = Object.assign([], clubAdmins)
-		finalClubAdmins.push(wallet.accounts[0])
-
-		const settings: MembershipSettings = {
-			requirements: membershipRequirements,
-			costToJoin,
-			membershipFundsAddress,
-			membershipQuantity,
-			membershipStartDate,
-			membershipEndDate,
-			clubAdmins: finalClubAdmins
-		}
-		setMembershipSettings(settings)
 		setTransactionsModalOpened(true)
 	}
 
 	const [newClubData, setNewClubData] = useState<Club>()
 	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
 		useState(false)
-	const openSaveChangesModal = () => {
+	const openSaveChangesModal = async () => {
 		// 'save changes' modal for execution club settings updates
-		// convert current settings and update for the modal
-
-		if (clubAdmins.length === 0) {
-			showNotification({
-				title: 'Oops!',
-				message: 'At least one club admin is required.'
-			})
-			return
-		}
-
-		setIsSavingChanges(true)
-
-		const settings: MembershipSettings = {
-			requirements: membershipRequirements,
-			costToJoin,
-			membershipFundsAddress,
-			membershipQuantity,
-			membershipStartDate,
-			membershipEndDate,
-			clubAdmins
-		}
-
-		const newClub = club!
-		newClub.membershipSettings = settings
-		setNewClubData(newClub)
 		setSaveChangesModalOpened(true)
 	}
 
@@ -446,25 +404,118 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	}
 
 	const saveChanges = async () => {
+		if (!clubclub.isMember) {
+			showNotification({
+				title: 'No Club Club membership found.',
+				message: `Join Club Club to continue.`
+			})
+			router.push({ pathname: '/' })
+			return
+		}
+
+		if (clubAdmins.length === 0) {
+			showNotification({
+				title: 'Oops!',
+				message: 'At least one club admin is required.'
+			})
+			return
+		}
+
+		// Validate / convert club admins
+		let isAdminListValid = true
+		const provider = new ethers.providers.AlchemyProvider(
+			'mainnet',
+			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+		)
+
+		// Add current user as an admin if this is a new club
+		const finalClubAdmins = Object.assign([], clubAdmins)
 		if (isCreatingClub) {
-			if (!clubclub.isMember) {
-				showNotification({
-					title: 'No Club Club membership found.',
-					message: `Join Club Club to continue.`
-				})
-				router.push({ pathname: '/' })
-				return
-			}
-			if (clubAdmins.length === 0) {
-				showNotification({
-					title: 'Oops!',
-					message: 'At least one club admin is required.'
-				})
-				return
-			}
-			setIsSavingChanges(true)
+			finalClubAdmins.push(wallet.accounts[0])
+		}
+
+		// Start saving changes on UI
+		setIsSavingChanges(true)
+
+		// Validate and convert club admins
+		const clubAdminAddresses: string[] = []
+		await Promise.all(
+			finalClubAdmins.map(async function (admin) {
+				const name = await provider.resolveName(admin)
+				if (!name) {
+					isAdminListValid = false
+					return
+				} else {
+					clubAdminAddresses.push(name)
+				}
+			})
+		)
+
+		if (!isAdminListValid) {
+			showNotification({
+				title: 'Oops!',
+				message:
+					'One or more club admin addresses are invalid. Check what you entered and try again.'
+			})
+			setIsSavingChanges(false)
+			return
+		}
+
+		// Validate and convert all approved addresses if necessary
+		let isApprovedAddressesInvalid = true
+		const sanitizedRequirements: MembershipRequirement[] = []
+		await Promise.all(
+			membershipRequirements.map(async function (req) {
+				const newReq = req
+				if (req.approvedAddresses.length > 0) {
+					const rawAddresses: string[] = []
+					await Promise.all(
+						// Make sure all addresses resolve correctly.
+
+						req.approvedAddresses.map(async function (address) {
+							if (isApprovedAddressesInvalid) {
+								const name = await provider.resolveName(address)
+								if (!name) {
+									isApprovedAddressesInvalid = true
+									return
+								} else {
+									rawAddresses.push(name)
+								}
+							}
+						})
+					)
+					newReq.approvedAddresses = rawAddresses
+				}
+				sanitizedRequirements.push(newReq)
+			})
+		)
+
+		// Convert funds address from ENS if necessary
+		let rawMembershipFundsAddress = ''
+		if (membershipFundsAddress.length > 0) {
+			const address = await provider.lookupAddress(membershipFundsAddress)
+			rawMembershipFundsAddress = address ?? membershipFundsAddress
+		}
+
+		// If all good, build Membership Settings
+		const settings: MembershipSettings = {
+			requirements: sanitizedRequirements,
+			costToJoin,
+			membershipFundsAddress: rawMembershipFundsAddress,
+			membershipQuantity,
+			membershipStartDate,
+			membershipEndDate,
+			clubAdmins: finalClubAdmins
+		}
+		setMembershipSettings(settings)
+
+		// Show the appropriate modal (create vs edit)
+		if (isCreatingClub) {
 			openTransactionsModal()
 		} else {
+			const newClub = club!
+			newClub.membershipSettings = settings
+			setNewClubData(newClub)
 			openSaveChangesModal()
 		}
 	}
@@ -1006,18 +1057,21 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 							switch (reqCurrentlyEditing.type) {
 								case MembershipReqType.ApprovedApplicants:
-									let isApplicantsListInvalid = false
+									let doesApplicantsListContainAdmin = false
+
+									// Make sure there's no admin addresses in here
 									clubAdmins.forEach(admin => {
 										if (
 											reqCurrentlyEditing.approvedAddressesString
 												.toLowerCase()
 												.includes(admin.toLowerCase())
 										) {
-											isApplicantsListInvalid = true
+											doesApplicantsListContainAdmin =
+												true
 										}
 									})
 
-									if (isApplicantsListInvalid) {
+									if (doesApplicantsListContainAdmin) {
 										showNotification({
 											title: 'Oops!',
 											message:
@@ -1025,7 +1079,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										})
 										return
 									}
-
 									break
 								case MembershipReqType.TokenHolders:
 									if (
@@ -1182,9 +1235,15 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}
 							if (costToJoin > 0) {
 								setIsCheckingRequirement(true)
-								const isValid = await isAddress(
+								const provider =
+									new ethers.providers.AlchemyProvider(
+										'mainnet',
+										process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+									)
+								const isValid = await provider.resolveName(
 									membershipFundsAddress
 								)
+
 								setIsCheckingRequirement(false)
 								if (!isValid) {
 									showNotification({
