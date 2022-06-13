@@ -218,7 +218,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		marginBottom: 12,
 		cursor: 'pointer',
-		border: '1px solid rgba(255, 102, 81, 1)',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
 		backgroundColor: '#FAFAFA',
 		borderRadius: 16,
 		padding: 16

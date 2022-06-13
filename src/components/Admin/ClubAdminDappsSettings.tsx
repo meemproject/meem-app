@@ -235,6 +235,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	const [availableIntegrations, setAvailableIntegrations] = useState<
 		Integration[]
 	>([])
+	const [allIntegrations, setAllIntegrations] = useState<Integration[]>([])
 
 	// Used to populate existing integrations when changes are made
 	const [integrationBeingEdited, setIntegrationBeingEdited] =
@@ -270,9 +271,40 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				}
 				available.push(integration)
 			})
-			setAvailableIntegrations(available)
+			setAllIntegrations(available)
 		}
-	}, [availableIntegrations.length, club.allIntegrations, inteData, loading])
+
+		if (
+			allIntegrations.length > 0 &&
+			availableIntegrations.length === 0 &&
+			hasSetupEnabledIntegrations
+		) {
+			// Filter out available integrations based on enabled...
+			const finalIntegrations: Integration[] = []
+
+			allIntegrations.forEach(inte => {
+				let alreadyExists = false
+				existingIntegrations.forEach(existing => {
+					if (inte.name === existing.name) {
+						alreadyExists = true
+						return
+					}
+				})
+				if (!alreadyExists) {
+					finalIntegrations.push(inte)
+				}
+			})
+
+			setAvailableIntegrations(finalIntegrations)
+		}
+	}, [
+		availableIntegrations,
+		allIntegrations,
+		hasSetupEnabledIntegrations,
+		inteData,
+		loading,
+		existingIntegrations
+	])
 
 	// Setup enabled integrations
 	useEffect(() => {
@@ -315,7 +347,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 					<>
 						<Text
 							className={classes.clubIntegrationsSectionTitle}
-						>{`Enabled apps (${existingIntegrations?.length})`}</Text>
+						>{`Added apps (${existingIntegrations?.length})`}</Text>
 						<Grid>
 							{existingIntegrations.map(integration => (
 								<Grid.Col
@@ -566,7 +598,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 											event.currentTarget.checked
 										)
 									}
-									label="Visible to everyone on the Club page"
+									label="Visible to non-members"
 								/>
 
 								{integrationBeingEdited?.isExistingIntegration && (
@@ -581,7 +613,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 													event.currentTarget.checked
 												)
 											}
-											label="Enable integration"
+											label="Enable app"
 										/>
 									</>
 								)}
