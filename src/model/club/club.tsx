@@ -3,7 +3,7 @@ import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
 import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
-import { truncatedWalletAddress } from '../../utils/truncated_wallet'
+import { ensWalletAddress } from '../../utils/truncated_wallet'
 import { tokenFromContractAddress } from '../token/token'
 import { clubMetadataFromContractUri } from './club_metadata'
 
@@ -11,10 +11,15 @@ export const ClubAdminRole =
 	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
 
 export interface Integration {
+	// Convenience for admin screen
+	isExistingIntegration?: boolean
+
+	// DB properties
 	id?: string
 	integrationId: string
 	name: string
 	isEnabled?: boolean
+	isPublic?: boolean
 	url?: string
 	icon?: string
 	description?: string
@@ -37,7 +42,9 @@ export interface Club {
 	isClubAdmin?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
-	integrations?: Integration[]
+	allIntegrations?: Integration[]
+	publicIntegrations?: Integration[]
+	privateIntegrations?: Integration[]
 }
 
 export interface MembershipSettings {
@@ -114,7 +121,7 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			integrations: []
+			allIntegrations: []
 		}
 	} else {
 		return {}
@@ -130,6 +137,12 @@ export default async function clubFromMeemContract(
 		// Parse the contract URI
 		const metadata = clubMetadataFromContractUri(clubData.contractURI)
 
+		// Define a provider to look up wallet addresses for admins / approved addresses
+		const provider = new ethers.providers.AlchemyProvider(
+			'mainnet',
+			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+		)
+
 		// Convert minting permissions to membership requirements
 		const reqs: MembershipRequirement[] = []
 		let costToJoin = 0
@@ -137,30 +150,38 @@ export default async function clubFromMeemContract(
 
 		// Set up club admins
 		// Is the current user a club admin?
-		const admins: string[] = []
+		const admins: string[] = [] // ENS-resolved list of admin addresses
+
+		// Raw admin addresses stored on contract, used to filter out admin-only mintPermissions
+		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
+
+		// Look up admin addresses and convert to ENS where necessary
 		if (
 			clubData.MeemContractWallets &&
 			clubData.MeemContractWallets.length > 0
 		) {
-			for (const wall of clubData.MeemContractWallets) {
-				if (wall.Wallet) {
-					const name = wall.Wallet.address
-					admins.push(name)
-				}
+			await Promise.all(
+				clubData.MeemContractWallets.map(async function (wall) {
+					if (wall.Wallet) {
+						const address = wall.Wallet.address
+						adminRawAddresses.push(address)
+						const name = await provider.lookupAddress(address)
+						admins.push(name ?? address)
+					}
 
-				if (
-					wall.Wallet?.address.toLowerCase() === walletAddress?.toLowerCase() &&
-					wall.role === ClubAdminRole
-				) {
-					isClubAdmin = true
-				}
-			}
+					if (
+						wall.Wallet?.address.toLowerCase() ===
+							walletAddress?.toLowerCase() &&
+						wall.role === ClubAdminRole
+					) {
+						isClubAdmin = true
+					}
+				})
+			)
 		}
 
 		if (clubData.mintPermissions) {
-			console.log('club has mint permissions')
-
 			// clubData.mintPermissions.forEach((permission: any) => {
 			// 	log.debug(permission)
 			// })
@@ -171,12 +192,16 @@ export default async function clubFromMeemContract(
 					if (
 						permission.permission === Permission.Addresses &&
 						permission.addresses.length === 1 &&
-						admins.includes(permission.addresses[0].toLowerCase())
+						adminRawAddresses.includes(
+							permission.addresses[0].toLowerCase()
+						)
 					) {
 						// Don't do anything
 						//log.debug('ignoring admin mint permission')
 					} else {
-						const cost = isNaN(permission.costWei) ? 0 : permission.costWei
+						const cost = isNaN(permission.costWei)
+							? 0
+							: permission.costWei
 						//log.debug(`cost to join (wei) = ${cost}`)
 						if (cost === 0) {
 							costToJoin = cost
@@ -187,7 +212,8 @@ export default async function clubFromMeemContract(
 						//log.debug(`cost to join (matic) = ${costToJoin}`)
 
 						let type = MembershipReqType.None
-						let approvedAddresses: string[] = []
+						const approvedAddresses: string[] = []
+						let approvedAddressesString = ''
 						let tokenName = 'TOKEN'
 						let tokenContractAddress = ''
 						let tokenMinQuantity = 0
@@ -207,7 +233,24 @@ export default async function clubFromMeemContract(
 								break
 							case Permission.Addresses:
 								type = MembershipReqType.ApprovedApplicants
-								approvedAddresses = permission.addresses
+
+								// Look up ENS names for approved addresses
+								await Promise.all(
+									permission.addresses.map(
+										async (address: string) => {
+											const name =
+												await provider.lookupAddress(
+													address
+												)
+											approvedAddresses.push(
+												name ?? address
+											)
+											approvedAddressesString =
+												approvedAddressesString +
+												`${name ?? address}\n`
+										}
+									)
+								)
 								break
 							case Permission.Holders:
 								tokenMinQuantity = Number(permission.numTokens)
@@ -246,7 +289,7 @@ export default async function clubFromMeemContract(
 										? metadata.applicationLinks[0]
 										: undefined,
 								approvedAddresses,
-								approvedAddressesString: '',
+								approvedAddressesString,
 								tokenName,
 								tokenMinQuantity,
 								tokenChain: '',
@@ -268,7 +311,7 @@ export default async function clubFromMeemContract(
 		let fundsAddress = ''
 		if (clubData.splits && clubData.splits.length > 0) {
 			const split = clubData.splits[0]
-			fundsAddress = split.toAddress
+			fundsAddress = (await provider.lookupAddress(split)) ?? split
 		}
 
 		// Total memberships
@@ -296,12 +339,13 @@ export default async function clubFromMeemContract(
 				}
 
 				if (
-					meem.owner.toLowerCase() !== MeemAPI.zeroAddress.toLowerCase() &&
+					meem.owner.toLowerCase() !==
+						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					const name = await truncatedWalletAddress(meem.owner)
+					const name = await ensWalletAddress(meem.owner)
 					if (!members.includes(name)) {
 						members.push(name)
 					}
@@ -310,19 +354,34 @@ export default async function clubFromMeemContract(
 		}
 
 		// Integrations
-		const integrations: Integration[] = []
-		clubData.MeemContractIntegrations.forEach(inte => {
-			const integration: Integration = {
-				id: inte.id,
-				integrationId: inte.IntegrationId,
-				name: inte.Integration?.name ?? 'Unknown',
-				description: inte.Integration?.description ?? 'Unknown',
-				isEnabled: inte.isEnabled,
-				guideUrl: inte.Integration?.guideUrl,
-				url: inte.metadata.externalUrl ?? ''
-			}
-			integrations.push(integration)
-		})
+		const allIntegrations: Integration[] = []
+		const publicIntegrations: Integration[] = []
+		const privateIntegrations: Integration[] = []
+		if (clubData.MeemContractIntegrations) {
+			clubData.MeemContractIntegrations.forEach(inte => {
+				if (inte.isEnabled) {
+					const integration: Integration = {
+						id: inte.id,
+						integrationId: inte.IntegrationId,
+						name: inte.Integration?.name ?? 'Unknown',
+						description: inte.Integration?.description ?? 'Unknown',
+						icon: inte.Integration?.icon ?? '',
+						isEnabled: inte.isEnabled,
+						isPublic: inte.isPublic,
+						guideUrl: inte.Integration?.guideUrl,
+						url: inte.metadata.externalUrl ?? '',
+						isExistingIntegration: true
+					}
+
+					if (inte.isPublic) {
+						publicIntegrations.push(integration)
+					} else {
+						privateIntegrations.push(integration)
+					}
+					allIntegrations.push(integration)
+				}
+			})
+		}
 
 		// Calculate slots left if totalOriginSupply > 0
 		let slotsLeft = -1
@@ -349,7 +408,9 @@ export default async function clubFromMeemContract(
 				costToJoin,
 				membershipFundsAddress: fundsAddress,
 				membershipStartDate:
-					clubData.mintStartAt !== 0 ? clubData.mintStartAt : undefined,
+					clubData.mintStartAt !== 0
+						? clubData.mintStartAt
+						: undefined,
 				membershipEndDate:
 					clubData.mintEndAt !== 0 ? clubData.mintEndAt : undefined,
 				membershipQuantity: totalMemberships,
@@ -357,7 +418,9 @@ export default async function clubFromMeemContract(
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			integrations
+			allIntegrations,
+			publicIntegrations,
+			privateIntegrations
 		}
 	} else {
 		return {}

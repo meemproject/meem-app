@@ -13,7 +13,8 @@ import {
 	Button,
 	Space,
 	Center,
-	Loader
+	Loader,
+	Grid
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
@@ -72,7 +73,7 @@ const useStyles = createStyles(theme => ({
 			backgroundColor: theme.colors.gray[8]
 		},
 		borderRadius: 24,
-		marginRight: 24
+		marginRight: 32
 	},
 	createClubLink: {
 		marginTop: 24,
@@ -146,7 +147,7 @@ export const MyClubsComponent: React.FC = () => {
 	}
 
 	const navigateToCreate = () => {
-		router.push({ pathname: '/create' })
+		router.push({ pathname: '/' })
 	}
 
 	const navigateToClub = (club: string) => {
@@ -162,7 +163,10 @@ export const MyClubsComponent: React.FC = () => {
 					</a>
 					<Text className={classes.headerClubName}>My Clubs</Text>
 				</div>
-				<Button onClick={navigateToCreate} className={classes.buttonCreate}>
+				<Button
+					onClick={navigateToCreate}
+					className={classes.buttonCreate}
+				>
 					Create a Club
 				</Button>
 			</div>
@@ -188,25 +192,37 @@ export const MyClubsComponent: React.FC = () => {
 				)}
 				{clubs.length > 0 && !loading && (
 					<>
-						{clubs.map(club => (
-							<div
-								key={club.address}
-								className={classes.clubItem}
-								onClick={() => {
-									navigateToClub(club.slug!)
-								}}
-							>
-								<Image
-									className={classes.clubLogoImage}
-									src={club.image!}
-									width={40}
-									height={40}
-									fit={'contain'}
-								/>
-								<Space w="xs" />
-								<Text>{club.name!}</Text>
-							</div>
-						))}
+						<Grid>
+							{clubs.map(club => (
+								<Grid.Col
+									xs={6}
+									sm={4}
+									md={4}
+									lg={4}
+									xl={4}
+									key={club.address}
+								>
+									<div
+										key={club.address}
+										className={classes.clubItem}
+										onClick={() => {
+											navigateToClub(club.slug!)
+										}}
+									>
+										<Image
+											className={classes.clubLogoImage}
+											src={club.image!}
+											width={40}
+											height={40}
+											fit={'contain'}
+										/>
+										<Space w="xs" />
+										<Text>{club.name!}</Text>
+									</div>
+								</Grid.Col>
+							))}
+						</Grid>
+
 						<Space h={60} />
 					</>
 				)}

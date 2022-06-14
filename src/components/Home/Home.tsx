@@ -66,13 +66,14 @@ const useStyles = createStyles(theme => ({
 	},
 
 	searchPrompt: {
-		marginTop: theme.spacing.xl,
+		marginTop: 64,
 		fontSize: 20,
 		fontWeight: 'bold',
 		color: 'black',
 
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 18
+			fontSize: 18,
+			marginTop: 48
 		}
 	},
 
@@ -191,7 +192,9 @@ export function HomeComponent() {
 				} else {
 					const clubsList: React.SetStateAction<any[]> = []
 					typedData.MeemContracts.forEach(club => {
-						const metadata = clubMetadataFromContractUri(club.contractURI)
+						const metadata = clubMetadataFromContractUri(
+							club.contractURI
+						)
 						if (metadata.image.length > 0) {
 							const clubData = {
 								image: metadata.image,
@@ -212,7 +215,8 @@ export function HomeComponent() {
 					clubsList.forEach(club => {
 						if (
 							club.value &&
-							club.value.toLowerCase() === val.trim().toLowerCase()
+							club.value.toLowerCase() ===
+								val.trim().toLowerCase()
 						) {
 							shouldAllow = false
 							return
@@ -246,9 +250,14 @@ export function HomeComponent() {
 
 	return (
 		<div className={classes.wrapper}>
-			<Container size={700} className={classes.inner}>
+			<Container size={900} className={classes.inner}>
 				<Center>
-					<Image src="/clubs-home.svg" height={150} width={150} fit={'contain'}>
+					<Image
+						src="/clubs-home.svg"
+						height={150}
+						width={150}
+						fit={'contain'}
+					>
 						{' '}
 						className={classes.title}{' '}
 					</Image>
@@ -261,7 +270,8 @@ export function HomeComponent() {
 					className={classes.clubSearch}
 					value={autocompleteFormValue}
 					data={autocompleteData}
-					size={'lg'}
+					limit={2}
+					size={'xl'}
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
 					placeholder={
@@ -274,7 +284,10 @@ export function HomeComponent() {
 						) : autocompleteFormValue.length > 0 &&
 						  showCreateButton &&
 						  clubclub.isMember ? (
-							<Button className={classes.createButton} onClick={goToCreate}>
+							<Button
+								className={classes.createButton}
+								onClick={goToCreate}
+							>
 								Create
 							</Button>
 						) : null
