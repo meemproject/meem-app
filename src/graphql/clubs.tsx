@@ -63,7 +63,7 @@ export const GET_CLUB = gql`
 			originalsPerWallet
 			totalOriginalsSupply
 			symbol
-			MeemContractWallets {
+			MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
 				role
 				Wallet {
 					address
@@ -111,7 +111,7 @@ export const SUB_CLUB = gql`
 			originalsPerWallet
 			totalOriginalsSupply
 			symbol
-			MeemContractWallets {
+			MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
 				role
 				Wallet {
 					address
@@ -146,7 +146,7 @@ export const GET_MY_CLUBS = gql`
 				originalsPerWallet
 				totalOriginalsSupply
 				symbol
-				MeemContractWallets {
+				MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
 					role
 					Wallet {
 						address
