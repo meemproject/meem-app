@@ -20,7 +20,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { Club } from '../../model/club/club'
+import { Club, Integration } from '../../model/club/club'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
