@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/meemproject/clubs-web/compare/v1.1.3...v1.1.4) (2022-06-14)
+
+
+### Bug Fixes
+
+* make eslint and prettier play nicely ([6a665d2](https://github.com/meemproject/clubs-web/commit/6a665d2))
+
 ## [1.1.3](https://github.com/meemproject/clubs-web/compare/v1.1.2...v1.1.3) (2022-06-09)
 
 ## [1.1.2](https://github.com/meemproject/clubs-web/compare/v1.1.1...v1.1.2) (2022-06-09)
