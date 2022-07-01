@@ -89,7 +89,11 @@ const useStyles = createStyles(theme => ({
 		marginBottom: 24,
 		fontSize: 16,
 		fontWeight: 600,
-		cursor: 'pointer'
+		cursor: 'pointer',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
 	},
 	clubLogoImage: {
 		imageRendering: 'pixelated'
