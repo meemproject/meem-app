@@ -819,59 +819,62 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</div>
 
 					<Container>
-						{!club.isClubMember && (
-							<>
-								<Text
-									className={classes.clubDetailSectionTitle}
-								>
-									Membership Requirements
-								</Text>
-								{!requirementsParsed && (
-									<div
+						{!club.isClubMember ||
+							(club.isClubAdmin && (
+								<>
+									<Text
 										className={
-											classes.requirementsContainer
+											classes.clubDetailSectionTitle
 										}
 									>
-										<Loader />
-									</div>
-								)}
-
-								{parsedRequirements.length > 0 &&
-									requirementsParsed && (
+										Membership Requirements
+									</Text>
+									{!requirementsParsed && (
 										<div
 											className={
 												classes.requirementsContainer
 											}
 										>
-											{parsedRequirements.map(
-												requirement => (
-													<div
-														className={
-															classes.requirementItem
-														}
-														key={
-															requirement.requirementKey
-														}
-													>
-														{requirement.meetsRequirement && (
-															<CircleCheck color="green" />
-														)}
-
-														{!requirement.meetsRequirement && (
-															<CircleX color="red" />
-														)}
-
-														<Space w={'xs'} />
-														{
-															requirement.requirementComponent
-														}
-													</div>
-												)
-											)}
+											<Loader />
 										</div>
 									)}
-							</>
-						)}
+
+									{parsedRequirements.length > 0 &&
+										requirementsParsed && (
+											<div
+												className={
+													classes.requirementsContainer
+												}
+											>
+												{parsedRequirements.map(
+													requirement => (
+														<div
+															className={
+																classes.requirementItem
+															}
+															key={
+																requirement.requirementKey
+															}
+														>
+															{requirement.meetsRequirement && (
+																<CircleCheck color="green" />
+															)}
+
+															{!requirement.meetsRequirement && (
+																<CircleX color="red" />
+															)}
+
+															<Space w={'xs'} />
+															{
+																requirement.requirementComponent
+															}
+														</div>
+													)
+												)}
+											</div>
+										)}
+								</>
+							))}
 
 						{/* Public integrations for club visitors */}
 						{!club.isClubMember &&
