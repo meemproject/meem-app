@@ -586,6 +586,33 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h="lg" />
+
+				<Text className={classes.manageClubHeader}>Club Admins</Text>
+
+				<div>
+					<Text className={classes.clubAdminsPrompt}>
+						Who can manage this club’s profile and membership
+						settings?
+					</Text>
+					<Text className={classes.clubAdminsInstructions}>
+						Add a line break between each address. Note that at
+						least one club admin is required at all times.
+					</Text>
+					<Textarea
+						radius="lg"
+						size="md"
+						value={clubAdminsString}
+						minRows={10}
+						onChange={event =>
+							parseClubAdmins(event.currentTarget.value)
+						}
+					/>
+				</div>
+				<Space h={64} />
+
+				<Divider />
+				<Space h={64} />
+
 				<Text className={classes.manageClubHeader}>Membership</Text>
 				<Text className={classes.membershipSettingHeader}>
 					Requirements
@@ -767,32 +794,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</a>
 					.
 				</Text>
-				<Space h={32} />
 
-				<Divider />
-				<Space h={32} />
-
-				<Text className={classes.manageClubHeader}>Club Admins</Text>
-
-				<div>
-					<Text className={classes.clubAdminsPrompt}>
-						Who can manage this club’s profile and membership
-						settings?
-					</Text>
-					<Text className={classes.clubAdminsInstructions}>
-						Add a line break between each address. Note that at
-						least one club admin is required at all times.
-					</Text>
-					<Textarea
-						radius="lg"
-						size="md"
-						value={clubAdminsString}
-						minRows={10}
-						onChange={event =>
-							parseClubAdmins(event.currentTarget.value)
-						}
-					/>
-				</div>
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
