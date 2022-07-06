@@ -36,6 +36,7 @@ import {
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate, ensWalletAddress } from '../../utils/truncated_wallet'
+import { CreateClubModal } from '../Create/CreateClubModal'
 import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
@@ -1550,7 +1551,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						Done
 					</Button>
 				</Modal>
-				<CreateClubTransactionsModal
+				<CreateClubModal
 					membershipSettings={membershipSettings}
 					isOpened={isTransactionsModalOpened}
 					onModalClosed={() => {
