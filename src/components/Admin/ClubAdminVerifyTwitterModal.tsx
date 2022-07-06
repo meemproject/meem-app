@@ -36,6 +36,7 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
+	AlertCircle,
 	BrandDiscord,
 	BrandTwitter,
 	Check,
@@ -137,6 +138,21 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 
 	const verifyTweet = async () => {
 		setStep(Step.Verifying)
+		// showNotification({
+		// 	title: 'Success!',
+		// 	autoClose: 5000,
+		// 	color: 'green',
+		// 	icon: <Check color="green" />,
+
+		// 	message: `Your club is now verified.`
+		// })
+		// showNotification({
+		// 	title: 'Verification failed',
+		// 	autoClose: 5000,
+		// 	color: 'red',
+		// 	icon: <AlertCircle color="red" />,
+		// 	message: `Please make sure your tweet was public and try again.`
+		// })
 	}
 
 	// Club subscription - watch for specific changes in order to update correctly
@@ -320,7 +336,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 								loading={step === Step.Verifying}
 								description={
 									step !== Step.Verify &&
-									step !== Step.Verifying ? (
+									step != Step.Verifying ? (
 										<Text
 											className={classes.stepDescription}
 										>
@@ -328,26 +344,44 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 										</Text>
 									) : (
 										<>
-											<div>
-												<Text
-													className={
-														classes.stepDescription
-													}
-												>
-													Complete your verification.
-												</Text>
-												<Space h={24} />
+											{step === Step.Verifying && (
+												<>
+													<Text
+														className={
+															classes.stepDescription
+														}
+													>
+														Please wait...
+													</Text>
+												</>
+											)}
+											{step !== Step.Verifying && (
+												<>
+													<div>
+														<Text
+															className={
+																classes.stepDescription
+															}
+														>
+															Complete your
+															verification.
+														</Text>
+														<Space h={24} />
 
-												<a
-													onClick={verifyTweet}
-													className={
-														classes.buttonConfirm
-													}
-												>
-													Verify Tweet
-												</a>
-												<Space h={12} />
-											</div>
+														<a
+															onClick={
+																verifyTweet
+															}
+															className={
+																classes.buttonConfirm
+															}
+														>
+															Verify Tweet
+														</a>
+														<Space h={12} />
+													</div>
+												</>
+											)}
 										</>
 									)
 								}
