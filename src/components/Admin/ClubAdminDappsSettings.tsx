@@ -29,6 +29,7 @@ import request from 'superagent'
 import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
 import { Club, Integration } from '../../model/club/club'
+import { ClubAdminVerifyTwitterModal } from './ClubAdminVerifyTwitterModal'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -125,6 +126,15 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 400,
 		marginTop: 4,
 		fontSize: 14
+	},
+	clubVerificationSectionTitle: {
+		fontSize: 18,
+		marginBottom: 4,
+		fontWeight: 600,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			marginBottom: 8
+		}
 	},
 	clubIntegrationsSectionTitle: {
 		fontSize: 18,
@@ -249,11 +259,115 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		useState(false)
 	const [currentIntegrationId, setCurrentIntegrationId] = useState('')
 
+	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
+		useState(false)
 	const [isIntegrationModalOpened, setIntegrationModalOpened] =
 		useState(false)
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
+
+	const saveIntegrationChanges = async () => {
+		if (integrationBeingEdited) {
+			// Validate URL
+
+			try {
+				const url = new URL(currentIntegrationUrl)
+			} catch (_) {
+				showNotification({
+					title: 'Oops!',
+					message: 'Please enter a valid URL for this integration.'
+				})
+				return
+			}
+
+			// Mark as saving changes
+			setIsSavingChanges(true)
+
+			log.debug(`public: ${isCurrentIntegrationPublic}`)
+
+			// Save the change to the db
+			try {
+				const jwtToken = Cookies.get('meemJwtToken')
+				const { body } = await request
+					.post(
+						`${
+							process.env.NEXT_PUBLIC_API_URL
+						}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
+							{
+								meemContractId: club.id ?? '',
+								integrationId: currentIntegrationId
+							}
+						)}`
+					)
+					.set('Authorization', `JWT ${jwtToken}`)
+					.send({
+						isEnabled: isCurrentIntegrationEnabled,
+						isPublic: isCurrentIntegrationPublic,
+						metadata: {
+							externalUrl: currentIntegrationUrl
+						}
+					})
+				log.debug(body)
+			} catch (e) {
+				log.debug(e)
+				setIsSavingChanges(false)
+				showNotification({
+					title: 'Oops!',
+					message:
+						'Unable to save this integration. Please get in touch!'
+				})
+				return
+				return
+			}
+
+			// Update the integration locally
+			const updatedInte = integrationBeingEdited
+			updatedInte.url = currentIntegrationUrl
+			updatedInte.isEnabled = isCurrentIntegrationEnabled
+			updatedInte.isPublic = isCurrentIntegrationPublic
+			setIntegrationBeingEdited(updatedInte)
+
+			// Check to see if this integration is an existing integration
+
+			if (!integrationBeingEdited.isExistingIntegration) {
+				// If not an existing integration, push this into existing integrations
+				const newExisting = existingIntegrations
+				integrationBeingEdited.isExistingIntegration = true
+				newExisting.push(integrationBeingEdited)
+				setExistingIntegrations(newExisting)
+
+				availableIntegrations.forEach(inte => {
+					if (inte.integrationId === currentIntegrationId) {
+						const newAvailable = availableIntegrations.filter(
+							integ =>
+								integ.integrationId !== currentIntegrationId
+						)
+						setAvailableIntegrations(newAvailable)
+						return
+					}
+				})
+			} else {
+				// If already enabled, modify the existing integration
+				const newIntegrations = [...existingIntegrations]
+				// Is there a better way of updating an array item in typescript than a C loop?
+				for (let i = 0; i < newIntegrations.length; i++) {
+					if (
+						newIntegrations[i].integrationId ===
+						currentIntegrationId
+					) {
+						newIntegrations[i] = integrationBeingEdited
+						break
+					}
+				}
+
+				setExistingIntegrations(newIntegrations)
+			}
+		}
+		setIsSavingChanges(false)
+		setStep(Step.FollowGuide)
+		setIntegrationModalOpened(false)
+	}
 
 	// Setup available integrations
 	useEffect(() => {
@@ -316,19 +430,24 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	}, [club.allIntegrations, hasSetupEnabledIntegrations])
 
 	const editIntegration = (integration: Integration) => {
-		setIntegrationBeingEdited(integration)
-		setCurrentIntegrationUrl(integration.url ?? '')
-		setCurrentIntegrationEnabled(integration.isEnabled ?? true)
-		setCurrentIntegrationId(integration.integrationId ?? '')
-		setCurrentIntegrationPublic(
-			integration.isPublic ??
-				(integration.name === 'Twitter' ||
-					integration.name === 'Discord')
-		)
-		if (integration.url && integration.url.length > 0) {
-			setStep(Step.AddUrl)
+		log.debug(integration.name)
+		if (integration.name === 'Twitter') {
+			setVerifyTwitterModalOpened(true)
+		} else {
+			setIntegrationBeingEdited(integration)
+			setCurrentIntegrationUrl(integration.url ?? '')
+			setCurrentIntegrationEnabled(integration.isEnabled ?? true)
+			setCurrentIntegrationId(integration.integrationId ?? '')
+			setCurrentIntegrationPublic(
+				integration.isPublic ??
+					(integration.name === 'Twitter' ||
+						integration.name === 'Discord')
+			)
+			if (integration.url && integration.url.length > 0) {
+				setStep(Step.AddUrl)
+			}
+			setIntegrationModalOpened(true)
 		}
-		setIntegrationModalOpened(true)
 	}
 
 	return (
@@ -340,6 +459,15 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Text className={classes.clubContractAddress}>
 					{club.address}
+				</Text>
+				<Space h={'xl'} />
+
+				<Text
+					className={classes.clubVerificationSectionTitle}
+				>{`Verify with Twitter`}</Text>
+				<Text>
+					Link your club’s official Twitter account to let new members
+					know it’s really you.
 				</Text>
 				<Space h={'xl'} />
 
@@ -456,6 +584,13 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				)}
 
 				<Space h="xl" />
+				<ClubAdminVerifyTwitterModal
+					clubAddress={club.address ?? ''}
+					isOpened={isVerifyTwitterModalOpened}
+					onModalClosed={() => {
+						setVerifyTwitterModalOpened(false)
+					}}
+				/>
 				<Modal
 					centered
 					closeOnClickOutside={false}
@@ -630,154 +765,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 									loading={isSavingChanges}
 									disabled={isSavingChanges}
 									onClick={async () => {
-										if (integrationBeingEdited) {
-											// Validate URL
-
-											try {
-												const url = new URL(
-													currentIntegrationUrl
-												)
-											} catch (_) {
-												showNotification({
-													title: 'Oops!',
-													message:
-														'Please enter a valid URL for this integration.'
-												})
-												return
-											}
-
-											// Mark as saving changes
-											setIsSavingChanges(true)
-
-											log.debug(
-												`public: ${isCurrentIntegrationPublic}`
-											)
-
-											// Save the change to the db
-											try {
-												const jwtToken =
-													Cookies.get('meemJwtToken')
-												const { body } = await request
-													.post(
-														`${
-															process.env
-																.NEXT_PUBLIC_API_URL
-														}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
-															{
-																meemContractId:
-																	club.id ??
-																	'',
-																integrationId:
-																	currentIntegrationId
-															}
-														)}`
-													)
-													.set(
-														'Authorization',
-														`JWT ${jwtToken}`
-													)
-													.send({
-														isEnabled:
-															isCurrentIntegrationEnabled,
-														isPublic:
-															isCurrentIntegrationPublic,
-														metadata: {
-															externalUrl:
-																currentIntegrationUrl
-														}
-													})
-												log.debug(body)
-											} catch (e) {
-												log.debug(e)
-												setIsSavingChanges(false)
-												showNotification({
-													title: 'Oops!',
-													message:
-														'Unable to save this integration. Please get in touch!'
-												})
-												return
-												return
-											}
-
-											// Update the integration locally
-											const updatedInte =
-												integrationBeingEdited
-											updatedInte.url =
-												currentIntegrationUrl
-											updatedInte.isEnabled =
-												isCurrentIntegrationEnabled
-											updatedInte.isPublic =
-												isCurrentIntegrationPublic
-											setIntegrationBeingEdited(
-												updatedInte
-											)
-
-											// Check to see if this integration is an existing integration
-
-											if (
-												!integrationBeingEdited.isExistingIntegration
-											) {
-												// If not an existing integration, push this into existing integrations
-												const newExisting =
-													existingIntegrations
-												integrationBeingEdited.isExistingIntegration =
-													true
-												newExisting.push(
-													integrationBeingEdited
-												)
-												setExistingIntegrations(
-													newExisting
-												)
-
-												availableIntegrations.forEach(
-													inte => {
-														if (
-															inte.integrationId ===
-															currentIntegrationId
-														) {
-															const newAvailable =
-																availableIntegrations.filter(
-																	integ =>
-																		integ.integrationId !==
-																		currentIntegrationId
-																)
-															setAvailableIntegrations(
-																newAvailable
-															)
-															return
-														}
-													}
-												)
-											} else {
-												// If already enabled, modify the existing integration
-												const newIntegrations = [
-													...existingIntegrations
-												]
-												// Is there a better way of updating an array item in typescript than a C loop?
-												for (
-													let i = 0;
-													i < newIntegrations.length;
-													i++
-												) {
-													if (
-														newIntegrations[i]
-															.integrationId ===
-														currentIntegrationId
-													) {
-														newIntegrations[i] =
-															integrationBeingEdited
-														break
-													}
-												}
-
-												setExistingIntegrations(
-													newIntegrations
-												)
-											}
-										}
-										setIsSavingChanges(false)
-										setStep(Step.FollowGuide)
-										setIntegrationModalOpened(false)
+										saveIntegrationChanges()
 									}}
 									className={classes.buttonConfirm}
 								>
