@@ -1,59 +1,28 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-	ApolloClient,
-	HttpLink,
-	InMemoryCache,
-	useLazyQuery,
-	useSubscription
-} from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
-	Container,
 	Text,
-	Image,
-	Button,
 	Space,
-	Grid,
 	Modal,
 	Divider,
 	Stepper,
-	Loader,
 	MantineProvider,
 	TextInput
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { Chain, Permission, UriSource } from '@meemproject/meem-contracts'
-import * as meemContracts from '@meemproject/meem-contracts'
-import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
-import { Contract, ethers } from 'ethers'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import {
-	AlertCircle,
-	BrandDiscord,
-	BrandTwitter,
-	Check,
-	CircleCheck,
-	Settings
-} from 'tabler-icons-react'
-import {
-	ClubSubscriptionSubscription,
-	MeemContracts
-} from '../../../generated/graphql'
-import { GET_CLUB_SLUG, SUB_CLUB } from '../../graphql/clubs'
-import clubFromMeemContract, {
-	Integration,
-	MembershipReqType,
-	MembershipSettings
-} from '../../model/club/club'
-import { CookieKeys } from '../../utils/cookies'
+import React, { useState } from 'react'
+import request from 'superagent'
+import { AlertCircle, Check } from 'tabler-icons-react'
+import twitterIntent from 'twitter-intent'
+import { Club, Integration } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -105,11 +74,19 @@ const useStyles = createStyles(theme => ({
 	},
 	stepDescription: {
 		fontSize: 14
+	},
+	currentTwitterVerification: {
+		fontWeight: 600
+	},
+	isVerifiedSection: {
+		paddingLeft: 8,
+		paddingRight: 8
 	}
 }))
 
 interface IProps {
-	clubAddress: string
+	club: Club
+	integration?: Integration
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -122,7 +99,8 @@ enum Step {
 }
 
 export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
-	clubAddress,
+	club,
+	integration,
 	isOpened,
 	onModalClosed
 }) => {
@@ -138,44 +116,51 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 
 	const verifyTweet = async () => {
 		setStep(Step.Verifying)
-		// showNotification({
-		// 	title: 'Success!',
-		// 	autoClose: 5000,
-		// 	color: 'green',
-		// 	icon: <Check color="green" />,
 
-		// 	message: `Your club is now verified.`
-		// })
-		// showNotification({
-		// 	title: 'Verification failed',
-		// 	autoClose: 5000,
-		// 	color: 'red',
-		// 	icon: <AlertCircle color="red" />,
-		// 	message: `Please make sure your tweet was public and try again.`
-		// })
+		// Save the change to the db
+		try {
+			const jwtToken = Cookies.get('meemJwtToken')
+			const { body } = await request
+				.post(
+					`${
+						process.env.NEXT_PUBLIC_API_URL
+					}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
+						meemContractId: club.id ?? '',
+						integrationId: integration?.integrationId ?? ''
+					})}`
+				)
+				.set('Authorization', `JWT ${jwtToken}`)
+				.send({
+					isEnabled: true,
+					isPublic: true,
+					metadata: {
+						externalUrl: integration?.integrationId,
+						twitterUsername
+					}
+				})
+			log.debug(body)
+			showNotification({
+				title: 'Success!',
+				autoClose: 5000,
+				color: 'green',
+				icon: <Check color="green" />,
+
+				message: `Your club is now verified.`
+			})
+			onModalClosed()
+		} catch (e) {
+			log.debug(e)
+			showNotification({
+				title: 'Verification failed',
+				autoClose: 5000,
+				color: 'red',
+				icon: <AlertCircle />,
+				message: `Please make sure your tweet was public and try again.`
+			})
+			setStep(Step.Verify)
+			return
+		}
 	}
-
-	// Club subscription - watch for specific changes in order to update correctly
-	const { data: clubData, loading } =
-		useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
-			variables: { address: clubAddress }
-		})
-
-	// Listen for change on the club that indicates Twitter was successfully verified.
-	useEffect(() => {
-		async function checkClubState(data: ClubSubscriptionSubscription) {
-			if (data.MeemContracts.length > 0 && step === Step.Verifying) {
-				// TODO
-			}
-		}
-
-		if (clubData && wallet.accounts.length > 0) {
-			checkClubState(clubData)
-		} else {
-			log.debug('No club data (yet) or wallet not connected...')
-		}
-	}, [clubData, router, step, wallet])
-
 	return (
 		<>
 			<Modal
@@ -193,6 +178,38 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				onClose={() => onModalClosed()}
 			>
 				<Divider />
+
+				{integration && integration.isVerified && (
+					<div className={classes.isVerifiedSection}>
+						<Space h={24} />
+
+						<Text size={'sm'}>
+							This club is currently verified with{' '}
+							<a
+								onClick={() => {
+									window.open(
+										`https://twitter.com/${integration.verifiedTwitterUser}`
+									)
+								}}
+							>
+								<span
+									className={
+										classes.currentTwitterVerification
+									}
+								>
+									{integration.verifiedTwitterUser}
+								</span>
+							</a>{' '}
+							on Twitter.
+						</Text>
+						<Space h={16} />
+
+						<Text size={'sm'}>
+							Use the steps below to verify with a different
+							Twitter account.
+						</Text>
+					</div>
+				)}
 
 				<Space h={24} />
 
@@ -315,9 +332,27 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 
 												<a
 													onClick={() => {
-														window.open(
-															'https://twitter.com/intent/tweet?text=I%20am%20validating%20that%20I%20am%20the%20owner%20of%20this%20Twitter%20account.&hashtags=%23clubs'
-														)
+														// Generate intent
+														const href =
+															twitterIntent.tweet.url(
+																{
+																	text: `Verifying that this is the official Twitter account of ${
+																		club.name ??
+																		''
+																	}!`,
+																	url: `${
+																		window
+																			.location
+																			.origin
+																	}/${
+																		club.slug ??
+																		''
+																	}`
+																}
+															)
+
+														// Open it
+														window.open(href)
 														setStep(Step.Verify)
 													}}
 													className={

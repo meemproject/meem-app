@@ -20,6 +20,8 @@ export interface Integration {
 	name: string
 	isEnabled?: boolean
 	isPublic?: boolean
+	isVerified?: boolean
+	verifiedTwitterUser?: string
 	url?: string
 	icon?: string
 	description?: string
@@ -45,8 +47,6 @@ export interface Club {
 	allIntegrations?: Integration[]
 	publicIntegrations?: Integration[]
 	privateIntegrations?: Integration[]
-	isTwitterVerified?: boolean
-	verifiedIntegrations?: Integration[]
 }
 
 export interface MembershipSettings {
@@ -355,22 +355,6 @@ export default async function clubFromMeemContract(
 			}
 		}
 
-		// Verifications
-		const verifiedIntegrations: Integration[] = []
-		const isTwitterVerified = false
-		verifiedIntegrations.push({
-			id: 'twitter',
-			integrationId: 'inte.IntegrationId',
-			name: 'Twitter',
-			description: '',
-			icon: '/integration-twitter.png',
-			isEnabled: true,
-			isPublic: true,
-			guideUrl: '',
-			url: '',
-			isExistingIntegration: true
-		})
-
 		// Integrations
 		const allIntegrations: Integration[] = []
 		const publicIntegrations: Integration[] = []
@@ -386,6 +370,9 @@ export default async function clubFromMeemContract(
 						icon: inte.Integration?.icon ?? '',
 						isEnabled: inte.isEnabled,
 						isPublic: inte.isPublic,
+						isVerified: inte.metadata.isVerified ?? false,
+						verifiedTwitterUser:
+							inte.metadata.twitterUsername ?? 'Unknown',
 						guideUrl: inte.Integration?.guideUrl,
 						url: inte.metadata.externalUrl ?? '',
 						isExistingIntegration: true
@@ -439,9 +426,7 @@ export default async function clubFromMeemContract(
 			rawClub: clubData,
 			allIntegrations,
 			publicIntegrations,
-			privateIntegrations,
-			isTwitterVerified,
-			verifiedIntegrations
+			privateIntegrations
 		}
 	} else {
 		return {}

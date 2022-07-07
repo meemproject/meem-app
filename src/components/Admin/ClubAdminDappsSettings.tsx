@@ -431,18 +431,20 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 	const editIntegration = (integration: Integration) => {
 		log.debug(integration.name)
+
+		setIntegrationBeingEdited(integration)
+		setCurrentIntegrationUrl(integration.url ?? '')
+		setCurrentIntegrationEnabled(integration.isEnabled ?? true)
+		setCurrentIntegrationId(integration.integrationId ?? '')
+		setCurrentIntegrationPublic(
+			integration.isPublic ??
+				(integration.name === 'Twitter' ||
+					integration.name === 'Discord')
+		)
+
 		if (integration.name === 'Twitter') {
 			setVerifyTwitterModalOpened(true)
 		} else {
-			setIntegrationBeingEdited(integration)
-			setCurrentIntegrationUrl(integration.url ?? '')
-			setCurrentIntegrationEnabled(integration.isEnabled ?? true)
-			setCurrentIntegrationId(integration.integrationId ?? '')
-			setCurrentIntegrationPublic(
-				integration.isPublic ??
-					(integration.name === 'Twitter' ||
-						integration.name === 'Discord')
-			)
 			if (integration.url && integration.url.length > 0) {
 				setStep(Step.AddUrl)
 			}
@@ -459,15 +461,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Text className={classes.clubContractAddress}>
 					{club.address}
-				</Text>
-				<Space h={'xl'} />
-
-				<Text
-					className={classes.clubVerificationSectionTitle}
-				>{`Verify with Twitter`}</Text>
-				<Text>
-					Link your club’s official Twitter account to let new members
-					know it’s really you.
 				</Text>
 				<Space h={'xl'} />
 
@@ -509,6 +502,23 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 												/>
 												<Space w={8} />
 												<Text>{integration.name}</Text>
+												{integration.isVerified && (
+													<>
+														<Space w={12} />
+														<Image
+															src="/icon-verified.png"
+															width={16}
+															height={16}
+														/>
+														<Space w={4} />
+														<Text
+															color={'#3EA2FF'}
+															size={'sm'}
+														>
+															Verified
+														</Text>
+													</>
+												)}
 											</div>
 										</div>
 									</a>
@@ -585,7 +595,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 				<Space h="xl" />
 				<ClubAdminVerifyTwitterModal
-					clubAddress={club.address ?? ''}
+					club={club}
+					integration={integrationBeingEdited}
 					isOpened={isVerifyTwitterModalOpened}
 					onModalClosed={() => {
 						setVerifyTwitterModalOpened(false)
