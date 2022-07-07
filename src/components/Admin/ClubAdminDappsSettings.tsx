@@ -318,7 +318,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						'Unable to save this integration. Please get in touch!'
 				})
 				return
-				return
 			}
 
 			// Update the integration locally
@@ -598,6 +597,64 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 					club={club}
 					integration={integrationBeingEdited}
 					isOpened={isVerifyTwitterModalOpened}
+					onSuccessfulVerification={() => {
+						// Update the integration locally
+						const updatedInte = integrationBeingEdited
+						if (updatedInte && integrationBeingEdited) {
+							updatedInte.url = currentIntegrationUrl
+							updatedInte.isEnabled = isCurrentIntegrationEnabled
+							updatedInte.isPublic = isCurrentIntegrationPublic
+							updatedInte.isVerified = true
+							setIntegrationBeingEdited(updatedInte)
+
+							if (!integrationBeingEdited.isExistingIntegration) {
+								// If not an existing integration, push this into existing integrations
+								const newExisting = existingIntegrations
+								integrationBeingEdited.isExistingIntegration =
+									true
+								newExisting.push(integrationBeingEdited)
+								setExistingIntegrations(newExisting)
+
+								availableIntegrations.forEach(inte => {
+									if (
+										inte.integrationId ===
+										currentIntegrationId
+									) {
+										const newAvailable =
+											availableIntegrations.filter(
+												integ =>
+													integ.integrationId !==
+													currentIntegrationId
+											)
+										setAvailableIntegrations(newAvailable)
+										return
+									}
+								})
+							} else {
+								// If already enabled, modify the existing integration
+								const newIntegrations = [
+									...existingIntegrations
+								]
+								// Is there a better way of updating an array item in typescript than a C loop?
+								for (
+									let i = 0;
+									i < newIntegrations.length;
+									i++
+								) {
+									if (
+										newIntegrations[i].integrationId ===
+										currentIntegrationId
+									) {
+										newIntegrations[i] =
+											integrationBeingEdited
+										break
+									}
+								}
+
+								setExistingIntegrations(newIntegrations)
+							}
+						}
+					}}
 					onModalClosed={() => {
 						setVerifyTwitterModalOpened(false)
 					}}
