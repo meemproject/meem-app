@@ -3,7 +3,6 @@ import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
 import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
-import { ensWalletAddress } from '../../utils/truncated_wallet'
 import { tokenFromContractAddress } from '../token/token'
 import { clubMetadataFromContractUri } from './club_metadata'
 
@@ -347,9 +346,9 @@ export default async function clubFromMeemContract(
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					const name = await ensWalletAddress(meem.owner)
-					if (!members.includes(name)) {
-						members.push(name)
+					//const name = await ensWalletAddress(meem.owner)
+					if (!members.includes(meem.owner)) {
+						members.push(meem.owner)
 					}
 				}
 			}
