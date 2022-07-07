@@ -267,6 +267,55 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
+	const updateIntegrationLocally = (withTwitter: boolean) => {
+		// Update the integration locally
+		const updatedInte = integrationBeingEdited
+
+		if (updatedInte && integrationBeingEdited) {
+			updatedInte.url = currentIntegrationUrl
+			updatedInte.isEnabled = isCurrentIntegrationEnabled
+			updatedInte.isPublic = isCurrentIntegrationPublic
+			updatedInte.isVerified = withTwitter
+			setIntegrationBeingEdited(updatedInte)
+
+			// Check to see if this integration is an existing integration
+
+			if (!integrationBeingEdited.isExistingIntegration) {
+				// If not an existing integration, push this into existing integrations
+				const newExisting = existingIntegrations
+				integrationBeingEdited.isExistingIntegration = true
+				newExisting.push(integrationBeingEdited)
+				setExistingIntegrations(newExisting)
+
+				availableIntegrations.forEach(inte => {
+					if (inte.integrationId === currentIntegrationId) {
+						const newAvailable = availableIntegrations.filter(
+							integ =>
+								integ.integrationId !== currentIntegrationId
+						)
+						setAvailableIntegrations(newAvailable)
+						return
+					}
+				})
+			} else {
+				// If already enabled, modify the existing integration
+				const newIntegrations = [...existingIntegrations]
+				// Is there a better way of updating an array item in typescript than a C loop?
+				for (let i = 0; i < newIntegrations.length; i++) {
+					if (
+						newIntegrations[i].integrationId ===
+						currentIntegrationId
+					) {
+						newIntegrations[i] = integrationBeingEdited
+						break
+					}
+				}
+
+				setExistingIntegrations(newIntegrations)
+			}
+		}
+	}
+
 	const saveIntegrationChanges = async () => {
 		if (integrationBeingEdited) {
 			// Validate URL
@@ -309,6 +358,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						}
 					})
 				log.debug(body)
+
+				updateIntegrationLocally(false)
 			} catch (e) {
 				log.debug(e)
 				setIsSavingChanges(false)
@@ -318,50 +369,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						'Unable to save this integration. Please get in touch!'
 				})
 				return
-				return
-			}
-
-			// Update the integration locally
-			const updatedInte = integrationBeingEdited
-			updatedInte.url = currentIntegrationUrl
-			updatedInte.isEnabled = isCurrentIntegrationEnabled
-			updatedInte.isPublic = isCurrentIntegrationPublic
-			setIntegrationBeingEdited(updatedInte)
-
-			// Check to see if this integration is an existing integration
-
-			if (!integrationBeingEdited.isExistingIntegration) {
-				// If not an existing integration, push this into existing integrations
-				const newExisting = existingIntegrations
-				integrationBeingEdited.isExistingIntegration = true
-				newExisting.push(integrationBeingEdited)
-				setExistingIntegrations(newExisting)
-
-				availableIntegrations.forEach(inte => {
-					if (inte.integrationId === currentIntegrationId) {
-						const newAvailable = availableIntegrations.filter(
-							integ =>
-								integ.integrationId !== currentIntegrationId
-						)
-						setAvailableIntegrations(newAvailable)
-						return
-					}
-				})
-			} else {
-				// If already enabled, modify the existing integration
-				const newIntegrations = [...existingIntegrations]
-				// Is there a better way of updating an array item in typescript than a C loop?
-				for (let i = 0; i < newIntegrations.length; i++) {
-					if (
-						newIntegrations[i].integrationId ===
-						currentIntegrationId
-					) {
-						newIntegrations[i] = integrationBeingEdited
-						break
-					}
-				}
-
-				setExistingIntegrations(newIntegrations)
 			}
 		}
 		setIsSavingChanges(false)
@@ -598,6 +605,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 					club={club}
 					integration={integrationBeingEdited}
 					isOpened={isVerifyTwitterModalOpened}
+					onSuccessfulVerification={() => {
+						updateIntegrationLocally(true)
+					}}
 					onModalClosed={() => {
 						setVerifyTwitterModalOpened(false)
 					}}
