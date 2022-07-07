@@ -50,7 +50,7 @@ import clubFromMeemContract, {
 } from '../../model/club/club'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { quickTruncate } from '../../utils/truncated_wallet'
+import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -631,6 +631,37 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				parseRequirements(possibleClub)
 			}
 			setIsLoadingClub(false)
+
+			// After the club is loaded, convert its members into ENS names
+			const newMembers: string[] = []
+			for (const member of possibleClub.members!) {
+				const name = await ensWalletAddress(member)
+				newMembers.push(name)
+			}
+			// TODO: Is there an easier way to copy an object in react, like copyWith?
+			const newClub: Club = {
+				id: possibleClub.id,
+				name: possibleClub.name,
+				address: possibleClub.address,
+				admins: possibleClub.admins,
+				isClubAdmin: possibleClub.isClubAdmin,
+				slug: possibleClub.slug,
+				description: possibleClub.description,
+				image: possibleClub.image,
+				isClubMember: possibleClub.isClubMember,
+				membershipToken: possibleClub.membershipToken,
+				members: newMembers,
+				slotsLeft: possibleClub.slotsLeft,
+				membershipSettings: possibleClub.membershipSettings,
+				isValid: possibleClub.isValid,
+				rawClub: possibleClub.rawClub,
+				allIntegrations: possibleClub.allIntegrations,
+				publicIntegrations: possibleClub.publicIntegrations,
+				privateIntegrations: possibleClub.privateIntegrations
+			}
+			setClub(newClub)
+			setIsLoadingClub(false)
+			log.debug('updated club with ENS addresses')
 		}
 
 		async function join(data: ClubSubscriptionSubscription) {
