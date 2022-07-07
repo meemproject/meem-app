@@ -221,7 +221,16 @@ export const MyClubsComponent: React.FC = () => {
 											fit={'contain'}
 										/>
 										<Space w="xs" />
-										<Text>{club.name!}</Text>
+										<Text>
+											{club.name
+												? club.name.length > 20
+													? `${club.name.substring(
+															0,
+															20
+													  )}...`
+													: club.name
+												: ''}
+										</Text>
 									</div>
 								</Grid.Col>
 							))}
