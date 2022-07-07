@@ -20,6 +20,8 @@ export interface Integration {
 	name: string
 	isEnabled?: boolean
 	isPublic?: boolean
+	isVerified?: boolean
+	verifiedTwitterUser?: string
 	url?: string
 	icon?: string
 	description?: string
@@ -368,6 +370,9 @@ export default async function clubFromMeemContract(
 						icon: inte.Integration?.icon ?? '',
 						isEnabled: inte.isEnabled,
 						isPublic: inte.isPublic,
+						isVerified: inte.metadata.isVerified ?? false,
+						verifiedTwitterUser:
+							inte.metadata.twitterUsername ?? 'Unknown',
 						guideUrl: inte.Integration?.guideUrl,
 						url: inte.metadata.externalUrl ?? '',
 						isExistingIntegration: true
@@ -400,6 +405,7 @@ export default async function clubFromMeemContract(
 			description: metadata.description,
 			image: metadata.image,
 			isClubMember,
+
 			membershipToken,
 			members,
 			slotsLeft,

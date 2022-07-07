@@ -941,6 +941,39 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 																			integration.name
 																		}
 																	</Text>
+																	{integration.isVerified && (
+																		<>
+																			<Space
+																				w={
+																					12
+																				}
+																			/>
+																			<Image
+																				src="/icon-verified.png"
+																				width={
+																					16
+																				}
+																				height={
+																					16
+																				}
+																			/>
+																			<Space
+																				w={
+																					4
+																				}
+																			/>
+																			<Text
+																				color={
+																					'#3EA2FF'
+																				}
+																				size={
+																					'sm'
+																				}
+																			>
+																				Verified
+																			</Text>
+																		</>
+																	)}
 																</div>
 															</div>
 														</a>
@@ -995,6 +1028,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														<Text>
 															{integration.name}
 														</Text>
+														{integration.isVerified && (
+															<>
+																<Space w={12} />
+																<Image
+																	src="/icon-verified.png"
+																	width={16}
+																	height={16}
+																/>
+																<Space w={4} />
+																<Text
+																	color={
+																		'#3EA2FF'
+																	}
+																	size={'sm'}
+																>
+																	Verified
+																</Text>
+															</>
+														)}
 													</div>
 												</div>
 											</a>
