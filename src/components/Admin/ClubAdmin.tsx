@@ -60,15 +60,30 @@ const useStyles = createStyles(theme => ({
 		justifyContent: 'space-between',
 		flexDirection: 'row'
 	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
+	headerClubNameContainer: {
 		marginLeft: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
 			marginLeft: 16
 		}
 	},
+	headerClubName: {
+		fontWeight: 600,
+		fontSize: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
+	},
+	clubUrlContainer: {
+		marginTop: 8,
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	clubUrl: {
+		fontSize: 14,
+		opacity: 0.6,
+		fontWeight: 500
+	},
+
 	clubLogoImage: {
 		imageRendering: 'pixelated',
 		width: 80,
@@ -280,9 +295,35 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								src={club.image!}
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<Text className={classes.headerClubName}>
-								{club.name!}
-							</Text>
+							<div className={classes.headerClubNameContainer}>
+								<Text className={classes.headerClubName}>
+									{club.name!}
+								</Text>
+								<div className={classes.clubUrlContainer}>
+									<Text
+										className={classes.clubUrl}
+									>{`${window.location.origin}/${club.slug}`}</Text>
+									<Image
+										className={classes.copy}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												`${window.location.origin}/${club.slug}`
+											)
+											showNotification({
+												title: 'Club URL copied',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+
+												message: `This club's URL was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 
