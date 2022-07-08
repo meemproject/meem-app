@@ -34,6 +34,7 @@ import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import {
 	BrandDiscord,
 	BrandTwitter,
+	Check,
 	CircleCheck,
 	CircleX,
 	Settings
@@ -209,7 +210,15 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: '#FAFAFA',
 		fontWeight: 600,
 		borderRadius: 16,
-		padding: 16
+		paddingTop: 16,
+		paddingLeft: 16,
+		paddingBottom: 16,
+		cursor: 'pointer',
+		display: 'flex'
+	},
+	memberAdminIndicator: {
+		marginLeft: 6,
+		marginTop: 6
 	},
 	enabledClubIntegrationItem: {
 		display: 'flex',
@@ -226,6 +235,19 @@ const useStyles = createStyles(theme => ({
 	intItemHeader: {
 		display: 'flex',
 		alignItems: 'center'
+	},
+	clubContractAddress: {
+		wordBreak: 'break-all',
+		color: 'rgba(0, 0, 0, 0.5)'
+	},
+	contractAddressContainer: {
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	copy: {
+		marginLeft: 4,
+		padding: 2,
+		cursor: 'pointer'
 	}
 }))
 
@@ -743,6 +765,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		router.push({ pathname: `/${slug}/admin` })
 	}
 
+	const memberIsAdmin = (member: string): boolean => {
+		if (club) {
+			let isAdmin = false
+			club.admins?.forEach(admin => {
+				if (admin === member) {
+					isAdmin = true
+				}
+			})
+
+			return isAdmin
+		} else {
+			return false
+		}
+	}
+
 	return (
 		<>
 			{isLoadingClub && (
@@ -906,6 +943,44 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										)}
 								</>
 							))}
+
+						{club.isClubMember && (
+							<>
+								<Text
+									className={classes.clubDetailSectionTitle}
+								>
+									Club Contract Address
+								</Text>
+								<div
+									className={classes.contractAddressContainer}
+								>
+									<Text
+										className={classes.clubContractAddress}
+									>
+										{club.address}
+									</Text>
+									<Image
+										className={classes.copy}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												club.address ?? ''
+											)
+											showNotification({
+												title: 'Address copied',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+
+												message: `This club's contract address was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
+							</>
+						)}
 
 						{/* Public integrations for club visitors */}
 						{!club.isClubMember &&
@@ -1101,9 +1176,35 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										xl={4}
 										key={member}
 									>
-										<Text className={classes.memberItem}>
-											{quickTruncate(member)}
-										</Text>
+										<div className={classes.memberItem}>
+											<Text
+												onClick={() => {
+													navigator.clipboard.writeText(
+														member
+													)
+													showNotification({
+														title: 'Member address copied',
+														autoClose: 2000,
+														color: 'green',
+														icon: <Check />,
+
+														message: `This member's address was copied to your clipboard.`
+													})
+												}}
+											>
+												{quickTruncate(member)}
+											</Text>
+											{memberIsAdmin(member) && (
+												<Image
+													className={
+														classes.memberAdminIndicator
+													}
+													src="/star.png"
+													height={12}
+													width={12}
+												/>
+											)}
+										</div>
 									</Grid.Col>
 								))}
 							</Grid>
