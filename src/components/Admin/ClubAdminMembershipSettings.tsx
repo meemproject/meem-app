@@ -818,8 +818,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
-						size="lg"
+						spacing={10}
+						size="md"
 						color="dark"
 						value={
 							reqCurrentlyEditing.type === MembershipReqType.None
@@ -1139,7 +1139,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
+						spacing={10}
 						size="lg"
 						color="dark"
 						value={
@@ -1283,7 +1283,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
+						spacing={10}
 						size="lg"
 						color="dark"
 						value={
@@ -1369,7 +1369,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
+						spacing={10}
 						size="lg"
 						color="dark"
 						value={
@@ -1466,7 +1466,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
+						spacing={10}
 						size="lg"
 						color="dark"
 						value={
