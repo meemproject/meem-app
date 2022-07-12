@@ -31,6 +31,7 @@ import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
+import Linkify from 'react-linkify'
 import {
 	BrandDiscord,
 	BrandTwitter,
@@ -248,6 +249,11 @@ const useStyles = createStyles(theme => ({
 		marginLeft: 4,
 		padding: 2,
 		cursor: 'pointer'
+	},
+	applicationInstructions: {
+		a: {
+			color: 'rgba(255, 102, 81, 1)'
+		}
 	}
 }))
 
@@ -342,7 +348,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				description: metadata.description,
 				image: metadata.image,
 				external_link: '',
-				application_links: []
+				application_instructions: []
 			})
 			const data = {
 				to: wallet.accounts[0],
@@ -466,34 +472,46 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								reqs.push({
 									requirementKey: `Applicants${index}`,
 									requirementComponent: (
-										<Text>
-											Membership is available to approved
-											applicants.
-											{!req.applicationLink && (
-												<span>
-													{' '}
-													Contact a Club Admin for the
-													application link.
-												</span>
+										<div
+											style={{
+												display: 'flex',
+												flexDirection: 'column'
+											}}
+										>
+											<Text>
+												Membership is available to
+												approved applicants.
+												{!req.applicationInstructions && (
+													<span>
+														{' '}
+														Contact a Club Admin for
+														instructions.
+													</span>
+												)}
+												{req.applicationInstructions && (
+													<span>
+														{' '}
+														<>
+															Here are the
+															application
+															instructions:
+														</>
+													</span>
+												)}
+											</Text>
+											{req.applicationInstructions && (
+												<Text
+													className={
+														classes.applicationInstructions
+													}
+												>
+													<Space h={4} />
+													<Linkify>
+														{`${req.applicationInstructions}`}
+													</Linkify>
+												</Text>
 											)}
-											{req.applicationLink && (
-												<span>
-													{' '}
-													Applicants can apply{' '}
-													<a
-														className={
-															classes.requirementLink
-														}
-														href={
-															req.applicationLink
-														}
-													>
-														here
-													</a>
-													.
-												</span>
-											)}
-										</Text>
+										</div>
 									),
 
 									meetsRequirement: wallet.isConnected
@@ -636,7 +654,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			setRequirementsParsed(true)
 		},
-		[checkEligibility, classes.requirementLink, requirementsParsed, wallet]
+		[
+			checkEligibility,
+			classes.applicationInstructions,
+			classes.requirementLink,
+			requirementsParsed,
+			wallet
+		]
 	)
 
 	useEffect(() => {

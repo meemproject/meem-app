@@ -228,14 +228,16 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				.split(' ')[0]
 				.toUpperCase()
 
-			const applicationLinks: string[] = []
+			const applicationInstructions: string[] = []
 			if (membershipSettings) {
 				membershipSettings.requirements.forEach(requirement => {
 					if (
-						requirement.applicationLink &&
-						requirement.applicationLink?.length > 0
+						requirement.applicationInstructions &&
+						requirement.applicationInstructions?.length > 0
 					) {
-						applicationLinks.push(requirement.applicationLink)
+						applicationInstructions.push(
+							requirement.applicationInstructions
+						)
 					}
 				})
 			}
@@ -245,7 +247,7 @@ export const CreateClubTransactionsModal: React.FC<IProps> = ({
 				description: Cookies.get(CookieKeys.clubDescription),
 				image: Cookies.get(CookieKeys.clubImage),
 				external_link: Cookies.get(CookieKeys.clubExternalUrl),
-				application_links: applicationLinks
+				application_instructions: applicationInstructions
 			})
 			setContractUri(uri)
 
