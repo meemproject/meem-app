@@ -81,7 +81,7 @@ export interface MembershipRequirement {
 	// Type of requirement
 	type: MembershipReqType
 	// Applicants
-	applicationLink?: string
+	applicationInstructions?: string
 	approvedAddresses: string[]
 	approvedAddressesString: string
 	// NFT / Token holders
@@ -285,9 +285,13 @@ export default async function clubFromMeemContract(
 								index,
 								andor: MembershipReqAndor.Or,
 								type,
-								applicationLink:
-									metadata.applicationLinks.length > 0
-										? metadata.applicationLinks[0]
+								applicationInstructions:
+									metadata.applicationInstructions
+										? metadata.applicationInstructions
+												.length > 0
+											? metadata
+													.applicationInstructions[0]
+											: undefined
 										: undefined,
 								approvedAddresses,
 								approvedAddressesString,
@@ -404,7 +408,6 @@ export default async function clubFromMeemContract(
 			description: metadata.description,
 			image: metadata.image,
 			isClubMember,
-
 			membershipToken,
 			members,
 			slotsLeft,

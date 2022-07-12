@@ -463,13 +463,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		<>
 			<div>
 				<Space h={30} />
-				<Text className={classes.clubIntegrationsSectionTitle}>
-					Club Contract Address
-				</Text>
-				<Text className={classes.clubContractAddress}>
-					{club.address}
-				</Text>
-				<Space h={'xl'} />
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>
