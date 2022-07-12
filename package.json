@@ -49,6 +49,7 @@
 		"@types/superagent": "^4.1.15",
 		"blob-util": "^2.0.2",
 		"dayjs": "^1.11.0",
+		"emoji-picker-react": "^3.5.1",
 		"ethers": "^5.6.4",
 		"graphql": "^15.7.2",
 		"graphql-ws": "^5.8.2",

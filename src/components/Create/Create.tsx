@@ -11,7 +11,8 @@ import {
 	Button,
 	Textarea,
 	TextInput,
-	Space
+	Space,
+	Modal
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import * as meemContracts from '@meemproject/meem-contracts'
@@ -19,6 +20,7 @@ import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
@@ -26,6 +28,10 @@ import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
 import ClubClubContext from '../Detail/ClubClubProvider'
+
+const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
+	ssr: false
+})
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -130,7 +136,8 @@ const useStyles = createStyles(theme => ({
 		top: '-12px',
 		right: '-105px',
 		cursor: 'pointer'
-	}
+	},
+	uploadOptions: { display: 'flex' }
 }))
 
 export const CreateComponent: React.FC = () => {
@@ -147,6 +154,8 @@ export const CreateComponent: React.FC = () => {
 	const [clubTwitterUrl, setClubTwitterUrl] = useState('')
 	const [clubDiscordUrl, setClubDiscordUrl] = useState('')
 	const descriptionRef = useRef<HTMLTextAreaElement>()
+
+	const [chosenEmoji, setChosenEmoji] = useState(null)
 
 	const [isLoading, setIsLoading] = useState(false)
 	const { web3Provider, accounts, signer, isConnected, connectWallet } =
@@ -188,6 +197,16 @@ export const CreateComponent: React.FC = () => {
 		multiple: false,
 		maxFileSize: 10
 	})
+
+	const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
+	const openEmojiPicker = () => {
+		setIsEmojiPickerOpen(true)
+	}
+
+	const onEmojiClick = (event: any, emojiObject: any) => {
+		setChosenEmoji(emojiObject)
+		setIsEmojiPickerOpen(false)
+	}
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -345,13 +364,23 @@ export const CreateComponent: React.FC = () => {
 					Note that all uploads will be rendered at 24x24 px.
 				</Text>
 				{smallClubLogo.length === 0 && !isLoadingImage && (
-					<Button
-						leftIcon={<Upload size={14} />}
-						className={classes.buttonUpload}
-						onClick={() => openFileSelector()}
-					>
-						Upload
-					</Button>
+					<div className={classes.uploadOptions}>
+						<Button
+							leftIcon={<Upload size={14} />}
+							className={classes.buttonUpload}
+							onClick={() => openFileSelector()}
+						>
+							Upload
+						</Button>
+						<Space w={'xs'} />
+						<Button
+							leftIcon={<Text>😈</Text>}
+							className={classes.buttonUpload}
+							onClick={() => openEmojiPicker()}
+						>
+							Choose emoji
+						</Button>
+					</div>
 				)}
 				{isLoadingImage && <Loader />}
 				{!isLoadingImage && smallClubLogo.length > 0 && (
@@ -390,6 +419,17 @@ export const CreateComponent: React.FC = () => {
 					Continue
 				</Button>
 			</Center>
+			<Modal
+				withCloseButton={false}
+				padding={8}
+				size={296}
+				opened={isEmojiPickerOpen}
+				onClose={() => {
+					setIsEmojiPickerOpen(false)
+				}}
+			>
+				<EmojiPicker onEmojiClick={onEmojiClick} />
+			</Modal>
 		</>
 	)
 }
