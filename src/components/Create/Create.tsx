@@ -238,6 +238,7 @@ export const CreateComponent: React.FC = () => {
 		setChosenEmoji(emojiObject)
 		setIsEmojiPickerOpen(false)
 		await timeout(100)
+		// emojiCanvas is a hidden div element containing the chosen emoji
 		const element = document.querySelector('#emojiCanvas')
 		if (element) {
 			log.debug('found emojiCanvas')
