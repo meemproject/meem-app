@@ -82,7 +82,7 @@
 		"fs-extra": "^10.0.0",
 		"jest": "^27.5.1",
 		"prettier": "^2.6.2",
-		"serverless": "^2.0.0",
+		"serverless": "^3.20.0",
 		"serverless-prune-plugin": "^2.0.1",
 		"ts-jest": "^27.1.4",
 		"ts-node": "^10.4.0",
