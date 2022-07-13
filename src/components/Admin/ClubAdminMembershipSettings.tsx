@@ -916,7 +916,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						</Text>
 						<Text className={classes.modalInfoText}>
 							Leave blank if you do not have an application
-							process
+							process.
 						</Text>
 						<Space h={'xs'} />
 
@@ -935,6 +935,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							Approved Addresses
 						</Text>
 						<Text className={classes.modalInfoText}>
+							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
 							approved addresses can be added manually anytime.
