@@ -170,6 +170,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				centered
 				closeOnClickOutside={false}
 				closeOnEscape={false}
+				withCloseButton={step !== Step.Verifying}
 				radius={16}
 				padding={'sm'}
 				opened={isOpened}
@@ -178,7 +179,10 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 						Verify with Twitter
 					</Text>
 				}
-				onClose={() => onModalClosed()}
+				onClose={() => {
+					onModalClosed()
+					setStep(Step.Start)
+				}}
 			>
 				<Divider />
 
