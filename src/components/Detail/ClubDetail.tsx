@@ -428,6 +428,22 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		}
 	}
 
+	const componentDecorator = (
+		href: string | undefined,
+		text:
+			| boolean
+			| React.ReactChild
+			| React.ReactFragment
+			| React.ReactPortal
+			| null
+			| undefined,
+		key: React.Key | null | undefined
+	) => (
+		<a href={href} key={key} target="_blank" rel="noopener noreferrer">
+			{text}
+		</a>
+	)
+
 	const parseRequirements = useCallback(
 		async (possibleClub: Club) => {
 			if (requirementsParsed || !possibleClub) {
@@ -506,7 +522,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													}
 												>
 													<Space h={4} />
-													<Linkify>
+													<Linkify
+														componentDecorator={
+															componentDecorator
+														}
+													>
 														{`${req.applicationInstructions}`}
 													</Linkify>
 												</Text>
