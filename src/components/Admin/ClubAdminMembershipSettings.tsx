@@ -809,7 +809,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					className={classes.buttonSaveChanges}
 					onClick={saveChanges}
 				>
-					{isCreatingClub ? 'Launch Club' : 'Save Changes'}
+					{isCreatingClub ? 'Launch club' : 'Save Changes'}
 				</Button>
 				<Space h="lg" />
 				<Modal
@@ -937,7 +937,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						<Text className={classes.modalInfoText}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
-							added separately in the Club Admins panel. New
+							added separately in the club Admins panel. New
 							approved addresses can be added manually anytime.
 						</Text>
 						<Space h={'xs'} />

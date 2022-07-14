@@ -349,7 +349,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												: classes.inactiveTab
 										}
 									>
-										Manage Club
+										Manage club
 									</Text>
 								</a>
 								<a onClick={switchToClubProfile}>

@@ -8,7 +8,7 @@ const CreatePermissionsPage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>New Club Permissions | Clubs</title>
+				<title>New club Permissions | Clubs</title>
 				<meta name="title" content="Clubs" />
 				<meta
 					name="description"

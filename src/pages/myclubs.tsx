@@ -8,7 +8,7 @@ const CreatePage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>My Clubs | Clubs</title>
+				<title>My clubs | Clubs</title>
 				<meta name="title" content="Clubs" />
 				<meta
 					name="description"

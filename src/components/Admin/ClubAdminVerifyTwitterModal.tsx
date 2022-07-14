@@ -253,7 +253,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 							}
 						>
 							<Stepper.Step
-								label="What's your Club's Twitter username?"
+								label="What's your club's Twitter username?"
 								description={
 									step !== Step.Start &&
 									step !== Step.Share ? null : (
