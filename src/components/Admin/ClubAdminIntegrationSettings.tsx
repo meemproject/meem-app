@@ -224,7 +224,9 @@ enum Step {
 	AddUrl
 }
 
-export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
+export const ClubAdminIntegrationsSettingsComponent: React.FC<IProps> = ({
+	club
+}) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 

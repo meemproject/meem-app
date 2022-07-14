@@ -21,7 +21,7 @@ import { ArrowLeft, Check } from 'tabler-icons-react'
 import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
 import { GET_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
-import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
+import { ClubAdminIntegrationsSettingsComponent } from './ClubAdminIntegrationSettings'
 import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
 import { ClubAdminProfileSettings } from './ClubAdminProfileSettings'
 /* eslint-disable no-unused-vars */
@@ -447,7 +447,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								}
 							>
 								{' '}
-								<ClubAdminDappSettingsComponent club={club} />
+								<ClubAdminIntegrationsSettingsComponent
+									club={club}
+								/>
 							</div>
 						</Container>
 					)}
