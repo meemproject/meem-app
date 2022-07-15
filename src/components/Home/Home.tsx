@@ -40,6 +40,7 @@ import {
 } from '../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import ClubClubContext from '../Detail/ClubClubProvider'
+import { ClubsFAQModal } from '../Header/ClubsFAQModal'
 
 const useStyles = createStyles(theme => ({
 	wrapper: {
@@ -283,6 +284,8 @@ export function HomeComponent() {
 		// }
 	}
 
+	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+
 	return (
 		<div className={classes.wrapper}>
 			<div className={classes.header}>
@@ -307,7 +310,9 @@ export function HomeComponent() {
 						</Text>
 						<Space h={24} />
 						<Text
-							onClick={() => {}}
+							onClick={() => {
+								setIsClubsFAQModalOpen(true)
+							}}
 							className={classes.headerLinkText}
 						>
 							Get to know Clubs
@@ -359,6 +364,12 @@ export function HomeComponent() {
 					</Text>
 				)}
 			</Container>
+			<ClubsFAQModal
+				onModalClosed={() => {
+					setIsClubsFAQModalOpen(false)
+				}}
+				isOpened={isClubsFAQModalOpen}
+			/>
 		</div>
 	)
 }
