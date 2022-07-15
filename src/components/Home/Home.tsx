@@ -18,7 +18,8 @@ import {
 	AutocompleteItem,
 	Group,
 	Button,
-	Modal
+	Modal,
+	Space
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
@@ -39,6 +40,7 @@ import {
 } from '../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import ClubClubContext from '../Detail/ClubClubProvider'
+import { ClubsFAQModal } from '../Header/ClubsFAQModal'
 
 const useStyles = createStyles(theme => ({
 	wrapper: {
@@ -52,12 +54,12 @@ const useStyles = createStyles(theme => ({
 		position: 'relative',
 		paddingTop: 0,
 		paddingBottom: 120,
-		marginTop: 120,
+		marginTop: 70,
 
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingBottom: 80,
 			paddingTop: 0,
-			marginTop: 80
+			marginTop: 40
 		}
 	},
 
@@ -111,6 +113,40 @@ const useStyles = createStyles(theme => ({
 	joinMeemDialogText: {
 		marginBottom: 8,
 		fontSize: 14
+	},
+	header: {
+		backgroundColor: 'rgba(255, 102, 81, 0.1)'
+	},
+	headerContainer: { display: 'flex', paddingTop: 32, paddingBottom: 32 },
+	headerLogoContainer: {
+		marginRight: 48,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginRight: 32
+		}
+	},
+	headerLogo: {
+		filter: 'invert(52%) sepia(97%) saturate(1775%) hue-rotate(326deg) brightness(99%) contrast(105%)'
+	},
+	headerTextContainer: {
+		color: 'rgba(255, 102, 81, 1)',
+		fontWeight: 600,
+		marginTop: 6
+	},
+	headerPitchText: {
+		fontSize: 22,
+		fontWeight: 800,
+		lineHeight: 1.3,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
+	},
+	headerLinkText: {
+		fontSize: 18,
+		textDecoration: 'underline',
+		cursor: 'pointer',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 15
+		}
 	}
 }))
 
@@ -248,21 +284,44 @@ export function HomeComponent() {
 		// }
 	}
 
+	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+
 	return (
 		<div className={classes.wrapper}>
-			<Container size={900} className={classes.inner}>
-				<Center>
-					<Image
-						src="/clubs-home.svg"
-						height={150}
-						width={150}
-						fit={'contain'}
-					>
-						{' '}
-						className={classes.title}{' '}
-					</Image>
-				</Center>
+			<div className={classes.header}>
+				<Container size={900} className={classes.headerContainer}>
+					<div className={classes.headerLogoContainer}>
+						<Image
+							className={classes.headerLogo}
+							src="/clubs-home.svg"
+							height={120}
+							width={120}
+							fit={'contain'}
+						>
+							{' '}
+							className={classes.title}{' '}
+						</Image>
+					</div>
 
+					<div className={classes.headerTextContainer}>
+						<Text className={classes.headerPitchText}>
+							Effortless access management and collaborative
+							publishing tools for your online community
+						</Text>
+						<Space h={24} />
+						<Text
+							onClick={() => {
+								setIsClubsFAQModalOpen(true)
+							}}
+							className={classes.headerLinkText}
+						>
+							Get to know Clubs
+						</Text>
+					</div>
+				</Container>
+			</div>
+
+			<Container size={900} className={classes.inner}>
 				<Text className={classes.searchPrompt} color="dimmed">
 					{`What's your club called?`}
 				</Text>
@@ -305,6 +364,12 @@ export function HomeComponent() {
 					</Text>
 				)}
 			</Container>
+			<ClubsFAQModal
+				onModalClosed={() => {
+					setIsClubsFAQModalOpen(false)
+				}}
+				isOpened={isClubsFAQModalOpen}
+			/>
 		</div>
 	)
 }
