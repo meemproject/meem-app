@@ -132,9 +132,13 @@ const useStyles = createStyles(theme => ({
 	modalHeaderText: {
 		fontSize: 18,
 		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.3)',
+		color: 'rgba(0, 0, 0, 0.6)',
 		marginBottom: 4,
 		marginTop: 16
+	},
+	modalInfoText: {
+		fontSize: 14,
+		opacity: 0.6
 	},
 	// Admins
 	clubAdminsPrompt: {
@@ -201,7 +205,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			index: 0,
 			andor: MembershipReqAndor.None,
 			type: MembershipReqType.None,
-			applicationLink: '',
+			applicationInstructions: '',
 			approvedAddresses: [],
 			approvedAddressesString: '',
 			tokenName: '',
@@ -267,7 +271,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			index: membershipRequirements.length,
 			andor: MembershipReqAndor.And,
 			type: MembershipReqType.None,
-			applicationLink: '',
+			applicationInstructions: '',
 			approvedAddresses: [],
 			approvedAddressesString: '',
 			tokenName: '',
@@ -586,6 +590,33 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h="lg" />
+
+				<Text className={classes.manageClubHeader}>Club Admins</Text>
+
+				<div>
+					<Text className={classes.clubAdminsPrompt}>
+						Who can manage this club’s profile and membership
+						settings?
+					</Text>
+					<Text className={classes.clubAdminsInstructions}>
+						Add a line break between each address. Note that at
+						least one club admin is required at all times.
+					</Text>
+					<Textarea
+						radius="lg"
+						size="sm"
+						value={clubAdminsString}
+						minRows={10}
+						onChange={event =>
+							parseClubAdmins(event.currentTarget.value)
+						}
+					/>
+				</div>
+				<Space h={64} />
+
+				<Divider />
+				<Space h={64} />
+
 				<Text className={classes.manageClubHeader}>Membership</Text>
 				<Text className={classes.membershipSettingHeader}>
 					Requirements
@@ -606,9 +637,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					to join.{' '}
 					{membershipRequirements[0].type ===
 						MembershipReqType.ApprovedApplicants &&
-						membershipRequirements[0].applicationLink && (
+						membershipRequirements[0].applicationInstructions && (
 							<>
-								Members can apply{' '}
+								<>Here are the application instructions: </>
+								<Space h={1} />
 								<a
 									onClick={() => {
 										openMembershipReqModal(0)
@@ -617,7 +649,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									<span
 										className={classes.membershipSelector}
 									>
-										at this link
+										{
+											membershipRequirements[0]
+												.applicationInstructions
+										}
 									</span>
 								</a>
 								.
@@ -767,32 +802,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</a>
 					.
 				</Text>
-				<Space h={32} />
 
-				<Divider />
-				<Space h={32} />
-
-				<Text className={classes.manageClubHeader}>Club Admins</Text>
-
-				<div>
-					<Text className={classes.clubAdminsPrompt}>
-						Who can manage this club’s profile and membership
-						settings?
-					</Text>
-					<Text className={classes.clubAdminsInstructions}>
-						Add a line break between each address. Note that at
-						least one club admin is required at all times.
-					</Text>
-					<Textarea
-						radius="lg"
-						size="md"
-						value={clubAdminsString}
-						minRows={10}
-						onChange={event =>
-							parseClubAdmins(event.currentTarget.value)
-						}
-					/>
-				</div>
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
@@ -816,8 +826,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
-						size="lg"
+						spacing={10}
+						size="md"
 						color="dark"
 						value={
 							reqCurrentlyEditing.type === MembershipReqType.None
@@ -900,15 +910,23 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								: classes.invisible
 						}
 					>
+						<Space h={8} />
 						<Text className={classes.modalHeaderText}>
-							Application Link
+							How to apply
 						</Text>
-						<TextInput
+						<Text className={classes.modalInfoText}>
+							Leave blank if you do not have an application
+							process.
+						</Text>
+						<Space h={'xs'} />
+
+						<Textarea
 							radius="lg"
-							size="md"
-							value={reqCurrentlyEditing.applicationLink}
+							size="sm"
+							minRows={3}
+							value={reqCurrentlyEditing.applicationInstructions}
 							onChange={event => {
-								reqCurrentlyEditing.applicationLink =
+								reqCurrentlyEditing.applicationInstructions =
 									event.target.value
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
@@ -916,10 +934,17 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						<Text className={classes.modalHeaderText}>
 							Approved Addresses
 						</Text>
+						<Text className={classes.modalInfoText}>
+							Enter one wallet address or ENS name per line.
+							Admins should not be included here, and should be
+							added separately in the Club Admins panel. New
+							approved addresses can be added manually anytime.
+						</Text>
+						<Space h={'xs'} />
 
 						<Textarea
 							radius="lg"
-							size="md"
+							size="sm"
 							value={reqCurrentlyEditing.approvedAddressesString}
 							minRows={5}
 							onChange={event => {
@@ -964,7 +989,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						</Text>
 						<TextInput
 							radius="lg"
-							size="md"
+							size="sm"
 							value={reqCurrentlyEditing.tokenContractAddress}
 							onChange={event => {
 								reqCurrentlyEditing.tokenContractAddress =
@@ -977,7 +1002,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						</Text>
 						<TextInput
 							radius="lg"
-							size="md"
+							size="sm"
 							type="number"
 							value={reqCurrentlyEditing.tokenMinQuantity}
 							onChange={event => {
@@ -1002,7 +1027,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 						<TextInput
 							radius="lg"
-							size="md"
+							size="sm"
 							value={reqCurrentlyEditing.clubName}
 							onChange={event => {
 								// TODO: Look up club and retrive club contract address!
@@ -1137,8 +1162,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
-						size="lg"
+						spacing={10}
+						size="md"
 						color="dark"
 						value={
 							reqCurrentlyEditing.andor === MembershipReqAndor.And
@@ -1194,7 +1219,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</Text>
 					<TextInput
 						radius="lg"
-						size="md"
+						size="sm"
 						type="text"
 						rightSectionWidth={80}
 						rightSection={<Text>MATIC</Text>}
@@ -1225,7 +1250,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					</Text>
 					<TextInput
 						radius="lg"
-						size="md"
+						size="sm"
 						value={membershipFundsAddress}
 						onChange={event => {
 							setMembershipFundsAddress(event.target.value)
@@ -1281,8 +1306,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
-						size="lg"
+						spacing={10}
+						size="md"
 						color="dark"
 						value={
 							isNaN(membershipQuantity) ||
@@ -1313,7 +1338,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 							<TextInput
 								radius="lg"
-								size="md"
+								size="sm"
 								value={
 									isNaN(membershipQuantity)
 										? ''
@@ -1367,8 +1392,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
-						size="lg"
+						spacing={10}
+						size="md"
 						color="dark"
 						value={
 							membershipStartDate === undefined ? 'now' : 'later'
@@ -1411,7 +1436,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									<Space h={16} />
 									<TimeInput
 										format="24"
-										size="md"
+										size="sm"
 										icon={<Clock size={16} />}
 										radius={'lg'}
 										value={membershipStartDate}
@@ -1464,8 +1489,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<RadioGroup
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
-						spacing={12}
-						size="lg"
+						spacing={10}
+						size="md"
 						color="dark"
 						value={
 							membershipEndDate === undefined ? 'forever' : 'end'
@@ -1508,7 +1533,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									<Space h={16} />
 									<TimeInput
 										format="24"
-										size="md"
+										size="sm"
 										icon={<Clock size={16} />}
 										radius={'lg'}
 										value={membershipEndDate}

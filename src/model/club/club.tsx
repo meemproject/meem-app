@@ -3,7 +3,6 @@ import { MeemAPI } from '@meemproject/api'
 import { Permission } from '@meemproject/meem-contracts'
 import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
-import { ensWalletAddress } from '../../utils/truncated_wallet'
 import { tokenFromContractAddress } from '../token/token'
 import { clubMetadataFromContractUri } from './club_metadata'
 
@@ -20,6 +19,8 @@ export interface Integration {
 	name: string
 	isEnabled?: boolean
 	isPublic?: boolean
+	isVerified?: boolean
+	verifiedTwitterUser?: string
 	url?: string
 	icon?: string
 	description?: string
@@ -80,7 +81,7 @@ export interface MembershipRequirement {
 	// Type of requirement
 	type: MembershipReqType
 	// Applicants
-	applicationLink?: string
+	applicationInstructions?: string
 	approvedAddresses: string[]
 	approvedAddressesString: string
 	// NFT / Token holders
@@ -284,9 +285,13 @@ export default async function clubFromMeemContract(
 								index,
 								andor: MembershipReqAndor.Or,
 								type,
-								applicationLink:
-									metadata.applicationLinks.length > 0
-										? metadata.applicationLinks[0]
+								applicationInstructions:
+									metadata.applicationInstructions
+										? metadata.applicationInstructions
+												.length > 0
+											? metadata
+													.applicationInstructions[0]
+											: undefined
 										: undefined,
 								approvedAddresses,
 								approvedAddressesString,
@@ -345,9 +350,9 @@ export default async function clubFromMeemContract(
 					meem.owner.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					const name = await ensWalletAddress(meem.owner)
-					if (!members.includes(name)) {
-						members.push(name)
+					//const name = await ensWalletAddress(meem.owner)
+					if (!members.includes(meem.owner)) {
+						members.push(meem.owner)
 					}
 				}
 			}
@@ -368,6 +373,9 @@ export default async function clubFromMeemContract(
 						icon: inte.Integration?.icon ?? '',
 						isEnabled: inte.isEnabled,
 						isPublic: inte.isPublic,
+						isVerified: inte.metadata.isVerified ?? false,
+						verifiedTwitterUser:
+							inte.metadata.twitterUsername ?? 'Unknown',
 						guideUrl: inte.Integration?.guideUrl,
 						url: inte.metadata.externalUrl ?? '',
 						isExistingIntegration: true

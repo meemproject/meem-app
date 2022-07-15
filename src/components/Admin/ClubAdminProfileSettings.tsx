@@ -11,10 +11,13 @@ import {
 	Button,
 	Textarea,
 	Space,
-	TextInput
+	TextInput,
+	Modal
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { base64StringToBlob } from 'blob-util'
+import html2canvas from 'html2canvas'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
@@ -22,6 +25,10 @@ import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Club, Integration } from '../../model/club/club'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
+
+const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
+	ssr: false
+})
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -160,6 +167,17 @@ const useStyles = createStyles(theme => ({
 		top: '-12px',
 		right: '-105px',
 		cursor: 'pointer'
+	},
+	uploadOptions: { display: 'flex' },
+	emojiCanvas: {
+		position: 'absolute',
+		top: 40,
+		left: 0,
+		marginTop: -12,
+		marginBottom: -12,
+		lineHeight: 1,
+		fontSize: 24,
+		zIndex: -1000
 	}
 }))
 
@@ -177,6 +195,8 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const descriptionRef = useRef<HTMLTextAreaElement>()
+
+	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
 	// Club logo
 	const [smallClubLogo, setSmallClubLogo] = useState('')
@@ -241,6 +261,36 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 	const deleteImage = () => {
 		setSmallClubLogo('')
+	}
+
+	const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
+	const openEmojiPicker = () => {
+		setIsEmojiPickerOpen(true)
+	}
+
+	function timeout(delay: number) {
+		return new Promise(res => setTimeout(res, delay))
+	}
+
+	const onEmojiClick = async (event: any, emojiObject: any) => {
+		setChosenEmoji(emojiObject)
+		setIsEmojiPickerOpen(false)
+		await timeout(100)
+		const element = document.querySelector('#emojiCanvas')
+		if (element) {
+			log.debug('found emojiCanvas')
+
+			const canvas = await html2canvas(element as HTMLElement)
+			const image = canvas.toDataURL('image/png', 1.0)
+			const clubLogoBlob = base64StringToBlob(
+				image.split(',')[1],
+				'image/png'
+			)
+			const file = await resizeFile(clubLogoBlob)
+			setSmallClubLogo(file as string)
+		} else {
+			log.debug('no emojiCanvas found')
+		}
 	}
 
 	const [newClubData, setNewClubData] = useState<Club>()
@@ -326,13 +376,23 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 				Note that all uploads will be rendered at 24x24 px.
 			</Text>
 			{smallClubLogo.length === 0 && !isLoadingImage && (
-				<Button
-					leftIcon={<Upload size={14} />}
-					className={classes.buttonUpload}
-					onClick={() => openFileSelector()}
-				>
-					Upload
-				</Button>
+				<div className={classes.uploadOptions}>
+					<Button
+						leftIcon={<Upload size={14} />}
+						className={classes.buttonUpload}
+						onClick={() => openFileSelector()}
+					>
+						Upload
+					</Button>
+					<Space w={'xs'} />
+					<Button
+						leftIcon={<Text>😈</Text>}
+						className={classes.buttonUpload}
+						onClick={() => openEmojiPicker()}
+					>
+						Choose emoji
+					</Button>
+				</div>
 			)}
 			{isLoadingImage && <Loader />}
 			{!isLoadingImage && smallClubLogo.length > 0 && (
@@ -371,6 +431,20 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 					setSaveChangesModalOpened(false)
 				}}
 			/>
+			<div id="emojiCanvas" className={classes.emojiCanvas}>
+				{chosenEmoji && <>{chosenEmoji.emoji}</>}
+			</div>
+			<Modal
+				withCloseButton={false}
+				padding={8}
+				size={296}
+				opened={isEmojiPickerOpen}
+				onClose={() => {
+					setIsEmojiPickerOpen(false)
+				}}
+			>
+				<EmojiPicker onEmojiClick={onEmojiClick} />
+			</Modal>
 		</>
 	)
 }

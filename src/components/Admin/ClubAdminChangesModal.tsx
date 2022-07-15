@@ -111,14 +111,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		try {
 			const clubSymbol = club.name!.split(' ')[0].toUpperCase()
 
-			const applicationLinks: string[] = []
+			const applicationInstructions: string[] = []
 			if (club.membershipSettings) {
 				club.membershipSettings.requirements.forEach(requirement => {
 					if (
-						requirement.applicationLink &&
-						requirement.applicationLink?.length > 0
+						requirement.applicationInstructions &&
+						requirement.applicationInstructions?.length > 0
 					) {
-						applicationLinks.push(requirement.applicationLink)
+						applicationInstructions.push(
+							requirement.applicationInstructions
+						)
 					}
 				})
 			}
@@ -128,7 +130,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				description: club.description,
 				image: club.image,
 				external_link: `https://clubs.link/${club.slug}`,
-				application_links: applicationLinks
+				application_instructions: applicationInstructions
 			})
 
 			let membershipStartUnix = -1

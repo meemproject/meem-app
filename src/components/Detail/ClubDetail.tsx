@@ -31,9 +31,11 @@ import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
+import Linkify from 'react-linkify'
 import {
 	BrandDiscord,
 	BrandTwitter,
+	Check,
 	CircleCheck,
 	CircleX,
 	Settings
@@ -50,7 +52,7 @@ import clubFromMeemContract, {
 } from '../../model/club/club'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { quickTruncate } from '../../utils/truncated_wallet'
+import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -209,7 +211,15 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: '#FAFAFA',
 		fontWeight: 600,
 		borderRadius: 16,
-		padding: 16
+		paddingTop: 16,
+		paddingLeft: 16,
+		paddingBottom: 16,
+		cursor: 'pointer',
+		display: 'flex'
+	},
+	memberAdminIndicator: {
+		marginLeft: 6,
+		marginTop: 6
 	},
 	enabledClubIntegrationItem: {
 		display: 'flex',
@@ -226,6 +236,24 @@ const useStyles = createStyles(theme => ({
 	intItemHeader: {
 		display: 'flex',
 		alignItems: 'center'
+	},
+	clubContractAddress: {
+		wordBreak: 'break-all',
+		color: 'rgba(0, 0, 0, 0.5)'
+	},
+	contractAddressContainer: {
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	copy: {
+		marginLeft: 4,
+		padding: 2,
+		cursor: 'pointer'
+	},
+	applicationInstructions: {
+		a: {
+			color: 'rgba(255, 102, 81, 1)'
+		}
 	}
 }))
 
@@ -320,7 +348,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				description: metadata.description,
 				image: metadata.image,
 				external_link: '',
-				application_links: []
+				application_instructions: []
 			})
 			const data = {
 				to: wallet.accounts[0],
@@ -400,6 +428,22 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		}
 	}
 
+	const componentDecorator = (
+		href: string | undefined,
+		text:
+			| boolean
+			| React.ReactChild
+			| React.ReactFragment
+			| React.ReactPortal
+			| null
+			| undefined,
+		key: React.Key | null | undefined
+	) => (
+		<a href={href} key={key} target="_blank" rel="noopener noreferrer">
+			{text}
+		</a>
+	)
+
 	const parseRequirements = useCallback(
 		async (possibleClub: Club) => {
 			if (requirementsParsed || !possibleClub) {
@@ -444,34 +488,50 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								reqs.push({
 									requirementKey: `Applicants${index}`,
 									requirementComponent: (
-										<Text>
-											Membership is available to approved
-											applicants.
-											{!req.applicationLink && (
-												<span>
-													{' '}
-													Contact a Club Admin for the
-													application link.
-												</span>
-											)}
-											{req.applicationLink && (
-												<span>
-													{' '}
-													Applicants can apply{' '}
-													<a
-														className={
-															classes.requirementLink
-														}
-														href={
-															req.applicationLink
+										<div
+											style={{
+												display: 'flex',
+												flexDirection: 'column'
+											}}
+										>
+											<Text>
+												Membership is available to
+												approved applicants.
+												{!req.applicationInstructions && (
+													<span>
+														{' '}
+														Contact a Club Admin for
+														instructions.
+													</span>
+												)}
+												{req.applicationInstructions && (
+													<span>
+														{' '}
+														<>
+															Here are the
+															application
+															instructions:
+														</>
+													</span>
+												)}
+											</Text>
+											{req.applicationInstructions && (
+												<Text
+													className={
+														classes.applicationInstructions
+													}
+												>
+													<Space h={4} />
+													<Linkify
+														componentDecorator={
+															componentDecorator
 														}
 													>
-														here
-													</a>
-													.
-												</span>
+														{`${req.applicationInstructions}`}
+													</Linkify>
+												</Text>
 											)}
-										</Text>
+										</div>
 									),
 
 									meetsRequirement: wallet.isConnected
@@ -614,7 +674,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			setRequirementsParsed(true)
 		},
-		[checkEligibility, classes.requirementLink, requirementsParsed, wallet]
+		[
+			checkEligibility,
+			classes.applicationInstructions,
+			classes.requirementLink,
+			requirementsParsed,
+			wallet
+		]
 	)
 
 	useEffect(() => {
@@ -631,6 +697,37 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				parseRequirements(possibleClub)
 			}
 			setIsLoadingClub(false)
+
+			// After the club is loaded, convert its members into ENS names
+			const newMembers: string[] = []
+			for (const member of possibleClub.members!) {
+				const name = await ensWalletAddress(member)
+				newMembers.push(name)
+			}
+			// TODO: Is there an easier way to copy an object in react, like copyWith?
+			const newClub: Club = {
+				id: possibleClub.id,
+				name: possibleClub.name,
+				address: possibleClub.address,
+				admins: possibleClub.admins,
+				isClubAdmin: possibleClub.isClubAdmin,
+				slug: possibleClub.slug,
+				description: possibleClub.description,
+				image: possibleClub.image,
+				isClubMember: possibleClub.isClubMember,
+				membershipToken: possibleClub.membershipToken,
+				members: newMembers,
+				slotsLeft: possibleClub.slotsLeft,
+				membershipSettings: possibleClub.membershipSettings,
+				isValid: possibleClub.isValid,
+				rawClub: possibleClub.rawClub,
+				allIntegrations: possibleClub.allIntegrations,
+				publicIntegrations: possibleClub.publicIntegrations,
+				privateIntegrations: possibleClub.privateIntegrations
+			}
+			setClub(newClub)
+			setIsLoadingClub(false)
+			log.debug('updated club with ENS addresses')
 		}
 
 		async function join(data: ClubSubscriptionSubscription) {
@@ -710,6 +807,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const navigateToSettings = () => {
 		router.push({ pathname: `/${slug}/admin` })
+	}
+
+	const memberIsAdmin = (member: string): boolean => {
+		if (club) {
+			let isAdmin = false
+			club.admins?.forEach(admin => {
+				if (admin === member) {
+					isAdmin = true
+				}
+			})
+
+			return isAdmin
+		} else {
+			return false
+		}
 	}
 
 	return (
@@ -819,57 +931,98 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</div>
 
 					<Container>
-						{!club.isClubMember && (
-							<>
-								<Text
-									className={classes.clubDetailSectionTitle}
-								>
-									Membership Requirements
-								</Text>
-								{!requirementsParsed && (
-									<div
+						{!club.isClubMember ||
+							(club.isClubAdmin && (
+								<>
+									<Text
 										className={
-											classes.requirementsContainer
+											classes.clubDetailSectionTitle
 										}
 									>
-										<Loader />
-									</div>
-								)}
-
-								{parsedRequirements.length > 0 &&
-									requirementsParsed && (
+										Membership Requirements
+									</Text>
+									{!requirementsParsed && (
 										<div
 											className={
 												classes.requirementsContainer
 											}
 										>
-											{parsedRequirements.map(
-												requirement => (
-													<div
-														className={
-															classes.requirementItem
-														}
-														key={
-															requirement.requirementKey
-														}
-													>
-														{requirement.meetsRequirement && (
-															<CircleCheck color="green" />
-														)}
-
-														{!requirement.meetsRequirement && (
-															<CircleX color="red" />
-														)}
-
-														<Space w={'xs'} />
-														{
-															requirement.requirementComponent
-														}
-													</div>
-												)
-											)}
+											<Loader />
 										</div>
 									)}
+
+									{parsedRequirements.length > 0 &&
+										requirementsParsed && (
+											<div
+												className={
+													classes.requirementsContainer
+												}
+											>
+												{parsedRequirements.map(
+													requirement => (
+														<div
+															className={
+																classes.requirementItem
+															}
+															key={
+																requirement.requirementKey
+															}
+														>
+															{requirement.meetsRequirement && (
+																<CircleCheck color="green" />
+															)}
+
+															{!requirement.meetsRequirement && (
+																<CircleX color="red" />
+															)}
+
+															<Space w={'xs'} />
+															{
+																requirement.requirementComponent
+															}
+														</div>
+													)
+												)}
+											</div>
+										)}
+								</>
+							))}
+
+						{club.isClubMember && (
+							<>
+								<Text
+									className={classes.clubDetailSectionTitle}
+								>
+									Club Contract Address
+								</Text>
+								<div
+									className={classes.contractAddressContainer}
+								>
+									<Text
+										className={classes.clubContractAddress}
+									>
+										{club.address}
+									</Text>
+									<Image
+										className={classes.copy}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												club.address ?? ''
+											)
+											showNotification({
+												title: 'Address copied',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+
+												message: `This club's contract address was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
 							</>
 						)}
 
@@ -938,6 +1091,39 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 																			integration.name
 																		}
 																	</Text>
+																	{integration.isVerified && (
+																		<>
+																			<Space
+																				w={
+																					12
+																				}
+																			/>
+																			<Image
+																				src="/icon-verified.png"
+																				width={
+																					16
+																				}
+																				height={
+																					16
+																				}
+																			/>
+																			<Space
+																				w={
+																					4
+																				}
+																			/>
+																			<Text
+																				color={
+																					'#3EA2FF'
+																				}
+																				size={
+																					'sm'
+																				}
+																			>
+																				Verified
+																			</Text>
+																		</>
+																	)}
 																</div>
 															</div>
 														</a>
@@ -992,6 +1178,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														<Text>
 															{integration.name}
 														</Text>
+														{integration.isVerified && (
+															<>
+																<Space w={12} />
+																<Image
+																	src="/icon-verified.png"
+																	width={16}
+																	height={16}
+																/>
+																<Space w={4} />
+																<Text
+																	color={
+																		'#3EA2FF'
+																	}
+																	size={'sm'}
+																>
+																	Verified
+																</Text>
+															</>
+														)}
 													</div>
 												</div>
 											</a>
@@ -1015,9 +1220,35 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										xl={4}
 										key={member}
 									>
-										<Text className={classes.memberItem}>
-											{quickTruncate(member)}
-										</Text>
+										<div className={classes.memberItem}>
+											<Text
+												onClick={() => {
+													navigator.clipboard.writeText(
+														member
+													)
+													showNotification({
+														title: 'Member address copied',
+														autoClose: 2000,
+														color: 'green',
+														icon: <Check />,
+
+														message: `This member's address was copied to your clipboard.`
+													})
+												}}
+											>
+												{quickTruncate(member)}
+											</Text>
+											{memberIsAdmin(member) && (
+												<Image
+													className={
+														classes.memberAdminIndicator
+													}
+													src="/star.png"
+													height={12}
+													width={12}
+												/>
+											)}
+										</div>
 									</Grid.Col>
 								))}
 							</Grid>
