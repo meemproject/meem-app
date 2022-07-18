@@ -204,7 +204,7 @@ export const CreatePage: React.FC = () => {
 				<Button
 					onClick={shouldShowUpgrade ? handleUpgrade : handleCreate}
 				>
-					{shouldShowUpgrade ? 'Upgrade Club' : '1. Create Club'}
+					{shouldShowUpgrade ? 'Upgrade club' : '1. Create club'}
 				</Button>
 			</div>
 			{!shouldShowUpgrade && (

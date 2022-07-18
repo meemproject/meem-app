@@ -11,6 +11,7 @@ import {
 	Divider
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import { QuestionMarkCircle } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import {
@@ -20,10 +21,12 @@ import {
 	BrandDiscord,
 	BrandTwitter,
 	MessageCircle,
-	Mail
+	Mail,
+	QuestionMark
 } from 'tabler-icons-react'
 import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
+import { ClubsFAQModal } from './ClubsFAQModal'
 
 const useStyles = createStyles(theme => ({
 	headerLeftItems: {
@@ -212,6 +215,8 @@ export function HeaderMenu() {
 		window.open('https://airtable.com/shrM296vRoDWmK8Rm')
 	}
 
+	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+
 	return (
 		<Header height={56}>
 			<div className={classes.inner}>
@@ -319,6 +324,15 @@ export function HeaderMenu() {
 								My Clubs
 							</Menu.Item>
 						)}
+						<Menu.Item
+							onClick={() => {
+								setIsClubsFAQModalOpen(true)
+							}}
+							className={classes.menuItemWithIcon}
+							icon={<QuestionMarkCircle height={20} width={20} />}
+						>
+							{`What's a club?`}
+						</Menu.Item>
 
 						<Divider />
 
@@ -353,6 +367,12 @@ export function HeaderMenu() {
 					</Menu>
 				</div>
 			</div>
+			<ClubsFAQModal
+				onModalClosed={() => {
+					setIsClubsFAQModalOpen(false)
+				}}
+				isOpened={isClubsFAQModalOpen}
+			/>
 		</Header>
 	)
 }
