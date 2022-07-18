@@ -93,7 +93,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 					nuanced, intuitive membership logic. Within your club, set
 					up token-gated access for popular third-party tools such as
 					Discord, Notion, and SlikSafe. Collaborate on and publish a
-					newsletter for your community using Mags.
+					newsletter for your community using Zeens.
 				</Text>
 				<Space h={24} />
 

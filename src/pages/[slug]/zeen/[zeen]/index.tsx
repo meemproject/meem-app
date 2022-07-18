@@ -9,17 +9,17 @@ import { GET_CLUB } from '../../../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../../../model/club/club_metadata'
 import { ssrGraphqlClient } from '../../../../utils/ssr_graphql'
 
-export interface MagPropViewModel {
+export interface ZeenPropViewModel {
 	responseBody: any
 	description: string
 	isError: boolean
 }
 
 interface IProps {
-	mag: MagPropViewModel
+	zeen: ZeenPropViewModel
 }
 
-const MagDetailPage: NextPage<IProps> = ({ mag }) => {
+const ZeenDetailPage: NextPage<IProps> = ({ zeen }) => {
 	const router = useRouter()
 
 	const magSlug =
@@ -28,38 +28,38 @@ const MagDetailPage: NextPage<IProps> = ({ mag }) => {
 		<>
 			<Head>
 				<title>
-					{mag === undefined || mag.isError
+					{zeen === undefined || zeen.isError
 						? 'Not found'
-						: `${mag.responseBody.MeemContracts[0].name} | Clubs`}
+						: `${zeen.responseBody.MeemContracts[0].name} | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
-						mag === undefined || mag.isError
+						zeen === undefined || zeen.isError
 							? 'Not found'
-							: `${mag.responseBody.MeemContracts[0].name} | Clubs`
+							: `${zeen.responseBody.MeemContracts[0].name} | Clubs`
 					}
 				/>
-				<meta name="description" content={mag.description} />
+				<meta name="description" content={zeen.description} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta
 					property="og:title"
 					content={
-						mag === undefined || mag.isError
+						zeen === undefined || zeen.isError
 							? 'Not found'
-							: `${mag.responseBody.MeemContracts[0].name} | Clubs`
+							: `${zeen.responseBody.MeemContracts[0].name} | Clubs`
 					}
 				/>
-				<meta property="og:description" content={mag.description} />
+				<meta property="og:description" content={zeen.description} />
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
 				<meta
 					property="twitter:title"
 					content={
-						mag === undefined || mag.isError
+						zeen === undefined || zeen.isError
 							? 'Not found'
-							: `${mag.responseBody.MeemContracts[0].name} | Clubs`
+							: `${zeen.responseBody.MeemContracts[0].name} | Clubs`
 					}
 				/>
 				<meta
@@ -94,7 +94,7 @@ const MagDetailPage: NextPage<IProps> = ({ mag }) => {
 
 // TODO: update for mags
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-	let mag: MagPropViewModel | undefined
+	let zeen: ZeenPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {
@@ -107,16 +107,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 			})
 
 			if (data.MeemContracts.length === 0) {
-				mag = {
+				zeen = {
 					isError: true,
-					description: 'This mag does not exist. Yet.',
+					description: 'This zeen does not exist. Yet.',
 					responseBody: null
 				}
 			} else {
 				const metadata = clubMetadataFromContractUri(
 					data.MeemContracts[0].contractURI
 				)
-				mag = {
+				zeen = {
 					isError: false,
 					responseBody: data,
 					description: metadata.description
@@ -126,22 +126,22 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
 		return {
 			props: {
-				club: mag
+				zeen
 			}
 		}
 	} catch (e) {
 		log.debug(e)
-		mag = {
+		zeen = {
 			isError: true,
 			responseBody: null,
-			description: 'This mag does not exist. Yet.'
+			description: 'This zeen does not exist. Yet.'
 		}
 		return {
 			props: {
-				club: mag
+				zeen
 			}
 		}
 	}
 }
 
-export default MagDetailPage
+export default ZeenDetailPage

@@ -19,7 +19,7 @@ interface IProps {
 	post: PostPropViewModel
 }
 
-const MagPostPage: NextPage<IProps> = ({ post }) => {
+const ZeenPostPage: NextPage<IProps> = ({ post }) => {
 	const router = useRouter()
 
 	const magSlug =
@@ -92,9 +92,9 @@ const MagPostPage: NextPage<IProps> = ({ post }) => {
 	)
 }
 
-// TODO: update for mag post
+// TODO: update for zeen post
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-	let mag: PostPropViewModel | undefined
+	let zeen: PostPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {
@@ -107,7 +107,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 			})
 
 			if (data.MeemContracts.length === 0) {
-				mag = {
+				zeen = {
 					isError: true,
 					description: 'This post does not exist. Yet.',
 					responseBody: null
@@ -116,7 +116,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 				const metadata = clubMetadataFromContractUri(
 					data.MeemContracts[0].contractURI
 				)
-				mag = {
+				zeen = {
 					isError: false,
 					responseBody: data,
 					description: metadata.description
@@ -126,22 +126,22 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
 		return {
 			props: {
-				club: mag
+				zeen
 			}
 		}
 	} catch (e) {
 		log.debug(e)
-		mag = {
+		zeen = {
 			isError: true,
 			responseBody: null,
 			description: 'This post does not exist. Yet.'
 		}
 		return {
 			props: {
-				club: mag
+				zeen
 			}
 		}
 	}
 }
 
-export default MagPostPage
+export default ZeenPostPage
