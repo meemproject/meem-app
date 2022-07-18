@@ -470,7 +470,7 @@ export const ClubAdminIntegrationsSettingsComponent: React.FC<IProps> = ({
 					<>
 						<Text
 							className={classes.clubIntegrationsSectionTitle}
-						>{`Added apps (${existingIntegrations?.length})`}</Text>
+						>{`Added integrations (${existingIntegrations?.length})`}</Text>
 						<Grid>
 							{existingIntegrations.map(integration => (
 								<Grid.Col
@@ -535,7 +535,7 @@ export const ClubAdminIntegrationsSettingsComponent: React.FC<IProps> = ({
 					<>
 						<Text
 							className={classes.clubIntegrationsSectionTitle}
-						>{`Available apps (${availableIntegrations?.length})`}</Text>
+						>{`Available integrations (${availableIntegrations?.length})`}</Text>
 						<Grid>
 							{availableIntegrations.map(integration => (
 								<Grid.Col
@@ -591,7 +591,7 @@ export const ClubAdminIntegrationsSettingsComponent: React.FC<IProps> = ({
 				)}
 				{!loading && error && (
 					<>
-						<Text>Unable to load available apps :(</Text>
+						<Text>Unable to load available integrations :(</Text>
 					</>
 				)}
 
@@ -764,7 +764,7 @@ export const ClubAdminIntegrationsSettingsComponent: React.FC<IProps> = ({
 													event.currentTarget.checked
 												)
 											}
-											label="Enable app"
+											label="Enable integration"
 										/>
 									</>
 								)}
