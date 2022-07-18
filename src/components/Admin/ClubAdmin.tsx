@@ -179,7 +179,8 @@ const useStyles = createStyles(theme => ({
 enum Tab {
 	Membership,
 	Profile,
-	Integrations
+	Integrations,
+	Apps
 }
 
 interface IProps {
@@ -208,6 +209,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 	const switchToIntegrations = () => {
 		setCurrentTab(Tab.Integrations)
+	}
+
+	const switchToApps = () => {
+		setCurrentTab(Tab.Apps)
 	}
 
 	const {
@@ -372,6 +377,17 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										}
 									>
 										Integrations
+									</Text>
+								</a>
+								<a onClick={switchToApps}>
+									<Text
+										className={
+											currentTab == Tab.Apps
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										Apps
 									</Text>
 								</a>
 							</div>
