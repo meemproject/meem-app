@@ -136,13 +136,11 @@ const useStyles = createStyles(theme => ({
 			marginBottom: 8
 		}
 	},
-	clubIntegrationsSectionTitle: {
+	clubAppsSectionTitle: {
 		fontSize: 18,
-		marginBottom: 16,
 		fontWeight: 600,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
+			fontSize: 16
 		}
 	},
 	clubContractAddress: {
@@ -212,6 +210,35 @@ const useStyles = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'end'
+	},
+	row: {
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	newText: {
+		color: 'rgba(255, 102, 81, 1)',
+		fontSize: 14,
+		fontWeight: 600,
+		marginLeft: 8,
+		marginTop: 4,
+		letterSpacing: 1.3
+	},
+	appDescriptionText: {
+		opacity: 0.6
+	},
+	zeenCreateButton: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		width: 256,
+		marginBottom: 12,
+		cursor: 'pointer',
+		color: 'rgba(255, 102, 81, 1)',
+		border: '1px solid rgba(255, 102, 81, 0.3)',
+		backgroundColor: 'rgba(255, 102, 81, 0.1)',
+		borderRadius: 16,
+		padding: 24
 	}
 }))
 
@@ -230,10 +257,38 @@ export const ClubAdminAppsSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 	const router = useRouter()
 
+	const navigateToZeenCreate = () => {
+		router.push({
+			pathname: `/${club.slug}/zeen/create`
+		})
+	}
+
 	return (
 		<>
 			<div>
 				<Space h={30} />
+				<div className={classes.row}>
+					<Text
+						className={classes.clubAppsSectionTitle}
+					>{`Zeen`}</Text>
+					<Text className={classes.newText}>NEW!</Text>
+				</div>
+				<Space h={16} />
+				<Text className={classes.appDescriptionText}>
+					Meet Zeen, a decentralized newsletter for your club.
+					Collaborate with editors, manage subscribers and spark
+					conversations that matter with your members.
+				</Text>
+				<Space h={32} />
+
+				<Text
+					onClick={() => {
+						navigateToZeenCreate()
+					}}
+					className={classes.zeenCreateButton}
+				>
+					+ Create a zeen
+				</Text>
 			</div>
 		</>
 	)
