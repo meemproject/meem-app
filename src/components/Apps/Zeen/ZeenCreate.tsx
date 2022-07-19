@@ -417,6 +417,7 @@ export const CreateZeenComponent: React.FC<IProps> = ({ slug }) => {
 						<TextInput
 							radius="lg"
 							size="md"
+							value={zeenName}
 							maxLength={30}
 							onChange={event =>
 								setZeenName(event.currentTarget.value)
