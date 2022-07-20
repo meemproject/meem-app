@@ -18,7 +18,9 @@ import {
 	Textarea,
 	Loader,
 	Button,
-	Switch
+	Switch,
+	RadioGroup,
+	Radio
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -236,11 +238,18 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: 'rgba(255, 102, 81, 0.1)',
 		borderRadius: 16,
 		padding: 24
-	}
+	},
+	radio: { fontWeight: 600, fontFamily: 'Inter' }
 }))
 
 interface IProps {
 	zeen: Zeen
+}
+
+enum WhoCanRead {
+	Anyone,
+	AllClubMembers,
+	SpecificPeople
 }
 
 export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
@@ -255,6 +264,7 @@ export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
 		})
 	}
 
+	const [whoCanRead, setWhoCanRead] = useState<WhoCanRead>(WhoCanRead.Anyone)
 	const [zeenEditorsString, setZeenEditorsString] = useState('')
 	const [zeenEditors, setZeenEditors] = useState<string[]>([])
 
@@ -279,8 +289,51 @@ export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
 					className={classes.clubAppsSectionTitle}
 				>{`Who can read your zeen?`}</Text>
 				<Space h={16} />
+
+				<RadioGroup
+					classNames={{ label: classes.radio }}
+					orientation="vertical"
+					spacing={20}
+					size="md"
+					color="dark"
+					value={
+						whoCanRead === WhoCanRead.Anyone
+							? 'anyone'
+							: whoCanRead === WhoCanRead.AllClubMembers
+							? 'all-club-members'
+							: 'specific-people'
+					}
+					onChange={value => {
+						switch (value) {
+							case 'anyone':
+								setWhoCanRead(WhoCanRead.Anyone)
+								break
+							case 'all-club-members':
+								setWhoCanRead(WhoCanRead.AllClubMembers)
+								break
+							case 'specific-people':
+								setWhoCanRead(WhoCanRead.SpecificPeople)
+								break
+						}
+					}}
+					required
+				>
+					<Radio
+						value="anyone"
+						label="Anyone with the link can read this zeen and any published posts."
+					/>
+					<Radio
+						value="all-club-members"
+						label="All club members can read this zeen and any published posts."
+					/>
+					<Radio
+						value="specific-people"
+						label="Only specific people can read this zeen and any published posts."
+					/>
+				</RadioGroup>
+				<Space h={32} />
 				<Divider />
-				<Space h={16} />
+				<Space h={32} />
 				<Text
 					className={classes.clubAppsSectionTitle}
 				>{`Who can edit your zeen?`}</Text>
