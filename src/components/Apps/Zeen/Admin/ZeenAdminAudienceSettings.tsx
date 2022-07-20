@@ -255,6 +255,22 @@ export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
 		})
 	}
 
+	const [zeenEditorsString, setZeenEditorsString] = useState('')
+	const [zeenEditors, setZeenEditors] = useState<string[]>([])
+
+	const parseZeenEditors = (rawString: string) => {
+		setZeenEditorsString(rawString)
+		const adminsList = rawString.split('\n')
+		const finalList: string[] = []
+		adminsList.forEach(potentialAdmin => {
+			if (potentialAdmin.length > 0) {
+				finalList.push(potentialAdmin)
+			}
+		})
+		log.debug(`zeen editors count = ${finalList.length + 1}`)
+		setZeenEditors(finalList)
+	}
+
 	return (
 		<>
 			<div>
@@ -268,6 +284,21 @@ export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
 				<Text
 					className={classes.clubAppsSectionTitle}
 				>{`Who can edit your zeen?`}</Text>
+				<div>
+					<Text className={classes.clubAdminsInstructions}>
+						Add a line break between each address. Note that at
+						least one zeen editor is required at all times.
+					</Text>
+					<Textarea
+						radius="lg"
+						size="sm"
+						value={zeenEditorsString}
+						minRows={10}
+						onChange={event =>
+							parseZeenEditors(event.currentTarget.value)
+						}
+					/>
+				</div>
 			</div>
 		</>
 	)
