@@ -316,7 +316,7 @@ export const CreateZeenComponent: React.FC<IProps> = ({ slug }) => {
 		setSmallZeenlogo('')
 	}
 
-	const createZeen = async () => {
+	const launchZeen = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			await wallet.connectWallet()
 			router.reload()
@@ -362,6 +362,9 @@ export const CreateZeenComponent: React.FC<IProps> = ({ slug }) => {
 
 		// TODO: Launch zeen
 		setIsLoading(true)
+		router.push({
+			pathname: `/${club?.slug}/zeen/test-zeen/admin`
+		})
 	}
 
 	return (
@@ -497,7 +500,7 @@ export const CreateZeenComponent: React.FC<IProps> = ({ slug }) => {
 					<Center>
 						<Button
 							onClick={() => {
-								createZeen()
+								launchZeen()
 							}}
 							loading={isLoading}
 							disabled={

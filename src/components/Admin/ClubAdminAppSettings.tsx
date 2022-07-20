@@ -246,11 +246,6 @@ interface IProps {
 	club: Club
 }
 
-enum Step {
-	FollowGuide,
-	AddUrl
-}
-
 export const ClubAdminAppsSettingsComponent: React.FC<IProps> = ({ club }) => {
 	// General properties / tab management
 	const { classes } = useStyles()

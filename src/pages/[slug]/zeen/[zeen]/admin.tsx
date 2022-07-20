@@ -3,7 +3,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { ClubAdminComponent } from '../../../../components/Admin/ClubAdmin'
+import { ZeenAdminComponent } from '../../../../components/Apps/Zeen/Admin/ZeenAdmin'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_CLUB } from '../../../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../../../model/club/club_metadata'
@@ -17,7 +17,7 @@ interface IProps {
 const ClubAdminPage: NextPage<IProps> = ({ zeen }) => {
 	const router = useRouter()
 
-	const magSlug =
+	const zeenSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
@@ -96,7 +96,7 @@ const ClubAdminPage: NextPage<IProps> = ({ zeen }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ClubAdminComponent slug={magSlug} />
+			<ZeenAdminComponent slug={zeenSlug} />
 		</>
 	)
 }
