@@ -3,7 +3,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { ClubDetailComponent } from '../../../../components/Detail/ClubDetail'
+import { ZeenDetailComponent } from '../../../../components/Apps/Zeen/ZeenDetail'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_CLUB } from '../../../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../../../model/club/club_metadata'
@@ -87,7 +87,7 @@ const ZeenDetailPage: NextPage<IProps> = ({ zeen }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ClubDetailComponent slug={magSlug} />
+			<ZeenDetailComponent slug={magSlug} />
 		</>
 	)
 }
