@@ -29,6 +29,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { Zeen } from '../../../../model/apps/zeen/zeen'
+import { ZeenAdminChangesModal } from './ZeenAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -222,7 +223,7 @@ const useStyles = createStyles(theme => ({
 		marginTop: 4,
 		letterSpacing: 1.3
 	},
-	appDescriptionText: {
+	descriptionText: {
 		opacity: 0.6
 	},
 	zeenCreateButton: {
@@ -265,20 +266,58 @@ export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
 	}
 
 	const [whoCanRead, setWhoCanRead] = useState<WhoCanRead>(WhoCanRead.Anyone)
+	const [zeenReadersString, setZeenReadersString] = useState('')
+	const [zeenReaders, setZeenReaders] = useState<string[]>([])
 	const [zeenEditorsString, setZeenEditorsString] = useState('')
 	const [zeenEditors, setZeenEditors] = useState<string[]>([])
 
+	const [newZeenData, setNewZeenData] = useState<Zeen>()
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
+
 	const parseZeenEditors = (rawString: string) => {
 		setZeenEditorsString(rawString)
-		const adminsList = rawString.split('\n')
+		const editorsList = rawString.split('\n')
 		const finalList: string[] = []
-		adminsList.forEach(potentialAdmin => {
+		editorsList.forEach(potentialAdmin => {
 			if (potentialAdmin.length > 0) {
 				finalList.push(potentialAdmin)
 			}
 		})
 		log.debug(`zeen editors count = ${finalList.length + 1}`)
 		setZeenEditors(finalList)
+	}
+
+	const parseZeenReaders = (rawString: string) => {
+		setZeenEditorsString(rawString)
+		const readersList = rawString.split('\n')
+		const finalList: string[] = []
+		readersList.forEach(potentialAdmin => {
+			if (potentialAdmin.length > 0) {
+				finalList.push(potentialAdmin)
+			}
+		})
+		log.debug(`zeen editors count = ${finalList.length + 1}`)
+		setZeenEditors(finalList)
+	}
+
+	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
+		useState(false)
+	const openSaveChangesModal = () => {
+		// Some basic validation
+		// TODO: Validate the fields on this page
+
+		// 'save changes' modal for executing zeen settings updates
+		// convert current settings and update for the modal
+		// TODO:
+		const newZeen = zeen
+		if (newZeen) {
+			setNewZeenData(newZeen)
+			setSaveChangesModalOpened(true)
+		}
+	}
+
+	const saveChanges = () => {
+		openSaveChangesModal()
 	}
 
 	return (
@@ -331,9 +370,29 @@ export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
 						label="Only specific people can read this zeen and any published posts."
 					/>
 				</RadioGroup>
-				<Space h={32} />
+				{whoCanRead === WhoCanRead.SpecificPeople && (
+					<>
+						<Space h={24} />
+						<Text className={classes.descriptionText}>
+							Add a line break between each address
+						</Text>
+						<Space h={24} />
+
+						<Textarea
+							radius="lg"
+							size="sm"
+							value={zeenReadersString}
+							minRows={10}
+							onChange={event =>
+								parseZeenReaders(event.currentTarget.value)
+							}
+						/>
+						<Space h={8} />
+					</>
+				)}
+				<Space h={48} />
 				<Divider />
-				<Space h={32} />
+				<Space h={48} />
 				<Text
 					className={classes.clubAppsSectionTitle}
 				>{`Who can edit your zeen?`}</Text>
@@ -352,6 +411,24 @@ export const ZeenAdminAudienceSettings: React.FC<IProps> = ({ zeen }) => {
 						}
 					/>
 				</div>
+				<Space h={24} />
+
+				<Button
+					className={classes.buttonSaveChanges}
+					loading={isSavingChanges}
+					onClick={saveChanges}
+				>
+					Save Changes
+				</Button>
+				<Space h={64} />
+				<ZeenAdminChangesModal
+					zeen={zeen}
+					isOpened={isSaveChangesModalOpened}
+					onModalClosed={() => {
+						setIsSavingChanges(false)
+						setSaveChangesModalOpened(false)
+					}}
+				/>
 			</div>
 		</>
 	)
