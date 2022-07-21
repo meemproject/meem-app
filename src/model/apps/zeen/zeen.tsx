@@ -4,6 +4,7 @@ export interface Zeen {
 	id: string
 	slug: string
 	clubSlug: string
+	clubName: string
 	name: string
 	description: string
 	image: string
@@ -11,14 +12,12 @@ export interface Zeen {
 	editors: string[]
 }
 
-export default async function zeenFromApi(
-	wallet: any,
-	clubSlug: string
-): Promise<Zeen> {
+export default async function zeenFromApi(wallet: any): Promise<Zeen> {
 	return {
 		id: '',
 		slug: 'zeen',
-		clubSlug,
+		clubSlug: 'club-club',
+		clubName: 'Club Club',
 		name: 'Zeen',
 		description: 'A zeen',
 		image: '/exampleclub.png',

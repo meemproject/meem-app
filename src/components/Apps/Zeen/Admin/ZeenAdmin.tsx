@@ -248,7 +248,7 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		async function getMockZeen() {
-			const possibleZeen = await zeenFromApi(wallet, getClubSlug())
+			const possibleZeen = await zeenFromApi(wallet)
 
 			if (possibleZeen && possibleZeen.name) {
 				setZeen(possibleZeen)
@@ -257,7 +257,7 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 		}
 
 		async function getZeen(data: GetClubQuery) {
-			const possibleZeen = await zeenFromApi(wallet, getClubSlug())
+			const possibleZeen = await zeenFromApi(wallet)
 
 			if (possibleZeen && possibleZeen.name) {
 				setZeen(possibleZeen)

@@ -159,7 +159,7 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 
-	clubDetailSectionTitle: {
+	zeenDetailSectionTitle: {
 		fontSize: 18,
 		marginBottom: 16,
 		marginTop: 40,
@@ -187,22 +187,6 @@ const useStyles = createStyles(theme => ({
 			marginLeft: 20,
 			marginRight: 20
 		}
-	},
-	requirementsContainer: {
-		border: '1px solid rgba(0, 0, 0, 0.5)',
-		paddingTop: 24,
-		paddingBottom: 16,
-		paddingLeft: 16,
-		paddingRight: 16,
-		borderRadius: 16
-	},
-	requirementItem: {
-		display: 'flex',
-		alignItems: 'center',
-		marginBottom: 8
-	},
-	requirementLink: {
-		color: 'rgba(255, 102, 81, 1)'
 	},
 	memberItem: {
 		border: '1px solid rgba(0, 0, 0, 0.1)',
@@ -235,23 +219,20 @@ const useStyles = createStyles(theme => ({
 		display: 'flex',
 		alignItems: 'center'
 	},
-	clubContractAddress: {
-		wordBreak: 'break-all',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	contractAddressContainer: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
 	copy: {
 		marginLeft: 4,
 		padding: 2,
 		cursor: 'pointer'
 	},
-	applicationInstructions: {
-		a: {
-			color: 'rgba(255, 102, 81, 1)'
-		}
+	linkItem: {
+		color: 'rgba(255, 102, 81, 1)',
+		textDecoration: 'underline',
+		cursor: 'pointer',
+		fontWeight: 600
+	},
+	row: {
+		display: 'flex',
+		flexDirection: 'row'
 	}
 }))
 
@@ -282,6 +263,7 @@ export const ZeenDetailComponent: React.FC<IProps> = ({ slug }) => {
 	// TODO: remove when we have real data
 	const [hasGotMockZeen, setHasGotMockZeen] = useState(false)
 	const [zeen, setZeen] = useState<Zeen | undefined>()
+	const [zeenPosts, setZeenPosts] = useState([])
 	const [isLoadingZeen, setIsLoadingZeen] = useState(true)
 
 	const componentDecorator = (
@@ -319,7 +301,7 @@ export const ZeenDetailComponent: React.FC<IProps> = ({ slug }) => {
 		// 	getZeen(zeenData)
 		// }
 		async function getMockZeen() {
-			const possibleZeen = await zeenFromApi(wallet, getClubSlug())
+			const possibleZeen = await zeenFromApi(wallet)
 
 			if (possibleZeen && possibleZeen.name) {
 				setZeen(possibleZeen)
@@ -380,11 +362,31 @@ export const ZeenDetailComponent: React.FC<IProps> = ({ slug }) => {
 							<Text className={classes.headerClubDescription}>
 								{zeen.description}
 							</Text>
+							<Space h={12} />
+							<div className={classes.row}>
+								<Text>♣ from</Text>
+								<Space w={5} />
+								<a
+									className={classes.linkItem}
+									onClick={() => {
+										router.push({
+											pathname: `/${zeen.clubSlug}`
+										})
+									}}
+								>
+									{zeen.clubName}
+								</a>
+							</div>
 						</div>
 					</div>
 
 					<Container>
 						<Space h={'xl'} />
+						<Text className={classes.zeenDetailSectionTitle}>
+							{zeenPosts.length === 0
+								? 'Meemzine does not have any public posts yet.'
+								: 'Posts'}
+						</Text>
 					</Container>
 				</>
 			)}
