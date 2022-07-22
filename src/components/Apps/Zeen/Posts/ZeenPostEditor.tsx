@@ -21,13 +21,15 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
+import { useFilePicker } from 'use-file-picker'
 import { GetClubQuery } from '../../../../../generated/graphql'
 import { GET_CLUB } from '../../../../graphql/clubs'
+import postFromApi, {
+	emptyPost,
+	Post
+} from '../../../../model/apps/zeen/post/post'
 import zeenFromApi, { Zeen } from '../../../../model/apps/zeen/zeen'
-import { getClubSlug } from '../../../../utils/slugs'
-import { ZeenAdminAudienceSettings } from './ZeenAdminAudienceSettings'
-import { ZeenAdminPostsSettings } from './ZeenAdminPostsSettings'
-import { ZeenAdminProfileSettings } from './ZeenAdminProfileSettings'
+import { getClubSlug, getZeenSlug } from '../../../../utils/slugs'
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -181,53 +183,40 @@ const useStyles = createStyles(theme => ({
 	}
 }))
 
-enum Tab {
-	Posts,
-	AudienceAndEditors,
-	Settings
-}
-
 interface IProps {
-	slug: string
+	postSlug?: string
 }
 
-export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
+export const ZeenPostEditor: React.FC<IProps> = ({ postSlug }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const [hasGotMockZeen, setHasGotMockZeen] = useState(false)
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Posts)
+	const [hasGotMockPost, setHasGotMockPost] = useState(false)
 
 	const navigateToZeenDetail = () => {
-		router.push({ pathname: `/${getClubSlug()}/zeen/${slug}` })
-	}
-
-	const switchToPosts = () => {
-		setCurrentTab(Tab.Posts)
-	}
-
-	const switchToAudienceAndEditors = () => {
-		setCurrentTab(Tab.AudienceAndEditors)
-	}
-
-	const switchToSettings = () => {
-		setCurrentTab(Tab.Settings)
+		router.push({ pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}` })
 	}
 
 	const {
 		loading,
 		error,
-		data: zeenData
+		data: postData
 	} = useQuery<GetClubQuery>(GET_CLUB, {
-		variables: { slug }
+		variables: { postSlug }
 	})
-	const [isLoadingZeen, setIsLoadingZeen] = useState(true)
-	const [zeen, setZeen] = useState<Zeen>()
+
+	const [isLoadingPost, setIsLoadingPost] = useState(true)
+	const [post, setPost] = useState<Post>()
+
+	const [postTitle, setPostTitle] = useState(``)
+	const [postRecap, setPostRecap] = useState('')
+	const [postBody, setPostBody] = useState('')
+	const [postCoverPhoto, setPostCoverPhoto] = useState('')
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
-		getClubSlug()
 		if (
 			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
 			Cookies.get('meemJwtToken') === undefined ||
@@ -236,53 +225,116 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/${slug}/admin`
+					return: `/${getClubSlug()}/zeen/${getZeenSlug()}/admin`
 				}
 			})
 		}
-	}, [router, slug])
+	}, [router])
 
 	useEffect(() => {
-		async function getMockZeen() {
-			const possibleZeen = await zeenFromApi(wallet)
+		async function getMockPost() {
+			const possiblePost = await postFromApi(wallet)
 
-			if (possibleZeen && possibleZeen.name) {
-				setZeen(possibleZeen)
+			if (possiblePost && possiblePost.title) {
+				setPost(possiblePost)
 			}
-			setIsLoadingZeen(false)
+			setIsLoadingPost(false)
 		}
 
-		async function getZeen(data: GetClubQuery) {
-			const possibleZeen = await zeenFromApi(wallet)
+		async function getPost(data: GetClubQuery) {
+			const possiblePost = await postFromApi(wallet)
 
-			if (possibleZeen && possibleZeen.name) {
-				setZeen(possibleZeen)
+			if (possiblePost && possiblePost.title) {
+				setPost(possiblePost)
 			}
-			setIsLoadingZeen(false)
+			setIsLoadingPost(false)
 		}
-		if (!loading && !error && !zeen && zeenData) {
-			getZeen(zeenData)
+
+		if (postSlug) {
+			// If we have a post slug, there's existing data to populate.
+			if (!loading && !error && !post && postData) {
+				getPost(postData)
+			}
+		} else {
+			// No post slug, set an empty post and finish loading instantly.
+			if (!post) {
+				setPost(emptyPost())
+				setIsLoadingPost(false)
+			}
 		}
 
 		// TODO: Remove mockzeen when we have data
-		if (!hasGotMockZeen) {
-			setHasGotMockZeen(true)
-			getMockZeen()
-		}
+		// if (!hasGotMockPost) {
+		// 	setHasGotMockPost(true)
+		// 	getMockPost()
+		// }
 	}, [
-		zeen,
-		zeenData,
+		post,
+		postData,
 		error,
 		loading,
 		wallet,
 		wallet.accounts,
 		wallet.isConnected,
-		hasGotMockZeen
+		hasGotMockPost,
+		postSlug
 	])
+
+	// Post cover photo picker
+	const [
+		openFileSelector,
+		{ filesContent: zeenLogo, loading: isLoadingImage }
+	] = useFilePicker({
+		readAs: 'DataURL',
+		accept: 'image/*',
+		limitFilesConfig: { max: 1 },
+		multiple: false,
+		maxFileSize: 10
+	})
+
+	const deleteImage = () => {
+		setPostCoverPhoto('')
+	}
+
+	const createPost = async () => {
+		if (!wallet.web3Provider || !wallet.isConnected) {
+			await wallet.connectWallet()
+			router.reload()
+			return
+		}
+
+		// Some basic validation
+		if (!postTitle || postTitle.length < 3 || postTitle.length > 50) {
+			// Club name invalid
+			showNotification({
+				title: 'Oops!',
+				message:
+					'You entered an invalid club name. Please choose a longer or shorter name.'
+			})
+			return
+		}
+
+		if (postRecap.length < 3 || postRecap.length > 140) {
+			// Club name invalid
+			showNotification({
+				title: 'Oops!',
+				message:
+					'You entered an invalid club description. Please choose a longer or shorter description.'
+			})
+			return
+		}
+
+		// TODO: create or edit post
+		// TODO: We will need post slug (from api?)
+		setIsLoading(true)
+		router.push({
+			pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}/hello-world`
+		})
+	}
 
 	return (
 		<>
-			{isLoadingZeen && (
+			{isLoadingPost && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -290,16 +342,16 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!isLoadingZeen && !zeen?.name && (
+			{!isLoadingPost && !post?.title && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that zeen does not exist!</Text>
+						<Text>Sorry, that post does not exist!</Text>
 					</Center>
 				</Container>
 			)}
 
-			{!isLoadingZeen && zeen?.name && (
+			{!isLoadingPost && post?.title && (
 				<>
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
@@ -309,19 +361,16 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 									size={32}
 								/>
 							</a>
-							<Image
-								className={classes.clubLogoImage}
-								src={zeen.image!}
-							/>
+
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
 							<div className={classes.headerClubNameContainer}>
 								<Text className={classes.headerClubName}>
-									{zeen.name!}
+									{post.title!}
 								</Text>
 								<div className={classes.clubUrlContainer}>
 									<Text
 										className={classes.clubUrl}
-									>{`${window.location.origin}/${zeen.slug}`}</Text>
+									>{`${window.location.origin}/${post.slug}`}</Text>
 									<Image
 										className={classes.copy}
 										src="/copy.png"
@@ -331,7 +380,7 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 												`${
 													window.location.origin
 												}/${getClubSlug()}/zeen/${
-													zeen.slug
+													post.slug
 												}`
 											)
 											showNotification({
@@ -350,7 +399,7 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</div>
 					</div>
 
-					{!zeen?.isZeenEditor && (
+					{!post?.isContributor && (
 						<Container>
 							<Space h={120} />
 							<Center>
@@ -359,75 +408,6 @@ export const ZeenAdminComponent: React.FC<IProps> = ({ slug }) => {
 									this page. Contact a zeen editor for help.
 								</Text>
 							</Center>
-						</Container>
-					)}
-					{zeen?.isZeenEditor && (
-						<Container>
-							<div className={classes.tabs}>
-								<a onClick={switchToPosts}>
-									<Text
-										className={
-											currentTab == Tab.Posts
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Posts
-									</Text>
-								</a>
-								<a onClick={switchToAudienceAndEditors}>
-									<Text
-										className={
-											currentTab == Tab.AudienceAndEditors
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Audience & Editors
-									</Text>
-								</a>
-								<a onClick={switchToSettings}>
-									<Text
-										className={
-											currentTab == Tab.Settings
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Settings
-									</Text>
-								</a>
-							</div>
-							<div
-								className={
-									currentTab === Tab.Posts
-										? classes.visibleTab
-										: classes.invisibleTab
-								}
-							>
-								<ZeenAdminPostsSettings zeen={zeen} />
-							</div>
-
-							<div
-								className={
-									currentTab === Tab.AudienceAndEditors
-										? classes.visibleTab
-										: classes.invisibleTab
-								}
-							>
-								<ZeenAdminAudienceSettings zeen={zeen} />
-							</div>
-
-							<div
-								className={
-									currentTab === Tab.Settings
-										? classes.visibleTab
-										: classes.invisibleTab
-								}
-							>
-								{' '}
-								<ZeenAdminProfileSettings zeen={zeen} />
-							</div>
 						</Container>
 					)}
 				</>

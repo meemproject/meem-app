@@ -51,6 +51,7 @@ import clubFromMeemContract, {
 	Club,
 	MembershipReqType
 } from '../../../model/club/club'
+import { getClubSlug } from '../../../utils/slugs'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -244,12 +245,6 @@ export const ZeenDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
-
-	const getClubSlug = (): string => {
-		const fullUrl = window.location.href
-		const split = fullUrl.split('/')
-		return split[3]
-	}
 
 	// TODO: Load zeen
 	const {
