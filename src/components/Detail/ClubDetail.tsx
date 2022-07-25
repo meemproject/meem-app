@@ -702,11 +702,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	])
 
 	useEffect(() => {
-		console.log({
-			isConnected: wallet.isConnected,
-			NEXT_PUBLIC_CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID,
-			chainId: wallet.chainId
-		})
 		if (
 			wallet.isConnected &&
 			process.env.NEXT_PUBLIC_CHAIN_ID &&

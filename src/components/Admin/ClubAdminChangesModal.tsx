@@ -15,7 +15,6 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { Chain, Permission } from '@meemproject/meem-contracts'
 import * as meemContracts from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -95,7 +94,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 }) => {
 	const router = useRouter()
 
-	const { web3Provider, accounts, signer, meemContract } = useWallet()
+	const { web3Provider, accounts, signer } = useWallet()
 
 	const { classes } = useStyles()
 
@@ -165,7 +164,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						case MembershipReqType.None:
 							// Anyone can join for X MATIC
 							mintPermissions.push({
-								permission: Permission.Anyone,
+								permission: MeemAPI.Permission.Anyone,
 								addresses: [],
 								numTokens: 0,
 								costWei: joinCostInWei,
@@ -175,7 +174,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						case MembershipReqType.ApprovedApplicants:
 							// Approved applicants join for X MATIC
 							mintPermissions.push({
-								permission: Permission.Addresses,
+								permission: MeemAPI.Permission.Addresses,
 								addresses: requirement.approvedAddresses,
 								numTokens: 0,
 								costWei: joinCostInWei,
@@ -185,7 +184,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						case MembershipReqType.TokenHolders:
 							//Token holders with X tokens can join for X MATIC
 							mintPermissions.push({
-								permission: Permission.Holders,
+								permission: MeemAPI.Permission.Holders,
 								addresses: [requirement.tokenContractAddress],
 								numTokens: requirement.tokenMinQuantity,
 								costWei: joinCostInWei,
@@ -195,7 +194,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						case MembershipReqType.OtherClubMember:
 							// Members of X club can join for X MATIC
 							mintPermissions.push({
-								permission: Permission.Holders,
+								permission: MeemAPI.Permission.Holders,
 								addresses: [requirement.clubContractAddress],
 								numTokens: requirement.tokenMinQuantity,
 								costWei: joinCostInWei,
@@ -209,7 +208,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				log.debug('adding admin permissions...')
 				club.membershipSettings.clubAdmins?.forEach(admin => {
 					mintPermissions.push({
-						permission: Permission.Addresses,
+						permission: MeemAPI.Permission.Addresses,
 						addresses: [admin],
 						numTokens: 0,
 						costWei: 0,
@@ -267,36 +266,37 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			log.debug(`club symbol: ${clubSymbol}`)
 			log.debug(`club admins: ${club.membershipSettings?.clubAdmins}`)
 
-			const contract = await meemContracts.getMeemContract({
-				contractAddress: club.address!,
-				signer: web3Provider.getSigner()
-			})
-			log.debug('contract found')
+			// TODO: Call reinitialize
+			// const contract = await meemContracts.getMeemContract({
+			// 	contractAddress: club.address!,
+			// 	signer: web3Provider.getSigner()
+			// })
+			// log.debug('contract found')
 
-			const data = {
-				name: club.name ?? '',
-				symbol: clubSymbol,
-				admins: club.membershipSettings
-					? club.membershipSettings.clubAdmins
-						? club.membershipSettings.clubAdmins
-						: []
-					: [],
-				contractURI: uri,
-				baseProperties,
-				defaultProperties: meemContracts.defaultMeemProperties,
-				defaultChildProperties: meemContracts.defaultMeemProperties,
-				tokenCounterStart: BigNumber.from(1),
-				childDepth: BigNumber.from(-1),
-				nonOwnerSplitAllocationAmount: BigNumber.from(0)
-			}
-			log.debug(data)
-			const tx = await contract.reInitialize(data, {
-				gasLimit: '5000000'
-			})
+			// const data = {
+			// 	name: club.name ?? '',
+			// 	symbol: clubSymbol,
+			// 	admins: club.membershipSettings
+			// 		? club.membershipSettings.clubAdmins
+			// 			? club.membershipSettings.clubAdmins
+			// 			: []
+			// 		: [],
+			// 	contractURI: uri,
+			// 	baseProperties,
+			// 	defaultProperties: meemContracts.defaultMeemProperties,
+			// 	defaultChildProperties: meemContracts.defaultMeemProperties,
+			// 	tokenCounterStart: BigNumber.from(1),
+			// 	childDepth: BigNumber.from(-1),
+			// 	nonOwnerSplitAllocationAmount: BigNumber.from(0)
+			// }
+			// log.debug(data)
+			// const tx = await contract.reInitialize(data, {
+			// 	gasLimit: '5000000'
+			// })
 
-			log.debug(tx)
-			// @ts-ignore
-			await tx.wait()
+			// log.debug(tx)
+			// // @ts-ignore
+			// await tx.wait()
 			setStep(Step.Start)
 			onModalClosed()
 		} catch (e) {

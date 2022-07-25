@@ -1,21 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/named */
 import log from '@kengoldfarb/log'
 import { Button, Select, Switch, TextInput } from '@mantine/core'
 import { MeemAPI } from '@meemproject/api'
-import * as meemContracts from '@meemproject/meem-contracts'
-import { IVersion } from '@meemproject/meem-contracts'
-import {
-	Chain,
-	MeemType,
-	UriSource
-} from '@meemproject/meem-contracts/dist/src/lib/meemStandard'
-import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
 import { Contract } from 'ethers'
-// import { Contract } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
 export const CreatePage: React.FC = () => {
