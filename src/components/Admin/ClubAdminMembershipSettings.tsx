@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -22,11 +23,15 @@ import {
 } from '@mantine/core'
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/api'
+import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
+import { MyClubsSubscriptionSubscription } from '../../../generated/graphql'
+import { SUB_MY_CLUBS } from '../../graphql/clubs'
 import {
 	MembershipSettings,
 	MembershipReqAndor,
@@ -35,9 +40,9 @@ import {
 	Club
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
+import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate, ensWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubModal } from '../Create/CreateClubModal'
-import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
@@ -347,12 +352,92 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setMembershipQuantityModalOpened(true)
 	}
 
+	const { data: myClubsData, loading: isLoadingMyClubs } =
+		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
+			variables: { walletAddress: wallet.accounts[0] }
+		})
+
 	const [isTransactionsModalOpened, setTransactionsModalOpened] =
 		useState(false)
 	const openTransactionsModal = async () => {
-		// transactions modal for club creation
 		setTransactionsModalOpened(true)
+		try {
+			const createContractFetcher = makeFetcher<
+				MeemAPI.v1.CreateMeemContract.IQueryParams,
+				MeemAPI.v1.CreateMeemContract.IRequestBody,
+				MeemAPI.v1.CreateMeemContract.IResponseBody
+			>({
+				method: MeemAPI.v1.CreateMeemContract.method
+			})
+
+			const name = Cookies.get(CookieKeys.clubName) ?? 'test name'
+
+			await createContractFetcher(
+				MeemAPI.v1.CreateMeemContract.path(),
+				undefined,
+				{
+					shouldMintAdminTokens: true,
+					metadata: {
+						meem_contract_type: 'meem-club',
+						meem_metadata_version: 'Meem_Contract_20220718',
+						name,
+						description: 'Testing...',
+						image: 'https://ipfs.io/ipfs/1234',
+						associations: [],
+						external_url: ''
+					},
+					name,
+					admins: clubAdmins,
+					minters: clubAdmins,
+					maxSupply:
+						ethers.BigNumber.from(membershipQuantity).toHexString(),
+					mintPermissions: [
+						{
+							permission: MeemAPI.Permission.Anyone,
+							numTokens: '0',
+							costWei: '0',
+							addresses: [],
+							mintStartTimestamp: '0',
+							mintEndTimestamp: '0',
+							lockedBy: ethers.constants.AddressZero
+						}
+					],
+					splits: [],
+					adminTokenMetadata: {
+						meem_metadata_version: 'Meem_Token_20220718',
+						description: 'Testing...',
+						name: `${name} membership token`,
+						image: 'https://ipfs.io/ipfs/1234',
+						associations: [],
+						external_url: ''
+					}
+				}
+			)
+		} catch (e) {
+			log.crit(e)
+			showNotification({
+				title: 'Error Creating Club',
+				message:
+					'An error occurred while creating the club. Please try again.',
+				color: 'red'
+			})
+			// transactions modal for club creation
+			setTransactionsModalOpened(false)
+		}
 	}
+
+	useEffect(() => {
+		if (isTransactionsModalOpened) {
+			const newClub = myClubsData?.Meems.find(
+				m => m.MeemContract?.name === Cookies.get(CookieKeys.clubName)
+			)
+			if (newClub) {
+				setTransactionsModalOpened(false)
+				log.info('New club created!', newClub)
+				// TODO: handle new club creation
+			}
+		}
+	}, [myClubsData, isLoadingMyClubs, isTransactionsModalOpened])
 
 	const [newClubData, setNewClubData] = useState<Club>()
 	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =

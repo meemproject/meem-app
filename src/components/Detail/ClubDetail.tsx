@@ -25,8 +25,6 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import * as meemContracts from '@meemproject/meem-contracts'
-import { Chain, MeemType, UriSource } from '@meemproject/meem-contracts'
-import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
@@ -40,10 +38,16 @@ import {
 } from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
+	GetBundleByIdQuery,
 	GetClubQuery,
 	MeemContracts
 } from '../../../generated/graphql'
-import { GET_CLUB, GET_CLUB_SLUG, SUB_CLUB } from '../../graphql/clubs'
+import {
+	GET_BUNDLE_BY_ID,
+	GET_CLUB,
+	GET_CLUB_SLUG,
+	SUB_CLUB
+} from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	MembershipReqType
@@ -269,6 +273,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [requirementsParsed, setRequirementsParsed] = useState(false)
 	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
 
+	const { loading: isBundleLoading, data: bundleData } =
+		useQuery<GetBundleByIdQuery>(GET_BUNDLE_BY_ID, {
+			variables: {
+				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
+			}
+		})
+
 	const checkEligibility = useCallback(
 		(
 			reqs: RequirementString[],
@@ -309,9 +320,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		try {
 			const meemContract = new Contract(
 				club?.address ?? '',
-				meemABI,
+				bundleData?.Bundles[0].abi,
 				wallet.signer
-			) as unknown as meemContracts.Meem
+			)
+
 			const metadata = clubMetadataFromContractUri(
 				club?.rawClub?.contractURI ?? ''
 			)
@@ -325,30 +337,18 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			const data = {
 				to: wallet.accounts[0],
 				tokenURI: uri,
-				parentChain: MeemAPI.Chain.Polygon,
-				parent: MeemAPI.zeroAddress,
-				parentTokenId: 0,
-				meemType: MeemAPI.MeemType.Original,
-				uriSource: UriSource.Json,
-				isURILocked: false,
-				reactionTypes: ['upvote', 'downvote', 'heart'],
-				mintedBy: wallet.accounts[0]
+				tokenType: MeemAPI.MeemType.Original
 			}
 
 			log.debug(data)
-			const tx = await meemContract?.mint(
-				data,
-				meemContracts.defaultMeemProperties,
-				meemContracts.defaultMeemProperties,
-				{
-					gasLimit: '5000000',
-					value: ethers.utils.parseEther(
-						club?.membershipSettings
-							? `${club.membershipSettings.costToJoin}`
-							: '0'
-					)
-				}
-			)
+			const tx = await meemContract?.mint(data, {
+				gasLimit: '5000000',
+				value: ethers.utils.parseEther(
+					club?.membershipSettings
+						? `${club.membershipSettings.costToJoin}`
+						: '0'
+				)
+			})
 
 			// @ts-ignore
 			await tx.wait()
@@ -383,9 +383,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		try {
 			const meemContract = new Contract(
 				club?.address ?? '',
-				meemABI,
+				bundleData?.Bundles[0].abi,
 				wallet.signer
-			) as unknown as meemContracts.Meem
+			)
 			if (club && club.membershipToken) {
 				const tx = await meemContract?.burn(club?.membershipToken)
 				// @ts-ignore
@@ -702,11 +702,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	])
 
 	useEffect(() => {
-		if (wallet.isConnected) {
-			const isWrong = wallet.isConnectedToWrongNetwork
-			setIsWrongNetwork(isWrong)
+		console.log({
+			isConnected: wallet.isConnected,
+			NEXT_PUBLIC_CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID,
+			chainId: wallet.chainId
+		})
+		if (
+			wallet.isConnected &&
+			process.env.NEXT_PUBLIC_CHAIN_ID &&
+			+process.env.NEXT_PUBLIC_CHAIN_ID !== wallet.chainId
+		) {
+			setIsWrongNetwork(true)
 		}
-	}, [wallet.isConnected, wallet.isConnectedToWrongNetwork])
+	}, [wallet])
 
 	const navigateToSettings = () => {
 		router.push({ pathname: `/${slug}/admin` })

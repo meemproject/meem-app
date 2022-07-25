@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import { MeemAPI } from '@meemproject/api'
-import { Permission } from '@meemproject/meem-contracts'
 import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
 import { ensWalletAddress } from '../../utils/truncated_wallet'
@@ -190,7 +189,8 @@ export default async function clubFromMeemContract(
 					log.debug(permission)
 					// Filter out the admin-exclusive permissions
 					if (
-						permission.permission === Permission.Addresses &&
+						permission.permission ===
+							MeemAPI.Permission.Addresses &&
 						permission.addresses.length === 1 &&
 						adminRawAddresses.includes(
 							permission.addresses[0].toLowerCase()
@@ -228,10 +228,10 @@ export default async function clubFromMeemContract(
 						)
 
 						switch (permission.permission) {
-							case Permission.Anyone:
+							case MeemAPI.Permission.Anyone:
 								type = MembershipReqType.None
 								break
-							case Permission.Addresses:
+							case MeemAPI.Permission.Addresses:
 								type = MembershipReqType.ApprovedApplicants
 
 								// Look up ENS names for approved addresses
@@ -252,7 +252,7 @@ export default async function clubFromMeemContract(
 									)
 								)
 								break
-							case Permission.Holders:
+							case MeemAPI.Permission.Holders:
 								tokenMinQuantity = Number(permission.numTokens)
 								// eslint-disable-next-line no-case-declarations
 								type = MembershipReqType.TokenHolders

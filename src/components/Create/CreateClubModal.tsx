@@ -25,9 +25,6 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { Chain, Permission, UriSource } from '@meemproject/meem-contracts'
-import * as meemContracts from '@meemproject/meem-contracts'
-import meemABI from '@meemproject/meem-contracts/types/Meem.json'
 import { useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 // eslint-disable-next-line import/no-extraneous-dependencies
