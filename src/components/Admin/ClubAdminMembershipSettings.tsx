@@ -439,9 +439,12 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setTransactionsModalOpened(false)
 				log.info('New club created!', newClub)
 				// TODO: handle new club creation
+				router.push({
+					pathname: `/${newClub.MeemContract?.slug}`
+				})
 			}
 		}
-	}, [myClubsData, isLoadingMyClubs, isTransactionsModalOpened])
+	}, [myClubsData, isLoadingMyClubs, isTransactionsModalOpened, router])
 
 	const [newClubData, setNewClubData] = useState<Club>()
 	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =

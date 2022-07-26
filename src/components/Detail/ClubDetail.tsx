@@ -24,7 +24,6 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import * as meemContracts from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
