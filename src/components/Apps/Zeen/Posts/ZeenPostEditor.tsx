@@ -13,14 +13,18 @@ import {
 	Space,
 	Center,
 	Loader,
-	Divider
+	Divider,
+	TextInput,
+	Textarea,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check } from 'tabler-icons-react'
+import { ArrowLeft, Check, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetClubQuery } from '../../../../../generated/graphql'
 import { GET_CLUB } from '../../../../graphql/clubs'
@@ -30,156 +34,125 @@ import postFromApi, {
 } from '../../../../model/apps/zeen/post/post'
 import zeenFromApi, { Zeen } from '../../../../model/apps/zeen/zeen'
 import { getClubSlug, getZeenSlug } from '../../../../utils/slugs'
+import RichTextEditor from './RichTextEditor'
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 const useStyles = createStyles(theme => ({
 	header: {
+		backgroundColor: 'rgba(160, 160, 160, 0.05)',
 		marginBottom: 60,
 		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
+		alignItems: 'end',
 		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
+		paddingTop: 24,
+		paddingBottom: 24,
 		paddingLeft: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
+			paddingTop: 12,
+			paddingBottom: 12,
+			paddingLeft: 16
 		}
 	},
 	headerArrow: {
-		marginRight: 24,
+		marginRight: 32,
 		cursor: 'pointer',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
+			marginRight: 16
 		}
 	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubNameContainer: {
-		marginLeft: 32,
+	headerPrompt: {
+		fontSize: 16,
+		fontWeight: 500,
+		color: 'rgba(0, 0, 0, 0.6)',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
+			marginBottom: 0
 		}
 	},
 	headerClubName: {
 		fontWeight: 600,
 		fontSize: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
+			fontSize: 20
 		}
 	},
-	clubUrlContainer: {
-		marginTop: 8,
-		display: 'flex',
-		flexDirection: 'row'
+	namespaceTextInputContainer: {
+		position: 'relative'
 	},
-	clubUrl: {
+	namespaceTextInput: {
+		paddingLeft: 154,
+		paddingBottom: 3
+	},
+	namespaceTextInputUrlPrefix: {
+		position: 'absolute',
+		top: 8,
+		left: 24,
+		color: 'rgba(0, 0, 0, 0.5)'
+	},
+	clubNamespaceHint: {
+		paddingLeft: 0,
+		paddingBottom: 16,
+		color: 'rgba(0, 0, 0, 0.5)'
+	},
+	formPrompt: { fontSize: 18, marginBottom: 0, fontWeight: 600 },
+	clubLogoPrompt: {
+		marginTop: 32,
+		fontSize: 18,
+		marginBottom: 8,
+		fontWeight: 600
+	},
+	clubLogoInfo: {
+		fontWeight: 500,
 		fontSize: 14,
-		opacity: 0.6,
-		fontWeight: 500
+		maxWidth: 650,
+		color: 'rgba(45, 28, 28, 0.6)',
+		marginBottom: 16
 	},
-
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 80,
-		height: 80,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 40,
-			height: 40,
-			minHeight: 40,
-			minWidth: 40,
-			marginLeft: 16
-		}
-	},
-	clubSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
-		}
-	},
-	buttonEditProfile: {
+	buttonUpload: {
 		borderRadius: 24,
-		marginRight: 24,
 		color: 'black',
 		borderColor: 'black',
 		backgroundColor: 'white',
 		'&:hover': {
 			backgroundColor: theme.colors.gray[0]
+		}
+	},
+	buttonCreate: {
+		marginTop: 48,
+		marginBottom: 48,
+
+		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
 		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 0,
-			marginLeft: 16,
-			marginRight: 0,
-			borderColor: 'transparent'
-		}
+		borderRadius: 24
 	},
-	tabs: {
-		display: 'flex',
-		flexDirection: 'row'
+	postCoverPhotoImage: {
+		imageRendering: 'pixelated'
 	},
-
-	activeTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-		fontWeight: 600,
-		color: 'black',
-		textDecoration: 'underline',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
+	postCoverPhotoImageContainer: {
+		marginTop: 24,
+		width: 108,
+		height: 100,
+		position: 'relative'
 	},
-	inactiveTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-
-		fontWeight: 600,
-		color: 'rgba(45, 28, 28, 0.3)',
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
-	},
-	visibleTab: {
-		display: 'block'
-	},
-	invisibleTab: {
-		display: 'none'
-	},
-	clubIntegrationsSectionTitle: {
-		fontSize: 20,
-		marginBottom: 16,
-		fontWeight: 600
-	},
-	clubContractAddress: {
-		wordBreak: 'break-all',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	contractAddressContainer: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	copy: {
-		marginLeft: 4,
-		padding: 2,
+	postCoverPhotoDeleteButton: {
+		position: 'absolute',
+		top: '-12px',
+		right: '-105px',
 		cursor: 'pointer'
+	},
+	uploadOptions: { display: 'flex' },
+	emojiCanvas: {
+		position: 'absolute',
+		top: 40,
+		left: 0,
+		marginTop: -12,
+		marginBottom: -12,
+		lineHeight: 1,
+		fontSize: 24,
+		zIndex: -1000
 	}
 }))
 
@@ -199,6 +172,12 @@ export const ZeenPostEditor: React.FC<IProps> = ({ postSlug }) => {
 		router.push({ pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}` })
 	}
 
+	const navigateToZeenAdmin = () => {
+		router.push({
+			pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}/admin`
+		})
+	}
+
 	const {
 		loading,
 		error,
@@ -210,7 +189,8 @@ export const ZeenPostEditor: React.FC<IProps> = ({ postSlug }) => {
 	const [isLoadingPost, setIsLoadingPost] = useState(true)
 	const [post, setPost] = useState<Post>()
 
-	const [postTitle, setPostTitle] = useState(``)
+	const [zeenName, setZeenName] = useState('')
+	const [postTitle, setPostTitle] = useState('')
 	const [postRecap, setPostRecap] = useState('')
 	const [postBody, setPostBody] = useState('')
 	const [postCoverPhoto, setPostCoverPhoto] = useState('')
@@ -342,7 +322,7 @@ export const ZeenPostEditor: React.FC<IProps> = ({ postSlug }) => {
 					</Center>
 				</Container>
 			)}
-			{!isLoadingPost && !post?.title && (
+			{!isLoadingPost && !post && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -351,53 +331,155 @@ export const ZeenPostEditor: React.FC<IProps> = ({ postSlug }) => {
 				</Container>
 			)}
 
-			{!isLoadingPost && post?.title && (
+			{!isLoadingPost && post && (
 				<>
-					<div className={classes.header}>
-						<div className={classes.headerTitle}>
-							<a onClick={navigateToZeenDetail}>
-								<ArrowLeft
-									className={classes.headerArrow}
-									size={32}
-								/>
-							</a>
-
-							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<div className={classes.headerClubNameContainer}>
-								<Text className={classes.headerClubName}>
-									{post.title!}
-								</Text>
-								<div className={classes.clubUrlContainer}>
-									<Text
-										className={classes.clubUrl}
-									>{`${window.location.origin}/${post.slug}`}</Text>
-									<Image
-										className={classes.copy}
-										src="/copy.png"
-										height={20}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												`${
-													window.location.origin
-												}/${getClubSlug()}/zeen/${
-													post.slug
-												}`
-											)
-											showNotification({
-												title: 'Zeen URL copied',
-												autoClose: 2000,
-												color: 'green',
-												icon: <Check />,
-
-												message: `This zeen's URL was copied to your clipboard.`
-											})
-										}}
-										width={20}
+					{post.isContributor && (
+						<>
+							<div className={classes.header}>
+								<a onClick={navigateToZeenAdmin}>
+									<ArrowLeft
+										className={classes.headerArrow}
+										size={32}
 									/>
+								</a>
+								<div>
+									<>
+										<Text className={classes.headerPrompt}>
+											Create new post
+										</Text>
+										{postTitle.length === 0 && (
+											<Text
+												className={
+													classes.headerClubName
+												}
+											>
+												{'Untitled'}
+											</Text>
+										)}
+									</>
+									<Text className={classes.headerClubName}>
+										{postTitle}
+									</Text>
 								</div>
 							</div>
-						</div>
-					</div>
+
+							<Container>
+								<Text className={classes.formPrompt}>
+									{`What’s your post called?`}
+								</Text>
+								<Space h={8} />
+
+								<TextInput
+									radius="lg"
+									size="md"
+									value={postTitle}
+									maxLength={30}
+									onChange={event =>
+										setPostTitle(event.currentTarget.value)
+									}
+								/>
+								<Space h={32} />
+
+								<Text className={classes.formPrompt}>
+									Give a one-sentence recap of what your post
+									is about.
+								</Text>
+								<Space h={8} />
+
+								<Textarea
+									radius="lg"
+									size="md"
+									autosize
+									minRows={2}
+									maxRows={4}
+									maxLength={140}
+									onChange={event =>
+										setPostBody(event.currentTarget.value)
+									}
+								/>
+
+								<Space h={32} />
+
+								<Text className={classes.formPrompt}>
+									Give a one-sentence recap of what your post
+									is about.
+								</Text>
+								<Space h={8} />
+
+								<RichTextEditor
+									value={postBody}
+									onChange={event => setPostBody(event)}
+								/>
+
+								<Text className={classes.clubLogoPrompt}>
+									{`Set a cover image for your post. (Optional)`}
+								</Text>
+								<Text className={classes.clubLogoInfo}>
+									Recommended size is 500px x 1500px. Please
+									upload either JPG or PNG files.
+								</Text>
+								{postCoverPhoto.length === 0 &&
+									!isLoadingImage && (
+										<div className={classes.uploadOptions}>
+											<Button
+												leftIcon={<Upload size={14} />}
+												className={classes.buttonUpload}
+												onClick={() =>
+													openFileSelector()
+												}
+											>
+												Upload
+											</Button>
+										</div>
+									)}
+								{isLoadingImage && <Loader />}
+								{!isLoadingImage && postCoverPhoto.length > 0 && (
+									<div
+										className={
+											classes.postCoverPhotoImageContainer
+										}
+									>
+										<Image
+											className={
+												classes.postCoverPhotoImage
+											}
+											src={postCoverPhoto}
+											width={400}
+											height={200}
+											fit={'contain'}
+										/>
+										<a onClick={deleteImage}>
+											<Image
+												className={
+													classes.postCoverPhotoDeleteButton
+												}
+												src="/delete.png"
+												width={24}
+												height={24}
+											/>
+										</a>
+									</div>
+								)}
+							</Container>
+
+							<Button
+								onClick={() => {
+									createPost()
+								}}
+								loading={isLoading}
+								disabled={
+									postTitle.length === 0 ||
+									postRecap.length === 0 ||
+									postBody.length === 0 ||
+									postCoverPhoto.length === 0 ||
+									isLoading
+								}
+								className={classes.buttonCreate}
+							>
+								Launch zeen
+							</Button>
+						</>
+					)}
 
 					{!post?.isContributor && (
 						<Container>

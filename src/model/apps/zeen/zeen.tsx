@@ -15,11 +15,11 @@ export interface Zeen {
 export default async function zeenFromApi(wallet: any): Promise<Zeen> {
 	return {
 		id: '',
-		slug: 'zeen',
+		slug: '',
 		clubSlug: 'club-club',
 		clubName: 'Club Club',
-		name: 'Zeen',
-		description: 'A zeen',
+		name: 'Zeen post',
+		description: 'This is a mock zeen post.',
 		image: '/exampleclub.png',
 		isZeenEditor: true,
 		editors: []
