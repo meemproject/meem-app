@@ -11,14 +11,17 @@ import {
 	Button,
 	Textarea,
 	TextInput,
-	Space
+	Space,
+	Modal
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import * as meemContracts from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
+import html2canvas from 'html2canvas'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
@@ -26,6 +29,10 @@ import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
 import ClubClubContext from '../Detail/ClubClubProvider'
+
+const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
+	ssr: false
+})
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -130,6 +137,17 @@ const useStyles = createStyles(theme => ({
 		top: '-12px',
 		right: '-105px',
 		cursor: 'pointer'
+	},
+	uploadOptions: { display: 'flex' },
+	emojiCanvas: {
+		position: 'absolute',
+		top: 40,
+		left: 0,
+		marginTop: -12,
+		marginBottom: -12,
+		lineHeight: 1,
+		fontSize: 24,
+		zIndex: -1000
 	}
 }))
 
@@ -147,6 +165,8 @@ export const CreateComponent: React.FC = () => {
 	const [clubTwitterUrl, setClubTwitterUrl] = useState('')
 	const [clubDiscordUrl, setClubDiscordUrl] = useState('')
 	const descriptionRef = useRef<HTMLTextAreaElement>()
+
+	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
 	const [isLoading, setIsLoading] = useState(false)
 	const { web3Provider, accounts, signer, isConnected, connectWallet } =
@@ -189,10 +209,6 @@ export const CreateComponent: React.FC = () => {
 		maxFileSize: 10
 	})
 
-	const navigateHome = () => {
-		router.push({ pathname: '/' })
-	}
-
 	const resizeFile = (file: any) =>
 		new Promise(resolve => {
 			Resizer.imageFileResizer(
@@ -208,6 +224,41 @@ export const CreateComponent: React.FC = () => {
 				'base64'
 			)
 		})
+
+	const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
+	const openEmojiPicker = () => {
+		setIsEmojiPickerOpen(true)
+	}
+
+	function timeout(delay: number) {
+		return new Promise(res => setTimeout(res, delay))
+	}
+
+	const onEmojiClick = async (event: any, emojiObject: any) => {
+		setChosenEmoji(emojiObject)
+		setIsEmojiPickerOpen(false)
+		await timeout(100)
+		// emojiCanvas is a hidden div element containing the chosen emoji
+		const element = document.querySelector('#emojiCanvas')
+		if (element) {
+			log.debug('found emojiCanvas')
+
+			const canvas = await html2canvas(element as HTMLElement)
+			const image = canvas.toDataURL('image/png', 1.0)
+			const clubLogoBlob = base64StringToBlob(
+				image.split(',')[1],
+				'image/png'
+			)
+			const file = await resizeFile(clubLogoBlob)
+			setSmallClubLogo(file as string)
+		} else {
+			log.debug('no emojiCanvas found')
+		}
+	}
+
+	const navigateHome = () => {
+		router.push({ pathname: '/' })
+	}
 
 	useEffect(() => {
 		const createResizedFile = async () => {
@@ -345,13 +396,23 @@ export const CreateComponent: React.FC = () => {
 					Note that all uploads will be rendered at 24x24 px.
 				</Text>
 				{smallClubLogo.length === 0 && !isLoadingImage && (
-					<Button
-						leftIcon={<Upload size={14} />}
-						className={classes.buttonUpload}
-						onClick={() => openFileSelector()}
-					>
-						Upload
-					</Button>
+					<div className={classes.uploadOptions}>
+						<Button
+							leftIcon={<Upload size={14} />}
+							className={classes.buttonUpload}
+							onClick={() => openFileSelector()}
+						>
+							Upload
+						</Button>
+						<Space w={'xs'} />
+						<Button
+							leftIcon={<Text>😈</Text>}
+							className={classes.buttonUpload}
+							onClick={() => openEmojiPicker()}
+						>
+							Choose emoji
+						</Button>
+					</div>
 				)}
 				{isLoadingImage && <Loader />}
 				{!isLoadingImage && smallClubLogo.length > 0 && (
@@ -374,6 +435,10 @@ export const CreateComponent: React.FC = () => {
 					</div>
 				)}
 			</Container>
+			<div id="emojiCanvas" className={classes.emojiCanvas}>
+				{chosenEmoji && <>{chosenEmoji.emoji}</>}
+			</div>
+
 			<Center>
 				<Button
 					onClick={() => {
@@ -390,6 +455,17 @@ export const CreateComponent: React.FC = () => {
 					Continue
 				</Button>
 			</Center>
+			<Modal
+				withCloseButton={false}
+				padding={8}
+				size={296}
+				opened={isEmojiPickerOpen}
+				onClose={() => {
+					setIsEmojiPickerOpen(false)
+				}}
+			>
+				<EmojiPicker onEmojiClick={onEmojiClick} />
+			</Modal>
 		</>
 	)
 }

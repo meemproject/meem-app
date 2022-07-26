@@ -9,13 +9,15 @@ import {
 	Image,
 	Space,
 	Center,
-	Loader
+	Loader,
+	Divider
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft } from 'tabler-icons-react'
+import { ArrowLeft, Check } from 'tabler-icons-react'
 import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
 import { GET_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
@@ -58,15 +60,30 @@ const useStyles = createStyles(theme => ({
 		justifyContent: 'space-between',
 		flexDirection: 'row'
 	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
+	headerClubNameContainer: {
 		marginLeft: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
 			marginLeft: 16
 		}
 	},
+	headerClubName: {
+		fontWeight: 600,
+		fontSize: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
+	},
+	clubUrlContainer: {
+		marginTop: 8,
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	clubUrl: {
+		fontSize: 14,
+		opacity: 0.6,
+		fontWeight: 500
+	},
+
 	clubLogoImage: {
 		imageRendering: 'pixelated',
 		width: 80,
@@ -138,6 +155,24 @@ const useStyles = createStyles(theme => ({
 	},
 	invisibleTab: {
 		display: 'none'
+	},
+	clubIntegrationsSectionTitle: {
+		fontSize: 20,
+		marginBottom: 16,
+		fontWeight: 600
+	},
+	clubContractAddress: {
+		wordBreak: 'break-all',
+		color: 'rgba(0, 0, 0, 0.5)'
+	},
+	contractAddressContainer: {
+		display: 'flex',
+		flexDirection: 'row'
+	},
+	copy: {
+		marginLeft: 4,
+		padding: 2,
+		cursor: 'pointer'
 	}
 }))
 
@@ -260,9 +295,35 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								src={club.image!}
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<Text className={classes.headerClubName}>
-								{club.name!}
-							</Text>
+							<div className={classes.headerClubNameContainer}>
+								<Text className={classes.headerClubName}>
+									{club.name!}
+								</Text>
+								<div className={classes.clubUrlContainer}>
+									<Text
+										className={classes.clubUrl}
+									>{`${window.location.origin}/${club.slug}`}</Text>
+									<Image
+										className={classes.copy}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												`${window.location.origin}/${club.slug}`
+											)
+											showNotification({
+												title: 'Club URL copied',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+
+												message: `This club's URL was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -321,6 +382,47 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										: classes.invisibleTab
 								}
 							>
+								<Space h={30} />
+								<Text
+									className={
+										classes.clubIntegrationsSectionTitle
+									}
+								>
+									Club Contract Address
+								</Text>
+								<div
+									className={classes.contractAddressContainer}
+								>
+									<Text
+										className={classes.clubContractAddress}
+									>
+										{club.address}
+									</Text>
+									<Image
+										className={classes.copy}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												club.address ?? ''
+											)
+											showNotification({
+												title: 'Address copied',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+
+												message: `This club's contract address was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
+
+								<Space h={'xl'} />
+								<Divider />
+								<Space h={'xs'} />
+
 								<ClubAdminMembershipSettingsComponent
 									isCreatingClub={false}
 									club={club}

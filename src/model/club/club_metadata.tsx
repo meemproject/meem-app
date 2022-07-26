@@ -1,7 +1,7 @@
 interface ClubMetadata {
 	image: string
 	description: string
-	applicationLinks: string[]
+	applicationInstructions: string[]
 }
 
 export function clubMetadataFromContractUri(uri: string): ClubMetadata {
@@ -9,7 +9,7 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 		return {
 			image: '',
 			description: '',
-			applicationLinks: []
+			applicationInstructions: []
 		}
 	}
 
@@ -23,7 +23,7 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 			return {
 				image: '',
 				description: '',
-				applicationLinks: []
+				applicationInstructions: []
 			}
 		}
 		const contractURIObject = JSON.parse(contractURIJSONString)
@@ -31,14 +31,14 @@ export function clubMetadataFromContractUri(uri: string): ClubMetadata {
 		const metadata: ClubMetadata = {
 			image: contractURIObject.image,
 			description: contractURIObject.description,
-			applicationLinks: contractURIObject.application_links
+			applicationInstructions: contractURIObject.application_instructions
 		}
 		return metadata
 	} catch (e) {
 		return {
 			image: '',
 			description: '',
-			applicationLinks: []
+			applicationInstructions: []
 		}
 	}
 }
