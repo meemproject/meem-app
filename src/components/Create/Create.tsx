@@ -157,7 +157,9 @@ export const CreateComponent: React.FC = () => {
 
 	const clubclub = useContext(ClubClubContext)
 
-	const clubName = router.query.clubname?.toString()
+	const [clubName, setClubName] = useState(
+		router.query.clubname?.toString() ?? ''
+	)
 	const [defaultNamespace, setDefaultNamespace] = useState('')
 	const [clubNamespace, setClubNamespace] = useState('')
 
@@ -173,13 +175,24 @@ export const CreateComponent: React.FC = () => {
 		useWallet()
 
 	useEffect(() => {
-		if (clubName === undefined) {
-			showNotification({
-				title: 'Unable to create this club.',
-				message: `Some data is missing. Try again!`,
-				autoClose: 5000
-			})
-			router.push({ pathname: '/' })
+		if (clubName === undefined || clubName.length === 0) {
+			const cookieName = Cookies.get(CookieKeys.clubName)
+
+			if (cookieName === undefined) {
+				showNotification({
+					title: 'Unable to create this club.',
+					message: `Some data is missing. Try again!`,
+					autoClose: 5000
+				})
+				router.push({ pathname: '/' })
+			} else {
+				setClubName(cookieName)
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const name = cookieName.replaceAll(' ', '-').toLowerCase()
+				setDefaultNamespace(name)
+				setClubNamespace(name)
+				Cookies.remove(CookieKeys.clubName)
+			}
 		}
 	}, [accounts.length, clubName, router])
 
