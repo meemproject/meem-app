@@ -94,7 +94,7 @@ const useStyles = createStyles(theme => ({
 		position: 'relative'
 	},
 	namespaceTextInput: {
-		paddingLeft: 154,
+		paddingLeft: 138,
 		paddingBottom: 3
 	},
 	namespaceTextInputUrlPrefix: {
@@ -109,7 +109,8 @@ const useStyles = createStyles(theme => ({
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	successText: { fontWeight: 600, color: 'rgba(29, 173, 78, 1)' }
+	successText: { fontWeight: 600, color: 'rgba(29, 173, 78, 1)' },
+	paragraphFrame: { width: '100%', height: 200 }
 }))
 
 interface IProps {
@@ -222,12 +223,17 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 			window.addEventListener(
 				'message',
 				(ev: MessageEvent<{ type: string; message: string }>) => {
-					log.debug(ev)
 					log.debug(ev.data)
-
-					// TODO: handle message data
-					setCreatedPublicationSlug('publication-slug')
-					saveIntegration(true)
+					if (
+						ev.data.message &&
+						ev.data.message.includes('paragraph')
+					) {
+						// TODO: What data do we get back?
+						log.debug('paragraph message')
+						// TODO: handle message data
+						setCreatedPublicationSlug('publication-slug')
+						saveIntegration(true)
+					}
 				}
 			)
 		}
@@ -253,6 +259,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 					step !== Step.Transaction && step != Step.SavingIntegration
 				}
 				radius={16}
+				size={'50%'}
 				padding={'sm'}
 				opened={isOpened}
 				title={
@@ -313,7 +320,12 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Text
 										className={classes.title}
 									>{`What's your Publication called?`}</Text>
-									<Text>Catchy names are the best.</Text>
+									<Space h={2} />
+									<Text className={classes.description}>
+										Catchy names are the best.
+									</Text>
+									<Space h={16} />
+
 									<TextInput
 										radius="lg"
 										size="md"
@@ -324,10 +336,19 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											)
 										}
 									/>
+									<Space h={24} />
+
 									<Text
 										className={classes.title}
 									>{`Your visitors can find your publication at this URL.`}</Text>
-									<Text>Catchy names are the best.</Text>
+									<Space h={2} />
+
+									<Text className={classes.description}>
+										Your visitors can find your publication
+										at this URL.
+									</Text>
+									<Space h={16} />
+
 									<div
 										className={
 											classes.namespaceTextInputContainer
@@ -354,9 +375,13 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											}
 										>{`paragraph.xyz/`}</Text>
 									</div>
+									<Space h={24} />
+
 									<Text
 										className={classes.title}
 									>{`Who can read your publication?`}</Text>
+									<Space h={2} />
+
 									<RadioGroup
 										classNames={{ label: classes.radio }}
 										orientation="vertical"
@@ -385,26 +410,31 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											label="Club members"
 										/>
 										<Radio value="anyone" label="Anyone" />
-										<Button
-											disabled={
-												publicationName.length === 0 ||
-												publicationName.length > 50 ||
-												publicationUrl.length === 0 ||
-												publicationUrl.length > 30
-											}
-											onClick={async () => {
-												submitToParagraph()
-											}}
-											className={classes.buttonConfirm}
-										>
-											Create
-										</Button>
 									</RadioGroup>
+									<Space h={32} />
+
+									<Button
+										disabled={
+											publicationName.length === 0 ||
+											publicationName.length > 50 ||
+											publicationUrl.length === 0 ||
+											publicationUrl.length > 30
+										}
+										onClick={async () => {
+											submitToParagraph()
+										}}
+										className={classes.buttonConfirm}
+									>
+										Create
+									</Button>
 								</>
 							)}
 							{step === Step.Transaction && (
 								<>
-									<iframe src={paragraphIframeUrl} />
+									<iframe
+										className={classes.paragraphFrame}
+										src={paragraphIframeUrl}
+									/>
 								</>
 							)}
 							{step === Step.SavingIntegration && (
