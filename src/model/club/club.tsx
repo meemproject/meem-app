@@ -19,11 +19,14 @@ export interface Integration {
 	isEnabled?: boolean
 	isPublic?: boolean
 	isVerified?: boolean
-	verifiedTwitterUser?: string
 	url?: string
 	icon?: string
 	description?: string
 	guideUrl?: string
+
+	// Per-app properties
+	verifiedTwitterUser?: string
+	paragraphSlug?: string
 }
 
 export interface Club {
@@ -374,11 +377,15 @@ export default async function clubFromMeemContract(
 						isEnabled: inte.isEnabled,
 						isPublic: inte.isPublic,
 						isVerified: inte.metadata.isVerified ?? false,
-						verifiedTwitterUser:
-							inte.metadata.twitterUsername ?? 'Unknown',
+
 						guideUrl: inte.Integration?.guideUrl,
 						url: inte.metadata.externalUrl ?? '',
-						isExistingIntegration: true
+						isExistingIntegration: true,
+
+						// Per app properties
+						verifiedTwitterUser:
+							inte.metadata.twitterUsername ?? 'Unknown',
+						paragraphSlug: inte.metadata.paragraphSlug ?? 'Unknown'
 					}
 
 					if (inte.isPublic) {
@@ -386,6 +393,7 @@ export default async function clubFromMeemContract(
 					} else {
 						privateIntegrations.push(integration)
 					}
+
 					allIntegrations.push(integration)
 				}
 			})

@@ -16,7 +16,8 @@ import {
 	Button,
 	Loader,
 	Center,
-	Image
+	Image,
+	Switch
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -24,7 +25,7 @@ import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
@@ -116,7 +117,7 @@ interface IProps {
 	integration?: Integration
 	isOpened: boolean
 	onModalClosed: () => void
-	onComplete: () => void
+	onComplete: (slug: string, isEnabled: boolean) => void
 }
 
 enum Step {
@@ -131,7 +132,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	integration,
 	isOpened,
 	onModalClosed,
-	onComplete: onSuccessfulVerification
+	onComplete
 }) => {
 	const router = useRouter()
 
@@ -146,21 +147,75 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	const [isClubMembersOnly, setIsClubMembersOnly] = useState(false)
 
 	// The url with appropriate encoded params to send to paragraph
-	const [paragraphUrl, setParagraphUrl] = useState('')
+	const [paragraphIframeUrl, setParagraphIframeUrl] = useState('')
 	const [hasAddedWindowListener, setHasAddedWindowListener] = useState(false)
+
+	// Data received back from paragraph
+	const [createdPublicationSlug, setCreatedPublicationSlug] = useState('')
+
+	// Is this integration enabled?
+	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(false)
 
 	const submitToParagraph = () => {
 		// TODO: Assemble the correct URL
 		const url = 'https://paragraph.xyz'
-		setParagraphUrl(url)
+		setParagraphIframeUrl(url)
 
 		// Show iFrame step - paragraph will handle the rest
 		setStep(Step.Transaction)
 	}
 
-	const saveIntegration = async () => {}
+	const saveIntegration = useCallback(
+		async (isPublic: boolean) => {
+			setStep(Step.SavingIntegration)
+			try {
+				const jwtToken = Cookies.get('meemJwtToken')
+				const { body } = await request
+					.post(
+						`${
+							process.env.NEXT_PUBLIC_API_URL
+						}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
+							{
+								meemContractId: club.id ?? '',
+								integrationId: integration?.integrationId ?? ''
+							}
+						)}`
+					)
+					.set('Authorization', `JWT ${jwtToken}`)
+					.send({
+						isEnabled: isIntegrationEnabled,
+						isPublic,
+						metadata: {
+							// TODO: Make sure this URL is correct
+							externalUrl: `https://paragraph.xyz/${createdPublicationSlug}`,
+							paragraphSlug: createdPublicationSlug
+						}
+					})
+				log.debug(body)
+				setStep(Step.Success)
+			} catch (e) {
+				log.debug(e)
+				showNotification({
+					title: 'Something went wrong',
+					autoClose: 5000,
+					color: 'red',
+					icon: <AlertCircle />,
+					message: `Please check that all fields are complete and try again.`
+				})
+				setStep(Step.Start)
+				return
+			}
+		},
+		[
+			club.id,
+			createdPublicationSlug,
+			integration?.integrationId,
+			isIntegrationEnabled
+		]
+	)
 
 	useEffect(() => {
+		// Listen out for changes from the Paragraph iFrame
 		if (!hasAddedWindowListener) {
 			setHasAddedWindowListener(true)
 			log.debug('Paragraph modal is listening for data from Paragraph...')
@@ -171,11 +226,22 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 					log.debug(ev.data)
 
 					// TODO: handle message data
-					saveIntegration()
+					setCreatedPublicationSlug('publication-slug')
+					saveIntegration(true)
 				}
 			)
 		}
-	}, [hasAddedWindowListener])
+
+		// Used when we want to show integration settings after being saved
+		if (integration && integration.paragraphSlug) {
+			setCreatedPublicationSlug(integration.paragraphSlug)
+		}
+	}, [
+		hasAddedWindowListener,
+		integration,
+		isClubMembersOnly,
+		saveIntegration
+	])
 
 	return (
 		<>
@@ -183,7 +249,9 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				centered
 				closeOnClickOutside={false}
 				closeOnEscape={false}
-				withCloseButton={step !== Step.Transaction}
+				withCloseButton={
+					step !== Step.Transaction && step != Step.SavingIntegration
+				}
 				radius={16}
 				padding={'sm'}
 				opened={isOpened}
@@ -193,8 +261,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 					</Text>
 				}
 				onClose={() => {
+					if (step === Step.Success) {
+						onComplete(createdPublicationSlug, isIntegrationEnabled)
+					}
 					onModalClosed()
-					setStep(Step.Start)
 				}}
 			>
 				<Divider />
@@ -202,122 +272,169 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				<Space h={24} />
 
 				<div className={classes.stepsContainer}>
-					{step === Step.Start && (
+					{integration && integration.paragraphSlug && (
 						<>
-							<Text
-								className={classes.title}
-							>{`What's your Publication called?`}</Text>
-							<Text>Catchy names are the best.</Text>
-							<TextInput
-								radius="lg"
-								size="md"
-								value={publicationName}
-								onChange={event =>
-									setPublicationName(
-										event.currentTarget.value
-									)
-								}
-							/>
-							<Text
-								className={classes.title}
-							>{`Your visitors can find your publication at this URL.`}</Text>
-							<Text>Catchy names are the best.</Text>
-							<div
-								className={classes.namespaceTextInputContainer}
-							>
-								<TextInput
-									classNames={{
-										input: classes.namespaceTextInput
-									}}
-									radius="lg"
-									size="md"
-									value={publicationUrl}
-									onChange={event => {
-										setPublicationUrl(
-											event.target.value
-												.replaceAll(' ', '')
-												.toLowerCase()
+							<>
+								<Space h={16} />
+								<Switch
+									checked={isIntegrationEnabled}
+									onChange={event =>
+										setIsIntegrationEnabled(
+											event.currentTarget.checked
 										)
-									}}
+									}
+									label="Enable app"
 								/>
-								<Text
-									className={
-										classes.namespaceTextInputUrlPrefix
-									}
-								>{`paragraph.xyz/`}</Text>
-							</div>
-							<Text
-								className={classes.title}
-							>{`Who can read your publication?`}</Text>
-							<RadioGroup
-								classNames={{ label: classes.radio }}
-								orientation="vertical"
-								spacing={10}
-								size="md"
-								color="dark"
-								value={isClubMembersOnly ? 'members' : 'anyone'}
-								onChange={value => {
-									switch (value) {
-										case 'members':
-											setIsClubMembersOnly(true)
-											break
-										case 'anyone':
-											setIsClubMembersOnly(false)
-											break
-									}
-								}}
-								required
-							>
-								<Radio value="members" label="Club members" />
-								<Radio value="anyone" label="Anyone" />
 								<Button
-									disabled={
-										publicationName.length === 0 ||
-										publicationName.length > 50 ||
-										publicationUrl.length === 0 ||
-										publicationUrl.length > 30
-									}
 									onClick={async () => {
-										submitToParagraph()
+										// Save the integration
+										saveIntegration(
+											integration.isPublic ?? true
+										)
+										// Update the local integration
+										onComplete(
+											createdPublicationSlug,
+											isIntegrationEnabled
+										)
+										// Close our modal
+										onModalClosed()
 									}}
 									className={classes.buttonConfirm}
 								>
 									Save
 								</Button>
-							</RadioGroup>
+							</>
 						</>
 					)}
-					{step === Step.Transaction && (
+					{integration && !integration.paragraphSlug && (
 						<>
-							<iframe src={paragraphUrl} />
-						</>
-					)}
-					{step === Step.SavingIntegration && (
-						<>
-							<Center>
-								<Loader />
-							</Center>
-						</>
-					)}
-					{step === Step.Success && (
-						<>
-							<Image src="/integration-paragraph.png" />
-							<Text className={classes.successText}>
-								Success!
-							</Text>
-							<Text>
-								{`Your club's Paragraph publication has been
+							{step === Step.Start && (
+								<>
+									<Text
+										className={classes.title}
+									>{`What's your Publication called?`}</Text>
+									<Text>Catchy names are the best.</Text>
+									<TextInput
+										radius="lg"
+										size="md"
+										value={publicationName}
+										onChange={event =>
+											setPublicationName(
+												event.currentTarget.value
+											)
+										}
+									/>
+									<Text
+										className={classes.title}
+									>{`Your visitors can find your publication at this URL.`}</Text>
+									<Text>Catchy names are the best.</Text>
+									<div
+										className={
+											classes.namespaceTextInputContainer
+										}
+									>
+										<TextInput
+											classNames={{
+												input: classes.namespaceTextInput
+											}}
+											radius="lg"
+											size="md"
+											value={publicationUrl}
+											onChange={event => {
+												setPublicationUrl(
+													event.target.value
+														.replaceAll(' ', '')
+														.toLowerCase()
+												)
+											}}
+										/>
+										<Text
+											className={
+												classes.namespaceTextInputUrlPrefix
+											}
+										>{`paragraph.xyz/`}</Text>
+									</div>
+									<Text
+										className={classes.title}
+									>{`Who can read your publication?`}</Text>
+									<RadioGroup
+										classNames={{ label: classes.radio }}
+										orientation="vertical"
+										spacing={10}
+										size="md"
+										color="dark"
+										value={
+											isClubMembersOnly
+												? 'members'
+												: 'anyone'
+										}
+										onChange={value => {
+											switch (value) {
+												case 'members':
+													setIsClubMembersOnly(true)
+													break
+												case 'anyone':
+													setIsClubMembersOnly(false)
+													break
+											}
+										}}
+										required
+									>
+										<Radio
+											value="members"
+											label="Club members"
+										/>
+										<Radio value="anyone" label="Anyone" />
+										<Button
+											disabled={
+												publicationName.length === 0 ||
+												publicationName.length > 50 ||
+												publicationUrl.length === 0 ||
+												publicationUrl.length > 30
+											}
+											onClick={async () => {
+												submitToParagraph()
+											}}
+											className={classes.buttonConfirm}
+										>
+											Create
+										</Button>
+									</RadioGroup>
+								</>
+							)}
+							{step === Step.Transaction && (
+								<>
+									<iframe src={paragraphIframeUrl} />
+								</>
+							)}
+							{step === Step.SavingIntegration && (
+								<>
+									<Center>
+										<Loader />
+									</Center>
+								</>
+							)}
+							{step === Step.Success && (
+								<>
+									<Image src="/integration-paragraph.png" />
+									<Text className={classes.successText}>
+										Success!
+									</Text>
+									<Text>
+										{`Your club's Paragraph publication has been
 								created.`}
-							</Text>
-							<Button
-								onClick={async () => {
-									// TODO: open paragraph publication editor
-									window.open('https://paragraph.xyz')
-								}}
-								className={classes.buttonConfirm}
-							>
-								Launch Paragraph
-							</Button>
+									</Text>
+									<Button
+										onClick={async () => {
+											// TODO: open paragraph publication editor
+											window.open('https://paragraph.xyz')
+										}}
+										className={classes.buttonConfirm}
+									>
+										Launch Paragraph
+									</Button>
+								</>
+							)}
 						</>
 					)}
 				</div>

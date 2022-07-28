@@ -89,7 +89,7 @@ interface IProps {
 	integration?: Integration
 	isOpened: boolean
 	onModalClosed: () => void
-	onSuccessfulVerification: () => void
+	onSuccessfulVerification: (username: string) => void
 }
 
 enum Step {
@@ -149,7 +149,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 
 				message: `Your club is now verified.`
 			})
-			onSuccessfulVerification()
+			onSuccessfulVerification(twitterUsername)
 			onModalClosed()
 		} catch (e) {
 			log.debug(e)
