@@ -29,7 +29,7 @@ import request from 'superagent'
 import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
 import { Club, Integration } from '../../model/club/club'
-import { ClubAdminVerifyTwitterModal } from './ClubAdminVerifyTwitterModal'
+import { ClubAdminVerifyTwitterModal } from './IntegrationModals/ClubAdminVerifyTwitterModal'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab

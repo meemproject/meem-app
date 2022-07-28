@@ -22,7 +22,7 @@ import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
-import { Club, Integration } from '../../model/club/club'
+import { Club, Integration } from '../../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
