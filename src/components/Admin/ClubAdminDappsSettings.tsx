@@ -637,7 +637,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						})
 					}}
 					onModalClosed={() => {
-						setVerifyTwitterModalOpened(false)
+						setParagraphModalOpened(false)
 					}}
 				/>
 				<Modal

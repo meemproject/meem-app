@@ -109,7 +109,12 @@ const useStyles = createStyles(theme => ({
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	successText: { fontWeight: 600, color: 'rgba(29, 173, 78, 1)' },
+	successText: {
+		fontWeight: 600,
+		fontSize: 22,
+		color: 'rgba(29, 173, 78, 1)'
+	},
+	successInfo: { textAlign: 'center' },
 	paragraphFrame: { width: '100%', height: 200 }
 }))
 
@@ -241,6 +246,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 		// Used when we want to show integration settings after being saved
 		if (integration && integration.paragraphSlug) {
 			setCreatedPublicationSlug(integration.paragraphSlug)
+			setIsIntegrationEnabled(integration.isEnabled ?? false)
 		}
 	}, [
 		hasAddedWindowListener,
@@ -264,7 +270,9 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				opened={isOpened}
 				title={
 					<Text className={classes.modalTitle}>
-						Create a Paragraph Publication
+						{integration && integration.paragraphSlug
+							? 'Edit Paragraph settings'
+							: 'Create a Paragraph Publication'}
 					</Text>
 				}
 				onClose={() => {
@@ -290,8 +298,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											event.currentTarget.checked
 										)
 									}
-									label="Enable app"
+									label="Paragraph enabled for your club"
 								/>
+								<Space h={16} />
+
 								<Button
 									onClick={async () => {
 										// Save the integration
@@ -439,30 +449,52 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							)}
 							{step === Step.SavingIntegration && (
 								<>
+									<Space h={16} />
 									<Center>
 										<Loader />
 									</Center>
+									<Space h={16} />
 								</>
 							)}
 							{step === Step.Success && (
 								<>
-									<Image src="/integration-paragraph.png" />
-									<Text className={classes.successText}>
-										Success!
-									</Text>
-									<Text>
+									<Space h={16} />
+
+									<Center>
+										<Image
+											src="/integration-paragraph.png"
+											height={40}
+											width={40}
+										/>
+									</Center>
+									<Space h={16} />
+									<Center>
+										<Text className={classes.successText}>
+											Success!
+										</Text>
+									</Center>
+									<Space h={16} />
+
+									<Text className={classes.successInfo}>
 										{`Your club's Paragraph publication has been
 								created.`}
 									</Text>
-									<Button
-										onClick={async () => {
-											// TODO: open paragraph publication editor
-											window.open('https://paragraph.xyz')
-										}}
-										className={classes.buttonConfirm}
-									>
-										Launch Paragraph
-									</Button>
+									<Space h={16} />
+
+									<Center>
+										<Button
+											onClick={async () => {
+												// TODO: open paragraph publication editor
+												window.open(
+													'https://paragraph.xyz'
+												)
+											}}
+											className={classes.buttonConfirm}
+										>
+											Launch Paragraph
+										</Button>
+									</Center>
+									<Space h={16} />
 								</>
 							)}
 						</>
