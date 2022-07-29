@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import { MeemAPI } from '@meemproject/api'
-import { Permission } from '@meemproject/meem-contracts'
 import { ethers } from 'ethers'
 import { MeemContracts } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
@@ -63,6 +62,42 @@ export enum MembershipReqType {
 	ApprovedApplicants,
 	TokenHolders,
 	OtherClubMember
+}
+
+export function MembershipRequirementToMeemPermission(
+	mr: MembershipRequirement & {
+		costEth?: number
+		mintStartTimestamp?: number
+		mintEndTimestamp?: number
+	}
+): MeemAPI.IMeemPermission {
+	let permission = MeemAPI.Permission.Anyone
+
+	switch (mr.type) {
+		case MembershipReqType.ApprovedApplicants:
+			permission = MeemAPI.Permission.Addresses
+			break
+		case MembershipReqType.TokenHolders:
+			permission = MeemAPI.Permission.Holders
+			break
+		case MembershipReqType.None:
+		default:
+			break
+	}
+
+	const costEth = mr.costEth ?? 0
+	const mintStartTimestamp = `${mr.mintStartTimestamp ?? 0}`
+	const mintEndTimestamp = `${mr.mintEndTimestamp ?? 0}`
+
+	return {
+		addresses: mr.approvedAddresses,
+		costWei: ethers.utils.parseEther(`${costEth}`).toHexString(),
+		lockedBy: MeemAPI.zeroAddress,
+		mintStartTimestamp,
+		mintEndTimestamp,
+		numTokens: `${mr.tokenMinQuantity}`,
+		permission
+	}
 }
 
 export enum MembershipReqAndor {
@@ -191,7 +226,8 @@ export default async function clubFromMeemContract(
 					log.debug(permission)
 					// Filter out the admin-exclusive permissions
 					if (
-						permission.permission === Permission.Addresses &&
+						permission.permission ===
+							MeemAPI.Permission.Addresses &&
 						permission.addresses.length === 1 &&
 						adminRawAddresses.includes(
 							permission.addresses[0].toLowerCase()
@@ -229,10 +265,10 @@ export default async function clubFromMeemContract(
 						)
 
 						switch (permission.permission) {
-							case Permission.Anyone:
+							case MeemAPI.Permission.Anyone:
 								type = MembershipReqType.None
 								break
-							case Permission.Addresses:
+							case MeemAPI.Permission.Addresses:
 								type = MembershipReqType.ApprovedApplicants
 
 								// Look up ENS names for approved addresses
@@ -253,7 +289,7 @@ export default async function clubFromMeemContract(
 									)
 								)
 								break
-							case Permission.Holders:
+							case MeemAPI.Permission.Holders:
 								tokenMinQuantity = Number(permission.numTokens)
 								// eslint-disable-next-line no-case-declarations
 								type = MembershipReqType.TokenHolders

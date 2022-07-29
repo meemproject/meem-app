@@ -171,3 +171,48 @@ export const GET_INTEGRATIONS = gql`
 		}
 	}
 `
+
+export const SUB_MY_CLUBS = gql`
+	subscription MyClubsSubscription($walletAddress: String) {
+		Meems(
+			where: {
+				MeemContractId: { _is_null: false }
+				owner: { _eq: $walletAddress }
+			}
+			distinct_on: MeemContractId
+		) {
+			owner
+			tokenId
+			MeemContractId
+			MeemContract {
+				slug
+				address
+				contractURI
+				createdAt
+				name
+				splits
+				mintEndAt
+				mintStartAt
+				mintPermissions
+				originalsPerWallet
+				totalOriginalsSupply
+				symbol
+				MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+					role
+					Wallet {
+						address
+					}
+				}
+			}
+		}
+	}
+`
+
+export const GET_BUNDLE_BY_ID = gql`
+	query GetBundleById($id: uuid!) {
+		Bundles(where: { id: { _eq: $id } }) {
+			id
+			abi
+		}
+	}
+`

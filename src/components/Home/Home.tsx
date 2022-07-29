@@ -22,6 +22,7 @@ import {
 	Space
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, {
 	forwardRef,
@@ -39,6 +40,7 @@ import {
 	GET_IS_MEMBER_OF_CLUB
 } from '../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
+import { CookieKeys } from '../../utils/cookies'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
 
@@ -274,14 +276,24 @@ export function HomeComponent() {
 	}
 
 	const goToCreate = () => {
-		//if (hasMeemId) {
-		router.push({
-			pathname: `/create`,
-			query: { clubname: autocompleteFormValue }
-		})
-		// } else {
-		// 	setJoinMeemDialogOpen(true)
-		// }
+		if (
+			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
+			Cookies.get('meemJwtToken') === undefined &&
+			Cookies.get('walletAddress') === undefined
+		) {
+			Cookies.set(CookieKeys.clubName, autocompleteFormValue)
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/create`
+				}
+			})
+		} else {
+			router.push({
+				pathname: `/create`,
+				query: { clubname: autocompleteFormValue }
+			})
+		}
 	}
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
