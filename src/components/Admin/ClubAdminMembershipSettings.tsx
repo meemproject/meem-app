@@ -37,7 +37,8 @@ import {
 	MembershipReqAndor,
 	MembershipReqType,
 	MembershipRequirement,
-	Club
+	Club,
+	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { CookieKeys } from '../../utils/cookies'
@@ -376,11 +377,37 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 			const name = Cookies.get(CookieKeys.clubName) ?? 'test name'
 
+			const splits =
+				membershipFundsAddress.length > 0 && costToJoin > 0
+					? [
+							{
+								amount: 10000,
+								toAddress: membershipFundsAddress,
+								lockedBy: MeemAPI.zeroAddress
+							}
+					  ]
+					: []
+
+			const mintPermissions: MeemAPI.IMeemPermission[] =
+				membershipRequirements.map(mr =>
+					MembershipRequirementToMeemPermission({
+						...mr,
+						costEth: costToJoin,
+						mintStartTimestamp: membershipStartDate
+							? membershipStartDate.getTime() / 1000
+							: 0,
+						mintEndTimestamp: membershipEndDate
+							? membershipEndDate.getTime() / 1000
+							: 0
+					})
+				)
+
 			await createContractFetcher(
 				MeemAPI.v1.CreateMeemContract.path(),
 				undefined,
 				{
 					shouldMintAdminTokens: true,
+					// TODO: Set real metadata
 					metadata: {
 						meem_contract_type: 'meem-club',
 						meem_metadata_version: 'Meem_Contract_20220718',
@@ -395,18 +422,9 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					minters: clubAdmins,
 					maxSupply:
 						ethers.BigNumber.from(membershipQuantity).toHexString(),
-					mintPermissions: [
-						{
-							permission: MeemAPI.Permission.Anyone,
-							numTokens: '0',
-							costWei: '0',
-							addresses: [],
-							mintStartTimestamp: '0',
-							mintEndTimestamp: '0',
-							lockedBy: ethers.constants.AddressZero
-						}
-					],
-					splits: [],
+					mintPermissions,
+					splits,
+					// TODO: Set real admin token metadata
 					adminTokenMetadata: {
 						meem_metadata_version: 'Meem_Token_20220718',
 						description: 'Testing...',

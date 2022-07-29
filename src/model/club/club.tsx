@@ -64,6 +64,42 @@ export enum MembershipReqType {
 	OtherClubMember
 }
 
+export function MembershipRequirementToMeemPermission(
+	mr: MembershipRequirement & {
+		costEth?: number
+		mintStartTimestamp?: number
+		mintEndTimestamp?: number
+	}
+): MeemAPI.IMeemPermission {
+	let permission = MeemAPI.Permission.Anyone
+
+	switch (mr.type) {
+		case MembershipReqType.ApprovedApplicants:
+			permission = MeemAPI.Permission.Addresses
+			break
+		case MembershipReqType.TokenHolders:
+			permission = MeemAPI.Permission.Holders
+			break
+		case MembershipReqType.None:
+		default:
+			break
+	}
+
+	const costEth = mr.costEth ?? 0
+	const mintStartTimestamp = `${mr.mintStartTimestamp ?? 0}`
+	const mintEndTimestamp = `${mr.mintEndTimestamp ?? 0}`
+
+	return {
+		addresses: mr.approvedAddresses,
+		costWei: ethers.utils.parseEther(`${costEth}`).toHexString(),
+		lockedBy: MeemAPI.zeroAddress,
+		mintStartTimestamp,
+		mintEndTimestamp,
+		numTokens: `${mr.tokenMinQuantity}`,
+		permission
+	}
+}
+
 export enum MembershipReqAndor {
 	None,
 	And,
