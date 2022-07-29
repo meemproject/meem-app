@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -23,25 +22,19 @@ import {
 } from '@mantine/core'
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
-import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
-import { MyClubsSubscriptionSubscription } from '../../../generated/graphql'
-import { SUB_MY_CLUBS } from '../../graphql/clubs'
 import {
 	MembershipSettings,
 	MembershipReqAndor,
 	MembershipReqType,
 	MembershipRequirement,
-	Club,
-	MembershipRequirementToMeemPermission
+	Club
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate, ensWalletAddress } from '../../utils/truncated_wallet'
 import { CreateClubModal } from '../Create/CreateClubModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
@@ -357,112 +350,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setMembershipQuantityModalOpened(true)
 	}
 
-	const { data: myClubsData, loading: isLoadingMyClubs } =
-		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
-			variables: { walletAddress: wallet.accounts[0] }
-		})
-
-	const [isTransactionsModalOpened, setTransactionsModalOpened] =
+	const [isClubCreationModalOpened, setIsClubCreationModalOpened] =
 		useState(false)
-	const openTransactionsModal = async () => {
-		setTransactionsModalOpened(true)
-		try {
-			const createContractFetcher = makeFetcher<
-				MeemAPI.v1.CreateMeemContract.IQueryParams,
-				MeemAPI.v1.CreateMeemContract.IRequestBody,
-				MeemAPI.v1.CreateMeemContract.IResponseBody
-			>({
-				method: MeemAPI.v1.CreateMeemContract.method
-			})
-
-			const name = Cookies.get(CookieKeys.clubName) ?? 'test name'
-
-			const splits =
-				membershipFundsAddress.length > 0 && costToJoin > 0
-					? [
-							{
-								amount: 10000,
-								toAddress: membershipFundsAddress,
-								lockedBy: MeemAPI.zeroAddress
-							}
-					  ]
-					: []
-
-			const mintPermissions: MeemAPI.IMeemPermission[] =
-				membershipRequirements.map(mr =>
-					MembershipRequirementToMeemPermission({
-						...mr,
-						costEth: costToJoin,
-						mintStartTimestamp: membershipStartDate
-							? membershipStartDate.getTime() / 1000
-							: 0,
-						mintEndTimestamp: membershipEndDate
-							? membershipEndDate.getTime() / 1000
-							: 0
-					})
-				)
-
-			await createContractFetcher(
-				MeemAPI.v1.CreateMeemContract.path(),
-				undefined,
-				{
-					shouldMintAdminTokens: true,
-					// TODO: Set real metadata
-					metadata: {
-						meem_contract_type: 'meem-club',
-						meem_metadata_version: 'Meem_Contract_20220718',
-						name,
-						description: 'Testing...',
-						image: 'https://ipfs.io/ipfs/1234',
-						associations: [],
-						external_url: ''
-					},
-					name,
-					admins: clubAdmins,
-					minters: clubAdmins,
-					maxSupply:
-						ethers.BigNumber.from(membershipQuantity).toHexString(),
-					mintPermissions,
-					splits,
-					// TODO: Set real admin token metadata
-					adminTokenMetadata: {
-						meem_metadata_version: 'Meem_Token_20220718',
-						description: 'Testing...',
-						name: `${name} membership token`,
-						image: 'https://ipfs.io/ipfs/1234',
-						associations: [],
-						external_url: ''
-					}
-				}
-			)
-		} catch (e) {
-			log.crit(e)
-			showNotification({
-				title: 'Error Creating Club',
-				message:
-					'An error occurred while creating the club. Please try again.',
-				color: 'red'
-			})
-			// transactions modal for club creation
-			setTransactionsModalOpened(false)
-		}
+	const openClubCreationModal = async () => {
+		// transactions modal for club creation
+		// Opening this triggers club creation
+		setIsClubCreationModalOpened(true)
 	}
-
-	useEffect(() => {
-		if (isTransactionsModalOpened) {
-			const newClub = myClubsData?.Meems.find(
-				m => m.MeemContract?.name === Cookies.get(CookieKeys.clubName)
-			)
-			if (newClub) {
-				setTransactionsModalOpened(false)
-				log.info('New club created!', newClub)
-				// TODO: handle new club creation
-				router.push({
-					pathname: `/${newClub.MeemContract?.slug}`
-				})
-			}
-		}
-	}, [myClubsData, isLoadingMyClubs, isTransactionsModalOpened, router])
 
 	const [newClubData, setNewClubData] = useState<Club>()
 	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
@@ -504,15 +398,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	// Is the req we're currently editing the first requirement or not? This affects language and modal options
 	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
-
-	async function isAddress(address: string) {
-		try {
-			await wallet.web3Provider?._getAddress(address)
-		} catch (e) {
-			return false
-		}
-		return true
-	}
 
 	const saveChanges = async () => {
 		if (!clubclub.isMember) {
@@ -628,7 +513,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		// Show the appropriate modal (create vs edit)
 		if (isCreatingClub) {
-			openTransactionsModal()
+			openClubCreationModal()
 		} else {
 			const newClub = club!
 			newClub.membershipSettings = settings
@@ -1682,10 +1567,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				</Modal>
 				<CreateClubModal
 					membershipSettings={membershipSettings}
-					isOpened={isTransactionsModalOpened}
+					isOpened={isClubCreationModalOpened}
 					onModalClosed={() => {
 						setIsSavingChanges(false)
-						setTransactionsModalOpened(false)
+						setIsClubCreationModalOpened(false)
 					}}
 				/>
 				<ClubAdminChangesModal
