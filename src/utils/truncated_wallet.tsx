@@ -1,15 +1,19 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ethers } from 'ethers'
 
 export async function ensWalletAddress(address: string): Promise<string> {
 	if (address.length === 0) {
 		return ''
 	}
-	const provider = new ethers.providers.AlchemyProvider(
-		'mainnet',
-		process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-	)
-	const name = await provider.lookupAddress(address)
-	if (name !== null) return name
+
+	// Note: this functionality was disabled in order to counter Alchemy rate-limiting.
+	// const provider = new ethers.providers.AlchemyProvider(
+	// 	'mainnet',
+	// 	process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+	// )
+	// const name = await provider.lookupAddress(address)
+	// if (name !== null) return name
 
 	return address.toLowerCase()
 }

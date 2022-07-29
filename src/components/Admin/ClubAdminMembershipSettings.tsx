@@ -36,7 +36,7 @@ import {
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate, ensWalletAddress } from '../../utils/truncated_wallet'
-import { CreateClubTransactionsModal } from '../Create/CreateClubTransactionsModal'
+import { CreateClubModal } from '../Create/CreateClubModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
@@ -350,11 +350,12 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		setMembershipQuantityModalOpened(true)
 	}
 
-	const [isTransactionsModalOpened, setTransactionsModalOpened] =
+	const [isClubCreationModalOpened, setIsClubCreationModalOpened] =
 		useState(false)
-	const openTransactionsModal = async () => {
+	const openClubCreationModal = async () => {
 		// transactions modal for club creation
-		setTransactionsModalOpened(true)
+		// Opening this triggers club creation
+		setIsClubCreationModalOpened(true)
 	}
 
 	const [newClubData, setNewClubData] = useState<Club>()
@@ -397,15 +398,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	// Is the req we're currently editing the first requirement or not? This affects language and modal options
 	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
-
-	async function isAddress(address: string) {
-		try {
-			await wallet.web3Provider?._getAddress(address)
-		} catch (e) {
-			return false
-		}
-		return true
-	}
 
 	const saveChanges = async () => {
 		if (!clubclub.isMember) {
@@ -521,7 +513,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		// Show the appropriate modal (create vs edit)
 		if (isCreatingClub) {
-			openTransactionsModal()
+			openClubCreationModal()
 		} else {
 			const newClub = club!
 			newClub.membershipSettings = settings
@@ -1573,12 +1565,12 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						Done
 					</Button>
 				</Modal>
-				<CreateClubTransactionsModal
+				<CreateClubModal
 					membershipSettings={membershipSettings}
-					isOpened={isTransactionsModalOpened}
+					isOpened={isClubCreationModalOpened}
 					onModalClosed={() => {
 						setIsSavingChanges(false)
-						setTransactionsModalOpened(false)
+						setIsClubCreationModalOpened(false)
 					}}
 				/>
 				<ClubAdminChangesModal
