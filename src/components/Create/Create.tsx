@@ -304,7 +304,7 @@ export const CreateComponent: React.FC = () => {
 		}
 
 		// Some basic validation
-		if (!clubName || clubName.length < 3 || clubName.length > 50) {
+		if (!clubName || clubName.length < 3 || clubName.length > 30) {
 			// Club name invalid
 			showNotification({
 				title: 'Oops!',
