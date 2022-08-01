@@ -269,7 +269,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		const newReqs = [...membershipRequirements]
 		newReqs.push({
 			index: membershipRequirements.length,
-			andor: MembershipReqAndor.And,
+			andor: MembershipReqAndor.Or,
 			type: MembershipReqType.None,
 			applicationInstructions: '',
 			approvedAddresses: [],
@@ -1041,9 +1041,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								// Validate token
 								setIsCheckingRequirement(true)
 
-								if (
-									reqCurrentlyEditing.tokenMinQuantity === 0
-								) {
+								if (reqCurrentlyEditing.tokenMinQuantity <= 0) {
 									showNotification({
 										title: 'Oops!',
 										message:
