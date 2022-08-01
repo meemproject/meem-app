@@ -21,6 +21,7 @@ import { ArrowLeft, Check } from 'tabler-icons-react'
 import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
 import { GET_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
+import { ClubAdminAirdrops } from './ClubAdminAirdrops'
 import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
 import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
 import { ClubAdminProfileSettings } from './ClubAdminProfileSettings'
@@ -179,7 +180,8 @@ const useStyles = createStyles(theme => ({
 enum Tab {
 	Membership,
 	Profile,
-	Integrations
+	Integrations,
+	Airdrops
 }
 
 interface IProps {
@@ -208,6 +210,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 	const switchToIntegrations = () => {
 		setCurrentTab(Tab.Integrations)
+	}
+
+	const switchToAirdrops = () => {
+		setCurrentTab(Tab.Airdrops)
 	}
 
 	const {
@@ -374,6 +380,17 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										Apps
 									</Text>
 								</a>
+								<a onClick={switchToAirdrops}>
+									<Text
+										className={
+											currentTab == Tab.Airdrops
+												? classes.activeTab
+												: classes.inactiveTab
+										}
+									>
+										Airdrops
+									</Text>
+								</a>
 							</div>
 							<div
 								className={
@@ -448,6 +465,16 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							>
 								{' '}
 								<ClubAdminDappSettingsComponent club={club} />
+							</div>
+							<div
+								className={
+									currentTab === Tab.Airdrops
+										? classes.visibleTab
+										: classes.invisibleTab
+								}
+							>
+								{' '}
+								<ClubAdminAirdrops club={club} />
 							</div>
 						</Container>
 					)}
