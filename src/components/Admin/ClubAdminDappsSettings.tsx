@@ -22,10 +22,12 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
+import { zIndex } from 'html2canvas/dist/types/css/property-descriptors/z-index'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
+import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
 import { Club, Integration } from '../../model/club/club'
@@ -110,18 +112,19 @@ const useStyles = createStyles(theme => ({
 	enabledClubIntegrationItem: {
 		display: 'flex',
 		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
+		alignItems: 'center',
 		marginBottom: 12,
-		cursor: 'pointer',
 		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
+		backgroundColor: 'white',
 		borderRadius: 16,
-		padding: 16
+		paddingTop: 16,
+		position: 'relative'
 	},
 	intItemHeader: {
+		fontWeight: 600,
 		display: 'flex',
-		alignItems: 'center'
+		alignItems: 'center',
+		zIndex: 1
 	},
 	intItemDescription: {
 		fontWeight: 400,
@@ -213,6 +216,30 @@ const useStyles = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'end'
+	},
+	integrationActions: {
+		display: 'flex',
+		flexDirection: 'row',
+		height: 46
+	},
+	integrationAction: {
+		cursor: 'pointer',
+		display: 'flex',
+		flexDirection: 'row',
+		padding: 12
+	},
+	integrationActionText: {
+		fontSize: 14
+	},
+	enabledIntHeaderBg: {
+		backgroundColor: '#FAFAFA',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		height: 53,
+		borderTopLeftRadius: 16,
+		borderTopRightRadius: 16
 	}
 }))
 
@@ -489,56 +516,111 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						<Grid>
 							{existingIntegrations.map(integration => (
 								<Grid.Col
-									xs={6}
-									sm={4}
+									xs={8}
+									sm={8}
 									md={4}
 									lg={4}
 									xl={4}
 									key={integration.name}
 								>
-									<a
-										onClick={() => {
-											editIntegration(integration)
-										}}
+									<div
+										className={
+											classes.enabledClubIntegrationItem
+										}
 									>
 										<div
 											className={
-												classes.enabledClubIntegrationItem
+												classes.enabledIntHeaderBg
+											}
+										/>
+										<div className={classes.intItemHeader}>
+											<Image
+												src={`/${integration.icon}`}
+												width={16}
+												height={16}
+												fit={'contain'}
+											/>
+											<Space w={8} />
+											<Text>{integration.name}</Text>
+											{integration.isVerified && (
+												<>
+													<Space w={12} />
+													<Image
+														src="/icon-verified.png"
+														width={16}
+														height={16}
+													/>
+													<Space w={4} />
+													<Text
+														color={'#3EA2FF'}
+														size={'sm'}
+													>
+														Verified
+													</Text>
+												</>
+											)}
+										</div>
+										<div
+											style={{
+												width: '100%'
+											}}
+										>
+											<Space h={12} />
+											<Divider />
+										</div>
+										<div
+											className={
+												classes.integrationActions
 											}
 										>
-											<div
-												className={
-													classes.intItemHeader
-												}
+											<a
+												onClick={() => {
+													window.open(integration.url)
+												}}
 											>
-												<Image
-													src={`/${integration.icon}`}
-													width={16}
-													height={16}
-													fit={'contain'}
-												/>
-												<Space w={8} />
-												<Text>{integration.name}</Text>
-												{integration.isVerified && (
-													<>
-														<Space w={12} />
-														<Image
-															src="/icon-verified.png"
-															width={16}
-															height={16}
-														/>
-														<Space w={4} />
-														<Text
-															color={'#3EA2FF'}
-															size={'sm'}
-														>
-															Verified
-														</Text>
-													</>
-												)}
-											</div>
+												<div
+													className={
+														classes.integrationAction
+													}
+												>
+													<ExternalLink size={20} />
+													<Space w={4} />
+													<Text
+														className={
+															classes.integrationActionText
+														}
+													>
+														Launch App
+													</Text>
+												</div>
+											</a>
+											<Space w={4} />
+											<Divider orientation="vertical" />
+											<Space w={4} />
+
+											<a
+												onClick={() => {
+													editIntegration(integration)
+												}}
+											>
+												<div
+													className={
+														classes.integrationAction
+													}
+												>
+													<Settings size={20} />
+													<Space w={4} />
+													<Text
+														className={
+															classes.integrationActionText
+														}
+													>
+														Settings
+													</Text>
+												</div>
+											</a>
 										</div>
-									</a>
+									</div>
 								</Grid.Col>
 							))}
 						</Grid>
@@ -554,8 +636,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						<Grid>
 							{availableIntegrations.map(integration => (
 								<Grid.Col
-									xs={6}
-									sm={4}
+									xs={8}
+									sm={8}
 									md={4}
 									lg={4}
 									xl={4}
