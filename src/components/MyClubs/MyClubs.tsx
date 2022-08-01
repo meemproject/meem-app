@@ -98,6 +98,12 @@ const useStyles = createStyles(theme => ({
 	clubLogoImage: {
 		imageRendering: 'pixelated'
 	},
+	clubNameEllipsis: {
+		textOverflow: 'ellipsis',
+		msTextOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden'
+	},
 
 	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
 }))
@@ -221,15 +227,10 @@ export const MyClubsComponent: React.FC = () => {
 											fit={'contain'}
 										/>
 										<Space w="xs" />
-										<Text>
-											{club.name
-												? club.name.length > 20
-													? `${club.name.substring(
-															0,
-															20
-													  )}...`
-													: club.name
-												: ''}
+										<Text
+											className={classes.clubNameEllipsis}
+										>
+											{club.name}
 										</Text>
 									</div>
 								</Grid.Col>
