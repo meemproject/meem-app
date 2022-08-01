@@ -278,7 +278,7 @@ export function HomeComponent() {
 	const goToCreate = () => {
 		if (
 			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
-			Cookies.get('meemJwtToken') === undefined &&
+			Cookies.get('meemJwtToken') === undefined ||
 			Cookies.get('walletAddress') === undefined
 		) {
 			Cookies.set(CookieKeys.clubName, autocompleteFormValue)
