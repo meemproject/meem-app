@@ -465,8 +465,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		if (integration.name === 'Twitter') {
 			// Open twitter integration modal
 			setVerifyTwitterModalOpened(true)
-		} else if (integration.name === 'Tellie') {
-			// TODO: Change to Paragraph when this integration shows up in the api
+		} else if (integration.name === 'Paragraph') {
 			// Open paragraph integration modal
 			setParagraphModalOpened(true)
 		} else {
