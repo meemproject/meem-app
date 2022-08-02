@@ -32,6 +32,7 @@ import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
 import { Club, Integration } from '../../model/club/club'
 import { ClubAdminParagraphIntegrationModal } from './IntegrationModals/ClubAdminParagraphIntegrationModal'
+import { ClubAdminSliksafeIntegrationModal } from './IntegrationModals/ClubAdminSliksafeIntegrationModal'
 import { ClubAdminVerifyTwitterModal } from './IntegrationModals/ClubAdminVerifyTwitterModal'
 
 const useStyles = createStyles(theme => ({
@@ -298,6 +299,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
 		useState(false)
 	const [isParagraphModalOpened, setParagraphModalOpened] = useState(false)
+	const [isSliksafeModalOpened, setSliksafeModalOpened] = useState(false)
 
 	// Update the integration locally so that changes are reflected immediately.
 	const updateIntegrationLocally = (extraData: any) => {
@@ -495,6 +497,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		} else if (integration.name === 'Paragraph') {
 			// Open paragraph integration modal
 			setParagraphModalOpened(true)
+		} else if (integration.name === 'Sliksafe') {
+			// Open sliksafe integration modal
+			setSliksafeModalOpened(true)
 		} else {
 			if (integration.url && integration.url.length > 0) {
 				setStep(Step.AddUrl)
@@ -719,6 +724,21 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 					}}
 					onModalClosed={() => {
 						setParagraphModalOpened(false)
+					}}
+				/>
+				<ClubAdminSliksafeIntegrationModal
+					club={club}
+					integration={integrationBeingEdited}
+					isOpened={isSliksafeModalOpened}
+					onComplete={(slug, isEnabled) => {
+						// TODO:
+						// updateIntegrationLocally({
+						// 	paragraphSlug: slug,
+						// 	isEnabled
+						// })
+					}}
+					onModalClosed={() => {
+						setSliksafeModalOpened(false)
 					}}
 				/>
 				<Modal
