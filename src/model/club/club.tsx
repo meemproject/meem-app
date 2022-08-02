@@ -173,11 +173,12 @@ export default async function clubFromMeemContract(
 		// Parse the contract URI
 		const metadata = clubMetadataFromContractUri(clubData.contractURI)
 
-		// Define a provider to look up wallet addresses for admins / approved addresses
-		const provider = new ethers.providers.AlchemyProvider(
-			'mainnet',
-			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-		)
+		// Disabled due to rate limiting
+		// // Define a provider to look up wallet addresses for admins / approved addresses
+		// const provider = new ethers.providers.AlchemyProvider(
+		// 	'mainnet',
+		// 	process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+		// )
 
 		// Convert minting permissions to membership requirements
 		const reqs: MembershipRequirement[] = []
@@ -202,8 +203,8 @@ export default async function clubFromMeemContract(
 					if (wall.Wallet) {
 						const address = wall.Wallet.address
 						adminRawAddresses.push(address)
-						const name = await provider.lookupAddress(address)
-						admins.push(name ?? address)
+						//const name = await provider.lookupAddress(address)
+						admins.push(address)
 					}
 
 					if (
@@ -275,16 +276,14 @@ export default async function clubFromMeemContract(
 								await Promise.all(
 									permission.addresses.map(
 										async (address: string) => {
-											const name =
-												await provider.lookupAddress(
-													address
-												)
-											approvedAddresses.push(
-												name ?? address
-											)
+											// const name =
+											// 	await provider.lookupAddress(
+											// 		address
+											// 	)
+											approvedAddresses.push(address)
 											approvedAddressesString =
 												approvedAddressesString +
-												`${name ?? address}\n`
+												`${address}\n`
 										}
 									)
 								)
@@ -352,7 +351,7 @@ export default async function clubFromMeemContract(
 		let fundsAddress = ''
 		if (clubData.splits && clubData.splits.length > 0) {
 			const split = clubData.splits[0]
-			fundsAddress = (await provider.lookupAddress(split)) ?? split
+			fundsAddress = split
 		}
 
 		// Total memberships
