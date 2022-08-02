@@ -10,7 +10,7 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import log, { LogLevel } from '@kengoldfarb/log'
 import { MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
-import { WalletProvider } from '@meemproject/react'
+import { WalletProvider, SocketProvider } from '@meemproject/react'
 import { createClient } from 'graphql-ws'
 import type { AppProps } from 'next/app'
 import React from 'react'
@@ -113,15 +113,17 @@ function MyApp(props: AppProps) {
 				primaryColor: 'brand'
 			}}
 		>
-			<ApolloProvider client={client}>
-				<WalletProvider rpcs={rpcs}>
-					<NotificationsProvider>
-						<ClubClubProvider>
-							<Component {...pageProps} />
-						</ClubClubProvider>
-					</NotificationsProvider>
-				</WalletProvider>
-			</ApolloProvider>
+			<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL}>
+				<ApolloProvider client={client}>
+					<WalletProvider rpcs={rpcs}>
+						<NotificationsProvider>
+							<ClubClubProvider>
+								<Component {...pageProps} />
+							</ClubClubProvider>
+						</NotificationsProvider>
+					</WalletProvider>
+				</ApolloProvider>
+			</SocketProvider>
 		</MantineProvider>
 	)
 }

@@ -41,6 +41,7 @@ import {
 	ClubSubscriptionSubscription,
 	GetBundleByIdQuery,
 	GetClubQuery,
+	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
 import {
@@ -279,7 +280,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		loading,
 		error,
 		data: clubData
-	} = useQuery<GetClubQuery>(GET_CLUB, {
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: { slug }
 	})
 
@@ -683,7 +684,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
-		async function getClub(data: GetClubQuery) {
+		async function getClub(data: GetClubSubscriptionSubscription) {
 			setIsLoadingClub(true)
 			const possibleClub = await clubFromMeemContract(
 				wallet,

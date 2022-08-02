@@ -1,7 +1,8 @@
 module.exports = {
     schema: [
         {
-            'https://dev-gql.meem.wtf/v1/graphql': {
+            // 'https://dev-gql.meem.wtf/v1/graphql': {
+            'https://meem-alpha.hasura.app/v1/graphql': {
                 headers: {},
             },
         },

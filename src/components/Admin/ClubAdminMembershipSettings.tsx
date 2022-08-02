@@ -24,7 +24,7 @@ import {
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { makeFetcher, useWallet } from '@meemproject/react'
+import { makeFetcher, useSockets, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
@@ -200,6 +200,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
+
+	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
+
+	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
 
 	// Membership
 	const [membershipSettings, setMembershipSettings] =
@@ -692,6 +696,38 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		wallet.accounts,
 		wallet.isConnected
 	])
+
+	useEffect(() => {
+		if (!isSocketsConnected) {
+			connect()
+		}
+	}, [connect, isSocketsConnected])
+
+	useEffect(() => {
+		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
+			sockets.subscribe(
+				[{ key: MeemAPI.MeemEvent.Err }],
+				wallet.accounts[0]
+			)
+			sockets.on({
+				eventName: MeemAPI.MeemEvent.Err,
+				handler: err => {
+					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
+						showNotification({
+							title: 'Club Creation Failed',
+							message:
+								'An error occurred while creating the club. Please try again.',
+							color: 'red'
+						})
+						setIsSavingChanges(false)
+					}
+					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
+					log.crit(err)
+				}
+			})
+			setHasSubscribedToSockets(true)
+		}
+	}, [hasSubscribedToSockets, sockets, wallet])
 
 	return (
 		<>

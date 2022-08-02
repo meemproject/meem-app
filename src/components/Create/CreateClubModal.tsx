@@ -42,7 +42,7 @@ import {
 	ClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { GET_CLUB_SLUG, SUB_CLUB } from '../../graphql/clubs'
+import { GET_CLUB_SLUG, SUB_CLUBS } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Integration,
 	MembershipReqType,
@@ -120,7 +120,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	// Club subscription - watch for specific changes in order to update correctly
 	const { data: clubData, loading } =
-		useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
+		useSubscription<ClubSubscriptionSubscription>(SUB_CLUBS, {
 			variables: { address: proxyAddress }
 		})
 

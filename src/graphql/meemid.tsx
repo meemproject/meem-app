@@ -10,10 +10,10 @@ export const GET_MEEM_ID = gql`
 			}
 			id
 			hasOnboarded
-			Twitters {
-				twitterId
-				id
-			}
+			# Twitters {
+			# 	twitterId
+			# 	id
+			# }
 		}
 	}
 `

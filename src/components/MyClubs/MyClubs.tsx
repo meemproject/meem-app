@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/named */
-import { useQuery } from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -20,8 +20,12 @@ import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
-import { MeemContracts, MyClubsQuery } from '../../../generated/graphql'
-import { GET_MY_CLUBS } from '../../graphql/clubs'
+import {
+	MeemContracts,
+	MyClubsQuery,
+	MyClubsSubscriptionSubscription
+} from '../../../generated/graphql'
+import { GET_MY_CLUBS, SUB_MY_CLUBS } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	clubSummaryFrommeemContract
@@ -111,40 +115,9 @@ export const MyClubsComponent: React.FC = () => {
 		loading,
 		error,
 		data: clubData
-	} = useQuery<MyClubsQuery>(GET_MY_CLUBS, {
-		variables: { walletAddress: wallet.accounts[0] }
+	} = useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
+		variables: { walletAddress: wallet.accounts[0].toLowerCase() }
 	})
-
-	const [clubs, setClubs] = useState<Club[]>([])
-
-	useEffect(() => {
-		if (error) {
-			log.warn(error)
-		}
-
-		if (!loading && !error && clubs.length === 0 && clubData) {
-			const tempClubs: Club[] = []
-
-			clubData.Meems.forEach(meem => {
-				const possibleClub = clubSummaryFrommeemContract(
-					meem.MeemContract as MeemContracts
-				)
-				if (possibleClub.name) {
-					tempClubs.push(possibleClub)
-				}
-			})
-
-			setClubs(tempClubs)
-		}
-	}, [
-		clubs,
-		clubData,
-		error,
-		loading,
-		wallet.accounts,
-		wallet.isConnected,
-		wallet.web3Provider
-	])
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -157,6 +130,18 @@ export const MyClubsComponent: React.FC = () => {
 	const navigateToClub = (club: string) => {
 		router.push({ pathname: `/${club}` })
 	}
+
+	const clubs: Club[] = []
+
+	clubData?.Meems.forEach(meem => {
+		const possibleClub = clubSummaryFrommeemContract(
+			meem.MeemContract as MeemContracts
+		)
+
+		if (possibleClub.name) {
+			clubs.push(possibleClub)
+		}
+	})
 
 	return (
 		<>

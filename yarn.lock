@@ -1946,10 +1946,10 @@
     "@kengoldfarb/log" "^1.0.5"
     ethers "^5.6.4"
 
-"@meemproject/react@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.7.1.tgz#cf08a6c2408ae608e0e450870332b8b467ebc72c"
-  integrity sha512-JQY7xT5FfP5RdWlatpEsYhCObapr1BLcZTsFF/tzIM35IM/R/6ths+CggPuG+vCV1TKRmyH+Cd1W/tI4uCyTbQ==
+"@meemproject/react@^0.7.2-pre-8d52b28.0":
+  version "0.7.2-pre-e860014.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.7.2-pre-e860014.0.tgz#7d3aae7858e375c0be2c5c445c659ed96bab5622"
+  integrity sha512-6cdNf+DOTU07MPWCD/gkPaHICljktbTzdMajLMXgN6MKQlGWUD46BTAUtR7JOnX+UwhQt6HWpoVshpR7ui4qOA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@material-ui/core" "^4.12.4"
