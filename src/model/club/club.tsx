@@ -434,8 +434,6 @@ export default async function clubFromMeemContract(
 			slotsLeft = totalMemberships - membersCount
 		}
 
-		console.log({ clubData })
-
 		return {
 			id: clubData.id,
 			name: clubData.name,

@@ -122,7 +122,12 @@ export const MyClubsComponent: React.FC = () => {
 		error,
 		data: clubData
 	} = useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
-		variables: { walletAddress: wallet.accounts[0].toLowerCase() }
+		variables: {
+			walletAddress:
+				wallet.accounts &&
+				wallet.accounts[0] &&
+				wallet.accounts[0].toLowerCase()
+		}
 	})
 
 	const navigateHome = () => {

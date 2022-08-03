@@ -23,7 +23,7 @@ import {
 import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { makeFetcher, useSockets, useWallet } from '@meemproject/react'
+import { useSockets, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
@@ -606,6 +606,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							color: 'red'
 						})
 						setIsSavingChanges(false)
+						setIsClubCreationModalOpened(false)
 					}
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)

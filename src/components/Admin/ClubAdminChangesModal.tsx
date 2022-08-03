@@ -16,7 +16,7 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import * as meemContracts from '@meemproject/meem-contracts'
-import { useWallet } from '@meemproject/react'
+import { makeFetcher, useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { BigNumber, ethers } from 'ethers'
 import { useRouter } from 'next/router'
@@ -170,7 +170,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 								addresses: [],
 								numTokens: 0,
 								costWei: joinCostInWei,
-								lockedBy: MeemAPI.zeroAddress
+								mintStartTimestamp: club.membershipSettings
+									?.membershipStartDate
+									? club.membershipSettings?.membershipStartDate.getTime() /
+									  1000
+									: 0,
+								mintEndTimestamp: club.membershipSettings
+									?.membershipEndDate
+									? club.membershipSettings?.membershipEndDate.getTime() /
+									  1000
+									: 0
 							})
 							break
 						case MembershipReqType.ApprovedApplicants:
@@ -180,7 +189,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 								addresses: requirement.approvedAddresses,
 								numTokens: 0,
 								costWei: joinCostInWei,
-								lockedBy: MeemAPI.zeroAddress
+								mintStartTimestamp: club.membershipSettings
+									?.membershipStartDate
+									? club.membershipSettings?.membershipStartDate.getTime() /
+									  1000
+									: 0,
+								mintEndTimestamp: club.membershipSettings
+									?.membershipEndDate
+									? club.membershipSettings?.membershipEndDate.getTime() /
+									  1000
+									: 0
 							})
 							break
 						case MembershipReqType.TokenHolders:
@@ -190,7 +208,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 								addresses: [requirement.tokenContractAddress],
 								numTokens: requirement.tokenMinQuantity,
 								costWei: joinCostInWei,
-								lockedBy: MeemAPI.zeroAddress
+								mintStartTimestamp: club.membershipSettings
+									?.membershipStartDate
+									? club.membershipSettings?.membershipStartDate.getTime() /
+									  1000
+									: 0,
+								mintEndTimestamp: club.membershipSettings
+									?.membershipEndDate
+									? club.membershipSettings?.membershipEndDate.getTime() /
+									  1000
+									: 0
 							})
 							break
 						case MembershipReqType.OtherClubMember:
@@ -200,7 +227,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 								addresses: [requirement.clubContractAddress],
 								numTokens: requirement.tokenMinQuantity,
 								costWei: joinCostInWei,
-								lockedBy: MeemAPI.zeroAddress
+								mintStartTimestamp: club.membershipSettings
+									?.membershipStartDate
+									? club.membershipSettings?.membershipStartDate.getTime() /
+									  1000
+									: 0,
+								mintEndTimestamp: club.membershipSettings
+									?.membershipEndDate
+									? club.membershipSettings?.membershipEndDate.getTime() /
+									  1000
+									: 0
 							})
 							break
 					}
@@ -214,24 +250,58 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						addresses: [admin],
 						numTokens: 0,
 						costWei: 0,
-						lockedBy: MeemAPI.zeroAddress
+						mintStartTimestamp: club.membershipSettings
+							?.membershipStartDate
+							? club.membershipSettings?.membershipStartDate.getTime() /
+							  1000
+							: 0,
+						mintEndTimestamp: club.membershipSettings
+							?.membershipEndDate
+							? club.membershipSettings?.membershipEndDate.getTime() /
+							  1000
+							: 0
 					})
 				})
 			}
 
-			const baseProperties = {
-				// Total # of tokens available. -1 means unlimited.
-				totalOriginalsSupply: club.membershipSettings
-					? club.membershipSettings.membershipQuantity === 0 ||
-					  isNaN(club.membershipSettings.membershipQuantity)
-						? -1
-						: club.membershipSettings.membershipQuantity
-					: -1,
-				totalOriginalsSupplyLockedBy: MeemAPI.zeroAddress,
-				// Specify who can mint originals
+			// TODO: Call reinitialize
+			const reInitializeContractFetcher = makeFetcher<
+				MeemAPI.v1.ReInitializeMeemContract.IQueryParams,
+				MeemAPI.v1.ReInitializeMeemContract.IRequestBody,
+				MeemAPI.v1.ReInitializeMeemContract.IResponseBody
+			>({
+				method: MeemAPI.v1.ReInitializeMeemContract.method
+			})
+
+			if (!club.id) {
+				showNotification({
+					title: 'Error saving club settings',
+					message: `Please get in touch!`,
+					color: 'red'
+				})
+				return
+			}
+
+			const data = {
+				shouldMintAdminTokens: true,
+				metadata: {
+					meem_contract_type: 'meem-club',
+					meem_metadata_version: 'Meem_Contract_20220718',
+					name: club.name,
+					description: club.description,
+					image: club.image,
+					associations: [],
+					external_url: ''
+				},
+				name: club.name ?? '',
+				admins: club.admins,
+				minters: club.admins,
+				maxSupply: !isNaN(
+					club.membershipSettings?.membershipQuantity ?? 0
+				)
+					? `${club.membershipSettings?.membershipQuantity}`
+					: '0',
 				mintPermissions,
-				mintPermissionsLockedBy: MeemAPI.zeroAddress,
-				// Payout of minting
 				splits:
 					club.membershipSettings &&
 					club.membershipSettings.membershipFundsAddress.length > 0
@@ -247,58 +317,24 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 								}
 						  ]
 						: [],
-				splitsLockedBy: MeemAPI.zeroAddress,
-				// Number of originals allowed to be held by the same wallet
-				originalsPerWallet: -1,
-				originalsPerWalletLockedBy: MeemAPI.zeroAddress,
-				// Whether originals are transferrable
-				isTransferrable: true,
-				isTransferrableLockedBy: MeemAPI.zeroAddress,
-				// Mint start unix timestamp
-				mintStartTimestamp: membershipStartUnix,
-				// Mint end unix timestamp
-				mintEndTimestamp: membershipEndUnix,
-				mintDatesLockedBy: MeemAPI.zeroAddress,
-				// Prevent transfers until this unix timestamp
-				transferLockupUntil: 0,
-				transferLockupUntilLockedBy: MeemAPI.zeroAddress
+				adminTokenMetadata: {
+					meem_metadata_version: 'Meem_Token_20220718',
+					description: `Membership token for ${club.name}`,
+					name: `${club.name} membership token`,
+					image: club.image,
+					associations: [],
+					external_url: ''
+				}
 			}
 
-			log.debug(`baseProperties: ${JSON.stringify(baseProperties)}`)
-			log.debug(`club symbol: ${clubSymbol}`)
-			log.debug(`club admins: ${club.membershipSettings?.clubAdmins}`)
+			await reInitializeContractFetcher(
+				MeemAPI.v1.ReInitializeMeemContract.path({
+					meemContractId: club.id
+				}),
+				undefined,
+				data
+			)
 
-			// TODO: Call reinitialize
-			// const contract = await meemContracts.getMeemContract({
-			// 	contractAddress: club.address!,
-			// 	signer: web3Provider.getSigner()
-			// })
-			// log.debug('contract found')
-
-			// const data = {
-			// 	name: club.name ?? '',
-			// 	symbol: clubSymbol,
-			// 	admins: club.membershipSettings
-			// 		? club.membershipSettings.clubAdmins
-			// 			? club.membershipSettings.clubAdmins
-			// 			: []
-			// 		: [],
-			// 	contractURI: uri,
-			// 	baseProperties,
-			// 	defaultProperties: meemContracts.defaultMeemProperties,
-			// 	defaultChildProperties: meemContracts.defaultMeemProperties,
-			// 	tokenCounterStart: BigNumber.from(1),
-			// 	childDepth: BigNumber.from(-1),
-			// 	nonOwnerSplitAllocationAmount: BigNumber.from(0)
-			// }
-			// log.debug(data)
-			// const tx = await contract.reInitialize(data, {
-			// 	gasLimit: '5000000'
-			// })
-
-			// log.debug(tx)
-			// // @ts-ignore
-			// await tx.wait()
 			setStep(Step.Start)
 			onModalClosed()
 		} catch (e) {

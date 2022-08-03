@@ -1938,6 +1938,24 @@
     tsnd "^1.0.2"
     typechain "^8.0.0"
 
+"@meemproject/api@^0.7.2-pre-b8e694f.0":
+  version "0.7.2-pre-b8e694f.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.7.2-pre-b8e694f.0.tgz#18be4dcdab209c052f2440568434a4af15eac698"
+  integrity sha512-1628mPfp3Y6HGZOE40JfRyHROv2pRPZhBgNxUkvo8qKoQGMdCKtStmy6/qajUuogSZU0G4wU3pJm2twfPZTTIA==
+  dependencies:
+    "@kengoldfarb/log" "^1.0.5"
+    "@meemproject/meem-contracts" "^0.7.2-pre-b8e694f.0"
+    "@typechain/ethers-v5" "^10.0.0"
+    "@types/js-cookie" "^3.0.1"
+    "@types/luxon" "^2.3.1"
+    ethers "^5.6.4"
+    js-cookie "^3.0.1"
+    luxon "^2.3.1"
+    superagent "^7.1.2"
+    swr "^1.3.0"
+    tsnd "^1.0.2"
+    typechain "^8.0.0"
+
 "@meemproject/meem-contracts@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.7.1.tgz#ec70d904dcab44f29b11adc74246ef60c2352928"
@@ -1946,7 +1964,16 @@
     "@kengoldfarb/log" "^1.0.5"
     ethers "^5.6.4"
 
-"@meemproject/react@^0.7.2-pre-8d52b28.0":
+"@meemproject/meem-contracts@^0.7.2-pre-b8e694f.0":
+  version "0.7.2-pre-b8e694f.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.7.2-pre-b8e694f.0.tgz#e6f9468f5b25bbfdcca73b77fd533a34e05c5a1f"
+  integrity sha512-9TicWOnTJacEEwZSLuzIm6I009h6kH+SaTlat8N+5nqlThVpwi6XtxNPx4cellR53spyR5jDgZQCzUzZlmjI9Q==
+  dependencies:
+    "@kengoldfarb/log" "^1.0.5"
+    ethers "^5.6.4"
+    superagent "^8.0.0"
+
+"@meemproject/react@^0.7.2-pre-b8e694f.0":
   version "0.7.2-pre-e860014.0"
   resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.7.2-pre-e860014.0.tgz#7d3aae7858e375c0be2c5c445c659ed96bab5622"
   integrity sha512-6cdNf+DOTU07MPWCD/gkPaHICljktbTzdMajLMXgN6MKQlGWUD46BTAUtR7JOnX+UwhQt6HWpoVshpR7ui4qOA==
@@ -13552,6 +13579,23 @@ superagent@^7.1.2, superagent@^7.1.6:
   version "7.1.6"
   resolved "https://registry.npmjs.org/superagent/-/superagent-7.1.6.tgz"
   integrity sha512-gZkVCQR1gy/oUXr+kxJMLDjla434KmSOKbx5iGD30Ql+AkJQ/YlPKECJy2nhqOsHLjGHzoDTXNSjhnvWhzKk7g==
+  dependencies:
+    component-emitter "^1.3.0"
+    cookiejar "^2.1.3"
+    debug "^4.3.4"
+    fast-safe-stringify "^2.1.1"
+    form-data "^4.0.0"
+    formidable "^2.0.1"
+    methods "^1.1.2"
+    mime "2.6.0"
+    qs "^6.10.3"
+    readable-stream "^3.6.0"
+    semver "^7.3.7"
+
+superagent@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/superagent/-/superagent-8.0.0.tgz#2ea4587df4b81ef023ec01ebc6e1bcb9e2344cb6"
+  integrity sha512-iudipXEel+SzlP9y29UBWGDjB+Zzag+eeA1iLosaR2YHBRr1Q1kC29iBrF2zIVD9fqVbpZnXkN/VJmwFMVyNWg==
   dependencies:
     component-emitter "^1.3.0"
     cookiejar "^2.1.3"

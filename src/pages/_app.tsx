@@ -113,7 +113,7 @@ function MyApp(props: AppProps) {
 				primaryColor: 'brand'
 			}}
 		>
-			<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL}>
+			<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL ?? ''}>
 				<ApolloProvider client={client}>
 					<WalletProvider rpcs={rpcs}>
 						<NotificationsProvider>

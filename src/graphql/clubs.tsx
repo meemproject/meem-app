@@ -109,7 +109,8 @@ export const SUB_CLUB = gql`
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
-			contractURI
+			# contractURI
+			metadata
 			createdAt
 			name
 			Meems {
@@ -118,6 +119,9 @@ export const SUB_CLUB = gql`
 				tokenURI
 				mintedAt
 				mintedBy
+				Owner {
+					address
+				}
 				# data
 			}
 			splits
