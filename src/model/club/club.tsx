@@ -23,6 +23,7 @@ export interface Integration {
 	icon?: string
 	description?: string
 	guideUrl?: string
+	requiresEmbed?: boolean
 
 	// Per-app properties
 	verifiedTwitterUser?: string
@@ -416,6 +417,9 @@ export default async function clubFromMeemContract(
 						guideUrl: inte.Integration?.guideUrl,
 						url: inte.metadata.externalUrl ?? '',
 						isExistingIntegration: true,
+						requiresEmbed:
+							inte.Integration?.name === 'Twitter' ||
+							inte.Integration?.name === 'Discord',
 
 						// Per app properties
 						verifiedTwitterUser:
