@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -10,20 +8,17 @@ import {
 	Loader,
 	Button,
 	Textarea,
-	TextInput,
 	Space,
 	Modal
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import * as meemContracts from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
@@ -164,15 +159,9 @@ export const CreateComponent: React.FC = () => {
 	const [clubNamespace, setClubNamespace] = useState('')
 
 	const [clubDescription, setClubDescription] = useState('')
-	const [clubTwitterUrl, setClubTwitterUrl] = useState('')
-	const [clubDiscordUrl, setClubDiscordUrl] = useState('')
-	const descriptionRef = useRef<HTMLTextAreaElement>()
 
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
-
-	const [isLoading, setIsLoading] = useState(false)
-	const { web3Provider, accounts, signer, isConnected, connectWallet } =
-		useWallet()
+	const { web3Provider, accounts, isConnected, connectWallet } = useWallet()
 
 	useEffect(() => {
 		if (clubName === undefined || clubName.length === 0) {
@@ -187,7 +176,6 @@ export const CreateComponent: React.FC = () => {
 				router.push({ pathname: '/' })
 			} else {
 				setClubName(cookieName)
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const name = cookieName.replaceAll(' ', '-').toLowerCase()
 				setDefaultNamespace(name)
 				setClubNamespace(name)
@@ -202,8 +190,7 @@ export const CreateComponent: React.FC = () => {
 			defaultNamespace.length === 0 &&
 			clubName !== undefined
 		) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const name = clubName!.toString().replaceAll(' ', '-').toLowerCase()
+			const name = clubName.toString().replaceAll(' ', '-').toLowerCase()
 			setDefaultNamespace(name)
 			setClubNamespace(name)
 		}
@@ -457,11 +444,9 @@ export const CreateComponent: React.FC = () => {
 					onClick={() => {
 						createClub()
 					}}
-					loading={isLoading}
 					disabled={
 						clubDescription.length === 0 ||
-						smallClubLogo.length === 0 ||
-						isLoading
+						smallClubLogo.length === 0
 					}
 					className={classes.buttonCreate}
 				>

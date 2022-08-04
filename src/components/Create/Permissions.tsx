@@ -1,27 +1,8 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-	createStyles,
-	Container,
-	Text,
-	Center,
-	Image,
-	Loader,
-	Button,
-	Textarea,
-	TextInput,
-	Space
-} from '@mantine/core'
+import { createStyles, Container, Text } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { base64StringToBlob } from 'blob-util'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
-import Resizer from 'react-image-file-resizer'
-import { ArrowLeft, Upload } from 'tabler-icons-react'
-import { useFilePicker } from 'use-file-picker'
+import React, { useEffect, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
 import { ClubAdminMembershipSettingsComponent } from '../Admin/ClubAdminMembershipSettings'
 

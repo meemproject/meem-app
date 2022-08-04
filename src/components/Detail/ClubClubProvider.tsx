@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery } from '@apollo/client'
 import { useWallet } from '@meemproject/react'
 import React, {
