@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-case-declarations */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -14,19 +9,16 @@ import {
 	Radio,
 	TextInput,
 	Textarea,
-	Chips,
-	Chip,
-	Select,
 	Center,
 	Divider
 } from '@mantine/core'
-import { Calendar, DatePicker, TimeInput } from '@mantine/dates'
+import { Calendar, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
-import { CircleMinus, Plus, Lock, Clock } from 'tabler-icons-react'
+import { CircleMinus, Plus, Clock } from 'tabler-icons-react'
 import {
 	MembershipSettings,
 	MembershipReqAndor,
@@ -35,7 +27,7 @@ import {
 	Club
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { quickTruncate, ensWalletAddress } from '../../utils/truncated_wallet'
+import { quickTruncate } from '../../utils/truncated_wallet'
 import { CreateClubModal } from '../Create/CreateClubModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
@@ -312,11 +304,11 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 	const [isSecondReqTypeModalOpened, setSecondReqTypeModalOpened] =
 		useState(false)
-	const openSecondReqTypeModal = () => {
-		// e.g. in addition vs alternatively
-		updateReqCurrentlyEditing(membershipRequirements[1])
-		setSecondReqTypeModalOpened(true)
-	}
+	// const openSecondReqTypeModal = () => {
+	// 	// e.g. in addition vs alternatively
+	// 	updateReqCurrentlyEditing(membershipRequirements[1])
+	// 	setSecondReqTypeModalOpened(true)
+	// }
 
 	const [
 		isMembershipTimingStartModalOpened,
@@ -515,10 +507,12 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		if (isCreatingClub) {
 			openClubCreationModal()
 		} else {
-			const newClub = club!
-			newClub.membershipSettings = settings
-			setNewClubData(newClub)
-			openSaveChangesModal()
+			const newClub = club
+			if (newClub) {
+				newClub.membershipSettings = settings
+				setNewClubData(newClub)
+				openSaveChangesModal()
+			}
 		}
 	}
 
@@ -534,7 +528,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				setHasLoadedClubData(true)
 
 				// Set club admins
-				setClubAdmins(club.admins!)
+				setClubAdmins(club.admins ?? [])
 
 				// Set the club admins string, used by the club admins textfield
 				let adminsString = ''
@@ -545,26 +539,28 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				}
 				setClubAdminsString(adminsString)
 
-				setCostToJoin(club.membershipSettings!.costToJoin)
+				setCostToJoin(club.membershipSettings?.costToJoin ?? 0)
 				setMembershipQuantity(
-					club.membershipSettings!.membershipQuantity
+					club.membershipSettings?.membershipQuantity ?? 0
 				)
-				setMembershipRequirements(club.membershipSettings!.requirements)
+				setMembershipRequirements(
+					club.membershipSettings?.requirements ?? []
+				)
 				setMembershipSettings(club.membershipSettings)
-				log.debug(club.membershipSettings!.membershipStartDate)
-				if (club.membershipSettings!.membershipStartDate) {
+				log.debug(club.membershipSettings?.membershipStartDate ?? 0)
+				if (club.membershipSettings?.membershipStartDate) {
 					setMembershipStartDate(
-						new Date(club.membershipSettings!.membershipStartDate)
+						new Date(club.membershipSettings.membershipStartDate)
 					)
 				}
-				if (club.membershipSettings!.membershipEndDate) {
+				if (club.membershipSettings?.membershipEndDate) {
 					setMembershipEndDate(
-						new Date(club.membershipSettings!.membershipEndDate)
+						new Date(club.membershipSettings.membershipEndDate)
 					)
 				}
 
 				setMembershipFundsAddress(
-					club.membershipSettings!.membershipFundsAddress
+					club.membershipSettings?.membershipFundsAddress ?? ''
 				)
 			}
 		}
@@ -1075,11 +1071,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									)
 								}
 							}
+							let doesApplicantsListContainAdmin = false
 
 							switch (reqCurrentlyEditing.type) {
 								case MembershipReqType.ApprovedApplicants:
-									let doesApplicantsListContainAdmin = false
-
 									// Make sure there's no admin addresses in here
 									clubAdmins.forEach(admin => {
 										if (
@@ -1444,7 +1439,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
-							const now = new Date()
 							if (
 								membershipStartDate !== undefined &&
 								membershipEndDate !== undefined &&
@@ -1541,8 +1535,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
-							const now = new Date()
-
 							if (
 								membershipStartDate !== undefined &&
 								membershipEndDate !== undefined &&

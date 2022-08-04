@@ -1,7 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
@@ -15,7 +11,6 @@ import {
 	Divider,
 	MantineProvider,
 	Stepper,
-	Textarea,
 	Loader,
 	Button,
 	Switch
@@ -23,7 +18,6 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { GetIntegrationsQuery } from '../../../generated/graphql'
@@ -228,8 +222,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 
-	const router = useRouter()
-
 	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] =
 		useState(false)
 
@@ -321,7 +313,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 			// Validate URL
 
 			try {
-				const url = new URL(currentIntegrationUrl)
+				new URL(currentIntegrationUrl)
 			} catch (_) {
 				showNotification({
 					title: 'Oops!',
@@ -404,14 +396,14 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 			const finalIntegrations: Integration[] = []
 
 			allIntegrations.forEach(inte => {
-				let alreadyExists = false
+				let doesAlreadyExist = false
 				existingIntegrations.forEach(existing => {
 					if (inte.name === existing.name) {
-						alreadyExists = true
+						doesAlreadyExist = true
 						return
 					}
 				})
-				if (!alreadyExists) {
+				if (!doesAlreadyExist) {
 					finalIntegrations.push(inte)
 				}
 			})

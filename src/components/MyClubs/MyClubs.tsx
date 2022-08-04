@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/named */
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
@@ -22,10 +17,7 @@ import React, { useEffect, useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
 import { MeemContracts, MyClubsQuery } from '../../../generated/graphql'
 import { GET_MY_CLUBS } from '../../graphql/clubs'
-import clubFromMeemContract, {
-	Club,
-	clubSummaryFrommeemContract
-} from '../../model/club/club'
+import { Club, clubSummaryFrommeemContract } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -216,12 +208,12 @@ export const MyClubsComponent: React.FC = () => {
 										key={club.address}
 										className={classes.clubItem}
 										onClick={() => {
-											navigateToClub(club.slug!)
+											navigateToClub(club.slug ?? '')
 										}}
 									>
 										<Image
 											className={classes.clubLogoImage}
-											src={club.image!}
+											src={club.image ?? ''}
 											width={40}
 											height={40}
 											fit={'contain'}
