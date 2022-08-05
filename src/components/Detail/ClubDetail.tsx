@@ -22,11 +22,10 @@ import { Check, CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
 	GetBundleByIdQuery,
-	GetClubQuery,
 	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { GET_BUNDLE_BY_ID, GET_CLUB, SUB_CLUB } from '../../graphql/clubs'
+import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	MembershipReqType
