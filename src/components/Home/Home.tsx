@@ -1,44 +1,29 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/named */
-import { ApolloClient, HttpLink, InMemoryCache, useQuery } from '@apollo/client'
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
 	Text,
-	Center,
 	Image,
 	Autocomplete,
 	Loader,
 	Avatar,
-	SelectItemProps,
-	MantineColor,
-	AutocompleteItem,
 	Group,
 	Button,
-	Modal,
-	Space
+	Space,
+	// Bug in mantine imports here
+	// eslint-disable-next-line import/named
+	SelectItemProps,
+	// eslint-disable-next-line import/named
+	MantineColor,
+	// eslint-disable-next-line import/named
+	AutocompleteItem
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, {
-	forwardRef,
-	useContext,
-	useEffect,
-	useRef,
-	useState
-} from 'react'
-import {
-	GetClubsAutocompleteQuery,
-	GetIsMemberOfClubQuery
-} from '../../../generated/graphql'
-import {
-	GET_CLUBS_AUTOCOMPLETE,
-	GET_IS_MEMBER_OF_CLUB
-} from '../../graphql/clubs'
+import React, { forwardRef, useContext, useRef, useState } from 'react'
+import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
+import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
 import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { CookieKeys } from '../../utils/cookies'
 import ClubClubContext from '../Detail/ClubClubProvider'
@@ -196,7 +181,7 @@ export function HomeComponent() {
 	const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
 	const [isFetchingData, setIsFetchingData] = useState(false)
 	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
-	const [showCreateButton, setShowCreateButton] = useState(false)
+	const [isShowingCreateButton, setShowCreateButton] = useState(false)
 
 	const handleChange = async (val: string) => {
 		window.clearTimeout(timeoutRef.current)
@@ -353,7 +338,7 @@ export function HomeComponent() {
 						isLoadingSuggestions ? (
 							<Loader size={16} />
 						) : autocompleteFormValue.length > 0 &&
-						  showCreateButton &&
+						  isShowingCreateButton &&
 						  clubclub.isMember ? (
 							<Button
 								className={classes.createButton}

@@ -1,6 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
 import {
 	createStyles,
@@ -24,8 +21,6 @@ import clubFromMeemContract, { Club } from '../../model/club/club'
 import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
 import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
 import { ClubAdminProfileSettings } from './ClubAdminProfileSettings'
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -292,12 +287,12 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</a>
 							<Image
 								className={classes.clubLogoImage}
-								src={club.image!}
+								src={club.image}
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
 							<div className={classes.headerClubNameContainer}>
 								<Text className={classes.headerClubName}>
-									{club.name!}
+									{club.name}
 								</Text>
 								<div className={classes.clubUrlContainer}>
 									<Text

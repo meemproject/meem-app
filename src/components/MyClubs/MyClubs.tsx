@@ -1,10 +1,4 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/named */
-import { useQuery, useSubscription } from '@apollo/client'
-import log from '@kengoldfarb/log'
+import { useSubscription } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -18,18 +12,14 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
 import {
 	MeemContracts,
-	MyClubsQuery,
 	MyClubsSubscriptionSubscription
 } from '../../../generated/graphql'
-import { GET_MY_CLUBS, SUB_MY_CLUBS } from '../../graphql/clubs'
-import clubFromMeemContract, {
-	Club,
-	clubSummaryFrommeemContract
-} from '../../model/club/club'
+import { SUB_MY_CLUBS } from '../../graphql/clubs'
+import { Club, clubSummaryFrommeemContract } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -117,18 +107,15 @@ export const MyClubsComponent: React.FC = () => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const {
-		loading,
-		error,
-		data: clubData
-	} = useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
-		variables: {
-			walletAddress:
-				wallet.accounts &&
-				wallet.accounts[0] &&
-				wallet.accounts[0].toLowerCase()
-		}
-	})
+	const { loading, data: clubData } =
+		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
+			variables: {
+				walletAddress:
+					wallet.accounts &&
+					wallet.accounts[0] &&
+					wallet.accounts[0].toLowerCase()
+			}
+		})
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -206,12 +193,12 @@ export const MyClubsComponent: React.FC = () => {
 										key={club.address}
 										className={classes.clubItem}
 										onClick={() => {
-											navigateToClub(club.slug!)
+											navigateToClub(club.slug ?? '')
 										}}
 									>
 										<Image
 											className={classes.clubLogoImage}
-											src={club.image!}
+											src={club.image ?? ''}
 											width={40}
 											height={40}
 											fit={'contain'}

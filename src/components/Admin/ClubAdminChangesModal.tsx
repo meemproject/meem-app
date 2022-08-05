@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -15,13 +11,10 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import * as meemContracts from '@meemproject/meem-contracts'
 import { makeFetcher, useWallet } from '@meemproject/react'
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { BigNumber, ethers } from 'ethers'
-import { useRouter } from 'next/router'
+import { ethers } from 'ethers'
 import React, { useState } from 'react'
-import { Club, Integration, MembershipReqType } from '../../model/club/club'
+import { Club, MembershipReqType } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -92,9 +85,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 	onModalClosed,
 	club
 }) => {
-	const router = useRouter()
-
-	const { web3Provider, accounts, signer } = useWallet()
+	const { web3Provider, accounts } = useWallet()
 
 	const { classes } = useStyles()
 
@@ -108,7 +99,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		setStep(Step.Initializing)
 
 		try {
-			const clubSymbol = club.name!.split(' ')[0].toUpperCase()
+			// const clubSymbol = (club.name ?? '').split(' ')[0].toUpperCase()
 
 			const applicationInstructions: string[] = []
 			if (club.membershipSettings) {
@@ -124,8 +115,10 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				})
 			}
 
+			// TODO: reinit
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 			const uri = JSON.stringify({
-				name: club.name!,
+				name: club.name ?? '',
 				description: club.description,
 				image: club.image,
 				external_link: `https://clubs.link/${club.slug}`,

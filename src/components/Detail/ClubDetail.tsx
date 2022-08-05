@@ -1,15 +1,4 @@
-/* eslint-disable no-case-declarations */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-	ApolloClient,
-	HttpLink,
-	InMemoryCache,
-	useQuery,
-	useSubscription
-} from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -29,14 +18,7 @@ import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
-import {
-	BrandDiscord,
-	BrandTwitter,
-	Check,
-	CircleCheck,
-	CircleX,
-	Settings
-} from 'tabler-icons-react'
+import { Check, CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
 	GetBundleByIdQuery,
@@ -44,12 +26,7 @@ import {
 	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import {
-	GET_BUNDLE_BY_ID,
-	GET_CLUB,
-	GET_CLUB_SLUG,
-	SUB_CLUB
-} from '../../graphql/clubs'
+import { GET_BUNDLE_BY_ID, GET_CLUB, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	MembershipReqType
@@ -287,10 +264,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
-	const { data: clubSubData, loading: loadingClubSub } =
-		useSubscription<ClubSubscriptionSubscription>(SUB_CLUB, {
-			variables: { address: club ? club!.address! : '' }
-		})
+	const { data: clubSubData } = useSubscription<ClubSubscriptionSubscription>(
+		SUB_CLUB,
+		{
+			variables: { address: club?.address ?? '' }
+		}
+	)
 
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [isLeavingClub, setIsLeavingClub] = useState(false)
@@ -298,15 +277,17 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
 	>([])
-	const [requirementsParsed, setRequirementsParsed] = useState(false)
-	const [meetsAllRequirements, setMeetsAllRequirements] = useState(false)
+	const [areRequirementsParsed, setRequirementsParsed] = useState(false)
+	const [doesMeetAllRequirements, setMeetsAllRequirements] = useState(false)
 
-	const { loading: isBundleLoading, data: bundleData } =
-		useQuery<GetBundleByIdQuery>(GET_BUNDLE_BY_ID, {
+	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
+		GET_BUNDLE_BY_ID,
+		{
 			variables: {
 				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
 			}
-		})
+		}
+	)
 
 	const checkEligibility = useCallback(
 		(
@@ -486,147 +467,150 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const parseRequirements = useCallback(
 		async (possibleClub: Club) => {
-			if (requirementsParsed || !possibleClub) {
+			if (areRequirementsParsed || !possibleClub) {
 				return
 			}
 
 			const reqs: RequirementString[] = []
 			let index = 0
-			await Promise.all(
-				possibleClub.membershipSettings!.requirements.map(
-					async function (req) {
-						index++
+			if (possibleClub.membershipSettings) {
+				await Promise.all(
+					possibleClub.membershipSettings?.requirements.map(
+						async function (req) {
+							index++
 
-						let tokenBalance = BigNumber.from(0)
-						let tokenUrl = ''
-						let tokenName = 'Unknown Token'
-						let tokenSymbol = ''
-						if (wallet.web3Provider && wallet.signer) {
-							const token = await tokenFromContractAddress(
-								req.tokenContractAddress,
-								wallet
-							)
-							if (token) {
-								tokenBalance = token.balance
-								tokenUrl = token.url
-								tokenName = token.name
-								tokenSymbol = token.symbol
+							let tokenBalance = BigNumber.from(0)
+							let tokenUrl = ''
+							let tokenName = 'Unknown Token'
+							if (wallet.web3Provider && wallet.signer) {
+								const token = await tokenFromContractAddress(
+									req.tokenContractAddress,
+									wallet
+								)
+								if (token) {
+									tokenBalance = token.balance
+									tokenUrl = token.url
+									tokenName = token.name
+								}
 							}
-						}
 
-						switch (req.type) {
-							case MembershipReqType.None:
-								reqs.push({
-									requirementKey: `Anyone${index}`,
-									requirementComponent: (
-										<Text>Anyone can join this club.</Text>
-									),
-									meetsRequirement: true
-								})
-								break
-							case MembershipReqType.ApprovedApplicants:
-								reqs.push({
-									requirementKey: `Applicants${index}`,
-									requirementComponent: (
-										<div
-											style={{
-												display: 'flex',
-												flexDirection: 'column'
-											}}
-										>
+							switch (req.type) {
+								case MembershipReqType.None:
+									reqs.push({
+										requirementKey: `Anyone${index}`,
+										requirementComponent: (
 											<Text>
-												Membership is available to
-												approved applicants.
-												{!req.applicationInstructions && (
-													<span>
-														{' '}
-														Contact a Club Admin for
-														instructions.
-													</span>
-												)}
-												{req.applicationInstructions && (
-													<span>
-														{' '}
-														<>
-															Here are the
-															application
-															instructions:
-														</>
-													</span>
-												)}
+												Anyone can join this club.
 											</Text>
-											{req.applicationInstructions && (
-												<Text
-													className={
-														classes.applicationInstructions
-													}
-												>
-													<Space h={4} />
-													<Linkify
-														componentDecorator={
-															componentDecorator
+										),
+										meetsRequirement: true
+									})
+									break
+								case MembershipReqType.ApprovedApplicants:
+									reqs.push({
+										requirementKey: `Applicants${index}`,
+										requirementComponent: (
+											<div
+												style={{
+													display: 'flex',
+													flexDirection: 'column'
+												}}
+											>
+												<Text>
+													Membership is available to
+													approved applicants.
+													{!req.applicationInstructions && (
+														<span>
+															{' '}
+															Contact a Club Admin
+															for instructions.
+														</span>
+													)}
+													{req.applicationInstructions && (
+														<span>
+															{' '}
+															<>
+																Here are the
+																application
+																instructions:
+															</>
+														</span>
+													)}
+												</Text>
+												{req.applicationInstructions && (
+													<Text
+														className={
+															classes.applicationInstructions
 														}
 													>
-														{`${req.applicationInstructions}`}
-													</Linkify>
-												</Text>
-											)}
-										</div>
-									),
+														<Space h={4} />
+														<Linkify
+															componentDecorator={
+																componentDecorator
+															}
+														>
+															{`${req.applicationInstructions}`}
+														</Linkify>
+													</Text>
+												)}
+											</div>
+										),
 
-									meetsRequirement: wallet.isConnected
-										? req.approvedAddresses.includes(
-												wallet.accounts[0]
-										  )
-										: false
-								})
-								break
+										meetsRequirement: wallet.isConnected
+											? req.approvedAddresses.includes(
+													wallet.accounts[0]
+											  )
+											: false
+									})
+									break
 
-							case MembershipReqType.TokenHolders:
-								reqs.push({
-									requirementKey: `Token${index}`,
-									requirementComponent: (
-										<Text>
-											Members must hold{' '}
-											{req.tokenMinQuantity}{' '}
-											<a
-												className={
-													classes.requirementLink
-												}
-												href={tokenUrl}
-											>
-												{tokenName}
-											</a>
-											.
-										</Text>
-									),
-									meetsRequirement:
-										tokenBalance > BigNumber.from(0)
-								})
-								break
-							case MembershipReqType.OtherClubMember:
-								reqs.push({
-									requirementKey: `OtherClub${index}`,
-									requirementComponent: (
-										<Text>
-											Members must also be a member of{' '}
-											<a
-												className={
-													classes.requirementLink
-												}
-												href="/club"
-											>
-												{req.clubName}
-											</a>
-										</Text>
-									),
-									meetsRequirement: true
-								})
-								break
+								case MembershipReqType.TokenHolders:
+									reqs.push({
+										requirementKey: `Token${index}`,
+										requirementComponent: (
+											<Text>
+												Members must hold{' '}
+												{req.tokenMinQuantity}{' '}
+												<a
+													className={
+														classes.requirementLink
+													}
+													href={tokenUrl}
+												>
+													{tokenName}
+												</a>
+												.
+											</Text>
+										),
+										meetsRequirement:
+											tokenBalance > BigNumber.from(0)
+									})
+									break
+								case MembershipReqType.OtherClubMember:
+									reqs.push({
+										requirementKey: `OtherClub${index}`,
+										requirementComponent: (
+											<Text>
+												Members must also be a member of{' '}
+												<a
+													className={
+														classes.requirementLink
+													}
+													href="/club"
+												>
+													{req.clubName}
+												</a>
+											</Text>
+										),
+										meetsRequirement: true
+									})
+									break
+							}
 						}
-					}
+					)
 				)
-			)
+			}
+
 			log.debug('set parsed reqs')
 			if (reqs.length === 0) {
 				reqs.push({
@@ -648,9 +632,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				const mintEnd =
 					possibleClub.membershipSettings.membershipEndDate
 
-				const afterMintStart =
+				const isAfterMintStart =
 					Date.now() > (mintStart ? new Date(mintStart).getTime() : 0)
-				const beforeMintEnd =
+				const isBeforeMintEnd =
 					Date.now() <
 					(mintEnd ? new Date(mintEnd).getTime() : 200000000000000)
 
@@ -675,23 +659,23 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					  }`
 					: ''
 				if (mintStart && !mintEnd) {
-					if (afterMintStart) {
+					if (isAfterMintStart) {
 						mintDatesText = `Membership opened ${mintStartString}.`
 					} else {
 						mintDatesText = `Membership opens ${mintStartString}.`
 					}
 				} else if (!mintStart && mintEnd) {
-					if (beforeMintEnd) {
+					if (isBeforeMintEnd) {
 						mintDatesText = `Membership closes ${mintEndString}.`
 					} else {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (mintStart && mintEnd) {
-					if (!afterMintStart) {
+					if (!isAfterMintStart) {
 						mintDatesText = `Membership opens ${mintStartString} and closes ${mintEndString}.`
-					} else if (afterMintStart && beforeMintEnd) {
+					} else if (isAfterMintStart && isBeforeMintEnd) {
 						mintDatesText = `Membership opened ${mintStartString} and closes ${mintEndString}.`
-					} else if (!beforeMintEnd) {
+					} else if (!isBeforeMintEnd) {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (!mintStart && !mintEnd) {
@@ -701,7 +685,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				reqs.push({
 					requirementKey: `mintDates${index}`,
 					requirementComponent: <Text>{mintDatesText}</Text>,
-					meetsRequirement: afterMintStart && beforeMintEnd
+					meetsRequirement: isAfterMintStart && isBeforeMintEnd
 				})
 			}
 
@@ -718,7 +702,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			checkEligibility,
 			classes.applicationInstructions,
 			classes.requirementLink,
-			requirementsParsed,
+			areRequirementsParsed,
 			wallet
 		]
 	)
@@ -740,7 +724,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			// After the club is loaded, convert its members into ENS names
 			const newMembers: string[] = []
-			for (const member of possibleClub.members!) {
+			for (const member of possibleClub.members ?? []) {
 				const name = await ensWalletAddress(member)
 				newMembers.push(name)
 			}
@@ -911,20 +895,20 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 								{!club.isClubMember && wallet.isConnected && (
 									<Button
-										disabled={!meetsAllRequirements}
+										disabled={!doesMeetAllRequirements}
 										loading={isJoiningClub}
 										onClick={joinClub}
 										className={classes.buttonJoinClub}
 									>
-										{meetsAllRequirements &&
-											(club.membershipSettings!
-												.costToJoin > 0
+										{doesMeetAllRequirements &&
+											((club.membershipSettings
+												?.costToJoin ?? 0) > 0
 												? `Join - ${
-														club.membershipSettings!
-															.costToJoin
+														club.membershipSettings
+															?.costToJoin ?? 0
 												  } MATIC`
 												: `Join`)}
-										{!meetsAllRequirements &&
+										{!doesMeetAllRequirements &&
 											'Requirements not met'}
 										{(!wallet.isConnected ||
 											isWrongNetwork) &&
@@ -984,7 +968,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									>
 										Membership Requirements
 									</Text>
-									{!requirementsParsed && (
+									{!areRequirementsParsed && (
 										<div
 											className={
 												classes.requirementsContainer
@@ -995,7 +979,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									)}
 
 									{parsedRequirements.length > 0 &&
-										requirementsParsed && (
+										areRequirementsParsed && (
 											<div
 												className={
 													classes.requirementsContainer
@@ -1071,22 +1055,24 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 						{/* Public integrations for club visitors */}
 						{!club.isClubMember &&
-							club.publicIntegrations!.length > 0 && (
+							club.publicIntegrations &&
+							club.allIntegrations &&
+							club.publicIntegrations.length > 0 && (
 								<>
 									<Text
 										className={
 											classes.clubDetailSectionTitle
 										}
 									>{`Apps (${
-										club.publicIntegrations!.length
+										club.publicIntegrations.length
 									})${
-										club.allIntegrations!.length >
-										club.publicIntegrations!.length
+										club.allIntegrations.length >
+										club.publicIntegrations.length
 											? ` (more apps available for club members)`
 											: ``
 									}`}</Text>
 									<Grid>
-										{club.publicIntegrations!.map(
+										{club.publicIntegrations.map(
 											integration => (
 												<>
 													<Grid.Col
@@ -1179,82 +1165,106 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 
 						{/* All integrations for club members */}
-						{club.isClubMember && club.allIntegrations!.length > 0 && (
-							<>
-								<Text
-									className={classes.clubDetailSectionTitle}
-								>{`Apps (${
-									club.allIntegrations!.length
-								})`}</Text>
-								<Grid>
-									{club.allIntegrations!.map(integration => (
-										<Grid.Col
-											xs={6}
-											sm={4}
-											md={4}
-											lg={4}
-											xl={4}
-											key={integration.name}
-										>
-											<a
-												onClick={() => {
-													window.open(integration.url)
-												}}
-											>
-												<div
-													className={
-														classes.enabledClubIntegrationItem
-													}
+						{club.isClubMember &&
+							club.allIntegrations &&
+							club.allIntegrations.length > 0 && (
+								<>
+									<Text
+										className={
+											classes.clubDetailSectionTitle
+										}
+									>{`Apps (${club.allIntegrations.length})`}</Text>
+									<Grid>
+										{club.allIntegrations.map(
+											integration => (
+												<Grid.Col
+													xs={6}
+													sm={4}
+													md={4}
+													lg={4}
+													xl={4}
+													key={integration.name}
 												>
-													<div
-														className={
-															classes.intItemHeader
-														}
+													<a
+														onClick={() => {
+															window.open(
+																integration.url
+															)
+														}}
 													>
-														<Image
-															src={`/${integration.icon}`}
-															width={16}
-															height={16}
-															fit={'contain'}
-														/>
-														<Space w={8} />
-														<Text>
-															{integration.name}
-														</Text>
-														{integration.isVerified && (
-															<>
-																<Space w={12} />
+														<div
+															className={
+																classes.enabledClubIntegrationItem
+															}
+														>
+															<div
+																className={
+																	classes.intItemHeader
+																}
+															>
 																<Image
-																	src="/icon-verified.png"
+																	src={`/${integration.icon}`}
 																	width={16}
 																	height={16}
-																/>
-																<Space w={4} />
-																<Text
-																	color={
-																		'#3EA2FF'
+																	fit={
+																		'contain'
 																	}
-																	size={'sm'}
-																>
-																	Verified
+																/>
+																<Space w={8} />
+																<Text>
+																	{
+																		integration.name
+																	}
 																</Text>
-															</>
-														)}
-													</div>
-												</div>
-											</a>
-										</Grid.Col>
-									))}
-								</Grid>
-							</>
-						)}
+																{integration.isVerified && (
+																	<>
+																		<Space
+																			w={
+																				12
+																			}
+																		/>
+																		<Image
+																			src="/icon-verified.png"
+																			width={
+																				16
+																			}
+																			height={
+																				16
+																			}
+																		/>
+																		<Space
+																			w={
+																				4
+																			}
+																		/>
+																		<Text
+																			color={
+																				'#3EA2FF'
+																			}
+																			size={
+																				'sm'
+																			}
+																		>
+																			Verified
+																		</Text>
+																	</>
+																)}
+															</div>
+														</div>
+													</a>
+												</Grid.Col>
+											)
+										)}
+									</Grid>
+								</>
+							)}
 
 						<Text
 							className={classes.clubDetailSectionTitle}
-						>{`Members (${club.members!.length})`}</Text>
-						{club.members!.length > 0 && (
+						>{`Members (${club.members?.length})`}</Text>
+						{club.members && club.members?.length > 0 && (
 							<Grid>
-								{club.members!.map(member => (
+								{club.members.map(member => (
 									<Grid.Col
 										xs={6}
 										sm={4}

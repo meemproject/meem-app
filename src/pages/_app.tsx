@@ -82,7 +82,6 @@ function MyApp(props: AppProps) {
 	}
 
 	return (
-		// eslint-disable-next-line
 		<MantineProvider
 			withGlobalStyles
 			withNormalizeCSS
