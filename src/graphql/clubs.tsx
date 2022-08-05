@@ -109,7 +109,7 @@ export const SUB_CLUB = gql`
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
-			# contractURI
+			contractURI
 			metadata
 			createdAt
 			name
