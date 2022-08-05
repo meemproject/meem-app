@@ -115,16 +115,6 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				})
 			}
 
-			// TODO: reinit
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-			const uri = JSON.stringify({
-				name: club.name ?? '',
-				description: club.description,
-				image: club.image,
-				external_link: `https://clubs.link/${club.slug}`,
-				application_instructions: applicationInstructions
-			})
-
 			let membershipStartUnix = -1
 			let membershipEndUnix = -1
 			if (club.membershipSettings) {
@@ -257,7 +247,6 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				})
 			}
 
-			// TODO: Call reinitialize
 			const reInitializeContractFetcher = makeFetcher<
 				MeemAPI.v1.ReInitializeMeemContract.IQueryParams,
 				MeemAPI.v1.ReInitializeMeemContract.IRequestBody,
@@ -284,7 +273,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					description: club.description,
 					image: club.image,
 					associations: [],
-					external_url: ''
+					external_url: `https://clubs.link/${club.slug}`,
+					applicationInstructions
 				},
 				name: club.name ?? '',
 				admins: club.admins,
@@ -316,7 +306,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					name: `${club.name} membership token`,
 					image: club.image,
 					associations: [],
-					external_url: ''
+					external_url: `https://clubs.link/${club.slug}`,
+					applicationInstructions
 				}
 			}
 
