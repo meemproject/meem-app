@@ -1,24 +1,40 @@
 import { gql } from '@apollo/client'
 
+export const MEEM_PARTS = gql`
+	fragment MeemParts on Meems {
+		tokenId
+		MeemContractId
+		MeemContract {
+			address
+			name
+			symbol
+		}
+	}
+`
+
+export const MEEM_CONTRACT_PARTS = gql`
+	fragment MeemContractParts on MeemContracts {
+		slug
+		address
+		contractURI
+		createdAt
+		name
+	}
+`
+
 export const GET_IS_MEMBER_OF_CLUB = gql`
 	query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				owner: { _ilike: $walletAddress }
+				# owner: { _ilike: $walletAddress }
 				MeemContract: { slug: { _eq: $clubSlug } }
 			}
 		) {
-			owner
-			tokenId
-			MeemContractId
-			MeemContract {
-				address
-				name
-				symbol
-			}
+			...MeemParts
 		}
 	}
+	${MEEM_PARTS}
 `
 
 export const GET_CLUBS_AUTOCOMPLETE = gql`
@@ -49,21 +65,21 @@ export const GET_CLUB = gql`
 			createdAt
 			name
 			Meems {
-				owner
+				# owner
 				tokenId
 				tokenURI
 				mintedAt
 				mintedBy
-				data
+				# data
 			}
 			splits
-			mintEndAt
-			mintStartAt
+			# mintEndAt
+			# mintStartAt
 			mintPermissions
-			originalsPerWallet
-			totalOriginalsSupply
+			# originalsPerWallet
+			# totalOriginalsSupply
 			symbol
-			MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+			MeemContractWallets {
 				role
 				Wallet {
 					address
@@ -89,6 +105,58 @@ export const GET_CLUB = gql`
 `
 
 export const SUB_CLUB = gql`
+	subscription GetClubSubscription($slug: String) {
+		MeemContracts(where: { slug: { _eq: $slug } }) {
+			slug
+			address
+			# contractURI
+			metadata
+			createdAt
+			name
+			Meems {
+				# owner
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+				Owner {
+					address
+				}
+				# data
+			}
+			splits
+			# mintEndAt
+			# mintStartAt
+			mintPermissions
+			# originalsPerWallet
+			# totalOriginalsSupply
+			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					address
+				}
+			}
+			id
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
+				IntegrationId
+				id
+				isEnabled
+				metadata
+				Integration {
+					description
+					guideUrl
+					icon
+					id
+					name
+				}
+				isPublic
+			}
+		}
+	}
+`
+
+export const SUB_CLUBS = gql`
 	subscription ClubSubscription($address: String) {
 		MeemContracts(where: { address: { _eq: $address } }) {
 			slug
@@ -97,21 +165,21 @@ export const SUB_CLUB = gql`
 			createdAt
 			name
 			Meems {
-				owner
+				# owner
 				tokenId
 				tokenURI
 				mintedAt
 				mintedBy
-				data
+				# data
 			}
 			splits
-			mintEndAt
-			mintStartAt
+			# mintEndAt
+			# mintStartAt
 			mintPermissions
-			originalsPerWallet
-			totalOriginalsSupply
+			# originalsPerWallet
+			# totalOriginalsSupply
 			symbol
-			MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+			MeemContractWallets {
 				role
 				Wallet {
 					address
@@ -126,11 +194,11 @@ export const GET_MY_CLUBS = gql`
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				owner: { _eq: $walletAddress }
+				# owner: { _eq: $walletAddress }
 			}
 			distinct_on: MeemContractId
 		) {
-			owner
+			# owner
 			tokenId
 			MeemContractId
 			MeemContract {
@@ -140,14 +208,15 @@ export const GET_MY_CLUBS = gql`
 				createdAt
 				name
 				splits
-				mintEndAt
-				mintStartAt
+				# mintEndAt
+				# mintStartAt
 				mintPermissions
-				originalsPerWallet
-				totalOriginalsSupply
+				# originalsPerWallet
+				# totalOriginalsSupply
 				symbol
-				MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+				MeemContractWallets {
 					role
+					# Wallet(where: { address: { _eq: $walletAddress } }) {
 					Wallet {
 						address
 					}
@@ -177,11 +246,14 @@ export const SUB_MY_CLUBS = gql`
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				owner: { _eq: $walletAddress }
+				Owner: { address: { _ilike: $walletAddress } }
 			}
 			distinct_on: MeemContractId
 		) {
-			owner
+			# owner
+			# Owner {
+			# 	address
+			# }
 			tokenId
 			MeemContractId
 			MeemContract {
@@ -191,14 +263,15 @@ export const SUB_MY_CLUBS = gql`
 				createdAt
 				name
 				splits
-				mintEndAt
-				mintStartAt
+				# mintEndAt
+				# mintStartAt
 				mintPermissions
-				originalsPerWallet
-				totalOriginalsSupply
+				# originalsPerWallet
+				# totalOriginalsSupply
 				symbol
-				MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+				MeemContractWallets {
 					role
+					# Wallet(where: { address: { _eq: $walletAddress } }) {
 					Wallet {
 						address
 					}

@@ -355,7 +355,7 @@ export default async function clubFromMeemContract(
 		}
 
 		// Total memberships
-		let totalMemberships = Number(clubData.totalOriginalsSupply)
+		let totalMemberships = Number(clubData.maxSupply)
 		if (totalMemberships === -1) {
 			totalMemberships = 0
 		}
@@ -372,22 +372,23 @@ export default async function clubFromMeemContract(
 			for (const meem of clubData.Meems) {
 				if (
 					walletAddress &&
-					walletAddress?.toLowerCase() === meem.owner.toLowerCase()
+					walletAddress?.toLowerCase() ===
+						meem.Owner?.address.toLowerCase()
 				) {
 					isClubMember = true
 					membershipToken = meem.tokenId
 				}
 
 				if (
-					meem.owner.toLowerCase() !==
+					meem.Owner?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
-					meem.owner.toLowerCase() !==
+					meem.Owner?.address.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					//const name = await ensWalletAddress(meem.owner)
-					if (!members.includes(meem.owner)) {
-						members.push(meem.owner)
+					//const name = await ensWalletAddress(meem.Owner?.address)
+					if (meem.Owner && !members.includes(meem.Owner.address)) {
+						members.push(meem.Owner.address)
 					}
 				}
 			}
@@ -450,12 +451,12 @@ export default async function clubFromMeemContract(
 				requirements: reqs,
 				costToJoin,
 				membershipFundsAddress: fundsAddress,
-				membershipStartDate:
-					clubData.mintStartAt !== 0
-						? clubData.mintStartAt
-						: undefined,
-				membershipEndDate:
-					clubData.mintEndAt !== 0 ? clubData.mintEndAt : undefined,
+				// membershipStartDate:
+				// 	clubData.mintStartAt !== 0
+				// 		? clubData.mintStartAt
+				// 		: undefined,
+				// membershipEndDate:
+				// 	clubData.mintEndAt !== 0 ? clubData.mintEndAt : undefined,
 				membershipQuantity: totalMemberships,
 				clubAdmins: []
 			},

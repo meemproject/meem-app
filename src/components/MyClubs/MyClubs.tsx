@@ -1,5 +1,4 @@
-import { useQuery } from '@apollo/client'
-import log from '@kengoldfarb/log'
+import { useSubscription } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -13,10 +12,13 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
-import { MeemContracts, MyClubsQuery } from '../../../generated/graphql'
-import { GET_MY_CLUBS } from '../../graphql/clubs'
+import {
+	MeemContracts,
+	MyClubsSubscriptionSubscription
+} from '../../../generated/graphql'
+import { SUB_MY_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFrommeemContract } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
@@ -105,44 +107,15 @@ export const MyClubsComponent: React.FC = () => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const {
-		loading,
-		error,
-		data: clubData
-	} = useQuery<MyClubsQuery>(GET_MY_CLUBS, {
-		variables: { walletAddress: wallet.accounts[0] }
-	})
-
-	const [clubs, setClubs] = useState<Club[]>([])
-
-	useEffect(() => {
-		if (error) {
-			log.warn(error)
-		}
-
-		if (!loading && !error && clubs.length === 0 && clubData) {
-			const tempClubs: Club[] = []
-
-			clubData.Meems.forEach(meem => {
-				const possibleClub = clubSummaryFrommeemContract(
-					meem.MeemContract as MeemContracts
-				)
-				if (possibleClub.name) {
-					tempClubs.push(possibleClub)
-				}
-			})
-
-			setClubs(tempClubs)
-		}
-	}, [
-		clubs,
-		clubData,
-		error,
-		loading,
-		wallet.accounts,
-		wallet.isConnected,
-		wallet.web3Provider
-	])
+	const { loading, data: clubData } =
+		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
+			variables: {
+				walletAddress:
+					wallet.accounts &&
+					wallet.accounts[0] &&
+					wallet.accounts[0].toLowerCase()
+			}
+		})
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -155,6 +128,18 @@ export const MyClubsComponent: React.FC = () => {
 	const navigateToClub = (club: string) => {
 		router.push({ pathname: `/${club}` })
 	}
+
+	const clubs: Club[] = []
+
+	clubData?.Meems.forEach(meem => {
+		const possibleClub = clubSummaryFrommeemContract(
+			meem.MeemContract as MeemContracts
+		)
+
+		if (possibleClub.name) {
+			clubs.push(possibleClub)
+		}
+	})
 
 	return (
 		<>

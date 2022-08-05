@@ -12,7 +12,7 @@ import {
 	Center
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
+import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
@@ -22,10 +22,10 @@ import { Check, CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
 	GetBundleByIdQuery,
-	GetClubQuery,
+	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { GET_BUNDLE_BY_ID, GET_CLUB, SUB_CLUB } from '../../graphql/clubs'
+import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	MembershipReqType
@@ -256,7 +256,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		loading,
 		error,
 		data: clubData
-	} = useQuery<GetClubQuery>(GET_CLUB, {
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: { slug }
 	})
 
@@ -326,48 +326,88 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		setIsJoiningClub(true)
 		try {
-			const meemContract = new Contract(
-				club?.address ?? '',
-				bundleData?.Bundles[0].abi,
-				wallet.signer
-			)
-
 			const metadata = clubMetadataFromContractUri(
 				club?.rawClub?.contractURI ?? ''
 			)
-			const uri = JSON.stringify({
-				name: club?.name ?? '',
-				description: metadata.description,
-				image: metadata.image,
-				external_link: '',
-				application_instructions: []
-			})
-			const data = {
-				to: wallet.accounts[0],
-				tokenURI: uri,
-				tokenType: MeemAPI.MeemType.Original
-			}
 
-			log.debug(data)
-			const tx = await meemContract?.mint(data, {
-				gasLimit: '5000000',
-				value: ethers.utils.parseEther(
-					club?.membershipSettings
-						? `${club.membershipSettings.costToJoin}`
-						: '0'
+			if (
+				typeof club?.membershipSettings?.costToJoin === 'number' &&
+				club.membershipSettings.costToJoin > 0
+			) {
+				// Cost to join. Run the transaction in browser.
+				const meemContract = new Contract(
+					club?.address ?? '',
+					bundleData?.Bundles[0].abi,
+					wallet.signer
 				)
-			})
 
-			// @ts-ignore
-			await tx.wait()
+				const uri = JSON.stringify({
+					name: club?.name ?? '',
+					description: metadata.description,
+					image: metadata.image,
+					external_link: '',
+					application_instructions: []
+				})
+				const data = {
+					to: wallet.accounts[0],
+					tokenURI: uri,
+					tokenType: MeemAPI.MeemType.Original
+				}
+
+				log.debug(data)
+				const tx = await meemContract?.mint(data, {
+					gasLimit: '5000000',
+					value: ethers.utils.parseEther(
+						club?.membershipSettings
+							? `${club.membershipSettings.costToJoin}`
+							: '0'
+					)
+				})
+
+				// @ts-ignore
+				await tx.wait()
+			} else if (club?.address) {
+				// No cost to join. Call the API
+				const joinClubFetcher = makeFetcher<
+					MeemAPI.v1.MintOriginalMeem.IQueryParams,
+					MeemAPI.v1.MintOriginalMeem.IRequestBody,
+					MeemAPI.v1.MintOriginalMeem.IResponseBody
+				>({
+					method: MeemAPI.v1.MintOriginalMeem.method
+				})
+
+				await joinClubFetcher(
+					MeemAPI.v1.MintOriginalMeem.path(),
+					undefined,
+					{
+						meemContractAddress: club.address,
+						to: wallet.accounts[0],
+						metadata: {
+							name: club?.name ?? '',
+							description: metadata.description,
+							image: metadata.image,
+							meem_metadata_version: 'Meem_Token_20220718'
+						}
+					}
+				)
+
+				// TODO: Listen for new token and refresh
+			} else {
+				showNotification({
+					title: 'Error joining this club.',
+					message: `Please get in touch!`
+				})
+			}
 		} catch (e) {
 			log.debug(e)
-			setIsJoiningClub(false)
+
 			showNotification({
 				title: 'Error joining this club.',
 				message: `Please get in touch!`
 			})
 		}
+
+		setIsJoiningClub(false)
 	}
 
 	const leaveClub = async () => {
@@ -667,7 +707,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
-		async function getClub(data: GetClubQuery) {
+		async function getClub(data: GetClubSubscriptionSubscription) {
 			setIsLoadingClub(true)
 			const possibleClub = await clubFromMeemContract(
 				wallet,
