@@ -65,12 +65,13 @@ export const GET_CLUB = gql`
 			createdAt
 			name
 			Meems {
-				# owner
+				Owner {
+					address
+				}
 				tokenId
 				tokenURI
 				mintedAt
 				mintedBy
-				# data
 			}
 			splits
 			# mintEndAt
@@ -114,7 +115,6 @@ export const SUB_CLUB = gql`
 			createdAt
 			name
 			Meems {
-				# owner
 				tokenId
 				tokenURI
 				mintedAt
@@ -122,7 +122,6 @@ export const SUB_CLUB = gql`
 				Owner {
 					address
 				}
-				# data
 			}
 			splits
 			# mintEndAt
