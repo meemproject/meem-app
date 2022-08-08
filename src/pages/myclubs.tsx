@@ -4,7 +4,7 @@ import React from 'react'
 import { HeaderMenu } from '../components/Header/Header'
 import { MyClubsComponent } from '../components/MyClubs/MyClubs'
 
-const CreatePage: NextPage = () => {
+const MyClubsPage: NextPage = () => {
 	return (
 		<>
 			<Head>
@@ -12,14 +12,16 @@ const CreatePage: NextPage = () => {
 				<meta name="title" content="Clubs" />
 				<meta
 					name="description"
-					content="Welcome to the free, unstoppable association of humankind."
+					content="Effortless access management and collaborative
+							publishing tools for your online community"
 				/>
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta property="og:title" content="Clubs" />
 				<meta
 					property="og:description"
-					content="Welcome to the free, unstoppable association of humankind."
+					content="Effortless access management and collaborative
+							publishing tools for your online community"
 				/>
 
 				<meta property="twitter:card" content="summary_large_image" />
@@ -27,7 +29,8 @@ const CreatePage: NextPage = () => {
 				<meta property="twitter:title" content="Clubs!" />
 				<meta
 					property="twitter:title"
-					content="Welcome to the free, unstoppable association of humankind."
+					content="Effortless access management and collaborative
+							publishing tools for your online community"
 				/>
 
 				<meta
@@ -60,4 +63,4 @@ const CreatePage: NextPage = () => {
 	)
 }
 
-export default CreatePage
+export default MyClubsPage

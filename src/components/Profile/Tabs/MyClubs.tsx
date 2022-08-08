@@ -17,9 +17,9 @@ import { ArrowLeft } from 'tabler-icons-react'
 import {
 	MeemContracts,
 	MyClubsSubscriptionSubscription
-} from '../../../generated/graphql'
-import { SUB_MY_CLUBS } from '../../graphql/clubs'
-import { Club, clubSummaryFrommeemContract } from '../../model/club/club'
+} from '../../../../generated/graphql'
+import { SUB_MY_CLUBS } from '../../../graphql/clubs'
+import { Club, clubSummaryFrommeemContract } from '../../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {

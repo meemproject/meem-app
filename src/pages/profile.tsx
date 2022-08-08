@@ -1,14 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import Authenticate from '../components/Authenticate/Authenticate'
 import { HeaderMenu } from '../components/Header/Header'
+import { MyClubsComponent } from '../components/MyClubs/MyClubs'
 
-const AuthenticatePage: NextPage = () => {
+const ProfilePage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Authenticate | Clubs</title>
+				<title>My Profile | Clubs</title>
 				<meta name="title" content="Clubs" />
 				<meta
 					name="description"
@@ -23,6 +23,7 @@ const AuthenticatePage: NextPage = () => {
 					content="Effortless access management and collaborative
 							publishing tools for your online community"
 				/>
+
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
 				<meta property="twitter:title" content="Clubs!" />
@@ -57,9 +58,9 @@ const AuthenticatePage: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<Authenticate />
+			<MyClubsComponent />
 		</>
 	)
 }
 
-export default AuthenticatePage
+export default ProfilePage
