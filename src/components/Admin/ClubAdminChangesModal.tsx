@@ -274,7 +274,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					image: club.image,
 					associations: [],
 					external_url: `https://clubs.link/${club.slug}`,
-					applicationInstructions
+					application_instructions: applicationInstructions
 				},
 				name: club.name ?? '',
 				admins: club.admins,
@@ -307,7 +307,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					image: club.image,
 					associations: [],
 					external_url: `https://clubs.link/${club.slug}`,
-					applicationInstructions
+					application_instructions: applicationInstructions
 				}
 			}
 
@@ -324,6 +324,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		} catch (e) {
 			setStep(Step.Start)
 			log.debug(e)
+
 			showNotification({
 				title: 'Error saving club settings',
 				message: `Please get in touch!`
