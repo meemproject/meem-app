@@ -1,20 +1,19 @@
-import { useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
 	Text,
 	Image,
 	Space,
-	Center,
-	Loader,
-	Divider
+	Center
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check } from 'tabler-icons-react'
+import { Check } from 'tabler-icons-react'
+import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
+import { MyClubsComponent } from './Tabs/MyClubs'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -174,7 +173,7 @@ interface IProps {
 	slug: string
 }
 
-export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
+export const ProfileComponent: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 	const router = useRouter()
@@ -189,16 +188,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const switchToMyClubs = () => {
 		setCurrentTab(Tab.MyClubs)
 	}
-
-	const {
-		loading,
-		error,
-		data: clubData
-	} = useQuery<GetClubQuery>(GET_CLUB, {
-		variables: { slug }
-	})
-	const [isLoadingClub, setIsLoadingClub] = useState(true)
-	const [club, setClub] = useState<Club>()
 
 	useEffect(() => {
 		if (
@@ -215,223 +204,113 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		}
 	}, [router, slug])
 
-	useEffect(() => {
-		async function getClub(data: GetClubQuery) {
-			const possibleClub = await clubFromMeemContract(
-				wallet,
-				wallet.isConnected ? wallet.accounts[0] : '',
-				data.MeemContracts[0] as MeemContracts
-			)
-
-			if (possibleClub && possibleClub.name) {
-				setClub(possibleClub)
-			}
-			setIsLoadingClub(false)
-		}
-		if (!loading && !error && !club && clubData) {
-			getClub(clubData)
-		}
-	}, [
-		club,
-		clubData,
-		error,
-		loading,
-		wallet,
-		wallet.accounts,
-		wallet.isConnected
-	])
+	// TODO: fetch profile info
+	// const {
+	// 	loading,
+	// 	error,
+	// 	data: clubData
+	// } = useQuery<GetClubQuery>(GET_CLUB, {
+	// 	variables: { slug }
+	// })
+	// const [isLoadingClub, setIsLoadingClub] = useState(true)
+	// const [club, setClub] = useState<Club>()
 
 	return (
 		<>
-			{isLoadingClub && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Loader />
-					</Center>
-				</Container>
-			)}
-			{!isLoadingClub && !club?.name && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>Sorry, that club does not exist!</Text>
-					</Center>
-				</Container>
-			)}
-
-			{!isLoadingClub && club?.name && (
-				<>
-					<div className={classes.header}>
-						<div className={classes.headerTitle}>
-							<a onClick={navigateToClubDetail}>
-								<ArrowLeft
-									className={classes.headerArrow}
-									size={32}
-								/>
-							</a>
+			<div className={classes.header}>
+				<div className={classes.headerTitle}>
+					<Image
+						className={classes.clubLogoImage}
+						src={'/exampleclub.png'}
+					/>
+					{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
+					<div className={classes.headerClubNameContainer}>
+						<Text className={classes.headerClubName}>
+							{'James'}
+						</Text>
+						<div className={classes.clubUrlContainer}>
+							<Text className={classes.clubUrl}>
+								{wallet.accounts[0]}
+							</Text>
 							<Image
-								className={classes.clubLogoImage}
-								src={club.image}
-							/>
-							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<div className={classes.headerClubNameContainer}>
-								<Text className={classes.headerClubName}>
-									{club.name}
-								</Text>
-								<div className={classes.clubUrlContainer}>
-									<Text
-										className={classes.clubUrl}
-									>{`${window.location.origin}/${club.slug}`}</Text>
-									<Image
-										className={classes.copy}
-										src="/copy.png"
-										height={20}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												`${window.location.origin}/${club.slug}`
-											)
-											showNotification({
-												title: 'Club URL copied',
-												autoClose: 2000,
-												color: 'green',
-												icon: <Check />,
+								className={classes.copy}
+								src="/copy.png"
+								height={20}
+								onClick={() => {
+									navigator.clipboard.writeText(
+										`${wallet.accounts[0]}`
+									)
+									showNotification({
+										title: 'Wallet info copied',
+										autoClose: 2000,
+										color: 'green',
+										icon: <Check />,
 
-												message: `This club's URL was copied to your clipboard.`
-											})
-										}}
-										width={20}
-									/>
-								</div>
-							</div>
+										message: `Wallet info was copied to your clipboard.`
+									})
+								}}
+								width={20}
+							/>
 						</div>
 					</div>
+				</div>
+			</div>
 
-					{!club?.isClubAdmin && (
-						<Container>
-							<Space h={120} />
-							<Center>
-								<Text>
-									Sorry, you do not have permission to view
-									this page. Contact the club owner for help.
-								</Text>
-							</Center>
-						</Container>
-					)}
-					{club?.isClubAdmin && (
-						<Container>
-							<div className={classes.tabs}>
-								<a onClick={switchToIdentity}>
-									<Text
-										className={
-											currentTab == Tab.Membership
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Manage Club
-									</Text>
-								</a>
-								<a onClick={switchToMyClubs}>
-									<Text
-										className={
-											currentTab == Tab.Profile
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Edit Profile
-									</Text>
-								</a>
-								<a onClick={switchToIntegrations}>
-									<Text
-										className={
-											currentTab == Tab.Integrations
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Apps
-									</Text>
-								</a>
-							</div>
-							<div
+			{!wallet.isConnected && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Text>Connect your wallet to access your profile.</Text>
+					</Center>
+				</Container>
+			)}
+			{wallet.isConnected && (
+				<Container>
+					<div className={classes.tabs}>
+						<a onClick={switchToIdentity}>
+							<Text
 								className={
-									currentTab === Tab.Membership
-										? classes.visibleTab
-										: classes.invisibleTab
+									currentTab == Tab.Identity
+										? classes.activeTab
+										: classes.inactiveTab
 								}
 							>
-								<Space h={30} />
-								<Text
-									className={
-										classes.clubIntegrationsSectionTitle
-									}
-								>
-									Club Contract Address
-								</Text>
-								<div
-									className={classes.contractAddressContainer}
-								>
-									<Text
-										className={classes.clubContractAddress}
-									>
-										{club.address}
-									</Text>
-									<Image
-										className={classes.copy}
-										src="/copy.png"
-										height={20}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												club.address ?? ''
-											)
-											showNotification({
-												title: 'Address copied',
-												autoClose: 2000,
-												color: 'green',
-												icon: <Check />,
-
-												message: `This club's contract address was copied to your clipboard.`
-											})
-										}}
-										width={20}
-									/>
-								</div>
-
-								<Space h={'xl'} />
-								<Divider />
-								<Space h={'xs'} />
-
-								<ClubAdminMembershipSettingsComponent
-									isCreatingClub={false}
-									club={club}
-								/>
-							</div>
-
-							<div
+								Manage Identity
+							</Text>
+						</a>
+						<a onClick={switchToMyClubs}>
+							<Text
 								className={
-									currentTab === Tab.Profile
-										? classes.visibleTab
-										: classes.invisibleTab
+									currentTab == Tab.MyClubs
+										? classes.activeTab
+										: classes.inactiveTab
 								}
 							>
-								<ClubAdminProfileSettings club={club} />
-							</div>
+								My Clubs
+							</Text>
+						</a>
+					</div>
 
-							<div
-								className={
-									currentTab === Tab.Integrations
-										? classes.visibleTab
-										: classes.invisibleTab
-								}
-							>
-								{' '}
-								<ClubAdminDappSettingsComponent club={club} />
-							</div>
-						</Container>
-					)}
-				</>
+					<div
+						className={
+							currentTab === Tab.Identity
+								? classes.visibleTab
+								: classes.invisibleTab
+						}
+					>
+						<ManageIdentityComponent />
+					</div>
+
+					<div
+						className={
+							currentTab === Tab.MyClubs
+								? classes.visibleTab
+								: classes.invisibleTab
+						}
+					>
+						<MyClubsComponent />
+					</div>
+				</Container>
 			)}
 		</>
 	)
