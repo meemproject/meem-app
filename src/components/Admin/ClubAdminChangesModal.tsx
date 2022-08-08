@@ -311,6 +311,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}
 			}
 
+			log.debug(JSON.stringify(data))
+
 			await reInitializeContractFetcher(
 				MeemAPI.v1.ReInitializeMeemContract.path({
 					meemContractId: club.id

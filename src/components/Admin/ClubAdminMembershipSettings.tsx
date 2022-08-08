@@ -595,22 +595,33 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				eventName: MeemAPI.MeemEvent.Err,
 				handler: err => {
 					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
-						showNotification({
-							title: 'Club Creation Failed',
-							message:
-								'An error occurred while creating the club. Please try again.',
-							color: 'red'
-						})
+						if (club) {
+							showNotification({
+								title: 'Saving Changes Failed',
+								message:
+									'An error occurred while saving changes. Please try again.',
+								color: 'red'
+							})
+						} else {
+							showNotification({
+								title: 'Club Creation Failed',
+								message:
+									'An error occurred while creating the club. Please try again.',
+								color: 'red'
+							})
+						}
+
 						setIsSavingChanges(false)
 						setIsClubCreationModalOpened(false)
 					}
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
+					log.crit(err.detail.code)
 				}
 			})
 			setHasSubscribedToSockets(true)
 		}
-	}, [hasSubscribedToSockets, sockets, wallet])
+	}, [club, hasSubscribedToSockets, sockets, wallet])
 
 	return (
 		<>
