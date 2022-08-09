@@ -13,6 +13,7 @@ import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
+import { Identity } from '../../../../model/identity/identity'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -95,16 +96,19 @@ const useStyles = createStyles(theme => ({
 	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
 }))
 
-export const ManageIdentityComponent: React.FC = () => {
+interface IProps {
+	identity: Identity
+}
+
+export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 	//const { classes } = useStyles()
 	// const router = useRouter()
 	// const wallet = useWallet()
 
 	return (
 		<>
-			<Container>
-				<Text>Manage identity here</Text>
-			</Container>
+			<Space h={30} />
+			<Text>Manage identity here</Text>
 		</>
 	)
 }

@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { HeaderMenu } from '../components/Header/Header'
-import { MyClubsComponent } from '../components/MyClubs/MyClubs'
+import { ProfileComponent } from '../components/Profile/Profile'
 
 const ProfilePage: NextPage = () => {
 	return (
@@ -58,7 +58,7 @@ const ProfilePage: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<MyClubsComponent />
+			<ProfileComponent />
 		</>
 	)
 }

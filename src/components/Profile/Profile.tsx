@@ -4,7 +4,8 @@ import {
 	Text,
 	Image,
 	Space,
-	Center
+	Center,
+	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
@@ -12,6 +13,7 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
+import { Identity, identityFromApi } from '../../model/identity/identity'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyClubsComponent } from './Tabs/MyClubs'
 
@@ -48,31 +50,31 @@ const useStyles = createStyles(theme => ({
 		justifyContent: 'space-between',
 		flexDirection: 'row'
 	},
-	headerClubNameContainer: {
+	headerProfileNameContainer: {
 		marginLeft: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginLeft: 16
 		}
 	},
-	headerClubName: {
+	headerProfileName: {
 		fontWeight: 600,
 		fontSize: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 16
 		}
 	},
-	clubUrlContainer: {
+	profileUrlContainer: {
 		marginTop: 8,
 		display: 'flex',
 		flexDirection: 'row'
 	},
-	clubUrl: {
+	profileUrl: {
 		fontSize: 14,
 		opacity: 0.6,
 		fontWeight: 500
 	},
 
-	clubLogoImage: {
+	profileLogoImage: {
 		imageRendering: 'pixelated',
 		width: 80,
 		height: 80,
@@ -84,7 +86,7 @@ const useStyles = createStyles(theme => ({
 			marginLeft: 16
 		}
 	},
-	clubSettingsIcon: {
+	profileSettingsIcon: {
 		width: 16,
 		height: 16,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -144,12 +146,12 @@ const useStyles = createStyles(theme => ({
 	invisibleTab: {
 		display: 'none'
 	},
-	clubIntegrationsSectionTitle: {
+	profileIntegrationsSectionTitle: {
 		fontSize: 20,
 		marginBottom: 16,
 		fontWeight: 600
 	},
-	clubContractAddress: {
+	profileContractAddress: {
 		wordBreak: 'break-all',
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
@@ -165,24 +167,20 @@ const useStyles = createStyles(theme => ({
 }))
 
 enum Tab {
-	Identity,
+	Profile,
 	MyClubs
 }
 
-interface IProps {
-	slug: string
-}
-
-export const ProfileComponent: React.FC<IProps> = ({ slug }) => {
+export const ProfileComponent: React.FC = () => {
 	// General properties / tab management
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Identity)
+	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
 
-	const switchToIdentity = () => {
-		setCurrentTab(Tab.Identity)
+	const switchToProfile = () => {
+		setCurrentTab(Tab.Profile)
 	}
 
 	const switchToMyClubs = () => {
@@ -198,64 +196,37 @@ export const ProfileComponent: React.FC<IProps> = ({ slug }) => {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/${slug}/admin`
+					return: `/profile`
 				}
 			})
 		}
-	}, [router, slug])
+	}, [router])
 
 	// TODO: fetch profile info
 	// const {
 	// 	loading,
 	// 	error,
-	// 	data: clubData
-	// } = useQuery<GetClubQuery>(GET_CLUB, {
+	// 	data: profileData
+	// } = useQuery<GetProfileQuery>(GET_CLUB, {
 	// 	variables: { slug }
 	// })
-	// const [isLoadingClub, setIsLoadingClub] = useState(true)
-	// const [club, setClub] = useState<Club>()
+	const [isLoadingIdentity, setIsLoadingIdentity] = useState(true)
+	const [identity, setIdentity] = useState<Identity>()
+
+	useEffect(() => {
+		async function getIdentity() {
+			setIsLoadingIdentity(true)
+			const id = await identityFromApi(wallet.accounts[0])
+			setIdentity(id)
+			setIsLoadingIdentity(false)
+		}
+		if (!identity && wallet.isConnected) {
+			getIdentity()
+		}
+	})
 
 	return (
 		<>
-			<div className={classes.header}>
-				<div className={classes.headerTitle}>
-					<Image
-						className={classes.clubLogoImage}
-						src={'/exampleclub.png'}
-					/>
-					{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-					<div className={classes.headerClubNameContainer}>
-						<Text className={classes.headerClubName}>
-							{'James'}
-						</Text>
-						<div className={classes.clubUrlContainer}>
-							<Text className={classes.clubUrl}>
-								{wallet.accounts[0]}
-							</Text>
-							<Image
-								className={classes.copy}
-								src="/copy.png"
-								height={20}
-								onClick={() => {
-									navigator.clipboard.writeText(
-										`${wallet.accounts[0]}`
-									)
-									showNotification({
-										title: 'Wallet info copied',
-										autoClose: 2000,
-										color: 'green',
-										icon: <Check />,
-
-										message: `Wallet info was copied to your clipboard.`
-									})
-								}}
-								width={20}
-							/>
-						</div>
-					</div>
-				</div>
-			</div>
-
 			{!wallet.isConnected && (
 				<Container>
 					<Space h={120} />
@@ -264,53 +235,111 @@ export const ProfileComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && (
+			{wallet.isConnected && isLoadingIdentity && (
 				<Container>
-					<div className={classes.tabs}>
-						<a onClick={switchToIdentity}>
-							<Text
-								className={
-									currentTab == Tab.Identity
-										? classes.activeTab
-										: classes.inactiveTab
-								}
-							>
-								Manage Identity
-							</Text>
-						</a>
-						<a onClick={switchToMyClubs}>
-							<Text
-								className={
-									currentTab == Tab.MyClubs
-										? classes.activeTab
-										: classes.inactiveTab
-								}
-							>
-								My Clubs
-							</Text>
-						</a>
-					</div>
-
-					<div
-						className={
-							currentTab === Tab.Identity
-								? classes.visibleTab
-								: classes.invisibleTab
-						}
-					>
-						<ManageIdentityComponent />
-					</div>
-
-					<div
-						className={
-							currentTab === Tab.MyClubs
-								? classes.visibleTab
-								: classes.invisibleTab
-						}
-					>
-						<MyClubsComponent />
-					</div>
+					<Space h={120} />
+					<Center>
+						<Loader />
+					</Center>
 				</Container>
+			)}
+			{wallet.isConnected && !isLoadingIdentity && !identity && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Text>
+							Unable to load your profile. Please try again later.
+						</Text>
+					</Center>
+				</Container>
+			)}
+			{wallet.isConnected && !isLoadingIdentity && identity && (
+				<>
+					<div className={classes.header}>
+						<div className={classes.headerTitle}>
+							<Image
+								className={classes.profileLogoImage}
+								src={identity.profilePic}
+							/>
+							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
+							<div className={classes.headerProfileNameContainer}>
+								<Text className={classes.headerProfileName}>
+									{identity.displayName}
+								</Text>
+								<div className={classes.profileUrlContainer}>
+									<Text className={classes.profileUrl}>
+										{identity.walletAddress}
+									</Text>
+									<Image
+										className={classes.copy}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												`${identity.walletAddress}`
+											)
+											showNotification({
+												title: 'Wallet info copied',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+
+												message: `Wallet info was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<Container>
+						<div className={classes.tabs}>
+							<a onClick={switchToProfile}>
+								<Text
+									className={
+										currentTab == Tab.Profile
+											? classes.activeTab
+											: classes.inactiveTab
+									}
+								>
+									Manage Identity
+								</Text>
+							</a>
+							<a onClick={switchToMyClubs}>
+								<Text
+									className={
+										currentTab == Tab.MyClubs
+											? classes.activeTab
+											: classes.inactiveTab
+									}
+								>
+									My Clubs
+								</Text>
+							</a>
+						</div>
+
+						<div
+							className={
+								currentTab === Tab.Profile
+									? classes.visibleTab
+									: classes.invisibleTab
+							}
+						>
+							<ManageIdentityComponent identity={identity} />
+						</div>
+
+						<div
+							className={
+								currentTab === Tab.MyClubs
+									? classes.visibleTab
+									: classes.invisibleTab
+							}
+						>
+							<MyClubsComponent />
+						</div>
+					</Container>
+				</>
 			)}
 		</>
 	)
