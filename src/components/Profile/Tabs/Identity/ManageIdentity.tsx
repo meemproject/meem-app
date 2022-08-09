@@ -14,6 +14,8 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
 import { Identity } from '../../../../model/identity/identity'
+import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
+import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
 import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
 
 const useStyles = createStyles(theme => ({
@@ -126,6 +128,26 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 				}}
 				onModalClosed={() => {
 					setIsTwitterModalOpen(false)
+				}}
+			/>
+			<ProfileLinkEmailModal
+				identity={identity}
+				isOpened={isEmailModalOpen}
+				onSuccessfulVerification={() => {
+					// TODO: Add to list of verified accounts locally
+				}}
+				onModalClosed={() => {
+					setIsEmailModalOpen(false)
+				}}
+			/>
+			<ProfileLinkDiscordModal
+				identity={identity}
+				isOpened={isDiscordModalOpen}
+				onSuccessfulVerification={() => {
+					// TODO: Add to list of verified accounts locally
+				}}
+				onModalClosed={() => {
+					setIsDiscordModalOpen(false)
 				}}
 			/>
 		</>
