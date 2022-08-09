@@ -11,9 +11,10 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
 import { Identity } from '../../../../model/identity/identity'
+import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -101,14 +102,32 @@ interface IProps {
 }
 
 export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
-	//const { classes } = useStyles()
-	// const router = useRouter()
-	// const wallet = useWallet()
+	const { classes } = useStyles()
+	const router = useRouter()
+	const wallet = useWallet()
+
+	// Modal visibility
+	const [isLinkedAccountModalOpen, setIsLinkedAccountModalOped] =
+		useState(false)
+
+	const [isDiscordModalOpen, setIsDiscordModalOpen] = useState(false)
+	const [isTwitterModalOpen, setIsTwitterModalOpen] = useState(false)
+	const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 
 	return (
 		<>
 			<Space h={30} />
 			<Text>Manage identity here</Text>
+			<ProfileLinkTwitterModal
+				identity={identity}
+				isOpened={isTwitterModalOpen}
+				onSuccessfulVerification={() => {
+					// TODO: Add to list of verified accounts locally
+				}}
+				onModalClosed={() => {
+					setIsTwitterModalOpen(false)
+				}}
+			/>
 		</>
 	)
 }
