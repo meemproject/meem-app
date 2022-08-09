@@ -61,7 +61,8 @@ export const GET_CLUB = gql`
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
-			contractURI
+			# contractURI
+			metadata
 			createdAt
 			name
 			Meems {
@@ -74,11 +75,8 @@ export const GET_CLUB = gql`
 				mintedBy
 			}
 			splits
-			# mintEndAt
-			# mintStartAt
+			maxSupply
 			mintPermissions
-			# originalsPerWallet
-			# totalOriginalsSupply
 			symbol
 			MeemContractWallets {
 				role

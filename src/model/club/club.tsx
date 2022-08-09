@@ -1,6 +1,7 @@
 import log from '@kengoldfarb/log'
 import { MeemAPI } from '@meemproject/api'
 import { ethers } from 'ethers'
+import { DateTime } from 'luxon'
 import { MeemContracts } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
 import { clubMetadataFromContractUri } from './club_metadata'
@@ -171,7 +172,7 @@ export default async function clubFromMeemContract(
 ): Promise<Club> {
 	if (clubData != null && clubData) {
 		// Parse the contract URI
-		const metadata = clubMetadataFromContractUri(clubData.contractURI)
+		// const metadata = clubMetadataFromContractUri(clubData.contractURI)
 
 		// Disabled due to rate limiting
 		// // Define a provider to look up wallet addresses for admins / approved addresses
@@ -218,6 +219,9 @@ export default async function clubFromMeemContract(
 			)
 		}
 
+		let membershipStartDate: Date | undefined
+		let membershipEndDate: Date | undefined
+
 		if (clubData.mintPermissions) {
 			// clubData.mintPermissions.forEach((permission: any) => {
 			// 	log.debug(permission)
@@ -225,6 +229,20 @@ export default async function clubFromMeemContract(
 			await Promise.all(
 				clubData.mintPermissions.map(async (permission: any) => {
 					log.debug(permission)
+					if (permission.mintStartTimestamp) {
+						membershipStartDate = DateTime.fromSeconds(
+							ethers.BigNumber.from(
+								permission.mintStartTimestamp
+							).toNumber()
+						).toJSDate()
+					}
+					if (permission.mintEndTimestamp) {
+						membershipEndDate = DateTime.fromSeconds(
+							ethers.BigNumber.from(
+								permission.mintEndTimestamp
+							).toNumber()
+						).toJSDate()
+					}
 					// Filter out the admin-exclusive permissions
 					if (
 						permission.permission ===
@@ -320,14 +338,14 @@ export default async function clubFromMeemContract(
 								index,
 								andor: MembershipReqAndor.Or,
 								type,
-								applicationInstructions:
-									metadata.applicationInstructions
-										? metadata.applicationInstructions
-												.length > 0
-											? metadata
-													.applicationInstructions[0]
-											: undefined
-										: undefined,
+								// applicationInstructions:
+								// 	metadata.applicationInstructions
+								// 		? metadata.applicationInstructions
+								// 				.length > 0
+								// 			? metadata
+								// 					.applicationInstructions[0]
+								// 			: undefined
+								// 		: undefined,
 								approvedAddresses,
 								approvedAddressesString,
 								tokenName,
@@ -351,7 +369,7 @@ export default async function clubFromMeemContract(
 		let fundsAddress = ''
 		if (clubData.splits && clubData.splits.length > 0) {
 			const split = clubData.splits[0]
-			fundsAddress = split
+			fundsAddress = split.toAddress
 		}
 
 		// Total memberships
@@ -441,8 +459,8 @@ export default async function clubFromMeemContract(
 			admins,
 			isClubAdmin,
 			slug: clubData.slug,
-			description: metadata.description,
-			image: metadata.image,
+			description: clubData.metadata.description,
+			image: clubData.metadata.image,
 			isClubMember,
 			membershipToken,
 			members,
@@ -451,6 +469,8 @@ export default async function clubFromMeemContract(
 				requirements: reqs,
 				costToJoin,
 				membershipFundsAddress: fundsAddress,
+				membershipStartDate,
+				membershipEndDate,
 				// membershipStartDate:
 				// 	clubData.mintStartAt !== 0
 				// 		? clubData.mintStartAt
