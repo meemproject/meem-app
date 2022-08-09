@@ -177,6 +177,7 @@ export const ProfileComponent: React.FC = () => {
 	const router = useRouter()
 	const wallet = useWallet()
 
+	const [isDeepLinkedToMyClubs, setIsDeepLinkedToMyClubs] = useState(false)
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
 
 	const switchToProfile = () => {
@@ -201,6 +202,13 @@ export const ProfileComponent: React.FC = () => {
 			})
 		}
 	}, [router])
+
+	useEffect(() => {
+		if (router.query.tab === 'myClubs' && !isDeepLinkedToMyClubs) {
+			setIsDeepLinkedToMyClubs(true)
+			switchToMyClubs()
+		}
+	}, [router.query.tab, isDeepLinkedToMyClubs])
 
 	// TODO: fetch profile info
 	// const {
