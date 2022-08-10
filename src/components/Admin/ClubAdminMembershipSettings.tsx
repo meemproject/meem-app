@@ -504,7 +504,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			membershipQuantity,
 			membershipStartDate,
 			membershipEndDate,
-			clubAdmins: clubAdminAddresses
+			clubAdminsAtClubCreation: clubAdminAddresses
 		}
 		setMembershipSettings(settings)
 
@@ -588,9 +588,31 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	useEffect(() => {
 		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
 			sockets.subscribe(
+				[{ key: MeemAPI.MeemEvent.MeemIdUpdated }],
+				wallet.accounts[0]
+			)
+			sockets.subscribe(
+				[{ key: MeemAPI.MeemEvent.MeemMinted }],
+				wallet.accounts[0]
+			)
+			sockets.subscribe(
 				[{ key: MeemAPI.MeemEvent.Err }],
 				wallet.accounts[0]
 			)
+			sockets.on({
+				eventName: MeemAPI.MeemEvent.MeemIdUpdated,
+				handler: event => {
+					log.debug('Meem Id Updated')
+					log.debug(event)
+				}
+			})
+			sockets.on({
+				eventName: MeemAPI.MeemEvent.MeemMinted,
+				handler: event => {
+					log.debug('Meem Minted')
+					log.debug(event)
+				}
+			})
 			sockets.on({
 				eventName: MeemAPI.MeemEvent.Err,
 				handler: err => {

@@ -4,7 +4,6 @@ import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { MeemContracts } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
-import { clubMetadataFromContractUri } from './club_metadata'
 
 export const ClubAdminRole =
 	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
@@ -55,7 +54,8 @@ export interface MembershipSettings {
 	membershipQuantity: number
 	membershipStartDate?: Date
 	membershipEndDate?: Date
-	clubAdmins?: string[]
+	// The club admins set when the club is created
+	clubAdminsAtClubCreation?: string[]
 }
 
 export enum MembershipReqType {
@@ -131,9 +131,8 @@ export interface MembershipRequirement {
 }
 
 // The club's basic metadata, doesn't require async
-export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
+export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 	if (clubData) {
-		const metadata = clubMetadataFromContractUri(clubData.contractURI)
 		return {
 			id: clubData.id,
 			name: clubData.name,
@@ -141,8 +140,8 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 			admins: [],
 			isClubAdmin: false,
 			slug: clubData.slug,
-			description: metadata.description,
-			image: metadata.image,
+			description: clubData.metadata.description,
+			image: clubData.metadata.image,
 			isClubMember: true,
 			membershipToken: '',
 			members: [],
@@ -154,7 +153,7 @@ export function clubSummaryFrommeemContract(clubData?: MeemContracts): Club {
 				membershipStartDate: undefined,
 				membershipEndDate: undefined,
 				membershipQuantity: 0,
-				clubAdmins: []
+				clubAdminsAtClubCreation: []
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
@@ -223,9 +222,6 @@ export default async function clubFromMeemContract(
 		let membershipEndDate: Date | undefined
 
 		if (clubData.mintPermissions) {
-			// clubData.mintPermissions.forEach((permission: any) => {
-			// 	log.debug(permission)
-			// })
 			await Promise.all(
 				clubData.mintPermissions.map(async (permission: any) => {
 					log.debug(permission)
@@ -338,14 +334,14 @@ export default async function clubFromMeemContract(
 								index,
 								andor: MembershipReqAndor.Or,
 								type,
-								// applicationInstructions:
-								// 	metadata.applicationInstructions
-								// 		? metadata.applicationInstructions
-								// 				.length > 0
-								// 			? metadata
-								// 					.applicationInstructions[0]
-								// 			: undefined
-								// 		: undefined,
+								applicationInstructions: clubData.metadata
+									.applicationInstructions
+									? clubData.metadata.applicationInstructions
+											.length > 0
+										? clubData.metadata
+												.applicationInstructions[0]
+										: undefined
+									: undefined,
 								approvedAddresses,
 								approvedAddressesString,
 								tokenName,
@@ -452,6 +448,8 @@ export default async function clubFromMeemContract(
 			slotsLeft = totalMemberships - membersCount
 		}
 
+		// Parse club metadata
+
 		return {
 			id: clubData.id,
 			name: clubData.name,
@@ -471,14 +469,7 @@ export default async function clubFromMeemContract(
 				membershipFundsAddress: fundsAddress,
 				membershipStartDate,
 				membershipEndDate,
-				// membershipStartDate:
-				// 	clubData.mintStartAt !== 0
-				// 		? clubData.mintStartAt
-				// 		: undefined,
-				// membershipEndDate:
-				// 	clubData.mintEndAt !== 0 ? clubData.mintEndAt : undefined,
-				membershipQuantity: totalMemberships,
-				clubAdmins: []
+				membershipQuantity: totalMemberships
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
