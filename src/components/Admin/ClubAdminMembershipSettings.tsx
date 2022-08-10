@@ -514,6 +514,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		} else {
 			const newClub = club
 			if (newClub) {
+				newClub.admins = clubAdminAddresses
 				newClub.membershipSettings = settings
 				setNewClubData(newClub)
 				openSaveChangesModal()
