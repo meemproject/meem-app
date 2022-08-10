@@ -8,6 +8,7 @@ import React, {
 	useMemo,
 	ReactNode
 } from 'react'
+// eslint-disable-next-line import/namespace
 import { GetIsMemberOfClubQuery } from '../../../generated/graphql'
 import { GET_IS_MEMBER_OF_CLUB } from '../../graphql/clubs'
 

@@ -22,9 +22,9 @@ import {
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { forwardRef, useContext, useRef, useState } from 'react'
+// eslint-disable-next-line import/namespace
 import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
 import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
-import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { CookieKeys } from '../../utils/cookies'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
@@ -215,19 +215,18 @@ export function HomeComponent() {
 				} else {
 					const clubsList: React.SetStateAction<any[]> = []
 					typedData.MeemContracts.forEach(club => {
-						const metadata = clubMetadataFromContractUri(
-							club.contractURI
-						)
-						if (metadata.image.length > 0) {
-							const clubData = {
-								image: metadata.image,
-								value: club.name,
-								description: metadata.description,
-								slug: club.slug,
-								id: club.id
-							}
-							clubsList.push(clubData)
+						const clubData = {
+							image: club.metadata.image
+								? club.metadata.image
+								: '',
+							value: club.name,
+							description: club.metadata.description
+								? club.metadata.description
+								: 'Unknown description',
+							slug: club.slug,
+							id: club.id
 						}
+						clubsList.push(clubData)
 					})
 					setAutocompleteData(clubsList)
 					setIsFetchingData(false)

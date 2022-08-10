@@ -20,6 +20,7 @@ import { MeemAPI } from '@meemproject/api'
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
+// eslint-disable-next-line import/namespace
 import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
 import { Club, Integration } from '../../model/club/club'

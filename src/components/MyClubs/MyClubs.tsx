@@ -19,7 +19,7 @@ import {
 	MyClubsSubscriptionSubscription
 } from '../../../generated/graphql'
 import { SUB_MY_CLUBS } from '../../graphql/clubs'
-import { Club, clubSummaryFrommeemContract } from '../../model/club/club'
+import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -132,7 +132,7 @@ export const MyClubsComponent: React.FC = () => {
 	const clubs: Club[] = []
 
 	clubData?.Meems.forEach(meem => {
-		const possibleClub = clubSummaryFrommeemContract(
+		const possibleClub = clubSummaryFromMeemContract(
 			meem.MeemContract as MeemContracts
 		)
 

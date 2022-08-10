@@ -30,7 +30,6 @@ import clubFromMeemContract, {
 	Club,
 	MembershipReqType
 } from '../../model/club/club'
-import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
 
@@ -326,77 +325,75 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		setIsJoiningClub(true)
 		try {
-			const metadata = clubMetadataFromContractUri(
-				club?.rawClub?.contractURI ?? ''
-			)
-
-			if (
-				typeof club?.membershipSettings?.costToJoin === 'number' &&
-				club.membershipSettings.costToJoin > 0
-			) {
-				// Cost to join. Run the transaction in browser.
-				const meemContract = new Contract(
-					club?.address ?? '',
-					bundleData?.Bundles[0].abi,
-					wallet.signer
-				)
-
-				const uri = JSON.stringify({
-					name: club?.name ?? '',
-					description: metadata.description,
-					image: metadata.image,
-					external_link: '',
-					application_instructions: []
-				})
-				const data = {
-					to: wallet.accounts[0],
-					tokenURI: uri,
-					tokenType: MeemAPI.MeemType.Original
-				}
-
-				log.debug(data)
-				const tx = await meemContract?.mint(data, {
-					gasLimit: '5000000',
-					value: ethers.utils.parseEther(
-						club?.membershipSettings
-							? `${club.membershipSettings.costToJoin}`
-							: '0'
+			if (club && club.rawClub) {
+				if (
+					typeof club?.membershipSettings?.costToJoin === 'number' &&
+					club.membershipSettings.costToJoin > 0
+				) {
+					// Cost to join. Run the transaction in browser.
+					const meemContract = new Contract(
+						club?.address ?? '',
+						bundleData?.Bundles[0].abi,
+						wallet.signer
 					)
-				})
 
-				// @ts-ignore
-				await tx.wait()
-			} else if (club?.address) {
-				// No cost to join. Call the API
-				const joinClubFetcher = makeFetcher<
-					MeemAPI.v1.MintOriginalMeem.IQueryParams,
-					MeemAPI.v1.MintOriginalMeem.IRequestBody,
-					MeemAPI.v1.MintOriginalMeem.IResponseBody
-				>({
-					method: MeemAPI.v1.MintOriginalMeem.method
-				})
-
-				await joinClubFetcher(
-					MeemAPI.v1.MintOriginalMeem.path(),
-					undefined,
-					{
-						meemContractAddress: club.address,
+					const uri = JSON.stringify({
+						name: club?.name ?? '',
+						description: club?.description,
+						image: club?.image,
+						external_link: '',
+						application_instructions: []
+					})
+					const data = {
 						to: wallet.accounts[0],
-						metadata: {
-							name: club?.name ?? '',
-							description: metadata.description,
-							image: metadata.image,
-							meem_metadata_version: 'Meem_Token_20220718'
-						}
+						tokenURI: uri,
+						tokenType: MeemAPI.MeemType.Original
 					}
-				)
 
-				// TODO: Listen for new token and refresh
-			} else {
-				showNotification({
-					title: 'Error joining this club.',
-					message: `Please get in touch!`
-				})
+					log.debug(data)
+					const tx = await meemContract?.mint(data, {
+						gasLimit: '5000000',
+						value: ethers.utils.parseEther(
+							club?.membershipSettings
+								? `${club.membershipSettings.costToJoin}`
+								: '0'
+						)
+					})
+
+					// @ts-ignore
+					await tx.wait()
+				} else if (club?.address) {
+					// No cost to join. Call the API
+					const joinClubFetcher = makeFetcher<
+						MeemAPI.v1.MintOriginalMeem.IQueryParams,
+						MeemAPI.v1.MintOriginalMeem.IRequestBody,
+						MeemAPI.v1.MintOriginalMeem.IResponseBody
+					>({
+						method: MeemAPI.v1.MintOriginalMeem.method
+					})
+
+					await joinClubFetcher(
+						MeemAPI.v1.MintOriginalMeem.path(),
+						undefined,
+						{
+							meemContractAddress: club.address,
+							to: wallet.accounts[0],
+							metadata: {
+								name: club?.name ?? '',
+								description: club?.description,
+								image: club?.image,
+								meem_metadata_version: 'Meem_Token_20220718'
+							}
+						}
+					)
+
+					// TODO: Listen for new token and refresh
+				} else {
+					showNotification({
+						title: 'Error joining this club.',
+						message: `Please get in touch!`
+					})
+				}
 			}
 		} catch (e) {
 			log.debug(e)

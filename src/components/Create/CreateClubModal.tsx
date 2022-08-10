@@ -187,8 +187,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 						// application_instructions: applicationInstructions
 					},
 					name: Cookies.get(CookieKeys.clubName) ?? '',
-					admins: membershipSettings.clubAdmins,
-					minters: membershipSettings.clubAdmins,
+					admins: membershipSettings.clubAdminsAtClubCreation,
+					minters: membershipSettings.clubAdminsAtClubCreation,
 					maxSupply: ethers.BigNumber.from(
 						membershipSettings.membershipQuantity
 					).toHexString(),
