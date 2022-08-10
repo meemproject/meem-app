@@ -45,6 +45,7 @@ export interface Club {
 	allIntegrations?: Integration[]
 	publicIntegrations?: Integration[]
 	privateIntegrations?: Integration[]
+	gnosisSafeAddress?: string
 }
 
 export interface MembershipSettings {
@@ -457,6 +458,7 @@ export default async function clubFromMeemContract(
 			admins,
 			isClubAdmin,
 			slug: clubData.slug,
+			gnosisSafeAddress: clubData.gnosisSafeAddress,
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			isClubMember,

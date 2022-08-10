@@ -7,11 +7,14 @@ import {
 	Space,
 	Center,
 	Loader,
-	Divider
+	Divider,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
@@ -188,6 +191,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const wallet = useWallet()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
+	const [isCreatingSafe, setIsCreatingSave] = useState(false)
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: `/${slug}` })
@@ -208,7 +212,8 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const {
 		loading,
 		error,
-		data: clubData
+		data: clubData,
+		refetch
 	} = useQuery<GetClubQuery>(GET_CLUB, {
 		variables: { slug }
 	})
@@ -413,6 +418,107 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										width={20}
 									/>
 								</div>
+
+								<Space h={'xl'} />
+								<Divider />
+								<Space h={'xl'} />
+								<Text
+									className={
+										classes.clubIntegrationsSectionTitle
+									}
+								>
+									Club Treasury Address
+								</Text>
+								<Space h={'xs'} />
+								{club.gnosisSafeAddress && (
+									<div
+										className={
+											classes.contractAddressContainer
+										}
+									>
+										<Text
+											className={
+												classes.clubContractAddress
+											}
+										>
+											{club.gnosisSafeAddress}
+										</Text>
+										<Image
+											className={classes.copy}
+											src="/copy.png"
+											height={20}
+											onClick={() => {
+												navigator.clipboard.writeText(
+													club.gnosisSafeAddress ?? ''
+												)
+												showNotification({
+													title: 'Address copied',
+													autoClose: 2000,
+													color: 'green',
+													icon: <Check />,
+
+													message: `This club's treasury address was copied to your clipboard.`
+												})
+											}}
+											width={20}
+										/>
+									</div>
+								)}
+								<Space h={'xs'} />
+
+								<Link
+									href={`https://gnosis-safe.io/app/${
+										process.env.NEXT_PUBLIC_CHAIN_ID === '4'
+											? 'rin'
+											: 'matic'
+									}:${club.gnosisSafeAddress}/home`}
+								>
+									<a target="_blank">Go to Gnosis Safe</a>
+								</Link>
+
+								{!club.gnosisSafeAddress && (
+									<Button
+										disabled={isCreatingSafe}
+										onClick={async () => {
+											if (!club.id || !club.admins) {
+												return
+											}
+											try {
+												setIsCreatingSave(true)
+												const createSafeFetcher =
+													makeFetcher<
+														MeemAPI.v1.CreateClubSafe.IQueryParams,
+														MeemAPI.v1.CreateClubSafe.IRequestBody,
+														MeemAPI.v1.CreateClubSafe.IResponseBody
+													>({
+														method: MeemAPI.v1
+															.CreateClubSafe
+															.method
+													})
+
+												await createSafeFetcher(
+													MeemAPI.v1.CreateClubSafe.path(
+														{
+															meemContractId:
+																club.id
+														}
+													),
+													undefined,
+													{
+														safeOwners: club.admins
+													}
+												)
+												refetch()
+											} catch (e) {
+												// eslint-disable-next-line no-console
+												console.log(e)
+											}
+											setIsCreatingSave(false)
+										}}
+									>
+										Create Gnosis Wallet
+									</Button>
+								)}
 
 								<Space h={'xl'} />
 								<Divider />
