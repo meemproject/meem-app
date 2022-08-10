@@ -431,50 +431,57 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								</Text>
 								<Space h={'xs'} />
 								{club.gnosisSafeAddress && (
-									<div
-										className={
-											classes.contractAddressContainer
-										}
-									>
-										<Text
+									<>
+										<div
 											className={
-												classes.clubContractAddress
+												classes.contractAddressContainer
 											}
 										>
-											{club.gnosisSafeAddress}
-										</Text>
-										<Image
-											className={classes.copy}
-											src="/copy.png"
-											height={20}
-											onClick={() => {
-												navigator.clipboard.writeText(
-													club.gnosisSafeAddress ?? ''
-												)
-												showNotification({
-													title: 'Address copied',
-													autoClose: 2000,
-													color: 'green',
-													icon: <Check />,
+											<Text
+												className={
+													classes.clubContractAddress
+												}
+											>
+												{club.gnosisSafeAddress}
+											</Text>
+											<Image
+												className={classes.copy}
+												src="/copy.png"
+												height={20}
+												onClick={() => {
+													navigator.clipboard.writeText(
+														club.gnosisSafeAddress ??
+															''
+													)
+													showNotification({
+														title: 'Address copied',
+														autoClose: 2000,
+														color: 'green',
+														icon: <Check />,
 
-													message: `This club's treasury address was copied to your clipboard.`
-												})
-											}}
-											width={20}
-										/>
-									</div>
+														message: `This club's treasury address was copied to your clipboard.`
+													})
+												}}
+												width={20}
+											/>
+										</div>
+										<Space h={'xs'} />
+
+										<Link
+											href={`https://gnosis-safe.io/app/${
+												process.env
+													.NEXT_PUBLIC_CHAIN_ID ===
+												'4'
+													? 'rin'
+													: 'matic'
+											}:${club.gnosisSafeAddress}/home`}
+										>
+											<a target="_blank">
+												Go to Gnosis Safe
+											</a>
+										</Link>
+									</>
 								)}
-								<Space h={'xs'} />
-
-								<Link
-									href={`https://gnosis-safe.io/app/${
-										process.env.NEXT_PUBLIC_CHAIN_ID === '4'
-											? 'rin'
-											: 'matic'
-									}:${club.gnosisSafeAddress}/home`}
-								>
-									<a target="_blank">Go to Gnosis Safe</a>
-								</Link>
 
 								{!club.gnosisSafeAddress && (
 									<Button
