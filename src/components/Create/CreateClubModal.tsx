@@ -161,6 +161,19 @@ export const CreateClubModal: React.FC<IProps> = ({
 					)}`
 				)
 
+				// Setup application instructions for club
+				const applicationInstructions: string[] = []
+				membershipSettings.requirements.forEach(requirement => {
+					if (
+						requirement.applicationInstructions &&
+						requirement.applicationInstructions?.length > 0
+					) {
+						applicationInstructions.push(
+							requirement.applicationInstructions
+						)
+					}
+				})
+
 				const data = {
 					shouldMintAdminTokens: true,
 					metadata: {
@@ -171,10 +184,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 						image: Cookies.get(CookieKeys.clubImage),
 						associations: [],
 						external_url: ''
+						// application_instructions: applicationInstructions
 					},
 					name: Cookies.get(CookieKeys.clubName) ?? '',
-					admins: membershipSettings.clubAdmins,
-					minters: membershipSettings.clubAdmins,
+					admins: membershipSettings.clubAdminsAtClubCreation,
+					minters: membershipSettings.clubAdminsAtClubCreation,
 					maxSupply: ethers.BigNumber.from(
 						membershipSettings.membershipQuantity
 					).toHexString(),

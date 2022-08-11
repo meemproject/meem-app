@@ -504,7 +504,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			membershipQuantity,
 			membershipStartDate,
 			membershipEndDate,
-			clubAdmins: clubAdminAddresses
+			clubAdminsAtClubCreation: clubAdminAddresses
 		}
 		setMembershipSettings(settings)
 
@@ -514,6 +514,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		} else {
 			const newClub = club
 			if (newClub) {
+				newClub.admins = clubAdminAddresses
 				newClub.membershipSettings = settings
 				setNewClubData(newClub)
 				openSaveChangesModal()
@@ -588,29 +589,62 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	useEffect(() => {
 		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
 			sockets.subscribe(
+				[{ key: MeemAPI.MeemEvent.MeemIdUpdated }],
+				wallet.accounts[0]
+			)
+			sockets.subscribe(
+				[{ key: MeemAPI.MeemEvent.MeemMinted }],
+				wallet.accounts[0]
+			)
+			sockets.subscribe(
 				[{ key: MeemAPI.MeemEvent.Err }],
 				wallet.accounts[0]
 			)
 			sockets.on({
+				eventName: MeemAPI.MeemEvent.MeemIdUpdated,
+				handler: event => {
+					log.debug('Meem Id Updated')
+					log.debug(event)
+				}
+			})
+			sockets.on({
+				eventName: MeemAPI.MeemEvent.MeemMinted,
+				handler: event => {
+					log.debug('Meem Minted')
+					log.debug(event)
+				}
+			})
+			sockets.on({
 				eventName: MeemAPI.MeemEvent.Err,
 				handler: err => {
 					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
-						showNotification({
-							title: 'Club Creation Failed',
-							message:
-								'An error occurred while creating the club. Please try again.',
-							color: 'red'
-						})
+						if (club) {
+							showNotification({
+								title: 'Saving Changes Failed',
+								message:
+									'An error occurred while saving changes. Please try again.',
+								color: 'red'
+							})
+						} else {
+							showNotification({
+								title: 'Club Creation Failed',
+								message:
+									'An error occurred while creating the club. Please try again.',
+								color: 'red'
+							})
+						}
+
 						setIsSavingChanges(false)
 						setIsClubCreationModalOpened(false)
 					}
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
+					log.crit(err.detail.code)
 				}
 			})
 			setHasSubscribedToSockets(true)
 		}
-	}, [hasSubscribedToSockets, sockets, wallet])
+	}, [club, hasSubscribedToSockets, sockets, wallet])
 
 	return (
 		<>

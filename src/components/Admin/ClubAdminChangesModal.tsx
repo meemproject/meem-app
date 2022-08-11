@@ -1,3 +1,4 @@
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -13,7 +14,13 @@ import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { makeFetcher, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Check } from 'tabler-icons-react'
+// eslint-disable-next-line import/namespace
+import {
+	GetClubSubscriptionSubscription // eslint-disable-next-line import/namespace
+} from '../../../generated/graphql'
+import { SUB_CLUB } from '../../graphql/clubs'
 import { Club, MembershipReqType } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
@@ -85,14 +92,73 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 	onModalClosed,
 	club
 }) => {
-	const { web3Provider, accounts } = useWallet()
+	const wallet = useWallet()
 
 	const { classes } = useStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
+	const [currentClubDataString, setCurrentClubDataString] = useState('')
+
+	const {
+		loading,
+		error,
+		data: clubData
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
+		variables: { slug: club?.slug ?? '' }
+	})
+
+	useEffect(() => {
+		function compareClubData() {
+			if (clubData) {
+				const newClubDataString = JSON.stringify(clubData)
+
+				if (currentClubDataString === newClubDataString) {
+					log.debug('nothing has changed on the club yet.')
+				} else {
+					log.debug('changes detected on the club.')
+					setStep(Step.Start)
+					setCurrentClubDataString('')
+					onModalClosed()
+
+					showNotification({
+						title: 'Success!',
+						autoClose: 5000,
+						color: 'green',
+						icon: <Check color="green" />,
+
+						message: `${clubData.MeemContracts[0].name} has been updated.`
+					})
+				}
+			}
+		}
+
+		if (clubData && !loading && !error && isOpened) {
+			if (currentClubDataString.length === 0) {
+				if (clubData.MeemContracts.length > 0) {
+					// Set initial club data
+					log.debug('setting initial club data...')
+					setCurrentClubDataString(JSON.stringify(clubData))
+				}
+			} else {
+				// compare to initial club fata
+				log.debug('compare club data...')
+				compareClubData()
+			}
+		}
+	}, [
+		club,
+		clubData,
+		currentClubDataString,
+		error,
+		isOpened,
+		loading,
+		onModalClosed,
+		wallet
+	])
+
 	const reinitialize = async () => {
-		if (!web3Provider || !club) {
+		if (!wallet.web3Provider || !club) {
 			return
 		}
 
@@ -227,7 +293,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 				// Now push special 'admin mint' permissions which bypass the other requirements
 				log.debug('adding admin permissions...')
-				club.membershipSettings.clubAdmins?.forEach(admin => {
+				club.admins?.forEach(admin => {
 					mintPermissions.push({
 						permission: MeemAPI.Permission.Addresses,
 						addresses: [admin],
@@ -273,8 +339,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					description: club.description,
 					image: club.image,
 					associations: [],
-					external_url: `https://clubs.link/${club.slug}`,
-					applicationInstructions
+					external_url: `https://clubs.link/${club.slug}`
+					// application_instructions: applicationInstructions
 				},
 				name: club.name ?? '',
 				admins: club.admins,
@@ -293,7 +359,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 									toAddress: club.membershipSettings
 										? club.membershipSettings
 												.membershipFundsAddress
-										: accounts[0],
+										: wallet.accounts[0],
 									// Amount in basis points 10000 == 100%
 									amount: 10000,
 									lockedBy: MeemAPI.zeroAddress
@@ -306,10 +372,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					name: `${club.name} membership token`,
 					image: club.image,
 					associations: [],
-					external_url: `https://clubs.link/${club.slug}`,
-					applicationInstructions
+					external_url: `https://clubs.link/${club.slug}`
+					// application_instructions: applicationInstructions
 				}
 			}
+
+			// log.debug(JSON.stringify(data))
+			log.debug(data)
 
 			await reInitializeContractFetcher(
 				MeemAPI.v1.ReInitializeMeemContract.path({
@@ -319,11 +388,11 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				data
 			)
 
-			setStep(Step.Start)
-			onModalClosed()
+			// Now we wait for an update on the db.
 		} catch (e) {
 			setStep(Step.Start)
 			log.debug(e)
+
 			showNotification({
 				title: 'Error saving club settings',
 				message: `Please get in touch!`
@@ -344,7 +413,10 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				title={
 					<Text className={classes.modalTitle}>Confirm changes</Text>
 				}
-				onClose={() => onModalClosed()}
+				onClose={() => {
+					onModalClosed()
+					setCurrentClubDataString('')
+				}}
 			>
 				<Divider />
 				<Space h={12} />

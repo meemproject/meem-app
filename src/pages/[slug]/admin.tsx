@@ -6,7 +6,6 @@ import React from 'react'
 import { ClubAdminComponent } from '../../components/Admin/ClubAdmin'
 import { HeaderMenu } from '../../components/Header/Header'
 import { GET_CLUB } from '../../graphql/clubs'
-import { clubMetadataFromContractUri } from '../../model/club/club_metadata'
 import { ssrGraphqlClient } from '../../utils/ssr_graphql'
 import { ClubPropViewModel } from '.'
 
@@ -121,13 +120,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 					responseBody: null
 				}
 			} else {
-				const metadata = clubMetadataFromContractUri(
-					data.MeemContracts[0].contractURI
-				)
 				club = {
 					isError: false,
 					responseBody: data,
-					description: metadata.description
+					description:
+						data.MeemContracts[0].metadata.description ?? ''
 				}
 			}
 		}
