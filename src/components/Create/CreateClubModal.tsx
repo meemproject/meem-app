@@ -1,59 +1,23 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-	ApolloClient,
-	HttpLink,
-	InMemoryCache,
-	useLazyQuery,
-	useSubscription
-} from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Container,
-	Text,
-	Image,
-	Button,
-	Space,
-	Grid,
-	Modal,
-	Divider,
-	Stepper,
-	Loader,
-	MantineProvider
-} from '@mantine/core'
+import { createStyles, Text, Image, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
-import * as meemContracts from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
-import { Contract, ethers } from 'ethers'
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { Check } from 'tabler-icons-react'
+import { MyClubsSubscriptionSubscription } from '../../../generated/graphql'
+import { SUB_MY_CLUBS } from '../../graphql/clubs'
 import {
-	BrandDiscord,
-	BrandTwitter,
-	Check,
-	CircleCheck,
-	Settings
-} from 'tabler-icons-react'
-import {
-	ClubSubscriptionSubscription,
-	MeemContracts,
-	MyClubsSubscriptionSubscription
-} from '../../../generated/graphql'
-import { GET_CLUB_SLUG, SUB_CLUB, SUB_MY_CLUBS } from '../../graphql/clubs'
-import clubFromMeemContract, {
-	Integration,
-	MembershipReqType,
 	MembershipSettings,
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
 import { CookieKeys } from '../../utils/cookies'
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles(() => ({
 	header: {
 		display: 'flex',
 		alignItems: 'center',
@@ -112,12 +76,10 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const { classes } = useStyles()
 
-	const [proxyAddress, setProxyAddress] = useState('')
-
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
 	// Club subscription - watch for specific changes in order to update correctly
-	const { data: myClubsData, loading: isLoadingMyClubs } =
+	const { data: myClubsData } =
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
 			variables: { walletAddress: wallet.accounts[0] }
 		})
@@ -199,6 +161,19 @@ export const CreateClubModal: React.FC<IProps> = ({
 					)}`
 				)
 
+				// Setup application instructions for club
+				const applicationInstructions: string[] = []
+				membershipSettings.requirements.forEach(requirement => {
+					if (
+						requirement.applicationInstructions &&
+						requirement.applicationInstructions?.length > 0
+					) {
+						applicationInstructions.push(
+							requirement.applicationInstructions
+						)
+					}
+				})
+
 				const data = {
 					shouldMintAdminTokens: true,
 					metadata: {
@@ -209,10 +184,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 						image: Cookies.get(CookieKeys.clubImage),
 						associations: [],
 						external_url: ''
+						// application_instructions: applicationInstructions
 					},
 					name: Cookies.get(CookieKeys.clubName) ?? '',
-					admins: membershipSettings.clubAdmins,
-					minters: membershipSettings.clubAdmins,
+					admins: membershipSettings.clubAdminsAtClubCreation,
+					minters: membershipSettings.clubAdminsAtClubCreation,
 					maxSupply: ethers.BigNumber.from(
 						membershipSettings.membershipQuantity
 					).toHexString(),

@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	createStyles,
 	Header,
@@ -21,8 +19,7 @@ import {
 	BrandDiscord,
 	BrandTwitter,
 	MessageCircle,
-	Mail,
-	QuestionMark
+	Mail
 } from 'tabler-icons-react'
 import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
@@ -159,8 +156,6 @@ const useStyles = createStyles(theme => ({
 }))
 
 export function HeaderMenu() {
-	// eslint-disable-next-line no-unused-vars
-	const [isMoreMenuOpened, setMoreMenuOpened] = useState(false)
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
 	const { classes, cx } = useStyles()
 	const router = useRouter()
@@ -291,8 +286,6 @@ export function HeaderMenu() {
 						size={260}
 						placement="end"
 						transition="pop-top-right"
-						onClose={() => setMoreMenuOpened(false)}
-						onOpen={() => setMoreMenuOpened(true)}
 						control={
 							<UnstyledButton>
 								<Dots className={classes.ellipse} />
