@@ -1,24 +1,39 @@
 import { gql } from '@apollo/client'
 
+export const MEEM_PARTS = gql`
+	fragment MeemParts on Meems {
+		tokenId
+		MeemContractId
+		MeemContract {
+			address
+			name
+			symbol
+		}
+	}
+`
+
+export const MEEM_CONTRACT_PARTS = gql`
+	fragment MeemContractParts on MeemContracts {
+		slug
+		address
+		metadata
+		createdAt
+		name
+	}
+`
+
 export const GET_IS_MEMBER_OF_CLUB = gql`
 	query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				owner: { _ilike: $walletAddress }
 				MeemContract: { slug: { _eq: $clubSlug } }
 			}
 		) {
-			owner
-			tokenId
-			MeemContractId
-			MeemContract {
-				address
-				name
-				symbol
-			}
+			...MeemParts
 		}
 	}
+	${MEEM_PARTS}
 `
 
 export const GET_CLUBS_AUTOCOMPLETE = gql`
@@ -26,7 +41,7 @@ export const GET_CLUBS_AUTOCOMPLETE = gql`
 		MeemContracts(where: { name: { _ilike: $query } }) {
 			id
 			name
-			contractURI
+			metadata
 			slug
 		}
 	}
@@ -45,25 +60,23 @@ export const GET_CLUB = gql`
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
-			contractURI
+			metadata
 			createdAt
 			name
 			Meems {
-				owner
+				Owner {
+					address
+				}
 				tokenId
 				tokenURI
 				mintedAt
 				mintedBy
-				data
 			}
 			splits
-			mintEndAt
-			mintStartAt
+			maxSupply
 			mintPermissions
-			originalsPerWallet
-			totalOriginalsSupply
 			symbol
-			MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+			MeemContractWallets {
 				role
 				Wallet {
 					address
@@ -89,29 +102,69 @@ export const GET_CLUB = gql`
 `
 
 export const SUB_CLUB = gql`
-	subscription ClubSubscription($address: String) {
-		MeemContracts(where: { address: { _eq: $address } }) {
+	subscription GetClubSubscription($slug: String) {
+		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
-			contractURI
+			metadata
 			createdAt
 			name
 			Meems {
-				owner
+				Owner {
+					address
+				}
 				tokenId
 				tokenURI
 				mintedAt
 				mintedBy
-				data
 			}
 			splits
-			mintEndAt
-			mintStartAt
+			maxSupply
 			mintPermissions
-			originalsPerWallet
-			totalOriginalsSupply
 			symbol
-			MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+			MeemContractWallets {
+				role
+				Wallet {
+					address
+				}
+			}
+			id
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
+				IntegrationId
+				id
+				isEnabled
+				metadata
+				Integration {
+					description
+					guideUrl
+					icon
+					id
+					name
+				}
+				isPublic
+			}
+		}
+	}
+`
+
+export const SUB_CLUBS = gql`
+	subscription ClubSubscription($address: String) {
+		MeemContracts(where: { address: { _eq: $address } }) {
+			slug
+			address
+			createdAt
+			name
+			metadata
+			Meems {
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+			}
+			splits
+			mintPermissions
+			symbol
+			MeemContractWallets {
 				role
 				Wallet {
 					address
@@ -124,29 +177,21 @@ export const SUB_CLUB = gql`
 export const GET_MY_CLUBS = gql`
 	query MyClubs($walletAddress: String) {
 		Meems(
-			where: {
-				MeemContractId: { _is_null: false }
-				owner: { _eq: $walletAddress }
-			}
+			where: { MeemContractId: { _is_null: false } }
 			distinct_on: MeemContractId
 		) {
-			owner
 			tokenId
 			MeemContractId
 			MeemContract {
 				slug
 				address
-				contractURI
 				createdAt
 				name
+				metadata
 				splits
-				mintEndAt
-				mintStartAt
 				mintPermissions
-				originalsPerWallet
-				totalOriginalsSupply
 				symbol
-				MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+				MeemContractWallets {
 					role
 					Wallet {
 						address
@@ -177,27 +222,22 @@ export const SUB_MY_CLUBS = gql`
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				owner: { _eq: $walletAddress }
+				Owner: { address: { _ilike: $walletAddress } }
 			}
 			distinct_on: MeemContractId
 		) {
-			owner
 			tokenId
 			MeemContractId
 			MeemContract {
 				slug
 				address
-				contractURI
 				createdAt
 				name
+				metadata
 				splits
-				mintEndAt
-				mintStartAt
 				mintPermissions
-				originalsPerWallet
-				totalOriginalsSupply
 				symbol
-				MeemContractWallets(where: { deletedAt: { _is_null: true } }) {
+				MeemContractWallets {
 					role
 					Wallet {
 						address

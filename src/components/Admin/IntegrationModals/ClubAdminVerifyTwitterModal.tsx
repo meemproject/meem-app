@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -14,10 +11,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
@@ -106,10 +100,6 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 	onModalClosed,
 	onSuccessfulVerification
 }) => {
-	const router = useRouter()
-
-	const wallet = useWallet()
-
 	const { classes } = useStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
