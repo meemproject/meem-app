@@ -1,10 +1,6 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
-	Container,
 	Text,
 	Image,
 	Loader,
@@ -18,12 +14,11 @@ import { showNotification } from '@mantine/notifications'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
-import { ArrowLeft, Upload } from 'tabler-icons-react'
+import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { Club, Integration } from '../../model/club/club'
+import { Club } from '../../model/club/club'
 import { ClubAdminChangesModal } from './ClubAdminChangesModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -186,15 +181,12 @@ interface IProps {
 }
 
 export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
-	const router = useRouter()
 	const { classes } = useStyles()
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-
-	const descriptionRef = useRef<HTMLTextAreaElement>()
 
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
@@ -214,15 +206,11 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 	useEffect(() => {
 		if (!hasLoadedClubData) {
 			setHasLoadedClubData(true)
-			setClubName(club.name!)
-			setClubDescription(club.description!)
-			setSmallClubLogo(club.image!)
+			setClubName(club.name ?? '')
+			setClubDescription(club.description ?? '')
+			setSmallClubLogo(club.image ?? '')
 		}
 	}, [club, hasLoadedClubData])
-
-	const navigateToClubDetail = () => {
-		router.push({ pathname: '/clubname' })
-	}
 
 	const resizeFile = (file: any) =>
 		new Promise(resolve => {
@@ -327,7 +315,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 		// 'save changes' modal for execution club settings updates
 		// convert current settings and update for the modal
-		const newClub = club!
+		const newClub = club
 		newClub.name = clubName
 		newClub.description = clubDescription
 		newClub.image = smallClubLogo

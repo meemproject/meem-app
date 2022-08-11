@@ -1,7 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ethers } from 'ethers'
-
 export async function ensWalletAddress(address: string): Promise<string> {
 	if (address.length === 0) {
 		return ''

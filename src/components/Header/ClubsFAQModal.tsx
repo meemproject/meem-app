@@ -1,30 +1,8 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Space,
-	Modal,
-	Divider,
-	Stepper,
-	MantineProvider,
-	TextInput
-} from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { createStyles, Text, Space, Modal, Divider } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import request from 'superagent'
-import { AlertCircle, Check } from 'tabler-icons-react'
-import twitterIntent from 'twitter-intent'
-import { Club, Integration } from '../../model/club/club'
+import React from 'react'
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles(() => ({
 	header: {
 		display: 'flex',
 		alignItems: 'start',
