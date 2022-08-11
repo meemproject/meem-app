@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -267,6 +268,23 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.isConnected
 	])
 
+	const refetchClub = async () => {
+		log.debug('refetching club...')
+		const newClub = await refetch()
+		if (newClub.data.MeemContracts.length > 0) {
+			const possibleClub = await clubFromMeemContract(
+				wallet,
+				wallet.isConnected ? wallet.accounts[0] : '',
+				newClub.data.MeemContracts[0] as MeemContracts
+			)
+
+			if (possibleClub && possibleClub.name) {
+				log.debug('got new club data, setting it...')
+				setClub(possibleClub)
+			}
+		}
+	}
+
 	return (
 		<>
 			{isLoadingClub && (
@@ -527,8 +545,16 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 														safeOwners: club.admins
 													}
 												)
-												refetch()
+												await new Promise(f =>
+													setTimeout(f, 10000)
+												)
+
+												refetchClub()
+
+												setIsCreatingSafe(false)
 											} catch (e) {
+												setIsCreatingSafe(false)
+
 												// eslint-disable-next-line no-console
 												console.log(e)
 												showNotification({
@@ -538,7 +564,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 													color: 'red'
 												})
 											}
-											setIsCreatingSafe(false)
 										}}
 									>
 										Create Gnosis Wallet

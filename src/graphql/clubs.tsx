@@ -230,12 +230,14 @@ export const SUB_MY_CLUBS = gql`
 			tokenId
 			MeemContractId
 			MeemContract {
+				id
 				slug
 				address
 				createdAt
 				name
 				metadata
 				splits
+				gnosisSafeAddress
 				mintPermissions
 				symbol
 				MeemContractWallets {

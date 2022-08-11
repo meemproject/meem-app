@@ -9,11 +9,15 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
-import { MyClubsSubscriptionSubscription } from '../../../generated/graphql'
-import { SUB_MY_CLUBS } from '../../graphql/clubs'
 import {
+	MeemContracts,
+	MyClubsSubscriptionSubscription
+} from '../../../generated/graphql'
+import { SUB_MY_CLUBS } from '../../graphql/clubs'
+import clubFromMeemContract, {
 	MembershipSettings,
-	MembershipRequirementToMeemPermission
+	MembershipRequirementToMeemPermission,
+	Club
 } from '../../model/club/club'
 import { CookieKeys } from '../../utils/cookies'
 
@@ -85,6 +89,63 @@ export const CreateClubModal: React.FC<IProps> = ({
 		})
 
 	useEffect(() => {
+		async function finishClubCreation(slug: string) {
+			// Successfully created club
+			log.debug('club creation complete')
+
+			// Remove all metadata cookies!
+			Cookies.remove(CookieKeys.clubName)
+			Cookies.remove(CookieKeys.clubDescription)
+			Cookies.remove(CookieKeys.clubImage)
+			Cookies.remove(CookieKeys.clubExternalUrl)
+			Cookies.remove(CookieKeys.clubSlug)
+
+			// Route to the created club detail page
+			showNotification({
+				title: 'Success!',
+				autoClose: 5000,
+				color: 'green',
+				icon: <Check color="green" />,
+
+				message: `Your club has been published.`
+			})
+
+			router.push({
+				pathname: `/${slug}`
+			})
+		}
+
+		async function createSafe(club: Club) {
+			log.debug(
+				`creating safe with id ${club.id}, admins ${JSON.stringify(
+					club.admins
+				)} ...`
+			)
+
+			try {
+				const createSafeFetcher = makeFetcher<
+					MeemAPI.v1.CreateClubSafe.IQueryParams,
+					MeemAPI.v1.CreateClubSafe.IRequestBody,
+					MeemAPI.v1.CreateClubSafe.IResponseBody
+				>({
+					method: MeemAPI.v1.CreateClubSafe.method
+				})
+
+				await createSafeFetcher(
+					MeemAPI.v1.CreateClubSafe.path({
+						meemContractId: club.id ?? ''
+					}),
+					undefined,
+					{
+						safeOwners: club.admins ?? []
+					}
+				)
+			} catch (e) {
+				// Ignore - the user can create later?
+				finishClubCreation(club.slug ?? '')
+			}
+		}
+
 		async function create() {
 			log.debug('creating club...')
 			if (!wallet.web3Provider) {
@@ -236,29 +297,21 @@ export const CreateClubModal: React.FC<IProps> = ({
 				m => m.MeemContract?.name === Cookies.get(CookieKeys.clubName)
 			)
 			if (newClub) {
-				// Successfully created club
-				log.debug('init complete')
+				if (
+					newClub.MeemContract &&
+					newClub.MeemContract.gnosisSafeAddress
+				) {
+					finishClubCreation(newClub.MeemContract?.slug)
+				} else {
+					const clubModel = await clubFromMeemContract(
+						wallet,
+						wallet.accounts[0],
+						newClub.MeemContract as MeemContracts
+					)
 
-				// Remove all metadata cookies!
-				Cookies.remove(CookieKeys.clubName)
-				Cookies.remove(CookieKeys.clubDescription)
-				Cookies.remove(CookieKeys.clubImage)
-				Cookies.remove(CookieKeys.clubExternalUrl)
-				Cookies.remove(CookieKeys.clubSlug)
-
-				// Route to the created club detail page
-				showNotification({
-					title: 'Success!',
-					autoClose: 5000,
-					color: 'green',
-					icon: <Check color="green" />,
-
-					message: `Your club has been published.`
-				})
-
-				router.push({
-					pathname: `/${newClub.MeemContract?.slug}`
-				})
+					// Create club safe
+					await createSafe(clubModel)
+				}
 			}
 		}
 
