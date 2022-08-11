@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -14,7 +15,6 @@ import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
@@ -118,6 +118,13 @@ const useStyles = createStyles(theme => ({
 			borderColor: 'transparent'
 		}
 	},
+	buttonCreate: {
+		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 24
+	},
 	tabs: {
 		display: 'flex',
 		flexDirection: 'row'
@@ -191,7 +198,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const wallet = useWallet()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
-	const [isCreatingSafe, setIsCreatingSave] = useState(false)
+	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: `/${slug}` })
@@ -260,6 +267,23 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.accounts,
 		wallet.isConnected
 	])
+
+	const refetchClub = async () => {
+		log.debug('refetching club...')
+		const newClub = await refetch()
+		if (newClub.data.MeemContracts.length > 0) {
+			const possibleClub = await clubFromMeemContract(
+				wallet,
+				wallet.isConnected ? wallet.accounts[0] : '',
+				newClub.data.MeemContracts[0] as MeemContracts
+			)
+
+			if (possibleClub && possibleClub.name) {
+				log.debug('got new club data, setting it...')
+				setClub(possibleClub)
+			}
+		}
+	}
 
 	return (
 		<>
@@ -429,7 +453,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								>
 									Club Treasury Address
 								</Text>
-								<Space h={'xs'} />
 								{club.gnosisSafeAddress && (
 									<>
 										<div
@@ -467,31 +490,38 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										</div>
 										<Space h={'xs'} />
 
-										<Link
-											href={`https://gnosis-safe.io/app/${
-												process.env
-													.NEXT_PUBLIC_CHAIN_ID ===
-												'4'
-													? 'rin'
-													: 'matic'
-											}:${club.gnosisSafeAddress}/home`}
+										<Button
+											className={classes.buttonCreate}
+											onClick={() => {
+												window.open(
+													`https://gnosis-safe.io/app/${
+														process.env
+															.NEXT_PUBLIC_CHAIN_ID ===
+														'4'
+															? 'rin'
+															: 'matic'
+													}:${
+														club.gnosisSafeAddress
+													}/home`
+												)
+											}}
 										>
-											<a target="_blank">
-												Go to Gnosis Safe
-											</a>
-										</Link>
+											View Gnosis Safe
+										</Button>
 									</>
 								)}
 
 								{!club.gnosisSafeAddress && (
 									<Button
+										className={classes.buttonCreate}
 										disabled={isCreatingSafe}
+										loading={isCreatingSafe}
 										onClick={async () => {
 											if (!club.id || !club.admins) {
 												return
 											}
 											try {
-												setIsCreatingSave(true)
+												setIsCreatingSafe(true)
 												const createSafeFetcher =
 													makeFetcher<
 														MeemAPI.v1.CreateClubSafe.IQueryParams,
@@ -515,12 +545,25 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 														safeOwners: club.admins
 													}
 												)
-												refetch()
+												await new Promise(f =>
+													setTimeout(f, 10000)
+												)
+
+												refetchClub()
+
+												setIsCreatingSafe(false)
 											} catch (e) {
+												setIsCreatingSafe(false)
+
 												// eslint-disable-next-line no-console
 												console.log(e)
+												showNotification({
+													title: 'Wallet creation failed.',
+													message:
+														'We were unable to create a Gnosis wallet for you. Please refresh the page and try again.',
+													color: 'red'
+												})
 											}
-											setIsCreatingSave(false)
 										}}
 									>
 										Create Gnosis Wallet
