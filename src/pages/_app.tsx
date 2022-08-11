@@ -14,9 +14,9 @@ import { WalletProvider, SocketProvider } from '@meemproject/react'
 import { createClient } from 'graphql-ws'
 import type { AppProps } from 'next/app'
 import React from 'react'
+import { App } from '../components/App'
 import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
 import '@fontsource/inter'
-import { App } from '../components/App'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
