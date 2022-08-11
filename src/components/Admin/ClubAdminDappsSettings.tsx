@@ -17,7 +17,6 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import { zIndex } from 'html2canvas/dist/types/css/property-descriptors/z-index'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'

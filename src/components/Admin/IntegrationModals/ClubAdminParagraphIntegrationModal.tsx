@@ -94,7 +94,7 @@ const useStyles = createStyles(theme => ({
 		position: 'relative'
 	},
 	namespaceTextInput: {
-		paddingLeft: 138,
+		paddingLeft: 153,
 		paddingBottom: 3
 	},
 	namespaceTextInputUrlPrefix: {
@@ -162,15 +162,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	// Is this integration enabled?
 	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(false)
 
-	const submitToParagraph = () => {
-		// TODO: Assemble the correct URL
-		const url = 'https://paragraph.xyz'
-		setParagraphIframeUrl(url)
-
-		// Show iFrame step - paragraph will handle the rest
-		setStep(Step.Transaction)
-	}
-
 	const saveIntegration = useCallback(
 		async (isPublic: boolean) => {
 			setStep(Step.SavingIntegration)
@@ -192,7 +183,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 						isEnabled: isIntegrationEnabled,
 						isPublic,
 						metadata: {
-							// TODO: Make sure this URL is correct
 							externalUrl: `https://paragraph.xyz/${createdPublicationSlug}`,
 							paragraphSlug: createdPublicationSlug
 						}
@@ -220,29 +210,38 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 		]
 	)
 
-	useEffect(() => {
-		// Listen out for changes from the Paragraph iFrame
-		if (!hasAddedWindowListener) {
-			setHasAddedWindowListener(true)
-			log.debug('Paragraph modal is listening for data from Paragraph...')
-			window.addEventListener(
-				'message',
-				(ev: MessageEvent<{ type: string; message: string }>) => {
-					log.debug(ev.data)
-					if (
-						ev.data.message &&
-						ev.data.message.includes('paragraph')
-					) {
-						// TODO: What data do we get back?
-						log.debug('paragraph message')
-						// TODO: handle message data
-						setCreatedPublicationSlug('publication-slug')
-						saveIntegration(true)
-					}
-				}
-			)
-		}
+	const showParagraphPopup = () => {
+		let url = `https://paragraph.xyz/link?publicationName=${encodeURIComponent(
+			publicationName
+		)}&publicationUrl=${publicationUrl}`
 
+		if (isClubMembersOnly) {
+			const communityName = `${club.name} Members`
+			const clubUrl = `https://clubs.link/${club.slug}`
+			const membershipName = `${club.name} Token`
+			url += `&tokenAddress=${club.membershipToken}&communityName=${communityName}&tokenUrl=${clubUrl}&membershipName=${membershipName}`
+		}
+		const popup = window.open(url, 'popup', 'width=600,height=600')
+
+		if (popup) {
+			window.addEventListener('message', function (e) {
+				// Wait for Paragraph to signal that it's loaded.
+				if (e.data === 'loaded') {
+					// Send the 'init' message. This is required.
+					popup.postMessage('init', 'https://link.paragraph.xyz')
+
+					// When the Papragraph flow completes, we'll broadcast
+					// this message.
+				} else if (e.data === 'updated') {
+					setStep(Step.SavingIntegration)
+					setCreatedPublicationSlug(`@${publicationName}`)
+					saveIntegration(!isClubMembersOnly)
+				}
+			})
+		}
+	}
+
+	useEffect(() => {
 		// Used when we want to show integration settings after being saved
 		if (integration && integration.paragraphSlug) {
 			setCreatedPublicationSlug(integration.paragraphSlug)
@@ -374,7 +373,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											onChange={event => {
 												setPublicationUrl(
 													event.target.value
-														.replaceAll(' ', '')
+														.replaceAll(' ', '-')
 														.toLowerCase()
 												)
 											}}
@@ -383,7 +382,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											className={
 												classes.namespaceTextInputUrlPrefix
 											}
-										>{`paragraph.xyz/`}</Text>
+										>{`paragraph.xyz/@`}</Text>
 									</div>
 									<Space h={24} />
 
@@ -431,7 +430,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											publicationUrl.length > 30
 										}
 										onClick={async () => {
-											submitToParagraph()
+											showParagraphPopup()
 										}}
 										className={classes.buttonConfirm}
 									>
@@ -441,10 +440,16 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							)}
 							{step === Step.Transaction && (
 								<>
-									<iframe
-										className={classes.paragraphFrame}
-										src={paragraphIframeUrl}
-									/>
+									<Space h={16} />
+									<Center>
+										<Text>
+											Please continue in the new window
+											that was opened.
+										</Text>
+										<Space h={16} />
+										<Loader />
+									</Center>
+									<Space h={16} />
 								</>
 							)}
 							{step === Step.SavingIntegration && (
