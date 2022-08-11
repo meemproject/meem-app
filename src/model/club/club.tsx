@@ -45,7 +45,7 @@ export interface Club {
 	allIntegrations?: Integration[]
 	publicIntegrations?: Integration[]
 	privateIntegrations?: Integration[]
-	gnosisSafeAddress?: string
+	gnosisSafeAddress?: string | null
 }
 
 export interface MembershipSettings {
@@ -94,7 +94,6 @@ export function MembershipRequirementToMeemPermission(
 	return {
 		addresses: mr.approvedAddresses,
 		costWei: ethers.utils.parseEther(`${costEth}`).toHexString(),
-		lockedBy: MeemAPI.zeroAddress,
 		mintStartTimestamp,
 		mintEndTimestamp,
 		numTokens: `${mr.tokenMinQuantity}`,
