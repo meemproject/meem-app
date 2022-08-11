@@ -63,6 +63,7 @@ export const GET_CLUB = gql`
 			metadata
 			createdAt
 			name
+			gnosisSafeAddress
 			Meems {
 				Owner {
 					address

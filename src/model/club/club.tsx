@@ -45,6 +45,7 @@ export interface Club {
 	allIntegrations?: Integration[]
 	publicIntegrations?: Integration[]
 	privateIntegrations?: Integration[]
+	gnosisSafeAddress?: string | null
 }
 
 export interface MembershipSettings {
@@ -93,7 +94,6 @@ export function MembershipRequirementToMeemPermission(
 	return {
 		addresses: mr.approvedAddresses,
 		costWei: ethers.utils.parseEther(`${costEth}`).toHexString(),
-		lockedBy: MeemAPI.zeroAddress,
 		mintStartTimestamp,
 		mintEndTimestamp,
 		numTokens: `${mr.tokenMinQuantity}`,
@@ -457,6 +457,7 @@ export default async function clubFromMeemContract(
 			admins,
 			isClubAdmin,
 			slug: clubData.slug,
+			gnosisSafeAddress: clubData.gnosisSafeAddress,
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			isClubMember,
