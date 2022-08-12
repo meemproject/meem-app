@@ -422,6 +422,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		)
 
 		// Add current user as an admin if this is a new club
+		console.log({ wallet })
 		const finalClubAdmins = Object.assign([], clubAdmins)
 		if (isCreatingClub) {
 			finalClubAdmins.push(wallet.accounts[0])
