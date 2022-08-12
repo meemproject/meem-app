@@ -13,7 +13,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { LoginState, useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -230,8 +230,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	useEffect(() => {
 		if (
 			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
+			wallet.loginState === LoginState.NotLoggedIn
 		) {
 			router.push({
 				pathname: '/authenticate',
@@ -240,7 +239,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			})
 		}
-	}, [router, slug])
+	}, [router, slug, wallet.loginState])
 
 	useEffect(() => {
 		async function getClub(data: GetClubQuery) {
