@@ -224,6 +224,38 @@ export const GET_INTEGRATIONS = gql`
 	}
 `
 
+export const GET_ALL_CLUBS = gql`
+	query AllClubs($limit: Int, $offset: Int) {
+		MeemContracts(
+			order_by: { Meems_aggregate: { count: desc } }
+			limit: $limit
+			offset: $offset
+		) {
+			slug
+			address
+			createdAt
+			name
+			metadata
+			Meems {
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+			}
+			splits
+			mintPermissions
+			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					ens
+					address
+				}
+			}
+		}
+	}
+`
+
 export const SUB_MY_CLUBS = gql`
 	subscription MyClubsSubscription($walletAddress: String) {
 		Meems(

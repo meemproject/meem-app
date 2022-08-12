@@ -88,7 +88,7 @@ const useStyles = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: theme.colors.gray[8]
 		},
-		borderRadius: 12
+		borderRadius: 32
 	},
 	joinButton: {
 		backgroundColor: 'black',
@@ -259,6 +259,12 @@ export function HomeComponent() {
 		})
 	}
 
+	const goToBrowse = () => {
+		router.push({
+			pathname: `/browse`
+		})
+	}
+
 	const goToCreate = () => {
 		if (
 			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
@@ -359,6 +365,10 @@ export function HomeComponent() {
 						</a>
 					</Text>
 				)}
+				<Space h={24} />
+				<Button className={classes.createButton} onClick={goToBrowse}>
+					Browse all clubs
+				</Button>
 			</Container>
 			<ClubsFAQModal
 				onModalClosed={() => {

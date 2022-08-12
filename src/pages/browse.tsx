@@ -1,14 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
+import { BrowseComponent } from '../components/Browse/Browse'
 import { HeaderMenu } from '../components/Header/Header'
-import { MyClubsComponent } from '../components/MyClubs/MyClubs'
 
 const BrowsePage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Browse clubs | Clubs</title>
+				<title>Browse | Clubs</title>
 				<meta name="title" content="Clubs" />
 				<meta
 					name="description"
@@ -58,7 +58,7 @@ const BrowsePage: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<MyClubsComponent />
+			<BrowseComponent />
 		</>
 	)
 }
