@@ -239,13 +239,13 @@ export const CreateClubModal: React.FC<IProps> = ({
 					shouldMintAdminTokens: true,
 					metadata: {
 						meem_contract_type: 'meem-club',
-						meem_metadata_version: 'Meem_Contract_20220718',
+						meem_metadata_version: 'MeemClub_Contract_20220718',
 						name: Cookies.get(CookieKeys.clubName),
 						description: Cookies.get(CookieKeys.clubDescription),
 						image: Cookies.get(CookieKeys.clubImage),
 						associations: [],
-						external_url: ''
-						// application_instructions: applicationInstructions
+						external_url: '',
+						application_instructions: applicationInstructions
 					},
 					name: Cookies.get(CookieKeys.clubName) ?? '',
 					admins: membershipSettings.clubAdminsAtClubCreation,
@@ -256,7 +256,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					mintPermissions,
 					splits,
 					adminTokenMetadata: {
-						meem_metadata_version: 'Meem_Token_20220718',
+						meem_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${Cookies.get(
 							CookieKeys.clubName
 						)}`,

@@ -376,7 +376,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								name: club?.name ?? '',
 								description: club?.description,
 								image: club?.image,
-								meem_metadata_version: 'Meem_Token_20220718'
+								meem_metadata_version: 'MeemClub_Token_20220718'
 							}
 						}
 					)
