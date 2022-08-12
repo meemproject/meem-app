@@ -871,7 +871,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									<Button
 										onClick={leaveClub}
 										loading={isLeavingClub}
-										className={classes.outlineButton}
+										className={classes.buttonJoinClub}
 									>
 										Leave
 									</Button>
