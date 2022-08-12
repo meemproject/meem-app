@@ -3536,6 +3536,14 @@ export type GetIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetIntegrationsQuery = { __typename?: 'query_root', Integrations: Array<{ __typename?: 'Integrations', createdAt: any, deletedAt?: any | null, description: string, guideUrl: string, icon: string, id: any, name: string, updatedAt: any }> };
 
+export type AllClubsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
+
 export type MyClubsSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
 }>;
@@ -3971,6 +3979,66 @@ export function useGetIntegrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetIntegrationsQueryHookResult = ReturnType<typeof useGetIntegrationsQuery>;
 export type GetIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIntegrationsLazyQuery>;
 export type GetIntegrationsQueryResult = Apollo.QueryResult<GetIntegrationsQuery, GetIntegrationsQueryVariables>;
+export const AllClubsDocument = gql`
+    query AllClubs($limit: Int, $offset: Int) {
+  MeemContracts(
+    order_by: {Meems_aggregate: {count: desc}}
+    limit: $limit
+    offset: $offset
+  ) {
+    slug
+    address
+    createdAt
+    name
+    metadata
+    Meems {
+      tokenId
+      tokenURI
+      mintedAt
+      mintedBy
+    }
+    splits
+    mintPermissions
+    symbol
+    MeemContractWallets {
+      role
+      Wallet {
+        ens
+        address
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAllClubsQuery__
+ *
+ * To run a query within a React component, call `useAllClubsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAllClubsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAllClubsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useAllClubsQuery(baseOptions?: Apollo.QueryHookOptions<AllClubsQuery, AllClubsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AllClubsQuery, AllClubsQueryVariables>(AllClubsDocument, options);
+      }
+export function useAllClubsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllClubsQuery, AllClubsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AllClubsQuery, AllClubsQueryVariables>(AllClubsDocument, options);
+        }
+export type AllClubsQueryHookResult = ReturnType<typeof useAllClubsQuery>;
+export type AllClubsLazyQueryHookResult = ReturnType<typeof useAllClubsLazyQuery>;
+export type AllClubsQueryResult = Apollo.QueryResult<AllClubsQuery, AllClubsQueryVariables>;
 export const MyClubsSubscriptionDocument = gql`
     subscription MyClubsSubscription($walletAddress: String) {
   Meems(
