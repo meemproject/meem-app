@@ -466,15 +466,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						// Make sure all addresses resolve correctly.
 
 						req.approvedAddresses.map(async function (address) {
-							if (isApprovedAddressesInvalid) {
+							if (!isApprovedAddressesInvalid) {
 								const name = await provider.resolveName(address)
 								if (!name) {
 									isApprovedAddressesInvalid = true
+									log.debug('invalid address found')
 									return
 								} else {
-									// log.debug(
-									// 	`validated approved address ${address}`
-									// )
+									log.debug(
+										`validated approved address ${address}, adding name ${name}`
+									)
 									rawAddresses.push(name)
 								}
 							}
@@ -514,6 +515,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			clubAdminsAtClubCreation: clubAdminAddresses
 		}
 		setMembershipSettings(settings)
+
+		log.debug(JSON.stringify(settings))
 
 		// Show the appropriate modal (create vs edit)
 		if (isCreatingClub) {
@@ -643,6 +646,13 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 						setIsSavingChanges(false)
 						setIsClubCreationModalOpened(false)
+					} else {
+						showNotification({
+							title: 'Saving Changes Failed',
+							message:
+								'An error occurred while saving changes. Please try again.',
+							color: 'red'
+						})
 					}
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
