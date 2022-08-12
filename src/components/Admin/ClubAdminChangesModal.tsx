@@ -339,8 +339,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					description: club.description,
 					image: club.image,
 					associations: [],
-					external_url: `https://clubs.link/${club.slug}`
-					// application_instructions: applicationInstructions
+					external_url: `https://clubs.link/${club.slug}`,
+					application_instructions: applicationInstructions
 				},
 				name: club.name ?? '',
 				admins: club.admins,
@@ -373,11 +373,10 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					image: club.image,
 					associations: [],
 					external_url: `https://clubs.link/${club.slug}`
-					// application_instructions: applicationInstructions
 				}
 			}
 
-			// log.debug(JSON.stringify(data))
+			log.debug(JSON.stringify(data))
 			log.debug(data)
 
 			await reInitializeContractFetcher(

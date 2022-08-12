@@ -244,8 +244,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 						description: Cookies.get(CookieKeys.clubDescription),
 						image: Cookies.get(CookieKeys.clubImage),
 						associations: [],
-						external_url: ''
-						// application_instructions: applicationInstructions
+						external_url: '',
+						application_instructions: applicationInstructions
 					},
 					name: Cookies.get(CookieKeys.clubName) ?? '',
 					admins: membershipSettings.clubAdminsAtClubCreation,

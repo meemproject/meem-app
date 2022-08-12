@@ -516,8 +516,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		}
 		setMembershipSettings(settings)
 
-		log.debug(JSON.stringify(settings))
-
 		// Show the appropriate modal (create vs edit)
 		if (isCreatingClub) {
 			openClubCreationModal()
@@ -643,9 +641,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								color: 'red'
 							})
 						}
-
-						setIsSavingChanges(false)
-						setIsClubCreationModalOpened(false)
 					} else {
 						showNotification({
 							title: 'Saving Changes Failed',
@@ -657,6 +652,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
 					log.crit(err.detail.code)
+					setIsSavingChanges(false)
+					setIsClubCreationModalOpened(false)
 				}
 			})
 			setHasSubscribedToSockets(true)

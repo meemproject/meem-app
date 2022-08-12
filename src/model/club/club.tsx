@@ -338,11 +338,11 @@ export default async function clubFromMeemContract(
 								andor: MembershipReqAndor.Or,
 								type,
 								applicationInstructions: clubData.metadata
-									.applicationInstructions
-									? clubData.metadata.applicationInstructions
+									.application_instructions
+									? clubData.metadata.application_instructions
 											.length > 0
 										? clubData.metadata
-												.applicationInstructions[0]
+												.application_instructions[0]
 										: undefined
 									: undefined,
 								approvedAddresses,
