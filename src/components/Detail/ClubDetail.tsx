@@ -262,13 +262,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
-	const { data: clubSubData } = useSubscription<ClubSubscriptionSubscription>(
-		SUB_CLUB,
-		{
-			variables: { address: club?.address ?? '' }
-		}
-	)
-
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [isLeavingClub, setIsLeavingClub] = useState(false)
 
@@ -386,8 +379,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							}
 						}
 					)
-
-					// TODO: Listen for new token and refresh
 				} else {
 					showNotification({
 						title: 'Error joining this club.',
@@ -397,14 +388,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 		} catch (e) {
 			log.debug(e)
+			setIsJoiningClub(false)
 
 			showNotification({
 				title: 'Error joining this club.',
 				message: `Please get in touch!`
 			})
 		}
-
-		setIsJoiningClub(false)
 	}
 
 	const leaveClub = async () => {
@@ -705,7 +695,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		async function getClub(data: GetClubSubscriptionSubscription) {
-			setIsLoadingClub(true)
 			const possibleClub = await clubFromMeemContract(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
@@ -767,7 +756,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					title: `Welcome to ${possibleClub.name}!`,
 					color: 'green',
 					autoClose: 5000,
-					message: `You now have access to this club's tools and resources.`
+					message: `You now have access to this club.`
 				})
 			}
 		}
@@ -798,15 +787,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			getClub(clubData)
 		}
 
-		if (isJoiningClub && clubSubData) {
-			join(clubSubData)
-		} else if (isLeavingClub && clubSubData) {
-			leave(clubSubData)
+		if (isJoiningClub && clubData) {
+			join(clubData)
+		} else if (isLeavingClub && clubData) {
+			leave(clubData)
 		}
 	}, [
 		club,
 		clubData,
-		clubSubData,
 		error,
 		isJoiningClub,
 		isLeavingClub,
