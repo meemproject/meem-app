@@ -28,10 +28,11 @@ import {
 import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
+	ClubMember,
 	MembershipReqType
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
+import { quickTruncate } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -343,7 +344,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						tokenType: MeemAPI.MeemType.Original
 					}
 
-					log.debug(data)
+					log.debug(JSON.stringify(data))
 					const tx = await meemContract?.mint(data, {
 						gasLimit: '5000000',
 						value: ethers.utils.parseEther(
@@ -707,11 +708,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 			setIsLoadingClub(false)
 
-			// After the club is loaded, convert its members into ENS names
-			const newMembers: string[] = []
+			const newMembers: ClubMember[] = []
 			for (const member of possibleClub.members ?? []) {
-				const name = await ensWalletAddress(member)
-				newMembers.push(name)
+				newMembers.push(member)
 			}
 			// TODO: Is there an easier way to copy an object in react, like copyWith?
 			const newClub: Club = {
@@ -1255,13 +1254,15 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										md={4}
 										lg={4}
 										xl={4}
-										key={member}
+										key={member.wallet}
 									>
 										<div className={classes.memberItem}>
 											<Text
 												onClick={() => {
 													navigator.clipboard.writeText(
-														member
+														member.ens
+															? member.ens
+															: member.wallet
 													)
 													showNotification({
 														title: 'Member address copied',
@@ -1273,9 +1274,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													})
 												}}
 											>
-												{quickTruncate(member)}
+												{member.ens
+													? member.ens
+													: quickTruncate(
+															member.wallet
+													  )}
 											</Text>
-											{memberIsAdmin(member) && (
+											{memberIsAdmin(member.wallet) && (
 												<Image
 													className={
 														classes.memberAdminIndicator

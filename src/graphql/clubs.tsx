@@ -67,6 +67,7 @@ export const GET_CLUB = gql`
 			Meems {
 				Owner {
 					address
+					ens
 				}
 				tokenId
 				tokenURI
@@ -81,6 +82,7 @@ export const GET_CLUB = gql`
 				role
 				Wallet {
 					address
+					ens
 				}
 			}
 			id
@@ -113,6 +115,7 @@ export const SUB_CLUB = gql`
 			Meems {
 				Owner {
 					address
+					ens
 				}
 				tokenId
 				tokenURI
@@ -127,6 +130,7 @@ export const SUB_CLUB = gql`
 				role
 				Wallet {
 					address
+					ens
 				}
 			}
 			id
@@ -168,6 +172,7 @@ export const SUB_CLUBS = gql`
 			MeemContractWallets {
 				role
 				Wallet {
+					ens
 					address
 				}
 			}
@@ -195,6 +200,7 @@ export const GET_MY_CLUBS = gql`
 				MeemContractWallets {
 					role
 					Wallet {
+						ens
 						address
 					}
 				}
@@ -243,6 +249,7 @@ export const SUB_MY_CLUBS = gql`
 				MeemContractWallets {
 					role
 					Wallet {
+						ens
 						address
 					}
 				}
