@@ -1,6 +1,6 @@
 import { Button, createStyles } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 export interface IProps {
 	children: React.ReactNode
@@ -26,16 +26,6 @@ const useStyles = createStyles(_theme => ({
 export const App: React.FC<IProps> = ({ children }) => {
 	const { chainId, setChain } = useWallet()
 	const styles = useStyles()
-
-	// useEffect(() => {
-	// 	if (
-	// 		process.env.NEXT_PUBLIC_CHAIN_ID &&
-	// 		chainId &&
-	// 		chainId !== +process.env.NEXT_PUBLIC_CHAIN_ID
-	// 	) {
-	// 		setChain(+process.env.NEXT_PUBLIC_CHAIN_ID)
-	// 	}
-	// }, [chainId, setChain])
 
 	return (
 		<>
