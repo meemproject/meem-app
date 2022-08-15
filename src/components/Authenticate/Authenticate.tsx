@@ -98,6 +98,7 @@ const MAuthenticate: React.FC = () => {
 				} catch (e) {
 					log.error(e)
 					showNotification({
+						radius: 'lg',
 						title: 'Login Failed',
 						message: 'Please refresh the page and try again.'
 					})
@@ -127,6 +128,7 @@ const MAuthenticate: React.FC = () => {
 			if (signature === undefined) {
 				log.debug('Unable to authenticate - signature is undefined.')
 				showNotification({
+					radius: 'lg',
 					title: 'Oops!',
 					message:
 						'Unable to authenticate with your wallet. Please try again.'
@@ -137,6 +139,7 @@ const MAuthenticate: React.FC = () => {
 			}
 		} catch (e) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'Unable to authenticate with your wallet. Please get in touch!'
@@ -157,6 +160,7 @@ const MAuthenticate: React.FC = () => {
 		} else {
 			log.debug('Unable to authenticate - wallet address not found.')
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'Unable to authenticate with your wallet. Please try again.'

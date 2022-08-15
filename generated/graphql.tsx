@@ -3556,7 +3556,7 @@ export type GetBundleByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, abi: any }> };
+export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, abi: any, BundleContracts: Array<{ __typename?: 'BundleContracts', functionSelectors: any }> }> };
 
 export const MeemPartsFragmentDoc = gql`
     fragment MeemParts on Meems {
@@ -4097,6 +4097,9 @@ export const GetBundleByIdDocument = gql`
   Bundles(where: {id: {_eq: $id}}) {
     id
     abi
+    BundleContracts {
+      functionSelectors
+    }
   }
 }
     `;
