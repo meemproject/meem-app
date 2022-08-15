@@ -243,7 +243,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 			createResizedFile()
 		} else {
-			log.debug('no current club image')
+			// log.debug('no current club image')
 		}
 	}, [clubLogo])
 
@@ -289,6 +289,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 		if (clubName.length < 3 || clubName.length > 50) {
 			// Club name invalid
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'You entered an invalid club name. Please choose a longer or shorter name.'
@@ -299,6 +300,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 		if (clubDescription.length < 3 || clubDescription.length > 140) {
 			// Club name invalid
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'You entered an invalid club description. Please choose a longer or shorter description.'
@@ -308,6 +310,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 		if (smallClubLogo.length === 0) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message: 'Please provide a club logo.'
 			})
@@ -382,7 +385,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 					</Button>
 				</div>
 			)}
-			{isLoadingImage && <Loader />}
+			{isLoadingImage && <Loader color="red" variant="bars" />}
 			{!isLoadingImage && smallClubLogo.length > 0 && (
 				<div className={classes.clubLogoImageContainer}>
 					<Image
@@ -390,7 +393,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 						src={smallClubLogo}
 						width={200}
 						height={200}
-						fit={'contain'}
+						fit={'cover'}
 					/>
 					<a onClick={deleteImage}>
 						<Image
@@ -425,6 +428,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 			<Modal
 				withCloseButton={false}
 				padding={8}
+				overlayBlur={8}
 				size={296}
 				opened={isEmojiPickerOpen}
 				onClose={() => {

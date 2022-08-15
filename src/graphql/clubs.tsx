@@ -112,6 +112,7 @@ export const SUB_CLUB = gql`
 			metadata
 			createdAt
 			name
+			gnosisSafeAddress
 			Meems {
 				Owner {
 					address
@@ -295,6 +296,9 @@ export const GET_BUNDLE_BY_ID = gql`
 		Bundles(where: { id: { _eq: $id } }) {
 			id
 			abi
+			BundleContracts {
+				functionSelectors
+			}
 		}
 	}
 `
