@@ -295,6 +295,9 @@ export const GET_BUNDLE_BY_ID = gql`
 		Bundles(where: { id: { _eq: $id } }) {
 			id
 			abi
+			BundleContracts {
+				functionSelectors
+			}
 		}
 	}
 `

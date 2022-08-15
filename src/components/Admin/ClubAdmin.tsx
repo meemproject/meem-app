@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -13,12 +13,18 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
+import { diamondABI } from '@meemproject/meem-contracts'
 import { LoginState, useWallet } from '@meemproject/react'
+import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
-import { GetClubQuery, MeemContracts } from '../../../generated/graphql'
-import { GET_CLUB } from '../../graphql/clubs'
+import {
+	GetBundleByIdQuery,
+	GetClubSubscriptionSubscription,
+	MeemContracts
+} from '../../../generated/graphql'
+import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
 import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
 import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
@@ -198,6 +204,15 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
 	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
+	const [bundleFunctionSelectors, setBundleFunctionSelectors] = useState<
+		string[]
+	>([])
+	const [clubFunctionSelectors, setClubFunctionSelectors] = useState<
+		string[]
+	>([])
+	const [bundleABI, setBundleABI] = useState<string>()
+	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
+	const [isUpgradingClub, setIsUpgradingClub] = useState(false)
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: `/${slug}` })
@@ -218,11 +233,20 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const {
 		loading,
 		error,
-		data: clubData,
-		refetch
-	} = useQuery<GetClubQuery>(GET_CLUB, {
+		data: clubData
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: { slug }
 	})
+
+	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
+		GET_BUNDLE_BY_ID,
+		{
+			variables: {
+				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
+			}
+		}
+	)
+
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 	const [club, setClub] = useState<Club>()
 
@@ -241,7 +265,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	}, [router, slug, wallet.loginState])
 
 	useEffect(() => {
-		async function getClub(data: GetClubQuery) {
+		async function getClub(data: GetClubSubscriptionSubscription) {
 			const possibleClub = await clubFromMeemContract(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
@@ -266,22 +290,95 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.isConnected
 	])
 
-	const refetchClub = async () => {
-		log.debug('refetching club...')
-		const newClub = await refetch()
-		if (newClub.data.MeemContracts.length > 0) {
-			const possibleClub = await clubFromMeemContract(
-				wallet,
-				wallet.isConnected ? wallet.accounts[0] : '',
-				newClub.data.MeemContracts[0] as MeemContracts
-			)
+	// const refetchClub = async () => {
+	// 	log.debug('refetching club...')
+	// 	const newClub = await refetch()
+	// 	if (newClub.data.MeemContracts.length > 0) {
+	// 		const possibleClub = await clubFromMeemContract(
+	// 			wallet,
+	// 			wallet.isConnected ? wallet.accounts[0] : '',
+	// 			newClub.data.MeemContracts[0] as MeemContracts
+	// 		)
 
-			if (possibleClub && possibleClub.name) {
-				log.debug('got new club data, setting it...')
-				setClub(possibleClub)
+	// 		if (possibleClub && possibleClub.name) {
+	// 			log.debug('got new club data, setting it...')
+	// 			setClub(possibleClub)
+	// 		}
+	// 	}
+	// }
+
+	useEffect(() => {
+		if (bundleData?.Bundles[0]) {
+			let allFunctionSelectors: string[] = []
+			bundleData.Bundles[0].BundleContracts.forEach(bc => {
+				allFunctionSelectors = [
+					...allFunctionSelectors,
+					...bc.functionSelectors
+				]
+			})
+
+			setBundleFunctionSelectors(allFunctionSelectors)
+			setBundleABI(bundleData.Bundles[0].abi)
+		}
+	}, [bundleData])
+
+	useEffect(() => {
+		const fetchFacets = async () => {
+			if (bundleABI && club?.address) {
+				try {
+					const diamond = new ethers.Contract(
+						club.address,
+						diamondABI,
+						wallet.signer
+					)
+
+					const facets = await diamond.facets()
+					let currentSelectors: string[] = []
+					facets.forEach(
+						(facet: { target: string; selectors: string[] }) => {
+							currentSelectors = [
+								...currentSelectors,
+								...facet.selectors
+							]
+						}
+					)
+					setClubFunctionSelectors(currentSelectors)
+				} catch (e) {
+					log.crit(e)
+				}
 			}
 		}
-	}
+		fetchFacets()
+	}, [bundleABI, club, wallet])
+
+	useEffect(() => {
+		if (
+			bundleFunctionSelectors.length > 0 &&
+			clubFunctionSelectors.length > 0
+		) {
+			for (let i = 0; i < bundleFunctionSelectors.length; i += 1) {
+				const clubFS = clubFunctionSelectors.find(
+					fs => fs === bundleFunctionSelectors[i]
+				)
+				if (!clubFS) {
+					setShouldShowUpgrade(true)
+					return
+				}
+			}
+
+			// If we made it this far, all selectors are accounted for and the upgrade was successful
+			if (shouldShowUpgrade) {
+				showNotification({
+					title: 'Club Upgraded!',
+					color: 'green',
+					icon: <Check />,
+					message: `The club has been upgraded to the latest version.`
+				})
+				setShouldShowUpgrade(false)
+				setIsUpgradingClub(false)
+			}
+		}
+	}, [bundleFunctionSelectors, clubFunctionSelectors, shouldShowUpgrade])
 
 	return (
 		<>
@@ -444,6 +541,81 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										width={20}
 									/>
 								</div>
+								{shouldShowUpgrade && (
+									<>
+										<Space h={'xl'} />
+										<Divider />
+										<Space h={'xl'} />
+										<Text
+											className={
+												classes.clubIntegrationsSectionTitle
+											}
+										>
+											Upgrade Club Contract
+										</Text>
+										<div
+											className={
+												classes.contractAddressContainer
+											}
+										>
+											<div>
+												<Text
+													className={
+														classes.clubContractAddress
+													}
+												>
+													A new version of Clubs is
+													available! Upgrade to take
+													advantage of all the new
+													features.
+												</Text>
+											</div>
+										</div>
+										<Space h={'xs'} />
+										<Button
+											loading={isUpgradingClub}
+											disabled={isUpgradingClub}
+											className={classes.buttonCreate}
+											onClick={async () => {
+												try {
+													if (!club?.id) {
+														return
+													}
+													setIsUpgradingClub(true)
+													const upgradeClubFetcher =
+														makeFetcher<
+															MeemAPI.v1.UpgradeClub.IQueryParams,
+															MeemAPI.v1.UpgradeClub.IRequestBody,
+															MeemAPI.v1.UpgradeClub.IResponseBody
+														>({
+															method: MeemAPI.v1
+																.UpgradeClub
+																.method
+														})
+
+													await upgradeClubFetcher(
+														MeemAPI.v1.UpgradeClub.path(
+															{
+																meemContractId:
+																	club.id
+															}
+														)
+													)
+												} catch (e) {
+													log.crit(e)
+													showNotification({
+														title: 'Error Upgrading Club',
+														color: 'red',
+														message: `Something went wrong during the upgrade.`
+													})
+													setIsUpgradingClub(false)
+												}
+											}}
+										>
+											Upgrade Contract
+										</Button>
+									</>
+								)}
 
 								<Space h={8} />
 
@@ -559,14 +731,12 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 													setTimeout(f, 10000)
 												)
 
-												refetchClub()
+												// refetchClub()
 
 												setIsCreatingSafe(false)
 											} catch (e) {
+												log.crit(e)
 												setIsCreatingSafe(false)
-
-												// eslint-disable-next-line no-console
-												console.log(e)
 												showNotification({
 													radius: 'lg',
 													title: 'Wallet creation failed.',
