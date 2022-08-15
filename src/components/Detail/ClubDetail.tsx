@@ -9,15 +9,20 @@ import {
 	Space,
 	Grid,
 	Loader,
-	Center
+	Center,
+	Group,
+	Modal,
+	Divider
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
+import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
+import QRCode from 'react-qr-code'
 import { Check, CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
@@ -28,10 +33,11 @@ import {
 import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
+	ClubMember,
 	MembershipReqType
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
-import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
+import { quickTruncate } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -55,7 +61,7 @@ const useStyles = createStyles(theme => ({
 	headerClubDescription: {
 		fontSize: 16,
 		wordBreak: 'break-all',
-		marginTop: 8,
+		marginTop: 4,
 		marginRight: 16,
 		fontWeight: 500,
 		color: 'rgba(0, 0, 0, 0.6)'
@@ -97,8 +103,10 @@ const useStyles = createStyles(theme => ({
 		textDecoration: 'none'
 	},
 	headerButtons: {
-		marginTop: 24,
-		display: 'flex'
+		marginTop: 12,
+		marginBottom: 0,
+		marginLeft: 0,
+		marginRight: 16
 	},
 	headerSlotsLeft: {
 		fontSize: 14,
@@ -131,14 +139,6 @@ const useStyles = createStyles(theme => ({
 		// 	borderColor: 'transparent'
 		// }
 	},
-	clubSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
-		}
-	},
 
 	clubDetailSectionTitle: {
 		fontSize: 18,
@@ -157,14 +157,9 @@ const useStyles = createStyles(theme => ({
 	},
 	clubLogoImage: {
 		imageRendering: 'pixelated',
-		width: 120,
-		height: 120,
+
 		marginRight: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 60,
-			height: 60,
-			minHeight: 60,
-			minWidth: 60,
 			marginLeft: 20,
 			marginRight: 20
 		}
@@ -262,15 +257,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
-	const { data: clubSubData } = useSubscription<ClubSubscriptionSubscription>(
-		SUB_CLUB,
-		{
-			variables: { address: club?.address ?? '' }
-		}
-	)
-
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [isLeavingClub, setIsLeavingClub] = useState(false)
+
+	const [isQrModalOpened, setIsQrModalOpened] = useState(false)
+	const [isEditionsModalOpened, setIsEditionsModalOpened] = useState(false)
 
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
@@ -350,7 +341,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						tokenType: MeemAPI.MeemType.Original
 					}
 
-					log.debug(data)
+					log.debug(JSON.stringify(data))
 					const tx = await meemContract?.mint(data, {
 						gasLimit: '5000000',
 						value: ethers.utils.parseEther(
@@ -382,14 +373,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								name: club?.name ?? '',
 								description: club?.description,
 								image: club?.image,
-								meem_metadata_version: 'Meem_Token_20220718'
+								meem_metadata_version: 'MeemClub_Token_20220718'
 							}
 						}
 					)
-
-					// TODO: Listen for new token and refresh
 				} else {
 					showNotification({
+						radius: 'lg',
 						title: 'Error joining this club.',
 						message: `Please get in touch!`
 					})
@@ -397,19 +387,20 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 		} catch (e) {
 			log.debug(e)
+			setIsJoiningClub(false)
 
 			showNotification({
+				radius: 'lg',
 				title: 'Error joining this club.',
 				message: `Please get in touch!`
 			})
 		}
-
-		setIsJoiningClub(false)
 	}
 
 	const leaveClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			showNotification({
+				radius: 'lg',
 				title: 'Unable to leave this club.',
 				message: `Did you connect your wallet?`
 			})
@@ -418,6 +409,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		if (club?.isClubAdmin) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
 			})
@@ -439,6 +431,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		} catch (e) {
 			setIsLeavingClub(false)
 			showNotification({
+				radius: 'lg',
 				title: 'Error leaving this club.',
 				message: `${e as string}`
 			})
@@ -705,7 +698,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		async function getClub(data: GetClubSubscriptionSubscription) {
-			setIsLoadingClub(true)
 			const possibleClub = await clubFromMeemContract(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
@@ -718,11 +710,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 			setIsLoadingClub(false)
 
-			// After the club is loaded, convert its members into ENS names
-			const newMembers: string[] = []
+			const newMembers: ClubMember[] = []
 			for (const member of possibleClub.members ?? []) {
-				const name = await ensWalletAddress(member)
-				newMembers.push(name)
+				newMembers.push(member)
 			}
 			// TODO: Is there an easier way to copy an object in react, like copyWith?
 			const newClub: Club = {
@@ -764,10 +754,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				setClub(possibleClub)
 
 				showNotification({
+					radius: 'lg',
 					title: `Welcome to ${possibleClub.name}!`,
 					color: 'green',
 					autoClose: 5000,
-					message: `You now have access to this club's tools and resources.`
+					message: `You now have access to this club.`
 				})
 			}
 		}
@@ -786,6 +777,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				setClub(possibleClub)
 
 				showNotification({
+					radius: 'lg',
 					title: 'Successfully left the club.',
 					color: 'green',
 					autoClose: 5000,
@@ -798,15 +790,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			getClub(clubData)
 		}
 
-		if (isJoiningClub && clubSubData) {
-			join(clubSubData)
-		} else if (isLeavingClub && clubSubData) {
-			leave(clubSubData)
+		if (isJoiningClub && clubData) {
+			join(clubData)
+		} else if (isLeavingClub && clubData) {
+			leave(clubData)
 		}
 	}, [
 		club,
 		clubData,
-		clubSubData,
 		error,
 		isJoiningClub,
 		isLeavingClub,
@@ -853,7 +844,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader />
+						<Loader color="red" variant="bars" />
 					</Center>
 				</Container>
 			)}
@@ -869,6 +860,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				<>
 					<div className={classes.header}>
 						<Image
+							width={80}
+							height={80}
+							radius={16}
+							fit="cover"
 							className={classes.clubLogoImage}
 							src={club.image}
 						/>
@@ -879,12 +874,28 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							<Text className={classes.headerClubDescription}>
 								{club.description}
 							</Text>
-							<div className={classes.headerButtons}>
+							<Group
+								spacing={'xs'}
+								className={classes.headerButtons}
+							>
+								{club.membershipSettings &&
+									club.membershipSettings
+										?.membershipQuantity > 0 && (
+										<Button
+											onClick={() => {
+												setIsEditionsModalOpened(true)
+											}}
+											className={classes.buttonJoinClub}
+										>
+											{' '}
+											{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
+										</Button>
+									)}
 								{club.isClubMember && wallet.isConnected && (
 									<Button
 										onClick={leaveClub}
 										loading={isLeavingClub}
-										className={classes.outlineButton}
+										className={classes.buttonJoinClub}
 									>
 										Leave
 									</Button>
@@ -922,34 +933,29 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										Connect wallet to join
 									</Button>
 								)}
-								{club.membershipSettings &&
-									club.membershipSettings
-										?.membershipQuantity > 0 && (
-										<Text
-											className={classes.headerSlotsLeft}
-										>{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}</Text>
-									)}
+
+								<Button
+									className={classes.buttonJoinClub}
+									onClick={() => {
+										setIsQrModalOpened(true)
+									}}
+								>
+									<QrCode />
+								</Button>
+
 								{club.isClubAdmin && wallet.isConnected && (
 									<>
-										<Space w={'xs'} />
 										<Button
 											onClick={navigateToSettings}
 											className={
 												classes.outlineHeaderButton
 											}
-											leftIcon={
-												<Settings
-													className={
-														classes.clubSettingsIcon
-													}
-												/>
-											}
 										>
-											Settings
+											<Settings />
 										</Button>
 									</>
 								)}
-							</div>
+							</Group>
 						</div>
 					</div>
 
@@ -970,7 +976,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												classes.requirementsContainer
 											}
 										>
-											<Loader />
+											<Loader
+												color="red"
+												variant="bars"
+											/>
 										</div>
 									)}
 
@@ -1035,6 +1044,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												club.address ?? ''
 											)
 											showNotification({
+												radius: 'lg',
 												title: 'Address copied',
 												autoClose: 2000,
 												color: 'green',
@@ -1267,15 +1277,18 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										md={4}
 										lg={4}
 										xl={4}
-										key={member}
+										key={member.wallet}
 									>
 										<div className={classes.memberItem}>
 											<Text
 												onClick={() => {
 													navigator.clipboard.writeText(
-														member
+														member.ens
+															? member.ens
+															: member.wallet
 													)
 													showNotification({
+														radius: 'lg',
 														title: 'Member address copied',
 														autoClose: 2000,
 														color: 'green',
@@ -1285,9 +1298,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													})
 												}}
 											>
-												{quickTruncate(member)}
+												{member.ens
+													? member.ens
+													: quickTruncate(
+															member.wallet
+													  )}
 											</Text>
-											{memberIsAdmin(member) && (
+											{memberIsAdmin(member.wallet) && (
 												<Image
 													className={
 														classes.memberAdminIndicator
@@ -1304,6 +1321,43 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						)}
 						<Space h={'xl'} />
 					</Container>
+					<Modal
+						centered
+						overlayBlur={8}
+						radius={16}
+						size={300}
+						padding={'sm'}
+						title={'Club QR Code'}
+						opened={isQrModalOpened}
+						onClose={() => setIsQrModalOpened(false)}
+					>
+						<Divider />
+						<Space h={24} />
+						<QRCode
+							value={
+								club
+									? `${window.location.origin}/${club.slug}`
+									: ''
+							}
+						/>
+					</Modal>
+					<Modal
+						centered
+						overlayBlur={8}
+						radius={16}
+						padding={'sm'}
+						title={'Club Members Limit'}
+						opened={isEditionsModalOpened}
+						onClose={() => setIsEditionsModalOpened(false)}
+					>
+						<Divider />
+						<Space h={24} />
+						<Text>
+							Some clubs have limits on how many members can join.
+							This shows you how many members have joined out of
+							the total allowed for this club.
+						</Text>
+					</Modal>
 				</>
 			)}
 		</>

@@ -141,7 +141,7 @@ export const MyClubsComponent: React.FC = () => {
 				<Container>
 					<Space h={30} />
 					<Center>
-						<Loader />
+						<Loader variant="bars" color="red" />
 					</Center>
 				</Container>
 			)}
@@ -183,7 +183,8 @@ export const MyClubsComponent: React.FC = () => {
 										src={club.image ?? ''}
 										width={40}
 										height={40}
-										fit={'contain'}
+										radius={8}
+										fit={'cover'}
 									/>
 									<Space w="xs" />
 									<Text className={classes.clubNameEllipsis}>

@@ -3,7 +3,6 @@ import {
 	createStyles,
 	Container,
 	Text,
-	Center,
 	Image,
 	Loader,
 	Button,
@@ -109,7 +108,7 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 	buttonCreate: {
-		marginTop: 48,
+		marginTop: 32,
 		marginBottom: 48,
 
 		backgroundColor: 'black',
@@ -122,9 +121,8 @@ const useStyles = createStyles(theme => ({
 		imageRendering: 'pixelated'
 	},
 	clubLogoImageContainer: {
-		marginTop: 24,
+		marginTop: 32,
 		width: 108,
-		height: 100,
 		position: 'relative'
 	},
 	clubLogoDeleteButton: {
@@ -169,6 +167,7 @@ export const CreateComponent: React.FC = () => {
 
 			if (cookieName === undefined) {
 				showNotification({
+					radius: 'lg',
 					title: 'Unable to create this club.',
 					message: `Some data is missing. Try again!`,
 					autoClose: 5000
@@ -275,7 +274,7 @@ export const CreateComponent: React.FC = () => {
 
 			createResizedFile()
 		} else {
-			log.debug('no current club image')
+			// log.debug('no current club image')
 		}
 	}, [clubLogo, clubclub.isMember, router])
 
@@ -294,6 +293,7 @@ export const CreateComponent: React.FC = () => {
 		if (!clubName || clubName.length < 3 || clubName.length > 30) {
 			// Club name invalid
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'You entered an invalid club name. Please choose a longer or shorter name.'
@@ -304,6 +304,7 @@ export const CreateComponent: React.FC = () => {
 		if (clubDescription.length < 3 || clubDescription.length > 140) {
 			// Club name invalid
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'You entered an invalid club description. Please choose a longer or shorter description.'
@@ -313,6 +314,7 @@ export const CreateComponent: React.FC = () => {
 
 		if (smallClubLogo.length === 0) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message: 'Please provide a club logo.'
 			})
@@ -320,6 +322,7 @@ export const CreateComponent: React.FC = () => {
 
 		if (!clubclub.isMember) {
 			showNotification({
+				radius: 'lg',
 				title: 'No Club Club membership found.',
 				message: `Join Club Club to continue.`
 			})
@@ -414,7 +417,7 @@ export const CreateComponent: React.FC = () => {
 						</Button>
 					</div>
 				)}
-				{isLoadingImage && <Loader />}
+				{isLoadingImage && <Loader color="red" variant="bars" />}
 				{!isLoadingImage && smallClubLogo.length > 0 && (
 					<div className={classes.clubLogoImageContainer}>
 						<Image
@@ -422,7 +425,7 @@ export const CreateComponent: React.FC = () => {
 							src={smallClubLogo}
 							width={200}
 							height={200}
-							fit={'contain'}
+							fit={'cover'}
 						/>
 						<a onClick={deleteImage}>
 							<Image
@@ -434,12 +437,6 @@ export const CreateComponent: React.FC = () => {
 						</a>
 					</div>
 				)}
-			</Container>
-			<div id="emojiCanvas" className={classes.emojiCanvas}>
-				{chosenEmoji && <>{chosenEmoji.emoji}</>}
-			</div>
-
-			<Center>
 				<Button
 					onClick={() => {
 						createClub()
@@ -452,10 +449,15 @@ export const CreateComponent: React.FC = () => {
 				>
 					Continue
 				</Button>
-			</Center>
+			</Container>
+			<div id="emojiCanvas" className={classes.emojiCanvas}>
+				{chosenEmoji && <>{chosenEmoji.emoji}</>}
+			</div>
+
 			<Modal
 				withCloseButton={false}
 				padding={8}
+				overlayBlur={8}
 				size={296}
 				opened={isEmojiPickerOpen}
 				onClose={() => {

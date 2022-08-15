@@ -1,3 +1,17 @@
+# [1.4.0](https://github.com/meemproject/clubs-web/compare/v1.3.1...v1.4.0) (2022-08-15)
+
+
+### Bug Fixes
+
+* detect wrong network ([6eea2fb](https://github.com/meemproject/clubs-web/commit/6eea2fb))
+* metadata saving; do not auto-change networks ([2eb41c2](https://github.com/meemproject/clubs-web/commit/2eb41c2))
+* rely on updated WalletContext instead of cookies for auth ([fc38f92](https://github.com/meemproject/clubs-web/commit/fc38f92))
+
+
+### Features
+
+* POC gnosis ([74e4a5a](https://github.com/meemproject/clubs-web/commit/74e4a5a))
+
 ## [1.3.1](https://github.com/meemproject/clubs-web/compare/v1.3.0...v1.3.1) (2022-08-11)
 
 # [1.3.0](https://github.com/meemproject/clubs-web/compare/v1.2.1...v1.3.0) (2022-08-11)

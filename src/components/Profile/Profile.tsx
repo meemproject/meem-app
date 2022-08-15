@@ -266,6 +266,8 @@ export const ProfileComponent: React.FC = () => {
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
 							<Image
+								radius={16}
+								fit={'cover'}
 								className={classes.profileLogoImage}
 								src={identity.profilePic}
 							/>

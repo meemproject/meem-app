@@ -3,17 +3,21 @@ import log from '@kengoldfarb/log'
 import { createStyles, Text, Image, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { useSockets, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
-import { MyClubsSubscriptionSubscription } from '../../../generated/graphql'
-import { SUB_MY_CLUBS } from '../../graphql/clubs'
 import {
+	MeemContracts,
+	MyClubsSubscriptionSubscription
+} from '../../../generated/graphql'
+import { SUB_MY_CLUBS } from '../../graphql/clubs'
+import clubFromMeemContract, {
 	MembershipSettings,
-	MembershipRequirementToMeemPermission
+	MembershipRequirementToMeemPermission,
+	Club
 } from '../../model/club/club'
 import { CookieKeys } from '../../utils/cookies'
 
@@ -65,6 +69,7 @@ interface IProps {
 	isOpened: boolean
 	onModalClosed: () => void
 }
+
 export const CreateClubModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
@@ -78,6 +83,29 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
+	const [hasStartedCreatingSafe, setHasStartedCreatingSafe] = useState(false)
+
+	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
+
+	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
+
+	const [clubSlug, setClubSlug] = useState('')
+
+	const closeModal = useCallback(() => {
+		if (sockets) {
+			sockets.unsubscribe([
+				{ type: MeemAPI.MeemEvent.Err },
+				{ type: MeemAPI.MeemEvent.MeemIdUpdated },
+				{ type: MeemAPI.MeemEvent.MeemMinted }
+			])
+		}
+		onModalClosed()
+
+		setHasStartedCreating(false)
+		setHasStartedCreatingSafe(false)
+		setHasSubscribedToSockets(false)
+	}, [onModalClosed, sockets])
+
 	// Club subscription - watch for specific changes in order to update correctly
 	const { data: myClubsData } =
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
@@ -85,16 +113,85 @@ export const CreateClubModal: React.FC<IProps> = ({
 		})
 
 	useEffect(() => {
+		if (!isSocketsConnected && isOpened) {
+			connect()
+		}
+	}, [connect, isOpened, isSocketsConnected])
+
+	useEffect(() => {
+		async function finishClubCreation() {
+			// Successfully created club
+			log.debug('club creation complete')
+
+			// Remove all metadata cookies!
+			Cookies.remove(CookieKeys.clubName)
+			Cookies.remove(CookieKeys.clubDescription)
+			Cookies.remove(CookieKeys.clubImage)
+			Cookies.remove(CookieKeys.clubExternalUrl)
+			Cookies.remove(CookieKeys.clubSlug)
+
+			// Route to the created club detail page
+			showNotification({
+				radius: 'lg',
+				title: 'Success!',
+				autoClose: 5000,
+				color: 'green',
+				icon: <Check color="green" />,
+
+				message: `Your club has been published.`
+			})
+
+			router.push({
+				pathname: `/${clubSlug}`
+			})
+		}
+
+		async function createSafe(club: Club) {
+			if (hasStartedCreatingSafe) {
+				return
+			}
+			setHasStartedCreatingSafe(true)
+			log.debug(
+				`creating safe with id ${club.id}, admins ${JSON.stringify(
+					club.admins
+				)} ...`
+			)
+
+			try {
+				const createSafeFetcher = makeFetcher<
+					MeemAPI.v1.CreateClubSafe.IQueryParams,
+					MeemAPI.v1.CreateClubSafe.IRequestBody,
+					MeemAPI.v1.CreateClubSafe.IResponseBody
+				>({
+					method: MeemAPI.v1.CreateClubSafe.method
+				})
+
+				await createSafeFetcher(
+					MeemAPI.v1.CreateClubSafe.path({
+						meemContractId: club.id ?? ''
+					}),
+					undefined,
+					{
+						safeOwners: club.admins ?? []
+					}
+				)
+			} catch (e) {
+				// Ignore - the user can create later?
+				finishClubCreation()
+			}
+		}
+
 		async function create() {
 			log.debug('creating club...')
 			if (!wallet.web3Provider) {
 				log.debug('no web3 provider, returning.')
 				showNotification({
+					radius: 'lg',
 					title: 'Error Creating Club',
 					message: 'Please connect your wallet first.',
 					color: 'red'
 				})
-				onModalClosed()
+				closeModal()
 				setHasStartedCreating(false)
 				return
 			}
@@ -102,13 +199,14 @@ export const CreateClubModal: React.FC<IProps> = ({
 			if (!membershipSettings) {
 				log.debug('no membership settings found, returning.')
 				showNotification({
+					radius: 'lg',
 					title: 'Error Creating Club',
 					message:
 						'An error occurred while creating the club. Please try again.',
 					color: 'red'
 				})
 
-				onModalClosed()
+				closeModal()
 				setHasStartedCreating(false)
 				return
 			}
@@ -178,13 +276,13 @@ export const CreateClubModal: React.FC<IProps> = ({
 					shouldMintAdminTokens: true,
 					metadata: {
 						meem_contract_type: 'meem-club',
-						meem_metadata_version: 'Meem_Contract_20220718',
+						meem_metadata_version: 'MeemClub_Contract_20220718',
 						name: Cookies.get(CookieKeys.clubName),
 						description: Cookies.get(CookieKeys.clubDescription),
 						image: Cookies.get(CookieKeys.clubImage),
 						associations: [],
-						external_url: ''
-						// application_instructions: applicationInstructions
+						external_url: '',
+						application_instructions: applicationInstructions
 					},
 					name: Cookies.get(CookieKeys.clubName) ?? '',
 					admins: membershipSettings.clubAdminsAtClubCreation,
@@ -195,7 +293,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					mintPermissions,
 					splits,
 					adminTokenMetadata: {
-						meem_metadata_version: 'Meem_Token_20220718',
+						meem_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${Cookies.get(
 							CookieKeys.clubName
 						)}`,
@@ -220,45 +318,73 @@ export const CreateClubModal: React.FC<IProps> = ({
 			} catch (e) {
 				log.crit(e)
 				showNotification({
+					radius: 'lg',
 					title: 'Error Creating Club',
 					message:
 						'An error occurred while creating the club. Please try again.',
 					color: 'red'
 				})
 
-				onModalClosed()
+				closeModal()
 				setHasStartedCreating(false)
 			}
 		}
+
+		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
+			sockets.subscribe(
+				[{ key: MeemAPI.MeemEvent.Err }],
+				wallet.accounts[0]
+			)
+			sockets.on({
+				eventName: MeemAPI.MeemEvent.Err,
+				handler: err => {
+					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
+						showNotification({
+							radius: 'lg',
+							title: 'Club Creation Failed',
+							message:
+								'An error occurred while creating the club. Please try again.',
+							color: 'red'
+						})
+
+						closeModal()
+					} else if (err.detail.code === 'SAFE_CREATE_FAILED') {
+						// If there's an error with creating the safe, ignore it
+						// and proceed to club homepage
+						log.debug('Safe creation failed. Skipping for now...')
+						finishClubCreation()
+					}
+					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
+					log.crit(err)
+					log.crit(err.detail.code)
+				}
+			})
+			setHasSubscribedToSockets(true)
+		}
+
 		async function checkClubState() {
 			log.debug('listening for new club...')
 			const newClub = myClubsData?.Meems.find(
 				m => m.MeemContract?.name === Cookies.get(CookieKeys.clubName)
 			)
 			if (newClub) {
-				// Successfully created club
-				log.debug('init complete')
+				if (
+					newClub.MeemContract &&
+					newClub.MeemContract.gnosisSafeAddress
+				) {
+					finishClubCreation()
+				} else {
+					const clubModel = await clubFromMeemContract(
+						wallet,
+						wallet.accounts[0],
+						newClub.MeemContract as MeemContracts
+					)
 
-				// Remove all metadata cookies!
-				Cookies.remove(CookieKeys.clubName)
-				Cookies.remove(CookieKeys.clubDescription)
-				Cookies.remove(CookieKeys.clubImage)
-				Cookies.remove(CookieKeys.clubExternalUrl)
-				Cookies.remove(CookieKeys.clubSlug)
+					setClubSlug(clubModel.slug ?? '')
 
-				// Route to the created club detail page
-				showNotification({
-					title: 'Success!',
-					autoClose: 5000,
-					color: 'green',
-					icon: <Check color="green" />,
-
-					message: `Your club has been published.`
-				})
-
-				router.push({
-					pathname: `/${newClub.MeemContract?.slug}`
-				})
+					// Create club safe
+					await createSafe(clubModel)
+				}
 			}
 		}
 
@@ -277,12 +403,17 @@ export const CreateClubModal: React.FC<IProps> = ({
 			}
 		}
 	}, [
+		closeModal,
+		clubSlug,
 		hasStartedCreating,
+		hasStartedCreatingSafe,
+		hasSubscribedToSockets,
 		isOpened,
 		membershipSettings,
 		myClubsData?.Meems,
 		onModalClosed,
 		router,
+		sockets,
 		wallet
 	])
 
@@ -294,18 +425,22 @@ export const CreateClubModal: React.FC<IProps> = ({
 				closeOnEscape={false}
 				withCloseButton={false}
 				radius={16}
+				overlayBlur={8}
 				padding={'lg'}
 				opened={isOpened}
-				onClose={() => onModalClosed()}
+				onClose={() => closeModal()}
 			>
 				<div className={classes.header}>
-					<Loader />
+					<Loader color="red" variant="bars" />
 					<Space h={16} />
 					<Text
 						className={classes.title}
 					>{`We're creating your club!`}</Text>
 					<Space h={32} />
 					<Image
+						height={120}
+						width={120}
+						fit={'cover'}
 						className={classes.clubLogoImage}
 						src={Cookies.get(CookieKeys.clubImage)}
 					/>
