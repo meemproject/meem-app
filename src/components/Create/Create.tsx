@@ -3,7 +3,6 @@ import {
 	createStyles,
 	Container,
 	Text,
-	Center,
 	Image,
 	Loader,
 	Button,
@@ -109,7 +108,7 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 	buttonCreate: {
-		marginTop: 48,
+		marginTop: 32,
 		marginBottom: 48,
 
 		backgroundColor: 'black',
@@ -122,9 +121,8 @@ const useStyles = createStyles(theme => ({
 		imageRendering: 'pixelated'
 	},
 	clubLogoImageContainer: {
-		marginTop: 24,
+		marginTop: 32,
 		width: 108,
-		height: 100,
 		position: 'relative'
 	},
 	clubLogoDeleteButton: {
@@ -427,7 +425,7 @@ export const CreateComponent: React.FC = () => {
 							src={smallClubLogo}
 							width={200}
 							height={200}
-							fit={'contain'}
+							fit={'cover'}
 						/>
 						<a onClick={deleteImage}>
 							<Image
@@ -439,12 +437,6 @@ export const CreateComponent: React.FC = () => {
 						</a>
 					</div>
 				)}
-			</Container>
-			<div id="emojiCanvas" className={classes.emojiCanvas}>
-				{chosenEmoji && <>{chosenEmoji.emoji}</>}
-			</div>
-
-			<Center>
 				<Button
 					onClick={() => {
 						createClub()
@@ -457,10 +449,15 @@ export const CreateComponent: React.FC = () => {
 				>
 					Continue
 				</Button>
-			</Center>
+			</Container>
+			<div id="emojiCanvas" className={classes.emojiCanvas}>
+				{chosenEmoji && <>{chosenEmoji.emoji}</>}
+			</div>
+
 			<Modal
 				withCloseButton={false}
 				padding={8}
+				overlayBlur={8}
 				size={296}
 				opened={isEmojiPickerOpen}
 				onClose={() => {

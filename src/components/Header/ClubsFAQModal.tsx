@@ -43,6 +43,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 			<Modal
 				centered
 				radius={16}
+				overlayBlur={8}
 				size={'60%'}
 				padding={'lg'}
 				opened={isOpened}

@@ -164,6 +164,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				closeOnEscape={false}
 				withCloseButton={step !== Step.Verifying}
 				radius={16}
+				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
 				title={

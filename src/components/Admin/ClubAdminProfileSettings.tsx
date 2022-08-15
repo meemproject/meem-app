@@ -393,7 +393,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 						src={smallClubLogo}
 						width={200}
 						height={200}
-						fit={'contain'}
+						fit={'cover'}
 					/>
 					<a onClick={deleteImage}>
 						<Image
@@ -428,6 +428,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 			<Modal
 				withCloseButton={false}
 				padding={8}
+				overlayBlur={8}
 				size={296}
 				opened={isEmojiPickerOpen}
 				onClose={() => {

@@ -197,11 +197,12 @@ export const MyClubsComponent: React.FC = () => {
 										}}
 									>
 										<Image
+											radius={8}
 											className={classes.clubLogoImage}
 											src={club.image ?? ''}
 											width={40}
 											height={40}
-											fit={'contain'}
+											fit={'cover'}
 										/>
 										<Space w="xs" />
 										<Text

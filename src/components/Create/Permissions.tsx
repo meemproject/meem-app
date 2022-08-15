@@ -22,6 +22,9 @@ const useStyles = createStyles(theme => ({
 			paddingLeft: 16
 		}
 	},
+	memberSettingsComponent: {
+		marginTop: '-24px'
+	},
 	headerArrow: {
 		marginRight: 32,
 		cursor: 'pointer',
@@ -140,7 +143,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 				</div>
 			</div>
 
-			<Container>
+			<Container className={classes.memberSettingsComponent}>
 				<ClubAdminMembershipSettingsComponent isCreatingClub />
 			</Container>
 		</>

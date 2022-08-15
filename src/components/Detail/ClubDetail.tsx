@@ -9,12 +9,14 @@ import {
 	Space,
 	Grid,
 	Loader,
-	Center
+	Center,
+	Group
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
+import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
@@ -56,7 +58,7 @@ const useStyles = createStyles(theme => ({
 	headerClubDescription: {
 		fontSize: 16,
 		wordBreak: 'break-all',
-		marginTop: 8,
+		marginTop: 4,
 		marginRight: 16,
 		fontWeight: 500,
 		color: 'rgba(0, 0, 0, 0.6)'
@@ -98,8 +100,10 @@ const useStyles = createStyles(theme => ({
 		textDecoration: 'none'
 	},
 	headerButtons: {
-		marginTop: 24,
-		display: 'flex'
+		marginTop: 12,
+		marginBottom: 0,
+		marginLeft: 0,
+		marginRight: 16
 	},
 	headerSlotsLeft: {
 		fontSize: 14,
@@ -132,14 +136,6 @@ const useStyles = createStyles(theme => ({
 		// 	borderColor: 'transparent'
 		// }
 	},
-	clubSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
-		}
-	},
 
 	clubDetailSectionTitle: {
 		fontSize: 18,
@@ -158,14 +154,9 @@ const useStyles = createStyles(theme => ({
 	},
 	clubLogoImage: {
 		imageRendering: 'pixelated',
-		width: 120,
-		height: 120,
+
 		marginRight: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 60,
-			height: 60,
-			minHeight: 60,
-			minWidth: 60,
 			marginLeft: 20,
 			marginRight: 20
 		}
@@ -863,8 +854,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				<>
 					<div className={classes.header}>
 						<Image
-							width={120}
-							height={120}
+							width={80}
+							height={80}
+							radius={16}
+							fit="cover"
 							className={classes.clubLogoImage}
 							src={club.image}
 						/>
@@ -875,7 +868,20 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							<Text className={classes.headerClubDescription}>
 								{club.description}
 							</Text>
-							<div className={classes.headerButtons}>
+							<Group
+								spacing={'xs'}
+								className={classes.headerButtons}
+							>
+								{club.membershipSettings &&
+									club.membershipSettings
+										?.membershipQuantity > 0 && (
+										<Button
+											className={classes.buttonJoinClub}
+										>
+											{' '}
+											{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
+										</Button>
+									)}
 								{club.isClubMember && wallet.isConnected && (
 									<Button
 										onClick={leaveClub}
@@ -918,34 +924,24 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										Connect wallet to join
 									</Button>
 								)}
-								{club.membershipSettings &&
-									club.membershipSettings
-										?.membershipQuantity > 0 && (
-										<Text
-											className={classes.headerSlotsLeft}
-										>{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}</Text>
-									)}
+
+								<Button className={classes.buttonJoinClub}>
+									<QrCode />
+								</Button>
+
 								{club.isClubAdmin && wallet.isConnected && (
 									<>
-										<Space w={'xs'} />
 										<Button
 											onClick={navigateToSettings}
 											className={
 												classes.outlineHeaderButton
 											}
-											leftIcon={
-												<Settings
-													className={
-														classes.clubSettingsIcon
-													}
-												/>
-											}
 										>
-											Settings
+											<Settings />
 										</Button>
 									</>
 								)}
-							</div>
+							</Group>
 						</div>
 					</div>
 
