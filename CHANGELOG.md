@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/meemproject/clubs-web/compare/v1.4.0...v1.5.0) (2022-08-15)
+
+
+### Features
+
+* upgrade club ([a52b9c9](https://github.com/meemproject/clubs-web/commit/a52b9c9))
+
 # [1.4.0](https://github.com/meemproject/clubs-web/compare/v1.3.1...v1.4.0) (2022-08-15)
 
 
