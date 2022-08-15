@@ -856,6 +856,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				<>
 					<div className={classes.header}>
 						<Image
+							width={120}
+							height={120}
 							className={classes.clubLogoImage}
 							src={club.image}
 						/>

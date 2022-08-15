@@ -5,7 +5,6 @@ import {
 	Button,
 	Space,
 	Modal,
-	RadioGroup,
 	Radio,
 	TextInput,
 	Textarea,
@@ -819,7 +818,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipReqModalOpened}
 					onClose={() => setMembershipReqModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -836,7 +835,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								? 'token-holders'
 								: 'other-club-member'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'anyone':
 									reqCurrentlyEditing.type =
@@ -897,7 +896,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								disabled
 							/>
 						)}
-					</RadioGroup>
+					</Radio.Group>
 					<div
 						className={
 							reqCurrentlyEditing.type ==
@@ -1152,7 +1151,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isSecondReqTypeModalOpened}
 					onClose={() => setSecondReqTypeModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1163,7 +1162,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								? 'and'
 								: 'or'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'and':
 									reqCurrentlyEditing.andor =
@@ -1185,7 +1184,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="and" label="In addition" />
 						<Radio value="or" label="Alternatively" />
-					</RadioGroup>
+					</Radio.Group>
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
@@ -1296,7 +1295,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipQuantityModalOpened}
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1308,7 +1307,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								? 'unlimited'
 								: 'finite'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'unlimited':
 									setMembershipQuantity(0)
@@ -1322,7 +1321,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="unlimited" label="unlimited" />
 						<Radio value="finite" label="finite" />
-					</RadioGroup>
+					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
 							<Text className={classes.modalHeaderText}>
@@ -1382,7 +1381,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipTimingStartModalOpened}
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1391,7 +1390,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						value={
 							membershipStartDate === undefined ? 'now' : 'later'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'now':
 									setMembershipStartDate(undefined)
@@ -1405,7 +1404,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="now" label="now" />
 						<Radio value="later" label="from a different date" />
-					</RadioGroup>
+					</Radio.Group>
 					<Space h={'sm'} />
 
 					{membershipStartDate !== undefined && (
@@ -1478,7 +1477,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipTimingEndModalOpened}
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1487,7 +1486,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						value={
 							membershipEndDate === undefined ? 'forever' : 'end'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'forever':
 									setMembershipEndDate(undefined)
@@ -1501,7 +1500,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="forever" label="forever" />
 						<Radio value="end" label="on a date" />
-					</RadioGroup>
+					</Radio.Group>
 					<Space h={'sm'} />
 
 					{membershipEndDate !== undefined && (
