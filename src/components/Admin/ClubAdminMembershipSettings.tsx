@@ -14,8 +14,7 @@ import {
 } from '@mantine/core'
 import { Calendar, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useSockets, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
@@ -186,10 +185,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
-
-	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
-
-	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
 
 	// Membership
 	const [membershipSettings, setMembershipSettings] =
@@ -586,72 +581,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		wallet.accounts,
 		wallet.isConnected
 	])
-
-	useEffect(() => {
-		if (!isSocketsConnected) {
-			connect()
-		}
-	}, [connect, isSocketsConnected])
-
-	useEffect(() => {
-		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.MeemIdUpdated }],
-				wallet.accounts[0]
-			)
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.MeemMinted }],
-				wallet.accounts[0]
-			)
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.Err }],
-				wallet.accounts[0]
-			)
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.MeemIdUpdated,
-				handler: event => {
-					log.debug('Meem Id Updated')
-					log.debug(event)
-				}
-			})
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.MeemMinted,
-				handler: event => {
-					log.debug('Meem Minted')
-					log.debug(event)
-				}
-			})
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.Err,
-				handler: err => {
-					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
-						if (club) {
-							showNotification({
-								title: 'Saving Changes Failed',
-								message:
-									'An error occurred while saving changes. Please try again.',
-								color: 'red'
-							})
-						} else {
-							showNotification({
-								title: 'Club Creation Failed',
-								message:
-									'An error occurred while creating the club. Please try again.',
-								color: 'red'
-							})
-						}
-
-						setIsSavingChanges(false)
-						setIsClubCreationModalOpened(false)
-					}
-					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
-					log.crit(err)
-					log.crit(err.detail.code)
-				}
-			})
-			setHasSubscribedToSockets(true)
-		}
-	}, [club, hasSubscribedToSockets, sockets, wallet])
 
 	return (
 		<>

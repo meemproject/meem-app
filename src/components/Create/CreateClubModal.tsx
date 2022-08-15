@@ -3,11 +3,11 @@ import log from '@kengoldfarb/log'
 import { createStyles, Text, Image, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { useSockets, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import {
 	MeemContracts,
@@ -69,6 +69,7 @@ interface IProps {
 	isOpened: boolean
 	onModalClosed: () => void
 }
+
 export const CreateClubModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
@@ -82,6 +83,25 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
+	const [hasStartedCreatingSafe, setHasStartedCreatingSafe] = useState(false)
+
+	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
+
+	const [clubSlug, setClubSlug] = useState('')
+
+	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
+
+	const closeModal = useCallback(() => {
+		if (sockets) {
+			sockets.unsubscribe([
+				{ type: MeemAPI.MeemEvent.Err },
+				{ type: MeemAPI.MeemEvent.MeemIdUpdated },
+				{ type: MeemAPI.MeemEvent.MeemMinted }
+			])
+		}
+		onModalClosed()
+	}, [onModalClosed, sockets])
+
 	// Club subscription - watch for specific changes in order to update correctly
 	const { data: myClubsData } =
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
@@ -89,7 +109,13 @@ export const CreateClubModal: React.FC<IProps> = ({
 		})
 
 	useEffect(() => {
-		async function finishClubCreation(slug: string) {
+		if (!isSocketsConnected && isOpened) {
+			connect()
+		}
+	}, [connect, isOpened, isSocketsConnected])
+
+	useEffect(() => {
+		async function finishClubCreation() {
 			// Successfully created club
 			log.debug('club creation complete')
 
@@ -111,11 +137,15 @@ export const CreateClubModal: React.FC<IProps> = ({
 			})
 
 			router.push({
-				pathname: `/${slug}`
+				pathname: `/${clubSlug}`
 			})
 		}
 
 		async function createSafe(club: Club) {
+			if (hasStartedCreatingSafe) {
+				return
+			}
+			setHasStartedCreatingSafe(true)
 			log.debug(
 				`creating safe with id ${club.id}, admins ${JSON.stringify(
 					club.admins
@@ -142,7 +172,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				)
 			} catch (e) {
 				// Ignore - the user can create later?
-				finishClubCreation(club.slug ?? '')
+				finishClubCreation()
 			}
 		}
 
@@ -155,7 +185,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					message: 'Please connect your wallet first.',
 					color: 'red'
 				})
-				onModalClosed()
+				closeModal()
 				setHasStartedCreating(false)
 				return
 			}
@@ -169,7 +199,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					color: 'red'
 				})
 
-				onModalClosed()
+				closeModal()
 				setHasStartedCreating(false)
 				return
 			}
@@ -287,10 +317,42 @@ export const CreateClubModal: React.FC<IProps> = ({
 					color: 'red'
 				})
 
-				onModalClosed()
+				closeModal()
 				setHasStartedCreating(false)
 			}
 		}
+
+		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
+			sockets.subscribe(
+				[{ key: MeemAPI.MeemEvent.Err }],
+				wallet.accounts[0]
+			)
+			sockets.on({
+				eventName: MeemAPI.MeemEvent.Err,
+				handler: err => {
+					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
+						showNotification({
+							title: 'Club Creation Failed',
+							message:
+								'An error occurred while creating the club. Please try again.',
+							color: 'red'
+						})
+
+						closeModal()
+					} else if (err.detail.code === 'SAFE_CREATE_FAILED') {
+						// If there's an error with creating the safe, ignore it
+						// and proceed to club homepage
+						log.debug('Safe creation failed. Skipping for now...')
+						finishClubCreation()
+					}
+					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
+					log.crit(err)
+					log.crit(err.detail.code)
+				}
+			})
+			setHasSubscribedToSockets(true)
+		}
+
 		async function checkClubState() {
 			log.debug('listening for new club...')
 			const newClub = myClubsData?.Meems.find(
@@ -301,13 +363,15 @@ export const CreateClubModal: React.FC<IProps> = ({
 					newClub.MeemContract &&
 					newClub.MeemContract.gnosisSafeAddress
 				) {
-					finishClubCreation(newClub.MeemContract?.slug)
+					finishClubCreation()
 				} else {
 					const clubModel = await clubFromMeemContract(
 						wallet,
 						wallet.accounts[0],
 						newClub.MeemContract as MeemContracts
 					)
+
+					setClubSlug(clubModel.slug ?? '')
 
 					// Create club safe
 					await createSafe(clubModel)
@@ -330,12 +394,17 @@ export const CreateClubModal: React.FC<IProps> = ({
 			}
 		}
 	}, [
+		closeModal,
+		clubSlug,
 		hasStartedCreating,
+		hasStartedCreatingSafe,
+		hasSubscribedToSockets,
 		isOpened,
 		membershipSettings,
 		myClubsData?.Meems,
 		onModalClosed,
 		router,
+		sockets,
 		wallet
 	])
 
@@ -349,7 +418,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				radius={16}
 				padding={'lg'}
 				opened={isOpened}
-				onClose={() => onModalClosed()}
+				onClose={() => closeModal()}
 			>
 				<div className={classes.header}>
 					<Loader />
