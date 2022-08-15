@@ -602,6 +602,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				/>
 				<Modal
 					centered
+					overlayBlur={8}
 					closeOnClickOutside={false}
 					closeOnEscape={false}
 					radius={16}

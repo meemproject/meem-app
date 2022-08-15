@@ -10,7 +10,9 @@ import {
 	Grid,
 	Loader,
 	Center,
-	Group
+	Group,
+	Modal,
+	Divider
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
@@ -20,6 +22,7 @@ import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
+import QRCode from 'react-qr-code'
 import { Check, CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
@@ -256,6 +259,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [isLeavingClub, setIsLeavingClub] = useState(false)
+
+	const [isQrModalOpened, setIsQrModalOpened] = useState(false)
+	const [isEditionsModalOpened, setIsEditionsModalOpened] = useState(false)
 
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
@@ -876,6 +882,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									club.membershipSettings
 										?.membershipQuantity > 0 && (
 										<Button
+											onClick={() => {
+												setIsEditionsModalOpened(true)
+											}}
 											className={classes.buttonJoinClub}
 										>
 											{' '}
@@ -925,7 +934,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									</Button>
 								)}
 
-								<Button className={classes.buttonJoinClub}>
+								<Button
+									className={classes.buttonJoinClub}
+									onClick={() => {
+										setIsQrModalOpened(true)
+									}}
+								>
 									<QrCode />
 								</Button>
 
@@ -1307,6 +1321,43 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						)}
 						<Space h={'xl'} />
 					</Container>
+					<Modal
+						centered
+						overlayBlur={8}
+						radius={16}
+						size={300}
+						padding={'sm'}
+						title={'Club QR Code'}
+						opened={isQrModalOpened}
+						onClose={() => setIsQrModalOpened(false)}
+					>
+						<Divider />
+						<Space h={24} />
+						<QRCode
+							value={
+								club
+									? `${window.location.origin}/${club.slug}`
+									: ''
+							}
+						/>
+					</Modal>
+					<Modal
+						centered
+						overlayBlur={8}
+						radius={16}
+						padding={'sm'}
+						title={'Club Members Limit'}
+						opened={isEditionsModalOpened}
+						onClose={() => setIsEditionsModalOpened(false)}
+					>
+						<Divider />
+						<Space h={24} />
+						<Text>
+							Some clubs have limits on how many members can join.
+							This shows you how many members have joined out of
+							the total allowed for this club.
+						</Text>
+					</Modal>
 				</>
 			)}
 		</>
