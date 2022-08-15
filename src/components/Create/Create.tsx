@@ -275,7 +275,7 @@ export const CreateComponent: React.FC = () => {
 
 			createResizedFile()
 		} else {
-			log.debug('no current club image')
+			// log.debug('no current club image')
 		}
 	}, [clubLogo, clubclub.isMember, router])
 

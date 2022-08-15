@@ -87,9 +87,9 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
 
-	const [clubSlug, setClubSlug] = useState('')
-
 	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
+
+	const [clubSlug, setClubSlug] = useState('')
 
 	const closeModal = useCallback(() => {
 		if (sockets) {
@@ -100,6 +100,10 @@ export const CreateClubModal: React.FC<IProps> = ({
 			])
 		}
 		onModalClosed()
+
+		setHasStartedCreating(false)
+		setHasStartedCreatingSafe(false)
+		setHasSubscribedToSockets(false)
 	}, [onModalClosed, sockets])
 
 	// Club subscription - watch for specific changes in order to update correctly
@@ -416,6 +420,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				closeOnEscape={false}
 				withCloseButton={false}
 				radius={16}
+				overlayBlur={8}
 				padding={'lg'}
 				opened={isOpened}
 				onClose={() => closeModal()}

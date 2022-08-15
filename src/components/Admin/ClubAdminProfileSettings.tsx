@@ -243,7 +243,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 			createResizedFile()
 		} else {
-			log.debug('no current club image')
+			// log.debug('no current club image')
 		}
 	}, [clubLogo])
 
