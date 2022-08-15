@@ -163,7 +163,7 @@ export const MyClubsComponent: React.FC = () => {
 					<Container>
 						<Space h={60} />
 						<Center>
-							<Loader />
+							<Loader color="red" variant="bars" />
 						</Center>
 					</Container>
 				)}

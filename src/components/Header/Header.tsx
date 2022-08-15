@@ -6,7 +6,8 @@ import {
 	UnstyledButton,
 	Group,
 	Avatar,
-	Divider
+	Divider,
+	Space
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
@@ -26,6 +27,11 @@ import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 const useStyles = createStyles(theme => ({
+	header: {
+		marginTop: 0,
+		paddingTop: 8,
+		paddingBottom: '-8px'
+	},
 	headerLeftItems: {
 		marginLeft: 4,
 		display: 'flex',
@@ -48,13 +54,13 @@ const useStyles = createStyles(theme => ({
 		fontSize: 32,
 		marginLeft: 16,
 		marginRight: 8,
-		paddingBottom: 4,
+		paddingBottom: 6,
 		cursor: 'pointer'
 	},
 
 	inner: {
 		height: 56,
-		marginTop: 8,
+		marginTop: '-4px',
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center'
@@ -119,6 +125,7 @@ const useStyles = createStyles(theme => ({
 	},
 
 	user: {
+		marginBottom: '3px',
 		color:
 			theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
@@ -213,7 +220,7 @@ export function HeaderMenu() {
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
 	return (
-		<Header height={56}>
+		<Header className={classes.header} height={56}>
 			<div className={classes.inner}>
 				<div className={classes.headerLeftItems}>
 					<a onClick={navigateHome}>
@@ -224,6 +231,9 @@ export function HeaderMenu() {
 				<div className={classes.headerRightItems}>
 					{wallet.isConnected && (
 						<Menu
+							radius={8}
+							offset={4}
+							shadow={'lg'}
 							onClose={() => setUserMenuOpened(false)}
 							onOpen={() => setUserMenuOpened(true)}
 						>
@@ -280,7 +290,7 @@ export function HeaderMenu() {
 						</Text>
 					)}
 
-					<Menu>
+					<Menu offset={15} radius={8} shadow={'lg'}>
 						<Menu.Target>
 							<UnstyledButton>
 								<Dots className={classes.ellipse} />
@@ -326,8 +336,9 @@ export function HeaderMenu() {
 							>
 								{`What's a club?`}
 							</Menu.Item>
-
+							<Space h={4} />
 							<Divider />
+							<Space h={4} />
 
 							<Menu.Item
 								onClick={handleTwitter}

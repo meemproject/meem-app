@@ -132,6 +132,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 			// Route to the created club detail page
 			showNotification({
+				radius: 'lg',
 				title: 'Success!',
 				autoClose: 5000,
 				color: 'green',
@@ -185,6 +186,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 			if (!wallet.web3Provider) {
 				log.debug('no web3 provider, returning.')
 				showNotification({
+					radius: 'lg',
 					title: 'Error Creating Club',
 					message: 'Please connect your wallet first.',
 					color: 'red'
@@ -197,6 +199,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 			if (!membershipSettings) {
 				log.debug('no membership settings found, returning.')
 				showNotification({
+					radius: 'lg',
 					title: 'Error Creating Club',
 					message:
 						'An error occurred while creating the club. Please try again.',
@@ -315,6 +318,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 			} catch (e) {
 				log.crit(e)
 				showNotification({
+					radius: 'lg',
 					title: 'Error Creating Club',
 					message:
 						'An error occurred while creating the club. Please try again.',
@@ -336,6 +340,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				handler: err => {
 					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
 						showNotification({
+							radius: 'lg',
 							title: 'Club Creation Failed',
 							message:
 								'An error occurred while creating the club. Please try again.',
@@ -426,7 +431,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				onClose={() => closeModal()}
 			>
 				<div className={classes.header}>
-					<Loader />
+					<Loader color="red" variant="bars" />
 					<Space h={16} />
 					<Text
 						className={classes.title}

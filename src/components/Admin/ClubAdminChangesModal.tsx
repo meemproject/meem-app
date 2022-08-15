@@ -270,6 +270,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 				if (!club.id) {
 					showNotification({
+						radius: 'lg',
 						title: 'Error saving club settings',
 						message: `Please get in touch!`,
 						color: 'red'
@@ -340,6 +341,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			} catch (e) {
 				log.debug(e)
 				showNotification({
+					radius: 'lg',
 					title: 'Error saving club settings',
 					message: `Please get in touch!`
 				})
@@ -357,6 +359,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					closeModal()
 
 					showNotification({
+						radius: 'lg',
 						title: 'Success!',
 						autoClose: 5000,
 						color: 'green',
@@ -399,6 +402,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				handler: err => {
 					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
 						showNotification({
+							radius: 'lg',
 							title: 'Error saving changes',
 							message:
 								'An error occurred while saving changes. Please try again.',
@@ -452,7 +456,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}}
 			>
 				<div className={classes.header}>
-					<Loader />
+					<Loader color="red" variant="bars" />
 					<Space h={16} />
 					<Text className={classes.title}>{`Saving changes...`}</Text>
 					<Space h={24} />

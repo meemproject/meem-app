@@ -132,6 +132,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				})
 			log.debug(body)
 			showNotification({
+				radius: 'lg',
 				title: 'Success!',
 				autoClose: 5000,
 				color: 'green',
@@ -144,6 +145,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 		} catch (e) {
 			log.debug(e)
 			showNotification({
+				radius: 'lg',
 				title: 'Verification failed',
 				autoClose: 5000,
 				color: 'red',

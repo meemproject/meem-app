@@ -169,6 +169,7 @@ export const CreateComponent: React.FC = () => {
 
 			if (cookieName === undefined) {
 				showNotification({
+					radius: 'lg',
 					title: 'Unable to create this club.',
 					message: `Some data is missing. Try again!`,
 					autoClose: 5000
@@ -294,6 +295,7 @@ export const CreateComponent: React.FC = () => {
 		if (!clubName || clubName.length < 3 || clubName.length > 30) {
 			// Club name invalid
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'You entered an invalid club name. Please choose a longer or shorter name.'
@@ -304,6 +306,7 @@ export const CreateComponent: React.FC = () => {
 		if (clubDescription.length < 3 || clubDescription.length > 140) {
 			// Club name invalid
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'You entered an invalid club description. Please choose a longer or shorter description.'
@@ -313,6 +316,7 @@ export const CreateComponent: React.FC = () => {
 
 		if (smallClubLogo.length === 0) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message: 'Please provide a club logo.'
 			})
@@ -320,6 +324,7 @@ export const CreateComponent: React.FC = () => {
 
 		if (!clubclub.isMember) {
 			showNotification({
+				radius: 'lg',
 				title: 'No Club Club membership found.',
 				message: `Join Club Club to continue.`
 			})
@@ -414,7 +419,7 @@ export const CreateComponent: React.FC = () => {
 						</Button>
 					</div>
 				)}
-				{isLoadingImage && <Loader />}
+				{isLoadingImage && <Loader color="red" variant="bars" />}
 				{!isLoadingImage && smallClubLogo.length > 0 && (
 					<div className={classes.clubLogoImageContainer}>
 						<Image

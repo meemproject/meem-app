@@ -289,7 +289,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader />
+						<Loader color="red" variant="bars" />
 					</Center>
 				</Container>
 			)}
@@ -336,6 +336,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												`${window.location.origin}/${club.slug}`
 											)
 											showNotification({
+												radius: 'lg',
 												title: 'Club URL copied',
 												autoClose: 2000,
 												color: 'green',
@@ -431,6 +432,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												club.address ?? ''
 											)
 											showNotification({
+												radius: 'lg',
 												title: 'Address copied',
 												autoClose: 2000,
 												color: 'green',
@@ -481,6 +483,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 															''
 													)
 													showNotification({
+														radius: 'lg',
 														title: 'Address copied',
 														autoClose: 2000,
 														color: 'green',
@@ -565,6 +568,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												// eslint-disable-next-line no-console
 												console.log(e)
 												showNotification({
+													radius: 'lg',
 													title: 'Wallet creation failed.',
 													message:
 														'We were unable to create treasury for your club. Please refresh the page and try again.',

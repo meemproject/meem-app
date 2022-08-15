@@ -382,6 +382,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					)
 				} else {
 					showNotification({
+						radius: 'lg',
 						title: 'Error joining this club.',
 						message: `Please get in touch!`
 					})
@@ -392,6 +393,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			setIsJoiningClub(false)
 
 			showNotification({
+				radius: 'lg',
 				title: 'Error joining this club.',
 				message: `Please get in touch!`
 			})
@@ -401,6 +403,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const leaveClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			showNotification({
+				radius: 'lg',
 				title: 'Unable to leave this club.',
 				message: `Did you connect your wallet?`
 			})
@@ -409,6 +412,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		if (club?.isClubAdmin) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
 			})
@@ -430,6 +434,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		} catch (e) {
 			setIsLeavingClub(false)
 			showNotification({
+				radius: 'lg',
 				title: 'Error leaving this club.',
 				message: `${e as string}`
 			})
@@ -752,6 +757,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				setClub(possibleClub)
 
 				showNotification({
+					radius: 'lg',
 					title: `Welcome to ${possibleClub.name}!`,
 					color: 'green',
 					autoClose: 5000,
@@ -774,6 +780,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				setClub(possibleClub)
 
 				showNotification({
+					radius: 'lg',
 					title: 'Successfully left the club.',
 					color: 'green',
 					autoClose: 5000,
@@ -840,7 +847,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader />
+						<Loader color="red" variant="bars" />
 					</Center>
 				</Container>
 			)}
@@ -959,7 +966,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												classes.requirementsContainer
 											}
 										>
-											<Loader />
+											<Loader
+												color="red"
+												variant="bars"
+											/>
 										</div>
 									)}
 
@@ -1024,6 +1034,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												club.address ?? ''
 											)
 											showNotification({
+												radius: 'lg',
 												title: 'Address copied',
 												autoClose: 2000,
 												color: 'green',
@@ -1267,6 +1278,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															: member.wallet
 													)
 													showNotification({
+														radius: 'lg',
 														title: 'Member address copied',
 														autoClose: 2000,
 														color: 'green',

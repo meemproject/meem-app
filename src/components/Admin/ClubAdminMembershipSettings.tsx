@@ -393,6 +393,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const saveChanges = async () => {
 		if (!clubclub.isMember) {
 			showNotification({
+				radius: 'lg',
 				title: 'No Club Club membership found.',
 				message: `Join Club Club to continue.`
 			})
@@ -402,6 +403,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		if (clubAdmins.length === 0) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message: 'At least one club admin is required.'
 			})
@@ -440,6 +442,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		if (!isAdminListValid) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'One or more club admin addresses are invalid. Check what you entered and try again.'
@@ -482,6 +485,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		if (isApprovedAddressesInvalid) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
@@ -1052,6 +1056,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 								if (reqCurrentlyEditing.tokenMinQuantity <= 0) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'Please enter a quantity greater than 0.'
@@ -1070,6 +1075,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 								if (!token) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'That token is not valid. Check the contract address and try again.'
@@ -1102,6 +1108,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 									if (doesApplicantsListContainAdmin) {
 										showNotification({
+											radius: 'lg',
 											title: 'Oops!',
 											message:
 												'You cannot add a club admin as an approved address.'
@@ -1115,6 +1122,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										0
 									) {
 										showNotification({
+											radius: 'lg',
 											title: 'Oops!',
 											message:
 												'Please enter a minimum token quantity.'
@@ -1231,6 +1239,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								)
 								if (isNaN(potentialNumber)) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'Please enter a number, not text.'
@@ -1276,6 +1285,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								setIsCheckingRequirement(false)
 								if (!isValid) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'Please enter a valid wallet address.'
@@ -1355,6 +1365,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						onClick={() => {
 							if (membershipQuantity > 10000000) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'Total memberships is too large. Choose unlimited instead.'
@@ -1363,6 +1374,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}
 							if (membershipQuantity < 0) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'How can you have negative total memberships?!'
@@ -1459,6 +1471,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									membershipEndDate.getTime()
 							) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'Please choose a start date or time earlier than the end date.'
@@ -1555,6 +1568,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									membershipEndDate.getTime()
 							) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'Please choose an end date or time later than the start date.'

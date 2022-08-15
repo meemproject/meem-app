@@ -317,6 +317,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				new URL(currentIntegrationUrl)
 			} catch (_) {
 				showNotification({
+					radius: 'lg',
 					title: 'Oops!',
 					message: 'Please enter a valid URL for this integration.'
 				})
@@ -357,6 +358,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				log.debug(e)
 				setIsSavingChanges(false)
 				showNotification({
+					radius: 'lg',
 					title: 'Oops!',
 					message:
 						'Unable to save this integration. Please get in touch!'
@@ -577,7 +579,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				)}
 				{loading && !inteData && (
 					<>
-						<Loader />
+						<Loader color="red" variant="bars" />
 					</>
 				)}
 				{!loading && error && (

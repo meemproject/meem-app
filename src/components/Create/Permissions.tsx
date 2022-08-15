@@ -122,6 +122,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 			setClubName(Cookies.get(CookieKeys.clubName) ?? '')
 		} else {
 			showNotification({
+				radius: 'lg',
 				title: 'Unable to create this club.',
 				message: `Some data is missing. Try again!`,
 				autoClose: 5000
