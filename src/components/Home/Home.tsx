@@ -149,7 +149,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 	({ description, value, image, ...others }: ItemProps, ref) => (
 		<div ref={ref} {...others}>
 			<Group noWrap>
-				<Avatar src={image} />
+				<Avatar src={image} style={{ imageRendering: 'pixelated' }} />
 
 				<div>
 					<Text>{value}</Text>
@@ -341,7 +341,12 @@ export function HomeComponent() {
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={
 						isLoadingSuggestions ? (
-							<Loader size={16} />
+							<Loader
+								variant="oval"
+								color={'red'}
+								size={24}
+								style={{ marginRight: '12px' }}
+							/>
 						) : autocompleteFormValue.length > 0 &&
 						  isShowingCreateButton &&
 						  clubclub.isMember ? (

@@ -176,7 +176,7 @@ export const BrowseComponent: React.FC = () => {
 					<Container>
 						<Space h={60} />
 						<Center>
-							<Loader />
+							<Loader color="red" variant="bars" />
 						</Center>
 					</Container>
 				)}
@@ -216,8 +216,9 @@ export const BrowseComponent: React.FC = () => {
 											className={classes.clubLogoImage}
 											src={club.image ?? ''}
 											width={40}
+											radius={8}
 											height={40}
-											fit={'contain'}
+											fit={'cover'}
 										/>
 										<Space w="xs" />
 										<div className={classes.clubInfo}>

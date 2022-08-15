@@ -386,7 +386,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader />
+						<Loader color="red" variant="bars" />
 					</Center>
 				</Container>
 			)}
@@ -410,6 +410,8 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								/>
 							</a>
 							<Image
+								width={80}
+								height={80}
 								className={classes.clubLogoImage}
 								src={club.image}
 							/>
@@ -431,6 +433,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												`${window.location.origin}/${club.slug}`
 											)
 											showNotification({
+												radius: 'lg',
 												title: 'Club URL copied',
 												autoClose: 2000,
 												color: 'green',
@@ -526,6 +529,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												club.address ?? ''
 											)
 											showNotification({
+												radius: 'lg',
 												title: 'Address copied',
 												autoClose: 2000,
 												color: 'green',
@@ -537,6 +541,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										width={20}
 									/>
 								</div>
+
+								<Space h={8} />
+
+								<Text>{`You can use this address to token-gate third-party apps and tools, such as creating an exclusive Discord community with Collab.Land. Every club member holds this club's token.`}</Text>
+
 								{shouldShowUpgrade && (
 									<>
 										<Space h={'xl'} />
@@ -555,11 +564,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 											}
 										>
 											<div>
-												<Text
-													className={
-														classes.clubContractAddress
-													}
-												>
+												<Text>
 													A new version of Clubs is
 													available! Upgrade to take
 													advantage of all the new
@@ -647,6 +652,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 															''
 													)
 													showNotification({
+														radius: 'lg',
 														title: 'Address copied',
 														autoClose: 2000,
 														color: 'green',
@@ -658,6 +664,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												width={20}
 											/>
 										</div>
+										<Space h={8} />
+
+										<Text>{`Your club's treasury was set up when the club was created. You can manage your treasury (including signing transactions and adding members) using the button below.`}</Text>
 										<Space h={'xs'} />
 
 										<Button
@@ -676,7 +685,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												)
 											}}
 										>
-											View Gnosis Safe
+											View Treasury
 										</Button>
 									</>
 								)}
@@ -726,15 +735,16 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												log.crit(e)
 												setIsCreatingSafe(false)
 												showNotification({
+													radius: 'lg',
 													title: 'Wallet creation failed.',
 													message:
-														'We were unable to create a Gnosis wallet for you. Please refresh the page and try again.',
+														'We were unable to create treasury for your club. Please refresh the page and try again.',
 													color: 'red'
 												})
 											}
 										}}
 									>
-										Create Gnosis Wallet
+										Create Treasury
 									</Button>
 								)}
 
