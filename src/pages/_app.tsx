@@ -14,6 +14,7 @@ import { WalletProvider, SocketProvider } from '@meemproject/react'
 import { createClient } from 'graphql-ws'
 import type { AppProps } from 'next/app'
 import React from 'react'
+import { App } from '../components/App'
 import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
 import '@fontsource/inter'
 
@@ -117,7 +118,9 @@ function MyApp(props: AppProps) {
 					<WalletProvider rpcs={rpcs}>
 						<NotificationsProvider>
 							<ClubClubProvider>
-								<Component {...pageProps} />
+								<App>
+									<Component {...pageProps} />
+								</App>
 							</ClubClubProvider>
 						</NotificationsProvider>
 					</WalletProvider>

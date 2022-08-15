@@ -439,9 +439,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					isAdminListValid = false
 					return
 				} else {
-					// log.debug(
-					// 	`validated and converted club admin address ${name}`
-					// )
 					clubAdminAddresses.push(name)
 				}
 			})
@@ -458,7 +455,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		}
 
 		// Validate and convert all approved addresses if necessary
-		let isApprovedAddressesInvalid = true
+		let isApprovedAddressesInvalid = false
 		const sanitizedRequirements: MembershipRequirement[] = []
 		await Promise.all(
 			membershipRequirements.map(async function (req) {
@@ -488,6 +485,16 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				sanitizedRequirements.push(newReq)
 			})
 		)
+
+		if (isApprovedAddressesInvalid) {
+			showNotification({
+				title: 'Oops!',
+				message:
+					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			})
+			setIsSavingChanges(false)
+			return
+		}
 
 		// Convert funds address from ENS if necessary
 		let rawMembershipFundsAddress = ''

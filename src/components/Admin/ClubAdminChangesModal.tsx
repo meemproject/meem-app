@@ -334,13 +334,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				shouldMintAdminTokens: true,
 				metadata: {
 					meem_contract_type: 'meem-club',
-					meem_metadata_version: 'Meem_Contract_20220718',
+					meem_metadata_version: 'MeemClub_Contract_20220718',
 					name: club.name,
 					description: club.description,
 					image: club.image,
 					associations: [],
-					external_url: `https://clubs.link/${club.slug}`
-					// application_instructions: applicationInstructions
+					external_url: `https://clubs.link/${club.slug}`,
+					application_instructions: applicationInstructions
 				},
 				name: club.name ?? '',
 				admins: club.admins,
@@ -367,13 +367,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						  ]
 						: [],
 				adminTokenMetadata: {
-					meem_metadata_version: 'Meem_Token_20220718',
+					meem_metadata_version: 'MeemClub_Token_20220718',
 					description: `Membership token for ${club.name}`,
 					name: `${club.name} membership token`,
 					image: club.image,
 					associations: [],
-					external_url: `https://clubs.link/${club.slug}`
-					// application_instructions: applicationInstructions
+					external_url: `https://clubs.link/${club.slug}`,
+					application_instructions: applicationInstructions
 				}
 			}
 
