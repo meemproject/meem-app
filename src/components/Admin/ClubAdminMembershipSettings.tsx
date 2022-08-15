@@ -590,12 +590,18 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 				<div>
 					<Text className={classes.clubAdminsPrompt}>
-						Who can manage this club’s profile and membership
-						settings?
+						{club
+							? `Who can manage this club’s profile and membership
+						settings?`
+							: `Who can manage this club’s profile, treasury and membership
+						settings?`}
 					</Text>
 					<Text className={classes.clubAdminsInstructions}>
-						Add a line break between each address. Note that at
-						least one club admin is required at all times.
+						{club
+							? `Add a line break between each address. Note that at
+						least one club admin is required at all times.`
+							: `Add a line break between each address. Note that at
+						least one club admin is required at all times, and you can update treasury addresses via your club's settings page.`}
 					</Text>
 					<Textarea
 						radius="lg"
