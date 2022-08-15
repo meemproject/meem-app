@@ -19,6 +19,7 @@ import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
@@ -314,6 +315,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
+		if (
+			Cookies.get('meemJwtToken') === undefined ||
+			Cookies.get('walletAddress') === undefined
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/${club?.slug}`
+				}
+			})
+			return
+		}
+
 		setIsJoiningClub(true)
 		try {
 			if (club && club.rawClub) {
@@ -412,6 +426,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
+			})
+			return
+		}
+
+		if (
+			Cookies.get('meemJwtToken') === undefined ||
+			Cookies.get('walletAddress') === undefined
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/${club?.slug}`
+				}
 			})
 			return
 		}
