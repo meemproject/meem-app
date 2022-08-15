@@ -438,6 +438,9 @@ export const CreateClubModal: React.FC<IProps> = ({
 					>{`We're creating your club!`}</Text>
 					<Space h={32} />
 					<Image
+						height={120}
+						width={120}
+						fit={'cover'}
 						className={classes.clubLogoImage}
 						src={Cookies.get(CookieKeys.clubImage)}
 					/>

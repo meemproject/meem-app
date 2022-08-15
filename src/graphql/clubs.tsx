@@ -112,6 +112,7 @@ export const SUB_CLUB = gql`
 			metadata
 			createdAt
 			name
+			gnosisSafeAddress
 			Meems {
 				Owner {
 					address
