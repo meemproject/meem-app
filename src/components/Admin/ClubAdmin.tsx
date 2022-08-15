@@ -541,6 +541,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										width={20}
 									/>
 								</div>
+
+								<Space h={8} />
+
+								<Text>{`You can use this address to token-gate third-party apps and tools, such as creating an exclusive Discord community with Collab.Land. Every club member holds this club's token.`}</Text>
+
 								{shouldShowUpgrade && (
 									<>
 										<Space h={'xl'} />
@@ -559,11 +564,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 											}
 										>
 											<div>
-												<Text
-													className={
-														classes.clubContractAddress
-													}
-												>
+												<Text>
 													A new version of Clubs is
 													available! Upgrade to take
 													advantage of all the new
@@ -616,10 +617,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										</Button>
 									</>
 								)}
-
-								<Space h={8} />
-
-								<Text>{`You can use this address to token-gate third-party apps and tools, such as creating an exclusive Discord community with Collab.Land. Every club member holds this club's token.`}</Text>
 
 								<Space h={'xl'} />
 								<Divider />
