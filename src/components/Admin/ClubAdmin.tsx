@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -7,11 +8,12 @@ import {
 	Space,
 	Center,
 	Loader,
-	Divider
+	Divider,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import Cookies from 'js-cookie'
+import { makeFetcher, MeemAPI } from '@meemproject/api'
+import { LoginState, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
@@ -115,6 +117,13 @@ const useStyles = createStyles(theme => ({
 			borderColor: 'transparent'
 		}
 	},
+	buttonCreate: {
+		backgroundColor: 'black',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[8]
+		},
+		borderRadius: 24
+	},
 	tabs: {
 		display: 'flex',
 		flexDirection: 'row'
@@ -188,6 +197,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const wallet = useWallet()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
+	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: `/${slug}` })
@@ -208,7 +218,8 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const {
 		loading,
 		error,
-		data: clubData
+		data: clubData,
+		refetch
 	} = useQuery<GetClubQuery>(GET_CLUB, {
 		variables: { slug }
 	})
@@ -218,8 +229,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	useEffect(() => {
 		if (
 			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
+			wallet.loginState === LoginState.NotLoggedIn
 		) {
 			router.push({
 				pathname: '/authenticate',
@@ -228,7 +238,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			})
 		}
-	}, [router, slug])
+	}, [router, slug, wallet.loginState])
 
 	useEffect(() => {
 		async function getClub(data: GetClubQuery) {
@@ -255,6 +265,23 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.accounts,
 		wallet.isConnected
 	])
+
+	const refetchClub = async () => {
+		log.debug('refetching club...')
+		const newClub = await refetch()
+		if (newClub.data.MeemContracts.length > 0) {
+			const possibleClub = await clubFromMeemContract(
+				wallet,
+				wallet.isConnected ? wallet.accounts[0] : '',
+				newClub.data.MeemContracts[0] as MeemContracts
+			)
+
+			if (possibleClub && possibleClub.name) {
+				log.debug('got new club data, setting it...')
+				setClub(possibleClub)
+			}
+		}
+	}
 
 	return (
 		<>
@@ -413,6 +440,133 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										width={20}
 									/>
 								</div>
+
+								<Space h={'xl'} />
+								<Divider />
+								<Space h={'xl'} />
+								<Text
+									className={
+										classes.clubIntegrationsSectionTitle
+									}
+								>
+									Club Treasury Address
+								</Text>
+								{club.gnosisSafeAddress && (
+									<>
+										<div
+											className={
+												classes.contractAddressContainer
+											}
+										>
+											<Text
+												className={
+													classes.clubContractAddress
+												}
+											>
+												{club.gnosisSafeAddress}
+											</Text>
+											<Image
+												className={classes.copy}
+												src="/copy.png"
+												height={20}
+												onClick={() => {
+													navigator.clipboard.writeText(
+														club.gnosisSafeAddress ??
+															''
+													)
+													showNotification({
+														title: 'Address copied',
+														autoClose: 2000,
+														color: 'green',
+														icon: <Check />,
+
+														message: `This club's treasury address was copied to your clipboard.`
+													})
+												}}
+												width={20}
+											/>
+										</div>
+										<Space h={'xs'} />
+
+										<Button
+											className={classes.buttonCreate}
+											onClick={() => {
+												window.open(
+													`https://gnosis-safe.io/app/${
+														process.env
+															.NEXT_PUBLIC_CHAIN_ID ===
+														'4'
+															? 'rin'
+															: 'matic'
+													}:${
+														club.gnosisSafeAddress
+													}/home`
+												)
+											}}
+										>
+											View Gnosis Safe
+										</Button>
+									</>
+								)}
+
+								{!club.gnosisSafeAddress && (
+									<Button
+										className={classes.buttonCreate}
+										disabled={isCreatingSafe}
+										loading={isCreatingSafe}
+										onClick={async () => {
+											if (!club.id || !club.admins) {
+												return
+											}
+											try {
+												setIsCreatingSafe(true)
+												const createSafeFetcher =
+													makeFetcher<
+														MeemAPI.v1.CreateClubSafe.IQueryParams,
+														MeemAPI.v1.CreateClubSafe.IRequestBody,
+														MeemAPI.v1.CreateClubSafe.IResponseBody
+													>({
+														method: MeemAPI.v1
+															.CreateClubSafe
+															.method
+													})
+
+												await createSafeFetcher(
+													MeemAPI.v1.CreateClubSafe.path(
+														{
+															meemContractId:
+																club.id
+														}
+													),
+													undefined,
+													{
+														safeOwners: club.admins
+													}
+												)
+												await new Promise(f =>
+													setTimeout(f, 10000)
+												)
+
+												refetchClub()
+
+												setIsCreatingSafe(false)
+											} catch (e) {
+												setIsCreatingSafe(false)
+
+												// eslint-disable-next-line no-console
+												console.log(e)
+												showNotification({
+													title: 'Wallet creation failed.',
+													message:
+														'We were unable to create a Gnosis wallet for you. Please refresh the page and try again.',
+													color: 'red'
+												})
+											}
+										}}
+									>
+										Create Gnosis Wallet
+									</Button>
+								)}
 
 								<Space h={'xl'} />
 								<Divider />
