@@ -18,7 +18,6 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { ExternalLink, Settings } from 'tabler-icons-react'
@@ -248,7 +247,6 @@ enum Step {
 
 export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
-	const router = useRouter()
 
 	// Fetch a list of available integrations.
 	const {

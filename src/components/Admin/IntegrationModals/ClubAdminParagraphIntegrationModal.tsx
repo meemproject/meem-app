@@ -11,7 +11,6 @@ import {
 	Stepper,
 	MantineProvider,
 	TextInput,
-	RadioGroup,
 	Radio,
 	Button,
 	Loader,
@@ -391,7 +390,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									>{`Who can read your publication?`}</Text>
 									<Space h={2} />
 
-									<RadioGroup
+									<Radio.Group
 										classNames={{ label: classes.radio }}
 										orientation="vertical"
 										spacing={10}
@@ -402,7 +401,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 												? 'members'
 												: 'anyone'
 										}
-										onChange={value => {
+										onChange={(value: any) => {
 											switch (value) {
 												case 'members':
 													setIsClubMembersOnly(true)
@@ -419,7 +418,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											label="Club members"
 										/>
 										<Radio value="anyone" label="Anyone" />
-									</RadioGroup>
+									</Radio.Group>
 									<Space h={32} />
 
 									<Button
