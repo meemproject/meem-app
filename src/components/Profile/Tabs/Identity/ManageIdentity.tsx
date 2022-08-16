@@ -8,18 +8,24 @@ import {
 	Image,
 	Modal,
 	Loader,
-	TextInput
+	TextInput,
+	Grid
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
+import { zIndex } from 'html2canvas/dist/types/css/property-descriptors/z-index'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { Identity } from '../../../../model/identity/identity'
+import {
+	AvailableIdentityIntegration,
+	Identity,
+	IdentityIntegration
+} from '../../../../model/identity/identity'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
 import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
 import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
@@ -89,7 +95,7 @@ const useStyles = createStyles(theme => ({
 			fontWeight: 'bold'
 		}
 	},
-	clubItem: {
+	profileItem: {
 		display: 'flex',
 		alignItems: 'center',
 		marginBottom: 24,
@@ -101,33 +107,83 @@ const useStyles = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
-	clubLogoImage: {
+	profileIntegrationsHeader: {
+		fontSize: 16,
+		color: 'rgba(0, 0, 0, 0.5)',
+		fontWeight: 600,
+		marginTop: 32,
+		marginBottom: 12,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16,
+			fontWeight: 400
+		}
+	},
+	profileIntegrationItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		marginBottom: 12,
+		cursor: 'pointer',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
+	},
+	enabledClubIntegrationItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		marginBottom: 12,
+		cursor: 'pointer',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
+	},
+	profilePictureImage: {
 		imageRendering: 'pixelated'
 	},
-	clubLogoImageContainer: {
+	profilePictureImageContainer: {
 		marginTop: 24,
 		width: 108,
 		height: 100,
 		position: 'relative'
 	},
-	clubLogoDeleteButton: {
+	profilePictureDeleteButton: {
 		position: 'absolute',
-		top: '-12px',
-		right: '-105px',
+		top: '0px',
+		right: '-100px',
 		cursor: 'pointer'
 	},
 	uploadOptions: { display: 'flex' },
 	emojiCanvas: {
 		position: 'absolute',
-		top: 40,
+		top: 0,
 		left: 0,
 		marginTop: -12,
 		marginBottom: -12,
 		lineHeight: 1,
-		fontSize: 24,
+		fontSize: 160,
 		zIndex: -1000
 	},
-	clubNameEllipsis: {
+	emojiCanvasCover: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		width: 256,
+		height: 256,
+		marginTop: -12,
+		marginBottom: -12,
+		backgroundColor: 'white',
+		zIndex: -1
+	},
+	intItemHeader: {
+		display: 'flex',
+		alignItems: 'center'
+	},
+	profileNameEllipsis: {
 		textOverflow: 'ellipsis',
 		msTextOverflow: 'ellipsis',
 		whiteSpace: 'nowrap',
@@ -163,13 +219,34 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 	const [profilePicture, setProfilePicture] = useState(
 		identity.profilePic ?? ''
 	)
-
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
+	const [existingIntegrations, setExistingIntegrations] = useState<
+		IdentityIntegration[]
+	>([])
+
+	// Hardcoded on client, no need to fetch from backend?
+	const availableIntegrations: AvailableIdentityIntegration[] = [
+		{
+			id: 'twitter',
+			name: 'Twitter',
+			icon: '/integration-twitter.png'
+		},
+		{
+			id: 'discord',
+			name: 'Discord',
+			icon: '/integration-discord.png'
+		},
+		{
+			id: 'email',
+			name: 'Email',
+			icon: '/integration-email.png'
+		}
+	]
 
 	// Club logo
 	const [
 		openFileSelector,
-		{ filesContent: clubLogo, loading: isLoadingImage }
+		{ filesContent: rawProfilePicture, loading: isLoadingImage }
 	] = useFilePicker({
 		readAs: 'DataURL',
 		accept: 'image/*',
@@ -196,22 +273,22 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 
 	useEffect(() => {
 		const createResizedFile = async () => {
-			const clubLogoBlob = base64StringToBlob(
-				clubLogo[0].content.split(',')[1],
+			const profilePictureBlob = base64StringToBlob(
+				rawProfilePicture[0].content.split(',')[1],
 				'image/png'
 			)
-			const file = await resizeFile(clubLogoBlob)
+			const file = await resizeFile(profilePictureBlob)
 			setProfilePicture(file as string)
 		}
-		if (clubLogo.length > 0) {
+		if (rawProfilePicture.length > 0) {
 			log.debug('Found an image...')
-			log.debug(clubLogo[0].content)
+			log.debug(rawProfilePicture[0].content)
 
 			createResizedFile()
 		} else {
-			// log.debug('no current club image')
+			// log.debug('no current profile image')
 		}
-	}, [clubLogo])
+	}, [rawProfilePicture])
 
 	const deleteImage = () => {
 		setProfilePicture('')
@@ -244,11 +321,11 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 
 			const canvas = await html2canvas(element as HTMLElement)
 			const image = canvas.toDataURL('image/png', 1.0)
-			const clubLogoBlob = base64StringToBlob(
+			const profilePictureBlob = base64StringToBlob(
 				image.split(',')[1],
 				'image/png'
 			)
-			const file = await resizeFile(clubLogoBlob)
+			const file = await resizeFile(profilePictureBlob)
 			setProfilePicture(file as string)
 		} else {
 			log.debug('no emojiCanvas found')
@@ -259,6 +336,24 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
+	}
+
+	const openIntegrationModal = (
+		integration: AvailableIdentityIntegration
+	) => {
+		if (integration.id) {
+			switch (integration.id) {
+				case 'twitter':
+					setIsTwitterModalOpen(true)
+					break
+				case 'discord':
+					setIsDiscordModalOpen(true)
+					break
+				case 'email':
+					setIsEmailModalOpen(true)
+					break
+			}
+		}
 	}
 
 	return (
@@ -289,17 +384,18 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			)}
 			{isLoadingImage && <Loader color="red" variant="bars" />}
 			{!isLoadingImage && profilePicture.length > 0 && (
-				<div className={classes.clubLogoImageContainer}>
+				<div className={classes.profilePictureImageContainer}>
 					<Image
-						className={classes.clubLogoImage}
+						className={classes.profilePictureImage}
 						src={profilePicture}
 						width={200}
 						height={200}
+						radius={128}
 						fit={'cover'}
 					/>
 					<a onClick={deleteImage}>
 						<Image
-							className={classes.clubLogoDeleteButton}
+							className={classes.profilePictureDeleteButton}
 							src="/delete.png"
 							width={24}
 							height={24}
@@ -312,15 +408,50 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			<Text className={classes.identitySectionTitle}>Display Name</Text>
 			<TextInput
 				radius="lg"
-				size="md"
+				size="lg"
 				value={displayName}
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
-			<Space h={'xl'} />
+			<Space h={48} />
 			<Divider />
+			<Space h={'xl'} />
+
 			<Text className={classes.identitySectionTitle}>
 				Verify Accounts
 			</Text>
+			<Grid>
+				{availableIntegrations.map(integration => (
+					<Grid.Col
+						xs={6}
+						sm={4}
+						md={4}
+						lg={4}
+						xl={4}
+						key={integration.name}
+					>
+						<a
+							onClick={() => {
+								openIntegrationModal(integration)
+							}}
+						>
+							<div className={classes.profileIntegrationItem}>
+								<div className={classes.intItemHeader}>
+									<Image
+										src={`${integration.icon}`}
+										width={16}
+										height={16}
+										fit={'contain'}
+									/>
+									<Space w={8} />
+									<Text>{integration.name}</Text>
+								</div>
+							</div>
+						</a>
+					</Grid.Col>
+				))}
+			</Grid>
+			<Space h={'xl'} />
+
 			<Button
 				className={classes.buttonSaveChanges}
 				loading={isSavingChanges}
@@ -361,6 +492,7 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			<div id="emojiCanvas" className={classes.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
+			<div className={classes.emojiCanvasCover} />
 			<Modal
 				withCloseButton={false}
 				padding={8}

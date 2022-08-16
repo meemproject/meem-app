@@ -1,7 +1,13 @@
+export interface AvailableIdentityIntegration {
+	id?: string
+	name?: string
+	icon?: string
+}
+
 export interface IdentityIntegration {
 	id?: string
 	name?: string
-	metadata?: string
+	icon?: string
 }
 
 export interface Identity {
