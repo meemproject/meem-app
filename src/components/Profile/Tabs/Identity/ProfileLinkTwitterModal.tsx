@@ -79,7 +79,6 @@ interface IProps {
 	identity: Identity
 	isOpened: boolean
 	onModalClosed: () => void
-	onSuccessfulVerification: () => void
 }
 
 enum Step {
@@ -92,8 +91,7 @@ enum Step {
 export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 	identity,
 	isOpened,
-	onModalClosed,
-	onSuccessfulVerification
+	onModalClosed
 }) => {
 	const { classes } = useStyles()
 
@@ -135,7 +133,6 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 				icon: <Check color="green" />,
 				message: `This Twitter account is now linked!`
 			})
-			onSuccessfulVerification()
 			onModalClosed()
 		} catch (e) {
 			log.debug(e)
@@ -158,6 +155,8 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 				closeOnEscape={false}
 				withCloseButton={step !== Step.Verifying}
 				radius={16}
+				size={'50%'}
+				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
 				title={
@@ -251,6 +250,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 																			'That Twitter username is invalid.'
 																	}
 																)
+																return
 															}
 															setStep(Step.Share)
 														}}

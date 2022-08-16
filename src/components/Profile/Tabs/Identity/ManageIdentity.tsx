@@ -14,7 +14,6 @@ import {
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
-import { zIndex } from 'html2canvas/dist/types/css/property-descriptors/z-index'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -26,6 +25,7 @@ import {
 	Identity,
 	IdentityIntegration
 } from '../../../../model/identity/identity'
+import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
 import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
 import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
@@ -220,9 +220,9 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 		identity.profilePic ?? ''
 	)
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
-	const [existingIntegrations, setExistingIntegrations] = useState<
-		IdentityIntegration[]
-	>([])
+
+	const [integrationCurrentlyEditing, setIntegrationCurrentlyEditing] =
+		useState<IdentityIntegration>()
 
 	// Hardcoded on client, no need to fetch from backend?
 	const availableIntegrations: AvailableIdentityIntegration[] = [
@@ -295,7 +295,7 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 	}
 
 	// Modal visibility
-	const [isLinkedAccountModalOpen, setIsLinkedAccountModalOped] =
+	const [isLinkedAccountModalOpen, setIsLinkedAccountModalOpen] =
 		useState(false)
 
 	const [isDiscordModalOpen, setIsDiscordModalOpen] = useState(false)
@@ -415,6 +415,70 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			<Space h={48} />
 			<Divider />
 			<Space h={'xl'} />
+			{identity.integrations && identity.integrations.length > 0 && (
+				<>
+					<Text className={classes.identitySectionTitle}>
+						Verified
+					</Text>
+
+					<Grid>
+						{identity.integrations.map(integration => (
+							<Grid.Col
+								xs={6}
+								sm={4}
+								md={4}
+								lg={4}
+								xl={4}
+								key={integration.name}
+							>
+								<a
+									onClick={() => {
+										setIntegrationCurrentlyEditing(
+											integration
+										)
+										setIsLinkedAccountModalOpen(true)
+									}}
+								>
+									<div
+										className={
+											classes.profileIntegrationItem
+										}
+									>
+										<div className={classes.intItemHeader}>
+											<Image
+												src={`${integration.icon}`}
+												width={16}
+												height={16}
+												fit={'contain'}
+											/>
+											<Space w={8} />
+											{integration.metadata
+												.twitterUsername && (
+												<Text>
+													{`@${integration.metadata.twitterUsername}`}
+												</Text>
+											)}
+											{integration.metadata
+												.discordUsername && (
+												<Text>
+													{`${integration.metadata.discordUsername}`}
+												</Text>
+											)}
+											{integration.metadata
+												.emailAddress && (
+												<Text>
+													{`${integration.metadata.emailAddress}`}
+												</Text>
+											)}
+										</div>
+									</div>
+								</a>
+							</Grid.Col>
+						))}
+					</Grid>
+					<Space h={'xl'} />
+				</>
+			)}
 
 			<Text className={classes.identitySectionTitle}>
 				Verify Accounts
@@ -459,12 +523,11 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			>
 				Save Changes
 			</Button>
+			<Space h={'xl'} />
+
 			<ProfileLinkTwitterModal
 				identity={identity}
 				isOpened={isTwitterModalOpen}
-				onSuccessfulVerification={() => {
-					// TODO: Add to list of verified accounts locally
-				}}
 				onModalClosed={() => {
 					setIsTwitterModalOpen(false)
 				}}
@@ -472,9 +535,6 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			<ProfileLinkEmailModal
 				identity={identity}
 				isOpened={isEmailModalOpen}
-				onSuccessfulVerification={() => {
-					// TODO: Add to list of verified accounts locally
-				}}
 				onModalClosed={() => {
 					setIsEmailModalOpen(false)
 				}}
@@ -482,11 +542,15 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			<ProfileLinkDiscordModal
 				identity={identity}
 				isOpened={isDiscordModalOpen}
-				onSuccessfulVerification={() => {
-					// TODO: Add to list of verified accounts locally
-				}}
 				onModalClosed={() => {
 					setIsDiscordModalOpen(false)
+				}}
+			/>
+			<ManageLinkedAccountModal
+				integration={integrationCurrentlyEditing}
+				isOpened={isLinkedAccountModalOpen}
+				onModalClosed={() => {
+					setIsLinkedAccountModalOpen(false)
 				}}
 			/>
 			<div id="emojiCanvas" className={classes.emojiCanvas}>

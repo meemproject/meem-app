@@ -8,6 +8,8 @@ export interface IdentityIntegration {
 	id?: string
 	name?: string
 	icon?: string
+	metadata?: any
+	visibility?: string
 }
 
 export interface Identity {
@@ -27,6 +29,28 @@ export async function identityFromApi(address: string): Promise<Identity> {
 		ensAddress: 'gadsby.eth',
 		displayName: 'James',
 		profilePic: '/exampleclub.png',
-		integrations: []
+		integrations: [
+			{
+				id: 'twitter',
+				name: 'Twitter',
+				icon: '/integration-twitter.png',
+				metadata: { twitterUsername: 'gadsbee' },
+				visibility: 'mutual-club-members'
+			},
+			{
+				id: 'discord',
+				name: 'Discord',
+				icon: '/integration-discord.png',
+				metadata: { discordUsername: 'jgads' },
+				visibility: 'mutual-club-members'
+			},
+			{
+				id: 'email',
+				name: 'Email',
+				icon: '/integration-email.png',
+				metadata: { emailAddress: 'james.gadsby@gmail.com' },
+				visibility: 'mutual-club-members'
+			}
+		]
 	}
 }

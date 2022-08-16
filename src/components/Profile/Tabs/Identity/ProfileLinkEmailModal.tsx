@@ -76,7 +76,6 @@ interface IProps {
 	identity: Identity
 	isOpened: boolean
 	onModalClosed: () => void
-	onSuccessfulVerification: () => void
 }
 
 enum Step {
@@ -87,8 +86,7 @@ enum Step {
 export const ProfileLinkEmailModal: React.FC<IProps> = ({
 	identity,
 	isOpened,
-	onModalClosed,
-	onSuccessfulVerification
+	onModalClosed
 }) => {
 	const { classes } = useStyles()
 
@@ -107,6 +105,8 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				radius={16}
+				size={'50%'}
+				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
 				title={
@@ -248,7 +248,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 													check your spam and trash
 													folders if you don’t see it.
 												</Text>
-												<Space h={24} />
+												{/* <Space h={24} />
 
 												<a
 													onClick={() => {
@@ -259,9 +259,9 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 													}
 												>
 													Launch Email App
-												</a>
+												</a> */}
 
-												<Space h={24} />
+												<Space h={8} />
 												<Text
 													className={
 														classes.stepDescription

@@ -1,4 +1,3 @@
-import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -75,22 +74,18 @@ interface IProps {
 	identity: Identity
 	isOpened: boolean
 	onModalClosed: () => void
-	onSuccessfulVerification: () => void
 }
 
 export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 	identity,
 	isOpened,
-	onModalClosed,
-	onSuccessfulVerification
+	onModalClosed
 }) => {
 	const { classes } = useStyles()
 
 	const [isAuthenticating, setIsAuthenticating] = useState(false)
 
-	const authenticateWithDiscord = async () => {
-		onSuccessfulVerification()
-	}
+	const authenticateWithDiscord = async () => {}
 
 	// TODO: Listen out for successful verification (subscription to identity?)
 
@@ -101,6 +96,8 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				radius={16}
+				size={'50%'}
+				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
 				title={
@@ -109,6 +106,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					</Text>
 				}
 				onClose={() => {
+					setIsAuthenticating(false)
 					onModalClosed()
 				}}
 			>
@@ -130,7 +128,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 									<Text className={classes.stepDescription}>
 										{`Launch Discord to verify ownership of your account.`}
 									</Text>
-									<Space h={4} />
+									<Space h={16} />
 									{!isAuthenticating && (
 										<a
 											onClick={() => {
@@ -142,7 +140,9 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 											Launch Discord
 										</a>
 									)}
-									{isAuthenticating && <Loader />}
+									{isAuthenticating && (
+										<Loader variant="bars" color="red" />
+									)}
 								</div>
 							}
 						/>
