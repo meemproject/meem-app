@@ -53,6 +53,8 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 		}
 		if (!hasIdentity && wallet.isConnected) {
 			getIdentity()
+		} else {
+			setIsLoadingIdentity(false)
 		}
 	}, [hasIdentity, isLoadingIdentity, wallet])
 	const value = useMemo(

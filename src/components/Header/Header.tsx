@@ -12,7 +12,7 @@ import {
 import { useWallet } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -22,7 +22,7 @@ import {
 	MessageCircle,
 	Mail
 } from 'tabler-icons-react'
-import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
+import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
 import { ClubsFAQModal } from './ClubsFAQModal'
@@ -255,7 +255,10 @@ export function HeaderMenu() {
 												  id.identity.ensAddress
 														?.length > 0
 												? id.identity.ensAddress
-												: id.identity.walletAddress}
+												: quickTruncate(
+														id.identity
+															.walletAddress ?? ''
+												  )}
 										</Text>
 										<ChevronDown size={12} />
 									</Group>
