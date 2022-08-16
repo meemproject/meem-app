@@ -256,7 +256,8 @@ export const ProfileComponent: React.FC = () => {
 								</Text>
 								<div className={classes.profileUrlContainer}>
 									<Text className={classes.profileUrl}>
-										{id.identity.walletAddress}
+										{id.identity.ensAddress ??
+											id.identity.walletAddress}
 									</Text>
 									<Image
 										className={classes.copy}
