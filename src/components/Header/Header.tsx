@@ -6,7 +6,8 @@ import {
 	UnstyledButton,
 	Group,
 	Avatar,
-	Divider
+	Divider,
+	Space
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
@@ -26,6 +27,11 @@ import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 const useStyles = createStyles(theme => ({
+	header: {
+		marginTop: 0,
+		paddingTop: 8,
+		paddingBottom: '-8px'
+	},
 	headerLeftItems: {
 		marginLeft: 4,
 		display: 'flex',
@@ -48,13 +54,13 @@ const useStyles = createStyles(theme => ({
 		fontSize: 32,
 		marginLeft: 16,
 		marginRight: 8,
-		paddingBottom: 4,
+		paddingBottom: 6,
 		cursor: 'pointer'
 	},
 
 	inner: {
 		height: 56,
-		marginTop: 8,
+		marginTop: '-4px',
 		display: 'flex',
 		justifyContent: 'space-between',
 		alignItems: 'center'
@@ -119,6 +125,7 @@ const useStyles = createStyles(theme => ({
 	},
 
 	user: {
+		marginBottom: '3px',
 		color:
 			theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
@@ -213,7 +220,7 @@ export function HeaderMenu() {
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
 	return (
-		<Header height={56}>
+		<Header className={classes.header} height={56}>
 			<div className={classes.inner}>
 				<div className={classes.headerLeftItems}>
 					<a onClick={navigateHome}>
@@ -224,13 +231,13 @@ export function HeaderMenu() {
 				<div className={classes.headerRightItems}>
 					{wallet.isConnected && (
 						<Menu
-							size={150}
-							placement="end"
-							transition="pop-top-right"
-							className={classes.userMenu}
+							radius={8}
+							offset={4}
+							shadow={'lg'}
 							onClose={() => setUserMenuOpened(false)}
 							onOpen={() => setUserMenuOpened(true)}
-							control={
+						>
+							<Menu.Target>
 								<UnstyledButton
 									className={cx(classes.user, {
 										[classes.userActive]: isUserMenuOpened
@@ -254,19 +261,20 @@ export function HeaderMenu() {
 										<ChevronDown size={12} />
 									</Group>
 								</UnstyledButton>
-							}
-						>
-							<Menu.Item
-								className={classes.menuItem}
-								onClick={async () => {
-									await wallet.disconnectWallet()
-									router.reload()
-								}}
-								color="red"
-								icon={<Logout size={14} />}
-							>
-								Disconnect
-							</Menu.Item>
+							</Menu.Target>
+							<Menu.Dropdown>
+								<Menu.Item
+									className={classes.menuItem}
+									onClick={async () => {
+										await wallet.disconnectWallet()
+										router.reload()
+									}}
+									color="red"
+									icon={<Logout size={14} />}
+								>
+									Disconnect
+								</Menu.Item>
+							</Menu.Dropdown>
 						</Menu>
 					)}
 					{!wallet.isConnected && (
@@ -282,81 +290,85 @@ export function HeaderMenu() {
 						</Text>
 					)}
 
-					<Menu
-						size={260}
-						placement="end"
-						transition="pop-top-right"
-						control={
+					<Menu offset={15} radius={8} shadow={'lg'}>
+						<Menu.Target>
 							<UnstyledButton>
 								<Dots className={classes.ellipse} />
 							</UnstyledButton>
-						}
-					>
-						<Menu.Item
-							onClick={handlePoweredByMeem}
-							className={classes.menuItem}
-						>
-							Powered by{' '}
-							<span style={{ textDecoration: 'underline' }}>
-								Meem
-							</span>
-						</Menu.Item>
-						{!clubclub.isMember && (
+						</Menu.Target>
+						<Menu.Dropdown>
 							<Menu.Item
-								onClick={handleJoinClubClub}
+								onClick={handlePoweredByMeem}
 								className={classes.menuItem}
 							>
-								Join Club Club
+								Powered by{' '}
+								<span style={{ textDecoration: 'underline' }}>
+									Meem
+								</span>
 							</Menu.Item>
-						)}
-						{clubclub.isMember && (
+							{!clubclub.isMember && (
+								<Menu.Item
+									onClick={handleJoinClubClub}
+									className={classes.menuItem}
+								>
+									Join Club Club
+								</Menu.Item>
+							)}
+							{clubclub.isMember && (
+								<Menu.Item
+									onClick={navigateToMyClubs}
+									className={classes.menuItem}
+								>
+									My Clubs
+								</Menu.Item>
+							)}
 							<Menu.Item
-								onClick={navigateToMyClubs}
-								className={classes.menuItem}
+								onClick={() => {
+									setIsClubsFAQModalOpen(true)
+								}}
+								className={classes.menuItemWithIcon}
+								icon={
+									<QuestionMarkCircle
+										height={20}
+										width={20}
+									/>
+								}
 							>
-								My Clubs
+								{`What's a club?`}
 							</Menu.Item>
-						)}
-						<Menu.Item
-							onClick={() => {
-								setIsClubsFAQModalOpen(true)
-							}}
-							className={classes.menuItemWithIcon}
-							icon={<QuestionMarkCircle height={20} width={20} />}
-						>
-							{`What's a club?`}
-						</Menu.Item>
+							<Space h={4} />
+							<Divider />
+							<Space h={4} />
 
-						<Divider />
-
-						<Menu.Item
-							onClick={handleTwitter}
-							className={classes.menuItemWithIcon}
-							icon={<BrandTwitter size={20} />}
-						>
-							Twitter
-						</Menu.Item>
-						<Menu.Item
-							onClick={handleDiscord}
-							className={classes.menuItemWithIcon}
-							icon={<BrandDiscord size={20} />}
-						>
-							Discord
-						</Menu.Item>
-						<Menu.Item
-							onClick={handleContactUs}
-							className={classes.menuItemWithIcon}
-							icon={<Mail size={20} />}
-						>
-							Contact Us
-						</Menu.Item>
-						<Menu.Item
-							onClick={handleShareFeedback}
-							className={classes.redMenuItem}
-							icon={<MessageCircle size={20} />}
-						>
-							Share Feedback
-						</Menu.Item>
+							<Menu.Item
+								onClick={handleTwitter}
+								className={classes.menuItemWithIcon}
+								icon={<BrandTwitter size={20} />}
+							>
+								Twitter
+							</Menu.Item>
+							<Menu.Item
+								onClick={handleDiscord}
+								className={classes.menuItemWithIcon}
+								icon={<BrandDiscord size={20} />}
+							>
+								Discord
+							</Menu.Item>
+							<Menu.Item
+								onClick={handleContactUs}
+								className={classes.menuItemWithIcon}
+								icon={<Mail size={20} />}
+							>
+								Contact Us
+							</Menu.Item>
+							<Menu.Item
+								onClick={handleShareFeedback}
+								className={classes.redMenuItem}
+								icon={<MessageCircle size={20} />}
+							>
+								Share Feedback
+							</Menu.Item>
+						</Menu.Dropdown>
 					</Menu>
 				</div>
 			</div>

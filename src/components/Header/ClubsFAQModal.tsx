@@ -43,6 +43,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 			<Modal
 				centered
 				radius={16}
+				overlayBlur={8}
 				size={'60%'}
 				padding={'lg'}
 				opened={isOpened}
@@ -70,8 +71,8 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 					Today, you can manage permissions for your club with
 					nuanced, intuitive membership logic. Within your club, set
 					up token-gated access for popular third-party tools such as
-					Discord, Notion, and SlikSafe. Collaborate on and publish a
-					newsletter for your community using Mags.
+					Discord, Notion, and SlikSafe, or use your club Gnosis
+					wallet to manage funds.
 				</Text>
 				<Space h={24} />
 

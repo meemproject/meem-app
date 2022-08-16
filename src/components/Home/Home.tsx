@@ -88,7 +88,7 @@ const useStyles = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: theme.colors.gray[8]
 		},
-		borderRadius: 12
+		borderRadius: 32
 	},
 	joinButton: {
 		backgroundColor: 'black',
@@ -149,7 +149,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 	({ description, value, image, ...others }: ItemProps, ref) => (
 		<div ref={ref} {...others}>
 			<Group noWrap>
-				<Avatar src={image} />
+				<Avatar src={image} style={{ imageRendering: 'pixelated' }} />
 
 				<div>
 					<Text>{value}</Text>
@@ -259,6 +259,12 @@ export function HomeComponent() {
 		})
 	}
 
+	const goToBrowse = () => {
+		router.push({
+			pathname: `/browse`
+		})
+	}
+
 	const goToCreate = () => {
 		if (
 			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
@@ -335,7 +341,12 @@ export function HomeComponent() {
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={
 						isLoadingSuggestions ? (
-							<Loader size={16} />
+							<Loader
+								variant="oval"
+								color={'red'}
+								size={24}
+								style={{ marginRight: '12px' }}
+							/>
 						) : autocompleteFormValue.length > 0 &&
 						  isShowingCreateButton &&
 						  clubclub.isMember ? (
@@ -359,6 +370,10 @@ export function HomeComponent() {
 						</a>
 					</Text>
 				)}
+				<Space h={24} />
+				<Button className={classes.createButton} onClick={goToBrowse}>
+					Browse all clubs
+				</Button>
 			</Container>
 			<ClubsFAQModal
 				onModalClosed={() => {

@@ -62,10 +62,10 @@ const MAuthenticate: React.FC = () => {
 
 	const login = useCallback(
 		async (walletSig: string) => {
-			const address = Cookies.get('walletAddress')
+			const address = wallet.accounts[0]
 
 			log.info('Logging in to Meem...')
-			log.debug(`address = ${address}`)
+			log.debug(`address = ${wallet.accounts[0]}`)
 			log.debug(`sig = ${walletSig}`)
 
 			if (address && walletSig) {
@@ -97,14 +97,21 @@ const MAuthenticate: React.FC = () => {
 					})
 				} catch (e) {
 					log.error(e)
+					showNotification({
+						radius: 'lg',
+						title: 'Login Failed',
+						message: 'Please refresh the page and try again.'
+					})
 				}
 			}
+
+			setIsLoading(false)
 		},
 		[router, wallet]
 	)
 
 	const sign = useCallback(async () => {
-		const address = Cookies.get('walletAddress') ?? ''
+		const address = wallet.accounts[0]
 		setIsLoading(true)
 
 		try {
@@ -121,6 +128,7 @@ const MAuthenticate: React.FC = () => {
 			if (signature === undefined) {
 				log.debug('Unable to authenticate - signature is undefined.')
 				showNotification({
+					radius: 'lg',
 					title: 'Oops!',
 					message:
 						'Unable to authenticate with your wallet. Please try again.'
@@ -131,6 +139,7 @@ const MAuthenticate: React.FC = () => {
 			}
 		} catch (e) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'Unable to authenticate with your wallet. Please get in touch!'
@@ -138,19 +147,20 @@ const MAuthenticate: React.FC = () => {
 			setIsLoading(false)
 			log.crit(e)
 		}
-	}, [getNonceFetcher, login, wallet.signer])
+	}, [getNonceFetcher, login, wallet.signer, wallet.accounts])
 
 	const connectWallet = useCallback(async () => {
 		setIsLoading(true)
 		await wallet.connectWallet()
 
-		const address = Cookies.get('walletAddress')
+		const address = wallet.accounts[0]
 		if (address) {
 			setIsConnected(true)
 			setIsLoading(false)
 		} else {
 			log.debug('Unable to authenticate - wallet address not found.')
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'Unable to authenticate with your wallet. Please try again.'

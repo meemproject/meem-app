@@ -42,7 +42,7 @@ export async function tokenFromContractAddress(
 
 	// URL
 	const tokenUrl =
-		process.env.NEXT_PUBLIC_NETWORK === 'rinkeby'
+		process.env.NEXT_PUBLIC_CHAIN_ID === '4'
 			? `https://rinkeby.etherscan.io/address/${contractAddress}`
 			: `https://polygonscan.io/address/${contractAddress}`
 

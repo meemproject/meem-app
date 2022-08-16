@@ -22,6 +22,9 @@ const useStyles = createStyles(theme => ({
 			paddingLeft: 16
 		}
 	},
+	memberSettingsComponent: {
+		marginTop: '-24px'
+	},
 	headerArrow: {
 		marginRight: 32,
 		cursor: 'pointer',
@@ -122,6 +125,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 			setClubName(Cookies.get(CookieKeys.clubName) ?? '')
 		} else {
 			showNotification({
+				radius: 'lg',
 				title: 'Unable to create this club.',
 				message: `Some data is missing. Try again!`,
 				autoClose: 5000
@@ -139,7 +143,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 				</div>
 			</div>
 
-			<Container>
+			<Container className={classes.memberSettingsComponent}>
 				<ClubAdminMembershipSettingsComponent isCreatingClub />
 			</Container>
 		</>

@@ -63,9 +63,11 @@ export const GET_CLUB = gql`
 			metadata
 			createdAt
 			name
+			gnosisSafeAddress
 			Meems {
 				Owner {
 					address
+					ens
 				}
 				tokenId
 				tokenURI
@@ -80,6 +82,7 @@ export const GET_CLUB = gql`
 				role
 				Wallet {
 					address
+					ens
 				}
 			}
 			id
@@ -109,9 +112,11 @@ export const SUB_CLUB = gql`
 			metadata
 			createdAt
 			name
+			gnosisSafeAddress
 			Meems {
 				Owner {
 					address
+					ens
 				}
 				tokenId
 				tokenURI
@@ -126,6 +131,7 @@ export const SUB_CLUB = gql`
 				role
 				Wallet {
 					address
+					ens
 				}
 			}
 			id
@@ -167,6 +173,7 @@ export const SUB_CLUBS = gql`
 			MeemContractWallets {
 				role
 				Wallet {
+					ens
 					address
 				}
 			}
@@ -194,6 +201,7 @@ export const GET_MY_CLUBS = gql`
 				MeemContractWallets {
 					role
 					Wallet {
+						ens
 						address
 					}
 				}
@@ -217,6 +225,38 @@ export const GET_INTEGRATIONS = gql`
 	}
 `
 
+export const GET_ALL_CLUBS = gql`
+	query AllClubs($limit: Int, $offset: Int) {
+		MeemContracts(
+			order_by: { Meems_aggregate: { count: desc } }
+			limit: $limit
+			offset: $offset
+		) {
+			slug
+			address
+			createdAt
+			name
+			metadata
+			Meems {
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+			}
+			splits
+			mintPermissions
+			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					ens
+					address
+				}
+			}
+		}
+	}
+`
+
 export const SUB_MY_CLUBS = gql`
 	subscription MyClubsSubscription($walletAddress: String) {
 		Meems(
@@ -229,17 +269,20 @@ export const SUB_MY_CLUBS = gql`
 			tokenId
 			MeemContractId
 			MeemContract {
+				id
 				slug
 				address
 				createdAt
 				name
 				metadata
 				splits
+				gnosisSafeAddress
 				mintPermissions
 				symbol
 				MeemContractWallets {
 					role
 					Wallet {
+						ens
 						address
 					}
 				}
@@ -253,6 +296,9 @@ export const GET_BUNDLE_BY_ID = gql`
 		Bundles(where: { id: { _eq: $id } }) {
 			id
 			abi
+			BundleContracts {
+				functionSelectors
+			}
 		}
 	}
 `

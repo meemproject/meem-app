@@ -1,4 +1,3 @@
-import log from '@kengoldfarb/log'
 import { MeemAPI } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
@@ -29,6 +28,11 @@ export interface Integration {
 	paragraphSlug?: string
 }
 
+export interface ClubMember {
+	wallet: string
+	ens?: string
+}
+
 export interface Club {
 	id?: string
 	name?: string
@@ -39,7 +43,7 @@ export interface Club {
 	admins?: string[]
 	membershipSettings?: MembershipSettings
 	slotsLeft?: number
-	members?: string[]
+	members?: ClubMember[]
 	isClubMember?: boolean
 	membershipToken?: string
 	isClubAdmin?: boolean
@@ -48,6 +52,7 @@ export interface Club {
 	allIntegrations?: Integration[]
 	publicIntegrations?: Integration[]
 	privateIntegrations?: Integration[]
+	gnosisSafeAddress?: string | null
 }
 
 export interface MembershipSettings {
@@ -96,7 +101,6 @@ export function MembershipRequirementToMeemPermission(
 	return {
 		addresses: mr.approvedAddresses,
 		costWei: ethers.utils.parseEther(`${costEth}`).toHexString(),
-		lockedBy: MeemAPI.zeroAddress,
 		mintStartTimestamp,
 		mintEndTimestamp,
 		numTokens: `${mr.tokenMinQuantity}`,
@@ -227,7 +231,6 @@ export default async function clubFromMeemContract(
 		if (clubData.mintPermissions) {
 			await Promise.all(
 				clubData.mintPermissions.map(async (permission: any) => {
-					log.debug(permission)
 					if (permission.mintStartTimestamp) {
 						membershipStartDate = DateTime.fromSeconds(
 							ethers.BigNumber.from(
@@ -378,7 +381,7 @@ export default async function clubFromMeemContract(
 		}
 
 		// Club members
-		const members: string[] = []
+		const members: ClubMember[] = []
 
 		// Is the current user a club member?
 		let isClubMember = false
@@ -403,9 +406,19 @@ export default async function clubFromMeemContract(
 					meem.Owner?.address.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					//const name = await ensWalletAddress(meem.Owner?.address)
-					if (meem.Owner && !members.includes(meem.Owner.address)) {
-						members.push(meem.Owner.address)
+					if (meem.Owner) {
+						let hasAlreadyBeenAdded = false
+						members.forEach(member => {
+							if (member.wallet === meem.Owner?.address) {
+								hasAlreadyBeenAdded = true
+							}
+						})
+						if (!hasAlreadyBeenAdded) {
+							members.push({
+								wallet: meem.Owner.address,
+								ens: meem.Owner.ens ?? undefined
+							})
+						}
 					}
 				}
 			}
@@ -465,6 +478,7 @@ export default async function clubFromMeemContract(
 			admins,
 			isClubAdmin,
 			slug: clubData.slug,
+			gnosisSafeAddress: clubData.gnosisSafeAddress,
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			isClubMember,

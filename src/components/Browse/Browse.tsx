@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -10,15 +10,11 @@ import {
 	Loader,
 	Grid
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
-import {
-	MeemContracts,
-	MyClubsSubscriptionSubscription
-} from '../../../generated/graphql'
-import { SUB_MY_CLUBS } from '../../graphql/clubs'
+import { AllClubsQuery, MeemContracts } from '../../../generated/graphql'
+import { GET_ALL_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
 
 const useStyles = createStyles(theme => ({
@@ -79,20 +75,28 @@ const useStyles = createStyles(theme => ({
 	},
 	clubItem: {
 		display: 'flex',
-		alignItems: 'center',
+		alignItems: 'start',
 		marginBottom: 24,
 		fontSize: 16,
-		fontWeight: 600,
 		cursor: 'pointer',
 		border: '1px solid rgba(0, 0, 0, 0.1)',
 		backgroundColor: '#FAFAFA',
 		borderRadius: 16,
 		padding: 16
 	},
+	clubInfo: {},
+
+	clubDescription: {
+		fontSize: 14,
+		marginRight: 8,
+		lineHeight: 1.3
+	},
 	clubLogoImage: {
+		marginTop: 4,
 		imageRendering: 'pixelated'
 	},
 	clubNameEllipsis: {
+		fontWeight: 600,
 		textOverflow: 'ellipsis',
 		msTextOverflow: 'ellipsis',
 		whiteSpace: 'nowrap',
@@ -102,20 +106,21 @@ const useStyles = createStyles(theme => ({
 	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
 }))
 
-export const MyClubsComponent: React.FC = () => {
+export const BrowseComponent: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
-	const wallet = useWallet()
+	const limit = 20
+	const [page, setPage] = useState(0)
 
-	const { loading, data: clubData } =
-		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
-			variables: {
-				walletAddress:
-					wallet.accounts &&
-					wallet.accounts[0] &&
-					wallet.accounts[0].toLowerCase()
-			}
-		})
+	const [clubs] = useState<Club[]>([])
+
+	const {
+		loading,
+		error,
+		data: clubData
+	} = useQuery<AllClubsQuery>(GET_ALL_CLUBS, {
+		variables: { limit, offset: limit * page }
+	})
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -129,17 +134,23 @@ export const MyClubsComponent: React.FC = () => {
 		router.push({ pathname: `/${club}` })
 	}
 
-	const clubs: Club[] = []
-
-	clubData?.Meems.forEach(meem => {
-		const possibleClub = clubSummaryFromMeemContract(
-			meem.MeemContract as MeemContracts
-		)
+	clubData?.MeemContracts.forEach(meem => {
+		const possibleClub = clubSummaryFromMeemContract(meem as MeemContracts)
 
 		if (possibleClub.name) {
-			clubs.push(possibleClub)
+			let doesClubExist = false
+			clubs.forEach(club => {
+				if (possibleClub.slug === club.slug) {
+					doesClubExist = true
+				}
+			})
+			if (!doesClubExist) {
+				clubs.push(possibleClub)
+			}
 		}
 	})
+
+	const isLoadingClubs = clubs.length === 0
 
 	return (
 		<>
@@ -148,7 +159,9 @@ export const MyClubsComponent: React.FC = () => {
 					<a onClick={navigateHome}>
 						<ArrowLeft className={classes.headerArrow} size={32} />
 					</a>
-					<Text className={classes.headerClubName}>My Clubs</Text>
+					<Text className={classes.headerClubName}>
+						Browse all clubs
+					</Text>
 				</div>
 				<Button
 					onClick={navigateToCreate}
@@ -159,7 +172,7 @@ export const MyClubsComponent: React.FC = () => {
 			</div>
 
 			<Container>
-				{loading && (
+				{isLoadingClubs && (
 					<Container>
 						<Space h={60} />
 						<Center>
@@ -167,23 +180,26 @@ export const MyClubsComponent: React.FC = () => {
 						</Center>
 					</Container>
 				)}
-				{clubs.length === 0 && !loading && (
-					<>
-						<Text className={classes.myClubsPrompt}>
-							{`You haven't joined any clubs!`}
-						</Text>
-						<Text className={classes.createClubLink}>
-							<a onClick={navigateToCreate}>Start a new one?</a>
-						</Text>
-					</>
+
+				{error && (
+					<Container>
+						<Space h={60} />
+						<Center>
+							<Text>
+								An error occurred loading clubs. Try again
+								later.
+							</Text>
+						</Center>
+					</Container>
 				)}
-				{clubs.length > 0 && !loading && (
+
+				{!isLoadingClubs && (
 					<>
 						<Grid>
 							{clubs.map(club => (
 								<Grid.Col
-									xs={6}
-									sm={4}
+									xs={8}
+									sm={6}
 									md={4}
 									lg={4}
 									xl={4}
@@ -197,23 +213,46 @@ export const MyClubsComponent: React.FC = () => {
 										}}
 									>
 										<Image
-											radius={8}
 											className={classes.clubLogoImage}
 											src={club.image ?? ''}
 											width={40}
+											radius={8}
 											height={40}
 											fit={'cover'}
 										/>
 										<Space w="xs" />
-										<Text
-											className={classes.clubNameEllipsis}
-										>
-											{club.name}
-										</Text>
+										<div className={classes.clubInfo}>
+											<Text
+												className={
+													classes.clubNameEllipsis
+												}
+											>
+												{club.name}
+											</Text>
+											<Space h={4} />
+											<Text
+												className={
+													classes.clubDescription
+												}
+											>
+												{club.description}{' '}
+											</Text>
+										</div>
 									</div>
 								</Grid.Col>
 							))}
 						</Grid>
+						<Space h={24} />
+
+						<Button
+							className={classes.buttonCreate}
+							loading={loading}
+							onClick={() => {
+								setPage(page + 1)
+							}}
+						>
+							Load more
+						</Button>
 
 						<Space h={60} />
 					</>

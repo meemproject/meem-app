@@ -5,7 +5,6 @@ import {
 	Button,
 	Space,
 	Modal,
-	RadioGroup,
 	Radio,
 	TextInput,
 	Textarea,
@@ -14,8 +13,7 @@ import {
 } from '@mantine/core'
 import { Calendar, TimeInput } from '@mantine/dates'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useSockets, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
@@ -186,10 +184,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
-
-	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
-
-	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
 
 	// Membership
 	const [membershipSettings, setMembershipSettings] =
@@ -399,6 +393,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 	const saveChanges = async () => {
 		if (!clubclub.isMember) {
 			showNotification({
+				radius: 'lg',
 				title: 'No Club Club membership found.',
 				message: `Join Club Club to continue.`
 			})
@@ -408,6 +403,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		if (clubAdmins.length === 0) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message: 'At least one club admin is required.'
 			})
@@ -439,9 +435,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					isAdminListValid = false
 					return
 				} else {
-					// log.debug(
-					// 	`validated and converted club admin address ${name}`
-					// )
 					clubAdminAddresses.push(name)
 				}
 			})
@@ -449,6 +442,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		if (!isAdminListValid) {
 			showNotification({
+				radius: 'lg',
 				title: 'Oops!',
 				message:
 					'One or more club admin addresses are invalid. Check what you entered and try again.'
@@ -458,7 +452,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		}
 
 		// Validate and convert all approved addresses if necessary
-		let isApprovedAddressesInvalid = true
+		let isApprovedAddressesInvalid = false
 		const sanitizedRequirements: MembershipRequirement[] = []
 		await Promise.all(
 			membershipRequirements.map(async function (req) {
@@ -488,6 +482,17 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				sanitizedRequirements.push(newReq)
 			})
 		)
+
+		if (isApprovedAddressesInvalid) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message:
+					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			})
+			setIsSavingChanges(false)
+			return
+		}
 
 		// Convert funds address from ENS if necessary
 		let rawMembershipFundsAddress = ''
@@ -580,72 +585,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		wallet.isConnected
 	])
 
-	useEffect(() => {
-		if (!isSocketsConnected) {
-			connect()
-		}
-	}, [connect, isSocketsConnected])
-
-	useEffect(() => {
-		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.MeemIdUpdated }],
-				wallet.accounts[0]
-			)
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.MeemMinted }],
-				wallet.accounts[0]
-			)
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.Err }],
-				wallet.accounts[0]
-			)
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.MeemIdUpdated,
-				handler: event => {
-					log.debug('Meem Id Updated')
-					log.debug(event)
-				}
-			})
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.MeemMinted,
-				handler: event => {
-					log.debug('Meem Minted')
-					log.debug(event)
-				}
-			})
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.Err,
-				handler: err => {
-					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
-						if (club) {
-							showNotification({
-								title: 'Saving Changes Failed',
-								message:
-									'An error occurred while saving changes. Please try again.',
-								color: 'red'
-							})
-						} else {
-							showNotification({
-								title: 'Club Creation Failed',
-								message:
-									'An error occurred while creating the club. Please try again.',
-								color: 'red'
-							})
-						}
-
-						setIsSavingChanges(false)
-						setIsClubCreationModalOpened(false)
-					}
-					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
-					log.crit(err)
-					log.crit(err.detail.code)
-				}
-			})
-			setHasSubscribedToSockets(true)
-		}
-	}, [club, hasSubscribedToSockets, sockets, wallet])
-
 	return (
 		<>
 			<div>
@@ -655,12 +594,18 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 				<div>
 					<Text className={classes.clubAdminsPrompt}>
-						Who can manage this club’s profile and membership
-						settings?
+						{club
+							? `Who can manage this club’s profile and membership
+						settings?`
+							: `Who can manage this club’s profile, treasury and membership
+						settings?`}
 					</Text>
 					<Text className={classes.clubAdminsInstructions}>
-						Add a line break between each address. Note that at
-						least one club admin is required at all times.
+						{club
+							? `Add a line break between each address. Note that at
+						least one club admin is required at all times.`
+							: `Add a line break between each address. Note that at
+						least one club admin is required at all times, and you can update treasury addresses via your club's settings page.`}
 					</Text>
 					<Textarea
 						radius="lg"
@@ -883,7 +828,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipReqModalOpened}
 					onClose={() => setMembershipReqModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -900,7 +845,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								? 'token-holders'
 								: 'other-club-member'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'anyone':
 									reqCurrentlyEditing.type =
@@ -961,7 +906,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								disabled
 							/>
 						)}
-					</RadioGroup>
+					</Radio.Group>
 					<div
 						className={
 							reqCurrentlyEditing.type ==
@@ -1111,6 +1056,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 								if (reqCurrentlyEditing.tokenMinQuantity <= 0) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'Please enter a quantity greater than 0.'
@@ -1129,6 +1075,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 								if (!token) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'That token is not valid. Check the contract address and try again.'
@@ -1161,6 +1108,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 									if (doesApplicantsListContainAdmin) {
 										showNotification({
+											radius: 'lg',
 											title: 'Oops!',
 											message:
 												'You cannot add a club admin as an approved address.'
@@ -1174,6 +1122,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 										0
 									) {
 										showNotification({
+											radius: 'lg',
 											title: 'Oops!',
 											message:
 												'Please enter a minimum token quantity.'
@@ -1216,7 +1165,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isSecondReqTypeModalOpened}
 					onClose={() => setSecondReqTypeModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1227,7 +1176,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								? 'and'
 								: 'or'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'and':
 									reqCurrentlyEditing.andor =
@@ -1249,7 +1198,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="and" label="In addition" />
 						<Radio value="or" label="Alternatively" />
-					</RadioGroup>
+					</Radio.Group>
 					<Space h={'md'} />
 					<Button
 						onClick={() => {
@@ -1290,6 +1239,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								)
 								if (isNaN(potentialNumber)) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'Please enter a number, not text.'
@@ -1335,6 +1285,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								setIsCheckingRequirement(false)
 								if (!isValid) {
 									showNotification({
+										radius: 'lg',
 										title: 'Oops!',
 										message:
 											'Please enter a valid wallet address.'
@@ -1360,7 +1311,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipQuantityModalOpened}
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1372,7 +1323,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 								? 'unlimited'
 								: 'finite'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'unlimited':
 									setMembershipQuantity(0)
@@ -1386,7 +1337,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="unlimited" label="unlimited" />
 						<Radio value="finite" label="finite" />
-					</RadioGroup>
+					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
 							<Text className={classes.modalHeaderText}>
@@ -1414,6 +1365,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						onClick={() => {
 							if (membershipQuantity > 10000000) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'Total memberships is too large. Choose unlimited instead.'
@@ -1422,6 +1374,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 							}
 							if (membershipQuantity < 0) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'How can you have negative total memberships?!'
@@ -1446,7 +1399,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipTimingStartModalOpened}
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1455,7 +1408,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						value={
 							membershipStartDate === undefined ? 'now' : 'later'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'now':
 									setMembershipStartDate(undefined)
@@ -1469,7 +1422,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="now" label="now" />
 						<Radio value="later" label="from a different date" />
-					</RadioGroup>
+					</Radio.Group>
 					<Space h={'sm'} />
 
 					{membershipStartDate !== undefined && (
@@ -1518,6 +1471,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									membershipEndDate.getTime()
 							) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'Please choose a start date or time earlier than the end date.'
@@ -1542,7 +1496,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					opened={isMembershipTimingEndModalOpened}
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
-					<RadioGroup
+					<Radio.Group
 						classNames={{ label: classes.radio }}
 						orientation="vertical"
 						spacing={10}
@@ -1551,7 +1505,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						value={
 							membershipEndDate === undefined ? 'forever' : 'end'
 						}
-						onChange={value => {
+						onChange={(value: any) => {
 							switch (value) {
 								case 'forever':
 									setMembershipEndDate(undefined)
@@ -1565,7 +1519,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					>
 						<Radio value="forever" label="forever" />
 						<Radio value="end" label="on a date" />
-					</RadioGroup>
+					</Radio.Group>
 					<Space h={'sm'} />
 
 					{membershipEndDate !== undefined && (
@@ -1614,6 +1568,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									membershipEndDate.getTime()
 							) {
 								showNotification({
+									radius: 'lg',
 									title: 'Oops!',
 									message:
 										'Please choose an end date or time later than the start date.'
