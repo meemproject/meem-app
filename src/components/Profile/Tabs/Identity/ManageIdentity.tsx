@@ -16,15 +16,15 @@ import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import {
 	AvailableIdentityIntegration,
-	Identity,
 	IdentityIntegration
 } from '../../../../model/identity/identity'
+import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
 import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
@@ -205,19 +205,18 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
 })
 
-interface IProps {
-	identity: Identity
-}
-
-export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
+export const ManageIdentityComponent: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
+	const id = useContext(IdentityContext)
 
 	// Mutable identity data
-	const [displayName, setDisplayName] = useState(identity.displayName ?? '')
+	const [displayName, setDisplayName] = useState(
+		id.identity.displayName ?? ''
+	)
 	const [profilePicture, setProfilePicture] = useState(
-		identity.profilePic ?? ''
+		id.identity.profilePic ?? ''
 	)
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
@@ -415,14 +414,14 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			<Space h={48} />
 			<Divider />
 			<Space h={'xl'} />
-			{identity.integrations && identity.integrations.length > 0 && (
+			{id.identity.integrations && id.identity.integrations.length > 0 && (
 				<>
 					<Text className={classes.identitySectionTitle}>
 						Verified
 					</Text>
 
 					<Grid>
-						{identity.integrations.map(integration => (
+						{id.identity.integrations.map(integration => (
 							<Grid.Col
 								xs={6}
 								sm={4}
@@ -526,21 +525,21 @@ export const ManageIdentityComponent: React.FC<IProps> = ({ identity }) => {
 			<Space h={'xl'} />
 
 			<ProfileLinkTwitterModal
-				identity={identity}
+				identity={id.identity}
 				isOpened={isTwitterModalOpen}
 				onModalClosed={() => {
 					setIsTwitterModalOpen(false)
 				}}
 			/>
 			<ProfileLinkEmailModal
-				identity={identity}
+				identity={id.identity}
 				isOpened={isEmailModalOpen}
 				onModalClosed={() => {
 					setIsEmailModalOpen(false)
 				}}
 			/>
 			<ProfileLinkDiscordModal
-				identity={identity}
+				identity={id.identity}
 				isOpened={isDiscordModalOpen}
 				onModalClosed={() => {
 					setIsDiscordModalOpen(false)

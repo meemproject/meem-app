@@ -21,6 +21,17 @@ export interface Identity {
 	integrations?: IdentityIntegration[]
 }
 
+export function getDefaultIdentity(): Identity {
+	return {
+		id: '',
+		walletAddress: '',
+		ensAddress: '',
+		displayName: '',
+		profilePic: '',
+		integrations: []
+	}
+}
+
 export async function identityFromApi(address: string): Promise<Identity> {
 	// TODO: return default identity if the wallet doesn't have an identity yet
 	return {

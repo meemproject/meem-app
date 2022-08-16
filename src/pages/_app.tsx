@@ -17,6 +17,7 @@ import React from 'react'
 import { App } from '../components/App'
 import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
 import '@fontsource/inter'
+import { IdentityProvider } from '../components/Profile/IdentityProvider'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
@@ -118,9 +119,11 @@ function MyApp(props: AppProps) {
 					<WalletProvider rpcs={rpcs}>
 						<NotificationsProvider>
 							<ClubClubProvider>
-								<App>
-									<Component {...pageProps} />
-								</App>
+								<IdentityProvider>
+									<App>
+										<Component {...pageProps} />
+									</App>
+								</IdentityProvider>
 							</ClubClubProvider>
 						</NotificationsProvider>
 					</WalletProvider>

@@ -11,9 +11,9 @@ import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
-import { Identity, identityFromApi } from '../../model/identity/identity'
+import IdentityContext from './IdentityProvider'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyClubsComponent } from './Tabs/MyClubs'
 
@@ -176,8 +176,8 @@ export const ProfileComponent: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
+	const id = useContext(IdentityContext)
 
-	const [isDeepLinkedToMyClubs, setIsDeepLinkedToMyClubs] = useState(false)
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
 
 	const switchToProfile = () => {
@@ -204,34 +204,12 @@ export const ProfileComponent: React.FC = () => {
 	}, [router])
 
 	useEffect(() => {
-		if (router.query.tab === 'myClubs' && !isDeepLinkedToMyClubs) {
-			setIsDeepLinkedToMyClubs(true)
+		if (router.query.tab === 'myClubs') {
 			switchToMyClubs()
+		} else if (router.query.tab === 'identity') {
+			switchToProfile()
 		}
-	}, [router.query.tab, isDeepLinkedToMyClubs])
-
-	// TODO: fetch profile info
-	// const {
-	// 	loading,
-	// 	error,
-	// 	data: profileData
-	// } = useQuery<GetProfileQuery>(GET_CLUB, {
-	// 	variables: { slug }
-	// })
-	const [isLoadingIdentity, setIsLoadingIdentity] = useState(true)
-	const [identity, setIdentity] = useState<Identity>()
-
-	useEffect(() => {
-		async function getIdentity() {
-			setIsLoadingIdentity(true)
-			const id = await identityFromApi(wallet.accounts[0])
-			setIdentity(id)
-			setIsLoadingIdentity(false)
-		}
-		if (!identity && wallet.isConnected) {
-			getIdentity()
-		}
-	})
+	}, [router.query.tab])
 
 	return (
 		<>
@@ -243,7 +221,7 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && isLoadingIdentity && (
+			{wallet.isConnected && id.isLoadingIdentity && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -251,7 +229,7 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && !isLoadingIdentity && !identity && (
+			{wallet.isConnected && !id.isLoadingIdentity && !id.identity && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -261,7 +239,7 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && !isLoadingIdentity && identity && (
+			{wallet.isConnected && !id.isLoadingIdentity && id.identity && (
 				<>
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
@@ -269,16 +247,16 @@ export const ProfileComponent: React.FC = () => {
 								radius={16}
 								fit={'cover'}
 								className={classes.profileLogoImage}
-								src={identity.profilePic}
+								src={id.identity.profilePic}
 							/>
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 							<div className={classes.headerProfileNameContainer}>
 								<Text className={classes.headerProfileName}>
-									{identity.displayName}
+									{id.identity.displayName}
 								</Text>
 								<div className={classes.profileUrlContainer}>
 									<Text className={classes.profileUrl}>
-										{identity.walletAddress}
+										{id.identity.walletAddress}
 									</Text>
 									<Image
 										className={classes.copy}
@@ -286,7 +264,7 @@ export const ProfileComponent: React.FC = () => {
 										height={20}
 										onClick={() => {
 											navigator.clipboard.writeText(
-												`${identity.walletAddress}`
+												`${id.identity.walletAddress}`
 											)
 											showNotification({
 												title: 'Wallet info copied',
@@ -336,7 +314,7 @@ export const ProfileComponent: React.FC = () => {
 									: classes.invisibleTab
 							}
 						>
-							<ManageIdentityComponent identity={identity} />
+							<ManageIdentityComponent />
 						</div>
 
 						<div
