@@ -227,7 +227,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				// Wait for Paragraph to signal that it's loaded.
 				if (e.data === 'loaded') {
 					// Send the 'init' message. This is required.
-					popup.postMessage('init', 'https://link.paragraph.xyz')
+					popup.postMessage('init', 'https://paragraph.xyz')
 
 					// When the Papragraph flow completes, we'll broadcast
 					// this message.
