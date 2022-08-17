@@ -7,9 +7,11 @@ import {
 	Space,
 	Center,
 	Loader,
-	Grid
+	Grid,
+	Badge
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import {
@@ -76,8 +78,6 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 	clubItem: {
-		display: 'flex',
-		alignItems: 'center',
 		marginBottom: 24,
 		fontSize: 16,
 		fontWeight: 600,
@@ -86,6 +86,10 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: '#FAFAFA',
 		borderRadius: 16,
 		padding: 16
+	},
+	clubItemRow: {
+		display: 'flex',
+		alignItems: 'center'
 	},
 	clubLogoImage: {
 		imageRendering: 'pixelated'
@@ -178,18 +182,43 @@ export const MyClubsComponent: React.FC = () => {
 										navigateToClub(club.slug ?? '')
 									}}
 								>
-									<Image
-										className={classes.clubLogoImage}
-										src={club.image ?? ''}
-										width={40}
-										height={40}
-										radius={8}
-										fit={'cover'}
-									/>
-									<Space w="xs" />
-									<Text className={classes.clubNameEllipsis}>
-										{club.name}
-									</Text>
+									<div className={classes.clubItemRow}>
+										<Image
+											className={classes.clubLogoImage}
+											src={club.image ?? ''}
+											width={40}
+											height={40}
+											radius={8}
+											fit={'cover'}
+										/>
+										<Space w="xs" />
+
+										<div>
+											<Text
+												className={
+													classes.clubNameEllipsis
+												}
+											>
+												{club.name}
+											</Text>
+											<Space h={4} />
+											<Badge
+												color="gray"
+												variant={'filled'}
+												leftSection={
+													<>
+														<Group
+															style={{
+																marginTop: 5
+															}}
+														/>
+													</>
+												}
+											>
+												{club.memberCount}
+											</Badge>
+										</div>
+									</div>
 								</div>
 							</Grid.Col>
 						))}

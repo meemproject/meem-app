@@ -253,6 +253,11 @@ export const GET_ALL_CLUBS = gql`
 					address
 				}
 			}
+			Meems_aggregate {
+				aggregate {
+					count
+				}
+			}
 		}
 	}
 `
@@ -284,6 +289,11 @@ export const SUB_MY_CLUBS = gql`
 					Wallet {
 						ens
 						address
+					}
+				}
+				Meems_aggregate {
+					aggregate {
+						count
 					}
 				}
 			}

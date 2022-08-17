@@ -50,6 +50,7 @@ export interface Club {
 	publicIntegrations?: Integration[]
 	privateIntegrations?: Integration[]
 	gnosisSafeAddress?: string | null
+	memberCount?: number
 }
 
 export interface MembershipSettings {
@@ -161,7 +162,8 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allIntegrations: []
+			allIntegrations: [],
+			memberCount: clubData.Meems_aggregate.aggregate?.count ?? 0
 		}
 	} else {
 		return {}
