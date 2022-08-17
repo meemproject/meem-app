@@ -161,53 +161,45 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	// Is this integration enabled?
 	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(false)
 
-	const saveIntegration = useCallback(
-		async (isPublic: boolean) => {
-			setStep(Step.SavingIntegration)
-			try {
-				const jwtToken = Cookies.get('meemJwtToken')
-				const { body } = await request
-					.post(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
-							{
-								meemContractId: club.id ?? '',
-								integrationId: integration?.integrationId ?? ''
-							}
-						)}`
-					)
-					.set('Authorization', `JWT ${jwtToken}`)
-					.send({
-						isEnabled: isIntegrationEnabled,
-						isPublic,
-						metadata: {
-							externalUrl: `https://paragraph.xyz/${createdPublicationSlug}`,
-							paragraphSlug: createdPublicationSlug
-						}
-					})
-				log.debug(body)
-				setStep(Step.Success)
-			} catch (e) {
-				log.debug(e)
-				showNotification({
-					title: 'Something went wrong',
-					autoClose: 5000,
-					color: 'red',
-					icon: <AlertCircle />,
-					message: `Please check that all fields are complete and try again.`
-				})
-				setStep(Step.Start)
-				return
+	const saveIntegration = async (isPublic: boolean) => {
+		setStep(Step.SavingIntegration)
+		try {
+			const jwtToken = Cookies.get('meemJwtToken')
+			const postData = `${
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
+				meemContractId: club.id ?? '',
+				integrationId: integration?.integrationId ?? ''
+			})}`
+			const data = {
+				isEnabled: isIntegrationEnabled,
+				isPublic,
+				metadata: {
+					externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
+					paragraphSlug: publicationUrl
+				}
 			}
-		},
-		[
-			club.id,
-			createdPublicationSlug,
-			integration?.integrationId,
-			isIntegrationEnabled
-		]
-	)
+			log.debug(JSON.stringify(postData))
+			log.debug(JSON.stringify(data))
+			const { body } = await request
+				.post(postData)
+				.set('Authorization', `JWT ${jwtToken}`)
+				.send(data)
+
+			setStep(Step.Success)
+		} catch (e) {
+			log.debug(e)
+			showNotification({
+				title: 'Something went wrong',
+				autoClose: 5000,
+				color: 'red',
+				icon: <AlertCircle />,
+				message: `Please check that all fields are complete and try again.`
+			})
+			setStep(Step.Start)
+			return
+		}
+	}
 
 	const showParagraphPopup = () => {
 		let url = `https://paragraph.xyz/link?publicationName=${encodeURIComponent(
@@ -223,7 +215,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 		const popup = window.open(url, 'popup', 'width=600,height=600')
 
 		if (popup) {
-			window.addEventListener('message', function (e) {
+			const listener = function (e: any) {
 				// Wait for Paragraph to signal that it's loaded.
 				if (e.data === 'loaded') {
 					// Send the 'init' message. This is required.
@@ -232,11 +224,14 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 					// When the Papragraph flow completes, we'll broadcast
 					// this message.
 				} else if (e.data === 'updated') {
+					window.removeEventListener('message', listener)
+					popup.close()
 					setStep(Step.SavingIntegration)
-					setCreatedPublicationSlug(`@${publicationName}`)
+					setCreatedPublicationSlug(`@${publicationUrl}`)
 					saveIntegration(!isClubMembersOnly)
 				}
-			})
+			}
+			window.addEventListener('message', listener)
 		}
 	}
 
