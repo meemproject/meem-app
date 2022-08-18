@@ -87,11 +87,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		async function reinitialize() {
-			if (!wallet.web3Provider || !club || isSavingChanges) {
+			if (!wallet.web3Provider || !club) {
 				return
 			}
 
 			setIsSavingChanges(true)
+
+			log.debug(`reinitialize...`)
 
 			try {
 				// const clubSymbol = (club.name ?? '').split(' ')[0].toUpperCase()

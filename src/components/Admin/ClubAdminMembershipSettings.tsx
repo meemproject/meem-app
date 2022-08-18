@@ -508,9 +508,35 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			membershipFundsAddress: rawMembershipFundsAddress,
 			membershipQuantity,
 			membershipStartDate,
-			membershipEndDate,
-			clubAdminsAtClubCreation: clubAdminAddresses
+			membershipEndDate
 		}
+
+		if (!isCreatingClub) {
+			// Now compare to see if there's anything to change - if saving changes
+			log.debug(
+				`old settings = ${JSON.stringify(club?.membershipSettings)}`
+			)
+			log.debug(`new settings = ${JSON.stringify(settings)}`)
+
+			if (club?.membershipSettings) {
+				if (
+					JSON.stringify(club.membershipSettings) ===
+					JSON.stringify(settings)
+				) {
+					log.debug('no changes, nothing to save. Tell user.')
+					setIsSavingChanges(false)
+					showNotification({
+						radius: 'lg',
+						title: 'Oops!',
+						message: 'There are no changes to save.'
+					})
+					return
+				}
+			}
+		} else {
+			settings.clubAdminsAtClubCreation = clubAdminAddresses
+		}
+
 		setMembershipSettings(settings)
 
 		// Show the appropriate modal (create vs edit)
