@@ -161,46 +161,55 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	// Is this integration enabled?
 	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(false)
 
-	const saveIntegration = async (isPublic: boolean) => {
-		setStep(Step.SavingIntegration)
-		try {
-			const jwtToken = Cookies.get('meemJwtToken')
-			const postData = `${
-				process.env.NEXT_PUBLIC_API_URL
-			}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-				meemContractId: club.id ?? '',
-				integrationId: integration?.integrationId ?? ''
-			})}`
-			const data = {
-				isEnabled: isIntegrationEnabled,
-				isPublic,
-				metadata: {
-					externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
-					publicationName: publicationName,
-					publicationSlug: publicationUrl
+	const saveIntegration = useCallback(
+		(isPublic: boolean) => async () => {
+			setStep(Step.SavingIntegration)
+			try {
+				const jwtToken = Cookies.get('meemJwtToken')
+				const postData = `${
+					process.env.NEXT_PUBLIC_API_URL
+				}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
+					meemContractId: club.id ?? '',
+					integrationId: integration?.integrationId ?? ''
+				})}`
+				const data = {
+					isEnabled: isIntegrationEnabled,
+					isPublic,
+					metadata: {
+						externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
+						publicationName,
+						publicationSlug: publicationUrl
+					}
 				}
-			}
-			log.debug(JSON.stringify(postData))
-			log.debug(JSON.stringify(data))
-			const { body } = await request
-				.post(postData)
-				.set('Authorization', `JWT ${jwtToken}`)
-				.send(data)
+				log.debug(JSON.stringify(postData))
+				log.debug(JSON.stringify(data))
+				const { body } = await request
+					.post(postData)
+					.set('Authorization', `JWT ${jwtToken}`)
+					.send(data)
 
-			setStep(Step.Success)
-		} catch (e) {
-			log.debug(e)
-			showNotification({
-				title: 'Something went wrong',
-				autoClose: 5000,
-				color: 'red',
-				icon: <AlertCircle />,
-				message: `Please check that all fields are complete and try again.`
-			})
-			setStep(Step.Start)
-			return
-		}
-	}
+				setStep(Step.Success)
+			} catch (e) {
+				log.debug(e)
+				showNotification({
+					title: 'Something went wrong',
+					autoClose: 5000,
+					color: 'red',
+					icon: <AlertCircle />,
+					message: `Please check that all fields are complete and try again.`
+				})
+				setStep(Step.Start)
+				return
+			}
+		},
+		[
+			integration,
+			publicationName,
+			publicationUrl,
+			isIntegrationEnabled,
+			club
+		]
+	)
 
 	const showParagraphPopup = () => {
 		let url = `https://paragraph.xyz/link?publicationName=${encodeURIComponent(
