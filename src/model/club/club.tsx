@@ -387,8 +387,7 @@ export default async function clubFromMeemContract(
 		// Is the current user a club member?
 		let isClubMember = false
 
-		// If so, what's their tokenId? / parse members
-		let membershipToken = undefined
+		// Parse members
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
 				if (
@@ -397,7 +396,6 @@ export default async function clubFromMeemContract(
 						meem.Owner?.address.toLowerCase()
 				) {
 					isClubMember = true
-					membershipToken = meem.tokenId
 				}
 
 				if (
@@ -486,7 +484,6 @@ export default async function clubFromMeemContract(
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			isClubMember,
-			membershipToken,
 			members,
 			slotsLeft,
 			membershipSettings: {

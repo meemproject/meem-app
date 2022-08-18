@@ -211,10 +211,12 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 		)}&publicationUrl=${publicationUrl}`
 
 		if (isClubMembersOnly) {
-			const communityName = `${club.name} Members`
-			const clubUrl = `https://clubs.link/${club.slug}`
-			const membershipName = `${club.name} Token`
-			url += `&tokenAddress=${club.membershipToken}&communityName=${communityName}&tokenUrl=${clubUrl}&membershipName=${membershipName}`
+			const communityName = encodeURIComponent(`${club.name} Members`)
+			const clubUrl = encodeURIComponent(
+				`https://clubs.link/${club.slug}`
+			)
+			const membershipName = encodeURIComponent(`${club.name} Token`)
+			url += `&tokenAddress=${club.address}&communityName=${communityName}&tokenUrl=${clubUrl}&membershipName=${membershipName}`
 		}
 
 		log.debug(`launching paragraph modal with url: ${url}`)
