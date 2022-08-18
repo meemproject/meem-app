@@ -159,7 +159,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	const [createdPublicationSlug, setCreatedPublicationSlug] = useState('')
 
 	// Is this integration enabled?
-	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(false)
+	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(true)
 
 	const saveIntegration = useCallback(
 		(isPublic: boolean) => async () => {
