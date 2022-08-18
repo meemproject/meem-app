@@ -450,7 +450,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 								<>
 									<Space h={16} />
 									<Center>
-										<Loader />
+										<Loader variant="bars" color="red" />
 									</Center>
 									<Space h={16} />
 								</>
@@ -483,7 +483,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Center>
 										<Button
 											onClick={async () => {
-												// TODO: open paragraph publication editor
 												window.open(
 													'https://paragraph.xyz'
 												)
