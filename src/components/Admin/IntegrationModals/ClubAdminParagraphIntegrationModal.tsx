@@ -176,7 +176,8 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				isPublic,
 				metadata: {
 					externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
-					paragraphSlug: publicationUrl
+					publicationName: publicationName,
+					publicationSlug: publicationUrl
 				}
 			}
 			log.debug(JSON.stringify(postData))
