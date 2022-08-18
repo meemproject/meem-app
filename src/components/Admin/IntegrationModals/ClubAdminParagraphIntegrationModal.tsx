@@ -221,7 +221,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 		log.debug(`launching paragraph modal with url: ${url}`)
 
-		const popup = window.open(url, 'popup', 'width=600,height=600')
+		const popup = window.open(url, 'popup', 'width=600,height=700')
 
 		if (popup) {
 			const listener = function (e: any) {
