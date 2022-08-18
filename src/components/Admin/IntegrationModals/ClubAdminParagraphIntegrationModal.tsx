@@ -325,7 +325,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							</>
 						</>
 					)}
-					{integration && (
+					{integration && !integration.publicationSlug && (
 						<>
 							{step === Step.Start && (
 								<>
