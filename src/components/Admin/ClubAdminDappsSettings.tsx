@@ -307,7 +307,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				updatedInte.isVerified = extraData.isVerified ?? false
 				updatedInte.verifiedTwitterUser =
 					extraData.twitterUsername ?? ''
-				updatedInte.paragraphSlug = extraData.paragraphSlug ?? ''
+				updatedInte.publicationSlug = extraData.publicationSlug ?? ''
+				updatedInte.publicationName = extraData.publicatioName ?? ''
 			}
 			setIntegrationBeingEdited(updatedInte)
 
@@ -705,9 +706,10 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 					club={club}
 					integration={integrationBeingEdited}
 					isOpened={isParagraphModalOpened}
-					onComplete={(slug, isEnabled) => {
+					onComplete={(slug, name, isEnabled) => {
 						updateIntegrationLocally({
-							paragraphSlug: slug,
+							publicationSlug: slug,
+							publicationName: name,
 							isEnabled
 						})
 					}}

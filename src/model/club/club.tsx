@@ -25,7 +25,8 @@ export interface Integration {
 
 	// Per-app properties
 	verifiedTwitterUser?: string
-	paragraphSlug?: string
+	publicationSlug?: string
+	publicationName?: string
 }
 
 export interface ClubMember {
@@ -448,7 +449,10 @@ export default async function clubFromMeemContract(
 						// Per app properties
 						verifiedTwitterUser:
 							inte.metadata.twitterUsername ?? 'Unknown',
-						paragraphSlug: inte.metadata.paragraphSlug ?? 'Unknown'
+						publicationSlug:
+							inte.metadata.publicationSlug ?? 'Unknown',
+						publicationName:
+							inte.metadata.publicationName ?? 'Unknown'
 					}
 
 					if (inte.isPublic) {

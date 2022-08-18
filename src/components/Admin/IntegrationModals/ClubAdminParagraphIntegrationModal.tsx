@@ -122,11 +122,12 @@ interface IProps {
 	integration?: Integration
 	isOpened: boolean
 	onModalClosed: () => void
-	onComplete: (slug: string, isEnabled: boolean) => void
+	onComplete: (slug: string, name: string, isEnabled: boolean) => void
 }
 
 enum Step {
 	Start,
+	OpenGnosis,
 	Transaction,
 	SavingIntegration,
 	Success
@@ -161,55 +162,48 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	// Is this integration enabled?
 	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(true)
 
-	const saveIntegration = useCallback(
-		(isPublic: boolean) => async () => {
-			setStep(Step.SavingIntegration)
-			try {
-				const jwtToken = Cookies.get('meemJwtToken')
-				const postData = `${
-					process.env.NEXT_PUBLIC_API_URL
-				}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-					meemContractId: club.id ?? '',
-					integrationId: integration?.integrationId ?? ''
-				})}`
-				const data = {
-					isEnabled: isIntegrationEnabled,
-					isPublic,
-					metadata: {
-						externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
-						publicationName,
-						publicationSlug: publicationUrl
-					}
-				}
-				log.debug(JSON.stringify(postData))
-				log.debug(JSON.stringify(data))
-				const { body } = await request
-					.post(postData)
-					.set('Authorization', `JWT ${jwtToken}`)
-					.send(data)
+	const [hasOpenedClubTreasury, setHasOpenedClubTreasury] = useState(false)
 
-				setStep(Step.Success)
-			} catch (e) {
-				log.debug(e)
-				showNotification({
-					title: 'Something went wrong',
-					autoClose: 5000,
-					color: 'red',
-					icon: <AlertCircle />,
-					message: `Please check that all fields are complete and try again.`
-				})
-				setStep(Step.Start)
-				return
+	const saveIntegration = async (isPublic: boolean) => {
+		log.debug('saving integration')
+		try {
+			const jwtToken = Cookies.get('meemJwtToken')
+			const postData = `${
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
+				meemContractId: club.id ?? '',
+				integrationId: integration?.integrationId ?? ''
+			})}`
+			const data = {
+				isEnabled: isIntegrationEnabled,
+				isPublic,
+				metadata: {
+					externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
+					publicationSlug: publicationUrl,
+					publicationName
+				}
 			}
-		},
-		[
-			integration,
-			publicationName,
-			publicationUrl,
-			isIntegrationEnabled,
-			club
-		]
-	)
+			log.debug(JSON.stringify(postData))
+			log.debug(JSON.stringify(data))
+			await request
+				.post(postData)
+				.set('Authorization', `JWT ${jwtToken}`)
+				.send(data)
+
+			setStep(Step.Success)
+		} catch (e) {
+			log.debug(e)
+			showNotification({
+				title: 'Something went wrong',
+				autoClose: 5000,
+				color: 'red',
+				icon: <AlertCircle />,
+				message: `Please check that all fields are complete and try again.`
+			})
+			setStep(Step.Start)
+			return
+		}
+	}
 
 	const showParagraphPopup = () => {
 		let url = `https://paragraph.xyz/link?publicationName=${encodeURIComponent(
@@ -222,6 +216,9 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 			const membershipName = `${club.name} Token`
 			url += `&tokenAddress=${club.membershipToken}&communityName=${communityName}&tokenUrl=${clubUrl}&membershipName=${membershipName}`
 		}
+
+		log.debug(`launching paragraph modal with url: ${url}`)
+
 		const popup = window.open(url, 'popup', 'width=600,height=600')
 
 		if (popup) {
@@ -247,16 +244,11 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		// Used when we want to show integration settings after being saved
-		if (integration && integration.paragraphSlug) {
-			setCreatedPublicationSlug(integration.paragraphSlug)
+		if (integration && integration.publicationSlug) {
+			setCreatedPublicationSlug(integration.publicationSlug)
 			setIsIntegrationEnabled(integration.isEnabled ?? false)
 		}
-	}, [
-		hasAddedWindowListener,
-		integration,
-		isClubMembersOnly,
-		saveIntegration
-	])
+	}, [hasAddedWindowListener, integration, isClubMembersOnly])
 
 	return (
 		<>
@@ -273,14 +265,18 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				opened={isOpened}
 				title={
 					<Text className={classes.modalTitle}>
-						{integration && integration.paragraphSlug
+						{integration && integration.publicationSlug
 							? 'Edit Paragraph settings'
 							: 'Create a Paragraph Publication'}
 					</Text>
 				}
 				onClose={() => {
 					if (step === Step.Success) {
-						onComplete(createdPublicationSlug, isIntegrationEnabled)
+						onComplete(
+							publicationUrl,
+							publicationName,
+							isIntegrationEnabled
+						)
 					}
 					onModalClosed()
 				}}
@@ -290,7 +286,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				<Space h={24} />
 
 				<div className={classes.stepsContainer}>
-					{integration && integration.paragraphSlug && (
+					{integration && integration.publicationSlug && (
 						<>
 							<>
 								<Space h={16} />
@@ -313,7 +309,8 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										)
 										// Update the local integration
 										onComplete(
-											createdPublicationSlug,
+											publicationUrl,
+											publicationName,
 											isIntegrationEnabled
 										)
 										// Close our modal
@@ -326,7 +323,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							</>
 						</>
 					)}
-					{integration && !integration.paragraphSlug && (
+					{integration && (
 						<>
 							{step === Step.Start && (
 								<>
@@ -434,7 +431,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											publicationUrl.length > 30
 										}
 										onClick={async () => {
-											showParagraphPopup()
+											setStep(Step.OpenGnosis)
 										}}
 										className={classes.buttonConfirm}
 									>
@@ -442,16 +439,70 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Button>
 								</>
 							)}
+							{step === Step.OpenGnosis && (
+								<>
+									<Space h={16} />
+
+									<Text className={classes.title}>
+										{`Let's connect your club's treasury.`}
+									</Text>
+									<Space h={12} />
+									<Text>
+										{`You'll need to sign a transaction on behalf of your club's treasury in the next step. When you this open in a new tab, return to this tab to continue.`}
+									</Text>
+									<Space h={16} />
+									{!hasOpenedClubTreasury && (
+										<Button
+											onClick={() => {
+												setHasOpenedClubTreasury(true)
+												window.open(
+													`https://gnosis-safe.io/app/${
+														process.env
+															.NEXT_PUBLIC_CHAIN_ID ===
+														'4'
+															? 'rin'
+															: 'matic'
+													}:${
+														club.gnosisSafeAddress
+													}/apps?appUrl=https://apps.gnosis-safe.io/wallet-connect`
+												)
+											}}
+											className={classes.buttonConfirm}
+										>
+											Open Treasury
+										</Button>
+									)}
+									{hasOpenedClubTreasury && (
+										<Button
+											onClick={() => {
+												setStep(Step.Transaction)
+												showParagraphPopup()
+											}}
+											className={classes.buttonConfirm}
+										>
+											Continue
+										</Button>
+									)}
+									<Space h={16} />
+								</>
+							)}
 							{step === Step.Transaction && (
 								<>
 									<Space h={16} />
+									<Text className={classes.title}>
+										{`Connect to club treasury and sign`}
+									</Text>
+									<Space h={12} />
+									<Text>
+										{`Your Paragraph publication belongs to your club. In the window we just opened for you, click 'Connect wallet', scroll down and choose 'WalletConnect', then click 'copy to clipboard'. In the Gnosis Safe tab, paste into the field 'QR Code or connection link'.`}
+									</Text>
+									<Space h={12} />
+									<Text>
+										{`Next, sign the transaction that appears in your Gnosis Safe, then return to the Clubs tab to continue.`}
+									</Text>
+									<Space h={24} />
 									<Center>
-										<Text>
-											Please continue in the new window
-											that was opened.
-										</Text>
-										<Space h={16} />
-										<Loader />
+										<Loader variant="bars" color="red" />
 									</Center>
 									<Space h={16} />
 								</>
