@@ -35,6 +35,7 @@ import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	ClubMember,
+	Integration,
 	MembershipReqType
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
@@ -229,6 +230,9 @@ const useStyles = createStyles(theme => ({
 		a: {
 			color: 'rgba(255, 102, 81, 1)'
 		}
+	},
+	integrationDetailText: {
+		fontWeight: 400
 	}
 }))
 
@@ -865,6 +869,50 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		}
 	}
 
+	const integrationItem = (integration: Integration) => (
+		<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
+			<a
+				onClick={() => {
+					window.open(integration.url)
+				}}
+			>
+				<div className={classes.enabledClubIntegrationItem}>
+					<div className={classes.intItemHeader}>
+						<Image
+							src={`/${integration.icon}`}
+							width={16}
+							height={16}
+							fit={'contain'}
+						/>
+						<Space w={8} />
+						<Text>{integration.name}</Text>
+						{integration.isVerified && (
+							<>
+								<Space w={12} />
+								<Image
+									src="/icon-verified.png"
+									width={16}
+									height={16}
+								/>
+								<Space w={4} />
+								<Text color={'#3EA2FF'} size={'sm'}>
+									Verified
+								</Text>
+							</>
+						)}
+					</div>
+					{integration.publicationName && (
+						<>
+							<Text className={classes.integrationDetailText}>
+								{integration.publicationName}
+							</Text>
+						</>
+					)}
+				</div>
+			</a>
+		</Grid.Col>
+	)
+
 	return (
 		<>
 			{isLoadingClub && (
@@ -1106,92 +1154,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									}`}</Text>
 									<Grid>
 										{club.publicIntegrations.map(
-											integration => (
-												<>
-													<Grid.Col
-														xs={6}
-														sm={4}
-														md={4}
-														lg={4}
-														xl={4}
-														key={integration.name}
-													>
-														<a
-															onClick={() => {
-																window.open(
-																	integration.url
-																)
-															}}
-														>
-															<div
-																className={
-																	classes.enabledClubIntegrationItem
-																}
-															>
-																<div
-																	className={
-																		classes.intItemHeader
-																	}
-																>
-																	<Image
-																		src={`/${integration.icon}`}
-																		width={
-																			16
-																		}
-																		height={
-																			16
-																		}
-																		fit={
-																			'contain'
-																		}
-																	/>
-																	<Space
-																		w={8}
-																	/>
-																	<Text>
-																		{
-																			integration.name
-																		}
-																	</Text>
-																	{integration.isVerified && (
-																		<>
-																			<Space
-																				w={
-																					12
-																				}
-																			/>
-																			<Image
-																				src="/icon-verified.png"
-																				width={
-																					16
-																				}
-																				height={
-																					16
-																				}
-																			/>
-																			<Space
-																				w={
-																					4
-																				}
-																			/>
-																			<Text
-																				color={
-																					'#3EA2FF'
-																				}
-																				size={
-																					'sm'
-																				}
-																			>
-																				Verified
-																			</Text>
-																		</>
-																	)}
-																</div>
-															</div>
-														</a>
-													</Grid.Col>
-												</>
-											)
+											integration =>
+												integrationItem(integration)
 										)}
 									</Grid>
 								</>
@@ -1208,85 +1172,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										}
 									>{`Apps (${club.allIntegrations.length})`}</Text>
 									<Grid>
-										{club.allIntegrations.map(
-											integration => (
-												<Grid.Col
-													xs={6}
-													sm={4}
-													md={4}
-													lg={4}
-													xl={4}
-													key={integration.name}
-												>
-													<a
-														onClick={() => {
-															window.open(
-																integration.url
-															)
-														}}
-													>
-														<div
-															className={
-																classes.enabledClubIntegrationItem
-															}
-														>
-															<div
-																className={
-																	classes.intItemHeader
-																}
-															>
-																<Image
-																	src={`/${integration.icon}`}
-																	width={16}
-																	height={16}
-																	fit={
-																		'contain'
-																	}
-																/>
-																<Space w={8} />
-																<Text>
-																	{
-																		integration.name
-																	}
-																</Text>
-																{integration.isVerified && (
-																	<>
-																		<Space
-																			w={
-																				12
-																			}
-																		/>
-																		<Image
-																			src="/icon-verified.png"
-																			width={
-																				16
-																			}
-																			height={
-																				16
-																			}
-																		/>
-																		<Space
-																			w={
-																				4
-																			}
-																		/>
-																		<Text
-																			color={
-																				'#3EA2FF'
-																			}
-																			size={
-																				'sm'
-																			}
-																		>
-																			Verified
-																		</Text>
-																	</>
-																)}
-															</div>
-														</div>
-													</a>
-												</Grid.Col>
-											)
+										{club.allIntegrations.map(integration =>
+											integrationItem(integration)
 										)}
 									</Grid>
 								</>
