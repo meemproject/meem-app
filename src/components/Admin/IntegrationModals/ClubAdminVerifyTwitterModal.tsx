@@ -16,7 +16,7 @@ import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
-import { Club, Integration } from '../../model/club/club'
+import { Club, Integration } from '../../../model/club/club'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -83,7 +83,7 @@ interface IProps {
 	integration?: Integration
 	isOpened: boolean
 	onModalClosed: () => void
-	onSuccessfulVerification: () => void
+	onSuccessfulVerification: (username: string) => void
 }
 
 enum Step {
@@ -140,7 +140,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 
 				message: `Your club is now verified.`
 			})
-			onSuccessfulVerification()
+			onSuccessfulVerification(twitterUsername)
 			onModalClosed()
 		} catch (e) {
 			log.debug(e)

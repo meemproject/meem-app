@@ -20,11 +20,12 @@ import { MeemAPI } from '@meemproject/api'
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
-// eslint-disable-next-line import/namespace
+import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetIntegrationsQuery } from '../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../graphql/clubs'
 import { Club, Integration } from '../../model/club/club'
-import { ClubAdminVerifyTwitterModal } from './ClubAdminVerifyTwitterModal'
+import { ClubAdminParagraphIntegrationModal } from './IntegrationModals/ClubAdminParagraphIntegrationModal'
+import { ClubAdminVerifyTwitterModal } from './IntegrationModals/ClubAdminVerifyTwitterModal'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -104,18 +105,19 @@ const useStyles = createStyles(theme => ({
 	enabledClubIntegrationItem: {
 		display: 'flex',
 		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
+		alignItems: 'center',
 		marginBottom: 12,
-		cursor: 'pointer',
 		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
+		backgroundColor: 'white',
 		borderRadius: 16,
-		padding: 16
+		paddingTop: 16,
+		position: 'relative'
 	},
 	intItemHeader: {
+		fontWeight: 600,
 		display: 'flex',
-		alignItems: 'center'
+		alignItems: 'center',
+		zIndex: 1
 	},
 	intItemDescription: {
 		fontWeight: 400,
@@ -207,6 +209,30 @@ const useStyles = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'end'
+	},
+	integrationActions: {
+		display: 'flex',
+		flexDirection: 'row',
+		height: 46
+	},
+	integrationAction: {
+		cursor: 'pointer',
+		display: 'flex',
+		flexDirection: 'row',
+		padding: 12
+	},
+	integrationActionText: {
+		fontSize: 14
+	},
+	enabledIntHeaderBg: {
+		backgroundColor: '#FAFAFA',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		height: 53,
+		borderTopLeftRadius: 16,
+		borderTopRightRadius: 16
 	}
 }))
 
@@ -220,18 +246,16 @@ enum Step {
 }
 
 export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
-	// General properties / tab management
 	const { classes } = useStyles()
 
-	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] =
-		useState(false)
-
+	// Fetch a list of available integrations.
 	const {
 		loading,
 		error,
 		data: inteData
 	} = useQuery<GetIntegrationsQuery>(GET_INTEGRATIONS)
 
+	// Lists of integrations
 	const [existingIntegrations, setExistingIntegrations] = useState<
 		Integration[]
 	>([])
@@ -239,6 +263,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		Integration[]
 	>([])
 	const [allIntegrations, setAllIntegrations] = useState<Integration[]>([])
+	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] =
+		useState(false)
 
 	// Used to populate existing integrations when changes are made
 	const [integrationBeingEdited, setIntegrationBeingEdited] =
@@ -250,25 +276,40 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		useState(true)
 	const [isCurrentIntegrationPublic, setCurrentIntegrationPublic] =
 		useState(false)
+
+	// Other properties of the integration being currently edited
 	const [currentIntegrationId, setCurrentIntegrationId] = useState('')
 
-	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
-		useState(false)
+	// Properties tied to simple, url-based integrations
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isIntegrationModalOpened, setIntegrationModalOpened] =
 		useState(false)
 	const [step, setStep] = useState<Step>(Step.FollowGuide)
 
-	const [isSavingChanges, setIsSavingChanges] = useState(false)
+	// Modals for deeper integrations
+	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
+		useState(false)
+	const [isParagraphModalOpened, setParagraphModalOpened] = useState(false)
 
-	const updateIntegrationLocally = (withTwitter: boolean) => {
-		// Update the integration locally
+	// Update the integration locally so that changes are reflected immediately.
+	const updateIntegrationLocally = (extraData: any) => {
 		const updatedInte = integrationBeingEdited
 
 		if (updatedInte && integrationBeingEdited) {
 			updatedInte.url = currentIntegrationUrl
 			updatedInte.isEnabled = isCurrentIntegrationEnabled
 			updatedInte.isPublic = isCurrentIntegrationPublic
-			updatedInte.isVerified = withTwitter
+
+			// If there was extra integration metadata, update it on the integration here.
+			if (extraData) {
+				updatedInte.isEnabled =
+					extraData.isEnabled ?? isCurrentIntegrationEnabled
+				updatedInte.isVerified = extraData.isVerified ?? false
+				updatedInte.verifiedTwitterUser =
+					extraData.twitterUsername ?? ''
+				updatedInte.publicationSlug = extraData.publicationSlug ?? ''
+				updatedInte.publicationName = extraData.publicatioName ?? ''
+			}
 			setIntegrationBeingEdited(updatedInte)
 
 			// Check to see if this integration is an existing integration
@@ -293,7 +334,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 			} else {
 				// If already enabled, modify the existing integration
 				const newIntegrations = [...existingIntegrations]
-				// Is there a better way of updating an array item in typescript than a C loop?
+				// TODO: Is there a better way of updating an array item in typescript than a C loop?
 				for (let i = 0; i < newIntegrations.length; i++) {
 					if (
 						newIntegrations[i].integrationId ===
@@ -309,7 +350,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		}
 	}
 
-	const saveIntegrationChanges = async () => {
+	// Used by simple integrations, i.e. ones that just require a URL.
+	const saveSimpleIntegrationChanges = async () => {
 		if (integrationBeingEdited) {
 			// Validate URL
 
@@ -439,13 +481,15 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 		setCurrentIntegrationEnabled(integration.isEnabled ?? true)
 		setCurrentIntegrationId(integration.integrationId ?? '')
 		setCurrentIntegrationPublic(
-			integration.isPublic ??
-				(integration.name === 'Twitter' ||
-					integration.name === 'Discord')
+			integration.isPublic ?? integration.name === 'Discord'
 		)
 
 		if (integration.name === 'Twitter') {
+			// Open twitter integration modal
 			setVerifyTwitterModalOpened(true)
+		} else if (integration.name === 'Paragraph') {
+			// Open paragraph integration modal
+			setParagraphModalOpened(true)
 		} else {
 			if (integration.url && integration.url.length > 0) {
 				setStep(Step.AddUrl)
@@ -467,56 +511,111 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						<Grid>
 							{existingIntegrations.map(integration => (
 								<Grid.Col
-									xs={6}
-									sm={4}
+									xs={8}
+									sm={8}
 									md={4}
 									lg={4}
 									xl={4}
 									key={integration.name}
 								>
-									<a
-										onClick={() => {
-											editIntegration(integration)
-										}}
+									<div
+										className={
+											classes.enabledClubIntegrationItem
+										}
 									>
 										<div
 											className={
-												classes.enabledClubIntegrationItem
+												classes.enabledIntHeaderBg
+											}
+										/>
+										<div className={classes.intItemHeader}>
+											<Image
+												src={`/${integration.icon}`}
+												width={16}
+												height={16}
+												fit={'contain'}
+											/>
+											<Space w={8} />
+											<Text>{integration.name}</Text>
+											{integration.isVerified && (
+												<>
+													<Space w={12} />
+													<Image
+														src="/icon-verified.png"
+														width={16}
+														height={16}
+													/>
+													<Space w={4} />
+													<Text
+														color={'#3EA2FF'}
+														size={'sm'}
+													>
+														Verified
+													</Text>
+												</>
+											)}
+										</div>
+										<div
+											style={{
+												width: '100%'
+											}}
+										>
+											<Space h={12} />
+											<Divider />
+										</div>
+										<div
+											className={
+												classes.integrationActions
 											}
 										>
-											<div
-												className={
-													classes.intItemHeader
-												}
+											<a
+												onClick={() => {
+													window.open(integration.url)
+												}}
 											>
-												<Image
-													src={`/${integration.icon}`}
-													width={16}
-													height={16}
-													fit={'contain'}
-												/>
-												<Space w={8} />
-												<Text>{integration.name}</Text>
-												{integration.isVerified && (
-													<>
-														<Space w={12} />
-														<Image
-															src="/icon-verified.png"
-															width={16}
-															height={16}
-														/>
-														<Space w={4} />
-														<Text
-															color={'#3EA2FF'}
-															size={'sm'}
-														>
-															Verified
-														</Text>
-													</>
-												)}
-											</div>
+												<div
+													className={
+														classes.integrationAction
+													}
+												>
+													<ExternalLink size={20} />
+													<Space w={4} />
+													<Text
+														className={
+															classes.integrationActionText
+														}
+													>
+														Launch App
+													</Text>
+												</div>
+											</a>
+											<Space w={4} />
+											<Divider orientation="vertical" />
+											<Space w={4} />
+
+											<a
+												onClick={() => {
+													editIntegration(integration)
+												}}
+											>
+												<div
+													className={
+														classes.integrationAction
+													}
+												>
+													<Settings size={20} />
+													<Space w={4} />
+													<Text
+														className={
+															classes.integrationActionText
+														}
+													>
+														Settings
+													</Text>
+												</div>
+											</a>
 										</div>
-									</a>
+									</div>
 								</Grid.Col>
 							))}
 						</Grid>
@@ -532,8 +631,8 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						<Grid>
 							{availableIntegrations.map(integration => (
 								<Grid.Col
-									xs={6}
-									sm={4}
+									xs={8}
+									sm={8}
 									md={4}
 									lg={4}
 									xl={4}
@@ -593,11 +692,29 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 					club={club}
 					integration={integrationBeingEdited}
 					isOpened={isVerifyTwitterModalOpened}
-					onSuccessfulVerification={() => {
-						updateIntegrationLocally(true)
+					onSuccessfulVerification={twitterUsername => {
+						updateIntegrationLocally({
+							isVerified: true,
+							twitterUsername
+						})
 					}}
 					onModalClosed={() => {
 						setVerifyTwitterModalOpened(false)
+					}}
+				/>
+				<ClubAdminParagraphIntegrationModal
+					club={club}
+					integration={integrationBeingEdited}
+					isOpened={isParagraphModalOpened}
+					onComplete={(slug, name, isEnabled) => {
+						updateIntegrationLocally({
+							publicationSlug: slug,
+							publicationName: name,
+							isEnabled
+						})
+					}}
+					onModalClosed={() => {
+						setParagraphModalOpened(false)
 					}}
 				/>
 				<Modal
@@ -767,15 +884,14 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 						)}
 
 					{integrationBeingEdited &&
-						(integrationBeingEdited?.name === 'Twitter' ||
-							integrationBeingEdited?.name === 'Discord' ||
+						(integrationBeingEdited?.name === 'Discord' ||
 							step === Step.AddUrl) && (
 							<div className={classes.buttonEndAlign}>
 								<Button
 									loading={isSavingChanges}
 									disabled={isSavingChanges}
 									onClick={async () => {
-										saveIntegrationChanges()
+										saveSimpleIntegrationChanges()
 									}}
 									className={classes.buttonConfirm}
 								>
