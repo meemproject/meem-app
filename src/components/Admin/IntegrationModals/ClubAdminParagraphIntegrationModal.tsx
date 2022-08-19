@@ -221,7 +221,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 		log.debug(`launching paragraph modal with url: ${url}`)
 
-		const popup = window.open(url, 'popup', 'width=600,height=600')
+		const popup = window.open(url, 'popup', 'width=600,height=700')
 
 		if (popup) {
 			const listener = function (e: any) {
@@ -325,7 +325,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							</>
 						</>
 					)}
-					{integration && (
+					{integration && !integration.publicationSlug && (
 						<>
 							{step === Step.Start && (
 								<>
@@ -450,7 +450,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Text>
 									<Space h={12} />
 									<Text>
-										{`You'll need to sign a transaction on behalf of your club's treasury in the next step. When you this open in a new tab, return to this tab to continue.`}
+										{`You'll need to sign a transaction on behalf of your club's treasury in the next step. Leave the tab open for now - we'll come back in a moment.`}
 									</Text>
 									<Space h={16} />
 									{!hasOpenedClubTreasury && (
@@ -468,6 +468,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 														club.gnosisSafeAddress
 													}/apps?appUrl=https://apps.gnosis-safe.io/wallet-connect`
 												)
+												window.focus()
 											}}
 											className={classes.buttonConfirm}
 										>
