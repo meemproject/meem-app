@@ -18,11 +18,15 @@ export interface Integration {
 	isEnabled?: boolean
 	isPublic?: boolean
 	isVerified?: boolean
-	verifiedTwitterUser?: string
 	url?: string
 	icon?: string
 	description?: string
 	guideUrl?: string
+
+	// Per-app properties
+	verifiedTwitterUser?: string
+	publicationSlug?: string
+	publicationName?: string
 }
 
 export interface ClubMember {
@@ -340,11 +344,11 @@ export default async function clubFromMeemContract(
 								andor: MembershipReqAndor.Or,
 								type,
 								applicationInstructions: clubData.metadata
-									.applicationInstructions
-									? clubData.metadata.applicationInstructions
+									.application_instructions
+									? clubData.metadata.application_instructions
 											.length > 0
 										? clubData.metadata
-												.applicationInstructions[0]
+												.application_instructions[0]
 										: undefined
 									: undefined,
 								approvedAddresses,
@@ -385,8 +389,7 @@ export default async function clubFromMeemContract(
 		// Is the current user a club member?
 		let isClubMember = false
 
-		// If so, what's their tokenId? / parse members
-		let membershipToken = undefined
+		// Parse members
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
 				if (
@@ -395,7 +398,6 @@ export default async function clubFromMeemContract(
 						meem.Owner?.address.toLowerCase()
 				) {
 					isClubMember = true
-					membershipToken = meem.tokenId
 				}
 
 				if (
@@ -439,11 +441,18 @@ export default async function clubFromMeemContract(
 						isEnabled: inte.isEnabled,
 						isPublic: inte.isPublic,
 						isVerified: inte.metadata.isVerified ?? false,
-						verifiedTwitterUser:
-							inte.metadata.twitterUsername ?? 'Unknown',
+
 						guideUrl: inte.Integration?.guideUrl,
 						url: inte.metadata.externalUrl ?? '',
-						isExistingIntegration: true
+						isExistingIntegration: true,
+
+						// Per app properties
+						verifiedTwitterUser:
+							inte.metadata.twitterUsername ?? 'Unknown',
+						publicationSlug:
+							inte.metadata.publicationSlug ?? 'Unknown',
+						publicationName:
+							inte.metadata.publicationName ?? 'Unknown'
 					}
 
 					if (inte.isPublic) {
@@ -451,6 +460,7 @@ export default async function clubFromMeemContract(
 					} else {
 						privateIntegrations.push(integration)
 					}
+
 					allIntegrations.push(integration)
 				}
 			})
@@ -476,7 +486,6 @@ export default async function clubFromMeemContract(
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			isClubMember,
-			membershipToken,
 			members,
 			slotsLeft,
 			membershipSettings: {

@@ -191,7 +191,13 @@ const MAuthenticate: React.FC = () => {
 				</Text>
 			</div>
 
-			{isLoading && <Loader className={classes.loader} />}
+			{isLoading && (
+				<Loader
+					className={classes.loader}
+					variant="bars"
+					color={'red'}
+				/>
+			)}
 			<div>
 				{!isLoading && !isConnected && (
 					<Button

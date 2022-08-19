@@ -456,28 +456,33 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		const sanitizedRequirements: MembershipRequirement[] = []
 		await Promise.all(
 			membershipRequirements.map(async function (req) {
-				const newReq = req
+				const newReq = { ...req }
 				if (req.approvedAddresses.length > 0) {
 					const rawAddresses: string[] = []
 					await Promise.all(
 						// Make sure all addresses resolve correctly.
 
 						req.approvedAddresses.map(async function (address) {
-							if (isApprovedAddressesInvalid) {
+							if (!isApprovedAddressesInvalid) {
 								const name = await provider.resolveName(address)
 								if (!name) {
 									isApprovedAddressesInvalid = true
+									log.debug(
+										'an approved address was invalid. Returning...'
+									)
 									return
 								} else {
-									// log.debug(
-									// 	`validated approved address ${address}`
-									// )
+									log.debug(
+										`validated approved address ${address}`
+									)
 									rawAddresses.push(name)
 								}
 							}
 						})
 					)
 					newReq.approvedAddresses = rawAddresses
+				} else {
+					log.debug(`no approved addresses found`)
 				}
 				sanitizedRequirements.push(newReq)
 			})
@@ -508,9 +513,39 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			membershipFundsAddress: rawMembershipFundsAddress,
 			membershipQuantity,
 			membershipStartDate,
-			membershipEndDate,
-			clubAdminsAtClubCreation: clubAdminAddresses
+			membershipEndDate
 		}
+
+		if (!isCreatingClub) {
+			// Now compare to see if there's anything to change - if saving changes
+
+			// Compare membership settings
+			const oldMembershipSettings = JSON.stringify(
+				club?.membershipSettings
+			)
+			const newMembershipSettings = JSON.stringify(settings)
+			const isMembershipSettingsSame =
+				oldMembershipSettings === newMembershipSettings
+
+			// Compare club admins
+			const oldClubAdmins = club?.admins ?? []
+			const newClubAdmins = clubAdmins
+			const isClubAdminsSame = oldClubAdmins == newClubAdmins
+
+			if (isMembershipSettingsSame && isClubAdminsSame) {
+				log.debug('no changes, nothing to save. Tell user.')
+				setIsSavingChanges(false)
+				showNotification({
+					radius: 'lg',
+					title: 'Oops!',
+					message: 'There are no changes to save.'
+				})
+				return
+			}
+		} else {
+			settings.clubAdminsAtClubCreation = clubAdminAddresses
+		}
+
 		setMembershipSettings(settings)
 
 		// Show the appropriate modal (create vs edit)
@@ -538,40 +573,42 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			if (club && !hasLoadedClubData) {
 				setHasLoadedClubData(true)
 
-				// Set club admins
-				setClubAdmins(club.admins ?? [])
-
-				// Set the club admins string, used by the club admins textfield
+				// Set the club admins array + string, used by the club admins textfield
 				let adminsString = ''
+				const admins: string[] = []
 				if (club.admins) {
 					club.admins.forEach(admin => {
+						admins.push(admin)
 						adminsString = adminsString + `${admin}\n`
 					})
 				}
+				setClubAdmins(admins)
 				setClubAdminsString(adminsString)
 
-				setCostToJoin(club.membershipSettings?.costToJoin ?? 0)
-				setMembershipQuantity(
-					club.membershipSettings?.membershipQuantity ?? 0
+				// Create a deep copy of original settings which we can use later to compare
+				const originalSettings: MembershipSettings = JSON.parse(
+					JSON.stringify(club.membershipSettings)
 				)
-				setMembershipRequirements(
-					club.membershipSettings?.requirements ?? []
-				)
-				setMembershipSettings(club.membershipSettings)
-				log.debug(club.membershipSettings?.membershipStartDate ?? 0)
-				if (club.membershipSettings?.membershipStartDate) {
+
+				setMembershipRequirements(originalSettings.requirements)
+				setMembershipSettings(originalSettings)
+
+				setCostToJoin(originalSettings.costToJoin)
+				setMembershipQuantity(originalSettings.membershipQuantity ?? 0)
+
+				if (originalSettings?.membershipStartDate) {
 					setMembershipStartDate(
-						new Date(club.membershipSettings.membershipStartDate)
+						new Date(originalSettings.membershipStartDate)
 					)
 				}
-				if (club.membershipSettings?.membershipEndDate) {
+				if (originalSettings?.membershipEndDate) {
 					setMembershipEndDate(
-						new Date(club.membershipSettings.membershipEndDate)
+						new Date(originalSettings.membershipEndDate)
 					)
 				}
 
 				setMembershipFundsAddress(
-					club.membershipSettings?.membershipFundsAddress ?? ''
+					originalSettings.membershipFundsAddress ?? ''
 				)
 			}
 		}
