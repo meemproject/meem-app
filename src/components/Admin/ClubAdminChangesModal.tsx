@@ -87,11 +87,14 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		async function reinitialize() {
-			if (!wallet.web3Provider || !club || isSavingChanges) {
+			if (!wallet.web3Provider || !club) {
+				log.debug('no web3provider or club')
 				return
 			}
 
 			setIsSavingChanges(true)
+
+			log.debug(`reinitialize...`)
 
 			try {
 				// const clubSymbol = (club.name ?? '').split(' ')[0].toUpperCase()
@@ -380,7 +383,6 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}
 			} else {
 				// compare to initial club fata
-				log.debug('compare club data...')
 				compareClubData()
 			}
 		}
@@ -418,7 +420,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			})
 		}
 
-		if (!isSocketsConnected && isOpened) {
+		if (isOpened && !hasSubscribedToSockets) {
 			connect()
 			reinitialize()
 		}

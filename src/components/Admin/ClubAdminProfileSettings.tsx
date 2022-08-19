@@ -318,12 +318,25 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 
 		// 'save changes' modal for execution club settings updates
 		// convert current settings and update for the modal
+		const oldClub = JSON.stringify(club)
 		const newClub = club
 		newClub.name = clubName
 		newClub.description = clubDescription
 		newClub.image = smallClubLogo
-		setNewClubData(newClub)
-		setSaveChangesModalOpened(true)
+
+		if (oldClub === JSON.stringify(newClub)) {
+			log.debug('no changes, nothing to save. Tell user.')
+			setIsSavingChanges(false)
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message: 'There are no changes to save.'
+			})
+			return
+		} else {
+			setNewClubData(newClub)
+			setSaveChangesModalOpened(true)
+		}
 	}
 
 	const saveChanges = async () => {
