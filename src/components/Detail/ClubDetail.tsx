@@ -12,7 +12,8 @@ import {
 	Center,
 	Group,
 	Modal,
-	Divider
+	Divider,
+	HoverCard
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
@@ -42,6 +43,9 @@ import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
+	row: { display: 'flex' },
+	rowCentered: { display: 'flex', alignItems: 'center' },
+
 	header: {
 		backgroundColor: 'rgba(160, 160, 160, 0.05)',
 		display: 'flex',
@@ -191,11 +195,14 @@ const useStyles = createStyles(theme => ({
 		paddingLeft: 16,
 		paddingBottom: 16,
 		cursor: 'pointer',
-		display: 'flex'
+		display: 'flex',
+		alignItems: 'center'
+	},
+	memberItemName: {
+		marginLeft: 6
 	},
 	memberAdminIndicator: {
-		marginLeft: 6,
-		marginTop: 6
+		marginLeft: 6
 	},
 	enabledClubIntegrationItem: {
 		display: 'flex',
@@ -1193,42 +1200,176 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										xl={4}
 										key={member.wallet}
 									>
-										<div className={classes.memberItem}>
-											<Text
-												onClick={() => {
-													navigator.clipboard.writeText(
-														member.ens
-															? member.ens
-															: member.wallet
-													)
-													showNotification({
-														radius: 'lg',
-														title: 'Member address copied',
-														autoClose: 2000,
-														color: 'green',
-														icon: <Check />,
-
-														message: `This member's address was copied to your clipboard.`
-													})
-												}}
-											>
-												{member.ens
-													? member.ens
-													: quickTruncate(
-															member.wallet
-													  )}
-											</Text>
-											{memberIsAdmin(member.wallet) && (
-												<Image
+										<HoverCard
+											width={280}
+											shadow="md"
+											radius={16}
+										>
+											<HoverCard.Target>
+												<div
 													className={
-														classes.memberAdminIndicator
+														classes.memberItem
 													}
-													src="/star.png"
-													height={12}
-													width={12}
-												/>
-											)}
-										</div>
+												>
+													<Image
+														src={
+															member.profilePicture
+														}
+														radius={16}
+														height={32}
+														width={32}
+													/>
+													<Text
+														className={
+															classes.memberItemName
+														}
+														// onClick={() => {
+														// 	navigator.clipboard.writeText(
+														// 		member.ens
+														// 			? member.ens
+														// 			: member.wallet
+														// 	)
+														// 	showNotification({
+														// 		radius: 'lg',
+														// 		title: 'Member address copied',
+														// 		autoClose: 2000,
+														// 		color: 'green',
+														// 		icon: <Check />,
+
+														// 		message: `This member's address was copied to your clipboard.`
+														// 	})
+														// }}
+													>
+														{member.displayName
+															? member.displayName
+															: member.ens
+															? member.ens
+															: quickTruncate(
+																	member.wallet
+															  )}
+													</Text>
+													{memberIsAdmin(
+														member.wallet
+													) && (
+														<Image
+															className={
+																classes.memberAdminIndicator
+															}
+															src="/star.png"
+															height={12}
+															width={12}
+														/>
+													)}
+												</div>
+											</HoverCard.Target>
+											<HoverCard.Dropdown>
+												<div className={classes.row}>
+													<Image
+														src={
+															member.profilePicture
+														}
+														radius={24}
+														height={48}
+														width={48}
+													/>
+													<Space w={16} />
+													<div>
+														{member.displayName && (
+															<Text>
+																{
+																	member.displayName
+																}
+															</Text>
+														)}
+
+														<Text>
+															{member.ens
+																? member.ens
+																: quickTruncate(
+																		member.wallet
+																  )}
+														</Text>
+													</div>
+												</div>
+												{(member.emailAddress ||
+													member.twitterUsername ||
+													member.discordUsername) && (
+													<>
+														<Space h={24} />
+														<div
+															className={
+																classes.rowCentered
+															}
+														>
+															<Text>Contact</Text>
+															<Space w={4} />
+															<Image
+																src="/icon-verified.png"
+																width={16}
+																height={16}
+															/>
+														</div>
+														{member.twitterUsername && (
+															<div
+																className={
+																	classes.rowCentered
+																}
+															>
+																<Image
+																	src="/integration-twitter.png"
+																	width={12}
+																	height={12}
+																/>
+																<Space w={4} />
+																<Text>
+																	{
+																		member.twitterUsername
+																	}
+																</Text>
+															</div>
+														)}
+														{member.discordUsername && (
+															<div
+																className={
+																	classes.rowCentered
+																}
+															>
+																<Image
+																	src="/integration-discord.png"
+																	width={12}
+																	height={12}
+																/>
+																<Space w={4} />
+																<Text>
+																	{
+																		member.discordUsername
+																	}
+																</Text>
+															</div>
+														)}
+														{member.emailAddress && (
+															<div
+																className={
+																	classes.rowCentered
+																}
+															>
+																<Image
+																	src="/integration-email.png"
+																	width={12}
+																	height={12}
+																/>
+																<Space w={4} />
+																<Text>
+																	{
+																		member.emailAddress
+																	}
+																</Text>
+															</div>
+														)}
+													</>
+												)}
+											</HoverCard.Dropdown>
+										</HoverCard>
 									</Grid.Col>
 								))}
 							</Grid>

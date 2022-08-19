@@ -30,8 +30,13 @@ export interface Integration {
 }
 
 export interface ClubMember {
+	displayName?: string
 	wallet: string
 	ens?: string
+	profilePicture?: string
+	twitterUsername?: string
+	discordUsername?: string
+	emailAddress?: string
 }
 
 export interface Club {
@@ -417,7 +422,12 @@ export default async function clubFromMeemContract(
 						if (!hasAlreadyBeenAdded) {
 							members.push({
 								wallet: meem.Owner.address,
-								ens: meem.Owner.ens ?? undefined
+								ens: meem.Owner.ens ?? undefined,
+								displayName: 'Kate',
+								profilePicture: '/exampleclub.png',
+								twitterUsername: 'kweimer',
+								discordUsername: 'username#1234',
+								emailAddress: 'kateeweimer@gmail.com'
 							})
 						}
 					}
