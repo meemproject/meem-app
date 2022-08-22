@@ -12,7 +12,11 @@ import {
 	GetClubSubscriptionSubscription // eslint-disable-next-line import/namespace
 } from '../../../generated/graphql'
 import { SUB_CLUB } from '../../graphql/clubs'
-import { Club, MembershipReqType } from '../../model/club/club'
+import {
+	Club,
+	MembershipReqType,
+	MembershipRequirementToMeemPermission
+} from '../../model/club/club'
 
 const useStyles = createStyles(() => ({
 	header: {
@@ -136,131 +140,26 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					}
 				}
 
-				const joinCostInWei = club.membershipSettings
-					? ethers.utils.parseEther(
-							`${club.membershipSettings.costToJoin}`
-					  )
-					: 0
-
-				const mintPermissions: any[] = []
-				if (club.membershipSettings) {
-					club.membershipSettings.requirements.forEach(
-						requirement => {
-							switch (requirement.type) {
-								case MembershipReqType.None:
-									// Anyone can join for X MATIC
-									mintPermissions.push({
-										permission: MeemAPI.Permission.Anyone,
-										addresses: [],
-										numTokens: 0,
-										costWei: joinCostInWei,
-										mintStartTimestamp: club
-											.membershipSettings
-											?.membershipStartDate
-											? club.membershipSettings?.membershipStartDate.getTime() /
-											  1000
-											: 0,
-										mintEndTimestamp: club
-											.membershipSettings
-											?.membershipEndDate
-											? club.membershipSettings?.membershipEndDate.getTime() /
-											  1000
-											: 0
-									})
-									break
-								case MembershipReqType.ApprovedApplicants:
-									// Approved applicants join for X MATIC
-									mintPermissions.push({
-										permission:
-											MeemAPI.Permission.Addresses,
-										addresses:
-											requirement.approvedAddresses,
-										numTokens: 0,
-										costWei: joinCostInWei,
-										mintStartTimestamp: club
-											.membershipSettings
-											?.membershipStartDate
-											? club.membershipSettings?.membershipStartDate.getTime() /
-											  1000
-											: 0,
-										mintEndTimestamp: club
-											.membershipSettings
-											?.membershipEndDate
-											? club.membershipSettings?.membershipEndDate.getTime() /
-											  1000
-											: 0
-									})
-									break
-								case MembershipReqType.TokenHolders:
-									//Token holders with X tokens can join for X MATIC
-									mintPermissions.push({
-										permission: MeemAPI.Permission.Holders,
-										addresses: [
-											requirement.tokenContractAddress
-										],
-										numTokens: requirement.tokenMinQuantity,
-										costWei: joinCostInWei,
-										mintStartTimestamp: club
-											.membershipSettings
-											?.membershipStartDate
-											? club.membershipSettings?.membershipStartDate.getTime() /
-											  1000
-											: 0,
-										mintEndTimestamp: club
-											.membershipSettings
-											?.membershipEndDate
-											? club.membershipSettings?.membershipEndDate.getTime() /
-											  1000
-											: 0
-									})
-									break
-								case MembershipReqType.OtherClubMember:
-									// Members of X club can join for X MATIC
-									mintPermissions.push({
-										permission: MeemAPI.Permission.Holders,
-										addresses: [
-											requirement.clubContractAddress
-										],
-										numTokens: requirement.tokenMinQuantity,
-										costWei: joinCostInWei,
-										mintStartTimestamp: club
-											.membershipSettings
-											?.membershipStartDate
-											? club.membershipSettings?.membershipStartDate.getTime() /
-											  1000
-											: 0,
-										mintEndTimestamp: club
-											.membershipSettings
-											?.membershipEndDate
-											? club.membershipSettings?.membershipEndDate.getTime() /
-											  1000
-											: 0
-									})
-									break
-							}
+				let mintPermissions: MeemAPI.IMeemPermission[] = []
+				if (club && club.membershipSettings) {
+					mintPermissions = club.membershipSettings.requirements.map(
+						mr => {
+							return MembershipRequirementToMeemPermission({
+								...mr,
+								costEth: club.membershipSettings?.costToJoin,
+								mintStartTimestamp: club.membershipSettings
+									?.membershipStartDate
+									? club.membershipSettings?.membershipStartDate.getTime() /
+									  1000
+									: 0,
+								mintEndTimestamp: club.membershipSettings
+									?.membershipEndDate
+									? club.membershipSettings?.membershipEndDate.getTime() /
+									  1000
+									: 0
+							})
 						}
 					)
-
-					// Now push special 'admin mint' permissions which bypass the other requirements
-					log.debug('adding admin permissions...')
-					club.admins?.forEach(admin => {
-						mintPermissions.push({
-							permission: MeemAPI.Permission.Addresses,
-							addresses: [admin],
-							numTokens: 0,
-							costWei: 0,
-							mintStartTimestamp: club.membershipSettings
-								?.membershipStartDate
-								? club.membershipSettings?.membershipStartDate.getTime() /
-								  1000
-								: 0,
-							mintEndTimestamp: club.membershipSettings
-								?.membershipEndDate
-								? club.membershipSettings?.membershipEndDate.getTime() /
-								  1000
-								: 0
-						})
-					})
 				}
 
 				const reInitializeContractFetcher = makeFetcher<
