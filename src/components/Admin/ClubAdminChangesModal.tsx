@@ -4,7 +4,6 @@ import { createStyles, Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { makeFetcher, useSockets, useWallet } from '@meemproject/react'
-import { ethers } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
@@ -14,7 +13,6 @@ import {
 import { SUB_CLUB } from '../../graphql/clubs'
 import {
 	Club,
-	MembershipReqType,
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
 
