@@ -40,6 +40,8 @@ export async function tokenFromContractAddress(
 		signer: wallet.signer
 	})
 
+	console.log({ contractAddress })
+
 	// URL
 	const tokenUrl =
 		process.env.NEXT_PUBLIC_CHAIN_ID === '4'

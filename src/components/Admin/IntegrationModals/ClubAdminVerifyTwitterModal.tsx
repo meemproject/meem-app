@@ -11,6 +11,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import React, { useState } from 'react'
 import request from 'superagent'
@@ -101,6 +102,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 	onSuccessfulVerification
 }) => {
 	const { classes } = useStyles()
+	const wallet = useWallet()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
@@ -111,7 +113,6 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 
 		// Save the change to the db
 		try {
-			const jwtToken = Cookies.get('meemJwtToken')
 			const { body } = await request
 				.post(
 					`${
@@ -121,7 +122,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 						integrationId: integration?.integrationId ?? ''
 					})}`
 				)
-				.set('Authorization', `JWT ${jwtToken}`)
+				.set('Authorization', `JWT ${wallet.jwt}`)
 				.send({
 					isEnabled: true,
 					isPublic: true,

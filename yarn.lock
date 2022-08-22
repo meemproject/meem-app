@@ -1998,13 +1998,13 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/api@^0.7.8":
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.7.8.tgz#27ac0299f51d775b3d5db1083d9b549ab1d3d829"
-  integrity sha512-r4lrxAfgLZFqN519kSAZo8ZFik5NuNaj61FkZh/SORqP7HVXGoV43CLHy+2sr84OiQrmCSlSN8fIraK6CEXrdA==
+"@meemproject/api@0.7.9-pre-be1a346.0", "@meemproject/api@^0.7.9-pre-be1a346.0":
+  version "0.7.9-pre-be1a346.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.7.9-pre-be1a346.0.tgz#b58fe7a6c0007343e1f1f0244977d1c2d3281e38"
+  integrity sha512-mAl1DanFBKNUy8/5yDFwf8KzVkqNSNJdrguWifYUoVxKOgJw62MQZkgoE9HtgM1D7iJGINNaW65PR+M33hxE5A==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.7.8"
+    "@meemproject/meem-contracts" "^0.7.9-pre-be1a346.0"
     "@typechain/ethers-v5" "^10.0.0"
     "@types/js-cookie" "^3.0.1"
     "@types/luxon" "^2.3.1"
@@ -2016,26 +2016,27 @@
     tsnd "^1.0.2"
     typechain "^8.0.0"
 
-"@meemproject/meem-contracts@^0.7.8":
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.7.8.tgz#0d7ea32ee259380c402be4a1d5f209bf220c93d7"
-  integrity sha512-3Zu33BZyC/1RYGXgDnwqMLrNsaxGLhiHq0WafW4lllaqnPMsTE5MWVXgTM5GuEOTkOJyRxNZXZ4aWkOZd1+J0g==
+"@meemproject/meem-contracts@0.7.9-pre-be1a346.0", "@meemproject/meem-contracts@^0.7.9-pre-be1a346.0":
+  version "0.7.9-pre-be1a346.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.7.9-pre-be1a346.0.tgz#ff29caf768f33e7be9b32b74b6300e30173f00f9"
+  integrity sha512-MoXx4mkYNYmgS6TREBtFoOnILb0rgu7r21gOI40F6iIvxUxQI8hdnxFnwu1jCyLnnMgiNRpX7tQm7jlIV+yfvQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
+    "@openzeppelin/contracts" "^4.7.3"
     ethers "^5.6.4"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.7.8":
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.7.8.tgz#583450390e66e489dec3aa289cd10e4e39413de2"
-  integrity sha512-LozIZXHthPehfLpHYLTZHPm5Cm9yltKmpW7qi+1G3Xa6t4eZnKooN3T8b+3GmIyp40463dckDJCIzhGK8sv2fg==
+"@meemproject/react@0.7.9-pre-be1a346.0":
+  version "0.7.9-pre-be1a346.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.7.9-pre-be1a346.0.tgz#9fe251762627045f93ef69e13aadfdcbbdcecd9f"
+  integrity sha512-2sQHJJ9q7Me2ud6NNghb4/0QlAV0xdleVAEIASR4hANvOhjTaXirxG50BI84HpTG86+ZnQfUPnVg65FG1mDNiA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/api" "^0.7.8"
-    "@meemproject/meem-contracts" "^0.7.8"
-    "@meemproject/utils" "^0.7.8"
+    "@meemproject/api" "^0.7.9-pre-be1a346.0"
+    "@meemproject/meem-contracts" "^0.7.9-pre-be1a346.0"
+    "@meemproject/utils" "^0.7.9-pre-be1a346.0"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -2048,13 +2049,13 @@
     swr "^1.3.0"
     web3modal "^1.9.6"
 
-"@meemproject/utils@^0.7.8":
-  version "0.7.8"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.7.8.tgz#cc27dcbd68196a56fd97254608ba3ca54e594c08"
-  integrity sha512-S/dhEqfM0RqtykJyr/YcHsWdYH5LYMDcb1nyaL1VfJUJ0c5Gg2YRsztvIpuRYujxR3ix2GgUox35ZWAAAGnqrg==
+"@meemproject/utils@^0.7.9-pre-be1a346.0":
+  version "0.7.9-pre-be1a346.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.7.9-pre-be1a346.0.tgz#75b8b179ec7254503f6073a4c886a3480e777892"
+  integrity sha512-ynClIAvA/7qEmmwkzUKt8m3ODizknJY2wRSZmCsdMff6mAVldPcnT+GPqUFWm3lw7MzQuuLz6Qhuk7TDbQ16tg==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.7.8"
+    "@meemproject/meem-contracts" "^0.7.9-pre-be1a346.0"
     ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@^2.0.0":
@@ -2681,6 +2682,11 @@
   integrity sha512-s1zLBjWhdEI2zwaoSgyOFoKSl109CUcVBCc7biPJ3aAf6LGLU6szDvi31JPU7bxfla2lqfhjbbg/5DdFNxOwHw==
   dependencies:
     "@octokit/openapi-types" "^11.2.0"
+
+"@openzeppelin/contracts@^4.7.3":
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.7.3.tgz#939534757a81f8d69cc854c7692805684ff3111e"
+  integrity sha512-dGRS0agJzu8ybo44pCIf3xBaPQN/65AIXNgK8+4gzKd5kbvlqyxryUYVLJv7fK98Seyd2hDZzVEHSWAh0Bt1Yw==
 
 "@polka/url@^1.0.0-next.20":
   version "1.0.0-next.21"

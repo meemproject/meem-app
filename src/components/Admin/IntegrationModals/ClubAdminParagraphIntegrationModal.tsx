@@ -167,7 +167,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	const saveIntegration = async (isPublic: boolean) => {
 		log.debug('saving integration')
 		try {
-			const jwtToken = Cookies.get('meemJwtToken')
 			const postData = `${
 				process.env.NEXT_PUBLIC_API_URL
 			}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
@@ -187,7 +186,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 			log.debug(JSON.stringify(data))
 			await request
 				.post(postData)
-				.set('Authorization', `JWT ${jwtToken}`)
+				.set('Authorization', `JWT ${wallet.jwt}`)
 				.send(data)
 
 			setStep(Step.Success)

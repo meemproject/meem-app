@@ -16,7 +16,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { LoginState, useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
 import Cookies from 'js-cookie'
@@ -319,10 +319,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
-		) {
+		if (wallet.loginState !== LoginState.LoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -334,11 +331,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		setIsJoiningClub(true)
 		try {
-			if (club && club.rawClub) {
+			if (club && club.rawClub && club.id) {
 				if (
 					typeof club?.membershipSettings?.costToJoin === 'number' &&
 					club.membershipSettings.costToJoin > 0
 				) {
+					const getProofFetcher = makeFetcher<
+						MeemAPI.v1.GetMintingProof.IQueryParams,
+						MeemAPI.v1.GetMintingProof.IRequestBody,
+						MeemAPI.v1.GetMintingProof.IResponseBody
+					>({
+						method: MeemAPI.v1.GetMintingProof.method
+					})
+
+					const { proof } = await getProofFetcher(
+						MeemAPI.v1.GetMintingProof.path({
+							meemContractId: club.id
+						})
+					)
+
 					// Cost to join. Run the transaction in browser.
 					const meemContract = new Contract(
 						club?.address ?? '',
@@ -356,7 +367,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					const data = {
 						to: wallet.accounts[0],
 						tokenURI: uri,
-						tokenType: MeemAPI.MeemType.Original
+						tokenType: MeemAPI.MeemType.Original,
+						proof
 					}
 
 					log.debug(JSON.stringify(data))
@@ -454,6 +466,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				bundleData?.Bundles[0].abi,
 				wallet.signer
 			)
+			console.log({ club, meemContract })
 			if (club && club.membershipToken) {
 				const tx = await meemContract?.burn(club?.membershipToken)
 				// @ts-ignore
@@ -493,6 +506,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			const reqs: RequirementString[] = []
 			let index = 0
+			console.log({ possibleClub })
 			if (possibleClub.membershipSettings) {
 				await Promise.all(
 					possibleClub.membershipSettings?.requirements.map(
@@ -815,6 +829,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					message: `You'll be missed!`
 				})
 			}
+			console.log('leaving club', { data, possibleClub })
 		}
 
 		if (!loading && !error && !club && clubData) {

@@ -17,6 +17,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
@@ -247,6 +248,7 @@ enum Step {
 
 export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
+	const wallet = useWallet()
 
 	// Fetch a list of available integrations.
 	const {
@@ -373,7 +375,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 			// Save the change to the db
 			try {
-				const jwtToken = Cookies.get('meemJwtToken')
 				const { body } = await request
 					.post(
 						`${
@@ -385,7 +386,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 							}
 						)}`
 					)
-					.set('Authorization', `JWT ${jwtToken}`)
+					.set('Authorization', `JWT ${wallet.jwt}`)
 					.send({
 						isEnabled: isCurrentIntegrationEnabled,
 						isPublic: isCurrentIntegrationPublic,
