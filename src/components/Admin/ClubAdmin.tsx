@@ -290,23 +290,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.isConnected
 	])
 
-	// const refetchClub = async () => {
-	// 	log.debug('refetching club...')
-	// 	const newClub = await refetch()
-	// 	if (newClub.data.MeemContracts.length > 0) {
-	// 		const possibleClub = await clubFromMeemContract(
-	// 			wallet,
-	// 			wallet.isConnected ? wallet.accounts[0] : '',
-	// 			newClub.data.MeemContracts[0] as MeemContracts
-	// 		)
-
-	// 		if (possibleClub && possibleClub.name) {
-	// 			log.debug('got new club data, setting it...')
-	// 			setClub(possibleClub)
-	// 		}
-	// 	}
-	// }
-
 	useEffect(() => {
 		if (bundleData?.Bundles[0]) {
 			let allFunctionSelectors: string[] = []
@@ -386,7 +369,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="red" variant="bars" />
+						<Loader color="red" variant="oval" />
 					</Center>
 				</Container>
 			)}
