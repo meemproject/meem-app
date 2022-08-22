@@ -458,7 +458,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}}
 			>
 				<div className={classes.header}>
-					<Loader color="red" variant="bars" />
+					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text className={classes.title}>{`Saving changes...`}</Text>
 					<Space h={24} />
