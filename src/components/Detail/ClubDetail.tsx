@@ -926,7 +926,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="red" variant="bars" />
+						<Loader color="red" variant="oval" />
 					</Center>
 				</Container>
 			)}
@@ -1060,7 +1060,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										>
 											<Loader
 												color="red"
-												variant="bars"
+												variant="oval"
 											/>
 										</div>
 									)}

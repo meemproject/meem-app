@@ -502,7 +502,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 		// Convert funds address from ENS if necessary
 		let rawMembershipFundsAddress = ''
 		if (membershipFundsAddress.length > 0) {
-			const address = await provider.lookupAddress(membershipFundsAddress)
+			const address = await provider.resolveName(membershipFundsAddress)
 			rawMembershipFundsAddress = address ?? membershipFundsAddress
 		}
 
