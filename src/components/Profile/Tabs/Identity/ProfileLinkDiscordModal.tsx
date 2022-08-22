@@ -141,7 +141,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 										</a>
 									)}
 									{isAuthenticating && (
-										<Loader variant="bars" color="red" />
+										<Loader variant="oval" color="red" />
 									)}
 								</div>
 							}

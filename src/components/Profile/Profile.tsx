@@ -225,7 +225,7 @@ export const ProfileComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader variant="bars" color="red" />
+						<Loader variant="oval" color="red" />
 					</Center>
 				</Container>
 			)}

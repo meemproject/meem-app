@@ -145,7 +145,7 @@ export const MyClubsComponent: React.FC = () => {
 				<Container>
 					<Space h={30} />
 					<Center>
-						<Loader variant="bars" color="red" />
+						<Loader variant="oval" color="red" />
 					</Center>
 				</Container>
 			)}
