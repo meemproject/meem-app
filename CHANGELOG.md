@@ -1,3 +1,5 @@
+## [1.5.5](https://github.com/meemproject/clubs-web/compare/v1.5.4...v1.5.5) (2022-08-22)
+
 ## [1.5.4](https://github.com/meemproject/clubs-web/compare/v1.5.3...v1.5.4) (2022-08-22)
 
 ## [1.5.3](https://github.com/meemproject/clubs-web/compare/v1.5.2...v1.5.3) (2022-08-19)
