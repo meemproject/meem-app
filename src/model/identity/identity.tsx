@@ -21,10 +21,10 @@ export interface Identity {
 	integrations?: IdentityIntegration[]
 }
 
-export function getDefaultIdentity(): Identity {
+export function getDefaultIdentity(walletAddress: string): Identity {
 	return {
 		id: '',
-		walletAddress: '',
+		walletAddress,
 		ensAddress: '',
 		displayName: '',
 		profilePic: '',

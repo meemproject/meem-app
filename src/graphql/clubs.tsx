@@ -328,6 +328,10 @@ export const MEEM_ID_SUBSCRIPTION = gql`
 				address
 				ens
 			}
+			MeemIdentityIntegrations {
+				metadata
+				visibility
+			}
 		}
 	}
 `
