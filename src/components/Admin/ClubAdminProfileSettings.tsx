@@ -398,7 +398,7 @@ export const ClubAdminProfileSettings: React.FC<IProps> = ({ club }) => {
 					</Button>
 				</div>
 			)}
-			{isLoadingImage && <Loader color="red" variant="bars" />}
+			{isLoadingImage && <Loader color="red" variant="oval" />}
 			{!isLoadingImage && smallClubLogo.length > 0 && (
 				<div className={classes.clubLogoImageContainer}>
 					<Image
