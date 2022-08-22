@@ -431,7 +431,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				onClose={() => closeModal()}
 			>
 				<div className={classes.header}>
-					<Loader color="red" variant="bars" />
+					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
 						className={classes.title}

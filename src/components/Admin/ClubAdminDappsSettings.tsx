@@ -679,7 +679,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 				)}
 				{loading && !inteData && (
 					<>
-						<Loader color="red" variant="bars" />
+						<Loader color="red" variant="oval" />
 					</>
 				)}
 				{!loading && error && (

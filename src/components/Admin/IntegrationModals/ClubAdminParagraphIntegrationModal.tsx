@@ -504,7 +504,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Text>
 									<Space h={24} />
 									<Center>
-										<Loader variant="bars" color="red" />
+										<Loader variant="oval" color="red" />
 									</Center>
 									<Space h={16} />
 								</>
@@ -513,7 +513,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 								<>
 									<Space h={16} />
 									<Center>
-										<Loader variant="bars" color="red" />
+										<Loader variant="oval" color="red" />
 									</Center>
 									<Space h={16} />
 								</>

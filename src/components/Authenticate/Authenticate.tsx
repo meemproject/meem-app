@@ -191,7 +191,7 @@ const MAuthenticate: React.FC = () => {
 			{isLoading && (
 				<Loader
 					className={classes.loader}
-					variant="bars"
+					variant="oval"
 					color={'red'}
 				/>
 			)}
