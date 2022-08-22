@@ -807,36 +807,6 @@ export type ContractsFunctionSelectorsArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregated selection of "Contracts" */
-export type Contracts_Aggregate = {
-  __typename?: 'Contracts_aggregate';
-  aggregate?: Maybe<Contracts_Aggregate_Fields>;
-  nodes: Array<Contracts>;
-};
-
-/** aggregate fields of "Contracts" */
-export type Contracts_Aggregate_Fields = {
-  __typename?: 'Contracts_aggregate_fields';
-  avg?: Maybe<Contracts_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Contracts_Max_Fields>;
-  min?: Maybe<Contracts_Min_Fields>;
-  stddev?: Maybe<Contracts_Stddev_Fields>;
-  stddev_pop?: Maybe<Contracts_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Contracts_Stddev_Samp_Fields>;
-  sum?: Maybe<Contracts_Sum_Fields>;
-  var_pop?: Maybe<Contracts_Var_Pop_Fields>;
-  var_samp?: Maybe<Contracts_Var_Samp_Fields>;
-  variance?: Maybe<Contracts_Variance_Fields>;
-};
-
-
-/** aggregate fields of "Contracts" */
-export type Contracts_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Contracts_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
 /** order by aggregate values of table "Contracts" */
 export type Contracts_Aggregate_Order_By = {
   avg?: InputMaybe<Contracts_Avg_Order_By>;
@@ -850,12 +820,6 @@ export type Contracts_Aggregate_Order_By = {
   var_pop?: InputMaybe<Contracts_Var_Pop_Order_By>;
   var_samp?: InputMaybe<Contracts_Var_Samp_Order_By>;
   variance?: InputMaybe<Contracts_Variance_Order_By>;
-};
-
-/** aggregate avg on columns */
-export type Contracts_Avg_Fields = {
-  __typename?: 'Contracts_avg_fields';
-  version?: Maybe<Scalars['Float']>;
 };
 
 /** order by avg() on columns of table "Contracts" */
@@ -885,21 +849,6 @@ export type Contracts_Bool_Exp = {
   version?: InputMaybe<Int_Comparison_Exp>;
 };
 
-/** aggregate max on columns */
-export type Contracts_Max_Fields = {
-  __typename?: 'Contracts_max_fields';
-  CreatorId?: Maybe<Scalars['uuid']>;
-  bytecode?: Maybe<Scalars['String']>;
-  contractType?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  description?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-  version?: Maybe<Scalars['Int']>;
-};
-
 /** order by max() on columns of table "Contracts" */
 export type Contracts_Max_Order_By = {
   CreatorId?: InputMaybe<Order_By>;
@@ -912,21 +861,6 @@ export type Contracts_Max_Order_By = {
   name?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
   version?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Contracts_Min_Fields = {
-  __typename?: 'Contracts_min_fields';
-  CreatorId?: Maybe<Scalars['uuid']>;
-  bytecode?: Maybe<Scalars['String']>;
-  contractType?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  description?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-  version?: Maybe<Scalars['Int']>;
 };
 
 /** order by min() on columns of table "Contracts" */
@@ -990,21 +924,9 @@ export enum Contracts_Select_Column {
   Version = 'version'
 }
 
-/** aggregate stddev on columns */
-export type Contracts_Stddev_Fields = {
-  __typename?: 'Contracts_stddev_fields';
-  version?: Maybe<Scalars['Float']>;
-};
-
 /** order by stddev() on columns of table "Contracts" */
 export type Contracts_Stddev_Order_By = {
   version?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Contracts_Stddev_Pop_Fields = {
-  __typename?: 'Contracts_stddev_pop_fields';
-  version?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_pop() on columns of table "Contracts" */
@@ -1012,21 +934,9 @@ export type Contracts_Stddev_Pop_Order_By = {
   version?: InputMaybe<Order_By>;
 };
 
-/** aggregate stddev_samp on columns */
-export type Contracts_Stddev_Samp_Fields = {
-  __typename?: 'Contracts_stddev_samp_fields';
-  version?: Maybe<Scalars['Float']>;
-};
-
 /** order by stddev_samp() on columns of table "Contracts" */
 export type Contracts_Stddev_Samp_Order_By = {
   version?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Contracts_Sum_Fields = {
-  __typename?: 'Contracts_sum_fields';
-  version?: Maybe<Scalars['Int']>;
 };
 
 /** order by sum() on columns of table "Contracts" */
@@ -1034,21 +944,9 @@ export type Contracts_Sum_Order_By = {
   version?: InputMaybe<Order_By>;
 };
 
-/** aggregate var_pop on columns */
-export type Contracts_Var_Pop_Fields = {
-  __typename?: 'Contracts_var_pop_fields';
-  version?: Maybe<Scalars['Float']>;
-};
-
 /** order by var_pop() on columns of table "Contracts" */
 export type Contracts_Var_Pop_Order_By = {
   version?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Contracts_Var_Samp_Fields = {
-  __typename?: 'Contracts_var_samp_fields';
-  version?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_samp() on columns of table "Contracts" */
@@ -1056,16 +954,170 @@ export type Contracts_Var_Samp_Order_By = {
   version?: InputMaybe<Order_By>;
 };
 
-/** aggregate variance on columns */
-export type Contracts_Variance_Fields = {
-  __typename?: 'Contracts_variance_fields';
-  version?: Maybe<Scalars['Float']>;
-};
-
 /** order by variance() on columns of table "Contracts" */
 export type Contracts_Variance_Order_By = {
   version?: InputMaybe<Order_By>;
 };
+
+/** columns and relationships of "Hashtags" */
+export type Hashtags = {
+  __typename?: 'Hashtags';
+  /** An array relationship */
+  TweetHashtags: Array<TweetHashtags>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  tag: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "Hashtags" */
+export type HashtagsTweetHashtagsArgs = {
+  distinct_on?: InputMaybe<Array<TweetHashtags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<TweetHashtags_Order_By>>;
+  where?: InputMaybe<TweetHashtags_Bool_Exp>;
+};
+
+/** Boolean expression to filter rows from the table "Hashtags". All fields are combined with a logical 'AND'. */
+export type Hashtags_Bool_Exp = {
+  TweetHashtags?: InputMaybe<TweetHashtags_Bool_Exp>;
+  _and?: InputMaybe<Array<Hashtags_Bool_Exp>>;
+  _not?: InputMaybe<Hashtags_Bool_Exp>;
+  _or?: InputMaybe<Array<Hashtags_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  tag?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** Ordering options when selecting data from "Hashtags". */
+export type Hashtags_Order_By = {
+  TweetHashtags_aggregate?: InputMaybe<TweetHashtags_Aggregate_Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  tag?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "Hashtags" */
+export enum Hashtags_Select_Column {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Tag = 'tag',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** columns and relationships of "IdentityIntegrations" */
+export type IdentityIntegrations = {
+  __typename?: 'IdentityIntegrations';
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description: Scalars['String'];
+  icon: Scalars['String'];
+  id: Scalars['uuid'];
+  name: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "IdentityIntegrations" */
+export type IdentityIntegrations_Aggregate = {
+  __typename?: 'IdentityIntegrations_aggregate';
+  aggregate?: Maybe<IdentityIntegrations_Aggregate_Fields>;
+  nodes: Array<IdentityIntegrations>;
+};
+
+/** aggregate fields of "IdentityIntegrations" */
+export type IdentityIntegrations_Aggregate_Fields = {
+  __typename?: 'IdentityIntegrations_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<IdentityIntegrations_Max_Fields>;
+  min?: Maybe<IdentityIntegrations_Min_Fields>;
+};
+
+
+/** aggregate fields of "IdentityIntegrations" */
+export type IdentityIntegrations_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Boolean expression to filter rows from the table "IdentityIntegrations". All fields are combined with a logical 'AND'. */
+export type IdentityIntegrations_Bool_Exp = {
+  _and?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
+  _not?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  _or?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  description?: InputMaybe<String_Comparison_Exp>;
+  icon?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type IdentityIntegrations_Max_Fields = {
+  __typename?: 'IdentityIntegrations_max_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type IdentityIntegrations_Min_Fields = {
+  __typename?: 'IdentityIntegrations_min_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  description?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** Ordering options when selecting data from "IdentityIntegrations". */
+export type IdentityIntegrations_Order_By = {
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
+  icon?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "IdentityIntegrations" */
+export enum IdentityIntegrations_Select_Column {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Icon = 'icon',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
@@ -1093,28 +1145,6 @@ export type Integrations = {
   updatedAt: Scalars['timestamptz'];
 };
 
-/** aggregated selection of "Integrations" */
-export type Integrations_Aggregate = {
-  __typename?: 'Integrations_aggregate';
-  aggregate?: Maybe<Integrations_Aggregate_Fields>;
-  nodes: Array<Integrations>;
-};
-
-/** aggregate fields of "Integrations" */
-export type Integrations_Aggregate_Fields = {
-  __typename?: 'Integrations_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<Integrations_Max_Fields>;
-  min?: Maybe<Integrations_Min_Fields>;
-};
-
-
-/** aggregate fields of "Integrations" */
-export type Integrations_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Integrations_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
 /** Boolean expression to filter rows from the table "Integrations". All fields are combined with a logical 'AND'. */
 export type Integrations_Bool_Exp = {
   _and?: InputMaybe<Array<Integrations_Bool_Exp>>;
@@ -1128,32 +1158,6 @@ export type Integrations_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** aggregate max on columns */
-export type Integrations_Max_Fields = {
-  __typename?: 'Integrations_max_fields';
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  description?: Maybe<Scalars['String']>;
-  guideUrl?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-};
-
-/** aggregate min on columns */
-export type Integrations_Min_Fields = {
-  __typename?: 'Integrations_min_fields';
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  description?: Maybe<Scalars['String']>;
-  guideUrl?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['uuid']>;
-  name?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** Ordering options when selecting data from "Integrations". */
@@ -1212,28 +1216,6 @@ export type MeemContractIntegrationsMetadataArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregated selection of "MeemContractIntegrations" */
-export type MeemContractIntegrations_Aggregate = {
-  __typename?: 'MeemContractIntegrations_aggregate';
-  aggregate?: Maybe<MeemContractIntegrations_Aggregate_Fields>;
-  nodes: Array<MeemContractIntegrations>;
-};
-
-/** aggregate fields of "MeemContractIntegrations" */
-export type MeemContractIntegrations_Aggregate_Fields = {
-  __typename?: 'MeemContractIntegrations_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<MeemContractIntegrations_Max_Fields>;
-  min?: Maybe<MeemContractIntegrations_Min_Fields>;
-};
-
-
-/** aggregate fields of "MeemContractIntegrations" */
-export type MeemContractIntegrations_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
 /** order by aggregate values of table "MeemContractIntegrations" */
 export type MeemContractIntegrations_Aggregate_Order_By = {
   count?: InputMaybe<Order_By>;
@@ -1259,17 +1241,6 @@ export type MeemContractIntegrations_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
-/** aggregate max on columns */
-export type MeemContractIntegrations_Max_Fields = {
-  __typename?: 'MeemContractIntegrations_max_fields';
-  IntegrationId?: Maybe<Scalars['uuid']>;
-  MeemContractId?: Maybe<Scalars['uuid']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-};
-
 /** order by max() on columns of table "MeemContractIntegrations" */
 export type MeemContractIntegrations_Max_Order_By = {
   IntegrationId?: InputMaybe<Order_By>;
@@ -1278,17 +1249,6 @@ export type MeemContractIntegrations_Max_Order_By = {
   deletedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type MeemContractIntegrations_Min_Fields = {
-  __typename?: 'MeemContractIntegrations_min_fields';
-  IntegrationId?: Maybe<Scalars['uuid']>;
-  MeemContractId?: Maybe<Scalars['uuid']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** order by min() on columns of table "MeemContractIntegrations" */
@@ -1354,28 +1314,6 @@ export type MeemContractWallets = {
   updatedAt: Scalars['timestamptz'];
 };
 
-/** aggregated selection of "MeemContractWallets" */
-export type MeemContractWallets_Aggregate = {
-  __typename?: 'MeemContractWallets_aggregate';
-  aggregate?: Maybe<MeemContractWallets_Aggregate_Fields>;
-  nodes: Array<MeemContractWallets>;
-};
-
-/** aggregate fields of "MeemContractWallets" */
-export type MeemContractWallets_Aggregate_Fields = {
-  __typename?: 'MeemContractWallets_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<MeemContractWallets_Max_Fields>;
-  min?: Maybe<MeemContractWallets_Min_Fields>;
-};
-
-
-/** aggregate fields of "MeemContractWallets" */
-export type MeemContractWallets_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
 /** order by aggregate values of table "MeemContractWallets" */
 export type MeemContractWallets_Aggregate_Order_By = {
   count?: InputMaybe<Order_By>;
@@ -1399,18 +1337,6 @@ export type MeemContractWallets_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
-/** aggregate max on columns */
-export type MeemContractWallets_Max_Fields = {
-  __typename?: 'MeemContractWallets_max_fields';
-  MeemContractId?: Maybe<Scalars['uuid']>;
-  WalletId?: Maybe<Scalars['uuid']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  role?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-};
-
 /** order by max() on columns of table "MeemContractWallets" */
 export type MeemContractWallets_Max_Order_By = {
   MeemContractId?: InputMaybe<Order_By>;
@@ -1420,18 +1346,6 @@ export type MeemContractWallets_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   role?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type MeemContractWallets_Min_Fields = {
-  __typename?: 'MeemContractWallets_min_fields';
-  MeemContractId?: Maybe<Scalars['uuid']>;
-  WalletId?: Maybe<Scalars['uuid']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  role?: Maybe<Scalars['String']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** order by min() on columns of table "MeemContractWallets" */
@@ -1481,12 +1395,8 @@ export type MeemContracts = {
   __typename?: 'MeemContracts';
   /** An array relationship */
   MeemContractIntegrations: Array<MeemContractIntegrations>;
-  /** An aggregate relationship */
-  MeemContractIntegrations_aggregate: MeemContractIntegrations_Aggregate;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
-  /** An aggregate relationship */
-  MeemContractWallets_aggregate: MeemContractWallets_Aggregate;
   /** An array relationship */
   Meems: Array<Meems>;
   /** An aggregate relationship */
@@ -1522,27 +1432,7 @@ export type MeemContractsMeemContractIntegrationsArgs = {
 
 
 /** columns and relationships of "MeemContracts" */
-export type MeemContractsMeemContractIntegrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemContractIntegrations_Order_By>>;
-  where?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
-};
-
-
-/** columns and relationships of "MeemContracts" */
 export type MeemContractsMeemContractWalletsArgs = {
-  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
-  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
-};
-
-
-/** columns and relationships of "MeemContracts" */
-export type MeemContractsMeemContractWallets_AggregateArgs = {
   distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -1743,28 +1633,6 @@ export type MeemIdentifications = {
   updatedAt: Scalars['timestamptz'];
 };
 
-/** aggregated selection of "MeemIdentifications" */
-export type MeemIdentifications_Aggregate = {
-  __typename?: 'MeemIdentifications_aggregate';
-  aggregate?: Maybe<MeemIdentifications_Aggregate_Fields>;
-  nodes: Array<MeemIdentifications>;
-};
-
-/** aggregate fields of "MeemIdentifications" */
-export type MeemIdentifications_Aggregate_Fields = {
-  __typename?: 'MeemIdentifications_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<MeemIdentifications_Max_Fields>;
-  min?: Maybe<MeemIdentifications_Min_Fields>;
-};
-
-
-/** aggregate fields of "MeemIdentifications" */
-export type MeemIdentifications_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
 /** Boolean expression to filter rows from the table "MeemIdentifications". All fields are combined with a logical 'AND'. */
 export type MeemIdentifications_Bool_Exp = {
   _and?: InputMaybe<Array<MeemIdentifications_Bool_Exp>>;
@@ -1775,24 +1643,6 @@ export type MeemIdentifications_Bool_Exp = {
   hasOnboarded?: InputMaybe<Boolean_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** aggregate max on columns */
-export type MeemIdentifications_Max_Fields = {
-  __typename?: 'MeemIdentifications_max_fields';
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-};
-
-/** aggregate min on columns */
-export type MeemIdentifications_Min_Fields = {
-  __typename?: 'MeemIdentifications_min_fields';
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** Ordering options when selecting data from "MeemIdentifications". */
@@ -1818,6 +1668,466 @@ export enum MeemIdentifications_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** columns and relationships of "MeemIdentities" */
+export type MeemIdentities = {
+  __typename?: 'MeemIdentities';
+  DefaultWalletId?: Maybe<Scalars['uuid']>;
+  /** An array relationship */
+  MeemIdentityIntegrations: Array<MeemIdentityIntegrations>;
+  /** An aggregate relationship */
+  MeemIdentityIntegrations_aggregate: MeemIdentityIntegrations_Aggregate;
+  /** An array relationship */
+  MeemIdentityWallets: Array<MeemIdentityWallets>;
+  /** An aggregate relationship */
+  MeemIdentityWallets_aggregate: MeemIdentityWallets_Aggregate;
+  /** An object relationship */
+  Wallet?: Maybe<Wallets>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  displayName?: Maybe<Scalars['String']>;
+  id: Scalars['uuid'];
+  profilePicUrl?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "MeemIdentities" */
+export type MeemIdentitiesMeemIdentityIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemIdentities" */
+export type MeemIdentitiesMeemIdentityIntegrations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemIdentities" */
+export type MeemIdentitiesMeemIdentityWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemIdentities" */
+export type MeemIdentitiesMeemIdentityWallets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+/** aggregated selection of "MeemIdentities" */
+export type MeemIdentities_Aggregate = {
+  __typename?: 'MeemIdentities_aggregate';
+  aggregate?: Maybe<MeemIdentities_Aggregate_Fields>;
+  nodes: Array<MeemIdentities>;
+};
+
+/** aggregate fields of "MeemIdentities" */
+export type MeemIdentities_Aggregate_Fields = {
+  __typename?: 'MeemIdentities_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<MeemIdentities_Max_Fields>;
+  min?: Maybe<MeemIdentities_Min_Fields>;
+};
+
+
+/** aggregate fields of "MeemIdentities" */
+export type MeemIdentities_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<MeemIdentities_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "MeemIdentities" */
+export type MeemIdentities_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<MeemIdentities_Max_Order_By>;
+  min?: InputMaybe<MeemIdentities_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "MeemIdentities". All fields are combined with a logical 'AND'. */
+export type MeemIdentities_Bool_Exp = {
+  DefaultWalletId?: InputMaybe<Uuid_Comparison_Exp>;
+  MeemIdentityIntegrations?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+  MeemIdentityWallets?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+  Wallet?: InputMaybe<Wallets_Bool_Exp>;
+  _and?: InputMaybe<Array<MeemIdentities_Bool_Exp>>;
+  _not?: InputMaybe<MeemIdentities_Bool_Exp>;
+  _or?: InputMaybe<Array<MeemIdentities_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  displayName?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  profilePicUrl?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type MeemIdentities_Max_Fields = {
+  __typename?: 'MeemIdentities_max_fields';
+  DefaultWalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  displayName?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  profilePicUrl?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "MeemIdentities" */
+export type MeemIdentities_Max_Order_By = {
+  DefaultWalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  displayName?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  profilePicUrl?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type MeemIdentities_Min_Fields = {
+  __typename?: 'MeemIdentities_min_fields';
+  DefaultWalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  displayName?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  profilePicUrl?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "MeemIdentities" */
+export type MeemIdentities_Min_Order_By = {
+  DefaultWalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  displayName?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  profilePicUrl?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "MeemIdentities". */
+export type MeemIdentities_Order_By = {
+  DefaultWalletId?: InputMaybe<Order_By>;
+  MeemIdentityIntegrations_aggregate?: InputMaybe<MeemIdentityIntegrations_Aggregate_Order_By>;
+  MeemIdentityWallets_aggregate?: InputMaybe<MeemIdentityWallets_Aggregate_Order_By>;
+  Wallet?: InputMaybe<Wallets_Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  displayName?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  profilePicUrl?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "MeemIdentities" */
+export enum MeemIdentities_Select_Column {
+  /** column name */
+  DefaultWalletId = 'DefaultWalletId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  DisplayName = 'displayName',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  ProfilePicUrl = 'profilePicUrl',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** columns and relationships of "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations = {
+  __typename?: 'MeemIdentityIntegrations';
+  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  MeemIdentity?: Maybe<MeemIdentities>;
+  MeemIdentityId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  metadata: Scalars['jsonb'];
+  updatedAt: Scalars['timestamptz'];
+  visibility: Scalars['String'];
+};
+
+
+/** columns and relationships of "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrationsMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregated selection of "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations_Aggregate = {
+  __typename?: 'MeemIdentityIntegrations_aggregate';
+  aggregate?: Maybe<MeemIdentityIntegrations_Aggregate_Fields>;
+  nodes: Array<MeemIdentityIntegrations>;
+};
+
+/** aggregate fields of "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations_Aggregate_Fields = {
+  __typename?: 'MeemIdentityIntegrations_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<MeemIdentityIntegrations_Max_Fields>;
+  min?: Maybe<MeemIdentityIntegrations_Min_Fields>;
+};
+
+
+/** aggregate fields of "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<MeemIdentityIntegrations_Max_Order_By>;
+  min?: InputMaybe<MeemIdentityIntegrations_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "MeemIdentityIntegrations". All fields are combined with a logical 'AND'. */
+export type MeemIdentityIntegrations_Bool_Exp = {
+  IdentityIntegrationId?: InputMaybe<Uuid_Comparison_Exp>;
+  MeemIdentity?: InputMaybe<MeemIdentities_Bool_Exp>;
+  MeemIdentityId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<MeemIdentityIntegrations_Bool_Exp>>;
+  _not?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+  _or?: InputMaybe<Array<MeemIdentityIntegrations_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  visibility?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type MeemIdentityIntegrations_Max_Fields = {
+  __typename?: 'MeemIdentityIntegrations_max_fields';
+  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  MeemIdentityId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  visibility?: Maybe<Scalars['String']>;
+};
+
+/** order by max() on columns of table "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations_Max_Order_By = {
+  IdentityIntegrationId?: InputMaybe<Order_By>;
+  MeemIdentityId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type MeemIdentityIntegrations_Min_Fields = {
+  __typename?: 'MeemIdentityIntegrations_min_fields';
+  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  MeemIdentityId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  visibility?: Maybe<Scalars['String']>;
+};
+
+/** order by min() on columns of table "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations_Min_Order_By = {
+  IdentityIntegrationId?: InputMaybe<Order_By>;
+  MeemIdentityId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "MeemIdentityIntegrations". */
+export type MeemIdentityIntegrations_Order_By = {
+  IdentityIntegrationId?: InputMaybe<Order_By>;
+  MeemIdentity?: InputMaybe<MeemIdentities_Order_By>;
+  MeemIdentityId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "MeemIdentityIntegrations" */
+export enum MeemIdentityIntegrations_Select_Column {
+  /** column name */
+  IdentityIntegrationId = 'IdentityIntegrationId',
+  /** column name */
+  MeemIdentityId = 'MeemIdentityId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Visibility = 'visibility'
+}
+
+/** columns and relationships of "MeemIdentityWallets" */
+export type MeemIdentityWallets = {
+  __typename?: 'MeemIdentityWallets';
+  /** An object relationship */
+  MeemIdentity?: Maybe<MeemIdentities>;
+  MeemIdentityId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  Wallet?: Maybe<Wallets>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "MeemIdentityWallets" */
+export type MeemIdentityWallets_Aggregate = {
+  __typename?: 'MeemIdentityWallets_aggregate';
+  aggregate?: Maybe<MeemIdentityWallets_Aggregate_Fields>;
+  nodes: Array<MeemIdentityWallets>;
+};
+
+/** aggregate fields of "MeemIdentityWallets" */
+export type MeemIdentityWallets_Aggregate_Fields = {
+  __typename?: 'MeemIdentityWallets_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<MeemIdentityWallets_Max_Fields>;
+  min?: Maybe<MeemIdentityWallets_Min_Fields>;
+};
+
+
+/** aggregate fields of "MeemIdentityWallets" */
+export type MeemIdentityWallets_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "MeemIdentityWallets" */
+export type MeemIdentityWallets_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<MeemIdentityWallets_Max_Order_By>;
+  min?: InputMaybe<MeemIdentityWallets_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "MeemIdentityWallets". All fields are combined with a logical 'AND'. */
+export type MeemIdentityWallets_Bool_Exp = {
+  MeemIdentity?: InputMaybe<MeemIdentities_Bool_Exp>;
+  MeemIdentityId?: InputMaybe<Uuid_Comparison_Exp>;
+  Wallet?: InputMaybe<Wallets_Bool_Exp>;
+  WalletId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<MeemIdentityWallets_Bool_Exp>>;
+  _not?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+  _or?: InputMaybe<Array<MeemIdentityWallets_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** aggregate max on columns */
+export type MeemIdentityWallets_Max_Fields = {
+  __typename?: 'MeemIdentityWallets_max_fields';
+  MeemIdentityId?: Maybe<Scalars['uuid']>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "MeemIdentityWallets" */
+export type MeemIdentityWallets_Max_Order_By = {
+  MeemIdentityId?: InputMaybe<Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type MeemIdentityWallets_Min_Fields = {
+  __typename?: 'MeemIdentityWallets_min_fields';
+  MeemIdentityId?: Maybe<Scalars['uuid']>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "MeemIdentityWallets" */
+export type MeemIdentityWallets_Min_Order_By = {
+  MeemIdentityId?: InputMaybe<Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "MeemIdentityWallets". */
+export type MeemIdentityWallets_Order_By = {
+  MeemIdentity?: InputMaybe<MeemIdentities_Order_By>;
+  MeemIdentityId?: InputMaybe<Order_By>;
+  Wallet?: InputMaybe<Wallets_Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "MeemIdentityWallets" */
+export enum MeemIdentityWallets_Select_Column {
+  /** column name */
+  MeemIdentityId = 'MeemIdentityId',
+  /** column name */
+  WalletId = 'WalletId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
 /** columns and relationships of "Meems" */
 export type Meems = {
   __typename?: 'Meems';
@@ -1829,8 +2139,8 @@ export type Meems = {
   OwnerId?: Maybe<Scalars['uuid']>;
   /** An array relationship */
   Transfers: Array<Transfers>;
-  /** An aggregate relationship */
-  Transfers_aggregate: Transfers_Aggregate;
+  /** An array relationship */
+  Tweets: Array<Tweets>;
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
   meemType: Scalars['Int'];
@@ -1854,12 +2164,12 @@ export type MeemsTransfersArgs = {
 
 
 /** columns and relationships of "Meems" */
-export type MeemsTransfers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transfers_Select_Column>>;
+export type MeemsTweetsArgs = {
+  distinct_on?: InputMaybe<Array<Tweets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transfers_Order_By>>;
-  where?: InputMaybe<Transfers_Bool_Exp>;
+  order_by?: InputMaybe<Array<Tweets_Order_By>>;
+  where?: InputMaybe<Tweets_Bool_Exp>;
 };
 
 
@@ -1931,6 +2241,7 @@ export type Meems_Bool_Exp = {
   Owner?: InputMaybe<Wallets_Bool_Exp>;
   OwnerId?: InputMaybe<Uuid_Comparison_Exp>;
   Transfers?: InputMaybe<Transfers_Bool_Exp>;
+  Tweets?: InputMaybe<Tweets_Bool_Exp>;
   _and?: InputMaybe<Array<Meems_Bool_Exp>>;
   _not?: InputMaybe<Meems_Bool_Exp>;
   _or?: InputMaybe<Array<Meems_Bool_Exp>>;
@@ -2010,6 +2321,7 @@ export type Meems_Order_By = {
   Owner?: InputMaybe<Wallets_Order_By>;
   OwnerId?: InputMaybe<Order_By>;
   Transfers_aggregate?: InputMaybe<Transfers_Aggregate_Order_By>;
+  Tweets_aggregate?: InputMaybe<Tweets_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   meemType?: InputMaybe<Order_By>;
@@ -2173,28 +2485,6 @@ export type Transfers = {
   updatedAt: Scalars['timestamptz'];
 };
 
-/** aggregated selection of "Transfers" */
-export type Transfers_Aggregate = {
-  __typename?: 'Transfers_aggregate';
-  aggregate?: Maybe<Transfers_Aggregate_Fields>;
-  nodes: Array<Transfers>;
-};
-
-/** aggregate fields of "Transfers" */
-export type Transfers_Aggregate_Fields = {
-  __typename?: 'Transfers_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<Transfers_Max_Fields>;
-  min?: Maybe<Transfers_Min_Fields>;
-};
-
-
-/** aggregate fields of "Transfers" */
-export type Transfers_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Transfers_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
 /** order by aggregate values of table "Transfers" */
 export type Transfers_Aggregate_Order_By = {
   count?: InputMaybe<Order_By>;
@@ -2219,20 +2509,6 @@ export type Transfers_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
-/** aggregate max on columns */
-export type Transfers_Max_Fields = {
-  __typename?: 'Transfers_max_fields';
-  MeemId?: Maybe<Scalars['uuid']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  from?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['uuid']>;
-  to?: Maybe<Scalars['String']>;
-  transactionHash?: Maybe<Scalars['String']>;
-  transferredAt?: Maybe<Scalars['timestamptz']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-};
-
 /** order by max() on columns of table "Transfers" */
 export type Transfers_Max_Order_By = {
   MeemId?: InputMaybe<Order_By>;
@@ -2244,20 +2520,6 @@ export type Transfers_Max_Order_By = {
   transactionHash?: InputMaybe<Order_By>;
   transferredAt?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Transfers_Min_Fields = {
-  __typename?: 'Transfers_min_fields';
-  MeemId?: Maybe<Scalars['uuid']>;
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  from?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['uuid']>;
-  to?: Maybe<Scalars['String']>;
-  transactionHash?: Maybe<Scalars['String']>;
-  transferredAt?: Maybe<Scalars['timestamptz']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** order by min() on columns of table "Transfers" */
@@ -2307,6 +2569,221 @@ export enum Transfers_Select_Column {
   TransferredAt = 'transferredAt',
   /** column name */
   UpdatedAt = 'updatedAt'
+}
+
+/** columns and relationships of "TweetHashtags" */
+export type TweetHashtags = {
+  __typename?: 'TweetHashtags';
+  /** An object relationship */
+  Hashtag?: Maybe<Hashtags>;
+  HashtagId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  Tweet?: Maybe<Tweets>;
+  TweetId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** order by aggregate values of table "TweetHashtags" */
+export type TweetHashtags_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<TweetHashtags_Max_Order_By>;
+  min?: InputMaybe<TweetHashtags_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "TweetHashtags". All fields are combined with a logical 'AND'. */
+export type TweetHashtags_Bool_Exp = {
+  Hashtag?: InputMaybe<Hashtags_Bool_Exp>;
+  HashtagId?: InputMaybe<Uuid_Comparison_Exp>;
+  Tweet?: InputMaybe<Tweets_Bool_Exp>;
+  TweetId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<TweetHashtags_Bool_Exp>>;
+  _not?: InputMaybe<TweetHashtags_Bool_Exp>;
+  _or?: InputMaybe<Array<TweetHashtags_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** order by max() on columns of table "TweetHashtags" */
+export type TweetHashtags_Max_Order_By = {
+  HashtagId?: InputMaybe<Order_By>;
+  TweetId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "TweetHashtags" */
+export type TweetHashtags_Min_Order_By = {
+  HashtagId?: InputMaybe<Order_By>;
+  TweetId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "TweetHashtags". */
+export type TweetHashtags_Order_By = {
+  Hashtag?: InputMaybe<Hashtags_Order_By>;
+  HashtagId?: InputMaybe<Order_By>;
+  Tweet?: InputMaybe<Tweets_Order_By>;
+  TweetId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "TweetHashtags" */
+export enum TweetHashtags_Select_Column {
+  /** column name */
+  HashtagId = 'HashtagId',
+  /** column name */
+  TweetId = 'TweetId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** columns and relationships of "Tweets" */
+export type Tweets = {
+  __typename?: 'Tweets';
+  /** An object relationship */
+  Meem?: Maybe<Meems>;
+  MeemId?: Maybe<Scalars['uuid']>;
+  /** An array relationship */
+  TweetHashtags: Array<TweetHashtags>;
+  conversationId: Scalars['String'];
+  createdAt: Scalars['timestamptz'];
+  deletedAt?: Maybe<Scalars['timestamptz']>;
+  id: Scalars['uuid'];
+  text: Scalars['String'];
+  tweetId: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+  userId: Scalars['String'];
+  userProfileImageUrl: Scalars['String'];
+  username: Scalars['String'];
+};
+
+
+/** columns and relationships of "Tweets" */
+export type TweetsTweetHashtagsArgs = {
+  distinct_on?: InputMaybe<Array<TweetHashtags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<TweetHashtags_Order_By>>;
+  where?: InputMaybe<TweetHashtags_Bool_Exp>;
+};
+
+/** order by aggregate values of table "Tweets" */
+export type Tweets_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Tweets_Max_Order_By>;
+  min?: InputMaybe<Tweets_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "Tweets". All fields are combined with a logical 'AND'. */
+export type Tweets_Bool_Exp = {
+  Meem?: InputMaybe<Meems_Bool_Exp>;
+  MeemId?: InputMaybe<Uuid_Comparison_Exp>;
+  TweetHashtags?: InputMaybe<TweetHashtags_Bool_Exp>;
+  _and?: InputMaybe<Array<Tweets_Bool_Exp>>;
+  _not?: InputMaybe<Tweets_Bool_Exp>;
+  _or?: InputMaybe<Array<Tweets_Bool_Exp>>;
+  conversationId?: InputMaybe<String_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  text?: InputMaybe<String_Comparison_Exp>;
+  tweetId?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  userId?: InputMaybe<String_Comparison_Exp>;
+  userProfileImageUrl?: InputMaybe<String_Comparison_Exp>;
+  username?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** order by max() on columns of table "Tweets" */
+export type Tweets_Max_Order_By = {
+  MeemId?: InputMaybe<Order_By>;
+  conversationId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  text?: InputMaybe<Order_By>;
+  tweetId?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  userId?: InputMaybe<Order_By>;
+  userProfileImageUrl?: InputMaybe<Order_By>;
+  username?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "Tweets" */
+export type Tweets_Min_Order_By = {
+  MeemId?: InputMaybe<Order_By>;
+  conversationId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  text?: InputMaybe<Order_By>;
+  tweetId?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  userId?: InputMaybe<Order_By>;
+  userProfileImageUrl?: InputMaybe<Order_By>;
+  username?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "Tweets". */
+export type Tweets_Order_By = {
+  Meem?: InputMaybe<Meems_Order_By>;
+  MeemId?: InputMaybe<Order_By>;
+  TweetHashtags_aggregate?: InputMaybe<TweetHashtags_Aggregate_Order_By>;
+  conversationId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  deletedAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  text?: InputMaybe<Order_By>;
+  tweetId?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  userId?: InputMaybe<Order_By>;
+  userProfileImageUrl?: InputMaybe<Order_By>;
+  username?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "Tweets" */
+export enum Tweets_Select_Column {
+  /** column name */
+  MeemId = 'MeemId',
+  /** column name */
+  ConversationId = 'conversationId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  DeletedAt = 'deletedAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Text = 'text',
+  /** column name */
+  TweetId = 'tweetId',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  UserId = 'userId',
+  /** column name */
+  UserProfileImageUrl = 'userProfileImageUrl',
+  /** column name */
+  Username = 'username'
 }
 
 /** columns and relationships of "WalletContractInstances" */
@@ -2456,12 +2933,20 @@ export type Wallets = {
   Bundles_aggregate: Bundles_Aggregate;
   /** An array relationship */
   Contracts: Array<Contracts>;
-  /** An aggregate relationship */
-  Contracts_aggregate: Contracts_Aggregate;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
+  /** An array relationship */
+  MeemIdentities: Array<MeemIdentities>;
   /** An aggregate relationship */
-  MeemContractWallets_aggregate: MeemContractWallets_Aggregate;
+  MeemIdentities_aggregate: MeemIdentities_Aggregate;
+  /** An array relationship */
+  MeemIdentityWallets: Array<MeemIdentityWallets>;
+  /** An aggregate relationship */
+  MeemIdentityWallets_aggregate: MeemIdentityWallets_Aggregate;
+  /** An array relationship */
+  Meems: Array<Meems>;
+  /** An aggregate relationship */
+  Meems_aggregate: Meems_Aggregate;
   /** An array relationship */
   WalletContractInstances: Array<WalletContractInstances>;
   /** An aggregate relationship */
@@ -2506,16 +2991,6 @@ export type WalletsContractsArgs = {
 
 
 /** columns and relationships of "Wallets" */
-export type WalletsContracts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Contracts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Contracts_Order_By>>;
-  where?: InputMaybe<Contracts_Bool_Exp>;
-};
-
-
-/** columns and relationships of "Wallets" */
 export type WalletsMeemContractWalletsArgs = {
   distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -2526,12 +3001,62 @@ export type WalletsMeemContractWalletsArgs = {
 
 
 /** columns and relationships of "Wallets" */
-export type WalletsMeemContractWallets_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
+export type WalletsMeemIdentitiesArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentities_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
-  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
+  order_by?: InputMaybe<Array<MeemIdentities_Order_By>>;
+  where?: InputMaybe<MeemIdentities_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsMeemIdentities_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentities_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentities_Order_By>>;
+  where?: InputMaybe<MeemIdentities_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsMeemIdentityWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsMeemIdentityWallets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsMeemsArgs = {
+  distinct_on?: InputMaybe<Array<Meems_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Meems_Order_By>>;
+  where?: InputMaybe<Meems_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Wallets" */
+export type WalletsMeems_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Meems_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Meems_Order_By>>;
+  where?: InputMaybe<Meems_Bool_Exp>;
 };
 
 
@@ -2581,6 +3106,9 @@ export type Wallets_Bool_Exp = {
   Bundles?: InputMaybe<Bundles_Bool_Exp>;
   Contracts?: InputMaybe<Contracts_Bool_Exp>;
   MeemContractWallets?: InputMaybe<MeemContractWallets_Bool_Exp>;
+  MeemIdentities?: InputMaybe<MeemIdentities_Bool_Exp>;
+  MeemIdentityWallets?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+  Meems?: InputMaybe<Meems_Bool_Exp>;
   WalletContractInstances?: InputMaybe<WalletContractInstances_Bool_Exp>;
   _and?: InputMaybe<Array<Wallets_Bool_Exp>>;
   _not?: InputMaybe<Wallets_Bool_Exp>;
@@ -2620,6 +3148,9 @@ export type Wallets_Order_By = {
   Bundles_aggregate?: InputMaybe<Bundles_Aggregate_Order_By>;
   Contracts_aggregate?: InputMaybe<Contracts_Aggregate_Order_By>;
   MeemContractWallets_aggregate?: InputMaybe<MeemContractWallets_Aggregate_Order_By>;
+  MeemIdentities_aggregate?: InputMaybe<MeemIdentities_Aggregate_Order_By>;
+  MeemIdentityWallets_aggregate?: InputMaybe<MeemIdentityWallets_Aggregate_Order_By>;
+  Meems_aggregate?: InputMaybe<Meems_Aggregate_Order_By>;
   WalletContractInstances_aggregate?: InputMaybe<WalletContractInstances_Aggregate_Order_By>;
   address?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -2711,26 +3242,28 @@ export type Query_Root = {
   ContractInstances_by_pk?: Maybe<ContractInstances>;
   /** An array relationship */
   Contracts: Array<Contracts>;
-  /** An aggregate relationship */
-  Contracts_aggregate: Contracts_Aggregate;
   /** fetch data from the table: "Contracts" using primary key columns */
   Contracts_by_pk?: Maybe<Contracts>;
+  /** fetch data from the table: "Hashtags" */
+  Hashtags: Array<Hashtags>;
+  /** fetch data from the table: "Hashtags" using primary key columns */
+  Hashtags_by_pk?: Maybe<Hashtags>;
+  /** fetch data from the table: "IdentityIntegrations" */
+  IdentityIntegrations: Array<IdentityIntegrations>;
+  /** fetch aggregated fields from the table: "IdentityIntegrations" */
+  IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
+  /** fetch data from the table: "IdentityIntegrations" using primary key columns */
+  IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
-  /** fetch aggregated fields from the table: "Integrations" */
-  Integrations_aggregate: Integrations_Aggregate;
   /** fetch data from the table: "Integrations" using primary key columns */
   Integrations_by_pk?: Maybe<Integrations>;
   /** An array relationship */
   MeemContractIntegrations: Array<MeemContractIntegrations>;
-  /** An aggregate relationship */
-  MeemContractIntegrations_aggregate: MeemContractIntegrations_Aggregate;
   /** fetch data from the table: "MeemContractIntegrations" using primary key columns */
   MeemContractIntegrations_by_pk?: Maybe<MeemContractIntegrations>;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
-  /** An aggregate relationship */
-  MeemContractWallets_aggregate: MeemContractWallets_Aggregate;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
   MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
   /** fetch data from the table: "MeemContracts" */
@@ -2741,10 +3274,26 @@ export type Query_Root = {
   MeemContracts_by_pk?: Maybe<MeemContracts>;
   /** fetch data from the table: "MeemIdentifications" */
   MeemIdentifications: Array<MeemIdentifications>;
-  /** fetch aggregated fields from the table: "MeemIdentifications" */
-  MeemIdentifications_aggregate: MeemIdentifications_Aggregate;
   /** fetch data from the table: "MeemIdentifications" using primary key columns */
   MeemIdentifications_by_pk?: Maybe<MeemIdentifications>;
+  /** An array relationship */
+  MeemIdentities: Array<MeemIdentities>;
+  /** An aggregate relationship */
+  MeemIdentities_aggregate: MeemIdentities_Aggregate;
+  /** fetch data from the table: "MeemIdentities" using primary key columns */
+  MeemIdentities_by_pk?: Maybe<MeemIdentities>;
+  /** An array relationship */
+  MeemIdentityIntegrations: Array<MeemIdentityIntegrations>;
+  /** An aggregate relationship */
+  MeemIdentityIntegrations_aggregate: MeemIdentityIntegrations_Aggregate;
+  /** fetch data from the table: "MeemIdentityIntegrations" using primary key columns */
+  MeemIdentityIntegrations_by_pk?: Maybe<MeemIdentityIntegrations>;
+  /** An array relationship */
+  MeemIdentityWallets: Array<MeemIdentityWallets>;
+  /** An aggregate relationship */
+  MeemIdentityWallets_aggregate: MeemIdentityWallets_Aggregate;
+  /** fetch data from the table: "MeemIdentityWallets" using primary key columns */
+  MeemIdentityWallets_by_pk?: Maybe<MeemIdentityWallets>;
   /** An array relationship */
   Meems: Array<Meems>;
   /** An aggregate relationship */
@@ -2753,10 +3302,16 @@ export type Query_Root = {
   Meems_by_pk?: Maybe<Meems>;
   /** An array relationship */
   Transfers: Array<Transfers>;
-  /** An aggregate relationship */
-  Transfers_aggregate: Transfers_Aggregate;
   /** fetch data from the table: "Transfers" using primary key columns */
   Transfers_by_pk?: Maybe<Transfers>;
+  /** An array relationship */
+  TweetHashtags: Array<TweetHashtags>;
+  /** fetch data from the table: "TweetHashtags" using primary key columns */
+  TweetHashtags_by_pk?: Maybe<TweetHashtags>;
+  /** An array relationship */
+  Tweets: Array<Tweets>;
+  /** fetch data from the table: "Tweets" using primary key columns */
+  Tweets_by_pk?: Maybe<Tweets>;
   /** An array relationship */
   WalletContractInstances: Array<WalletContractInstances>;
   /** An aggregate relationship */
@@ -2850,30 +3405,49 @@ export type Query_RootContractsArgs = {
 };
 
 
-export type Query_RootContracts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Contracts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Contracts_Order_By>>;
-  where?: InputMaybe<Contracts_Bool_Exp>;
-};
-
-
 export type Query_RootContracts_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
-export type Query_RootIntegrationsArgs = {
-  distinct_on?: InputMaybe<Array<Integrations_Select_Column>>;
+export type Query_RootHashtagsArgs = {
+  distinct_on?: InputMaybe<Array<Hashtags_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Integrations_Order_By>>;
-  where?: InputMaybe<Integrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<Hashtags_Order_By>>;
+  where?: InputMaybe<Hashtags_Bool_Exp>;
 };
 
 
-export type Query_RootIntegrations_AggregateArgs = {
+export type Query_RootHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootIdentityIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
+  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Query_RootIdentityIntegrations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
+  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Query_RootIdentityIntegrations_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootIntegrationsArgs = {
   distinct_on?: InputMaybe<Array<Integrations_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -2896,30 +3470,12 @@ export type Query_RootMeemContractIntegrationsArgs = {
 };
 
 
-export type Query_RootMeemContractIntegrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemContractIntegrations_Order_By>>;
-  where?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
-};
-
-
 export type Query_RootMeemContractIntegrations_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
 export type Query_RootMeemContractWalletsArgs = {
-  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
-  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
-};
-
-
-export type Query_RootMeemContractWallets_AggregateArgs = {
   distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -2965,16 +3521,76 @@ export type Query_RootMeemIdentificationsArgs = {
 };
 
 
-export type Query_RootMeemIdentifications_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemIdentifications_Order_By>>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
+export type Query_RootMeemIdentifications_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
-export type Query_RootMeemIdentifications_By_PkArgs = {
+export type Query_RootMeemIdentitiesArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentities_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentities_Order_By>>;
+  where?: InputMaybe<MeemIdentities_Bool_Exp>;
+};
+
+
+export type Query_RootMeemIdentities_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentities_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentities_Order_By>>;
+  where?: InputMaybe<MeemIdentities_Bool_Exp>;
+};
+
+
+export type Query_RootMeemIdentities_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootMeemIdentityIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Query_RootMeemIdentityIntegrations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Query_RootMeemIdentityIntegrations_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootMeemIdentityWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
+export type Query_RootMeemIdentityWallets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
+export type Query_RootMeemIdentityWallets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3011,16 +3627,35 @@ export type Query_RootTransfersArgs = {
 };
 
 
-export type Query_RootTransfers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transfers_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transfers_Order_By>>;
-  where?: InputMaybe<Transfers_Bool_Exp>;
+export type Query_RootTransfers_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
-export type Query_RootTransfers_By_PkArgs = {
+export type Query_RootTweetHashtagsArgs = {
+  distinct_on?: InputMaybe<Array<TweetHashtags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<TweetHashtags_Order_By>>;
+  where?: InputMaybe<TweetHashtags_Bool_Exp>;
+};
+
+
+export type Query_RootTweetHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootTweetsArgs = {
+  distinct_on?: InputMaybe<Array<Tweets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Tweets_Order_By>>;
+  where?: InputMaybe<Tweets_Bool_Exp>;
+};
+
+
+export type Query_RootTweets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3092,26 +3727,28 @@ export type Subscription_Root = {
   ContractInstances_by_pk?: Maybe<ContractInstances>;
   /** An array relationship */
   Contracts: Array<Contracts>;
-  /** An aggregate relationship */
-  Contracts_aggregate: Contracts_Aggregate;
   /** fetch data from the table: "Contracts" using primary key columns */
   Contracts_by_pk?: Maybe<Contracts>;
+  /** fetch data from the table: "Hashtags" */
+  Hashtags: Array<Hashtags>;
+  /** fetch data from the table: "Hashtags" using primary key columns */
+  Hashtags_by_pk?: Maybe<Hashtags>;
+  /** fetch data from the table: "IdentityIntegrations" */
+  IdentityIntegrations: Array<IdentityIntegrations>;
+  /** fetch aggregated fields from the table: "IdentityIntegrations" */
+  IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
+  /** fetch data from the table: "IdentityIntegrations" using primary key columns */
+  IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
-  /** fetch aggregated fields from the table: "Integrations" */
-  Integrations_aggregate: Integrations_Aggregate;
   /** fetch data from the table: "Integrations" using primary key columns */
   Integrations_by_pk?: Maybe<Integrations>;
   /** An array relationship */
   MeemContractIntegrations: Array<MeemContractIntegrations>;
-  /** An aggregate relationship */
-  MeemContractIntegrations_aggregate: MeemContractIntegrations_Aggregate;
   /** fetch data from the table: "MeemContractIntegrations" using primary key columns */
   MeemContractIntegrations_by_pk?: Maybe<MeemContractIntegrations>;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
-  /** An aggregate relationship */
-  MeemContractWallets_aggregate: MeemContractWallets_Aggregate;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
   MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
   /** fetch data from the table: "MeemContracts" */
@@ -3122,10 +3759,26 @@ export type Subscription_Root = {
   MeemContracts_by_pk?: Maybe<MeemContracts>;
   /** fetch data from the table: "MeemIdentifications" */
   MeemIdentifications: Array<MeemIdentifications>;
-  /** fetch aggregated fields from the table: "MeemIdentifications" */
-  MeemIdentifications_aggregate: MeemIdentifications_Aggregate;
   /** fetch data from the table: "MeemIdentifications" using primary key columns */
   MeemIdentifications_by_pk?: Maybe<MeemIdentifications>;
+  /** An array relationship */
+  MeemIdentities: Array<MeemIdentities>;
+  /** An aggregate relationship */
+  MeemIdentities_aggregate: MeemIdentities_Aggregate;
+  /** fetch data from the table: "MeemIdentities" using primary key columns */
+  MeemIdentities_by_pk?: Maybe<MeemIdentities>;
+  /** An array relationship */
+  MeemIdentityIntegrations: Array<MeemIdentityIntegrations>;
+  /** An aggregate relationship */
+  MeemIdentityIntegrations_aggregate: MeemIdentityIntegrations_Aggregate;
+  /** fetch data from the table: "MeemIdentityIntegrations" using primary key columns */
+  MeemIdentityIntegrations_by_pk?: Maybe<MeemIdentityIntegrations>;
+  /** An array relationship */
+  MeemIdentityWallets: Array<MeemIdentityWallets>;
+  /** An aggregate relationship */
+  MeemIdentityWallets_aggregate: MeemIdentityWallets_Aggregate;
+  /** fetch data from the table: "MeemIdentityWallets" using primary key columns */
+  MeemIdentityWallets_by_pk?: Maybe<MeemIdentityWallets>;
   /** An array relationship */
   Meems: Array<Meems>;
   /** An aggregate relationship */
@@ -3134,10 +3787,16 @@ export type Subscription_Root = {
   Meems_by_pk?: Maybe<Meems>;
   /** An array relationship */
   Transfers: Array<Transfers>;
-  /** An aggregate relationship */
-  Transfers_aggregate: Transfers_Aggregate;
   /** fetch data from the table: "Transfers" using primary key columns */
   Transfers_by_pk?: Maybe<Transfers>;
+  /** An array relationship */
+  TweetHashtags: Array<TweetHashtags>;
+  /** fetch data from the table: "TweetHashtags" using primary key columns */
+  TweetHashtags_by_pk?: Maybe<TweetHashtags>;
+  /** An array relationship */
+  Tweets: Array<Tweets>;
+  /** fetch data from the table: "Tweets" using primary key columns */
+  Tweets_by_pk?: Maybe<Tweets>;
   /** An array relationship */
   WalletContractInstances: Array<WalletContractInstances>;
   /** An aggregate relationship */
@@ -3231,30 +3890,49 @@ export type Subscription_RootContractsArgs = {
 };
 
 
-export type Subscription_RootContracts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Contracts_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Contracts_Order_By>>;
-  where?: InputMaybe<Contracts_Bool_Exp>;
-};
-
-
 export type Subscription_RootContracts_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
-export type Subscription_RootIntegrationsArgs = {
-  distinct_on?: InputMaybe<Array<Integrations_Select_Column>>;
+export type Subscription_RootHashtagsArgs = {
+  distinct_on?: InputMaybe<Array<Hashtags_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Integrations_Order_By>>;
-  where?: InputMaybe<Integrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<Hashtags_Order_By>>;
+  where?: InputMaybe<Hashtags_Bool_Exp>;
 };
 
 
-export type Subscription_RootIntegrations_AggregateArgs = {
+export type Subscription_RootHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootIdentityIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
+  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Subscription_RootIdentityIntegrations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
+  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Subscription_RootIdentityIntegrations_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootIntegrationsArgs = {
   distinct_on?: InputMaybe<Array<Integrations_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -3277,30 +3955,12 @@ export type Subscription_RootMeemContractIntegrationsArgs = {
 };
 
 
-export type Subscription_RootMeemContractIntegrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemContractIntegrations_Order_By>>;
-  where?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
-};
-
-
 export type Subscription_RootMeemContractIntegrations_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
 export type Subscription_RootMeemContractWalletsArgs = {
-  distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemContractWallets_Order_By>>;
-  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
-};
-
-
-export type Subscription_RootMeemContractWallets_AggregateArgs = {
   distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -3346,16 +4006,76 @@ export type Subscription_RootMeemIdentificationsArgs = {
 };
 
 
-export type Subscription_RootMeemIdentifications_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemIdentifications_Order_By>>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
+export type Subscription_RootMeemIdentifications_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
-export type Subscription_RootMeemIdentifications_By_PkArgs = {
+export type Subscription_RootMeemIdentitiesArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentities_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentities_Order_By>>;
+  where?: InputMaybe<MeemIdentities_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemIdentities_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentities_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentities_Order_By>>;
+  where?: InputMaybe<MeemIdentities_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemIdentities_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeemIdentityIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemIdentityIntegrations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemIdentityIntegrations_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeemIdentityWalletsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemIdentityWallets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityWallets_Order_By>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
+export type Subscription_RootMeemIdentityWallets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3392,16 +4112,35 @@ export type Subscription_RootTransfersArgs = {
 };
 
 
-export type Subscription_RootTransfers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transfers_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transfers_Order_By>>;
-  where?: InputMaybe<Transfers_Bool_Exp>;
+export type Subscription_RootTransfers_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
-export type Subscription_RootTransfers_By_PkArgs = {
+export type Subscription_RootTweetHashtagsArgs = {
+  distinct_on?: InputMaybe<Array<TweetHashtags_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<TweetHashtags_Order_By>>;
+  where?: InputMaybe<TweetHashtags_Bool_Exp>;
+};
+
+
+export type Subscription_RootTweetHashtags_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootTweetsArgs = {
+  distinct_on?: InputMaybe<Array<Tweets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Tweets_Order_By>>;
+  where?: InputMaybe<Tweets_Bool_Exp>;
+};
+
+
+export type Subscription_RootTweets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -3515,7 +4254,7 @@ export type GetClubSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -3542,14 +4281,14 @@ export type AllClubsQueryVariables = Exact<{
 }>;
 
 
-export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
+export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, Meems_aggregate: { __typename?: 'Meems_aggregate', aggregate?: { __typename?: 'Meems_aggregate_fields', count: number } | null } }> };
 
 export type MyClubsSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type MyClubsSubscriptionSubscription = { __typename?: 'subscription_root', Meems: Array<{ __typename?: 'Meems', tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> } | null }> };
+export type MyClubsSubscriptionSubscription = { __typename?: 'subscription_root', Meems: Array<{ __typename?: 'Meems', tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, Meems_aggregate: { __typename?: 'Meems_aggregate', aggregate?: { __typename?: 'Meems_aggregate_fields', count: number } | null } } | null }> };
 
 export type GetBundleByIdQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -3557,6 +4296,13 @@ export type GetBundleByIdQueryVariables = Exact<{
 
 
 export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, abi: any, BundleContracts: Array<{ __typename?: 'BundleContracts', functionSelectors: any }> }> };
+
+export type MeemIdSubscriptionSubscriptionVariables = Exact<{
+  walletAddress?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', MeemIdentities: Array<{ __typename?: 'MeemIdentities', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> };
 
 export const MeemPartsFragmentDoc = gql`
     fragment MeemParts on Meems {
@@ -3773,6 +4519,7 @@ export const GetClubSubscriptionDocument = gql`
     metadata
     createdAt
     name
+    gnosisSafeAddress
     Meems {
       Owner {
         address
@@ -4007,6 +4754,11 @@ export const AllClubsDocument = gql`
         address
       }
     }
+    Meems_aggregate {
+      aggregate {
+        count
+      }
+    }
   }
 }
     `;
@@ -4063,6 +4815,11 @@ export const MyClubsSubscriptionDocument = gql`
         Wallet {
           ens
           address
+        }
+      }
+      Meems_aggregate {
+        aggregate {
+          count
         }
       }
     }
@@ -4131,3 +4888,46 @@ export function useGetBundleByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetBundleByIdQueryHookResult = ReturnType<typeof useGetBundleByIdQuery>;
 export type GetBundleByIdLazyQueryHookResult = ReturnType<typeof useGetBundleByIdLazyQuery>;
 export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, GetBundleByIdQueryVariables>;
+export const MeemIdSubscriptionDocument = gql`
+    subscription MeemIdSubscription($walletAddress: String) {
+  MeemIdentities(where: {Wallet: {address: {_ilike: $walletAddress}}}) {
+    updatedAt
+    profilePicUrl
+    id
+    displayName
+    deletedAt
+    createdAt
+    Wallet {
+      address
+      ens
+    }
+    MeemIdentityIntegrations {
+      metadata
+      visibility
+    }
+  }
+}
+    `;
+
+/**
+ * __useMeemIdSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useMeemIdSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMeemIdSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeemIdSubscriptionSubscription({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *   },
+ * });
+ */
+export function useMeemIdSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MeemIdSubscriptionSubscription, MeemIdSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MeemIdSubscriptionSubscription, MeemIdSubscriptionSubscriptionVariables>(MeemIdSubscriptionDocument, options);
+      }
+export type MeemIdSubscriptionSubscriptionHookResult = ReturnType<typeof useMeemIdSubscriptionSubscription>;
+export type MeemIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MeemIdSubscriptionSubscription>;
