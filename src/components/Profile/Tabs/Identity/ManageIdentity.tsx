@@ -407,17 +407,110 @@ export const ManageIdentityComponent: React.FC = () => {
 				value={displayName}
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
-			<Space h={48} />
-			<Divider />
-			<Space h={'xl'} />
-			{id.identity.integrations && id.identity.integrations.length > 0 && (
+			{/* Only show verified accounts section if the user has an existing identity */}
+			{!id.identity && (
 				<>
+					<Space h={48} />
+					<Divider />
+					<Space h={'xl'} />
 					<Text className={classes.identitySectionTitle}>
-						Verified
+						Verify Accounts
 					</Text>
 
+					<Text>
+						Choose a Display Name or Profile Picture and save
+						changes to add a verified account, such as Twitter,
+						Discord or Email.
+					</Text>
+				</>
+			)}
+			{id.identity.id && (
+				<>
+					<Space h={48} />
+					<Divider />
+					<Space h={'xl'} />
+					{id.identity.integrations &&
+						id.identity.integrations.length > 0 && (
+							<>
+								<Text className={classes.identitySectionTitle}>
+									Verified
+								</Text>
+
+								<Grid>
+									{id.identity.integrations.map(
+										integration => (
+											<Grid.Col
+												xs={6}
+												sm={4}
+												md={4}
+												lg={4}
+												xl={4}
+												key={integration.name}
+											>
+												<a
+													onClick={() => {
+														setIntegrationCurrentlyEditing(
+															integration
+														)
+														setIsLinkedAccountModalOpen(
+															true
+														)
+													}}
+												>
+													<div
+														className={
+															classes.profileIntegrationItem
+														}
+													>
+														<div
+															className={
+																classes.intItemHeader
+															}
+														>
+															<Image
+																src={`${integration.icon}`}
+																width={16}
+																height={16}
+																fit={'contain'}
+															/>
+															<Space w={8} />
+															{integration
+																.metadata
+																.twitterUsername && (
+																<Text>
+																	{`@${integration.metadata.twitterUsername}`}
+																</Text>
+															)}
+															{integration
+																.metadata
+																.discordUsername && (
+																<Text>
+																	{`${integration.metadata.discordUsername}`}
+																</Text>
+															)}
+															{integration
+																.metadata
+																.emailAddress && (
+																<Text>
+																	{`${integration.metadata.emailAddress}`}
+																</Text>
+															)}
+														</div>
+													</div>
+												</a>
+											</Grid.Col>
+										)
+									)}
+								</Grid>
+								<Space h={'xl'} />
+							</>
+						)}
+
+					<Text className={classes.identitySectionTitle}>
+						Verify Accounts
+					</Text>
 					<Grid>
-						{id.identity.integrations.map(integration => (
+						{availableIntegrations.map(integration => (
 							<Grid.Col
 								xs={6}
 								sm={4}
@@ -428,10 +521,7 @@ export const ManageIdentityComponent: React.FC = () => {
 							>
 								<a
 									onClick={() => {
-										setIntegrationCurrentlyEditing(
-											integration
-										)
-										setIsLinkedAccountModalOpen(true)
+										openIntegrationModal(integration)
 									}}
 								>
 									<div
@@ -447,68 +537,16 @@ export const ManageIdentityComponent: React.FC = () => {
 												fit={'contain'}
 											/>
 											<Space w={8} />
-											{integration.metadata
-												.twitterUsername && (
-												<Text>
-													{`@${integration.metadata.twitterUsername}`}
-												</Text>
-											)}
-											{integration.metadata
-												.discordUsername && (
-												<Text>
-													{`${integration.metadata.discordUsername}`}
-												</Text>
-											)}
-											{integration.metadata
-												.emailAddress && (
-												<Text>
-													{`${integration.metadata.emailAddress}`}
-												</Text>
-											)}
+											<Text>{integration.name}</Text>
 										</div>
 									</div>
 								</a>
 							</Grid.Col>
 						))}
 					</Grid>
-					<Space h={'xl'} />
 				</>
 			)}
 
-			<Text className={classes.identitySectionTitle}>
-				Verify Accounts
-			</Text>
-			<Grid>
-				{availableIntegrations.map(integration => (
-					<Grid.Col
-						xs={6}
-						sm={4}
-						md={4}
-						lg={4}
-						xl={4}
-						key={integration.name}
-					>
-						<a
-							onClick={() => {
-								openIntegrationModal(integration)
-							}}
-						>
-							<div className={classes.profileIntegrationItem}>
-								<div className={classes.intItemHeader}>
-									<Image
-										src={`${integration.icon}`}
-										width={16}
-										height={16}
-										fit={'contain'}
-									/>
-									<Space w={8} />
-									<Text>{integration.name}</Text>
-								</div>
-							</div>
-						</a>
-					</Grid.Col>
-				))}
-			</Grid>
 			<Space h={'xl'} />
 
 			<Button
