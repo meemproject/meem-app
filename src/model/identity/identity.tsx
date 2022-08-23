@@ -42,9 +42,9 @@ export async function identityFromApi(
 		return {
 			id: id?.id,
 			walletAddress: address,
-			ensAddress: 'gadsby.eth',
-			displayName: 'James',
-			profilePic: '/exampleclub.png',
+			ensAddress: id?.Wallet?.ens ?? '',
+			displayName: id?.displayName ?? '',
+			profilePic: id?.profilePicUrl ?? '',
 			integrations: [
 				{
 					id: 'twitter',
