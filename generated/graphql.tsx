@@ -4295,7 +4295,7 @@ export type GetBundleByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, abi: any, BundleContracts: Array<{ __typename?: 'BundleContracts', functionSelectors: any }> }> };
+export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, abi: any, BundleContracts: Array<{ __typename?: 'BundleContracts', functionSelectors: any, Contract?: { __typename?: 'Contracts', ContractInstances: Array<{ __typename?: 'ContractInstances', address: string }> } | null }> }> };
 
 export type MeemIdSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
@@ -4856,6 +4856,11 @@ export const GetBundleByIdDocument = gql`
     abi
     BundleContracts {
       functionSelectors
+      Contract {
+        ContractInstances {
+          address
+        }
+      }
     }
   }
 }

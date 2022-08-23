@@ -10,7 +10,6 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet, makeFetcher, makeRequest } from '@meemproject/react'
-import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 
@@ -85,11 +84,7 @@ const MAuthenticate: React.FC = () => {
 						)
 
 					log.debug(`logged in successfully.`)
-
-					Cookies.set('meemJwtToken', loginRequest.jwt)
-					Cookies.set('walletAddress', address)
 					wallet.setJwt(loginRequest.jwt)
-					log.debug(`saved JWT token as cookie.`)
 
 					router.push({
 						pathname: router.query.return

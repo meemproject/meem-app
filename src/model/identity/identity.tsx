@@ -1,3 +1,5 @@
+import { MeemIdSubscriptionSubscription } from '../../../generated/graphql'
+
 export interface AvailableIdentityIntegration {
 	id?: string
 	name?: string
@@ -31,37 +33,43 @@ export function getDefaultIdentity(walletAddress: string): Identity {
 		integrations: []
 	}
 }
-
-export async function identityFromApi(address: string): Promise<Identity> {
-	// TODO: return default identity if the wallet doesn't have an identity yet
-	return {
-		id: 'id',
-		walletAddress: address,
-		ensAddress: 'gadsby.eth',
-		displayName: 'James',
-		profilePic: '/exampleclub.png',
-		integrations: [
-			{
-				id: 'twitter',
-				name: 'Twitter',
-				icon: '/integration-twitter.png',
-				metadata: { twitterUsername: 'gadsbee' },
-				visibility: 'mutual-club-members'
-			},
-			{
-				id: 'discord',
-				name: 'Discord',
-				icon: '/integration-discord.png',
-				metadata: { discordUsername: 'jgads' },
-				visibility: 'mutual-club-members'
-			},
-			{
-				id: 'email',
-				name: 'Email',
-				icon: '/integration-email.png',
-				metadata: { emailAddress: 'james.gadsby@gmail.com' },
-				visibility: 'mutual-club-members'
-			}
-		]
+export async function identityFromApi(
+	address: string,
+	identityData: MeemIdSubscriptionSubscription | undefined
+): Promise<Identity> {
+	const id = identityData?.MeemIdentities[0]
+	if (id) {
+		return {
+			id: id?.id,
+			walletAddress: address,
+			ensAddress: 'gadsby.eth',
+			displayName: 'James',
+			profilePic: '/exampleclub.png',
+			integrations: [
+				{
+					id: 'twitter',
+					name: 'Twitter',
+					icon: '/integration-twitter.png',
+					metadata: { twitterUsername: 'gadsbee' },
+					visibility: 'mutual-club-members'
+				},
+				{
+					id: 'discord',
+					name: 'Discord',
+					icon: '/integration-discord.png',
+					metadata: { discordUsername: 'jgads' },
+					visibility: 'mutual-club-members'
+				},
+				{
+					id: 'email',
+					name: 'Email',
+					icon: '/integration-email.png',
+					metadata: { emailAddress: 'james.gadsby@gmail.com' },
+					visibility: 'mutual-club-members'
+				}
+			]
+		}
+	} else {
+		return getDefaultIdentity(address)
 	}
 }

@@ -308,6 +308,11 @@ export const GET_BUNDLE_BY_ID = gql`
 			abi
 			BundleContracts {
 				functionSelectors
+				Contract {
+					ContractInstances {
+						address
+					}
+				}
 			}
 		}
 	}

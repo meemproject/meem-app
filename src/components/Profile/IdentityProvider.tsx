@@ -1,4 +1,5 @@
 import { useSubscription } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import { useWallet } from '@meemproject/react'
 import React, {
 	useState,
@@ -8,6 +9,7 @@ import React, {
 	useMemo,
 	ReactNode
 } from 'react'
+import { MeemIdSubscriptionSubscription } from '../../../generated/graphql'
 import { MEEM_ID_SUBSCRIPTION } from '../../graphql/clubs'
 import {
 	getDefaultIdentity,
@@ -35,7 +37,7 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 		loading,
 		error,
 		data: identityData
-	} = useSubscription<MeemIdSubscription>(MEEM_ID_SUBSCRIPTION, {
+	} = useSubscription<MeemIdSubscriptionSubscription>(MEEM_ID_SUBSCRIPTION, {
 		variables: { walletAddress: wallet.accounts[0] ?? '' }
 	})
 	const [isLoadingIdentity, setIsLoadingIdentity] = useState(
@@ -52,32 +54,22 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 			setIdentity(id)
 			setIsLoadingIdentity(false)
 			setHasIdentity(true)
+			log.debug(`got identity for ${wallet.accounts[0]}`)
 		}
 
-		async function getDefault() {
-			setIsLoadingIdentity(true)
-			const id = getDefaultIdentity(
-				wallet.isConnected ? wallet.accounts[0] : ''
-			)
-			setIdentity(id)
-			setIsLoadingIdentity(false)
-			setHasIdentity(true)
-		}
-
-		setIsLoadingIdentity(loading)
-
-		if (!hasIdentity && identityData && wallet.isConnected) {
+		if (
+			identityData &&
+			identityData.MeemIdentities.length > 0 &&
+			wallet.isConnected
+		) {
 			getIdentity()
 		} else {
-			// TODO: check to see if identies array is empty here
-			if (error) {
-				// TODO: Get default identiy
-
-				getDefault()
-			}
+			log.debug(
+				`no identity found for ${wallet.accounts[0]}, using fallback...`
+			)
 			setIsLoadingIdentity(false)
 		}
-	}, [error, hasIdentity, identityData, isLoadingIdentity, wallet])
+	}, [error, hasIdentity, identityData, isLoadingIdentity, loading, wallet])
 	const value = useMemo(
 		() => ({
 			identity,
