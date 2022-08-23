@@ -11,11 +11,9 @@ import {
 	TextInput,
 	Grid
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
@@ -207,8 +205,6 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export const ManageIdentityComponent: React.FC = () => {
 	const { classes } = useStyles()
-	const router = useRouter()
-	const wallet = useWallet()
 	const id = useContext(IdentityContext)
 
 	// Mutable identity data

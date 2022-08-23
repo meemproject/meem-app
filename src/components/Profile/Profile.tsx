@@ -247,12 +247,12 @@ export const ProfileComponent: React.FC = () => {
 								radius={16}
 								fit={'cover'}
 								className={classes.profileLogoImage}
-								src={id.identity.profilePic}
+								src={id.identity.profilePic ?? ''}
 							/>
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 							<div className={classes.headerProfileNameContainer}>
 								<Text className={classes.headerProfileName}>
-									{id.identity.displayName}
+									{id.identity.displayName ?? 'My Profile'}
 								</Text>
 								<div className={classes.profileUrlContainer}>
 									<Text className={classes.profileUrl}>

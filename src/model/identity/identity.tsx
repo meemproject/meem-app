@@ -25,12 +25,7 @@ export interface Identity {
 
 export function getDefaultIdentity(walletAddress: string): Identity {
 	return {
-		id: '',
-		walletAddress,
-		ensAddress: '',
-		displayName: '',
-		profilePic: '',
-		integrations: []
+		walletAddress
 	}
 }
 export async function identityFromApi(
@@ -39,35 +34,27 @@ export async function identityFromApi(
 ): Promise<Identity> {
 	const id = identityData?.MeemIdentities[0]
 	if (id) {
+		// Integrations
+		const integrations: IdentityIntegration[] = []
+		if (id.MeemIdentityIntegrations.length > 0) {
+			id.MeemIdentityIntegrations.forEach(inte => {
+				const integration: IdentityIntegration = {
+					id: inte.IdentityIntegrationId,
+					name: inte.IdentityIntegration?.name,
+					icon: inte.IdentityIntegration?.icon,
+					visibility: inte.visibility,
+					metadata: inte.metadata
+				}
+				integrations.push(integration)
+			})
+		}
 		return {
 			id: id?.id,
 			walletAddress: address,
-			ensAddress: id?.Wallet?.ens ?? '',
-			displayName: id?.displayName ?? '',
-			profilePic: id?.profilePicUrl ?? '',
-			integrations: [
-				{
-					id: 'twitter',
-					name: 'Twitter',
-					icon: '/integration-twitter.png',
-					metadata: { twitterUsername: 'gadsbee' },
-					visibility: 'mutual-club-members'
-				},
-				{
-					id: 'discord',
-					name: 'Discord',
-					icon: '/integration-discord.png',
-					metadata: { discordUsername: 'jgads' },
-					visibility: 'mutual-club-members'
-				},
-				{
-					id: 'email',
-					name: 'Email',
-					icon: '/integration-email.png',
-					metadata: { emailAddress: 'james.gadsby@gmail.com' },
-					visibility: 'mutual-club-members'
-				}
-			]
+			ensAddress: id?.Wallet?.ens ?? undefined,
+			displayName: id?.displayName ?? undefined,
+			profilePic: id?.profilePicUrl ?? undefined,
+			integrations
 		}
 	} else {
 		return getDefaultIdentity(address)

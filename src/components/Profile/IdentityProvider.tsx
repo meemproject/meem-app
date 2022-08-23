@@ -9,7 +9,7 @@ import React, {
 	ReactNode
 } from 'react'
 import { MeemIdSubscriptionSubscription } from '../../../generated/graphql'
-import { MEEM_ID_SUBSCRIPTION } from '../../graphql/clubs'
+import { MEEM_ID_SUBSCRIPTION } from '../../graphql/id'
 import {
 	getDefaultIdentity,
 	Identity,

@@ -1021,6 +1021,10 @@ export enum Hashtags_Select_Column {
 /** columns and relationships of "IdentityIntegrations" */
 export type IdentityIntegrations = {
   __typename?: 'IdentityIntegrations';
+  /** An array relationship */
+  MeemIdentityIntegrations: Array<MeemIdentityIntegrations>;
+  /** An aggregate relationship */
+  MeemIdentityIntegrations_aggregate: MeemIdentityIntegrations_Aggregate;
   createdAt: Scalars['timestamptz'];
   deletedAt?: Maybe<Scalars['timestamptz']>;
   description: Scalars['String'];
@@ -1028,6 +1032,26 @@ export type IdentityIntegrations = {
   id: Scalars['uuid'];
   name: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "IdentityIntegrations" */
+export type IdentityIntegrationsMeemIdentityIntegrationsArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+};
+
+
+/** columns and relationships of "IdentityIntegrations" */
+export type IdentityIntegrationsMeemIdentityIntegrations_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemIdentityIntegrations_Order_By>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
 };
 
 /** aggregated selection of "IdentityIntegrations" */
@@ -1054,6 +1078,7 @@ export type IdentityIntegrations_Aggregate_FieldsCountArgs = {
 
 /** Boolean expression to filter rows from the table "IdentityIntegrations". All fields are combined with a logical 'AND'. */
 export type IdentityIntegrations_Bool_Exp = {
+  MeemIdentityIntegrations?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
   _and?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
   _not?: InputMaybe<IdentityIntegrations_Bool_Exp>;
   _or?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
@@ -1092,6 +1117,7 @@ export type IdentityIntegrations_Min_Fields = {
 
 /** Ordering options when selecting data from "IdentityIntegrations". */
 export type IdentityIntegrations_Order_By = {
+  MeemIdentityIntegrations_aggregate?: InputMaybe<MeemIdentityIntegrations_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
@@ -1857,6 +1883,8 @@ export enum MeemIdentities_Select_Column {
 /** columns and relationships of "MeemIdentityIntegrations" */
 export type MeemIdentityIntegrations = {
   __typename?: 'MeemIdentityIntegrations';
+  /** An object relationship */
+  IdentityIntegration?: Maybe<IdentityIntegrations>;
   IdentityIntegrationId?: Maybe<Scalars['uuid']>;
   /** An object relationship */
   MeemIdentity?: Maybe<MeemIdentities>;
@@ -1906,6 +1934,7 @@ export type MeemIdentityIntegrations_Aggregate_Order_By = {
 
 /** Boolean expression to filter rows from the table "MeemIdentityIntegrations". All fields are combined with a logical 'AND'. */
 export type MeemIdentityIntegrations_Bool_Exp = {
+  IdentityIntegration?: InputMaybe<IdentityIntegrations_Bool_Exp>;
   IdentityIntegrationId?: InputMaybe<Uuid_Comparison_Exp>;
   MeemIdentity?: InputMaybe<MeemIdentities_Bool_Exp>;
   MeemIdentityId?: InputMaybe<Uuid_Comparison_Exp>;
@@ -1968,6 +1997,7 @@ export type MeemIdentityIntegrations_Min_Order_By = {
 
 /** Ordering options when selecting data from "MeemIdentityIntegrations". */
 export type MeemIdentityIntegrations_Order_By = {
+  IdentityIntegration?: InputMaybe<IdentityIntegrations_Order_By>;
   IdentityIntegrationId?: InputMaybe<Order_By>;
   MeemIdentity?: InputMaybe<MeemIdentities_Order_By>;
   MeemIdentityId?: InputMaybe<Order_By>;
@@ -4302,7 +4332,7 @@ export type MeemIdSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', MeemIdentities: Array<{ __typename?: 'MeemIdentities', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> };
+export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', MeemIdentities: Array<{ __typename?: 'MeemIdentities', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string } | null }> }> };
 
 export const MeemPartsFragmentDoc = gql`
     fragment MeemParts on Meems {
@@ -4909,6 +4939,13 @@ export const MeemIdSubscriptionDocument = gql`
     MeemIdentityIntegrations {
       metadata
       visibility
+      IdentityIntegrationId
+      IdentityIntegration {
+        description
+        icon
+        id
+        name
+      }
     }
   }
 }
