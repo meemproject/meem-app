@@ -466,7 +466,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				bundleData?.Bundles[0].abi,
 				wallet.signer
 			)
-			console.log({ club, meemContract })
 			if (club && club.membershipToken) {
 				const tx = await meemContract?.burn(club?.membershipToken)
 				// @ts-ignore
@@ -506,7 +505,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			const reqs: RequirementString[] = []
 			let index = 0
-			console.log({ possibleClub })
+
 			if (possibleClub.membershipSettings) {
 				await Promise.all(
 					possibleClub.membershipSettings?.requirements.map(
@@ -829,7 +828,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					message: `You'll be missed!`
 				})
 			}
-			console.log('leaving club', { data, possibleClub })
 		}
 
 		if (!loading && !error && !club && clubData) {

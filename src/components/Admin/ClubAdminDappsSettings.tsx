@@ -18,7 +18,6 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
-import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { ExternalLink, Settings } from 'tabler-icons-react'

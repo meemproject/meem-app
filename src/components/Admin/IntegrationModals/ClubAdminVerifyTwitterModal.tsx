@@ -12,7 +12,6 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
-import Cookies from 'js-cookie'
 import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
