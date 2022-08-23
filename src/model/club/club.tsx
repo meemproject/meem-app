@@ -105,7 +105,8 @@ export function MembershipRequirementToMeemPermission(
 		mintStartTimestamp,
 		mintEndTimestamp,
 		numTokens: `${mr.tokenMinQuantity}`,
-		permission
+		permission,
+		merkleRoot: ''
 	}
 }
 

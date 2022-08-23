@@ -19,6 +19,7 @@ import {
 	// eslint-disable-next-line import/named
 	AutocompleteItem
 } from '@mantine/core'
+import { LoginState, useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { forwardRef, useContext, useRef, useState } from 'react'
@@ -165,6 +166,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 export function HomeComponent() {
 	const { classes } = useStyles()
 	const router = useRouter()
+	const wallet = useWallet()
 
 	const autocompleteClient = new ApolloClient({
 		cache: new InMemoryCache(),
@@ -266,11 +268,7 @@ export function HomeComponent() {
 	}
 
 	const goToCreate = () => {
-		if (
-			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
-		) {
+		if (wallet.loginState === LoginState.NotLoggedIn) {
 			Cookies.set(CookieKeys.clubName, autocompleteFormValue)
 			router.push({
 				pathname: '/authenticate',

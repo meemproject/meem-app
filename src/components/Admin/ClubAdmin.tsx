@@ -13,9 +13,10 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { diamondABI } from '@meemproject/meem-contracts'
+import { diamondABI, getCuts, IFacetVersion } from '@meemproject/meem-contracts'
 import { LoginState, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
+import { isEqual } from 'lodash'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
@@ -204,13 +205,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
 	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
-	const [bundleFunctionSelectors, setBundleFunctionSelectors] = useState<
-		string[]
-	>([])
-	const [clubFunctionSelectors, setClubFunctionSelectors] = useState<
-		string[]
-	>([])
-	const [bundleABI, setBundleABI] = useState<string>()
 	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
 	const [isUpgradingClub, setIsUpgradingClub] = useState(false)
 
@@ -291,23 +285,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	])
 
 	useEffect(() => {
-		if (bundleData?.Bundles[0]) {
-			let allFunctionSelectors: string[] = []
-			bundleData.Bundles[0].BundleContracts.forEach(bc => {
-				allFunctionSelectors = [
-					...allFunctionSelectors,
-					...bc.functionSelectors
-				]
-			})
-
-			setBundleFunctionSelectors(allFunctionSelectors)
-			setBundleABI(bundleData.Bundles[0].abi)
-		}
-	}, [bundleData])
-
-	useEffect(() => {
 		const fetchFacets = async () => {
-			if (bundleABI && club?.address) {
+			// TODO: Move this to meem-contracts package?
+			if (club?.address && bundleData) {
 				try {
 					const diamond = new ethers.Contract(
 						club.address,
@@ -315,53 +295,103 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						wallet.signer
 					)
 
-					const facets = await diamond.facets()
-					let currentSelectors: string[] = []
-					facets.forEach(
-						(facet: { target: string; selectors: string[] }) => {
-							currentSelectors = [
-								...currentSelectors,
-								...facet.selectors
-							]
-						}
+					const diamondFacets = await diamond.facets()
+					const fromVersion: IFacetVersion[] = diamondFacets.map(
+						(f: any) => ({
+							address: f.target,
+							functionSelectors: f.selectors
+						})
 					)
-					setClubFunctionSelectors(currentSelectors)
+
+					const toVersion: IFacetVersion[] = []
+
+					for (
+						let i = 0;
+						i < bundleData.Bundles[0].BundleContracts.length;
+						i++
+					) {
+						const bc = bundleData.Bundles[0].BundleContracts[i]
+						if (
+							bc.Contract &&
+							bc.Contract?.ContractInstances &&
+							bc.Contract?.ContractInstances.length > 0
+						) {
+							let didFindFacet = false
+							for (
+								let j = 0;
+								j < bc.Contract.ContractInstances.length;
+								j += 1
+							) {
+								const ci = bc.Contract.ContractInstances[j]
+
+								const clubFacet = fromVersion.find(f => {
+									if (bc.Contract) {
+										const clubFacetFunctionSelectors = [
+											...f.functionSelectors
+										].sort()
+										const bcFunctionSelectors = [
+											...bc.functionSelectors
+										].sort()
+
+										if (
+											f.address.toLowerCase() ===
+												ci.address.toLowerCase() &&
+											isEqual(
+												clubFacetFunctionSelectors,
+												bcFunctionSelectors
+											)
+										) {
+											return true
+										}
+									}
+									return false
+								})
+
+								if (clubFacet) {
+									toVersion.push(clubFacet)
+									didFindFacet = true
+									break
+								}
+							}
+
+							if (!didFindFacet) {
+								toVersion.push({
+									address:
+										bc.Contract.ContractInstances[0]
+											.address,
+									functionSelectors: bc.functionSelectors
+								})
+							}
+						}
+					}
+
+					const cuts = getCuts({
+						proxyContractAddress: club.address,
+						fromVersion,
+						toVersion
+					})
+
+					if (cuts.length > 0) {
+						setShouldShowUpgrade(true)
+					}
+
+					if (shouldShowUpgrade && cuts.length === 0) {
+						showNotification({
+							title: 'Club Upgraded!',
+							color: 'green',
+							icon: <Check />,
+							message: `The club has been upgraded to the latest version.`
+						})
+						setShouldShowUpgrade(false)
+						setIsUpgradingClub(false)
+					}
 				} catch (e) {
 					log.crit(e)
 				}
 			}
 		}
 		fetchFacets()
-	}, [bundleABI, club, wallet])
-
-	useEffect(() => {
-		if (
-			bundleFunctionSelectors.length > 0 &&
-			clubFunctionSelectors.length > 0
-		) {
-			for (let i = 0; i < bundleFunctionSelectors.length; i += 1) {
-				const clubFS = clubFunctionSelectors.find(
-					fs => fs === bundleFunctionSelectors[i]
-				)
-				if (!clubFS) {
-					setShouldShowUpgrade(true)
-					return
-				}
-			}
-
-			// If we made it this far, all selectors are accounted for and the upgrade was successful
-			if (shouldShowUpgrade) {
-				showNotification({
-					title: 'Club Upgraded!',
-					color: 'green',
-					icon: <Check />,
-					message: `The club has been upgraded to the latest version.`
-				})
-				setShouldShowUpgrade(false)
-				setIsUpgradingClub(false)
-			}
-		}
-	}, [bundleFunctionSelectors, clubFunctionSelectors, shouldShowUpgrade])
+	}, [club, wallet, bundleData, shouldShowUpgrade])
 
 	return (
 		<>
