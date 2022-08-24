@@ -84,7 +84,10 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		error,
 		data: clubData
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
-		variables: { slug: club?.slug ?? '' }
+		variables: {
+			slug: club?.slug ?? '',
+			visibilityLevel: ['mutual-club-members', 'anyone']
+		}
 	})
 
 	useEffect(() => {

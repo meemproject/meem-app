@@ -229,7 +229,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		error,
 		data: clubData
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
-		variables: { slug }
+		variables: { slug, visibilityLevel: ['mutual-club-members', 'anyone'] }
 	})
 
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(

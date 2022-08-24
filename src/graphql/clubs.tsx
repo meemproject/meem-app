@@ -56,8 +56,8 @@ export const GET_CLUB_SLUG = gql`
 `
 
 export const GET_CLUB = gql`
-	query GetClub($slug: String) {
-		MeemContracts(where: { slug: { _eq: $slug } }) {
+	query GetClub($slug: String, $visibilityLevel: [String!]) {
+		MeemContracts(where: { slug: { _in: $slug } }) {
 			slug
 			address
 			metadata
@@ -68,6 +68,16 @@ export const GET_CLUB = gql`
 				Owner {
 					address
 					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations(
+							where: { visibility: { _in: $visibilityLevel } }
+						) {
+							metadata
+							visibility
+						}
+					}
 				}
 				tokenId
 				tokenURI
@@ -105,7 +115,10 @@ export const GET_CLUB = gql`
 `
 
 export const SUB_CLUB = gql`
-	subscription GetClubSubscription($slug: String) {
+	subscription GetClubSubscription(
+		$slug: String
+		$visibilityLevel: [String!]
+	) {
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
@@ -117,6 +130,16 @@ export const SUB_CLUB = gql`
 				Owner {
 					address
 					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations(
+							where: { visibility: { _in: $visibilityLevel } }
+						) {
+							metadata
+							visibility
+						}
+					}
 				}
 				tokenId
 				tokenURI

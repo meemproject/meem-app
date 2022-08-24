@@ -113,7 +113,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					autoClose: 5000,
 					color: 'green',
 					icon: <Check color="green" />,
-					message: `This Twitter account is now linked!`
+					message: `This Discord account is now linked!`
 				})
 				onModalClosed()
 			} catch (e) {
@@ -123,7 +123,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					autoClose: 5000,
 					color: 'red',
 					icon: <AlertCircle />,
-					message: `Please make sure your tweet was public and try again.`
+					message: `Please try again or get in touch!`
 				})
 				onModalClosed()
 				return

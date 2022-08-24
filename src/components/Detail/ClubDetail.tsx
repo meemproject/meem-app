@@ -35,7 +35,6 @@ import {
 import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
-	ClubMember,
 	Integration,
 	MembershipReqType
 } from '../../model/club/club'
@@ -258,15 +257,22 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 	const [isWrongNetwork, setIsWrongNetwork] = useState(false)
+
+	const [club, setClub] = useState<Club | undefined>()
+
 	const {
 		loading,
 		error,
 		data: clubData
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
-		variables: { slug }
+		variables: {
+			slug,
+			visibilityLevel: club?.isClubMember
+				? ['mutual-club-members', 'anyone']
+				: ['anyone']
+		}
 	})
 
-	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
@@ -759,34 +765,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				setClub(possibleClub)
 				parseRequirements(possibleClub)
 			}
-			setIsLoadingClub(false)
-
-			const newMembers: ClubMember[] = []
-			for (const member of possibleClub.members ?? []) {
-				newMembers.push(member)
-			}
-			// TODO: Is there an easier way to copy an object in react, like copyWith?
-			const newClub: Club = {
-				id: possibleClub.id,
-				name: possibleClub.name,
-				address: possibleClub.address,
-				admins: possibleClub.admins,
-				isClubAdmin: possibleClub.isClubAdmin,
-				slug: possibleClub.slug,
-				description: possibleClub.description,
-				image: possibleClub.image,
-				isClubMember: possibleClub.isClubMember,
-				membershipToken: possibleClub.membershipToken,
-				members: newMembers,
-				slotsLeft: possibleClub.slotsLeft,
-				membershipSettings: possibleClub.membershipSettings,
-				isValid: possibleClub.isValid,
-				rawClub: possibleClub.rawClub,
-				allIntegrations: possibleClub.allIntegrations,
-				publicIntegrations: possibleClub.publicIntegrations,
-				privateIntegrations: possibleClub.privateIntegrations
-			}
-			setClub(newClub)
+			setClub(possibleClub)
 			setIsLoadingClub(false)
 			log.debug('updated club with ENS addresses')
 		}
@@ -837,7 +816,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 		}
 
-		if (!loading && !error && !club && clubData) {
+		if (!loading && !error && clubData) {
 			getClub(clubData)
 		}
 
@@ -1224,14 +1203,17 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														classes.memberItem
 													}
 												>
-													<Image
-														src={
-															member.profilePicture
-														}
-														radius={16}
-														height={32}
-														width={32}
-													/>
+													{member.profilePicture && (
+														<Image
+															src={
+																member.profilePicture
+															}
+															radius={16}
+															height={32}
+															width={32}
+														/>
+													)}
+
 													<Text
 														className={
 															classes.memberItemName
@@ -1277,15 +1259,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											</HoverCard.Target>
 											<HoverCard.Dropdown>
 												<div className={classes.row}>
-													<Image
-														src={
-															member.profilePicture
-														}
-														radius={24}
-														height={48}
-														width={48}
-													/>
-													<Space w={16} />
+													{member.profilePicture && (
+														<>
+															<Image
+																src={
+																	member.profilePicture
+																}
+																radius={24}
+																height={48}
+																width={48}
+															/>
+															<Space w={16} />
+														</>
+													)}
 													<div>
 														{member.displayName && (
 															<Text>

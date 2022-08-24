@@ -1,4 +1,5 @@
-import { MeemAPI } from '@meemproject/api'
+import log from '@kengoldfarb/log'
+import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { MeemContracts } from '../../../generated/graphql'
@@ -424,14 +425,50 @@ export default async function clubFromMeemContract(
 							}
 						})
 						if (!hasAlreadyBeenAdded) {
+							log.debug(
+								`member identities:${JSON.stringify(
+									meem.Owner.MeemIdentities
+								)}`
+							)
+							const memberIdentity =
+								meem.Owner.MeemIdentities &&
+								meem.Owner.MeemIdentities.length > 0
+									? meem.Owner.MeemIdentities[0]
+									: undefined
+
+							let twitterUsername = ''
+							let discordUsername = ''
+							let emailAddress = ''
+
+							memberIdentity?.MeemIdentityIntegrations.forEach(
+								inte => {
+									if (inte.metadata.twitterUsername) {
+										twitterUsername =
+											inte.metadata.twitterUsername
+									} else if (inte.metadata.discordUsername) {
+										discordUsername =
+											inte.metadata.discordUsername
+									} else if (inte.metadata.emailAddress) {
+										emailAddress =
+											inte.metadata.emailAddress
+									}
+								}
+							)
+
 							members.push({
 								wallet: meem.Owner.address,
 								ens: meem.Owner.ens ?? undefined,
-								displayName: 'Kate',
-								profilePicture: '/exampleclub.png',
-								twitterUsername: 'kweimer',
-								discordUsername: 'username#1234',
-								emailAddress: 'kateeweimer@gmail.com'
+								displayName: memberIdentity?.displayName
+									? memberIdentity?.displayName
+									: '',
+								profilePicture: memberIdentity?.profilePicUrl
+									? normalizeImageUrl(
+											memberIdentity?.profilePicUrl
+									  )
+									: '',
+								twitterUsername,
+								discordUsername,
+								emailAddress
 							})
 						}
 					}
