@@ -10,10 +10,13 @@ import {
 	TextInput
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import React, { useState } from 'react'
+import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
-import { Identity } from '../../../../model/identity/identity'
+import { AvailableIdentityIntegration } from '../../../../model/identity/identity'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -76,7 +79,7 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
-	identity: Identity
+	integration?: AvailableIdentityIntegration
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -89,11 +92,12 @@ enum Step {
 }
 
 export const ProfileLinkTwitterModal: React.FC<IProps> = ({
-	identity,
 	isOpened,
+	integration,
 	onModalClosed
 }) => {
 	const { classes } = useStyles()
+	const wallet = useWallet()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
@@ -102,30 +106,24 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 	const verifyTweet = async () => {
 		setStep(Step.Verifying)
 
-		// TODO
-
 		// Save the change to the db
 		try {
-			// const jwtToken = Cookies.get('meemJwtToken')
-			// const { body } = await request
-			// 	.post(
-			// 		`${
-			// 			process.env.NEXT_PUBLIC_API_URL
-			// 		}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-			// 			meemContractId: club.id ?? '',
-			// 			integrationId: integration?.integrationId ?? ''
-			// 		})}`
-			// 	)
-			// 	.set('Authorization', `JWT ${jwtToken}`)
-			// 	.send({
-			// 		isEnabled: true,
-			// 		isPublic: true,
-			// 		metadata: {
-			// 			externalUrl: integration?.integrationId,
-			// 			twitterUsername
-			// 		}
-			// 	})
-			// log.debug(body)
+			const { body } = await request
+				.post(
+					`${
+						process.env.NEXT_PUBLIC_API_URL
+					}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
+						integrationId: integration?.id ?? ''
+					})}`
+				)
+				.set('Authorization', `JWT ${wallet.jwt}`)
+				.send({
+					visibility: 'mutual-club-members',
+					metadata: {
+						twitterUsername
+					}
+				})
+			log.debug(body)
 			showNotification({
 				title: 'Success!',
 				autoClose: 5000,
@@ -294,20 +292,8 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 														const href =
 															twitterIntent.tweet.url(
 																{
-																	text: `Verifying that this Twitter account belongs to ${
-																		identity.displayName ??
-																		''
-																	}!`
-																	// TODO: What info do we need here?
-																	// ,
-																	// url: `${
-																	// 	window
-																	// 		.location
-																	// 		.origin
-																	// }/${
-																	// 	club.slug ??
-																	// 	''
-																	// }`
+																	text: `Verifying that this Twitter account belongs to me!
+																	 ${wallet.accounts[0] ?? ''}`
 																}
 															)
 

@@ -622,7 +622,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			<Space h={'xl'} />
 
 			<ProfileLinkTwitterModal
-				identity={id.identity}
+				integration={integrationCurrentlyEditing}
 				isOpened={isTwitterModalOpen}
 				onModalClosed={() => {
 					setIsTwitterModalOpen(false)

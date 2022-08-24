@@ -213,7 +213,7 @@ export const ProfileComponent: React.FC = () => {
 
 	return (
 		<>
-			{!wallet.isConnected && (
+			{!wallet.isConnected && !id.isLoadingIdentity && (
 				<Container>
 					<Space h={120} />
 					<Center>
