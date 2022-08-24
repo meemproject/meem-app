@@ -6800,10 +6800,10 @@ eslint-config-airbnb-typescript@^17.0.0:
   dependencies:
     eslint-config-airbnb-base "^15.0.0"
 
-eslint-config-kengoldfarb@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.npmjs.org/eslint-config-kengoldfarb/-/eslint-config-kengoldfarb-1.4.2.tgz"
-  integrity sha512-Sa8QNs/qceGbTKnCbHt1M5GsiSOeCAU0yc7s3sGVGh9zTrxhM+ujpCRJ7Ja61UKrZmrNxSPSu4V8QL2yGQAy+g==
+eslint-config-kengoldfarb@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/eslint-config-kengoldfarb/-/eslint-config-kengoldfarb-1.4.4.tgz#c9e168e53ec440ccd6868137e3f58fbeb094259a"
+  integrity sha512-l1Xy6TgDeVlLXxNCIHDHvEKcrM7ldaQUwkVGIE1gpdE1l/b/g4AzGQKOM2L5nBo31Om26YdO6KoMUT8eyW/Oow==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.19.0"
     "@typescript-eslint/parser" "^5.19.0"
@@ -6811,7 +6811,7 @@ eslint-config-kengoldfarb@^1.4.2:
     eslint-config-prettier "^8.5.0"
     eslint-plugin-import "^2.26.0"
     eslint-plugin-jsx-a11y "^6.3.1"
-    eslint-plugin-kengoldfarb "^1.4.2"
+    eslint-plugin-kengoldfarb "^1.4.4"
     eslint-plugin-prettier "^4.0.0"
     eslint-plugin-react "^7.29.4"
     eslint-plugin-react-hooks "^4.4.0"
@@ -6875,10 +6875,10 @@ eslint-plugin-jsx-a11y@^6.3.1:
     language-tags "^1.0.5"
     minimatch "^3.0.4"
 
-eslint-plugin-kengoldfarb@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.npmjs.org/eslint-plugin-kengoldfarb/-/eslint-plugin-kengoldfarb-1.4.2.tgz"
-  integrity sha512-1tsn+etNKJ1W8N90KSnb7GiZt/PHBnNkuOd0Lh2F+m/MdRNKrMzeZO89lpyOop1l4VjQEXz7noqjubALW/Hmwg==
+eslint-plugin-kengoldfarb@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-kengoldfarb/-/eslint-plugin-kengoldfarb-1.4.4.tgz#f65963d62b702bd343e7622e893bd5545ab112fe"
+  integrity sha512-76gaABj2suVR22M4jppEXDhf0uLKeWuJ7ms/o3wf0lY/VDdAIa2yS4Q5HG2nyR0Z6JHpcwhIkbKAfNLIlK/YbQ==
   dependencies:
     pascal-case "^3"
 
