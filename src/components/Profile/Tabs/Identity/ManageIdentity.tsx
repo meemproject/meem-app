@@ -18,6 +18,7 @@ import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
+import router from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import request from 'superagent'
@@ -220,9 +221,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	// Mutable identity data
 	const [displayName, setDisplayName] = useState('')
 	const [profilePicture, setProfilePicture] = useState('')
-
 	const [profilePicBase64, setProfilePicBase64] = useState<string>()
-
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
 	// Available integrations
@@ -237,6 +236,9 @@ export const ManageIdentityComponent: React.FC = () => {
 	const { data: inteData } = useQuery<GetIdentityIntegrationsQuery>(
 		IDENTITY_INTEGRATIONS_QUERY
 	)
+
+	// Discord-specific integration data
+	const [discordAuthCode, setIsDiscordAuthCode] = useState<string>()
 
 	// Club logo
 	const [
@@ -345,6 +347,19 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
+	useEffect(() => {
+		if (router.query.code && availableIntegrations.length > 0) {
+			// We have a discord auth code - create or update integration
+			availableIntegrations.forEach(inte => {
+				if (inte.name === 'Discord') {
+					setIntegrationCurrentlyEditing(inte)
+					setIsDiscordAuthCode(router.query.code as string)
+					setIsDiscordModalOpen(true)
+				}
+			})
+		}
+	}, [availableIntegrations])
+
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const saveChanges = async () => {
@@ -384,13 +399,22 @@ export const ManageIdentityComponent: React.FC = () => {
 	const openIntegrationModal = (
 		integration: AvailableIdentityIntegration
 	) => {
+		setIntegrationCurrentlyEditing(integration)
 		if (integration.name) {
 			switch (integration.name) {
 				case 'Twitter':
 					setIsTwitterModalOpen(true)
 					break
 				case 'Discord':
-					setIsDiscordModalOpen(true)
+					// Discord is a special case due to OAuth
+					// eslint-disable-next-line no-case-declarations
+					const redirectUri = encodeURI(
+						`${window.location.origin}/profile`
+					)
+
+					window.location.replace(
+						`https://discord.com/api/oauth2/authorize?response_type=code&client_id=967119580088660039&scope=identify&redirect_uri=${redirectUri}`
+					)
 					break
 				case 'Email':
 					setIsEmailModalOpen(true)
@@ -636,7 +660,8 @@ export const ManageIdentityComponent: React.FC = () => {
 				}}
 			/>
 			<ProfileLinkDiscordModal
-				identity={id.identity}
+				integrationId={integrationCurrentlyEditing?.id}
+				discordAuthCode={discordAuthCode}
 				isOpened={isDiscordModalOpen}
 				onModalClosed={() => {
 					setIsDiscordModalOpen(false)

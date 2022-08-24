@@ -7,7 +7,7 @@ import {
 	Radio,
 	Button
 } from '@mantine/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IdentityIntegration } from '../../../../model/identity/identity'
 
 const useStyles = createStyles(theme => ({
@@ -91,13 +91,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	const { classes } = useStyles()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [integrationVisibility, setIntegrationVisibility] = useState(
-		integration?.visibility ?? 'anyone'
-	)
+	const [integrationVisibility, setIntegrationVisibility] = useState('')
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
 	}
+
+	useEffect(() => {
+		if (isOpened) {
+			setIntegrationVisibility(integration?.visibility ?? 'anyone')
+		}
+	}, [integration?.visibility, isOpened])
 
 	return (
 		<>
@@ -113,17 +117,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				opened={isOpened}
 				title={
 					<>
-						{integration?.id === 'twitter' && (
+						{integration?.name === 'Twitter' && (
 							<Text className={classes.modalTitle}>
 								Twitter Settings
 							</Text>
 						)}
-						{integration?.id === 'discord' && (
+						{integration?.name === 'Discord' && (
 							<Text className={classes.modalTitle}>
 								Discord Settings
 							</Text>
 						)}
-						{integration?.id === 'email' && (
+						{integration?.name === 'Email' && (
 							<Text className={classes.modalTitle}>
 								Email Address Settings
 							</Text>
@@ -139,29 +143,29 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				<Space h={24} />
 
 				<div className={classes.stepsContainer}>
-					{integration?.id === 'twitter' && (
+					{integration?.name === 'Twitter' && (
 						<Text className={classes.modalText}>
-							{`You've successfully verified @${integration.metadata.twitterUsername} as your Twitter username.`}
+							{`You've successfully verified @${integration.metadata?.twitterUsername} as your Twitter username.`}
 						</Text>
 					)}
-					{integration?.id === 'discord' && (
+					{integration?.name === 'Discord' && (
 						<Text className={classes.modalText}>
-							{`You've successfully verified ${integration.metadata.discordUsername} as your Discord username.`}
+							{`You've successfully verified ${integration.metadata?.discordUsername} as your Discord username.`}
 						</Text>
 					)}
-					{integration?.id === 'email' && (
+					{integration?.name === 'Email' && (
 						<Text className={classes.modalText}>
-							{`You've successfully verified ${integration.metadata.emailAddress} as your email address.`}
+							{`You've successfully verified ${integration.metadata?.emailAddress} as your email address.`}
 						</Text>
 					)}
 					<Space h={24} />
-					{(integration?.id === 'twitter' ||
-						integration?.id === 'discord') && (
+					{(integration?.name === 'Twitter' ||
+						integration?.name === 'Discord') && (
 						<Text className={classes.modalQuestion}>
 							{`Who can view this username?`}
 						</Text>
 					)}
-					{integration?.id === 'email' && (
+					{integration?.name === 'Email' && (
 						<Text className={classes.modalQuestion}>
 							{`who can view this email address?`}
 						</Text>

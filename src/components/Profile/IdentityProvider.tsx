@@ -1,5 +1,4 @@
 import { useSubscription } from '@apollo/client'
-import log from '@kengoldfarb/log'
 import { useWallet } from '@meemproject/react'
 import React, {
 	useState,
@@ -58,8 +57,6 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 					identityData
 				)
 				setHasFetchedIdentity(true)
-
-				log.debug(`is loading id = ${isLoadingIdentity}`)
 
 				let hasIdentityChanged = true
 				if (previousIdentity) {

@@ -1,14 +1,18 @@
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
 	Space,
 	Modal,
 	Divider,
-	Stepper,
 	Loader
 } from '@mantine/core'
-import React, { useState } from 'react'
-import { Identity } from '../../../../model/identity/identity'
+import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
+import React, { useEffect } from 'react'
+import request from 'superagent'
+import { AlertCircle, Check } from 'tabler-icons-react'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -71,23 +75,65 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
-	identity: Identity
+	integrationId?: string
+	discordAuthCode?: string
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const ProfileLinkDiscordModal: React.FC<IProps> = ({
-	identity,
+	integrationId,
+	discordAuthCode,
 	isOpened,
 	onModalClosed
 }) => {
 	const { classes } = useStyles()
+	const wallet = useWallet()
 
-	const [isAuthenticating, setIsAuthenticating] = useState(false)
+	useEffect(() => {
+		async function authenticateWithDiscord() {
+			try {
+				await request
+					.post(
+						`${
+							process.env.NEXT_PUBLIC_API_URL
+						}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
+							integrationId: integrationId ?? ''
+						})}`
+					)
+					.set('Authorization', `JWT ${wallet.jwt}`)
+					.send({
+						visibility: 'mutual-club-members',
+						metadata: {
+							discordAuthCode
+						}
+					})
+				showNotification({
+					title: 'Success!',
+					autoClose: 5000,
+					color: 'green',
+					icon: <Check color="green" />,
+					message: `This Twitter account is now linked!`
+				})
+				onModalClosed()
+			} catch (e) {
+				log.debug(e)
+				showNotification({
+					title: 'Verification failed',
+					autoClose: 5000,
+					color: 'red',
+					icon: <AlertCircle />,
+					message: `Please make sure your tweet was public and try again.`
+				})
+				onModalClosed()
+				return
+			}
+		}
 
-	const authenticateWithDiscord = async () => {}
-
-	// TODO: Listen out for successful verification (subscription to identity?)
+		if (isOpened && discordAuthCode && integrationId) {
+			authenticateWithDiscord()
+		}
+	}, [discordAuthCode, integrationId, isOpened, onModalClosed, wallet])
 
 	return (
 		<>
@@ -105,8 +151,8 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 						Connect your Discord account
 					</Text>
 				}
+				withCloseButton={false}
 				onClose={() => {
-					setIsAuthenticating(false)
 					onModalClosed()
 				}}
 			>
@@ -115,38 +161,11 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				<Space h={24} />
 
 				<div className={classes.stepsContainer}>
-					<Stepper
-						size="md"
-						color="green"
-						orientation="vertical"
-						active={0}
-					>
-						<Stepper.Step
-							label="Authenticate with Discord"
-							description={
-								<div>
-									<Text className={classes.stepDescription}>
-										{`Launch Discord to verify ownership of your account.`}
-									</Text>
-									<Space h={16} />
-									{!isAuthenticating && (
-										<a
-											onClick={() => {
-												setIsAuthenticating(true)
-												authenticateWithDiscord()
-											}}
-											className={classes.buttonConfirm}
-										>
-											Launch Discord
-										</a>
-									)}
-									{isAuthenticating && (
-										<Loader variant="oval" color="red" />
-									)}
-								</div>
-							}
-						/>
-					</Stepper>
+					<Space h={8} />
+					<Text>Saving Discord information to your profile...</Text>
+					<Space h={8} />
+
+					<Loader variant="oval" color="red" />
 				</div>
 			</Modal>
 		</>

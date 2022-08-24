@@ -106,9 +106,11 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 	const verifyTweet = async () => {
 		setStep(Step.Verifying)
 
+		log.debug(`integration id to enable: ${integration?.id}`)
+
 		// Save the change to the db
 		try {
-			const { body } = await request
+			await request
 				.post(
 					`${
 						process.env.NEXT_PUBLIC_API_URL
@@ -123,7 +125,6 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 						twitterUsername
 					}
 				})
-			log.debug(body)
 			showNotification({
 				title: 'Success!',
 				autoClose: 5000,
