@@ -1,3 +1,4 @@
+import { normalizeImageUrl } from '@meemproject/api'
 import { MeemIdSubscriptionSubscription } from '../../../generated/graphql'
 
 export interface AvailableIdentityIntegration {
@@ -53,7 +54,7 @@ export async function identityFromApi(
 			walletAddress: address,
 			ensAddress: id?.Wallet?.ens ?? undefined,
 			displayName: id?.displayName ?? undefined,
-			profilePic: id?.profilePicUrl ?? undefined,
+			profilePic: normalizeImageUrl(id?.profilePicUrl) ?? undefined,
 			integrations
 		}
 	} else {

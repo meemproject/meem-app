@@ -18,7 +18,8 @@ import {
 
 const defaultState = {
 	identity: getDefaultIdentity(''),
-	isLoadingIdentity: true
+	isLoadingIdentity: true,
+	hasFetchedIdentity: false
 }
 const IdentityContext = createContext(defaultState)
 
@@ -43,6 +44,7 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 		defaultState.isLoadingIdentity
 	)
 
+	const [hasFetchedIdentity, setHasFetchedIdentity] = useState(false)
 	const [hasIdentity, setHasIdentity] = useState(false)
 	const [identity, setIdentity] = useState<Identity>(defaultState.identity)
 	const [previousIdentity, setPreviousIdentity] = useState<Identity>()
@@ -50,6 +52,7 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 	useEffect(() => {
 		async function getIdentity() {
 			const id = await identityFromApi(wallet.accounts[0], identityData)
+			setHasFetchedIdentity(true)
 
 			let hasIdentityChanged = true
 			if (previousIdentity) {
@@ -97,9 +100,10 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 	const value = useMemo(
 		() => ({
 			identity,
-			isLoadingIdentity
+			isLoadingIdentity,
+			hasFetchedIdentity
 		}),
-		[identity, isLoadingIdentity]
+		[hasFetchedIdentity, identity, isLoadingIdentity]
 	)
 	return <IdentityContext.Provider value={value} {...props} />
 }

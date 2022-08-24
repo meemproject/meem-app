@@ -11,11 +11,15 @@ import {
 	TextInput,
 	Grid
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
 import React, { useContext, useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
+import request from 'superagent'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import {
@@ -205,15 +209,16 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export const ManageIdentityComponent: React.FC = () => {
 	const { classes } = useStyles()
+
+	const wallet = useWallet()
 	const id = useContext(IdentityContext)
 
 	// Mutable identity data
-	const [displayName, setDisplayName] = useState(
-		id.identity.displayName ?? ''
-	)
-	const [profilePicture, setProfilePicture] = useState(
-		id.identity.profilePic ?? ''
-	)
+	const [displayName, setDisplayName] = useState('')
+	const [profilePicture, setProfilePicture] = useState('')
+
+	const [profilePicBase64, setProfilePicBase64] = useState<string>()
+
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
 	const [integrationCurrentlyEditing, setIntegrationCurrentlyEditing] =
@@ -268,6 +273,8 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	useEffect(() => {
 		const createResizedFile = async () => {
+			setProfilePicBase64(rawProfilePicture[0].content)
+			log.debug('set base64')
 			const profilePictureBlob = base64StringToBlob(
 				rawProfilePicture[0].content.split(',')[1],
 				'image/png'
@@ -284,6 +291,13 @@ export const ManageIdentityComponent: React.FC = () => {
 			// log.debug('no current profile image')
 		}
 	}, [rawProfilePicture])
+
+	useEffect(() => {
+		if (id.hasFetchedIdentity) {
+			setDisplayName(id.identity.displayName ?? '')
+			setProfilePicture(id.identity.profilePic ?? '')
+		}
+	}, [id.hasFetchedIdentity, id.identity.displayName, id.identity.profilePic])
 
 	const deleteImage = () => {
 		setProfilePicture('')
@@ -316,6 +330,8 @@ export const ManageIdentityComponent: React.FC = () => {
 
 			const canvas = await html2canvas(element as HTMLElement)
 			const image = canvas.toDataURL('image/png', 1.0)
+			log.debug('set base64')
+			setProfilePicBase64(image)
 			const profilePictureBlob = base64StringToBlob(
 				image.split(',')[1],
 				'image/png'
@@ -331,6 +347,36 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
+
+		// Save the change to the db
+		try {
+			const body = {
+				displayName,
+				profilePicBase64
+			}
+
+			log.debug(`saving changes with body = ${JSON.stringify(body)}`)
+
+			await request
+				.post(
+					`${
+						process.env.NEXT_PUBLIC_API_URL
+					}${MeemAPI.v1.CreateOrUpdateMeemId.path()}`
+				)
+				.set('Authorization', `JWT ${wallet.jwt}`)
+				.send(body)
+			setIsSavingChanges(false)
+		} catch (e) {
+			log.debug(e)
+			setIsSavingChanges(false)
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message:
+					'Unable to save changes to your profile. Please get in touch!'
+			})
+			return
+		}
 	}
 
 	const openIntegrationModal = (

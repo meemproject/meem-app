@@ -243,12 +243,19 @@ export const ProfileComponent: React.FC = () => {
 				<>
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
-							<Image
-								radius={16}
-								fit={'cover'}
-								className={classes.profileLogoImage}
-								src={id.identity.profilePic ?? ''}
-							/>
+							{id.identity.profilePic && (
+								<>
+									<Image
+										radius={16}
+										height={64}
+										width={64}
+										fit={'cover'}
+										className={classes.profileLogoImage}
+										src={id.identity.profilePic ?? ''}
+									/>
+								</>
+							)}
+
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 							<div className={classes.headerProfileNameContainer}>
 								<Text className={classes.headerProfileName}>
@@ -256,28 +263,40 @@ export const ProfileComponent: React.FC = () => {
 								</Text>
 								<div className={classes.profileUrlContainer}>
 									<Text className={classes.profileUrl}>
-										{id.identity.ensAddress ??
-											id.identity.walletAddress}
+										{id.identity.ensAddress
+											? id.identity.ensAddress
+											: id.identity.walletAddress
+											? id.identity.walletAddress
+											: 'No wallet address found'}
 									</Text>
-									<Image
-										className={classes.copy}
-										src="/copy.png"
-										height={20}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												`${id.identity.walletAddress}`
-											)
-											showNotification({
-												title: 'Wallet info copied',
-												autoClose: 2000,
-												color: 'green',
-												icon: <Check />,
+									{id.identity.id && (
+										<>
+											<Image
+												className={classes.copy}
+												src="/copy.png"
+												height={20}
+												onClick={() => {
+													navigator.clipboard.writeText(
+														`${
+															id.identity
+																.ensAddress ??
+															id.identity
+																.walletAddress
+														}`
+													)
+													showNotification({
+														title: 'Wallet info copied',
+														autoClose: 2000,
+														color: 'green',
+														icon: <Check />,
 
-												message: `Wallet info was copied to your clipboard.`
-											})
-										}}
-										width={20}
-									/>
+														message: `Wallet info was copied to your clipboard.`
+													})
+												}}
+												width={20}
+											/>
+										</>
+									)}
 								</div>
 							</div>
 						</div>
