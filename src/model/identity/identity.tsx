@@ -54,7 +54,7 @@ export async function identityFromApi(
 			walletAddress: address,
 			ensAddress: id?.Wallet?.ens ?? undefined,
 			displayName: id?.displayName ?? undefined,
-			profilePic: normalizeImageUrl(id?.profilePicUrl) ?? undefined,
+			profilePic: normalizeImageUrl(id?.profilePicUrl ?? ''),
 			integrations
 		}
 	} else {
