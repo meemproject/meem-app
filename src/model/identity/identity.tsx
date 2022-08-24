@@ -1,5 +1,8 @@
 import { normalizeImageUrl } from '@meemproject/api'
-import { MeemIdSubscriptionSubscription } from '../../../generated/graphql'
+import {
+	GetIdentityIntegrationsQuery,
+	MeemIdSubscriptionSubscription
+} from '../../../generated/graphql'
 
 export interface AvailableIdentityIntegration {
 	id?: string
@@ -22,6 +25,25 @@ export interface Identity {
 	displayName?: string
 	profilePic?: string
 	integrations?: IdentityIntegration[]
+}
+
+export function identityIntegrationFromApi(
+	inteData: GetIdentityIntegrationsQuery | undefined
+): AvailableIdentityIntegration[] {
+	if (inteData && inteData.IdentityIntegrations.length > 0) {
+		const integrations: AvailableIdentityIntegration[] = []
+		inteData.IdentityIntegrations.forEach(inte => {
+			const integration: AvailableIdentityIntegration = {
+				id: inte.id,
+				name: inte.name,
+				icon: inte.icon
+			}
+			integrations.push(integration)
+		})
+		return integrations
+	} else {
+		return []
+	}
 }
 
 export function getDefaultIdentity(walletAddress: string): Identity {

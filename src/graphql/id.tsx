@@ -29,3 +29,14 @@ export const MEEM_ID_SUBSCRIPTION = gql`
 		}
 	}
 `
+
+export const IDENTITY_INTEGRATIONS_QUERY = gql`
+	query GetIdentityIntegrations {
+		IdentityIntegrations {
+			description
+			icon
+			id
+			name
+		}
+	}
+`

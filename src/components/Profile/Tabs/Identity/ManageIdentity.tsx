@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -22,9 +23,12 @@ import Resizer from 'react-image-file-resizer'
 import request from 'superagent'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
+import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
 import {
 	AvailableIdentityIntegration,
-	IdentityIntegration
+	IdentityIntegration,
+	identityIntegrationFromApi
 } from '../../../../model/identity/identity'
 import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
@@ -221,27 +225,18 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
+	// Available integrations
+	const [availableIntegrations, setAvailableIntegrations] = useState<
+		AvailableIdentityIntegration[]
+	>([])
+
 	const [integrationCurrentlyEditing, setIntegrationCurrentlyEditing] =
 		useState<IdentityIntegration>()
 
-	// Hardcoded on client, no need to fetch from backend?
-	const availableIntegrations: AvailableIdentityIntegration[] = [
-		{
-			id: 'twitter',
-			name: 'Twitter',
-			icon: '/integration-twitter.png'
-		},
-		{
-			id: 'discord',
-			name: 'Discord',
-			icon: '/integration-discord.png'
-		},
-		{
-			id: 'email',
-			name: 'Email',
-			icon: '/integration-email.png'
-		}
-	]
+	// Fetch a list of available integrations.
+	const { data: inteData } = useQuery<GetIdentityIntegrationsQuery>(
+		IDENTITY_INTEGRATIONS_QUERY
+	)
 
 	// Club logo
 	const [
@@ -298,6 +293,13 @@ export const ManageIdentityComponent: React.FC = () => {
 			setProfilePicture(id.identity.profilePic ?? '')
 		}
 	}, [id.hasFetchedIdentity, id.identity.displayName, id.identity.profilePic])
+
+	useEffect(() => {
+		if (availableIntegrations.length === 0 && inteData) {
+			const integrations = identityIntegrationFromApi(inteData)
+			setAvailableIntegrations(integrations)
+		}
+	}, [availableIntegrations.length, inteData])
 
 	const deleteImage = () => {
 		setProfilePicture('')
@@ -382,15 +384,15 @@ export const ManageIdentityComponent: React.FC = () => {
 	const openIntegrationModal = (
 		integration: AvailableIdentityIntegration
 	) => {
-		if (integration.id) {
-			switch (integration.id) {
-				case 'twitter':
+		if (integration.name) {
+			switch (integration.name) {
+				case 'Twitter':
 					setIsTwitterModalOpen(true)
 					break
-				case 'discord':
+				case 'Discord':
 					setIsDiscordModalOpen(true)
 					break
-				case 'email':
+				case 'Email':
 					setIsEmailModalOpen(true)
 					break
 			}
@@ -555,41 +557,56 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Text className={classes.identitySectionTitle}>
 						Verify Accounts
 					</Text>
-					<Grid>
-						{availableIntegrations.map(integration => (
-							<Grid.Col
-								xs={6}
-								sm={4}
-								md={4}
-								lg={4}
-								xl={4}
-								key={integration.name}
-							>
-								<a
-									onClick={() => {
-										openIntegrationModal(integration)
-									}}
-								>
-									<div
-										className={
-											classes.profileIntegrationItem
-										}
+					{availableIntegrations.length === 0 && (
+						<Loader variant="oval" color="red" />
+					)}
+					{availableIntegrations.length > 0 && (
+						<>
+							<Grid>
+								{availableIntegrations.map(integration => (
+									<Grid.Col
+										xs={6}
+										sm={4}
+										md={4}
+										lg={4}
+										xl={4}
+										key={integration.name}
 									>
-										<div className={classes.intItemHeader}>
-											<Image
-												src={`${integration.icon}`}
-												width={16}
-												height={16}
-												fit={'contain'}
-											/>
-											<Space w={8} />
-											<Text>{integration.name}</Text>
-										</div>
-									</div>
-								</a>
-							</Grid.Col>
-						))}
-					</Grid>
+										<a
+											onClick={() => {
+												openIntegrationModal(
+													integration
+												)
+											}}
+										>
+											<div
+												className={
+													classes.profileIntegrationItem
+												}
+											>
+												<div
+													className={
+														classes.intItemHeader
+													}
+												>
+													<Image
+														src={`${integration.icon}`}
+														width={16}
+														height={16}
+														fit={'contain'}
+													/>
+													<Space w={8} />
+													<Text>
+														{integration.name}
+													</Text>
+												</div>
+											</div>
+										</a>
+									</Grid.Col>
+								))}
+							</Grid>
+						</>
+					)}
 				</>
 			)}
 

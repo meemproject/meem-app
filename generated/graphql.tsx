@@ -4334,6 +4334,11 @@ export type MeemIdSubscriptionSubscriptionVariables = Exact<{
 
 export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', MeemIdentities: Array<{ __typename?: 'MeemIdentities', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string } | null }> }> };
 
+export type GetIdentityIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetIdentityIntegrationsQuery = { __typename?: 'query_root', IdentityIntegrations: Array<{ __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string }> };
+
 export const MeemPartsFragmentDoc = gql`
     fragment MeemParts on Meems {
   tokenId
@@ -4973,3 +4978,40 @@ export function useMeemIdSubscriptionSubscription(baseOptions?: Apollo.Subscript
       }
 export type MeemIdSubscriptionSubscriptionHookResult = ReturnType<typeof useMeemIdSubscriptionSubscription>;
 export type MeemIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MeemIdSubscriptionSubscription>;
+export const GetIdentityIntegrationsDocument = gql`
+    query GetIdentityIntegrations {
+  IdentityIntegrations {
+    description
+    icon
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetIdentityIntegrationsQuery__
+ *
+ * To run a query within a React component, call `useGetIdentityIntegrationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIdentityIntegrationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIdentityIntegrationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetIdentityIntegrationsQuery(baseOptions?: Apollo.QueryHookOptions<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>(GetIdentityIntegrationsDocument, options);
+      }
+export function useGetIdentityIntegrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>(GetIdentityIntegrationsDocument, options);
+        }
+export type GetIdentityIntegrationsQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsQuery>;
+export type GetIdentityIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsLazyQuery>;
+export type GetIdentityIntegrationsQueryResult = Apollo.QueryResult<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>;
