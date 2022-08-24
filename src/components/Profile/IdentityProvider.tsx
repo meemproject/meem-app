@@ -1,4 +1,5 @@
 import { useSubscription } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import { useWallet } from '@meemproject/react'
 import React, {
 	useState,
@@ -51,43 +52,41 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 
 	useEffect(() => {
 		async function getIdentity() {
-			const id = await identityFromApi(wallet.accounts[0], identityData)
-			setHasFetchedIdentity(true)
+			if (identityData) {
+				const id = await identityFromApi(
+					wallet.accounts[0],
+					identityData
+				)
+				setHasFetchedIdentity(true)
 
-			let hasIdentityChanged = true
-			if (previousIdentity) {
-				const previous = JSON.stringify(previousIdentity)
-				const current = JSON.stringify(id)
-				if (previous === current) {
-					hasIdentityChanged = false
-				}
-			}
+				log.debug(`is loading id = ${isLoadingIdentity}`)
 
-			if (hasIdentityChanged) {
-				setIdentity(id)
-				if (!previousIdentity) {
-					setPreviousIdentity(id)
+				let hasIdentityChanged = true
+				if (previousIdentity) {
+					const previous = JSON.stringify(previousIdentity)
+					const current = JSON.stringify(id)
+					if (previous === current) {
+						hasIdentityChanged = false
+					}
 				}
+
+				if (hasIdentityChanged) {
+					setIdentity(id)
+					if (!previousIdentity) {
+						setPreviousIdentity(id)
+					}
+					setIsLoadingIdentity(false)
+					// if (!hasIdentity) {
+					// 	log.debug(`got identity for ${wallet.accounts[0]}`)
+					// }
+					setHasIdentity(true)
+				}
+			} else if (error) {
 				setIsLoadingIdentity(false)
-				// if (!hasIdentity) {
-				// 	log.debug(`got identity for ${wallet.accounts[0]}`)
-				// }
-				setHasIdentity(true)
 			}
 		}
 
-		if (
-			identityData &&
-			identityData.MeemIdentities.length > 0 &&
-			wallet.isConnected
-		) {
-			getIdentity()
-		} else {
-			// log.debug(
-			// 	`no identity found for ${wallet.accounts[0]}, using fallback...`
-			// )
-			setIsLoadingIdentity(false)
-		}
+		getIdentity()
 	}, [
 		error,
 		hasIdentity,
