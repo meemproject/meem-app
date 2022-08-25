@@ -84,7 +84,6 @@ enum Step {
 }
 
 export const ProfileLinkEmailModal: React.FC<IProps> = ({
-	identity,
 	isOpened,
 	onModalClosed
 }) => {
