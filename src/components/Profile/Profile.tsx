@@ -8,11 +8,11 @@ import {
 	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import Cookies from 'js-cookie'
+import { LoginState, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
+import { quickTruncate } from '../../utils/truncated_wallet'
 import IdentityContext from './IdentityProvider'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyClubsComponent } from './Tabs/MyClubs'
@@ -51,7 +51,7 @@ const useStyles = createStyles(theme => ({
 		flexDirection: 'row'
 	},
 	headerProfileNameContainer: {
-		marginLeft: 32,
+		marginLeft: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginLeft: 16
 		}
@@ -189,11 +189,7 @@ export const ProfileComponent: React.FC = () => {
 	}
 
 	useEffect(() => {
-		if (
-			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
-		) {
+		if (wallet.loginState === LoginState.NotLoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -201,7 +197,7 @@ export const ProfileComponent: React.FC = () => {
 				}
 			})
 		}
-	}, [router])
+	}, [router, wallet.loginState])
 
 	useEffect(() => {
 		if (router.query.tab === 'myClubs') {
@@ -246,7 +242,7 @@ export const ProfileComponent: React.FC = () => {
 							{id.identity.profilePic && (
 								<>
 									<Image
-										radius={16}
+										radius={32}
 										height={64}
 										width={64}
 										fit={'cover'}
@@ -266,7 +262,9 @@ export const ProfileComponent: React.FC = () => {
 										{id.identity.ensAddress
 											? id.identity.ensAddress
 											: id.identity.walletAddress
-											? id.identity.walletAddress
+											? quickTruncate(
+													id.identity.walletAddress
+											  )
 											: 'No wallet address found'}
 									</Text>
 									{id.identity.id && (

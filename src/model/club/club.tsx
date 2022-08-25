@@ -1,4 +1,3 @@
-import log from '@kengoldfarb/log'
 import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
@@ -216,11 +215,10 @@ export default async function clubFromMeemContract(
 			clubData.MeemContractWallets.length > 0
 		) {
 			await Promise.all(
-				clubData.MeemContractWallets.map(async function (wall) {
+				clubData.MeemContractWallets.map(function (wall) {
 					if (wall.Wallet) {
 						const address = wall.Wallet.address
 						adminRawAddresses.push(address)
-						//const name = await provider.lookupAddress(address)
 						admins.push(address)
 					}
 
@@ -425,11 +423,6 @@ export default async function clubFromMeemContract(
 							}
 						})
 						if (!hasAlreadyBeenAdded) {
-							log.debug(
-								`member identities:${JSON.stringify(
-									meem.Owner.MeemIdentities
-								)}`
-							)
 							const memberIdentity =
 								meem.Owner.MeemIdentities &&
 								meem.Owner.MeemIdentities.length > 0

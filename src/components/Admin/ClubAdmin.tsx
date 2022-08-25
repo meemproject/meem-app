@@ -245,10 +245,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const [club, setClub] = useState<Club>()
 
 	useEffect(() => {
-		if (
-			// Note: walletContext thinks logged in = LoginState.unknown, using cookies here
-			wallet.loginState === LoginState.NotLoggedIn
-		) {
+		if (wallet.loginState === LoginState.NotLoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {

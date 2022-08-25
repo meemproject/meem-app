@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -7,7 +8,12 @@ import {
 	Radio,
 	Button
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
+import request from 'superagent'
+import { AlertCircle } from 'tabler-icons-react'
 import { IdentityIntegration } from '../../../../model/identity/identity'
 
 const useStyles = createStyles(theme => ({
@@ -89,12 +95,45 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	onModalClosed
 }) => {
 	const { classes } = useStyles()
+	const wallet = useWallet()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [integrationVisibility, setIntegrationVisibility] = useState('')
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
+
+		log.debug(`integration id to edit: ${integration?.id}`)
+
+		// Save the change to the db
+		try {
+			await request
+				.post(
+					`${
+						process.env.NEXT_PUBLIC_API_URL
+					}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
+						integrationId: integration?.id ?? ''
+					})}`
+				)
+				.set('Authorization', `JWT ${wallet.jwt}`)
+				.send({
+					visibility: integrationVisibility
+				})
+			setIsSavingChanges(false)
+			onModalClosed()
+		} catch (e) {
+			log.debug(e)
+			setIsSavingChanges(false)
+
+			showNotification({
+				title: 'Oops!',
+				autoClose: 5000,
+				color: 'red',
+				icon: <AlertCircle />,
+				message: `Unable to save changes to this account.`
+			})
+			return
+		}
 	}
 
 	useEffect(() => {

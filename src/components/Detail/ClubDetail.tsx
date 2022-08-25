@@ -260,6 +260,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const [club, setClub] = useState<Club | undefined>()
 
+	const [previousClubDataString, setPreviousClubDataString] = useState('')
 	const {
 		loading,
 		error,
@@ -754,20 +755,32 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
-		async function getClub(data: GetClubSubscriptionSubscription) {
+		async function getClub() {
+			if (!clubData) {
+				return
+			}
+			// TODO: Why do I have to compare strings to prevent an infinite useEffect loop?
+			// TODO: Why does this page cause a loop but MyClubs.tsx doesn't?
+			if (previousClubDataString) {
+				const currentData = JSON.stringify(clubData)
+				if (previousClubDataString === currentData) {
+					return
+				}
+			}
 			const possibleClub = await clubFromMeemContract(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
-				data.MeemContracts[0] as MeemContracts
+				clubData.MeemContracts[0] as MeemContracts
 			)
 
 			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
 				parseRequirements(possibleClub)
+				setIsLoadingClub(false)
+				log.debug('got club')
 			}
-			setClub(possibleClub)
-			setIsLoadingClub(false)
-			log.debug('updated club with ENS addresses')
+
+			setPreviousClubDataString(JSON.stringify(clubData))
 		}
 
 		async function join(data: ClubSubscriptionSubscription) {
@@ -817,7 +830,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		}
 
 		if (!loading && !error && clubData) {
-			getClub(clubData)
+			getClub()
 		}
 
 		if (isJoiningClub && clubData) {
@@ -828,15 +841,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	}, [
 		club,
 		clubData,
+		previousClubDataString,
 		error,
 		isJoiningClub,
 		isLeavingClub,
 		loading,
 		parseRequirements,
-		wallet,
-		wallet.accounts,
-		wallet.isConnected,
-		wallet.web3Provider
+		wallet
 	])
 
 	useEffect(() => {

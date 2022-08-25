@@ -38,6 +38,7 @@ import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
 import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
 
 const useStyles = createStyles(theme => ({
+	row: { display: 'flex', alignItems: 'center' },
 	header: {
 		marginBottom: 60,
 		display: 'flex',
@@ -135,7 +136,7 @@ const useStyles = createStyles(theme => ({
 		border: '1px solid rgba(0, 0, 0, 0.1)',
 		backgroundColor: '#FAFAFA',
 		borderRadius: 16,
-		padding: 16
+		padding: 24
 	},
 	enabledClubIntegrationItem: {
 		display: 'flex',
@@ -195,6 +196,14 @@ const useStyles = createStyles(theme => ({
 		msTextOverflow: 'ellipsis',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden'
+	},
+	verifiedSectionTitle: {
+		fontSize: 18,
+		fontWeight: 600,
+		color: 'rgba(62, 162, 255, 1)',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
 	},
 	identitySectionTitle: {
 		fontSize: 18,
@@ -417,7 +426,13 @@ export const ManageIdentityComponent: React.FC = () => {
 					)
 					break
 				case 'Email':
-					setIsEmailModalOpen(true)
+					showNotification({
+						radius: 'lg',
+						title: 'Coming soon!',
+						message:
+							'Linking your email to your account will be added at a later date.'
+					})
+					//setIsEmailModalOpen(true)
 					break
 			}
 		}
@@ -504,10 +519,21 @@ export const ManageIdentityComponent: React.FC = () => {
 					{id.identity.integrations &&
 						id.identity.integrations.length > 0 && (
 							<>
-								<Text className={classes.identitySectionTitle}>
-									Verified
-								</Text>
+								<div className={classes.row}>
+									<Image
+										src="/icon-verified.png"
+										width={18}
+										height={18}
+									/>
+									<Space w={8} />
 
+									<Text
+										className={classes.verifiedSectionTitle}
+									>
+										Verified
+									</Text>
+								</div>
+								<Space h={16} />
 								<Grid>
 									{id.identity.integrations.map(
 										integration => (

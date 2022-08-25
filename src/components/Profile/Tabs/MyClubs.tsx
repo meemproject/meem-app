@@ -101,7 +101,14 @@ const useStyles = createStyles(theme => ({
 		overflow: 'hidden'
 	},
 
-	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
+	myClubsPrompt: { fontSize: 18, marginBottom: 16 },
+	badgeText: {
+		color: '#000'
+	},
+	badge: {
+		paddingLeft: 8,
+		paddingRight: 8
+	}
 }))
 
 export const MyClubsComponent: React.FC = () => {
@@ -203,11 +210,20 @@ export const MyClubsComponent: React.FC = () => {
 											</Text>
 											<Space h={4} />
 											<Badge
-												color="gray"
-												variant={'filled'}
+												variant="gradient"
+												gradient={{
+													from: '#DCDCDC',
+													to: '#DCDCDC',
+													deg: 35
+												}}
+												classNames={{
+													inner: classes.badgeText,
+													root: classes.badge
+												}}
 												leftSection={
 													<>
 														<Group
+															color="#000"
 															style={{
 																marginTop: 5
 															}}
