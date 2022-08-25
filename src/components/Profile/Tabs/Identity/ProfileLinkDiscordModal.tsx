@@ -95,7 +95,8 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 			try {
 				await request
 					.post(
-						`${process.env.NEXT_PUBLIC_API_URL
+						`${
+							process.env.NEXT_PUBLIC_API_URL
 						}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
 							integrationId: integrationId ?? ''
 						})}`
