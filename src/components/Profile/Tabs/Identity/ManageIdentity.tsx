@@ -258,7 +258,7 @@ export const ManageIdentityComponent: React.FC = () => {
 		accept: 'image/*',
 		limitFilesConfig: { max: 1 },
 		multiple: false,
-		maxFileSize: 10
+		maxFileSize: 5
 	})
 
 	const resizeFile = (file: any) =>
@@ -279,13 +279,13 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	useEffect(() => {
 		const createResizedFile = async () => {
-			setProfilePicBase64(rawProfilePicture[0].content)
 			log.debug('set base64')
 			const profilePictureBlob = base64StringToBlob(
 				rawProfilePicture[0].content.split(',')[1],
 				'image/png'
 			)
 			const file = await resizeFile(profilePictureBlob)
+			setProfilePicBase64(file as string)
 			setProfilePicture(file as string)
 		}
 		if (rawProfilePicture.length > 0) {
