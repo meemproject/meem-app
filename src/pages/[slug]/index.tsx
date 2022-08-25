@@ -100,7 +100,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 			const { data } = await client.query({
 				query: GET_CLUB,
 				variables: {
-					slug: params.slug
+					slug: params.slug,
+					visibilityLevel: ['anyone']
 				}
 			})
 

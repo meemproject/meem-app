@@ -8,8 +8,10 @@ import {
 	Space,
 	Center,
 	Loader,
-	Grid
+	Grid,
+	Badge
 } from '@mantine/core'
+import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
@@ -237,6 +239,22 @@ export const BrowseComponent: React.FC = () => {
 											>
 												{club.description}{' '}
 											</Text>
+											<Space h={6} />
+											<Badge
+												color="gray"
+												variant={'filled'}
+												leftSection={
+													<>
+														<Group
+															style={{
+																marginTop: 5
+															}}
+														/>
+													</>
+												}
+											>
+												{club.memberCount}
+											</Badge>
 										</div>
 									</div>
 								</Grid.Col>

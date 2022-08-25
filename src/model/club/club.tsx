@@ -1,4 +1,4 @@
-import { MeemAPI } from '@meemproject/api'
+import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { MeemContracts } from '../../../generated/graphql'
@@ -30,8 +30,14 @@ export interface Integration {
 }
 
 export interface ClubMember {
+	displayName?: string
 	wallet: string
 	ens?: string
+	profilePicture?: string
+	twitterUsername?: string
+	discordUsername?: string
+	discordUserId?: string
+	emailAddress?: string
 }
 
 export interface Club {
@@ -54,6 +60,7 @@ export interface Club {
 	publicIntegrations?: Integration[]
 	privateIntegrations?: Integration[]
 	gnosisSafeAddress?: string | null
+	memberCount?: number
 }
 
 export interface MembershipSettings {
@@ -166,7 +173,8 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allIntegrations: []
+			allIntegrations: [],
+			memberCount: clubData.Meems_aggregate.aggregate?.count ?? 0
 		}
 	} else {
 		return {}
@@ -208,11 +216,10 @@ export default async function clubFromMeemContract(
 			clubData.MeemContractWallets.length > 0
 		) {
 			await Promise.all(
-				clubData.MeemContractWallets.map(async function (wall) {
+				clubData.MeemContractWallets.map(function (wall) {
 					if (wall.Wallet) {
 						const address = wall.Wallet.address
 						adminRawAddresses.push(address)
-						//const name = await provider.lookupAddress(address)
 						admins.push(address)
 					}
 
@@ -417,9 +424,49 @@ export default async function clubFromMeemContract(
 							}
 						})
 						if (!hasAlreadyBeenAdded) {
+							const memberIdentity =
+								meem.Owner.MeemIdentities &&
+								meem.Owner.MeemIdentities.length > 0
+									? meem.Owner.MeemIdentities[0]
+									: undefined
+
+							let twitterUsername = ''
+							let discordUsername = ''
+							let discordUserId = ''
+							let emailAddress = ''
+
+							memberIdentity?.MeemIdentityIntegrations.forEach(
+								inte => {
+									if (inte.metadata.twitterUsername) {
+										twitterUsername =
+											inte.metadata.twitterUsername
+									} else if (inte.metadata.discordUsername) {
+										discordUsername =
+											inte.metadata.discordUsername
+										discordUserId =
+											inte.metadata.discordUserId
+									} else if (inte.metadata.emailAddress) {
+										emailAddress =
+											inte.metadata.emailAddress
+									}
+								}
+							)
+
 							members.push({
 								wallet: meem.Owner.address,
-								ens: meem.Owner.ens ?? undefined
+								ens: meem.Owner.ens ?? undefined,
+								displayName: memberIdentity?.displayName
+									? memberIdentity?.displayName
+									: '',
+								profilePicture: memberIdentity?.profilePicUrl
+									? normalizeImageUrl(
+											memberIdentity?.profilePicUrl
+									  )
+									: '',
+								twitterUsername,
+								discordUsername,
+								discordUserId,
+								emailAddress
 							})
 						}
 					}
