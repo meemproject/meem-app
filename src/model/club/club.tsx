@@ -36,6 +36,7 @@ export interface ClubMember {
 	profilePicture?: string
 	twitterUsername?: string
 	discordUsername?: string
+	discordUserId?: string
 	emailAddress?: string
 }
 
@@ -431,6 +432,7 @@ export default async function clubFromMeemContract(
 
 							let twitterUsername = ''
 							let discordUsername = ''
+							let discordUserId = ''
 							let emailAddress = ''
 
 							memberIdentity?.MeemIdentityIntegrations.forEach(
@@ -441,6 +443,8 @@ export default async function clubFromMeemContract(
 									} else if (inte.metadata.discordUsername) {
 										discordUsername =
 											inte.metadata.discordUsername
+										discordUserId =
+											inte.metadata.discordUserId
 									} else if (inte.metadata.emailAddress) {
 										emailAddress =
 											inte.metadata.emailAddress
@@ -461,6 +465,7 @@ export default async function clubFromMeemContract(
 									: '',
 								twitterUsername,
 								discordUsername,
+								discordUserId,
 								emailAddress
 							})
 						}

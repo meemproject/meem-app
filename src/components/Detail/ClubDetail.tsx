@@ -44,6 +44,11 @@ import { quickTruncate } from '../../utils/truncated_wallet'
 const useStyles = createStyles(theme => ({
 	row: { display: 'flex' },
 	rowCentered: { display: 'flex', alignItems: 'center' },
+	rowCenteredClickable: {
+		display: 'flex',
+		alignItems: 'center',
+		cursor: 'pointer'
+	},
 
 	header: {
 		backgroundColor: 'rgba(160, 160, 160, 0.05)',
@@ -203,6 +208,12 @@ const useStyles = createStyles(theme => ({
 	memberAdminIndicator: {
 		marginLeft: 6
 	},
+	memberDisplayName: {
+		fontWeight: 600
+	},
+	memberEns: { opacity: '0.6' },
+	memberContactLabel: { fontWeight: 600 },
+	memberContactItemText: { opacity: '0.6' },
 	enabledClubIntegrationItem: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -1285,20 +1296,63 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													)}
 													<div>
 														{member.displayName && (
-															<Text>
+															<Text
+																className={
+																	classes.memberDisplayName
+																}
+															>
 																{
 																	member.displayName
 																}
 															</Text>
 														)}
 
-														<Text>
-															{member.ens
-																? member.ens
-																: quickTruncate(
-																		member.wallet
-																  )}
-														</Text>
+														<div
+															className={
+																classes.rowCentered
+															}
+														>
+															<Text
+																className={
+																	classes.memberEns
+																}
+															>
+																{member.ens
+																	? member.ens
+																	: quickTruncate(
+																			member.wallet
+																	  )}
+															</Text>
+															<Space h={4} />
+															<Image
+																className={
+																	classes.copy
+																}
+																src="/copy.png"
+																height={18}
+																width={18}
+																onClick={() => {
+																	navigator.clipboard.writeText(
+																		member.ens
+																			? member.ens
+																			: member.wallet
+																	)
+																	showNotification(
+																		{
+																			radius: 'lg',
+																			title: 'Address copied',
+																			autoClose: 2000,
+																			color: 'green',
+																			icon: (
+																				<Check />
+																			),
+
+																			message: `This member's address was copied to your clipboard.`
+																		}
+																	)
+																}}
+															/>
+														</div>
 													</div>
 												</div>
 												{(member.emailAddress ||
@@ -1311,7 +1365,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 																classes.rowCentered
 															}
 														>
-															<Text>Contact</Text>
+															<Text
+																className={
+																	classes.memberContactLabel
+																}
+															>
+																Contact
+															</Text>
 															<Space w={4} />
 															<Image
 																src="/icon-verified.png"
@@ -1321,17 +1381,29 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														</div>
 														{member.twitterUsername && (
 															<div
+																onClick={() => {
+																	window.open(
+																		`https://twitter.com/${member.twitterUsername}`
+																	)
+																}}
 																className={
-																	classes.rowCentered
+																	classes.rowCenteredClickable
 																}
 															>
 																<Image
+																	className={
+																		classes.memberContactItemText
+																	}
 																	src="/integration-twitter.png"
 																	width={12}
 																	height={12}
 																/>
 																<Space w={4} />
-																<Text>
+																<Text
+																	className={
+																		classes.memberContactItemText
+																	}
+																>
 																	{
 																		member.twitterUsername
 																	}
@@ -1340,17 +1412,29 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														)}
 														{member.discordUsername && (
 															<div
+																onClick={() => {
+																	window.open(
+																		`https://discordapp.com/users/${member.discordUserId}`
+																	)
+																}}
 																className={
-																	classes.rowCentered
+																	classes.rowCenteredClickable
 																}
 															>
 																<Image
+																	className={
+																		classes.memberContactItemText
+																	}
 																	src="/integration-discord.png"
 																	width={12}
 																	height={12}
 																/>
 																<Space w={4} />
-																<Text>
+																<Text
+																	className={
+																		classes.memberContactItemText
+																	}
+																>
 																	{
 																		member.discordUsername
 																	}
@@ -1359,17 +1443,29 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														)}
 														{member.emailAddress && (
 															<div
+																onClick={() => {
+																	window.open(
+																		`mailto:${member.emailAddress}`
+																	)
+																}}
 																className={
-																	classes.rowCentered
+																	classes.rowCenteredClickable
 																}
 															>
 																<Image
+																	className={
+																		classes.memberContactItemText
+																	}
 																	src="/integration-email.png"
 																	width={12}
 																	height={12}
 																/>
 																<Space w={4} />
-																<Text>
+																<Text
+																	className={
+																		classes.memberContactItemText
+																	}
+																>
 																	{
 																		member.emailAddress
 																	}
