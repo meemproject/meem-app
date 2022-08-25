@@ -95,8 +95,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 			try {
 				await request
 					.post(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
+						`${process.env.NEXT_PUBLIC_API_URL
 						}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
 							integrationId: integrationId ?? ''
 						})}`
@@ -105,7 +104,8 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					.send({
 						visibility: 'mutual-club-members',
 						metadata: {
-							discordAuthCode
+							discordAuthCode,
+							redirectUri: `${window.location.origin}/profile`
 						}
 					})
 				showNotification({
