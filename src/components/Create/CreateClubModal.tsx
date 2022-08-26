@@ -353,6 +353,16 @@ export const CreateClubModal: React.FC<IProps> = ({
 						// and proceed to club homepage
 						log.debug('Safe creation failed. Skipping for now...')
 						finishClubCreation()
+					} else if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
+						showNotification({
+							radius: 'lg',
+							title: 'Usage limit exceeded',
+							message:
+								'You have reached your Clubs usage limit for today. Come back tomorrow!',
+							color: 'red'
+						})
+
+						closeModal()
 					}
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)

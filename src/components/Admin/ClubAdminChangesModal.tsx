@@ -80,6 +80,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 	}, [onModalClosed, sockets])
 
 	const {
+		// eslint-disable-next-line @typescript-eslint/naming-convention
 		loading,
 		error,
 		data: clubData
@@ -308,6 +309,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							title: 'Error saving changes',
 							message:
 								'An error occurred while saving changes. Please try again.',
+							color: 'red'
+						})
+
+						closeModal()
+					} else if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
+						showNotification({
+							radius: 'lg',
+							title: 'Usage limit exceeded',
+							message:
+								'You have reached your Clubs usage limit for today. Come back tomorrow!',
 							color: 'red'
 						})
 
