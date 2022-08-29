@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
 import { useWallet } from '@meemproject/react'
 import React, {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { createStyles, Text, Space, Modal, Loader } from '@mantine/core'
