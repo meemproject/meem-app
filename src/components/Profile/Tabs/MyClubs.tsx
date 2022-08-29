@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
 import {
 	createStyles,
