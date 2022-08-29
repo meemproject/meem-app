@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
@@ -1126,11 +1127,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								<div
 									className={classes.contractAddressContainer}
 								>
-									<Text
-										className={classes.clubContractAddress}
-									>
-										{club.address}
-									</Text>
+									<Text>{club.address}</Text>
 									<Image
 										className={classes.copy}
 										src="/copy.png"

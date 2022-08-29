@@ -230,7 +230,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	// Mutable identity data
 	const [displayName, setDisplayName] = useState('')
 	const [profilePicture, setProfilePicture] = useState('')
-	const [profilePicBase64, setProfilePicBase64] = useState<string>()
+	const [profilePicBase64, setProfilePicBase64] = useState<string>('')
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
 	// Available integrations

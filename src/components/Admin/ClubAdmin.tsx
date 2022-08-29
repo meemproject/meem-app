@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
