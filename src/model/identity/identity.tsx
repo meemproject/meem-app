@@ -71,12 +71,16 @@ export async function identityFromApi(
 				integrations.push(integration)
 			})
 		}
+
 		return {
 			id: id?.id,
 			walletAddress: address,
 			ensAddress: id?.Wallet?.ens ?? undefined,
 			displayName: id?.displayName ?? undefined,
-			profilePic: normalizeImageUrl(id?.profilePicUrl ?? ''),
+			profilePic:
+				id?.profilePicUrl && id?.profilePicUrl.length > 0
+					? normalizeImageUrl(id?.profilePicUrl ?? '')
+					: undefined,
 			integrations
 		}
 	} else {
