@@ -1292,17 +1292,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														</>
 													)}
 													<div>
-														{member.displayName && (
-															<Text
-																className={
-																	classes.memberDisplayName
-																}
-															>
-																{
-																	member.displayName
-																}
-															</Text>
-														)}
+														<Text
+															className={
+																classes.memberDisplayName
+															}
+														>
+															{member.displayName ??
+																'Club Member'}
+														</Text>
 
 														<div
 															className={
