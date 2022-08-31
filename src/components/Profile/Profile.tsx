@@ -102,6 +102,7 @@ const useStyles = createStyles(theme => ({
 	},
 	profileContainer: {
 		display: 'flex',
+		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
 			flexDirection: 'column'
 		}
@@ -130,6 +131,7 @@ const useStyles = createStyles(theme => ({
 	profileContent: {
 		marginLeft: 32,
 		marginRight: 32,
+		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8
 		}

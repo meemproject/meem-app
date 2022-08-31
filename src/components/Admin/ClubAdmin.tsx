@@ -17,7 +17,7 @@ import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Check, CircleX } from 'tabler-icons-react'
+import { Check } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
 	MeemContracts
@@ -163,6 +163,7 @@ const useStyles = createStyles(theme => ({
 	},
 	adminContainer: {
 		display: 'flex',
+		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
 			flexDirection: 'column'
 		}
@@ -191,13 +192,17 @@ const useStyles = createStyles(theme => ({
 	adminContent: {
 		marginLeft: 32,
 		marginRight: 32,
+		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8
 		}
 	},
 	exitButton: {
-		marginRight: 16,
-		marginLeft: 'auto'
+		marginRight: 48,
+		marginLeft: 'auto',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
 	}
 }))
 
@@ -340,10 +345,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							className={classes.exitButton}
 							onClick={navigateToClubDetail}
 						>
-							<CircleX
-								className={classes.headerArrow}
-								size={32}
-							/>
+							<Image src="/delete.png" width={24} height={24} />
 						</a>
 					</div>
 
