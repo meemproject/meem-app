@@ -2,11 +2,9 @@
 import { useSubscription } from '@apollo/client'
 import {
 	createStyles,
-	Container,
 	Text,
 	Image,
 	Space,
-	Center,
 	Loader,
 	Grid,
 	Badge
@@ -109,6 +107,11 @@ const useStyles = createStyles(theme => ({
 	badge: {
 		paddingLeft: 8,
 		paddingRight: 8
+	},
+	profileHeaderText: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
 	}
 }))
 
@@ -150,16 +153,15 @@ export const MyClubsComponent: React.FC = () => {
 	return (
 		<>
 			{loading && (
-				<Container>
-					<Space h={30} />
-					<Center>
-						<Loader variant="oval" color="red" />
-					</Center>
-				</Container>
+				<>
+					<Space h={12} />
+					<Loader variant="oval" color="red" />
+				</>
 			)}
 			{clubs.length === 0 && !loading && (
 				<>
-					<Space h={30} />
+					<Space h={12} />
+					<Text className={classes.profileHeaderText}>My Clubs</Text>
 
 					<Text className={classes.myClubsPrompt}>
 						{`You haven't joined any clubs!`}
@@ -171,8 +173,8 @@ export const MyClubsComponent: React.FC = () => {
 			)}
 			{clubs.length > 0 && !loading && (
 				<>
-					<Space h={30} />
-
+					<Space h={12} />
+					<Text className={classes.profileHeaderText}>My Clubs</Text>
 					<Grid>
 						{clubs.map(club => (
 							<Grid.Col

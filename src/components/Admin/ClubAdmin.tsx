@@ -98,7 +98,8 @@ const useStyles = createStyles(theme => ({
 			height: 40,
 			minHeight: 40,
 			minWidth: 40,
-			marginLeft: 16
+			marginLeft: 16,
+			marginRight: 16
 		}
 	},
 	clubSettingsIcon: {
