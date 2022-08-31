@@ -107,6 +107,11 @@ const useStyles = createStyles(theme => ({
 	},
 	container: {
 		width: '100%'
+	},
+	manageClubHeader: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
 	}
 }))
 
@@ -187,7 +192,10 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div className={classes.container}>
-			<Space h={16} />
+			<Space h={12} />
+
+			<Text className={classes.manageClubHeader}>Club Profile</Text>
+
 			<Text
 				className={classes.clubNamePrompt}
 			>{`What's your club called?`}</Text>

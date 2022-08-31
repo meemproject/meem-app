@@ -234,6 +234,11 @@ const useStyles = createStyles(theme => ({
 		height: 53,
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16
+	},
+	manageClubHeader: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
 	}
 }))
 
@@ -503,6 +508,8 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		<>
 			<div>
 				<Space h={12} />
+
+				<Text className={classes.manageClubHeader}>Club Apps</Text>
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>

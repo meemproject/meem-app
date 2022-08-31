@@ -171,6 +171,11 @@ const useStyles = createStyles(theme => ({
 		lineHeight: 1,
 		fontSize: 24,
 		zIndex: -1000
+	},
+	manageClubHeader: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
 	}
 }))
 
@@ -319,6 +324,9 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<>
+			<Space h={12} />
+			<Text className={classes.manageClubHeader}>Club Icon</Text>
+
 			<Text className={classes.clubLogoPrompt}>
 				Upload an icon for your club.
 			</Text>
