@@ -60,14 +60,14 @@ const MAuthenticate: React.FC = () => {
 	}, [wallet.isConnected])
 
 	const login = useCallback(
-		async (walletSig: string) => {
+		async (options: { walletSig?: string; accessToken?: string }) => {
 			const address = wallet.accounts[0]
-
+			const { walletSig, accessToken } = options
 			log.info('Logging in to Meem...')
 			log.debug(`address = ${wallet.accounts[0]}`)
 			log.debug(`sig = ${walletSig}`)
 
-			if (address && walletSig) {
+			if (accessToken || (address && walletSig)) {
 				try {
 					setIsLoading(true)
 
@@ -77,13 +77,15 @@ const MAuthenticate: React.FC = () => {
 							{
 								method: MeemAPI.v1.Login.method,
 								body: {
-									address,
-									signature: walletSig
+									...(address && { address }),
+									...(walletSig && { signature: walletSig }),
+									...(accessToken && { accessToken })
 								}
 							}
 						)
 
 					log.debug(`logged in successfully.`)
+
 					wallet.setJwt(loginRequest.jwt)
 
 					router.push({
@@ -105,6 +107,24 @@ const MAuthenticate: React.FC = () => {
 		},
 		[router, wallet]
 	)
+
+	useEffect(() => {
+		const hashQueryParams: { [key: string]: string } = {}
+		const hashPath = router.asPath.split('#')
+
+		if (hashPath.length > 0) {
+			hashPath[1].split('&').forEach(value => {
+				const keyVal = value.split('=')
+				hashQueryParams[keyVal[0]] = keyVal[1]
+			})
+		}
+
+		if (hashQueryParams.access_token) {
+			login({
+				accessToken: hashQueryParams.access_token
+			})
+		}
+	}, [router.asPath])
 
 	const sign = useCallback(async () => {
 		const address = wallet.accounts[0]
@@ -131,7 +151,9 @@ const MAuthenticate: React.FC = () => {
 				})
 				setIsLoading(false)
 			} else {
-				login(signature)
+				login({
+					walletSig: signature
+				})
 			}
 		} catch (e) {
 			showNotification({

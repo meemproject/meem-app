@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -297,10 +298,10 @@ export const ProfileComponent: React.FC = () => {
 										{id.identity.ensAddress
 											? id.identity.ensAddress
 											: id.identity.walletAddress
-											? quickTruncate(
+												? quickTruncate(
 													id.identity.walletAddress
-											  )
-											: 'No wallet address found'}
+												)
+												: 'No wallet address found'}
 									</Text>
 									{id.identity.id && (
 										<>
@@ -310,11 +311,10 @@ export const ProfileComponent: React.FC = () => {
 												height={20}
 												onClick={() => {
 													navigator.clipboard.writeText(
-														`${
-															id.identity
-																.ensAddress ??
-															id.identity
-																.walletAddress
+														`${id.identity
+															.ensAddress ??
+														id.identity
+															.walletAddress
 														}`
 													)
 													showNotification({
