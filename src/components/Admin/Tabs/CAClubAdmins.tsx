@@ -138,6 +138,9 @@ const useStyles = createStyles(theme => ({
 	primaryAdminChipContents: {
 		display: 'flex',
 		alignItems: 'center'
+	},
+	textField: {
+		maxWidth: 800
 	}
 }))
 
@@ -315,6 +318,7 @@ export const CAClubAdmins: React.FC<IProps> = ({ club }) => {
 					<Textarea
 						radius="lg"
 						size="sm"
+						className={classes.textField}
 						value={clubAdminsString}
 						minRows={10}
 						onChange={event =>
