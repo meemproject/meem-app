@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
