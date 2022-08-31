@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
 	createStyles,
 	Container,
@@ -5,7 +6,11 @@ import {
 	Image,
 	Space,
 	Center,
-	Loader
+	Loader,
+	MediaQuery,
+	Burger,
+	Navbar,
+	NavLink
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
@@ -19,8 +24,9 @@ import { MyClubsComponent } from './Tabs/MyClubs'
 
 const useStyles = createStyles(theme => ({
 	header: {
-		marginBottom: 60,
+		marginBottom: 32,
 		display: 'flex',
+		backgroundColor: '#FAFAFA',
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
@@ -92,6 +98,40 @@ const useStyles = createStyles(theme => ({
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: 24,
 			height: 24
+		}
+	},
+	profileContainer: {
+		display: 'flex',
+		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+			flexDirection: 'column'
+		}
+	},
+	profileNavHeader: {
+		fontWeight: 600,
+		opacity: 0.5,
+		marginLeft: 20,
+		marginBottom: 4
+	},
+	profileNavItem: {
+		borderRadius: 8
+	},
+	profileMobileBurger: {
+		marginLeft: 24
+	},
+	profileNavBar: {
+		minWidth: 288,
+		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
+			paddingLeft: 32
+		},
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingTop: 24
+		}
+	},
+	profileContent: {
+		marginLeft: 32,
+		marginRight: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingTop: 8
 		}
 	},
 	buttonEditProfile: {
@@ -179,14 +219,7 @@ export const ProfileComponent: React.FC = () => {
 	const id = useContext(IdentityContext)
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
-
-	const switchToProfile = () => {
-		setCurrentTab(Tab.Profile)
-	}
-
-	const switchToMyClubs = () => {
-		setCurrentTab(Tab.MyClubs)
-	}
+	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	useEffect(() => {
 		if (wallet.loginState === LoginState.NotLoggedIn) {
@@ -201,9 +234,9 @@ export const ProfileComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (router.query.tab === 'myClubs') {
-			switchToMyClubs()
+			setCurrentTab(Tab.MyClubs)
 		} else if (router.query.tab === 'identity') {
-			switchToProfile()
+			setCurrentTab(Tab.Profile)
 		}
 	}, [router.query.tab])
 
@@ -299,52 +332,62 @@ export const ProfileComponent: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					<Container>
-						<div className={classes.tabs}>
-							<a onClick={switchToProfile}>
-								<Text
-									className={
-										currentTab == Tab.Profile
-											? classes.activeTab
-											: classes.inactiveTab
-									}
-								>
-									Manage Identity
-								</Text>
-							</a>
-							<a onClick={switchToMyClubs}>
-								<Text
-									className={
-										currentTab == Tab.MyClubs
-											? classes.activeTab
-											: classes.inactiveTab
-									}
-								>
-									My Clubs
-								</Text>
-							</a>
-						</div>
 
-						<div
-							className={
-								currentTab === Tab.Profile
-									? classes.visibleTab
-									: classes.invisibleTab
-							}
+					<div className={classes.profileContainer}>
+						<MediaQuery
+							largerThan="sm"
+							styles={{ display: 'none' }}
 						>
-							<ManageIdentityComponent />
-						</div>
-
-						<div
-							className={
-								currentTab === Tab.MyClubs
-									? classes.visibleTab
-									: classes.invisibleTab
-							}
+							<Burger
+								className={classes.profileMobileBurger}
+								opened={mobileNavBarVisible}
+								onClick={() => setMobileNavBarVisible(o => !o)}
+								size="sm"
+								mr="xl"
+							/>
+						</MediaQuery>
+						<Navbar
+							className={classes.profileNavBar}
+							width={{ base: 288 }}
+							height={400}
+							hidden={!mobileNavBarVisible}
+							hiddenBreakpoint={'sm'}
+							withBorder={false}
+							p="xs"
 						>
-							<MyClubsComponent />
-						</div>
-					</Container>
+							<Text className={classes.profileNavHeader}>
+								SETTINGS
+							</Text>
+							<NavLink
+								className={classes.profileNavItem}
+								active={currentTab === Tab.Profile}
+								label={'Manage Identity'}
+								onClick={() => {
+									setCurrentTab(Tab.Profile)
+									setMobileNavBarVisible(false)
+								}}
+							/>
+							<NavLink
+								className={classes.profileNavItem}
+								active={currentTab === Tab.MyClubs}
+								label={'My Clubs'}
+								onClick={() => {
+									setCurrentTab(Tab.MyClubs)
+									setMobileNavBarVisible(false)
+								}}
+							/>
+						</Navbar>
+						{!mobileNavBarVisible && (
+							<div className={classes.profileContent}>
+								{currentTab === Tab.Profile && (
+									<ManageIdentityComponent />
+								)}
+								{currentTab === Tab.MyClubs && (
+									<MyClubsComponent />
+								)}
+							</div>
+						)}
+					</div>
 				</>
 			)}
 		</>
