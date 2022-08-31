@@ -500,7 +500,9 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={classes.manageClubHeader}>Membership</Text>
+				<Text className={classes.manageClubHeader}>
+					Membership Settings
+				</Text>
 				<Text className={classes.membershipSettingHeader}>
 					Requirements
 				</Text>
