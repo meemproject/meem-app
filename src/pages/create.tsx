@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { CreateComponent } from '../components/Create/Create'
+import { MeemFooter } from '../components/Footer/MeemFooter'
 import { HeaderMenu } from '../components/Header/Header'
 
 const CreatePage: NextPage = () => {
@@ -58,6 +59,7 @@ const CreatePage: NextPage = () => {
 			</Head>
 			<HeaderMenu />
 			<CreateComponent />
+			<MeemFooter />
 		</>
 	)
 }

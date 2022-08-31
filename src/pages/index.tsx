@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
+import { MeemFooter } from '../components/Footer/MeemFooter'
 import { HeaderMenu } from '../components/Header/Header'
 import { HomeComponent } from '../components/Home/Home'
 
@@ -59,6 +60,7 @@ const Home: NextPage = () => {
 			</Head>
 			<HeaderMenu />
 			<HomeComponent />
+			<MeemFooter />
 		</>
 	)
 }

@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { CreatePermissionsComponent } from '../../components/Create/Permissions'
+import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 
 const CreatePermissionsPage: NextPage = () => {
@@ -58,6 +59,7 @@ const CreatePermissionsPage: NextPage = () => {
 			</Head>
 			<HeaderMenu />
 			<CreatePermissionsComponent />
+			<MeemFooter />
 		</>
 	)
 }
