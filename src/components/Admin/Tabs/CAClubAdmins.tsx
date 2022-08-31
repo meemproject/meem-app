@@ -322,7 +322,6 @@ export const CAClubAdmins: React.FC<IProps> = ({ club }) => {
 						}
 					/>
 				</div>
-				<Space h={64} />
 
 				<Button
 					disabled={isSavingChanges}

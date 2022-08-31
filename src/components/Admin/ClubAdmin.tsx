@@ -17,7 +17,7 @@ import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check } from 'tabler-icons-react'
+import { Check, CircleX } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
 	MeemContracts
@@ -44,7 +44,7 @@ const useStyles = createStyles(theme => ({
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
-		paddingLeft: 32,
+		paddingLeft: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginBottom: 16,
 			paddingBottom: 16,
@@ -193,6 +193,10 @@ const useStyles = createStyles(theme => ({
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8
 		}
+	},
+	exitButton: {
+		marginRight: 16,
+		marginLeft: 'auto'
 	}
 }))
 
@@ -293,15 +297,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				<>
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
-							<a onClick={navigateToClubDetail}>
-								<ArrowLeft
-									className={classes.headerArrow}
-									size={32}
-								/>
-							</a>
 							<Image
-								width={80}
-								height={80}
+								width={56}
+								height={56}
 								className={classes.clubLogoImage}
 								src={club.image}
 							/>
@@ -337,6 +335,15 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								</div>
 							</div>
 						</div>
+						<a
+							className={classes.exitButton}
+							onClick={navigateToClubDetail}
+						>
+							<CircleX
+								className={classes.headerArrow}
+								size={32}
+							/>
+						</a>
 					</div>
 
 					{!club?.isClubAdmin && (

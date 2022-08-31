@@ -83,25 +83,6 @@ const useStyles = createStyles(theme => ({
 			marginLeft: 16
 		}
 	},
-	clubNamePrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-
-	clubDescriptionPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
 	clubLogoPrompt: {
 		marginTop: 16,
 		fontSize: 18,
@@ -150,7 +131,7 @@ const useStyles = createStyles(theme => ({
 	},
 
 	clubLogoImageContainer: {
-		marginTop: 24,
+		marginTop: 32,
 		width: 108,
 		height: 100,
 		position: 'relative'
