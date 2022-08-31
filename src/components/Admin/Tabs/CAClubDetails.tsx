@@ -112,6 +112,9 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		fontSize: 20,
 		marginBottom: 32
+	},
+	textField: {
+		maxWidth: 800
 	}
 }))
 
@@ -203,6 +206,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 				radius="lg"
 				size="md"
 				value={clubName}
+				className={classes.textField}
 				onChange={event => setClubName(event.currentTarget.value)}
 			/>
 			<Space h={'xl'} />
@@ -215,6 +219,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 				minRows={2}
 				maxRows={4}
 				maxLength={140}
+				className={classes.textField}
 				value={clubDescription}
 				onChange={event =>
 					setClubDescription(event.currentTarget.value)
