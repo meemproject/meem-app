@@ -87,12 +87,20 @@ const useStyles = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
-	clubInfo: {},
-
+	clubInfo: {
+		textOverflow: 'ellipsis',
+		msTextOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden'
+	},
 	clubDescription: {
 		fontSize: 14,
 		marginRight: 8,
-		lineHeight: 1.3
+		lineHeight: 1.3,
+		textOverflow: 'ellipsis',
+		msTextOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden'
 	},
 	clubLogoImage: {
 		marginTop: 4,
@@ -105,7 +113,6 @@ const useStyles = createStyles(theme => ({
 		whiteSpace: 'nowrap',
 		overflow: 'hidden'
 	},
-
 	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
 }))
 
@@ -272,8 +279,6 @@ export const BrowseComponent: React.FC = () => {
 						>
 							Load more
 						</Button>
-
-						<Space h={60} />
 					</>
 				)}
 			</Container>

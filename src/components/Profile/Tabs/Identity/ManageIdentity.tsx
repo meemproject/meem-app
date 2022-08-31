@@ -214,7 +214,15 @@ const useStyles = createStyles(theme => ({
 			marginBottom: 8
 		}
 	},
-	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
+	myClubsPrompt: { fontSize: 18, marginBottom: 16 },
+	profileHeaderText: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
+	},
+	textField: {
+		maxWidth: 800
+	}
 }))
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -440,11 +448,13 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	return (
 		<>
-			<Space h={30} />
+			<Space h={12} />
+			<Text className={classes.profileHeaderText}>
+				Manage Identity
+			</Text>{' '}
 			<Text className={classes.identitySectionTitle}>
 				Profile Picture
 			</Text>
-
 			{profilePicture.length === 0 && !isLoadingImage && (
 				<div className={classes.uploadOptions}>
 					<Button
@@ -486,11 +496,11 @@ export const ManageIdentityComponent: React.FC = () => {
 				</div>
 			)}
 			<Space h={profilePicture.length > 0 ? 148 : 32} />
-
 			<Text className={classes.identitySectionTitle}>Display Name</Text>
 			<TextInput
 				radius="lg"
 				size="lg"
+				className={classes.textField}
 				value={displayName}
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
@@ -659,9 +669,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					)}
 				</>
 			)}
-
 			<Space h={'xl'} />
-
 			<Button
 				className={classes.buttonSaveChanges}
 				loading={isSavingChanges}
@@ -670,7 +678,6 @@ export const ManageIdentityComponent: React.FC = () => {
 				Save Changes
 			</Button>
 			<Space h={'xl'} />
-
 			<ProfileLinkTwitterModal
 				integration={integrationCurrentlyEditing}
 				isOpened={isTwitterModalOpen}

@@ -22,11 +22,11 @@ import { useWallet } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { ExternalLink, Settings } from 'tabler-icons-react'
-import { GetIntegrationsQuery } from '../../../generated/graphql'
-import { GET_INTEGRATIONS } from '../../graphql/clubs'
-import { Club, Integration } from '../../model/club/club'
-import { ClubAdminParagraphIntegrationModal } from './IntegrationModals/ClubAdminParagraphIntegrationModal'
-import { ClubAdminVerifyTwitterModal } from './IntegrationModals/ClubAdminVerifyTwitterModal'
+import { GetIntegrationsQuery } from '../../../../generated/graphql'
+import { GET_INTEGRATIONS } from '../../../graphql/clubs'
+import { Club, Integration } from '../../../model/club/club'
+import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
+import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -234,6 +234,11 @@ const useStyles = createStyles(theme => ({
 		height: 53,
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16
+	},
+	manageClubHeader: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
 	}
 }))
 
@@ -246,7 +251,7 @@ enum Step {
 	AddUrl
 }
 
-export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
+export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
 	const wallet = useWallet()
 
@@ -502,7 +507,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={30} />
+				<Space h={12} />
+
+				<Text className={classes.manageClubHeader}>Club Apps</Text>
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>

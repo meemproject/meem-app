@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useQuery, useSubscription } from '@apollo/client'
-import log from '@kengoldfarb/log'
+import { useSubscription } from '@apollo/client'
 import {
 	createStyles,
 	Container,
@@ -9,44 +8,45 @@ import {
 	Space,
 	Center,
 	Loader,
-	Divider,
-	Button
+	Navbar,
+	NavLink,
+	MediaQuery,
+	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { diamondABI, getCuts, IFacetVersion } from '@meemproject/meem-contracts'
 import { LoginState, useWallet } from '@meemproject/react'
-import { ethers } from 'ethers'
-import { isEqual } from 'lodash'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check } from 'tabler-icons-react'
+import { Check } from 'tabler-icons-react'
 import {
-	GetBundleByIdQuery,
 	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
+import { SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
-import { ClubAdminDappSettingsComponent } from './ClubAdminDappsSettings'
-import { ClubAdminMembershipSettingsComponent } from './ClubAdminMembershipSettings'
-import { ClubAdminProfileSettings } from './ClubAdminProfileSettings'
+import { CAClubAdmins } from './Tabs/CAClubAdmins'
+import { CAClubApps } from './Tabs/CAClubApps'
+import { CAClubDetails } from './Tabs/CAClubDetails'
+import { CAClubIcon } from './Tabs/CAClubIcon'
+import { CAContractAddress } from './Tabs/CAContractAddress'
+import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
 
 const useStyles = createStyles(theme => ({
 	header: {
-		marginBottom: 60,
+		marginBottom: 32,
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		paddingTop: 32,
+		backgroundColor: '#FAFAFA',
 		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
-		paddingLeft: 32,
+		paddingLeft: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
+			marginBottom: 16,
 			paddingBottom: 16,
 			paddingLeft: 8,
 			paddingTop: 16
@@ -98,7 +98,8 @@ const useStyles = createStyles(theme => ({
 			height: 40,
 			minHeight: 40,
 			minWidth: 40,
-			marginLeft: 16
+			marginLeft: 16,
+			marginRight: 16
 		}
 	},
 	clubSettingsIcon: {
@@ -136,32 +137,6 @@ const useStyles = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row'
 	},
-
-	activeTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-		fontWeight: 600,
-		color: 'black',
-		textDecoration: 'underline',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
-	},
-	inactiveTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-
-		fontWeight: 600,
-		color: 'rgba(45, 28, 28, 0.3)',
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
-	},
 	visibleTab: {
 		display: 'block'
 	},
@@ -185,13 +160,59 @@ const useStyles = createStyles(theme => ({
 		marginLeft: 4,
 		padding: 2,
 		cursor: 'pointer'
+	},
+	adminContainer: {
+		display: 'flex',
+		width: '100%',
+		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+			flexDirection: 'column'
+		}
+	},
+	adminNavHeader: {
+		fontWeight: 600,
+		opacity: 0.5,
+		marginLeft: 20,
+		marginBottom: 4
+	},
+	adminNavItem: {
+		borderRadius: 8
+	},
+	adminMobileBurger: {
+		marginLeft: 24
+	},
+	adminNavBar: {
+		minWidth: 288,
+		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
+			paddingLeft: 32
+		},
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingTop: 24
+		}
+	},
+	adminContent: {
+		marginLeft: 32,
+		marginRight: 32,
+		width: '100%',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingTop: 8
+		}
+	},
+	exitButton: {
+		marginRight: 48,
+		marginLeft: 'auto',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
 	}
 }))
 
 enum Tab {
-	Membership,
-	Profile,
-	Integrations
+	ContractAddress,
+	MembershipSettings,
+	Admins,
+	ClubDetails,
+	ClubIcon,
+	Apps
 }
 
 interface IProps {
@@ -204,25 +225,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Membership)
-	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
-	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
-	const [isUpgradingClub, setIsUpgradingClub] = useState(false)
+	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractAddress)
+	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: `/${slug}` })
-	}
-
-	const switchToMembership = () => {
-		setCurrentTab(Tab.Membership)
-	}
-
-	const switchToClubProfile = () => {
-		setCurrentTab(Tab.Profile)
-	}
-
-	const switchToIntegrations = () => {
-		setCurrentTab(Tab.Integrations)
 	}
 
 	const {
@@ -232,15 +239,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: { slug, visibilityLevel: ['mutual-club-members', 'anyone'] }
 	})
-
-	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
-		GET_BUNDLE_BY_ID,
-		{
-			variables: {
-				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
-			}
-		}
-	)
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 	const [club, setClub] = useState<Club>()
@@ -282,115 +280,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		wallet.isConnected
 	])
 
-	useEffect(() => {
-		const fetchFacets = async () => {
-			// TODO: Move this to meem-contracts package?
-			if (club?.address && bundleData) {
-				try {
-					const diamond = new ethers.Contract(
-						club.address,
-						diamondABI,
-						wallet.signer
-					)
-
-					const diamondFacets = await diamond.facets()
-					const fromVersion: IFacetVersion[] = diamondFacets.map(
-						(f: any) => ({
-							address: f.target,
-							functionSelectors: f.selectors
-						})
-					)
-
-					const toVersion: IFacetVersion[] = []
-
-					for (
-						let i = 0;
-						i < bundleData.Bundles[0].BundleContracts.length;
-						i++
-					) {
-						const bc = bundleData.Bundles[0].BundleContracts[i]
-						if (
-							bc.Contract &&
-							bc.Contract?.ContractInstances &&
-							bc.Contract?.ContractInstances.length > 0
-						) {
-							let didFindFacet = false
-							for (
-								let j = 0;
-								j < bc.Contract.ContractInstances.length;
-								j += 1
-							) {
-								const ci = bc.Contract.ContractInstances[j]
-
-								const clubFacet = fromVersion.find(f => {
-									if (bc.Contract) {
-										const clubFacetFunctionSelectors = [
-											...f.functionSelectors
-										].sort()
-										const bcFunctionSelectors = [
-											...bc.functionSelectors
-										].sort()
-
-										if (
-											f.address.toLowerCase() ===
-												ci.address.toLowerCase() &&
-											isEqual(
-												clubFacetFunctionSelectors,
-												bcFunctionSelectors
-											)
-										) {
-											return true
-										}
-									}
-									return false
-								})
-
-								if (clubFacet) {
-									toVersion.push(clubFacet)
-									didFindFacet = true
-									break
-								}
-							}
-
-							if (!didFindFacet) {
-								toVersion.push({
-									address:
-										bc.Contract.ContractInstances[0]
-											.address,
-									functionSelectors: bc.functionSelectors
-								})
-							}
-						}
-					}
-
-					const cuts = getCuts({
-						proxyContractAddress: club.address,
-						fromVersion,
-						toVersion
-					})
-
-					if (cuts.length > 0) {
-						setShouldShowUpgrade(true)
-					}
-
-					if (shouldShowUpgrade && cuts.length === 0) {
-						showNotification({
-							title: 'Club Upgraded!',
-							color: 'green',
-							icon: <Check />,
-							message: `The club has been upgraded to the latest version.`
-						})
-						setShouldShowUpgrade(false)
-						setIsUpgradingClub(false)
-					}
-				} catch (e) {
-					log.crit(e)
-				}
-			}
-		}
-		fetchFacets()
-	}, [club, wallet, bundleData, shouldShowUpgrade])
-
 	return (
 		<>
 			{isLoadingClub && (
@@ -414,15 +303,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				<>
 					<div className={classes.header}>
 						<div className={classes.headerTitle}>
-							<a onClick={navigateToClubDetail}>
-								<ArrowLeft
-									className={classes.headerArrow}
-									size={32}
-								/>
-							</a>
 							<Image
-								width={80}
-								height={80}
+								width={56}
+								height={56}
 								className={classes.clubLogoImage}
 								src={club.image}
 							/>
@@ -458,6 +341,12 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								</div>
 							</div>
 						</div>
+						<a
+							className={classes.exitButton}
+							onClick={navigateToClubDetail}
+						>
+							<Image src="/delete.png" width={24} height={24} />
+						</a>
 					</div>
 
 					{!club?.isClubAdmin && (
@@ -472,324 +361,118 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</Container>
 					)}
 					{club?.isClubAdmin && (
-						<Container>
-							<div className={classes.tabs}>
-								<a onClick={switchToMembership}>
-									<Text
-										className={
-											currentTab == Tab.Membership
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Manage Club
-									</Text>
-								</a>
-								<a onClick={switchToClubProfile}>
-									<Text
-										className={
-											currentTab == Tab.Profile
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Edit Profile
-									</Text>
-								</a>
-								<a onClick={switchToIntegrations}>
-									<Text
-										className={
-											currentTab == Tab.Integrations
-												? classes.activeTab
-												: classes.inactiveTab
-										}
-									>
-										Apps
-									</Text>
-								</a>
-							</div>
-							<div
-								className={
-									currentTab === Tab.Membership
-										? classes.visibleTab
-										: classes.invisibleTab
-								}
+						<div className={classes.adminContainer}>
+							<MediaQuery
+								largerThan="sm"
+								styles={{ display: 'none' }}
 							>
-								<Space h={30} />
-								<Text
-									className={
-										classes.clubIntegrationsSectionTitle
+								<Burger
+									className={classes.adminMobileBurger}
+									opened={mobileNavBarVisible}
+									onClick={() =>
+										setMobileNavBarVisible(o => !o)
 									}
-								>
-									Club Contract Address
-								</Text>
-								<div
-									className={classes.contractAddressContainer}
-								>
-									<Text
-										className={classes.clubContractAddress}
-									>
-										{club.address}
-									</Text>
-									<Image
-										className={classes.copy}
-										src="/copy.png"
-										height={20}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												club.address ?? ''
-											)
-											showNotification({
-												radius: 'lg',
-												title: 'Address copied',
-												autoClose: 2000,
-												color: 'green',
-												icon: <Check />,
-
-												message: `This club's contract address was copied to your clipboard.`
-											})
-										}}
-										width={20}
-									/>
-								</div>
-
-								<Space h={8} />
-
-								<Text>{`You can use this address to token-gate third-party apps and tools, such as creating an exclusive Discord community with Collab.Land. Every club member holds this club's token.`}</Text>
-
-								{shouldShowUpgrade && (
-									<>
-										<Space h={'xl'} />
-										<Divider />
-										<Space h={'xl'} />
-										<Text
-											className={
-												classes.clubIntegrationsSectionTitle
-											}
-										>
-											Upgrade Club Contract
-										</Text>
-										<div
-											className={
-												classes.contractAddressContainer
-											}
-										>
-											<div>
-												<Text>
-													A new version of Clubs is
-													available! Upgrade to take
-													advantage of all the new
-													features.
-												</Text>
-											</div>
-										</div>
-										<Space h={'xs'} />
-										<Button
-											loading={isUpgradingClub}
-											disabled={isUpgradingClub}
-											className={classes.buttonCreate}
-											onClick={async () => {
-												try {
-													if (!club?.id) {
-														return
-													}
-													setIsUpgradingClub(true)
-													const upgradeClubFetcher =
-														makeFetcher<
-															MeemAPI.v1.UpgradeClub.IQueryParams,
-															MeemAPI.v1.UpgradeClub.IRequestBody,
-															MeemAPI.v1.UpgradeClub.IResponseBody
-														>({
-															method: MeemAPI.v1
-																.UpgradeClub
-																.method
-														})
-
-													await upgradeClubFetcher(
-														MeemAPI.v1.UpgradeClub.path(
-															{
-																meemContractId:
-																	club.id
-															}
-														)
-													)
-												} catch (e) {
-													log.crit(e)
-													showNotification({
-														title: 'Error Upgrading Club',
-														color: 'red',
-														message: `Something went wrong during the upgrade.`
-													})
-													setIsUpgradingClub(false)
-												}
-											}}
-										>
-											Upgrade Contract
-										</Button>
-									</>
-								)}
-
-								<Space h={'xl'} />
-								<Divider />
-								<Space h={'xl'} />
-								<Text
-									className={
-										classes.clubIntegrationsSectionTitle
-									}
-								>
-									Club Treasury Address
-								</Text>
-								{club.gnosisSafeAddress && (
-									<>
-										<div
-											className={
-												classes.contractAddressContainer
-											}
-										>
-											<Text
-												className={
-													classes.clubContractAddress
-												}
-											>
-												{club.gnosisSafeAddress}
-											</Text>
-											<Image
-												className={classes.copy}
-												src="/copy.png"
-												height={20}
-												onClick={() => {
-													navigator.clipboard.writeText(
-														club.gnosisSafeAddress ??
-															''
-													)
-													showNotification({
-														radius: 'lg',
-														title: 'Address copied',
-														autoClose: 2000,
-														color: 'green',
-														icon: <Check />,
-
-														message: `This club's treasury address was copied to your clipboard.`
-													})
-												}}
-												width={20}
-											/>
-										</div>
-										<Space h={8} />
-
-										<Text>{`Your club's treasury was set up when the club was created. You can manage your treasury (including signing transactions and adding members) using the button below.`}</Text>
-										<Space h={'xs'} />
-
-										<Button
-											className={classes.buttonCreate}
-											onClick={() => {
-												window.open(
-													`https://gnosis-safe.io/app/${
-														process.env
-															.NEXT_PUBLIC_CHAIN_ID ===
-														'4'
-															? 'rin'
-															: 'matic'
-													}:${
-														club.gnosisSafeAddress
-													}/home`
-												)
-											}}
-										>
-											View Treasury
-										</Button>
-									</>
-								)}
-
-								{!club.gnosisSafeAddress && (
-									<Button
-										className={classes.buttonCreate}
-										disabled={isCreatingSafe}
-										loading={isCreatingSafe}
-										onClick={async () => {
-											if (!club.id || !club.admins) {
-												return
-											}
-											try {
-												setIsCreatingSafe(true)
-												const createSafeFetcher =
-													makeFetcher<
-														MeemAPI.v1.CreateClubSafe.IQueryParams,
-														MeemAPI.v1.CreateClubSafe.IRequestBody,
-														MeemAPI.v1.CreateClubSafe.IResponseBody
-													>({
-														method: MeemAPI.v1
-															.CreateClubSafe
-															.method
-													})
-
-												await createSafeFetcher(
-													MeemAPI.v1.CreateClubSafe.path(
-														{
-															meemContractId:
-																club.id
-														}
-													),
-													undefined,
-													{
-														safeOwners: club.admins
-													}
-												)
-												await new Promise(f =>
-													setTimeout(f, 10000)
-												)
-
-												// refetchClub()
-
-												setIsCreatingSafe(false)
-											} catch (e) {
-												log.crit(e)
-												setIsCreatingSafe(false)
-												showNotification({
-													radius: 'lg',
-													title: 'Wallet creation failed.',
-													message:
-														'We were unable to create treasury for your club. Please refresh the page and try again.',
-													color: 'red'
-												})
-											}
-										}}
-									>
-										Create Treasury
-									</Button>
-								)}
-
-								<Space h={'xl'} />
-								<Divider />
-								<Space h={'xs'} />
-
-								<ClubAdminMembershipSettingsComponent
-									isCreatingClub={false}
-									club={club}
+									size="sm"
+									mr="xl"
 								/>
-							</div>
-
-							<div
-								className={
-									currentTab === Tab.Profile
-										? classes.visibleTab
-										: classes.invisibleTab
-								}
+							</MediaQuery>
+							<Navbar
+								className={classes.adminNavBar}
+								width={{ base: 288 }}
+								height={400}
+								hidden={!mobileNavBarVisible}
+								hiddenBreakpoint={'sm'}
+								withBorder={false}
+								p="xs"
 							>
-								<ClubAdminProfileSettings club={club} />
-							</div>
+								<Text className={classes.adminNavHeader}>
+									MANAGE CLUB
+								</Text>
+								<NavLink
+									className={classes.adminNavItem}
+									active={currentTab === Tab.ContractAddress}
+									label={'Contract Address'}
+									onClick={() => {
+										setCurrentTab(Tab.ContractAddress)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+								<NavLink
+									className={classes.adminNavItem}
+									active={
+										currentTab === Tab.MembershipSettings
+									}
+									label={'Membership Settings'}
+									onClick={() => {
+										setCurrentTab(Tab.MembershipSettings)
+										setMobileNavBarVisible(false)
+									}}
+								/>
 
-							<div
-								className={
-									currentTab === Tab.Integrations
-										? classes.visibleTab
-										: classes.invisibleTab
-								}
-							>
-								{' '}
-								<ClubAdminDappSettingsComponent club={club} />
-							</div>
-						</Container>
+								<NavLink
+									className={classes.adminNavItem}
+									active={currentTab === Tab.Admins}
+									label={'Club Admins'}
+									onClick={() => {
+										setCurrentTab(Tab.Admins)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+								<NavLink
+									className={classes.adminNavItem}
+									active={currentTab === Tab.Apps}
+									label={'Club Apps'}
+									onClick={() => {
+										setCurrentTab(Tab.Apps)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+								<Space h={32} />
+								<Text className={classes.adminNavHeader}>
+									EDIT PROFILE
+								</Text>
+								<NavLink
+									className={classes.adminNavItem}
+									active={currentTab === Tab.ClubDetails}
+									label={'Club Details'}
+									onClick={() => {
+										setCurrentTab(Tab.ClubDetails)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+								<NavLink
+									className={classes.adminNavItem}
+									active={currentTab === Tab.ClubIcon}
+									label={'Club Icon'}
+									onClick={() => {
+										setCurrentTab(Tab.ClubIcon)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+							</Navbar>
+							{!mobileNavBarVisible && (
+								<div className={classes.adminContent}>
+									{currentTab === Tab.ContractAddress && (
+										<CAContractAddress club={club} />
+									)}
+									{currentTab === Tab.MembershipSettings && (
+										<CAMembershipSettings club={club} />
+									)}
+									{currentTab === Tab.Admins && (
+										<CAClubAdmins club={club} />
+									)}
+									{currentTab === Tab.ClubDetails && (
+										<CAClubDetails club={club} />
+									)}
+									{currentTab === Tab.ClubIcon && (
+										<CAClubIcon club={club} />
+									)}
+									{currentTab === Tab.Apps && (
+										<CAClubApps club={club} />
+									)}
+								</div>
+							)}
+						</div>
 					)}
 				</>
 			)}

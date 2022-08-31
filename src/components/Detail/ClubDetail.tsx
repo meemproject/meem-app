@@ -1292,17 +1292,17 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														</>
 													)}
 													<div>
-														{member.displayName && (
-															<Text
-																className={
-																	classes.memberDisplayName
-																}
-															>
-																{
-																	member.displayName
-																}
-															</Text>
-														)}
+														<Text
+															className={
+																classes.memberDisplayName
+															}
+														>
+															{member.displayName &&
+															member.displayName
+																.length > 0
+																? member.displayName
+																: 'Club Member'}
+														</Text>
 
 														<div
 															className={
@@ -1477,7 +1477,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								))}
 							</Grid>
 						)}
-						<Space h={'xl'} />
 					</Container>
 					<Modal
 						centered
