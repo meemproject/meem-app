@@ -1474,7 +1474,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								))}
 							</Grid>
 						)}
-						<Space h={'xl'} />
 					</Container>
 					<Modal
 						centered

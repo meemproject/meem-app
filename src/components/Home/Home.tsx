@@ -41,7 +41,7 @@ const useStyles = createStyles(theme => ({
 	inner: {
 		position: 'relative',
 		paddingTop: 0,
-		paddingBottom: 120,
+		paddingBottom: 32,
 		marginTop: 70,
 
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
