@@ -1,4 +1,6 @@
+/* eslint-disable react/prop-types */
 import log from '@kengoldfarb/log'
+import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -88,6 +90,7 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 			</Head>
 			<HeaderMenu />
 			<ClubDetailComponent slug={clubSlug} />
+			<Space h={64} />
 			<MeemFooter />
 		</>
 	)

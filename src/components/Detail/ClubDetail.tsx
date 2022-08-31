@@ -1297,8 +1297,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 																classes.memberDisplayName
 															}
 														>
-															{member.displayName ??
-																'Club Member'}
+															{member.displayName &&
+															member.displayName
+																.length > 0
+																? member.displayName
+																: 'Club Member'}
 														</Text>
 
 														<div

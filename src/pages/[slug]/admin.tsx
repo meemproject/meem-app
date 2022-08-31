@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import log from '@kengoldfarb/log'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
