@@ -219,6 +219,9 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		fontSize: 20,
 		marginBottom: 32
+	},
+	textField: {
+		maxWidth: 800
 	}
 }))
 
@@ -497,6 +500,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			<TextInput
 				radius="lg"
 				size="lg"
+				className={classes.textField}
 				value={displayName}
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
