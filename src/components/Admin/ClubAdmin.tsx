@@ -24,6 +24,7 @@ import {
 } from '../../../generated/graphql'
 import { SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
+import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubAdmins } from './Tabs/CAClubAdmins'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
@@ -212,7 +213,8 @@ enum Tab {
 	Admins,
 	ClubDetails,
 	ClubIcon,
-	Apps
+	Apps,
+	Airdrops
 }
 
 interface IProps {
@@ -427,6 +429,15 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										setMobileNavBarVisible(false)
 									}}
 								/>
+								<NavLink
+									className={classes.adminNavItem}
+									active={currentTab === Tab.Airdrops}
+									label={'Airdrops'}
+									onClick={() => {
+										setCurrentTab(Tab.Airdrops)
+										setMobileNavBarVisible(false)
+									}}
+								/>
 								<Space h={32} />
 								<Text className={classes.adminNavHeader}>
 									EDIT PROFILE
@@ -469,6 +480,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									)}
 									{currentTab === Tab.Apps && (
 										<CAClubApps club={club} />
+									)}
+									{currentTab === Tab.Airdrops && (
+										<CABulkMint club={club} />
 									)}
 								</div>
 							)}
