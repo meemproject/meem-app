@@ -30,6 +30,7 @@ import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
 import { CAClubIcon } from './Tabs/CAClubIcon'
 import { CAContractAddress } from './Tabs/CAContractAddress'
+import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
 import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
 
 const useStyles = createStyles(theme => ({
@@ -210,6 +211,7 @@ const useStyles = createStyles(theme => ({
 enum Tab {
 	ContractAddress,
 	MembershipSettings,
+	MembershipRequirements,
 	Admins,
 	ClubDetails,
 	ClubIcon,
@@ -413,6 +415,20 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 								<NavLink
 									className={classes.adminNavItem}
+									active={
+										currentTab ===
+										Tab.MembershipRequirements
+									}
+									label={'Membership Requirements'}
+									onClick={() => {
+										setCurrentTab(
+											Tab.MembershipRequirements
+										)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+								<NavLink
+									className={classes.adminNavItem}
 									active={currentTab === Tab.Admins}
 									label={'Club Admins'}
 									onClick={() => {
@@ -468,6 +484,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									)}
 									{currentTab === Tab.MembershipSettings && (
 										<CAMembershipSettings club={club} />
+									)}
+									{currentTab ===
+										Tab.MembershipRequirements && (
+										<CAMembershipRequirements club={club} />
 									)}
 									{currentTab === Tab.Admins && (
 										<CAClubAdmins club={club} />

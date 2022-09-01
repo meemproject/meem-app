@@ -8,7 +8,6 @@ import {
 	Modal,
 	Radio,
 	TextInput,
-	Textarea,
 	Center
 } from '@mantine/core'
 import { Calendar, TimeInput } from '@mantine/dates'
@@ -17,15 +16,8 @@ import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
-import { CircleMinus, Plus, Clock } from 'tabler-icons-react'
-import {
-	MembershipSettings,
-	MembershipReqAndor,
-	MembershipReqType,
-	MembershipRequirement,
-	Club
-} from '../../../model/club/club'
-import { tokenFromContractAddress } from '../../../model/token/token'
+import { Clock } from 'tabler-icons-react'
+import { MembershipSettings, Club } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import ClubClubContext from '../../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
@@ -176,29 +168,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
-
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
-
-	// Membership
-	const [membershipRequirements, setMembershipRequirements] = useState<
-		MembershipRequirement[]
-	>([
-		{
-			index: 0,
-			andor: MembershipReqAndor.None,
-			type: MembershipReqType.None,
-			applicationInstructions: '',
-			approvedAddresses: [],
-			approvedAddressesString: '',
-			tokenName: '',
-			tokenChain: 'matic',
-			tokenContractAddress: '',
-			tokenMinQuantity: 0,
-			clubContractAddress: '',
-			clubName: ''
-		}
-	])
 
 	// Cost to join
 	// Note: Not used in MVP
@@ -217,66 +187,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 		Date | undefined
 	>(undefined)
 
-	const [reqCurrentlyEditing, updateReqCurrentlyEditing] =
-		useState<MembershipRequirement>(membershipRequirements[0])
-
-	const updateMembershipRequirement = (updatedReq: MembershipRequirement) => {
-		const newReqs = [...membershipRequirements]
-		newReqs.forEach(currentReq => {
-			if (currentReq.index == updatedReq.index) {
-				newReqs[currentReq.index] = updatedReq
-			}
-		})
-		setMembershipRequirements(newReqs)
-	}
-
-	const addMembershipRequirement = () => {
-		const newReqs = [...membershipRequirements]
-		newReqs.push({
-			index: membershipRequirements.length,
-			andor: MembershipReqAndor.Or,
-			type: MembershipReqType.None,
-			applicationInstructions: '',
-			approvedAddresses: [],
-			approvedAddressesString: '',
-			tokenName: '',
-			tokenChain: 'matic',
-			tokenContractAddress: '',
-			tokenMinQuantity: 0,
-			clubContractAddress: '',
-			clubName: ''
-		})
-		setMembershipRequirements(newReqs)
-	}
-
-	const removeMembershipRequirement = (index: number) => {
-		const newReqs = membershipRequirements.filter(
-			item => item.index !== index
-		)
-		setMembershipRequirements(newReqs)
-		updateReqCurrentlyEditing(membershipRequirements[0])
-	}
-
-	const parseApprovedAddresses = (rawString: string): string[] => {
-		const approvedAddressesList = rawString.split('\n')
-		const finalList: string[] = []
-		approvedAddressesList.forEach(potentialApprovedAddress => {
-			if (potentialApprovedAddress.length > 0) {
-				finalList.push(potentialApprovedAddress)
-			}
-		})
-		return finalList
-	}
-
-	const [isMembershipReqModalOpened, setMembershipReqModalOpened] =
-		useState(false)
-	const openMembershipReqModal = (index: number) => {
-		updateReqCurrentlyEditing(membershipRequirements[index])
-		setMembershipReqModalOpened(true)
-	}
-
-	const [isSecondReqTypeModalOpened, setSecondReqTypeModalOpened] =
-		useState(false)
+	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
 
 	const [
 		isMembershipTimingStartModalOpened,
@@ -318,39 +229,6 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 		setSaveChangesModalOpened(true)
 	}
 
-	const membershipTypeStringForFirstReq = (
-		req: MembershipRequirement
-	): string => {
-		switch (req.type) {
-			case MembershipReqType.None:
-				return 'anyone'
-			case MembershipReqType.ApprovedApplicants:
-				return 'approved addresses'
-			case MembershipReqType.TokenHolders:
-				return 'token holders'
-			case MembershipReqType.OtherClubMember:
-				return 'join another club' // Note: currently not an option for v1
-		}
-	}
-
-	const membershipTypeStringForSecondReq = (
-		req: MembershipRequirement
-	): string => {
-		switch (req.type) {
-			case MembershipReqType.None:
-				return '...'
-			case MembershipReqType.ApprovedApplicants:
-				return `own an address on this list`
-			case MembershipReqType.TokenHolders:
-				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
-			case MembershipReqType.OtherClubMember:
-				return `join ${membershipRequirements[1].clubName}`
-		}
-	}
-
-	// Is the req we're currently editing the first requirement or not? This affects language and modal options
-	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
-
 	const saveChanges = async () => {
 		if (!clubclub.isMember) {
 			showNotification({
@@ -371,54 +249,6 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 		// Start saving changes on UI
 		setIsSavingChanges(true)
 
-		// Validate and convert all approved addresses if necessary
-		let isApprovedAddressesInvalid = false
-		const sanitizedRequirements: MembershipRequirement[] = []
-		await Promise.all(
-			membershipRequirements.map(async function (req) {
-				const newReq = { ...req }
-				if (req.approvedAddresses.length > 0) {
-					const rawAddresses: string[] = []
-					await Promise.all(
-						// Make sure all addresses resolve correctly.
-
-						req.approvedAddresses.map(async function (address) {
-							if (!isApprovedAddressesInvalid) {
-								const name = await provider.resolveName(address)
-								if (!name) {
-									isApprovedAddressesInvalid = true
-									log.debug(
-										'an approved address was invalid. Returning...'
-									)
-									return
-								} else {
-									log.debug(
-										`validated approved address ${address}`
-									)
-									rawAddresses.push(name)
-								}
-							}
-						})
-					)
-					newReq.approvedAddresses = rawAddresses
-				} else {
-					log.debug(`no approved addresses found`)
-				}
-				sanitizedRequirements.push(newReq)
-			})
-		)
-
-		if (isApprovedAddressesInvalid) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
-			})
-			setIsSavingChanges(false)
-			return
-		}
-
 		// Convert funds address from ENS if necessary
 		let rawMembershipFundsAddress = ''
 		if (membershipFundsAddress.length > 0) {
@@ -426,41 +256,45 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 			rawMembershipFundsAddress = address ?? membershipFundsAddress
 		}
 
-		// If all good, build Membership Settings
-		const settings: MembershipSettings = {
-			requirements: sanitizedRequirements,
-			costToJoin,
-			membershipFundsAddress: rawMembershipFundsAddress,
-			membershipQuantity,
-			membershipStartDate,
-			membershipEndDate
-		}
+		if (club?.membershipSettings?.requirements) {
+			// If all good, build Membership Settings
+			const settings: MembershipSettings = {
+				requirements: club.membershipSettings.requirements,
+				costToJoin,
+				membershipFundsAddress: rawMembershipFundsAddress,
+				membershipQuantity,
+				membershipStartDate,
+				membershipEndDate
+			}
 
-		// Now compare to see if there's anything to change - if saving changes
+			// Now compare to see if there's anything to change - if saving changes
 
-		// Compare membership settings
-		const oldMembershipSettings = JSON.stringify(club?.membershipSettings)
-		const newMembershipSettings = JSON.stringify(settings)
-		const isMembershipSettingsSame =
-			oldMembershipSettings === newMembershipSettings
+			// Compare membership settings
+			const oldMembershipSettings = JSON.stringify(
+				club?.membershipSettings
+			)
+			const newMembershipSettings = JSON.stringify(settings)
+			const isMembershipSettingsSame =
+				oldMembershipSettings === newMembershipSettings
 
-		if (isMembershipSettingsSame) {
-			log.debug('no changes, nothing to save. Tell user.')
-			setIsSavingChanges(false)
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'There are no changes to save.'
-			})
-			return
-		}
+			if (isMembershipSettingsSame) {
+				log.debug('no changes, nothing to save. Tell user.')
+				setIsSavingChanges(false)
+				showNotification({
+					radius: 'lg',
+					title: 'Oops!',
+					message: 'There are no changes to save.'
+				})
+				return
+			}
 
-		// Show the appropriate modal (create vs edit)
-		const newClub = club
-		if (newClub) {
-			newClub.membershipSettings = settings
-			setNewClubData(newClub)
-			openSaveChangesModal()
+			// Show the appropriate modal (create vs edit)
+			const newClub = club
+			if (newClub) {
+				newClub.membershipSettings = settings
+				setNewClubData(newClub)
+				openSaveChangesModal()
+			}
 		}
 	}
 
@@ -472,8 +306,6 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 			const originalSettings: MembershipSettings = JSON.parse(
 				JSON.stringify(club.membershipSettings)
 			)
-
-			setMembershipRequirements(originalSettings.requirements)
 
 			setCostToJoin(originalSettings.costToJoin)
 			setMembershipQuantity(originalSettings.membershipQuantity ?? 0)
@@ -503,114 +335,6 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Text className={classes.manageClubHeader}>
 					Membership Settings
 				</Text>
-				<Text className={classes.membershipSettingHeader}>
-					Requirements
-				</Text>
-				<Text className={classes.membershipText}>
-					This club is open for{' '}
-					<a
-						onClick={() => {
-							openMembershipReqModal(0)
-						}}
-					>
-						<span className={classes.membershipSelector}>
-							{membershipTypeStringForFirstReq(
-								membershipRequirements[0]
-							)}
-						</span>
-					</a>{' '}
-					to join.{' '}
-					{membershipRequirements[0].type ===
-						MembershipReqType.ApprovedApplicants &&
-						membershipRequirements[0].applicationInstructions && (
-							<>
-								<>Here are the application instructions: </>
-								<Space h={1} />
-								<a
-									onClick={() => {
-										openMembershipReqModal(0)
-									}}
-								>
-									<span
-										className={classes.membershipSelector}
-									>
-										{
-											membershipRequirements[0]
-												.applicationInstructions
-										}
-									</span>
-								</a>
-								.
-							</>
-						)}
-					{membershipRequirements[0].type ===
-						MembershipReqType.TokenHolders && (
-						<>
-							Members must hold{' '}
-							<a
-								onClick={() => {
-									openMembershipReqModal(0)
-								}}
-							>
-								<span className={classes.membershipSelector}>
-									{membershipRequirements[0].tokenMinQuantity}{' '}
-									{membershipRequirements[0].tokenName}
-								</span>
-							</a>
-							.
-						</>
-					)}
-				</Text>
-				{membershipRequirements.length > 1 && (
-					<Text className={classes.membershipTextAdditionalReq}>
-						<CircleMinus
-							onClick={() => {
-								// Hardcoded for now as there's only one additional req in v1
-								removeMembershipRequirement(1)
-							}}
-							className={classes.removeAdditionalReq}
-						/>
-						{/* <a onClick={openSecondReqTypeModal}>
-							<span className={classes.membershipSelector}>
-								{membershipRequirements[1].andor === MembershipReqAndor.And
-									? 'In addition'
-									: 'Alternatively'}
-							</span>
-						</a> */}
-						in addition, members{' '}
-						{membershipRequirements[1].andor ===
-						MembershipReqAndor.Or
-							? 'can'
-							: 'must'}{' '}
-						<a
-							onClick={() => {
-								openMembershipReqModal(1)
-							}}
-						>
-							<span className={classes.membershipSelector}>
-								{membershipTypeStringForSecondReq(
-									membershipRequirements[1]
-								)}
-							</span>
-						</a>{' '}
-						to join.
-					</Text>
-				)}
-				{membershipRequirements[0].type !== MembershipReqType.None &&
-					membershipRequirements.length === 1 && (
-						<Button
-							onClick={() => {
-								addMembershipRequirement()
-							}}
-							className={classes.addRequirementButton}
-							size={'md'}
-							leftIcon={<Plus size={14} />}
-						>
-							Add another requirement
-						</Button>
-					)}
-
-				<Space h="lg" />
 
 				<Text className={classes.membershipSettingHeader}>Price</Text>
 
@@ -697,402 +421,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					{'Save Changes'}
 				</Button>
 				<Space h="lg" />
-				<Modal
-					withCloseButton={false}
-					centered
-					overlayBlur={8}
-					closeOnClickOutside={false}
-					closeOnEscape={false}
-					radius={16}
-					padding={'sm'}
-					opened={isMembershipReqModalOpened}
-					onClose={() => setMembershipReqModalOpened(false)}
-				>
-					<Radio.Group
-						classNames={{ label: classes.radio }}
-						orientation="vertical"
-						spacing={10}
-						size="md"
-						color="dark"
-						value={
-							reqCurrentlyEditing.type === MembershipReqType.None
-								? 'anyone'
-								: reqCurrentlyEditing.type ===
-								  MembershipReqType.ApprovedApplicants
-								? 'approved-applicants'
-								: reqCurrentlyEditing.type ===
-								  MembershipReqType.TokenHolders
-								? 'token-holders'
-								: 'other-club-member'
-						}
-						onChange={(value: any) => {
-							switch (value) {
-								case 'anyone':
-									reqCurrentlyEditing.type =
-										MembershipReqType.None
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
-									break
-								case 'approved-applicants':
-									reqCurrentlyEditing.type =
-										MembershipReqType.ApprovedApplicants
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
-									break
-								case 'token-holders':
-									reqCurrentlyEditing.type =
-										MembershipReqType.TokenHolders
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
-									break
-								case 'other-club-member':
-									reqCurrentlyEditing.type =
-										MembershipReqType.OtherClubMember
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
-									break
-							}
-						}}
-						required
-					>
-						{isEditedReqFirstReq && (
-							<Radio value="anyone" label="anyone" />
-						)}
-						<Radio
-							value="approved-applicants"
-							label={
-								isEditedReqFirstReq
-									? 'approved addresses'
-									: 'own an address on this list'
-							}
-						/>
-						<Radio
-							value="token-holders"
-							label={
-								isEditedReqFirstReq
-									? 'token holders'
-									: 'hold a token'
-							}
-						/>
 
-						{!isEditedReqFirstReq && (
-							<Radio
-								value="other-club-member"
-								label="join another club"
-								disabled
-							/>
-						)}
-					</Radio.Group>
-					<div
-						className={
-							reqCurrentlyEditing.type ==
-							MembershipReqType.ApprovedApplicants
-								? classes.visible
-								: classes.invisible
-						}
-					>
-						<Space h={8} />
-						<Text className={classes.modalHeaderText}>
-							How to apply
-						</Text>
-						<Text className={classes.modalInfoText}>
-							Leave blank if you do not have an application
-							process.
-						</Text>
-						<Space h={'xs'} />
-
-						<Textarea
-							radius="lg"
-							size="sm"
-							minRows={3}
-							value={reqCurrentlyEditing.applicationInstructions}
-							onChange={event => {
-								reqCurrentlyEditing.applicationInstructions =
-									event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
-						<Text className={classes.modalHeaderText}>
-							Approved Addresses
-						</Text>
-						<Text className={classes.modalInfoText}>
-							Enter one wallet address or ENS name per line.
-							Admins should not be included here, and should be
-							added separately in the Club Admins panel. New
-							approved addresses can be added manually anytime.
-						</Text>
-						<Space h={'xs'} />
-
-						<Textarea
-							radius="lg"
-							size="sm"
-							value={reqCurrentlyEditing.approvedAddressesString}
-							minRows={5}
-							onChange={event => {
-								reqCurrentlyEditing.approvedAddressesString =
-									event.currentTarget.value
-								reqCurrentlyEditing.approvedAddresses =
-									parseApprovedAddresses(
-										event.currentTarget.value
-									)
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
-					</div>
-
-					<div
-						className={
-							reqCurrentlyEditing.type ==
-							MembershipReqType.TokenHolders
-								? classes.visible
-								: classes.invisible
-						}
-					>
-						{/* <Text className={classes.modalHeaderText}>Chain</Text>
-						<Select
-							data={[
-								{
-									value: 'eth',
-									label: 'Ethereum'
-								},
-								{ value: 'matic', label: 'MATIC' }
-							]}
-							size={'md'}
-							radius={'lg'}
-							onChange={value => {
-								reqCurrentlyEditing.tokenChain = value ?? 'eth'
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-							value={reqCurrentlyEditing.tokenChain}
-						/> */}
-						<Text className={classes.modalHeaderText}>
-							Token Address
-						</Text>
-						<TextInput
-							radius="lg"
-							size="sm"
-							value={reqCurrentlyEditing.tokenContractAddress}
-							onChange={event => {
-								reqCurrentlyEditing.tokenContractAddress =
-									event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
-						<Text className={classes.modalHeaderText}>
-							Minimum Quantity
-						</Text>
-						<TextInput
-							radius="lg"
-							size="sm"
-							type="number"
-							value={reqCurrentlyEditing.tokenMinQuantity}
-							onChange={event => {
-								reqCurrentlyEditing.tokenMinQuantity = parseInt(
-									event.target.value
-								)
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
-					</div>
-					<div
-						className={
-							reqCurrentlyEditing.type ==
-							MembershipReqType.OtherClubMember
-								? classes.visible
-								: classes.invisible
-						}
-					>
-						<Text className={classes.modalHeaderText}>
-							Club Name
-						</Text>
-
-						<TextInput
-							radius="lg"
-							size="sm"
-							value={reqCurrentlyEditing.clubName}
-							onChange={event => {
-								// TODO: Look up club and retrive club contract address!
-								reqCurrentlyEditing.clubName =
-									event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
-							}}
-						/>
-					</div>
-					<Space h={'md'} />
-					<Button
-						disabled={isCheckingRequirement}
-						loading={isCheckingRequirement}
-						onClick={async () => {
-							if (
-								reqCurrentlyEditing.type ===
-								MembershipReqType.TokenHolders
-							) {
-								// Validate token
-								setIsCheckingRequirement(true)
-
-								if (reqCurrentlyEditing.tokenMinQuantity <= 0) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'Please enter a quantity greater than 0.'
-									})
-									setIsCheckingRequirement(false)
-
-									return
-								}
-
-								setIsCheckingRequirement(false)
-
-								const token = await tokenFromContractAddress(
-									reqCurrentlyEditing.tokenContractAddress,
-									wallet
-								)
-
-								if (!token) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'That token is not valid. Check the contract address and try again.'
-									})
-									setIsCheckingRequirement(false)
-									return
-								} else {
-									setIsCheckingRequirement(false)
-									reqCurrentlyEditing.tokenName = token.name
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
-								}
-							}
-							let doesApplicantsListContainAdmin = false
-
-							switch (reqCurrentlyEditing.type) {
-								case MembershipReqType.ApprovedApplicants:
-									// Make sure there's no admin addresses in here
-									if (club && club.admins) {
-										club?.admins.forEach(admin => {
-											if (
-												reqCurrentlyEditing.approvedAddressesString
-													.toLowerCase()
-													.includes(
-														admin.toLowerCase()
-													)
-											) {
-												doesApplicantsListContainAdmin =
-													true
-											}
-										})
-									}
-									if (doesApplicantsListContainAdmin) {
-										showNotification({
-											radius: 'lg',
-											title: 'Oops!',
-											message:
-												'You cannot add a club admin as an approved address.'
-										})
-										return
-									}
-
-									break
-								case MembershipReqType.TokenHolders:
-									if (
-										reqCurrentlyEditing.tokenMinQuantity ===
-										0
-									) {
-										showNotification({
-											radius: 'lg',
-											title: 'Oops!',
-											message:
-												'Please enter a minimum token quantity.'
-										})
-										return
-									}
-									break
-							}
-
-							setMembershipReqModalOpened(false)
-						}}
-						className={classes.buttonModalSave}
-					>
-						Done
-					</Button>
-					{!isEditedReqFirstReq && (
-						<Button
-							onClick={() => {
-								setMembershipReqModalOpened(false)
-								membershipRequirements[1].type =
-									MembershipReqType.None
-								setMembershipRequirements(
-									membershipRequirements
-								)
-							}}
-							className={classes.buttonModalCancel}
-						>
-							Cancel
-						</Button>
-					)}
-				</Modal>
-				<Modal
-					withCloseButton={false}
-					centered
-					overlayBlur={8}
-					closeOnClickOutside={false}
-					closeOnEscape={false}
-					radius={16}
-					padding={'sm'}
-					opened={isSecondReqTypeModalOpened}
-					onClose={() => setSecondReqTypeModalOpened(false)}
-				>
-					<Radio.Group
-						classNames={{ label: classes.radio }}
-						orientation="vertical"
-						spacing={10}
-						size="md"
-						color="dark"
-						value={
-							reqCurrentlyEditing.andor === MembershipReqAndor.And
-								? 'and'
-								: 'or'
-						}
-						onChange={(value: any) => {
-							switch (value) {
-								case 'and':
-									reqCurrentlyEditing.andor =
-										MembershipReqAndor.And
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
-									break
-								case 'or':
-									reqCurrentlyEditing.andor =
-										MembershipReqAndor.Or
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
-									break
-							}
-						}}
-						required
-					>
-						<Radio value="and" label="In addition" />
-						<Radio value="or" label="Alternatively" />
-					</Radio.Group>
-					<Space h={'md'} />
-					<Button
-						onClick={() => {
-							setSecondReqTypeModalOpened(false)
-						}}
-						className={classes.buttonModalSave}
-					>
-						Done
-					</Button>
-				</Modal>
 				<Modal
 					withCloseButton={false}
 					centered
