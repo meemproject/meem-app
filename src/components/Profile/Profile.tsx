@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -13,9 +14,10 @@ import {
 	NavLink
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/api'
+import { LoginState, makeRequest, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import IdentityContext from './IdentityProvider'
@@ -222,6 +224,70 @@ export const ProfileComponent: React.FC = () => {
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
+
+	const login = useCallback(
+		async (options: { walletSig?: string; accessToken?: string }) => {
+			const address = wallet.accounts[0]
+			const { walletSig, accessToken } = options
+			log.info('Logging in to Meem...')
+			log.debug(`address = ${wallet.accounts[0]}`)
+			log.debug(`sig = ${walletSig}`)
+
+			if (accessToken || (address && walletSig)) {
+				log.debug('HERE', accessToken, address)
+				try {
+					const loginRequest =
+						await makeRequest<MeemAPI.v1.Login.IDefinition>(
+							MeemAPI.v1.Login.path(),
+							{
+								method: MeemAPI.v1.Login.method,
+								body: {
+									...(address && { address }),
+									...(walletSig && { signature: walletSig }),
+									...(accessToken && { accessToken })
+								}
+							}
+						)
+
+					log.debug(`logged in successfully.`)
+
+					wallet.setJwt(loginRequest.jwt)
+
+					router.push({
+						pathname: router.query.return
+							? (router.query.return as string)
+							: '/'
+					})
+				} catch (e) {
+					log.error(e)
+					showNotification({
+						radius: 'lg',
+						title: 'Login Failed',
+						message: 'Please refresh the page and try again.'
+					})
+				}
+			}
+		},
+		[router, wallet]
+	)
+
+	useEffect(() => {
+		const hashQueryParams: { [key: string]: string } = {}
+		const hashPath = router.asPath.split('#')
+
+		if (hashPath.length > 0) {
+			hashPath[1].split('&').forEach(value => {
+				const keyVal = value.split('=')
+				hashQueryParams[keyVal[0]] = keyVal[1]
+			})
+		}
+		log.debug('ACCESS TOKEN', hashQueryParams)
+		if (hashQueryParams.access_token) {
+			login({
+				accessToken: hashQueryParams.access_token
+			})
+		}
+	}, [router.asPath])
 
 	useEffect(() => {
 		if (wallet.loginState === LoginState.NotLoggedIn) {
