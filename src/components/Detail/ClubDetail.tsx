@@ -21,7 +21,6 @@ import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { LoginState, useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
-import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
@@ -472,10 +471,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
-		) {
+		if (wallet.loginState !== LoginState.LoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
