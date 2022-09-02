@@ -196,7 +196,8 @@ const useStyles = createStyles(theme => ({
 		marginRight: 32,
 		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 8
+			paddingTop: 8,
+			width: 'auto'
 		}
 	},
 	exitButton: {
