@@ -28,12 +28,16 @@ export const GET_IS_MEMBER_OF_CLUB = gql`
 			where: {
 				MeemContractId: { _is_null: false }
 				MeemContract: { slug: { _eq: $clubSlug } }
+				Owner: { address: { _ilike: $walletAddress } }
 			}
 		) {
-			...MeemParts
+			id
+			tokenId
+			Owner {
+				address
+			}
 		}
 	}
-	${MEEM_PARTS}
 `
 
 export const GET_CLUBS_AUTOCOMPLETE = gql`
