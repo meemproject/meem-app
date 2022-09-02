@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
+import { MeemFooter } from '../components/Footer/MeemFooter'
 import { HeaderMenu } from '../components/Header/Header'
 import { HomeComponent } from '../components/Home/Home'
 
@@ -12,14 +13,16 @@ const Home: NextPage = () => {
 				<meta name="title" content="Clubs" />
 				<meta
 					name="description"
-					content="Welcome to the free, unstoppable association of humankind."
+					content="Effortless access management and collaborative
+							publishing tools for your online community"
 				/>
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta property="og:title" content="Clubs" />
 				<meta
 					property="og:description"
-					content="Welcome to the free, unstoppable association of humankind."
+					content="Effortless access management and collaborative
+							publishing tools for your online community"
 				/>
 
 				<meta property="twitter:card" content="summary_large_image" />
@@ -27,7 +30,8 @@ const Home: NextPage = () => {
 				<meta property="twitter:title" content="Clubs!" />
 				<meta
 					property="twitter:title"
-					content="Welcome to the free, unstoppable association of humankind."
+					content="Effortless access management and collaborative
+							publishing tools for your online community"
 				/>
 
 				<meta
@@ -56,6 +60,7 @@ const Home: NextPage = () => {
 			</Head>
 			<HeaderMenu />
 			<HomeComponent />
+			<MeemFooter />
 		</>
 	)
 }

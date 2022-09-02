@@ -12,7 +12,7 @@ import {
 import { useWallet } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -22,8 +22,9 @@ import {
 	MessageCircle,
 	Mail
 } from 'tabler-icons-react'
-import { ensWalletAddress, quickTruncate } from '../../utils/truncated_wallet'
+import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
+import IdentityContext from '../Profile/IdentityProvider'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 const useStyles = createStyles(theme => ({
@@ -167,30 +168,21 @@ export function HeaderMenu() {
 	const { classes, cx } = useStyles()
 	const router = useRouter()
 
-	const [username, setUsername] = useState('')
+	const id = useContext(IdentityContext)
+
 	const clubclub = useContext(ClubClubContext)
 	const wallet = useWallet()
-
-	useEffect(() => {
-		async function getName() {
-			try {
-				if (wallet.isConnected && wallet.web3Provider) {
-					const name = await ensWalletAddress(wallet.accounts[0])
-					setUsername(quickTruncate(name))
-				}
-			} catch (e) {
-				// ignore
-			}
-		}
-		getName()
-	}, [wallet.accounts, wallet.isConnected, wallet.web3Provider])
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
 	}
 
+	const navigateToMyAccount = () => {
+		router.push({ pathname: '/profile', query: { tab: 'identity' } })
+	}
+
 	const navigateToMyClubs = () => {
-		router.push({ pathname: '/myclubs' })
+		router.push({ pathname: '/profile', query: { tab: 'myClubs' } })
 	}
 
 	const handleJoinClubClub = () => {
@@ -245,8 +237,8 @@ export function HeaderMenu() {
 								>
 									<Group spacing={7}>
 										<Avatar
-											src={''}
-											alt={'user.name'}
+											src={id.identity.profilePic ?? ''}
+											alt={'Profile photo'}
 											radius="xl"
 											size={24}
 										/>
@@ -256,13 +248,37 @@ export function HeaderMenu() {
 											sx={{ lineHeight: 1 }}
 											mr={3}
 										>
-											{username}
+											{id.identity.displayName &&
+											id.identity.displayName?.length > 0
+												? id.identity.displayName
+												: id.identity.ensAddress &&
+												  id.identity.ensAddress
+														?.length > 0
+												? id.identity.ensAddress
+												: quickTruncate(
+														id.identity
+															.walletAddress ?? ''
+												  )}
 										</Text>
 										<ChevronDown size={12} />
 									</Group>
 								</UnstyledButton>
 							</Menu.Target>
 							<Menu.Dropdown>
+								<Menu.Item
+									onClick={navigateToMyAccount}
+									className={classes.menuItem}
+								>
+									My Account
+								</Menu.Item>
+								{clubclub.isMember && (
+									<Menu.Item
+										onClick={navigateToMyClubs}
+										className={classes.menuItem}
+									>
+										My Clubs
+									</Menu.Item>
+								)}
 								<Menu.Item
 									className={classes.menuItem}
 									onClick={async () => {
@@ -314,14 +330,7 @@ export function HeaderMenu() {
 									Join Club Club
 								</Menu.Item>
 							)}
-							{clubclub.isMember && (
-								<Menu.Item
-									onClick={navigateToMyClubs}
-									className={classes.menuItem}
-								>
-									My Clubs
-								</Menu.Item>
-							)}
+
 							<Menu.Item
 								onClick={() => {
 									setIsClubsFAQModalOpen(true)

@@ -28,12 +28,16 @@ export const GET_IS_MEMBER_OF_CLUB = gql`
 			where: {
 				MeemContractId: { _is_null: false }
 				MeemContract: { slug: { _eq: $clubSlug } }
+				Owner: { address: { _ilike: $walletAddress } }
 			}
 		) {
-			...MeemParts
+			id
+			tokenId
+			Owner {
+				address
+			}
 		}
 	}
-	${MEEM_PARTS}
 `
 
 export const GET_CLUBS_AUTOCOMPLETE = gql`
@@ -56,7 +60,7 @@ export const GET_CLUB_SLUG = gql`
 `
 
 export const GET_CLUB = gql`
-	query GetClub($slug: String) {
+	query GetClub($slug: String, $visibilityLevel: [String!]) {
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
@@ -68,6 +72,16 @@ export const GET_CLUB = gql`
 				Owner {
 					address
 					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations(
+							where: { visibility: { _in: $visibilityLevel } }
+						) {
+							metadata
+							visibility
+						}
+					}
 				}
 				tokenId
 				tokenURI
@@ -105,7 +119,10 @@ export const GET_CLUB = gql`
 `
 
 export const SUB_CLUB = gql`
-	subscription GetClubSubscription($slug: String) {
+	subscription GetClubSubscription(
+		$slug: String
+		$visibilityLevel: [String!]
+	) {
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
 			address
@@ -117,6 +134,16 @@ export const SUB_CLUB = gql`
 				Owner {
 					address
 					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations(
+							where: { visibility: { _in: $visibilityLevel } }
+						) {
+							metadata
+							visibility
+						}
+					}
 				}
 				tokenId
 				tokenURI
@@ -162,6 +189,10 @@ export const SUB_CLUBS = gql`
 			name
 			metadata
 			Meems {
+				Owner {
+					address
+					ens
+				}
 				tokenId
 				tokenURI
 				mintedAt
@@ -175,35 +206,6 @@ export const SUB_CLUBS = gql`
 				Wallet {
 					ens
 					address
-				}
-			}
-		}
-	}
-`
-
-export const GET_MY_CLUBS = gql`
-	query MyClubs($walletAddress: String) {
-		Meems(
-			where: { MeemContractId: { _is_null: false } }
-			distinct_on: MeemContractId
-		) {
-			tokenId
-			MeemContractId
-			MeemContract {
-				slug
-				address
-				createdAt
-				name
-				metadata
-				splits
-				mintPermissions
-				symbol
-				MeemContractWallets {
-					role
-					Wallet {
-						ens
-						address
-					}
 				}
 			}
 		}
@@ -238,6 +240,10 @@ export const GET_ALL_CLUBS = gql`
 			name
 			metadata
 			Meems {
+				Owner {
+					address
+					ens
+				}
 				tokenId
 				tokenURI
 				mintedAt
@@ -253,6 +259,12 @@ export const GET_ALL_CLUBS = gql`
 					address
 				}
 			}
+			Meems {
+				Owner {
+					address
+					ens
+				}
+			}
 		}
 	}
 `
@@ -264,7 +276,7 @@ export const SUB_MY_CLUBS = gql`
 				MeemContractId: { _is_null: false }
 				Owner: { address: { _ilike: $walletAddress } }
 			}
-			distinct_on: MeemContractId
+			order_by: { MeemContract: { Meems_aggregate: { count: desc } } }
 		) {
 			tokenId
 			MeemContractId
@@ -286,6 +298,18 @@ export const SUB_MY_CLUBS = gql`
 						address
 					}
 				}
+				Meems_aggregate {
+					aggregate {
+						count
+					}
+				}
+				Meems {
+					Owner {
+						address
+						ens
+					}
+				}
+				updatedAt
 			}
 		}
 	}
@@ -298,6 +322,11 @@ export const GET_BUNDLE_BY_ID = gql`
 			abi
 			BundleContracts {
 				functionSelectors
+				Contract {
+					ContractInstances {
+						address
+					}
+				}
 			}
 		}
 	}

@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { BrowseComponent } from '../components/Browse/Browse'
+import { MeemFooter } from '../components/Footer/MeemFooter'
 import { HeaderMenu } from '../components/Header/Header'
 
 const BrowsePage: NextPage = () => {
@@ -59,6 +60,7 @@ const BrowsePage: NextPage = () => {
 			</Head>
 			<HeaderMenu />
 			<BrowseComponent />
+			<MeemFooter />
 		</>
 	)
 }
