@@ -189,6 +189,10 @@ export const SUB_CLUBS = gql`
 			name
 			metadata
 			Meems {
+				Owner {
+					address
+					ens
+				}
 				tokenId
 				tokenURI
 				mintedAt
@@ -236,6 +240,10 @@ export const GET_ALL_CLUBS = gql`
 			name
 			metadata
 			Meems {
+				Owner {
+					address
+					ens
+				}
 				tokenId
 				tokenURI
 				mintedAt
@@ -251,9 +259,10 @@ export const GET_ALL_CLUBS = gql`
 					address
 				}
 			}
-			Meems_aggregate {
-				aggregate {
-					count
+			Meems {
+				Owner {
+					address
+					ens
 				}
 			}
 		}
@@ -289,9 +298,10 @@ export const SUB_MY_CLUBS = gql`
 						address
 					}
 				}
-				Meems_aggregate {
-					aggregate {
-						count
+				Meems {
+					Owner {
+						address
+						ens
 					}
 				}
 			}

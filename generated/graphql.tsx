@@ -4632,7 +4632,7 @@ export type GetIsMemberOfClubQueryVariables = Exact<{
 }>;
 
 
-export type GetIsMemberOfClubQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', address: string, name: string, symbol: string } | null }> };
+export type GetIsMemberOfClubQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', id: any, tokenId: string, Owner?: { __typename?: 'Wallets', address: string } | null }> };
 
 export type GetClubsAutocompleteQueryVariables = Exact<{
   query?: InputMaybe<Scalars['String']>;
@@ -4650,33 +4650,26 @@ export type GetClubSlugQuery = { __typename?: 'query_root', MeemContracts: Array
 
 export type GetClubQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
-  visibilityLevel?: InputMaybe<Scalars['String']>;
+  visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 
-export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type GetClubSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
-  visibilityLevel?: InputMaybe<Scalars['String']>;
+  visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
 }>;
 
 
-export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
-
-export type MyClubsQueryVariables = Exact<{
-  walletAddress?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type MyClubsQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> } | null }> };
+export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
 
 export type GetIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4689,7 +4682,7 @@ export type AllClubsQueryVariables = Exact<{
 }>;
 
 
-export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, Meems_aggregate: { __typename?: 'Meems_aggregate', aggregate?: { __typename?: 'Meems_aggregate_fields', count: number } | null } }> };
+export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, Meems_aggregate: { __typename?: 'Meems_aggregate', aggregate?: { __typename?: 'Meems_aggregate_fields', count: number } | null } }> };
 
 export type MyClubsSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
@@ -4740,12 +4733,16 @@ export const MeemContractPartsFragmentDoc = gql`
 export const GetIsMemberOfClubDocument = gql`
     query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}}}
+    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}}, Owner: {address: {_ilike: $walletAddress}}}
   ) {
-    ...MeemParts
+    id
+    tokenId
+    Owner {
+      address
+    }
   }
 }
-    ${MeemPartsFragmentDoc}`;
+    `;
 
 /**
  * __useGetIsMemberOfClubQuery__
@@ -4849,7 +4846,7 @@ export type GetClubSlugQueryHookResult = ReturnType<typeof useGetClubSlugQuery>;
 export type GetClubSlugLazyQueryHookResult = ReturnType<typeof useGetClubSlugLazyQuery>;
 export type GetClubSlugQueryResult = Apollo.QueryResult<GetClubSlugQuery, GetClubSlugQueryVariables>;
 export const GetClubDocument = gql`
-    query GetClub($slug: String, $visibilityLevel: String) {
+    query GetClub($slug: String, $visibilityLevel: [String!]) {
   MeemContracts(where: {slug: {_eq: $slug}}) {
     slug
     address
@@ -4861,6 +4858,14 @@ export const GetClubDocument = gql`
       Owner {
         address
         ens
+        MeemIdentities {
+          displayName
+          profilePicUrl
+          MeemIdentityIntegrations(where: {visibility: {_in: $visibilityLevel}}) {
+            metadata
+            visibility
+          }
+        }
       }
       tokenId
       tokenURI
@@ -4876,14 +4881,6 @@ export const GetClubDocument = gql`
       Wallet {
         address
         ens
-        MeemIdentities {
-          displayName
-          profilePicUrl
-          MeemIdentityIntegrations(where: {visibility: {_eq: $visibilityLevel}}) {
-            metadata
-            visibility
-          }
-        }
       }
     }
     id
@@ -4934,7 +4931,7 @@ export type GetClubQueryHookResult = ReturnType<typeof useGetClubQuery>;
 export type GetClubLazyQueryHookResult = ReturnType<typeof useGetClubLazyQuery>;
 export type GetClubQueryResult = Apollo.QueryResult<GetClubQuery, GetClubQueryVariables>;
 export const GetClubSubscriptionDocument = gql`
-    subscription GetClubSubscription($slug: String, $visibilityLevel: String) {
+    subscription GetClubSubscription($slug: String, $visibilityLevel: [String!]) {
   MeemContracts(where: {slug: {_eq: $slug}}) {
     slug
     address
@@ -4946,6 +4943,14 @@ export const GetClubSubscriptionDocument = gql`
       Owner {
         address
         ens
+        MeemIdentities {
+          displayName
+          profilePicUrl
+          MeemIdentityIntegrations(where: {visibility: {_in: $visibilityLevel}}) {
+            metadata
+            visibility
+          }
+        }
       }
       tokenId
       tokenURI
@@ -4961,14 +4966,6 @@ export const GetClubSubscriptionDocument = gql`
       Wallet {
         address
         ens
-        MeemIdentities {
-          displayName
-          profilePicUrl
-          MeemIdentityIntegrations(where: {visibility: {_eq: $visibilityLevel}}) {
-            metadata
-            visibility
-          }
-        }
       }
     }
     id
@@ -5022,6 +5019,10 @@ export const ClubSubscriptionDocument = gql`
     name
     metadata
     Meems {
+      Owner {
+        address
+        ens
+      }
       tokenId
       tokenURI
       mintedAt
@@ -5063,59 +5064,6 @@ export function useClubSubscriptionSubscription(baseOptions?: Apollo.Subscriptio
       }
 export type ClubSubscriptionSubscriptionHookResult = ReturnType<typeof useClubSubscriptionSubscription>;
 export type ClubSubscriptionSubscriptionResult = Apollo.SubscriptionResult<ClubSubscriptionSubscription>;
-export const MyClubsDocument = gql`
-    query MyClubs($walletAddress: String) {
-  Meems(where: {MeemContractId: {_is_null: false}}, distinct_on: MeemContractId) {
-    tokenId
-    MeemContractId
-    MeemContract {
-      slug
-      address
-      createdAt
-      name
-      metadata
-      splits
-      mintPermissions
-      symbol
-      MeemContractWallets {
-        role
-        Wallet {
-          ens
-          address
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useMyClubsQuery__
- *
- * To run a query within a React component, call `useMyClubsQuery` and pass it any options that fit your needs.
- * When your component renders, `useMyClubsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMyClubsQuery({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *   },
- * });
- */
-export function useMyClubsQuery(baseOptions?: Apollo.QueryHookOptions<MyClubsQuery, MyClubsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MyClubsQuery, MyClubsQueryVariables>(MyClubsDocument, options);
-      }
-export function useMyClubsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyClubsQuery, MyClubsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MyClubsQuery, MyClubsQueryVariables>(MyClubsDocument, options);
-        }
-export type MyClubsQueryHookResult = ReturnType<typeof useMyClubsQuery>;
-export type MyClubsLazyQueryHookResult = ReturnType<typeof useMyClubsLazyQuery>;
-export type MyClubsQueryResult = Apollo.QueryResult<MyClubsQuery, MyClubsQueryVariables>;
 export const GetIntegrationsDocument = gql`
     query GetIntegrations {
   Integrations {
@@ -5170,6 +5118,10 @@ export const AllClubsDocument = gql`
     name
     metadata
     Meems {
+      Owner {
+        address
+        ens
+      }
       tokenId
       tokenURI
       mintedAt
