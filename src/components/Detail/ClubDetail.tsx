@@ -16,7 +16,7 @@ import {
 	Divider,
 	HoverCard
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
+import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { LoginState, useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
@@ -822,11 +822,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			)
 			if (!possibleClub.isClubMember) {
 				log.debug('current user has left the club')
+
 				setIsLeavingClub(false)
 
 				// Set the updated local copy of the club
 				setClub(possibleClub)
 
+				cleanNotifications()
 				showNotification({
 					radius: 'lg',
 					title: 'Successfully left the club.',
