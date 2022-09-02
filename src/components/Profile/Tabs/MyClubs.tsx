@@ -203,7 +203,9 @@ export const MyClubsComponent: React.FC = () => {
 										/>
 										<Space w="xs" />
 
-										<div>
+										<div
+											className={classes.clubNameEllipsis}
+										>
 											<Text
 												className={
 													classes.clubNameEllipsis

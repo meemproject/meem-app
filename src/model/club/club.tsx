@@ -148,6 +148,39 @@ export interface MembershipRequirement {
 
 // The club's basic metadata, doesn't require async
 export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
+	// Count members accurately
+	const members: ClubMember[] = []
+
+	// Parse members
+	if (clubData) {
+		if (clubData.Meems) {
+			for (const meem of clubData.Meems) {
+				if (
+					meem.Owner?.address.toLowerCase() !==
+						MeemAPI.zeroAddress.toLowerCase() &&
+					// 0xfurnace address
+					meem.Owner?.address.toLowerCase() !==
+						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
+				) {
+					if (meem.Owner) {
+						let hasAlreadyBeenAdded = false
+						members.forEach(member => {
+							if (member.wallet === meem.Owner?.address) {
+								hasAlreadyBeenAdded = true
+							}
+						})
+						if (!hasAlreadyBeenAdded) {
+							members.push({
+								wallet: meem.Owner.address,
+								ens: meem.Owner.ens ?? undefined
+							})
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if (clubData) {
 		return {
 			id: clubData.id,
@@ -160,7 +193,7 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			image: clubData.metadata.image,
 			isClubMember: true,
 			membershipToken: '',
-			members: [],
+			members,
 			slotsLeft: 0,
 			membershipSettings: {
 				requirements: [],
@@ -174,7 +207,7 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
 			allIntegrations: [],
-			memberCount: clubData.Meems_aggregate.aggregate?.count ?? 0
+			memberCount: members.length
 		}
 	} else {
 		return {}
