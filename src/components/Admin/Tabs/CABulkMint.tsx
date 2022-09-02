@@ -2,11 +2,9 @@
 import log from '@kengoldfarb/log'
 import { createStyles, Text, Button, Textarea, Space } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
-import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
 
@@ -65,7 +63,6 @@ interface IProps {
 
 export const CABulkMint: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
-	const wallet = useWallet()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
@@ -158,22 +155,30 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 
 		// Send request
 		try {
-			await request
-				.post(
-					`${
-						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.BulkMint.path({
-						meemContractId: club.id ?? ''
-					})}`
-				)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send(airdrops)
+			const bulkMintFetcher = makeFetcher<
+				MeemAPI.v1.BulkMint.IQueryParams,
+				MeemAPI.v1.BulkMint.IRequestBody,
+				MeemAPI.v1.BulkMint.IResponseBody
+			>({
+				method: MeemAPI.v1.BulkMint.method
+			})
+
+			await bulkMintFetcher(
+				MeemAPI.v1.BulkMint.path({
+					meemContractId: club.id ?? ''
+				}),
+				undefined,
+				{
+					tokens: airdrops
+				}
+			)
+
 			showNotification({
 				title: 'Success!',
 				autoClose: 5000,
 				color: 'green',
 				icon: <Check color="green" />,
-				message: `Airdrops sent! The wallets you provided now have access to this club.`
+				message: `Airdrops sent! The wallets you provided should have access to this club in a few minutes.`
 			})
 			setAirdropAddressesString('')
 			setAirdropAddresses([])
