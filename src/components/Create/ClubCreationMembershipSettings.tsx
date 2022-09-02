@@ -28,9 +28,9 @@ import {
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { CreateClubModal } from '../Create/CreateClubModal'
+import { ClubAdminChangesModal } from '../Admin/ClubAdminChangesModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
-import { ClubAdminChangesModal } from './ClubAdminChangesModal'
+import { CreateClubModal } from './CreateClubModal'
 
 const useStyles = createStyles(theme => ({
 	buttonSaveChanges: {
@@ -168,7 +168,7 @@ interface IProps {
 	club?: Club
 }
 
-export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
+export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 	isCreatingClub,
 	club
 }) => {
@@ -205,7 +205,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			tokenContractAddress: '',
 			tokenMinQuantity: 0,
 			clubContractAddress: '',
-			clubName: ''
+			otherClubName: ''
 		}
 	])
 
@@ -271,7 +271,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			tokenContractAddress: '',
 			tokenMinQuantity: 0,
 			clubContractAddress: '',
-			clubName: ''
+			otherClubName: ''
 		})
 		setMembershipRequirements(newReqs)
 	}
@@ -384,7 +384,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			case MembershipReqType.TokenHolders:
 				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
 			case MembershipReqType.OtherClubMember:
-				return `join ${membershipRequirements[1].clubName}`
+				return `join ${membershipRequirements[1].otherClubName}`
 		}
 	}
 
@@ -1071,10 +1071,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						<TextInput
 							radius="lg"
 							size="sm"
-							value={reqCurrentlyEditing.clubName}
+							value={reqCurrentlyEditing.otherClubName}
 							onChange={event => {
 								// TODO: Look up club and retrive club contract address!
-								reqCurrentlyEditing.clubName =
+								reqCurrentlyEditing.otherClubName =
 									event.target.value
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}

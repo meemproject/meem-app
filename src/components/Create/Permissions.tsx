@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
-import { ClubAdminMembershipSettingsComponent } from '../Admin/ClubAdminMembershipSettings'
+import { ClubCreationMembershipSettings } from '../Admin/ClubAdminMembershipSettings'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -144,7 +144,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 			</div>
 
 			<Container className={classes.memberSettingsComponent}>
-				<ClubAdminMembershipSettingsComponent isCreatingClub />
+				<ClubCreationMembershipSettings isCreatingClub />
 			</Container>
 		</>
 	)

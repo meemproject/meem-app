@@ -653,7 +653,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													}
 													href="/club"
 												>
-													{req.clubName}
+													{req.otherClubName}
 												</a>
 											</Text>
 										),
@@ -671,11 +671,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				reqs.push({
 					requirementKey: `Error${index}`,
 					requirementComponent: (
-						<Text>
-							This club has invalid membership requirements.
-						</Text>
+						<Text>Anyone can join this club for free.</Text>
 					),
-					meetsRequirement: false
+					meetsRequirement: true
 				})
 			}
 
@@ -726,6 +724,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (mintStart && mintEnd) {
+					if (mintStart.getTime() === 0 && mintEnd.getTime() === 0) {
+						mintDatesText = 'People may join at any time.'
+					}
 					if (!isAfterMintStart) {
 						mintDatesText = `Membership opens ${mintStartString} and closes ${mintEndString}.`
 					} else if (isAfterMintStart && isBeforeMintEnd) {
@@ -734,13 +735,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (!mintStart && !mintEnd) {
-					mintDatesText = 'Members can join at any time.'
+					mintDatesText = 'People may join at any time.'
 				}
 
 				reqs.push({
 					requirementKey: `mintDates${index}`,
 					requirementComponent: <Text>{mintDatesText}</Text>,
-					meetsRequirement: isAfterMintStart && isBeforeMintEnd
+					meetsRequirement:
+						(isAfterMintStart && isBeforeMintEnd) ||
+						(mintStart &&
+							mintEnd &&
+							mintStart.getTime() === 0 &&
+							mintEnd.getTime() === 0) ||
+						false
 				})
 			}
 

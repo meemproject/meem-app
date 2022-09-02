@@ -205,7 +205,8 @@ const useStyles = createStyles(theme => ({
 		marginLeft: 'auto',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
-		}
+		},
+		cursor: 'pointer'
 	}
 }))
 
