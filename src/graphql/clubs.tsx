@@ -276,7 +276,7 @@ export const SUB_MY_CLUBS = gql`
 				MeemContractId: { _is_null: false }
 				Owner: { address: { _ilike: $walletAddress } }
 			}
-			distinct_on: MeemContractId
+			order_by: { MeemContract: { Meems_aggregate: { count: desc } } }
 		) {
 			tokenId
 			MeemContractId
@@ -298,12 +298,18 @@ export const SUB_MY_CLUBS = gql`
 						address
 					}
 				}
+				Meems_aggregate {
+					aggregate {
+						count
+					}
+				}
 				Meems {
 					Owner {
 						address
 						ens
 					}
 				}
+				updatedAt
 			}
 		}
 	}
