@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
@@ -17,15 +18,15 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
-import Cookies from 'js-cookie'
+import { useWallet } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { ExternalLink, Settings } from 'tabler-icons-react'
-import { GetIntegrationsQuery } from '../../../generated/graphql'
-import { GET_INTEGRATIONS } from '../../graphql/clubs'
-import { Club, Integration } from '../../model/club/club'
-import { ClubAdminParagraphIntegrationModal } from './IntegrationModals/ClubAdminParagraphIntegrationModal'
-import { ClubAdminVerifyTwitterModal } from './IntegrationModals/ClubAdminVerifyTwitterModal'
+import { GetIntegrationsQuery } from '../../../../generated/graphql'
+import { GET_INTEGRATIONS } from '../../../graphql/clubs'
+import { Club, Integration } from '../../../model/club/club'
+import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
+import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'
 
 const useStyles = createStyles(theme => ({
 	// Membership tab
@@ -233,6 +234,11 @@ const useStyles = createStyles(theme => ({
 		height: 53,
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16
+	},
+	manageClubHeader: {
+		fontWeight: 600,
+		fontSize: 20,
+		marginBottom: 32
 	}
 }))
 
@@ -245,8 +251,9 @@ enum Step {
 	AddUrl
 }
 
-export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
+export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
+	const wallet = useWallet()
 
 	// Fetch a list of available integrations.
 	const {
@@ -373,7 +380,6 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 
 			// Save the change to the db
 			try {
-				const jwtToken = Cookies.get('meemJwtToken')
 				const { body } = await request
 					.post(
 						`${
@@ -385,7 +391,7 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 							}
 						)}`
 					)
-					.set('Authorization', `JWT ${jwtToken}`)
+					.set('Authorization', `JWT ${wallet.jwt}`)
 					.send({
 						isEnabled: isCurrentIntegrationEnabled,
 						isPublic: isCurrentIntegrationPublic,
@@ -501,7 +507,9 @@ export const ClubAdminDappSettingsComponent: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={30} />
+				<Space h={12} />
+
+				<Text className={classes.manageClubHeader}>Club Apps</Text>
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>

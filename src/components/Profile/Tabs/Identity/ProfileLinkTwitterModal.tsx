@@ -16,7 +16,7 @@ import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
-import { Club, Integration } from '../../../model/club/club'
+import { AvailableIdentityIntegration } from '../../../../model/identity/identity'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -79,11 +79,9 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
-	club: Club
-	integration?: Integration
+	integration?: AvailableIdentityIntegration
 	isOpened: boolean
 	onModalClosed: () => void
-	onSuccessfulVerification: (username: string) => void
 }
 
 enum Step {
@@ -93,12 +91,10 @@ enum Step {
 	Verifying
 }
 
-export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
-	club,
-	integration,
+export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 	isOpened,
-	onModalClosed,
-	onSuccessfulVerification
+	integration,
+	onModalClosed
 }) => {
 	const { classes } = useStyles()
 	const wallet = useWallet()
@@ -110,42 +106,36 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 	const verifyTweet = async () => {
 		setStep(Step.Verifying)
 
+		log.debug(`integration id to enable: ${integration?.id}`)
+
 		// Save the change to the db
 		try {
-			const { body } = await request
+			await request
 				.post(
 					`${
 						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-						meemContractId: club.id ?? '',
-						integrationId: integration?.integrationId ?? ''
+					}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
+						integrationId: integration?.id ?? ''
 					})}`
 				)
 				.set('Authorization', `JWT ${wallet.jwt}`)
 				.send({
-					isEnabled: true,
-					isPublic: true,
+					visibility: 'mutual-club-members',
 					metadata: {
-						externalUrl: integration?.integrationId,
 						twitterUsername
 					}
 				})
-			log.debug(body)
 			showNotification({
-				radius: 'lg',
 				title: 'Success!',
 				autoClose: 5000,
 				color: 'green',
 				icon: <Check color="green" />,
-
-				message: `Your club is now verified.`
+				message: `This Twitter account is now linked!`
 			})
-			onSuccessfulVerification(twitterUsername)
 			onModalClosed()
 		} catch (e) {
 			log.debug(e)
 			showNotification({
-				radius: 'lg',
 				title: 'Verification failed',
 				autoClose: 5000,
 				color: 'red',
@@ -164,12 +154,13 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				closeOnEscape={false}
 				withCloseButton={step !== Step.Verifying}
 				radius={16}
+				size={'50%'}
 				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
 				title={
 					<Text className={classes.modalTitle}>
-						Verify with Twitter
+						Connect your Twitter account
 					</Text>
 				}
 				onClose={() => {
@@ -178,38 +169,6 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				}}
 			>
 				<Divider />
-
-				{integration && integration.isVerified && (
-					<div className={classes.isVerifiedSection}>
-						<Space h={24} />
-
-						<Text size={'sm'}>
-							This club is currently verified with{' '}
-							<a
-								onClick={() => {
-									window.open(
-										`https://twitter.com/${integration.verifiedTwitterUser}`
-									)
-								}}
-							>
-								<span
-									className={
-										classes.currentTwitterVerification
-									}
-								>
-									{integration.verifiedTwitterUser}
-								</span>
-							</a>{' '}
-							on Twitter.
-						</Text>
-						<Space h={16} />
-
-						<Text size={'sm'}>
-							Use the steps below to verify with a different
-							Twitter account.
-						</Text>
-					</div>
-				)}
 
 				<Space h={24} />
 
@@ -246,7 +205,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 							}
 						>
 							<Stepper.Step
-								label="What's your Club's Twitter username?"
+								label="What's your Twitter username?"
 								description={
 									step !== Step.Start &&
 									step !== Step.Share ? null : (
@@ -290,6 +249,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 																			'That Twitter username is invalid.'
 																	}
 																)
+																return
 															}
 															setStep(Step.Share)
 														}}
@@ -333,18 +293,8 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 														const href =
 															twitterIntent.tweet.url(
 																{
-																	text: `Verifying that this is the official Twitter account of ${
-																		club.name ??
-																		''
-																	}!`,
-																	url: `${
-																		window
-																			.location
-																			.origin
-																	}/${
-																		club.slug ??
-																		''
-																	}`
+																	text: `Verifying that this Twitter account belongs to me!
+																	 ${wallet.accounts[0] ?? ''}`
 																}
 															)
 

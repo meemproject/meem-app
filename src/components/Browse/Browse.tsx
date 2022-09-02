@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
 import {
 	createStyles,
@@ -8,8 +9,10 @@ import {
 	Space,
 	Center,
 	Loader,
-	Grid
+	Grid,
+	Badge
 } from '@mantine/core'
+import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
@@ -84,12 +87,20 @@ const useStyles = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
-	clubInfo: {},
-
+	clubInfo: {
+		textOverflow: 'ellipsis',
+		msTextOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden'
+	},
 	clubDescription: {
 		fontSize: 14,
 		marginRight: 8,
-		lineHeight: 1.3
+		lineHeight: 1.3,
+		textOverflow: 'ellipsis',
+		msTextOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden'
 	},
 	clubLogoImage: {
 		marginTop: 4,
@@ -102,7 +113,6 @@ const useStyles = createStyles(theme => ({
 		whiteSpace: 'nowrap',
 		overflow: 'hidden'
 	},
-
 	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
 }))
 
@@ -237,6 +247,22 @@ export const BrowseComponent: React.FC = () => {
 											>
 												{club.description}{' '}
 											</Text>
+											<Space h={6} />
+											<Badge
+												color="gray"
+												variant={'filled'}
+												leftSection={
+													<>
+														<Group
+															style={{
+																marginTop: 5
+															}}
+														/>
+													</>
+												}
+											>
+												{club.memberCount}
+											</Badge>
 										</div>
 									</div>
 								</Grid.Col>
@@ -253,8 +279,6 @@ export const BrowseComponent: React.FC = () => {
 						>
 							Load more
 						</Button>
-
-						<Space h={60} />
 					</>
 				)}
 			</Container>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
@@ -12,14 +13,14 @@ import {
 	Center,
 	Group,
 	Modal,
-	Divider
+	Divider,
+	HoverCard
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
+import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { LoginState, useWallet } from '@meemproject/react'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
-import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
@@ -34,7 +35,6 @@ import {
 import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
-	ClubMember,
 	Integration,
 	MembershipReqType
 } from '../../model/club/club'
@@ -42,6 +42,14 @@ import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
 
 const useStyles = createStyles(theme => ({
+	row: { display: 'flex' },
+	rowCentered: { display: 'flex', alignItems: 'center' },
+	rowCenteredClickable: {
+		display: 'flex',
+		alignItems: 'center',
+		cursor: 'pointer'
+	},
+
 	header: {
 		backgroundColor: 'rgba(160, 160, 160, 0.05)',
 		display: 'flex',
@@ -191,12 +199,21 @@ const useStyles = createStyles(theme => ({
 		paddingLeft: 16,
 		paddingBottom: 16,
 		cursor: 'pointer',
-		display: 'flex'
+		display: 'flex',
+		alignItems: 'center'
+	},
+	memberItemName: {
+		marginLeft: 6
 	},
 	memberAdminIndicator: {
-		marginLeft: 6,
-		marginTop: 6
+		marginLeft: 6
 	},
+	memberDisplayName: {
+		fontWeight: 600
+	},
+	memberEns: { opacity: '0.6' },
+	memberContactLabel: { fontWeight: 600 },
+	memberContactItemText: { opacity: '0.6' },
 	enabledClubIntegrationItem: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -251,15 +268,23 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 	const [isWrongNetwork, setIsWrongNetwork] = useState(false)
+
+	const [club, setClub] = useState<Club | undefined>()
+
+	const [previousClubDataString, setPreviousClubDataString] = useState('')
 	const {
 		loading,
 		error,
 		data: clubData
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
-		variables: { slug }
+		variables: {
+			slug,
+			visibilityLevel: club?.isClubMember
+				? ['mutual-club-members', 'anyone']
+				: ['anyone']
+		}
 	})
 
-	const [club, setClub] = useState<Club | undefined>()
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
@@ -319,10 +344,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
-		) {
+		if (wallet.loginState !== LoginState.LoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -334,11 +356,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 		setIsJoiningClub(true)
 		try {
-			if (club && club.rawClub) {
+			if (club && club.rawClub && club.id) {
 				if (
 					typeof club?.membershipSettings?.costToJoin === 'number' &&
 					club.membershipSettings.costToJoin > 0
 				) {
+					const getProofFetcher = makeFetcher<
+						MeemAPI.v1.GetMintingProof.IQueryParams,
+						MeemAPI.v1.GetMintingProof.IRequestBody,
+						MeemAPI.v1.GetMintingProof.IResponseBody
+					>({
+						method: MeemAPI.v1.GetMintingProof.method
+					})
+
+					const { proof } = await getProofFetcher(
+						MeemAPI.v1.GetMintingProof.path({
+							meemContractId: club.id
+						})
+					)
+
 					// Cost to join. Run the transaction in browser.
 					const meemContract = new Contract(
 						club?.address ?? '',
@@ -356,7 +392,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					const data = {
 						to: wallet.accounts[0],
 						tokenURI: uri,
-						tokenType: MeemAPI.MeemType.Original
+						tokenType: MeemAPI.MeemType.Original,
+						proof
 					}
 
 					log.debug(JSON.stringify(data))
@@ -434,10 +471,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (
-			Cookies.get('meemJwtToken') === undefined ||
-			Cookies.get('walletAddress') === undefined
-		) {
+		if (wallet.loginState !== LoginState.LoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -493,6 +527,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			const reqs: RequirementString[] = []
 			let index = 0
+
 			if (possibleClub.membershipSettings) {
 				await Promise.all(
 					possibleClub.membershipSettings?.requirements.map(
@@ -728,47 +763,32 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
-		async function getClub(data: GetClubSubscriptionSubscription) {
+		async function getClub() {
+			if (!clubData) {
+				return
+			}
+			// TODO: Why do I have to compare strings to prevent an infinite useEffect loop?
+			// TODO: Why does this page cause a loop but MyClubs.tsx doesn't?
+			if (previousClubDataString) {
+				const currentData = JSON.stringify(clubData)
+				if (previousClubDataString === currentData) {
+					return
+				}
+			}
 			const possibleClub = await clubFromMeemContract(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
-				data.MeemContracts[0] as MeemContracts
+				clubData.MeemContracts[0] as MeemContracts
 			)
 
 			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
 				parseRequirements(possibleClub)
+				setIsLoadingClub(false)
+				log.debug('got club')
 			}
-			setIsLoadingClub(false)
 
-			const newMembers: ClubMember[] = []
-			for (const member of possibleClub.members ?? []) {
-				newMembers.push(member)
-			}
-			// TODO: Is there an easier way to copy an object in react, like copyWith?
-			const newClub: Club = {
-				id: possibleClub.id,
-				name: possibleClub.name,
-				address: possibleClub.address,
-				admins: possibleClub.admins,
-				isClubAdmin: possibleClub.isClubAdmin,
-				slug: possibleClub.slug,
-				description: possibleClub.description,
-				image: possibleClub.image,
-				isClubMember: possibleClub.isClubMember,
-				membershipToken: possibleClub.membershipToken,
-				members: newMembers,
-				slotsLeft: possibleClub.slotsLeft,
-				membershipSettings: possibleClub.membershipSettings,
-				isValid: possibleClub.isValid,
-				rawClub: possibleClub.rawClub,
-				allIntegrations: possibleClub.allIntegrations,
-				publicIntegrations: possibleClub.publicIntegrations,
-				privateIntegrations: possibleClub.privateIntegrations
-			}
-			setClub(newClub)
-			setIsLoadingClub(false)
-			log.debug('updated club with ENS addresses')
+			setPreviousClubDataString(JSON.stringify(clubData))
 		}
 
 		async function join(data: ClubSubscriptionSubscription) {
@@ -802,11 +822,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			)
 			if (!possibleClub.isClubMember) {
 				log.debug('current user has left the club')
+
 				setIsLeavingClub(false)
 
 				// Set the updated local copy of the club
 				setClub(possibleClub)
 
+				cleanNotifications()
 				showNotification({
 					radius: 'lg',
 					title: 'Successfully left the club.',
@@ -817,8 +839,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 		}
 
-		if (!loading && !error && !club && clubData) {
-			getClub(clubData)
+		if (!loading && !error && clubData) {
+			getClub()
 		}
 
 		if (isJoiningClub && clubData) {
@@ -829,15 +851,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	}, [
 		club,
 		clubData,
+		previousClubDataString,
 		error,
 		isJoiningClub,
 		isLeavingClub,
 		loading,
 		parseRequirements,
-		wallet,
-		wallet.accounts,
-		wallet.isConnected,
-		wallet.web3Provider
+		wallet
 	])
 
 	useEffect(() => {
@@ -1105,11 +1125,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								<div
 									className={classes.contractAddressContainer}
 								>
-									<Text
-										className={classes.clubContractAddress}
-									>
-										{club.address}
-									</Text>
+									<Text>{club.address}</Text>
 									<Image
 										className={classes.copy}
 										src="/copy.png"
@@ -1193,47 +1209,272 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										xl={4}
 										key={member.wallet}
 									>
-										<div className={classes.memberItem}>
-											<Text
-												onClick={() => {
-													navigator.clipboard.writeText(
-														member.ens
-															? member.ens
-															: member.wallet
-													)
-													showNotification({
-														radius: 'lg',
-														title: 'Member address copied',
-														autoClose: 2000,
-														color: 'green',
-														icon: <Check />,
-
-														message: `This member's address was copied to your clipboard.`
-													})
-												}}
-											>
-												{member.ens
-													? member.ens
-													: quickTruncate(
-															member.wallet
-													  )}
-											</Text>
-											{memberIsAdmin(member.wallet) && (
-												<Image
+										<HoverCard
+											width={280}
+											shadow="md"
+											radius={16}
+										>
+											<HoverCard.Target>
+												<div
 													className={
-														classes.memberAdminIndicator
+														classes.memberItem
 													}
-													src="/star.png"
-													height={12}
-													width={12}
-												/>
-											)}
-										</div>
+												>
+													{member.profilePicture && (
+														<Image
+															src={
+																member.profilePicture
+															}
+															radius={16}
+															height={32}
+															width={32}
+														/>
+													)}
+
+													<Text
+														className={
+															classes.memberItemName
+														}
+														// onClick={() => {
+														// 	navigator.clipboard.writeText(
+														// 		member.ens
+														// 			? member.ens
+														// 			: member.wallet
+														// 	)
+														// 	showNotification({
+														// 		radius: 'lg',
+														// 		title: 'Member address copied',
+														// 		autoClose: 2000,
+														// 		color: 'green',
+														// 		icon: <Check />,
+
+														// 		message: `This member's address was copied to your clipboard.`
+														// 	})
+														// }}
+													>
+														{member.displayName
+															? member.displayName
+															: member.ens
+															? member.ens
+															: quickTruncate(
+																	member.wallet
+															  )}
+													</Text>
+													{memberIsAdmin(
+														member.wallet
+													) && (
+														<Image
+															className={
+																classes.memberAdminIndicator
+															}
+															src="/star.png"
+															height={12}
+															width={12}
+														/>
+													)}
+												</div>
+											</HoverCard.Target>
+											<HoverCard.Dropdown>
+												<div className={classes.row}>
+													{member.profilePicture && (
+														<>
+															<Image
+																src={
+																	member.profilePicture
+																}
+																radius={24}
+																height={48}
+																width={48}
+															/>
+															<Space w={16} />
+														</>
+													)}
+													<div>
+														<Text
+															className={
+																classes.memberDisplayName
+															}
+														>
+															{member.displayName &&
+															member.displayName
+																.length > 0
+																? member.displayName
+																: 'Club Member'}
+														</Text>
+
+														<div
+															className={
+																classes.rowCentered
+															}
+														>
+															<Text
+																className={
+																	classes.memberEns
+																}
+															>
+																{member.ens
+																	? member.ens
+																	: quickTruncate(
+																			member.wallet
+																	  )}
+															</Text>
+															<Space h={4} />
+															<Image
+																className={
+																	classes.copy
+																}
+																src="/copy.png"
+																height={18}
+																width={18}
+																onClick={() => {
+																	navigator.clipboard.writeText(
+																		member.ens
+																			? member.ens
+																			: member.wallet
+																	)
+																	showNotification(
+																		{
+																			radius: 'lg',
+																			title: 'Address copied',
+																			autoClose: 2000,
+																			color: 'green',
+																			icon: (
+																				<Check />
+																			),
+
+																			message: `This member's address was copied to your clipboard.`
+																		}
+																	)
+																}}
+															/>
+														</div>
+													</div>
+												</div>
+												{(member.emailAddress ||
+													member.twitterUsername ||
+													member.discordUsername) && (
+													<>
+														<Space h={24} />
+														<div
+															className={
+																classes.rowCentered
+															}
+														>
+															<Text
+																className={
+																	classes.memberContactLabel
+																}
+															>
+																Contact
+															</Text>
+															<Space w={4} />
+															<Image
+																src="/icon-verified.png"
+																width={16}
+																height={16}
+															/>
+														</div>
+														{member.twitterUsername && (
+															<div
+																onClick={() => {
+																	window.open(
+																		`https://twitter.com/${member.twitterUsername}`
+																	)
+																}}
+																className={
+																	classes.rowCenteredClickable
+																}
+															>
+																<Image
+																	className={
+																		classes.memberContactItemText
+																	}
+																	src="/integration-twitter.png"
+																	width={12}
+																	height={12}
+																/>
+																<Space w={4} />
+																<Text
+																	className={
+																		classes.memberContactItemText
+																	}
+																>
+																	{
+																		member.twitterUsername
+																	}
+																</Text>
+															</div>
+														)}
+														{member.discordUsername && (
+															<div
+																onClick={() => {
+																	window.open(
+																		`https://discordapp.com/users/${member.discordUserId}`
+																	)
+																}}
+																className={
+																	classes.rowCenteredClickable
+																}
+															>
+																<Image
+																	className={
+																		classes.memberContactItemText
+																	}
+																	src="/integration-discord.png"
+																	width={12}
+																	height={12}
+																/>
+																<Space w={4} />
+																<Text
+																	className={
+																		classes.memberContactItemText
+																	}
+																>
+																	{
+																		member.discordUsername
+																	}
+																</Text>
+															</div>
+														)}
+														{member.emailAddress && (
+															<div
+																onClick={() => {
+																	window.open(
+																		`mailto:${member.emailAddress}`
+																	)
+																}}
+																className={
+																	classes.rowCenteredClickable
+																}
+															>
+																<Image
+																	className={
+																		classes.memberContactItemText
+																	}
+																	src="/integration-email.png"
+																	width={12}
+																	height={12}
+																/>
+																<Space w={4} />
+																<Text
+																	className={
+																		classes.memberContactItemText
+																	}
+																>
+																	{
+																		member.emailAddress
+																	}
+																</Text>
+															</div>
+														)}
+													</>
+												)}
+											</HoverCard.Dropdown>
+										</HoverCard>
 									</Grid.Col>
 								))}
 							</Grid>
 						)}
-						<Space h={'xl'} />
 					</Container>
 					<Modal
 						centered
