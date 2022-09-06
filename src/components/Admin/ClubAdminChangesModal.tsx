@@ -303,20 +303,18 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			sockets.on({
 				eventName: MeemAPI.MeemEvent.Err,
 				handler: err => {
-					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
-						showNotification({
-							radius: 'lg',
-							title: 'Error saving changes',
-							message:
-								'An error occurred while saving changes. Please try again.',
-							color: 'red'
-						})
-
-						closeModal()
-					}
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
 					log.crit(err.detail.code)
+					showNotification({
+						radius: 'lg',
+						title: 'Error saving changes',
+						message:
+							'An error occurred while saving changes. Please try again.',
+						color: 'red'
+					})
+
+					closeModal()
 				}
 			})
 		}
