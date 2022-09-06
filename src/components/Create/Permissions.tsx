@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
-import { ClubCreationMembershipSettings } from '../Admin/ClubAdminMembershipSettings'
+import { ClubCreationMembershipSettings } from './ClubCreationMembershipSettings'
 
 const useStyles = createStyles(theme => ({
 	header: {
