@@ -931,8 +931,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 						{isEditedReqFirstReq && (
 							<Radio value="anyone" label="anyone" />
 						)}
-						{!isApprovedAddressesAlreadyARequirement}{' '}
-						{
+						{!isApprovedAddressesAlreadyARequirement && (
 							<Radio
 								value="approved-applicants"
 								label={
@@ -941,7 +940,8 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 										: 'own an address on this list'
 								}
 							/>
-						}
+						)}
+						{}
 						<Radio
 							value="token-holders"
 							label={

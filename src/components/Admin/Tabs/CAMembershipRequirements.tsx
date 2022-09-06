@@ -644,13 +644,13 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						}}
 						required
 					>
-						{!isApprovedAddressesAlreadyARequirement}{' '}
-						{
+						{!isApprovedAddressesAlreadyARequirement && (
 							<Radio
 								value="approved-applicants"
 								label={'approved addresses'}
 							/>
-						}
+						)}
+
 						<Radio value="token-holders" label={'token holders'} />
 						{/* <Radio
 								value="other-club-member"
