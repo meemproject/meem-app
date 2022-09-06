@@ -241,12 +241,28 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 		setMembershipRequirements(newReqs)
 	}
 
+	const isApprovedAddressesAlreadyARequirement = (): boolean => {
+		let isAdded = false
+		membershipRequirements.forEach(req => {
+			if (req.type === MembershipReqType.ApprovedApplicants) {
+				log.debug('approved already added')
+				isAdded = true
+			}
+		})
+		return isAdded
+	}
+
 	const addMembershipRequirement = () => {
 		const newReqs = [...membershipRequirements]
+
+		const hasApprovedAddresses = isApprovedAddressesAlreadyARequirement()
+
 		newReqs.push({
 			index: membershipRequirements.length,
 			andor: MembershipReqAndor.Or,
-			type: MembershipReqType.ApprovedApplicants,
+			type: hasApprovedAddresses
+				? MembershipReqType.TokenHolders
+				: MembershipReqType.ApprovedApplicants,
 			applicationInstructions: '',
 			approvedAddresses: [],
 			approvedAddressesString: '',
@@ -628,12 +644,14 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						}}
 						required
 					>
-						<Radio
-							value="approved-applicants"
-							label={'approved addresses'}
-						/>
+						{!isApprovedAddressesAlreadyARequirement}{' '}
+						{
+							<Radio
+								value="approved-applicants"
+								label={'approved addresses'}
+							/>
+						}
 						<Radio value="token-holders" label={'token holders'} />
-
 						{/* <Radio
 								value="other-club-member"
 								label="join another club"
