@@ -209,6 +209,17 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 		}
 	])
 
+	const isApprovedAddressesAlreadyARequirement = (): boolean => {
+		let isAdded = false
+		membershipRequirements.forEach(req => {
+			if (req.type === MembershipReqType.ApprovedApplicants) {
+				log.debug('approved already added')
+				isAdded = true
+			}
+		})
+		return isAdded
+	}
+
 	// Cost to join
 	// Note: Not used in MVP
 	const [costToJoin, setCostToJoin] = useState(0)
@@ -920,14 +931,17 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 						{isEditedReqFirstReq && (
 							<Radio value="anyone" label="anyone" />
 						)}
-						<Radio
-							value="approved-applicants"
-							label={
-								isEditedReqFirstReq
-									? 'approved addresses'
-									: 'own an address on this list'
-							}
-						/>
+						{!isApprovedAddressesAlreadyARequirement}{' '}
+						{
+							<Radio
+								value="approved-applicants"
+								label={
+									isEditedReqFirstReq
+										? 'approved addresses'
+										: 'own an address on this list'
+								}
+							/>
+						}
 						<Radio
 							value="token-holders"
 							label={
@@ -936,7 +950,6 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 									: 'hold a token'
 							}
 						/>
-
 						{!isEditedReqFirstReq && (
 							<Radio
 								value="other-club-member"
