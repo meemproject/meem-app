@@ -774,6 +774,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			if (!clubData) {
 				return
 			}
+
+			if (clubData.MeemContracts.length === 0) {
+				setIsLoadingClub(false)
+				return
+			}
 			// TODO: Why do I have to compare strings to prevent an infinite useEffect loop?
 			// TODO: Why does this page cause a loop but MyClubs.tsx doesn't?
 			if (previousClubDataString) {
