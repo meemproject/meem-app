@@ -729,10 +729,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (mintStart && mintEnd) {
-					if (mintStart.getTime() === 0 && mintEnd.getTime() === 0) {
+					log.debug(`mint start = ${mintStart.getTime()}`)
+					log.debug(`mint end = ${mintEnd.getTime()}`)
+
+					if (mintStart.getTime() < 1 && mintEnd.getTime() < 1) {
 						mintDatesText = 'People may join at any time.'
-					}
-					if (!isAfterMintStart) {
+					} else if (!isAfterMintStart) {
 						mintDatesText = `Membership opens ${mintStartString} and closes ${mintEndString}.`
 					} else if (isAfterMintStart && isBeforeMintEnd) {
 						mintDatesText = `Membership opened ${mintStartString} and closes ${mintEndString}.`

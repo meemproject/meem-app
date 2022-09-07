@@ -225,8 +225,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						name: `${club.name} membership token`,
 						image: club.image,
 						associations: [],
-						external_url: `https://clubs.link/${club.slug}`,
-						application_instructions: applicationInstructions
+						external_url: `https://clubs.link/${club.slug}`
 					}
 				}
 

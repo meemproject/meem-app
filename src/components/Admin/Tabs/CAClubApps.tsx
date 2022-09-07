@@ -544,11 +544,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												fit={'contain'}
 											/>
 											<Space w={8} />
-											<Text>{`${integration.name}${
-												integration.guideUrl
-													? ` Link`
-													: ``
-											}`}</Text>{' '}
+											<Text>{`${integration.name}`}</Text>
 											{integration.isVerified && (
 												<>
 													<Space w={12} />
@@ -672,11 +668,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 													fit={'contain'}
 												/>
 												<Space w={8} />
-												<Text>{`${integration.name}${
-													integration.guideUrl
-														? ` Link`
-														: ``
-												}`}</Text>
+												<Text>{`${integration.name}`}</Text>
 											</div>
 											<Text
 												className={
