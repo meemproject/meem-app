@@ -14,7 +14,8 @@ import {
 	Group,
 	Modal,
 	Divider,
-	HoverCard
+	HoverCard,
+	Alert
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
@@ -184,8 +185,10 @@ const useStyles = createStyles(theme => ({
 	},
 	requirementItem: {
 		display: 'flex',
-		alignItems: 'center',
 		marginBottom: 8
+	},
+	requirementIcon: {
+		minWidth: 32
 	},
 	requirementLink: {
 		color: 'rgba(255, 102, 81, 1)'
@@ -581,32 +584,34 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															for instructions.
 														</span>
 													)}
-													{req.applicationInstructions && (
-														<span>
-															{' '}
-															<>
-																Here are the
-																application
-																instructions:
-															</>
-														</span>
-													)}
 												</Text>
 												{req.applicationInstructions && (
-													<Text
-														className={
-															classes.applicationInstructions
-														}
-													>
-														<Space h={4} />
-														<Linkify
-															componentDecorator={
-																componentDecorator
-															}
+													<>
+														<Space h={8} />
+														<Alert
+															title="Follow these
+														instructions to
+														apply:"
+															color="red"
+															radius="lg"
 														>
-															{`${req.applicationInstructions}`}
-														</Linkify>
-													</Text>
+															<Text
+																className={
+																	classes.applicationInstructions
+																}
+															>
+																<Space h={4} />
+																<Linkify
+																	componentDecorator={
+																		componentDecorator
+																	}
+																>
+																	{`${req.applicationInstructions}`}
+																</Linkify>
+															</Text>
+														</Alert>
+														<Space h={8} />
+													</>
 												)}
 											</div>
 										),
@@ -1108,11 +1113,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															}
 														>
 															{requirement.meetsRequirement && (
-																<CircleCheck color="green" />
+																<CircleCheck
+																	className={
+																		classes.requirementIcon
+																	}
+																	color="green"
+																/>
 															)}
 
 															{!requirement.meetsRequirement && (
-																<CircleX color="red" />
+																<CircleX
+																	className={
+																		classes.requirementIcon
+																	}
+																	color="red"
+																/>
 															)}
 
 															<Space w={'xs'} />

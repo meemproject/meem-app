@@ -679,6 +679,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							radius="lg"
 							size="sm"
 							minRows={3}
+							maxLength={280}
+							autosize
 							value={currentRequirement?.applicationInstructions}
 							onChange={event => {
 								if (currentRequirement) {
