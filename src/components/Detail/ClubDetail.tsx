@@ -924,7 +924,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							fit={'contain'}
 						/>
 						<Space w={8} />
-						<Text>{integration.name}</Text>
+						<Text>{integration.name.replaceAll(' Link', '')}</Text>
 						{integration.isVerified && (
 							<>
 								<Space w={12} />
@@ -940,13 +940,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</>
 						)}
 					</div>
-					{integration.publicationName && (
-						<>
-							<Text className={classes.integrationDetailText}>
-								{integration.publicationName}
-							</Text>
-						</>
-					)}
+					{integration.publicationName &&
+						integration.publicationName.length > 0 && (
+							<>
+								<Text className={classes.integrationDetailText}>
+									{integration.publicationName}
+								</Text>
+							</>
+						)}
 				</div>
 			</a>
 		</Grid.Col>

@@ -513,11 +513,9 @@ export default async function clubFromMeemContract(
 
 						// Per app properties
 						verifiedTwitterUser:
-							inte.metadata.twitterUsername ?? 'Unknown',
-						publicationSlug:
-							inte.metadata.publicationSlug ?? 'Unknown',
-						publicationName:
-							inte.metadata.publicationName ?? 'Unknown'
+							inte.metadata.twitterUsername ?? '',
+						publicationSlug: inte.metadata.publicationSlug ?? '',
+						publicationName: inte.metadata.publicationName ?? ''
 					}
 
 					if (inte.isPublic) {
