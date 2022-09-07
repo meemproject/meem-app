@@ -465,6 +465,8 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 
 		// Validate and convert all approved addresses if necessary
 		let isApprovedAddressesInvalid = false
+		let isTokenRequirementInvalid = false
+
 		const sanitizedRequirements: MembershipRequirement[] = []
 		await Promise.all(
 			membershipRequirements.map(async function (req) {
@@ -473,7 +475,6 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 					const rawAddresses: string[] = []
 					await Promise.all(
 						// Make sure all addresses resolve correctly.
-
 						req.approvedAddresses.map(async function (address) {
 							if (!isApprovedAddressesInvalid) {
 								const name = await provider.resolveName(address)
@@ -496,6 +497,17 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 				} else {
 					log.debug(`no approved addresses found`)
 				}
+
+				// If the requirement is a token, ensure that a token has been added
+				if (req.type === MembershipReqType.TokenHolders) {
+					if (
+						req.tokenContractAddress.length === 0 ||
+						req.tokenMinQuantity === 0
+					) {
+						isTokenRequirementInvalid = true
+					}
+				}
+
 				sanitizedRequirements.push(newReq)
 			})
 		)
@@ -506,6 +518,17 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 				title: 'Oops!',
 				message:
 					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			})
+			setIsSavingChanges(false)
+			return
+		}
+
+		if (isTokenRequirementInvalid) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message:
+					'It looks like you provided an invalid token address or quantity for a requirement. Check what you entered and try again.'
 			})
 			setIsSavingChanges(false)
 			return

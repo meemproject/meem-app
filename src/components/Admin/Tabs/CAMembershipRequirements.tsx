@@ -344,6 +344,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 
 		// Validate and convert all approved addresses if necessary
 		let isApprovedAddressesInvalid = false
+		let isTokenRequirementInvalid = false
+
 		const sanitizedRequirements: MembershipRequirement[] = []
 
 		if (isClubOpenForAnyone || membershipRequirements.length === 0) {
@@ -369,6 +371,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			await Promise.all(
 				membershipRequirements.map(async function (req) {
 					const newReq = { ...req }
+
+					// Check approved addresses
 					if (req.approvedAddresses.length > 0) {
 						const rawAddresses: string[] = []
 						await Promise.all(
@@ -391,6 +395,17 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						)
 						newReq.approvedAddresses = rawAddresses
 					}
+
+					// If the requirement is a token, ensure that a token has been added
+					if (req.type === MembershipReqType.TokenHolders) {
+						if (
+							req.tokenContractAddress.length === 0 ||
+							req.tokenMinQuantity === 0
+						) {
+							isTokenRequirementInvalid = true
+						}
+					}
+
 					sanitizedRequirements.push(newReq)
 				})
 			)
@@ -402,6 +417,17 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 				title: 'Oops!',
 				message:
 					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			})
+			setIsSavingChanges(false)
+			return
+		}
+
+		if (isTokenRequirementInvalid) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message:
+					'It looks like you provided an invalid token address or quantity. Check what you entered and try again.'
 			})
 			setIsSavingChanges(false)
 			return
