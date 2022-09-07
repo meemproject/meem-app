@@ -10,15 +10,15 @@ import {
 	Grid,
 	Modal,
 	Divider,
-	MantineProvider,
-	Stepper,
 	Loader,
 	Button,
-	Switch
+	Switch,
+	Alert
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
+import { QuestionMarkCircle } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { ExternalLink, Settings } from 'tabler-icons-react'
@@ -159,6 +159,10 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		fontSize: 18
 	},
+	modalInstructions: {
+		fontWeight: 600,
+		fontSize: 16
+	},
 	headerTitle: {
 		display: 'flex',
 		alignItems: 'center',
@@ -239,16 +243,17 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600,
 		fontSize: 20,
 		marginBottom: 32
+	},
+	link: {
+		fontWeight: 'bold',
+		color: 'rgba(255, 102, 81, 1)',
+		cursor: 'pointer',
+		textDecoration: 'none'
 	}
 }))
 
 interface IProps {
 	club: Club
-}
-
-enum Step {
-	FollowGuide,
-	AddUrl
 }
 
 export const CAClubApps: React.FC<IProps> = ({ club }) => {
@@ -291,7 +296,6 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isIntegrationModalOpened, setIntegrationModalOpened] =
 		useState(false)
-	const [step, setStep] = useState<Step>(Step.FollowGuide)
 
 	// Modals for deeper integrations
 	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
@@ -415,7 +419,6 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			}
 		}
 		setIsSavingChanges(false)
-		setStep(Step.FollowGuide)
 		setIntegrationModalOpened(false)
 	}
 
@@ -497,9 +500,6 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			// Open paragraph integration modal
 			setParagraphModalOpened(true)
 		} else {
-			if (integration.url && integration.url.length > 0) {
-				setStep(Step.AddUrl)
-			}
 			setIntegrationModalOpened(true)
 		}
 	}
@@ -544,7 +544,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												fit={'contain'}
 											/>
 											<Space w={8} />
-											<Text>{integration.name}</Text>
+											<Text>{`${integration.name}`}</Text>
 											{integration.isVerified && (
 												<>
 													<Space w={12} />
@@ -668,7 +668,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 													fit={'contain'}
 												/>
 												<Space w={8} />
-												<Text>{integration.name}</Text>
+												<Text>{`${integration.name}`}</Text>
 											</div>
 											<Text
 												className={
@@ -737,176 +737,103 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					title={
 						<Text
 							className={classes.modalTitle}
-						>{`${integrationBeingEdited?.name} integration`}</Text>
+						>{`Add link to ${integrationBeingEdited?.name}`}</Text>
 					}
 					onClose={() => {
-						setStep(Step.FollowGuide)
 						setIntegrationModalOpened(false)
 					}}
 				>
 					<Divider />
 					<Space h={24} />
-					{integrationBeingEdited &&
-						(integrationBeingEdited?.name === 'Twitter' ||
-							integrationBeingEdited?.name === 'Discord') && (
-							<>
-								<Text>
-									{integrationBeingEdited.description}
-								</Text>
-								<Space h={8} />
-								<TextInput
-									radius="lg"
-									size="md"
-									value={currentIntegrationUrl}
-									onChange={event => {
-										setCurrentIntegrationUrl(
-											event.target.value
-										)
-									}}
-								/>
-								<Space h={24} />
-							</>
-						)}
-
-					{integrationBeingEdited &&
-						integrationBeingEdited?.name !== 'Twitter' &&
-						integrationBeingEdited?.name !== 'Discord' && (
-							<div className={classes.stepsContainer}>
-								<MantineProvider
-									theme={{
-										colors: {
-											brand: [
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E',
-												'#1DAD4E'
-											]
-										},
-										primaryColor: 'brand'
-									}}
-								>
-									<Stepper
-										size="md"
-										color="green"
-										orientation="vertical"
-										active={
-											step === Step.FollowGuide ? 0 : 1
-										}
-									>
-										<Stepper.Step
-											label={
-												'Follow the instructions at the link below.'
-											}
-											description={
-												<>
-													<div>
-														<Space h={12} />
-														<a
-															onClick={() => {
-																setStep(
-																	Step.AddUrl
-																)
-																window.open(
-																	integrationBeingEdited?.guideUrl
-																)
-															}}
-															className={
-																classes.buttonConfirm
-															}
-														>
-															View guide
-														</a>
-													</div>
-												</>
-											}
-										/>
-										<Stepper.Step
-											label={`Add the URL for the ${integrationBeingEdited.name} integration here.`}
-											description={
-												<>
-													{step === Step.AddUrl && (
-														<div>
-															<Space h={4} />
-															<TextInput
-																radius="lg"
-																size="md"
-																value={
-																	currentIntegrationUrl
-																}
-																onChange={event => {
-																	setCurrentIntegrationUrl(
-																		event
-																			.target
-																			.value
-																	)
-																}}
-															/>
-														</div>
-													)}
-												</>
-											}
-										/>
-									</Stepper>
-								</MantineProvider>
-							</div>
-						)}
-					{integrationBeingEdited &&
-						(integrationBeingEdited?.name === 'Twitter' ||
-							integrationBeingEdited?.name === 'Discord' ||
-							step === Step.AddUrl) && (
-							<>
-								<Switch
-									checked={isCurrentIntegrationPublic}
-									onChange={event =>
-										setCurrentIntegrationPublic(
-											event.currentTarget.checked
-										)
-									}
-									label="Visible to non-members"
-								/>
-
-								{integrationBeingEdited?.isExistingIntegration && (
+					{integrationBeingEdited && (
+						<>
+							{integrationBeingEdited.guideUrl &&
+								!integrationBeingEdited.isExistingIntegration && (
 									<>
-										<Space h={16} />
-										<Switch
-											checked={
-												isCurrentIntegrationEnabled
-											}
-											onChange={event =>
-												setCurrentIntegrationEnabled(
-													event.currentTarget.checked
-												)
-											}
-											label="Enable app"
-										/>
+										<Alert
+											icon={<QuestionMarkCircle />}
+											title="Need help?"
+											radius={'lg'}
+											color="red"
+											variant="light"
+										>
+											<Text>{`We've written a handy short guide in case you're not familiar with ${integrationBeingEdited.name}.`}</Text>
+											<Space h={4} />
+											<a
+												target="_blank"
+												className={classes.link}
+												href={
+													integrationBeingEdited.guideUrl
+												}
+												rel="noreferrer"
+											>
+												{`${integrationBeingEdited.name} setup instructions`}
+											</a>
+										</Alert>
+										<Space h={24} />
 									</>
 								)}
-								<Space h={24} />
-							</>
-						)}
 
-					{integrationBeingEdited &&
-						(integrationBeingEdited?.name === 'Discord' ||
-							step === Step.AddUrl) && (
-							<div className={classes.buttonEndAlign}>
-								<Button
-									loading={isSavingChanges}
-									disabled={isSavingChanges}
-									onClick={async () => {
-										saveSimpleIntegrationChanges()
-									}}
-									className={classes.buttonConfirm}
-								>
-									Save
-								</Button>
-							</div>
-						)}
+							<Text
+								className={classes.modalInstructions}
+							>{`Enter your club's ${integrationBeingEdited.name} URL here:`}</Text>
+							<Space h={8} />
+							<TextInput
+								radius="lg"
+								size="md"
+								value={currentIntegrationUrl}
+								onChange={event => {
+									setCurrentIntegrationUrl(event.target.value)
+								}}
+							/>
+							<Space h={24} />
+						</>
+					)}
+
+					{integrationBeingEdited && (
+						<>
+							<Switch
+								checked={isCurrentIntegrationPublic}
+								onChange={event =>
+									setCurrentIntegrationPublic(
+										event.currentTarget.checked
+									)
+								}
+								label="Visible to non-members"
+							/>
+
+							{integrationBeingEdited?.isExistingIntegration && (
+								<>
+									<Space h={16} />
+									<Switch
+										checked={isCurrentIntegrationEnabled}
+										onChange={event =>
+											setCurrentIntegrationEnabled(
+												event.currentTarget.checked
+											)
+										}
+										label="Enable app"
+									/>
+								</>
+							)}
+							<Space h={24} />
+						</>
+					)}
+
+					{integrationBeingEdited && (
+						<div className={classes.buttonEndAlign}>
+							<Button
+								loading={isSavingChanges}
+								disabled={isSavingChanges}
+								onClick={async () => {
+									saveSimpleIntegrationChanges()
+								}}
+								className={classes.buttonConfirm}
+							>
+								Save
+							</Button>
+						</div>
+					)}
 				</Modal>
 			</div>
 		</>

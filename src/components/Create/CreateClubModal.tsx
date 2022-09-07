@@ -353,6 +353,17 @@ export const CreateClubModal: React.FC<IProps> = ({
 						// and proceed to club homepage
 						log.debug('Safe creation failed. Skipping for now...')
 						finishClubCreation()
+					} else {
+						// Handle a generic socket error too
+						showNotification({
+							radius: 'lg',
+							title: 'Club Creation Failed',
+							message:
+								'An error occurred while creating the club. Please try again.',
+							color: 'red'
+						})
+
+						closeModal()
 					}
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
