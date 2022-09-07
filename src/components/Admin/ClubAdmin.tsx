@@ -261,6 +261,35 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	}, [router, slug, wallet.loginState])
 
 	useEffect(() => {
+		switch (router.query.tab) {
+			case 'admins':
+				setCurrentTab(Tab.Admins)
+				break
+			case 'airdrops':
+				setCurrentTab(Tab.Airdrops)
+				break
+			case 'apps':
+				setCurrentTab(Tab.Apps)
+				break
+			case 'clubdetails':
+				setCurrentTab(Tab.ClubDetails)
+				break
+			case 'clubicon':
+				setCurrentTab(Tab.ClubIcon)
+				break
+			case 'contractaddress':
+				setCurrentTab(Tab.ContractAddress)
+				break
+			case 'membershiprequirements':
+				setCurrentTab(Tab.MembershipRequirements)
+				break
+			case 'membershipsettings':
+				setCurrentTab(Tab.MembershipSettings)
+				break
+		}
+	}, [router.query.tab])
+
+	useEffect(() => {
 		async function getClub(data: GetClubSubscriptionSubscription) {
 			const possibleClub = await clubFromMeemContract(
 				wallet,

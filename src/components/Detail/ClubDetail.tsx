@@ -26,7 +26,13 @@ import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
 import QRCode from 'react-qr-code'
-import { Check, CircleCheck, CircleX, Settings } from 'tabler-icons-react'
+import {
+	AlertCircle,
+	Check,
+	CircleCheck,
+	CircleX,
+	Settings
+} from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
 	GetBundleByIdQuery,
@@ -253,6 +259,13 @@ const useStyles = createStyles(theme => ({
 	},
 	integrationDetailText: {
 		fontWeight: 400
+	},
+	appsEmptyStateTitle: {
+		fontSize: 16,
+		fontWeight: 600
+	},
+	appsEmptyStateText: {
+		fontSize: 16
 	}
 }))
 
@@ -1145,7 +1158,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								</>
 							))}
 
-						{club.isClubMember && (
+						{club.isClubAdmin && (
 							<>
 								<Text
 									className={classes.clubDetailSectionTitle}
@@ -1222,6 +1235,47 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											integrationItem(integration)
 										)}
 									</Grid>
+								</>
+							)}
+
+						{club.isClubAdmin &&
+							club.allIntegrations &&
+							club.allIntegrations.length === 0 && (
+								<>
+									<Text
+										className={
+											classes.clubDetailSectionTitle
+										}
+									>{`Apps`}</Text>
+									<Alert
+										icon={<AlertCircle />}
+										color="red"
+										radius="lg"
+									>
+										<Text
+											className={
+												classes.appsEmptyStateTitle
+											}
+										>{`This club is boring! 🙄`}</Text>
+										<Space h={4} />
+										<Text
+											className={
+												classes.appsEmptyStateText
+											}
+										>{`Your club doesn't have any links or connected apps. That means there's nothing for your members to do when they join, and there's no other information about this club right now. Fix this by adding some apps!`}</Text>
+										<Space h={8} />
+										<Button
+											onClick={() => {
+												window.open(
+													`/${club.slug}/admin?tab=apps`
+												)
+											}}
+											className={classes.buttonJoinClub}
+										>
+											{' '}
+											{`Add your first apps`}
+										</Button>
+									</Alert>
 								</>
 							)}
 
