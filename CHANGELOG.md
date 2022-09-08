@@ -1,3 +1,17 @@
+# [1.6.0](https://github.com/meemproject/clubs-web/compare/v1.5.5...v1.6.0) (2022-09-02)
+
+
+### Bug Fixes
+
+* better upgrade detection; ([052833f](https://github.com/meemproject/clubs-web/commit/052833f))
+
+
+### Features
+
+* upgrade lint rules ([c29456e](https://github.com/meemproject/clubs-web/commit/c29456e))
+
+## [1.5.5](https://github.com/meemproject/clubs-web/compare/v1.5.4...v1.5.5) (2022-08-22)
+
 ## [1.5.4](https://github.com/meemproject/clubs-web/compare/v1.5.3...v1.5.4) (2022-08-22)
 
 ## [1.5.3](https://github.com/meemproject/clubs-web/compare/v1.5.2...v1.5.3) (2022-08-19)

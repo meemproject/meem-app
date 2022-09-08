@@ -143,7 +143,7 @@ export interface MembershipRequirement {
 	tokenMinQuantity: number
 	// Club membership
 	clubContractAddress: string
-	clubName: string // Resolved from contract
+	otherClubName: string // Resolved from contract
 }
 
 // The club's basic metadata, doesn't require async
@@ -222,13 +222,6 @@ export default async function clubFromMeemContract(
 	if (clubData != null && clubData) {
 		// Parse the contract URI
 		// const metadata = clubMetadataFromContractUri(clubData.contractURI)
-
-		// Disabled due to rate limiting
-		// // Define a provider to look up wallet addresses for admins / approved addresses
-		// const provider = new ethers.providers.AlchemyProvider(
-		// 	'mainnet',
-		// 	process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-		// )
 
 		// Convert minting permissions to membership requirements
 		const reqs: MembershipRequirement[] = []
@@ -364,20 +357,10 @@ export default async function clubFromMeemContract(
 								break
 						}
 
-						// Construct a requirement
-						// (check to make sure there isn't already an 'anyone' req type)
-						let didReqTypeExist = false
-						reqs.forEach(req => {
-							if (
-								req.type === MembershipReqType.None &&
-								type === MembershipReqType.None
-							) {
-								didReqTypeExist = true
-							}
-						})
-						if (!didReqTypeExist) {
-							//log.debug('pushing req')
-
+						// Construct a requirement - only push if it is not 'anyone'
+						if (
+							permission.permission !== MeemAPI.Permission.Anyone
+						) {
 							reqs.push({
 								index,
 								andor: MembershipReqAndor.Or,
@@ -397,11 +380,11 @@ export default async function clubFromMeemContract(
 								tokenChain: '',
 								clubContractAddress,
 								tokenContractAddress,
-								clubName
+								otherClubName: clubName
 							})
-						}
 
-						index++
+							index++
+						}
 					}
 				})
 			)
@@ -530,11 +513,9 @@ export default async function clubFromMeemContract(
 
 						// Per app properties
 						verifiedTwitterUser:
-							inte.metadata.twitterUsername ?? 'Unknown',
-						publicationSlug:
-							inte.metadata.publicationSlug ?? 'Unknown',
-						publicationName:
-							inte.metadata.publicationName ?? 'Unknown'
+							inte.metadata.twitterUsername ?? '',
+						publicationSlug: inte.metadata.publicationSlug ?? '',
+						publicationName: inte.metadata.publicationName ?? ''
 					}
 
 					if (inte.isPublic) {
