@@ -28,9 +28,9 @@ import {
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { CreateClubModal } from '../Create/CreateClubModal'
+import { ClubAdminChangesModal } from '../Admin/ClubAdminChangesModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
-import { ClubAdminChangesModal } from './ClubAdminChangesModal'
+import { CreateClubModal } from './CreateClubModal'
 
 const useStyles = createStyles(theme => ({
 	buttonSaveChanges: {
@@ -168,7 +168,7 @@ interface IProps {
 	club?: Club
 }
 
-export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
+export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 	isCreatingClub,
 	club
 }) => {
@@ -205,9 +205,20 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			tokenContractAddress: '',
 			tokenMinQuantity: 0,
 			clubContractAddress: '',
-			clubName: ''
+			otherClubName: ''
 		}
 	])
+
+	const isApprovedAddressesAlreadyARequirement = (): boolean => {
+		let isAdded = false
+		membershipRequirements.forEach(req => {
+			if (req.type === MembershipReqType.ApprovedApplicants) {
+				log.debug('approved already added')
+				isAdded = true
+			}
+		})
+		return isAdded
+	}
 
 	// Cost to join
 	// Note: Not used in MVP
@@ -271,7 +282,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			tokenContractAddress: '',
 			tokenMinQuantity: 0,
 			clubContractAddress: '',
-			clubName: ''
+			otherClubName: ''
 		})
 		setMembershipRequirements(newReqs)
 	}
@@ -384,7 +395,7 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 			case MembershipReqType.TokenHolders:
 				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
 			case MembershipReqType.OtherClubMember:
-				return `join ${membershipRequirements[1].clubName}`
+				return `join ${membershipRequirements[1].otherClubName}`
 		}
 	}
 
@@ -454,6 +465,8 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 
 		// Validate and convert all approved addresses if necessary
 		let isApprovedAddressesInvalid = false
+		let isTokenRequirementInvalid = false
+
 		const sanitizedRequirements: MembershipRequirement[] = []
 		await Promise.all(
 			membershipRequirements.map(async function (req) {
@@ -462,7 +475,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 					const rawAddresses: string[] = []
 					await Promise.all(
 						// Make sure all addresses resolve correctly.
-
 						req.approvedAddresses.map(async function (address) {
 							if (!isApprovedAddressesInvalid) {
 								const name = await provider.resolveName(address)
@@ -485,6 +497,17 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				} else {
 					log.debug(`no approved addresses found`)
 				}
+
+				// If the requirement is a token, ensure that a token has been added
+				if (req.type === MembershipReqType.TokenHolders) {
+					if (
+						req.tokenContractAddress.length === 0 ||
+						req.tokenMinQuantity === 0
+					) {
+						isTokenRequirementInvalid = true
+					}
+				}
+
 				sanitizedRequirements.push(newReq)
 			})
 		)
@@ -495,6 +518,17 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 				title: 'Oops!',
 				message:
 					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			})
+			setIsSavingChanges(false)
+			return
+		}
+
+		if (isTokenRequirementInvalid) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message:
+					'It looks like you provided an invalid token address or quantity for a requirement. Check what you entered and try again.'
 			})
 			setIsSavingChanges(false)
 			return
@@ -922,12 +956,14 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						)}
 						<Radio
 							value="approved-applicants"
+							disabled={isApprovedAddressesAlreadyARequirement()}
 							label={
 								isEditedReqFirstReq
 									? 'approved addresses'
 									: 'own an address on this list'
 							}
 						/>
+
 						<Radio
 							value="token-holders"
 							label={
@@ -936,7 +972,6 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 									: 'hold a token'
 							}
 						/>
-
 						{!isEditedReqFirstReq && (
 							<Radio
 								value="other-club-member"
@@ -1071,10 +1106,10 @@ export const ClubAdminMembershipSettingsComponent: React.FC<IProps> = ({
 						<TextInput
 							radius="lg"
 							size="sm"
-							value={reqCurrentlyEditing.clubName}
+							value={reqCurrentlyEditing.otherClubName}
 							onChange={event => {
 								// TODO: Look up club and retrive club contract address!
-								reqCurrentlyEditing.clubName =
+								reqCurrentlyEditing.otherClubName =
 									event.target.value
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}

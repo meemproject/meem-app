@@ -15,7 +15,7 @@ import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
-import { CircleMinus, Plus } from 'tabler-icons-react'
+import { CircleMinus } from 'tabler-icons-react'
 import {
 	MembershipSettings,
 	MembershipReqAndor,
@@ -28,6 +28,7 @@ import ClubClubContext from '../../Detail/ClubClubProvider'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 
 const useStyles = createStyles(theme => ({
+	row: { display: 'flex' },
 	buttonSaveChanges: {
 		marginTop: 48,
 		marginBottom: 48,
@@ -37,6 +38,15 @@ const useStyles = createStyles(theme => ({
 			backgroundColor: theme.colors.gray[8]
 		},
 		borderRadius: 24
+	},
+	buttonAddRequirement: {
+		borderRadius: 24,
+		color: 'black',
+		borderColor: 'black',
+		backgroundColor: 'white',
+		'&:hover': {
+			backgroundColor: theme.colors.gray[0]
+		}
 	},
 
 	// Membership tab
@@ -53,16 +63,6 @@ const useStyles = createStyles(theme => ({
 			fontSize: 16
 		}
 	},
-	membershipTextAdditionalReq: {
-		fontSize: 20,
-		marginTop: 16,
-		lineHeight: 2,
-		position: 'relative',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-
 	membershipSelector: {
 		padding: 4,
 		borderRadius: 8,
@@ -76,10 +76,56 @@ const useStyles = createStyles(theme => ({
 		color: 'rgba(255, 102, 81, 1)',
 		border: '1px dashed rgba(255, 102, 81, 1)',
 		borderRadius: 24,
-		marginBottom: 6,
 		'&:hover': {
 			backgroundColor: 'rgba(255, 102, 81, 0.05)'
 		}
+	},
+	requirementItem: {
+		width: 200,
+		height: 150,
+		border: '1px solid rgba(0, 0, 0, 1)',
+		borderRadius: 16,
+		alignItems: 'center',
+		justifyContent: 'center',
+		display: 'flex',
+		position: 'relative'
+	},
+	requirementRemoveButton: {
+		position: 'absolute',
+		top: 8,
+		left: 8,
+		width: 18,
+		height: 18,
+		cursor: 'pointer',
+		color: 'rgba(255, 102, 81, 1)'
+	},
+	requirementOrContainer: {
+		width: 200,
+		height: 80,
+		alignItems: 'center',
+		justifyContent: 'center',
+		display: 'flex',
+		marginTop: 8,
+		marginBottom: 8
+	},
+	requirementOr: {
+		width: 30,
+		height: 80,
+		display: 'flex',
+		position: 'relative',
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	requirementOrLine: {
+		width: 1,
+		height: 80,
+		border: '1px dashed rgba(0, 0, 0, 1)'
+	},
+	requirementOrTextBackground: {
+		backgroundColor: 'white',
+		padding: 4,
+		position: 'absolute',
+		top: 25
 	},
 	membershipSettingHeader: {
 		fontSize: 16,
@@ -176,27 +222,14 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 
+	const [isClubOpenForAnyone, setIsClubOpenForAnyone] = useState(true)
+
 	// Membership
 	const [membershipRequirements, setMembershipRequirements] = useState<
 		MembershipRequirement[]
-	>([
-		{
-			index: 0,
-			andor: MembershipReqAndor.None,
-			type: MembershipReqType.None,
-			applicationInstructions: '',
-			approvedAddresses: [],
-			approvedAddressesString: '',
-			tokenName: '',
-			tokenChain: 'matic',
-			tokenContractAddress: '',
-			tokenMinQuantity: 0,
-			clubContractAddress: '',
-			clubName: ''
-		}
-	])
-	const [reqCurrentlyEditing, updateReqCurrentlyEditing] =
-		useState<MembershipRequirement>(membershipRequirements[0])
+	>([])
+	const [currentRequirement, updateReqCurrentlyEditing] =
+		useState<MembershipRequirement>()
 
 	const updateMembershipRequirement = (updatedReq: MembershipRequirement) => {
 		const newReqs = [...membershipRequirements]
@@ -208,12 +241,28 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 		setMembershipRequirements(newReqs)
 	}
 
+	const isApprovedAddressesAlreadyARequirement = (): boolean => {
+		let isAdded = false
+		membershipRequirements.forEach(req => {
+			if (req.type === MembershipReqType.ApprovedApplicants) {
+				log.debug('approved already added')
+				isAdded = true
+			}
+		})
+		return isAdded
+	}
+
 	const addMembershipRequirement = () => {
 		const newReqs = [...membershipRequirements]
+
+		const hasApprovedAddresses = isApprovedAddressesAlreadyARequirement()
+
 		newReqs.push({
 			index: membershipRequirements.length,
 			andor: MembershipReqAndor.Or,
-			type: MembershipReqType.None,
+			type: hasApprovedAddresses
+				? MembershipReqType.TokenHolders
+				: MembershipReqType.ApprovedApplicants,
 			applicationInstructions: '',
 			approvedAddresses: [],
 			approvedAddressesString: '',
@@ -222,7 +271,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			tokenContractAddress: '',
 			tokenMinQuantity: 0,
 			clubContractAddress: '',
-			clubName: ''
+			otherClubName: ''
 		})
 		setMembershipRequirements(newReqs)
 	}
@@ -232,7 +281,6 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			item => item.index !== index
 		)
 		setMembershipRequirements(newReqs)
-		updateReqCurrentlyEditing(membershipRequirements[0])
 	}
 
 	const parseApprovedAddresses = (rawString: string): string[] => {
@@ -248,8 +296,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 
 	const [isMembershipReqModalOpened, setMembershipReqModalOpened] =
 		useState(false)
-	const openMembershipReqModal = (index: number) => {
-		updateReqCurrentlyEditing(membershipRequirements[index])
+	const openMembershipReqModal = (current: MembershipRequirement) => {
+		updateReqCurrentlyEditing(current)
 		setMembershipReqModalOpened(true)
 	}
 
@@ -261,9 +309,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 		setSaveChangesModalOpened(true)
 	}
 
-	const membershipTypeStringForFirstReq = (
-		req: MembershipRequirement
-	): string => {
+	const membershipTypeString = (req: MembershipRequirement): string => {
 		switch (req.type) {
 			case MembershipReqType.None:
 				return 'anyone'
@@ -272,27 +318,9 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			case MembershipReqType.TokenHolders:
 				return 'token holders'
 			case MembershipReqType.OtherClubMember:
-				return 'join another club' // Note: currently not an option for v1
+				return 'other club members' // Note: currently not an option for v1
 		}
 	}
-
-	const membershipTypeStringForSecondReq = (
-		req: MembershipRequirement
-	): string => {
-		switch (req.type) {
-			case MembershipReqType.None:
-				return '...'
-			case MembershipReqType.ApprovedApplicants:
-				return `own an address on this list`
-			case MembershipReqType.TokenHolders:
-				return `hold ${membershipRequirements[1].tokenMinQuantity} ${membershipRequirements[1].tokenName}`
-			case MembershipReqType.OtherClubMember:
-				return `join ${membershipRequirements[1].clubName}`
-		}
-	}
-
-	// Is the req we're currently editing the first requirement or not? This affects language and modal options
-	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
 
 	const saveChanges = async () => {
 		if (!clubclub.isMember) {
@@ -305,51 +333,83 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			return
 		}
 
+		// Start saving changes on UI
+		setIsSavingChanges(true)
+
 		// Validate / convert club admins
 		const provider = new ethers.providers.AlchemyProvider(
 			'mainnet',
 			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 		)
 
-		// Start saving changes on UI
-		setIsSavingChanges(true)
-
 		// Validate and convert all approved addresses if necessary
 		let isApprovedAddressesInvalid = false
-		const sanitizedRequirements: MembershipRequirement[] = []
-		await Promise.all(
-			membershipRequirements.map(async function (req) {
-				const newReq = { ...req }
-				if (req.approvedAddresses.length > 0) {
-					const rawAddresses: string[] = []
-					await Promise.all(
-						// Make sure all addresses resolve correctly.
+		let isTokenRequirementInvalid = false
 
-						req.approvedAddresses.map(async function (address) {
-							if (!isApprovedAddressesInvalid) {
-								const name = await provider.resolveName(address)
-								if (!name) {
-									isApprovedAddressesInvalid = true
-									log.debug(
-										'an approved address was invalid. Returning...'
-									)
-									return
-								} else {
-									log.debug(
-										`validated approved address ${address}`
-									)
-									rawAddresses.push(name)
-								}
-							}
-						})
-					)
-					newReq.approvedAddresses = rawAddresses
-				} else {
-					log.debug(`no approved addresses found`)
-				}
-				sanitizedRequirements.push(newReq)
+		const sanitizedRequirements: MembershipRequirement[] = []
+
+		if (isClubOpenForAnyone || membershipRequirements.length === 0) {
+			// Default requirement for 'anyone can join'
+			log.debug(
+				'club is open to anyone, or no reqs found. Adding base requirement...'
+			)
+			sanitizedRequirements.push({
+				index: 0,
+				andor: MembershipReqAndor.Or,
+				type: MembershipReqType.None,
+				applicationInstructions: '',
+				approvedAddresses: [],
+				approvedAddressesString: '',
+				tokenName: '',
+				tokenChain: 'matic',
+				tokenContractAddress: '',
+				tokenMinQuantity: 0,
+				clubContractAddress: '',
+				otherClubName: ''
 			})
-		)
+		} else {
+			await Promise.all(
+				membershipRequirements.map(async function (req) {
+					const newReq = { ...req }
+
+					// Check approved addresses
+					if (req.approvedAddresses.length > 0) {
+						const rawAddresses: string[] = []
+						await Promise.all(
+							// Make sure all addresses resolve correctly.
+
+							req.approvedAddresses.map(async function (address) {
+								if (!isApprovedAddressesInvalid) {
+									const name = await provider.resolveName(
+										address
+									)
+									if (!name) {
+										isApprovedAddressesInvalid = true
+
+										return
+									} else {
+										rawAddresses.push(name)
+									}
+								}
+							})
+						)
+						newReq.approvedAddresses = rawAddresses
+					}
+
+					// If the requirement is a token, ensure that a token has been added
+					if (req.type === MembershipReqType.TokenHolders) {
+						if (
+							req.tokenContractAddress.length === 0 ||
+							req.tokenMinQuantity === 0
+						) {
+							isTokenRequirementInvalid = true
+						}
+					}
+
+					sanitizedRequirements.push(newReq)
+				})
+			)
+		}
 
 		if (isApprovedAddressesInvalid) {
 			showNotification({
@@ -357,6 +417,17 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 				title: 'Oops!',
 				message:
 					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			})
+			setIsSavingChanges(false)
+			return
+		}
+
+		if (isTokenRequirementInvalid) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message:
+					'It looks like you provided an invalid token address or quantity. Check what you entered and try again.'
 			})
 			setIsSavingChanges(false)
 			return
@@ -416,6 +487,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			)
 
 			setMembershipRequirements(originalSettings.requirements)
+			setIsClubOpenForAnyone(originalSettings.requirements.length === 0)
 		}
 	}, [club, hasLoadedClubData, wallet.accounts, wallet.isConnected])
 
@@ -427,109 +499,95 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 				<Text className={classes.manageClubHeader}>
 					Membership Requirements
 				</Text>
-				<Text className={classes.membershipText}>
-					This club is open for{' '}
-					<a
-						onClick={() => {
-							openMembershipReqModal(0)
-						}}
-					>
-						<span className={classes.membershipSelector}>
-							{membershipTypeStringForFirstReq(
-								membershipRequirements[0]
-							)}
-						</span>
-					</a>{' '}
-					to join.{' '}
-					{membershipRequirements[0].type ===
-						MembershipReqType.ApprovedApplicants &&
-						membershipRequirements[0].applicationInstructions && (
-							<>
-								<>Here are the application instructions: </>
-								<Space h={1} />
-								<a
-									onClick={() => {
-										openMembershipReqModal(0)
-									}}
-								>
-									<span
-										className={classes.membershipSelector}
+
+				<Radio.Group
+					classNames={{ label: classes.radio }}
+					orientation="vertical"
+					spacing={16}
+					size="md"
+					color="dark"
+					value={
+						isClubOpenForAnyone
+							? 'open-for-anyone'
+							: 'has-requirements'
+					}
+					onChange={(value: any) => {
+						setIsClubOpenForAnyone(value === 'open-for-anyone')
+					}}
+					required
+				>
+					<Radio
+						value="open-for-anyone"
+						label={'This club is open for anyone to join.'}
+					/>
+					<Radio
+						value="has-requirements"
+						label={'There are requirements to join this club.'}
+					/>
+				</Radio.Group>
+
+				{!isClubOpenForAnyone && (
+					<>
+						<Space h={24} />
+
+						{membershipRequirements.map(requirement => (
+							<div key={requirement.index}>
+								<div className={classes.requirementItem}>
+									<a
+										onClick={() => {
+											openMembershipReqModal(requirement)
+										}}
 									>
-										{
-											membershipRequirements[0]
-												.applicationInstructions
+										<span
+											className={
+												classes.membershipSelector
+											}
+										>
+											{membershipTypeString(requirement)}
+										</span>
+									</a>
+									<CircleMinus
+										onClick={() => {
+											removeMembershipRequirement(
+												requirement.index
+											)
+										}}
+										className={
+											classes.requirementRemoveButton
 										}
-									</span>
-								</a>
-								.
-							</>
-						)}
-					{membershipRequirements[0].type ===
-						MembershipReqType.TokenHolders && (
-						<>
-							Members must hold{' '}
-							<a
-								onClick={() => {
-									openMembershipReqModal(0)
-								}}
+									/>
+								</div>
+								<div className={classes.requirementOrContainer}>
+									<div className={classes.requirementOr}>
+										<div
+											className={
+												classes.requirementOrLine
+											}
+										/>
+										<div
+											className={
+												classes.requirementOrTextBackground
+											}
+										>
+											<Text>OR</Text>
+										</div>
+									</div>
+								</div>
+							</div>
+						))}
+						<div className={classes.row}>
+							<Space
+								w={membershipRequirements.length === 0 ? 0 : 14}
+							/>
+							<Button
+								className={classes.buttonAddRequirement}
+								onClick={addMembershipRequirement}
 							>
-								<span className={classes.membershipSelector}>
-									{membershipRequirements[0].tokenMinQuantity}{' '}
-									{membershipRequirements[0].tokenName}
-								</span>
-							</a>
-							.
-						</>
-					)}
-				</Text>
-				{membershipRequirements.length > 1 && (
-					<Text className={classes.membershipTextAdditionalReq}>
-						<CircleMinus
-							onClick={() => {
-								// Hardcoded for now as there's only one additional req in v1
-								removeMembershipRequirement(1)
-							}}
-							className={classes.removeAdditionalReq}
-						/>
-						{/* <a onClick={openSecondReqTypeModal}>
-							<span className={classes.membershipSelector}>
-								{membershipRequirements[1].andor === MembershipReqAndor.And
-									? 'In addition'
-									: 'Alternatively'}
-							</span>
-						</a> */}
-						in addition, members{' '}
-						{membershipRequirements[1].andor ===
-						MembershipReqAndor.Or
-							? 'can'
-							: 'must'}{' '}
-						<a
-							onClick={() => {
-								openMembershipReqModal(1)
-							}}
-						>
-							<span className={classes.membershipSelector}>
-								{membershipTypeStringForSecondReq(
-									membershipRequirements[1]
-								)}
-							</span>
-						</a>{' '}
-						to join.
-					</Text>
+								{'+ Add Requirement'}
+							</Button>
+						</div>
+					</>
 				)}
-				{membershipRequirements[0].type !== MembershipReqType.None &&
-					membershipRequirements.length === 1 && (
-						<Button
-							onClick={() => {
-								addMembershipRequirement()
-							}}
-							className={classes.addRequirementButton}
-							size={'md'}
-							leftIcon={<Plus size={14} />}
-						>
-							Add another requirement
-						</Button>
-					)}
 
 				<Space h="xs" />
 
@@ -560,12 +618,12 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						size="md"
 						color="dark"
 						value={
-							reqCurrentlyEditing.type === MembershipReqType.None
+							currentRequirement?.type === MembershipReqType.None
 								? 'anyone'
-								: reqCurrentlyEditing.type ===
+								: currentRequirement?.type ===
 								  MembershipReqType.ApprovedApplicants
 								? 'approved-applicants'
-								: reqCurrentlyEditing.type ===
+								: currentRequirement?.type ===
 								  MembershipReqType.TokenHolders
 								? 'token-holders'
 								: 'other-club-member'
@@ -573,68 +631,61 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						onChange={(value: any) => {
 							switch (value) {
 								case 'anyone':
-									reqCurrentlyEditing.type =
-										MembershipReqType.None
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
+									if (currentRequirement) {
+										currentRequirement.type =
+											MembershipReqType.None
+										updateMembershipRequirement(
+											currentRequirement
+										)
+									}
 									break
 								case 'approved-applicants':
-									reqCurrentlyEditing.type =
-										MembershipReqType.ApprovedApplicants
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
+									if (currentRequirement) {
+										currentRequirement.type =
+											MembershipReqType.ApprovedApplicants
+										updateMembershipRequirement(
+											currentRequirement
+										)
+									}
 									break
 								case 'token-holders':
-									reqCurrentlyEditing.type =
-										MembershipReqType.TokenHolders
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
+									if (currentRequirement) {
+										currentRequirement.type =
+											MembershipReqType.TokenHolders
+										updateMembershipRequirement(
+											currentRequirement
+										)
+									}
 									break
 								case 'other-club-member':
-									reqCurrentlyEditing.type =
-										MembershipReqType.OtherClubMember
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
+									if (currentRequirement) {
+										currentRequirement.type =
+											MembershipReqType.OtherClubMember
+										updateMembershipRequirement(
+											currentRequirement
+										)
+									}
 									break
 							}
 						}}
 						required
 					>
-						{isEditedReqFirstReq && (
-							<Radio value="anyone" label="anyone" />
-						)}
 						<Radio
 							value="approved-applicants"
-							label={
-								isEditedReqFirstReq
-									? 'approved addresses'
-									: 'own an address on this list'
-							}
-						/>
-						<Radio
-							value="token-holders"
-							label={
-								isEditedReqFirstReq
-									? 'token holders'
-									: 'hold a token'
-							}
+							disabled={isApprovedAddressesAlreadyARequirement()}
+							label={'approved addresses'}
 						/>
 
-						{!isEditedReqFirstReq && (
-							<Radio
+						<Radio value="token-holders" label={'token holders'} />
+						{/* <Radio
 								value="other-club-member"
 								label="join another club"
 								disabled
-							/>
-						)}
+							/> */}
 					</Radio.Group>
 					<div
 						className={
-							reqCurrentlyEditing.type ==
+							currentRequirement?.type ==
 							MembershipReqType.ApprovedApplicants
 								? classes.visible
 								: classes.invisible
@@ -654,11 +705,17 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							radius="lg"
 							size="sm"
 							minRows={3}
-							value={reqCurrentlyEditing.applicationInstructions}
+							maxLength={280}
+							autosize
+							value={currentRequirement?.applicationInstructions}
 							onChange={event => {
-								reqCurrentlyEditing.applicationInstructions =
-									event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
+								if (currentRequirement) {
+									currentRequirement.applicationInstructions =
+										event.target.value
+									updateMembershipRequirement(
+										currentRequirement
+									)
+								}
 							}}
 						/>
 						<Text className={classes.modalHeaderText}>
@@ -675,23 +732,27 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						<Textarea
 							radius="lg"
 							size="sm"
-							value={reqCurrentlyEditing.approvedAddressesString}
+							value={currentRequirement?.approvedAddressesString}
 							minRows={5}
 							onChange={event => {
-								reqCurrentlyEditing.approvedAddressesString =
-									event.currentTarget.value
-								reqCurrentlyEditing.approvedAddresses =
-									parseApprovedAddresses(
+								if (currentRequirement) {
+									currentRequirement.approvedAddressesString =
 										event.currentTarget.value
+									currentRequirement.approvedAddresses =
+										parseApprovedAddresses(
+											event.currentTarget.value
+										)
+									updateMembershipRequirement(
+										currentRequirement
 									)
-								updateMembershipRequirement(reqCurrentlyEditing)
+								}
 							}}
 						/>
 					</div>
 
 					<div
 						className={
-							reqCurrentlyEditing.type ==
+							currentRequirement?.type ==
 							MembershipReqType.TokenHolders
 								? classes.visible
 								: classes.invisible
@@ -709,10 +770,10 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							size={'md'}
 							radius={'lg'}
 							onChange={value => {
-								reqCurrentlyEditing.tokenChain = value ?? 'eth'
+								reqCurrentlyEditing?.tokenChain = value ?? 'eth'
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
-							value={reqCurrentlyEditing.tokenChain}
+							value={reqCurrentlyEditing?.tokenChain}
 						/> */}
 						<Text className={classes.modalHeaderText}>
 							Token Address
@@ -720,11 +781,15 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						<TextInput
 							radius="lg"
 							size="sm"
-							value={reqCurrentlyEditing.tokenContractAddress}
+							value={currentRequirement?.tokenContractAddress}
 							onChange={event => {
-								reqCurrentlyEditing.tokenContractAddress =
-									event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
+								if (currentRequirement) {
+									currentRequirement.tokenContractAddress =
+										event.target.value
+									updateMembershipRequirement(
+										currentRequirement
+									)
+								}
 							}}
 						/>
 						<Text className={classes.modalHeaderText}>
@@ -734,18 +799,21 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							radius="lg"
 							size="sm"
 							type="number"
-							value={reqCurrentlyEditing.tokenMinQuantity}
+							value={currentRequirement?.tokenMinQuantity}
 							onChange={event => {
-								reqCurrentlyEditing.tokenMinQuantity = parseInt(
-									event.target.value
-								)
-								updateMembershipRequirement(reqCurrentlyEditing)
+								if (currentRequirement) {
+									currentRequirement.tokenMinQuantity =
+										parseInt(event.target.value)
+									updateMembershipRequirement(
+										currentRequirement
+									)
+								}
 							}}
 						/>
 					</div>
 					<div
 						className={
-							reqCurrentlyEditing.type ==
+							currentRequirement?.type ==
 							MembershipReqType.OtherClubMember
 								? classes.visible
 								: classes.invisible
@@ -758,12 +826,16 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						<TextInput
 							radius="lg"
 							size="sm"
-							value={reqCurrentlyEditing.clubName}
+							value={currentRequirement?.otherClubName}
 							onChange={event => {
 								// TODO: Look up club and retrive club contract address!
-								reqCurrentlyEditing.clubName =
-									event.target.value
-								updateMembershipRequirement(reqCurrentlyEditing)
+								if (currentRequirement) {
+									currentRequirement.otherClubName =
+										event.target.value
+									updateMembershipRequirement(
+										currentRequirement
+									)
+								}
 							}}
 						/>
 					</div>
@@ -773,13 +845,13 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						loading={isCheckingRequirement}
 						onClick={async () => {
 							if (
-								reqCurrentlyEditing.type ===
+								currentRequirement?.type ===
 								MembershipReqType.TokenHolders
 							) {
 								// Validate token
 								setIsCheckingRequirement(true)
 
-								if (reqCurrentlyEditing.tokenMinQuantity <= 0) {
+								if (currentRequirement?.tokenMinQuantity <= 0) {
 									showNotification({
 										radius: 'lg',
 										title: 'Oops!',
@@ -794,7 +866,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								setIsCheckingRequirement(false)
 
 								const token = await tokenFromContractAddress(
-									reqCurrentlyEditing.tokenContractAddress,
+									currentRequirement?.tokenContractAddress,
 									wallet
 								)
 
@@ -809,21 +881,24 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									return
 								} else {
 									setIsCheckingRequirement(false)
-									reqCurrentlyEditing.tokenName = token.name
-									updateMembershipRequirement(
-										reqCurrentlyEditing
-									)
+									if (currentRequirement) {
+										currentRequirement.tokenName =
+											token.name
+										updateMembershipRequirement(
+											currentRequirement
+										)
+									}
 								}
 							}
 							let doesApplicantsListContainAdmin = false
 
-							switch (reqCurrentlyEditing.type) {
+							switch (currentRequirement?.type) {
 								case MembershipReqType.ApprovedApplicants:
 									// Make sure there's no admin addresses in here
 									if (club && club.admins) {
 										club?.admins.forEach(admin => {
 											if (
-												reqCurrentlyEditing.approvedAddressesString
+												currentRequirement?.approvedAddressesString
 													.toLowerCase()
 													.includes(
 														admin.toLowerCase()
@@ -847,7 +922,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									break
 								case MembershipReqType.TokenHolders:
 									if (
-										reqCurrentlyEditing.tokenMinQuantity ===
+										currentRequirement?.tokenMinQuantity ===
 										0
 									) {
 										showNotification({
@@ -867,21 +942,14 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 					>
 						Done
 					</Button>
-					{!isEditedReqFirstReq && (
-						<Button
-							onClick={() => {
-								setMembershipReqModalOpened(false)
-								membershipRequirements[1].type =
-									MembershipReqType.None
-								setMembershipRequirements(
-									membershipRequirements
-								)
-							}}
-							className={classes.buttonModalCancel}
-						>
-							Cancel
-						</Button>
-					)}
+					<Button
+						onClick={() => {
+							setMembershipReqModalOpened(false)
+						}}
+						className={classes.buttonModalCancel}
+					>
+						Cancel
+					</Button>
 				</Modal>
 
 				<ClubAdminChangesModal

@@ -14,7 +14,8 @@ import {
 	Group,
 	Modal,
 	Divider,
-	HoverCard
+	HoverCard,
+	Alert
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
@@ -25,7 +26,13 @@ import { useRouter } from 'next/router'
 import React, { ReactNode, useEffect, useState, useCallback } from 'react'
 import Linkify from 'react-linkify'
 import QRCode from 'react-qr-code'
-import { Check, CircleCheck, CircleX, Settings } from 'tabler-icons-react'
+import {
+	AlertCircle,
+	Check,
+	CircleCheck,
+	CircleX,
+	Settings
+} from 'tabler-icons-react'
 import {
 	ClubSubscriptionSubscription,
 	GetBundleByIdQuery,
@@ -184,8 +191,10 @@ const useStyles = createStyles(theme => ({
 	},
 	requirementItem: {
 		display: 'flex',
-		alignItems: 'center',
 		marginBottom: 8
+	},
+	requirementIcon: {
+		minWidth: 32
 	},
 	requirementLink: {
 		color: 'rgba(255, 102, 81, 1)'
@@ -250,6 +259,13 @@ const useStyles = createStyles(theme => ({
 	},
 	integrationDetailText: {
 		fontWeight: 400
+	},
+	appsEmptyStateTitle: {
+		fontSize: 16,
+		fontWeight: 600
+	},
+	appsEmptyStateText: {
+		fontSize: 16
 	}
 }))
 
@@ -581,32 +597,34 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															for instructions.
 														</span>
 													)}
-													{req.applicationInstructions && (
-														<span>
-															{' '}
-															<>
-																Here are the
-																application
-																instructions:
-															</>
-														</span>
-													)}
 												</Text>
 												{req.applicationInstructions && (
-													<Text
-														className={
-															classes.applicationInstructions
-														}
-													>
-														<Space h={4} />
-														<Linkify
-															componentDecorator={
-																componentDecorator
-															}
+													<>
+														<Space h={8} />
+														<Alert
+															title="Follow these
+														instructions to
+														apply:"
+															color="red"
+															radius="lg"
 														>
-															{`${req.applicationInstructions}`}
-														</Linkify>
-													</Text>
+															<Text
+																className={
+																	classes.applicationInstructions
+																}
+															>
+																<Space h={4} />
+																<Linkify
+																	componentDecorator={
+																		componentDecorator
+																	}
+																>
+																	{`${req.applicationInstructions}`}
+																</Linkify>
+															</Text>
+														</Alert>
+														<Space h={8} />
+													</>
 												)}
 											</div>
 										),
@@ -653,7 +671,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													}
 													href="/club"
 												>
-													{req.clubName}
+													{req.otherClubName}
 												</a>
 											</Text>
 										),
@@ -671,11 +689,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				reqs.push({
 					requirementKey: `Error${index}`,
 					requirementComponent: (
-						<Text>
-							This club has invalid membership requirements.
-						</Text>
+						<Text>Anyone can join this club for free.</Text>
 					),
-					meetsRequirement: false
+					meetsRequirement: true
 				})
 			}
 
@@ -726,7 +742,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (mintStart && mintEnd) {
-					if (!isAfterMintStart) {
+					log.debug(`mint start = ${mintStart.getTime()}`)
+					log.debug(`mint end = ${mintEnd.getTime()}`)
+
+					if (mintStart.getTime() < 1 && mintEnd.getTime() < 1) {
+						mintDatesText = 'People may join at any time.'
+					} else if (!isAfterMintStart) {
 						mintDatesText = `Membership opens ${mintStartString} and closes ${mintEndString}.`
 					} else if (isAfterMintStart && isBeforeMintEnd) {
 						mintDatesText = `Membership opened ${mintStartString} and closes ${mintEndString}.`
@@ -734,13 +755,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						mintDatesText = `Membership closed ${mintEndString}.`
 					}
 				} else if (!mintStart && !mintEnd) {
-					mintDatesText = 'Members can join at any time.'
+					mintDatesText = 'People may join at any time.'
 				}
 
 				reqs.push({
 					requirementKey: `mintDates${index}`,
 					requirementComponent: <Text>{mintDatesText}</Text>,
-					meetsRequirement: isAfterMintStart && isBeforeMintEnd
+					meetsRequirement:
+						(isAfterMintStart && isBeforeMintEnd) ||
+						(mintStart &&
+							mintEnd &&
+							mintStart.getTime() === 0 &&
+							mintEnd.getTime() === 0) ||
+						false
 				})
 			}
 
@@ -765,6 +792,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	useEffect(() => {
 		async function getClub() {
 			if (!clubData) {
+				return
+			}
+
+			if (clubData.MeemContracts.length === 0) {
+				setIsLoadingClub(false)
 				return
 			}
 			// TODO: Why do I have to compare strings to prevent an infinite useEffect loop?
@@ -905,7 +937,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							fit={'contain'}
 						/>
 						<Space w={8} />
-						<Text>{integration.name}</Text>
+						<Text>{integration.name.replaceAll(' Link', '')}</Text>
 						{integration.isVerified && (
 							<>
 								<Space w={12} />
@@ -921,13 +953,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</>
 						)}
 					</div>
-					{integration.publicationName && (
-						<>
-							<Text className={classes.integrationDetailText}>
-								{integration.publicationName}
-							</Text>
-						</>
-					)}
+					{integration.publicationName &&
+						integration.publicationName.length > 0 && (
+							<>
+								<Text className={classes.integrationDetailText}>
+									{integration.publicationName}
+								</Text>
+							</>
+						)}
 				</div>
 			</a>
 		</Grid.Col>
@@ -1096,11 +1129,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															}
 														>
 															{requirement.meetsRequirement && (
-																<CircleCheck color="green" />
+																<CircleCheck
+																	className={
+																		classes.requirementIcon
+																	}
+																	color="green"
+																/>
 															)}
 
 															{!requirement.meetsRequirement && (
-																<CircleX color="red" />
+																<CircleX
+																	className={
+																		classes.requirementIcon
+																	}
+																	color="red"
+																/>
 															)}
 
 															<Space w={'xs'} />
@@ -1115,7 +1158,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								</>
 							))}
 
-						{club.isClubMember && (
+						{club.isClubAdmin && (
 							<>
 								<Text
 									className={classes.clubDetailSectionTitle}
@@ -1192,6 +1235,47 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											integrationItem(integration)
 										)}
 									</Grid>
+								</>
+							)}
+
+						{club.isClubAdmin &&
+							club.allIntegrations &&
+							club.allIntegrations.length === 0 && (
+								<>
+									<Text
+										className={
+											classes.clubDetailSectionTitle
+										}
+									>{`Apps`}</Text>
+									<Alert
+										icon={<AlertCircle />}
+										color="red"
+										radius="lg"
+									>
+										<Text
+											className={
+												classes.appsEmptyStateTitle
+											}
+										>{`This club is boring! 🙄`}</Text>
+										<Space h={4} />
+										<Text
+											className={
+												classes.appsEmptyStateText
+											}
+										>{`Your club doesn't have any links or connected apps. That means there's nothing for your members to do when they join, and there's no other information about this club right now. Fix this by adding some apps!`}</Text>
+										<Space h={8} />
+										<Button
+											onClick={() => {
+												window.open(
+													`/${club.slug}/admin?tab=apps`
+												)
+											}}
+											className={classes.buttonJoinClub}
+										>
+											{' '}
+											{`Add your first apps`}
+										</Button>
+									</Alert>
 								</>
 							)}
 
