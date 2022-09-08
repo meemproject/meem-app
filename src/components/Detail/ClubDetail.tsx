@@ -1042,8 +1042,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														club.membershipSettings
 															?.costToJoin ?? 0
 												  } MATIC`
-												: `Join`)}
+												: wallet.isConnected &&
+												  !isWrongNetwork
+												? `Join`
+												: '')}
 										{!doesMeetAllRequirements &&
+											wallet.isConnected &&
+											!isWrongNetwork &&
 											'Requirements not met'}
 										{(!wallet.isConnected ||
 											isWrongNetwork) &&
