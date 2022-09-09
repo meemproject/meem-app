@@ -464,7 +464,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					finalIntegrations.push(inte)
 				}
 			})
-
+			setSearchedIntegrations(finalIntegrations)
 			setAvailableIntegrations(finalIntegrations)
 		}
 	}, [
@@ -504,6 +504,22 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			setParagraphModalOpened(true)
 		} else {
 			setIntegrationModalOpened(true)
+		}
+	}
+
+	const filterIntegrations = (searchTerm: string) => {
+		const search = searchTerm.toLowerCase()
+		const filteredIntegrations: Integration[] = []
+
+		if (searchTerm.length > 0) {
+			availableIntegrations.forEach(inte => {
+				if (inte.name.toLowerCase().includes(search)) {
+					filteredIntegrations.push(inte)
+				}
+			})
+			setSearchedIntegrations(filteredIntegrations)
+		} else {
+			setSearchedIntegrations(availableIntegrations)
 		}
 	}
 
@@ -638,15 +654,24 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					<>
 						<Text
 							className={classes.clubIntegrationsSectionTitle}
-						>{`Available apps (${availableIntegrations?.length})`}</Text>
+						>{`Available apps (${searchedIntegrations?.length})`}</Text>
 						<TextInput
 							radius={16}
 							size={'md'}
+							onChange={event => {
+								if (event.target.value) {
+									filterIntegrations(event.target.value)
+								} else {
+									setSearchedIntegrations(
+										availableIntegrations
+									)
+								}
+							}}
 							placeholder="Search Apps"
 						/>
 						<Space h={24} />
 						<Grid>
-							{availableIntegrations.map(integration => (
+							{searchedIntegrations.map(integration => (
 								<Grid.Col
 									xs={8}
 									sm={8}
