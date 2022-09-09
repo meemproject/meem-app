@@ -75,7 +75,7 @@ export async function identityFromApi(
 		return {
 			id: id?.id,
 			walletAddress: address,
-			ensAddress: id?.Wallet?.ens ?? undefined,
+			ensAddress: id?.DefaultWallet?.ens ?? undefined,
 			displayName: id?.displayName ?? undefined,
 			profilePic:
 				id?.profilePicUrl && id?.profilePicUrl.length > 0
