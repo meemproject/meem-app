@@ -309,19 +309,19 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		useState(false)
 	const [isParagraphModalOpened, setParagraphModalOpened] = useState(false)
 
-	const filterIntegrations = () => {
+	const filterIntegrations = (available: Integration[]) => {
 		const search = currentSearchTerm
 		const filteredIntegrations: Integration[] = []
 
 		if (currentSearchTerm.length > 0) {
-			availableIntegrations.forEach(inte => {
+			available.forEach(inte => {
 				if (inte.name.toLowerCase().includes(search)) {
 					filteredIntegrations.push(inte)
 				}
 			})
 			setSearchedIntegrations(filteredIntegrations)
 		} else {
-			setSearchedIntegrations(availableIntegrations)
+			setSearchedIntegrations(available)
 		}
 	}
 
@@ -362,7 +362,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								integ.integrationId !== currentIntegrationId
 						)
 						setAvailableIntegrations(newAvailable)
-						filterIntegrations()
+						filterIntegrations(newAvailable)
 						return
 					}
 				})
@@ -692,7 +692,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 							onChange={event => {
 								if (event.target.value) {
 									setCurrentSearchTerm(event.target.value)
-									filterIntegrations()
+									filterIntegrations(availableIntegrations)
 								} else {
 									setSearchedIntegrations(
 										availableIntegrations

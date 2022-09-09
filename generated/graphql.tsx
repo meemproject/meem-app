@@ -5272,6 +5272,7 @@ export type GetClubSlugQuery = { __typename?: 'query_root', MeemContracts: Array
 export type GetClubQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
   visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  showPublicApps?: InputMaybe<Array<Scalars['Boolean']> | Scalars['Boolean']>;
 }>;
 
 
@@ -5280,6 +5281,7 @@ export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ _
 export type GetClubSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
   visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  showPublicApps?: InputMaybe<Array<Scalars['Boolean']> | Scalars['Boolean']>;
 }>;
 
 
@@ -5467,7 +5469,7 @@ export type GetClubSlugQueryHookResult = ReturnType<typeof useGetClubSlugQuery>;
 export type GetClubSlugLazyQueryHookResult = ReturnType<typeof useGetClubSlugLazyQuery>;
 export type GetClubSlugQueryResult = Apollo.QueryResult<GetClubSlugQuery, GetClubSlugQueryVariables>;
 export const GetClubDocument = gql`
-    query GetClub($slug: String, $visibilityLevel: [String!]) {
+    query GetClub($slug: String, $visibilityLevel: [String!], $showPublicApps: [Boolean!]) {
   MeemContracts(where: {slug: {_eq: $slug}}) {
     slug
     address
@@ -5505,7 +5507,9 @@ export const GetClubDocument = gql`
       }
     }
     id
-    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
+    MeemContractIntegrations(
+      where: {isPublic: {_in: $showPublicApps}, isEnabled: {_eq: true}}
+    ) {
       IntegrationId
       id
       isEnabled
@@ -5537,6 +5541,7 @@ export const GetClubDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      visibilityLevel: // value for 'visibilityLevel'
+ *      showPublicApps: // value for 'showPublicApps'
  *   },
  * });
  */
@@ -5552,7 +5557,7 @@ export type GetClubQueryHookResult = ReturnType<typeof useGetClubQuery>;
 export type GetClubLazyQueryHookResult = ReturnType<typeof useGetClubLazyQuery>;
 export type GetClubQueryResult = Apollo.QueryResult<GetClubQuery, GetClubQueryVariables>;
 export const GetClubSubscriptionDocument = gql`
-    subscription GetClubSubscription($slug: String, $visibilityLevel: [String!]) {
+    subscription GetClubSubscription($slug: String, $visibilityLevel: [String!], $showPublicApps: [Boolean!]) {
   MeemContracts(where: {slug: {_eq: $slug}}) {
     slug
     address
@@ -5590,7 +5595,9 @@ export const GetClubSubscriptionDocument = gql`
       }
     }
     id
-    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
+    MeemContractIntegrations(
+      where: {isPublic: {_in: $showPublicApps}, isEnabled: {_eq: true}}
+    ) {
       IntegrationId
       id
       isEnabled
@@ -5622,6 +5629,7 @@ export const GetClubSubscriptionDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      visibilityLevel: // value for 'visibilityLevel'
+ *      showPublicApps: // value for 'showPublicApps'
  *   },
  * });
  */

@@ -106,7 +106,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 				query: GET_CLUB,
 				variables: {
 					slug: params.slug,
-					visibilityLevel: ['anyone']
+					visibilityLevel: ['anyone'],
+					showPublicApps: [true]
 				}
 			})
 

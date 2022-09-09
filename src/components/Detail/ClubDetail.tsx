@@ -297,7 +297,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			slug,
 			visibilityLevel: club?.isClubMember
 				? ['mutual-club-members', 'anyone']
-				: ['anyone']
+				: ['anyone'],
+			showPublicApps: club?.isClubMember ? [true, false] : [true]
 		}
 	})
 
@@ -1219,7 +1220,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									})${
 										club.allIntegrations.length >
 										club.publicIntegrations.length
-											? ` (more apps available for club members)`
+											? ` - more apps available for club members`
 											: ``
 									}`}</Text>
 									<Grid>

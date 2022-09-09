@@ -243,7 +243,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		error,
 		data: clubData
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
-		variables: { slug, visibilityLevel: ['mutual-club-members', 'anyone'] }
+		variables: {
+			slug,
+			visibilityLevel: ['mutual-club-members', 'anyone'],
+			showPublicApps: [true, false]
+		}
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
