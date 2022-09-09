@@ -925,7 +925,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={integration.name}>
 			<a
 				onClick={() => {
-					window.open(integration.url)
+					if (integration.name === 'Phone Number') {
+						window.open(`tel:${integration.url}`)
+					} else if (integration.name === 'Email Address') {
+						window.open(`mailto:${integration.url}`)
+					} else {
+						window.open(integration.url)
+					}
 				}}
 			>
 				<div className={classes.enabledClubIntegrationItem}>

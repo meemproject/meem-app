@@ -278,6 +278,10 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const [searchedIntegrations, setSearchedIntegrations] = useState<
 		Integration[]
 	>([])
+
+	// Current search term
+	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
+
 	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] =
 		useState(false)
 
@@ -304,6 +308,22 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
 		useState(false)
 	const [isParagraphModalOpened, setParagraphModalOpened] = useState(false)
+
+	const filterIntegrations = () => {
+		const search = currentSearchTerm
+		const filteredIntegrations: Integration[] = []
+
+		if (currentSearchTerm.length > 0) {
+			availableIntegrations.forEach(inte => {
+				if (inte.name.toLowerCase().includes(search)) {
+					filteredIntegrations.push(inte)
+				}
+			})
+			setSearchedIntegrations(filteredIntegrations)
+		} else {
+			setSearchedIntegrations(availableIntegrations)
+		}
+	}
 
 	// Update the integration locally so that changes are reflected immediately.
 	const updateIntegrationLocally = (extraData: any) => {
@@ -342,6 +362,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								integ.integrationId !== currentIntegrationId
 						)
 						setAvailableIntegrations(newAvailable)
+						filterIntegrations()
 						return
 					}
 				})
@@ -369,15 +390,23 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		if (integrationBeingEdited) {
 			// Validate URL
 
-			try {
-				new URL(currentIntegrationUrl)
-			} catch (_) {
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message: 'Please enter a valid URL for this integration.'
-				})
-				return
+			if (
+				integrationBeingEdited.name === 'Phone Number' ||
+				integrationBeingEdited.name === 'Email Address'
+			) {
+				// Ignore / skip validation (we may want to add custom validation here in future)
+			} else {
+				try {
+					new URL(currentIntegrationUrl)
+				} catch (_) {
+					showNotification({
+						radius: 'lg',
+						title: 'Oops!',
+						message:
+							'Please enter a valid URL for this integration.'
+					})
+					return
+				}
 			}
 
 			// Mark as saving changes
@@ -507,22 +536,6 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		}
 	}
 
-	const filterIntegrations = (searchTerm: string) => {
-		const search = searchTerm.toLowerCase()
-		const filteredIntegrations: Integration[] = []
-
-		if (searchTerm.length > 0) {
-			availableIntegrations.forEach(inte => {
-				if (inte.name.toLowerCase().includes(search)) {
-					filteredIntegrations.push(inte)
-				}
-			})
-			setSearchedIntegrations(filteredIntegrations)
-		} else {
-			setSearchedIntegrations(availableIntegrations)
-		}
-	}
-
 	return (
 		<>
 			<div>
@@ -597,7 +610,25 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 										>
 											<a
 												onClick={() => {
-													window.open(integration.url)
+													if (
+														integration.name ===
+														'Phone Number'
+													) {
+														window.open(
+															`tel:${integration.url}`
+														)
+													} else if (
+														integration.name ===
+														'Email Address'
+													) {
+														window.open(
+															`mailto:${integration.url}`
+														)
+													} else {
+														window.open(
+															integration.url
+														)
+													}
 												}}
 											>
 												<div
@@ -660,7 +691,8 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 							size={'md'}
 							onChange={event => {
 								if (event.target.value) {
-									filterIntegrations(event.target.value)
+									setCurrentSearchTerm(event.target.value)
+									filterIntegrations()
 								} else {
 									setSearchedIntegrations(
 										availableIntegrations
@@ -771,7 +803,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					title={
 						<Text
 							className={classes.modalTitle}
-						>{`Add link to ${integrationBeingEdited?.name}`}</Text>
+						>{`Add ${integrationBeingEdited?.name}`}</Text>
 					}
 					onClose={() => {
 						setIntegrationModalOpened(false)
@@ -810,7 +842,15 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 
 							<Text
 								className={classes.modalInstructions}
-							>{`Enter your club's ${integrationBeingEdited.name} URL here:`}</Text>
+							>{`Enter your club's ${
+								integrationBeingEdited.name
+							}${
+								integrationBeingEdited.name ===
+									'Phone Number' ||
+								integrationBeingEdited.name === 'Email Address'
+									? ''
+									: ' URL'
+							} here:`}</Text>
 							<Space h={8} />
 							<TextInput
 								radius="lg"
