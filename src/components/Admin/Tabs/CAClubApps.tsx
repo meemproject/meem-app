@@ -636,6 +636,12 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 						<Text
 							className={classes.clubIntegrationsSectionTitle}
 						>{`Available apps (${availableIntegrations?.length})`}</Text>
+						<TextInput
+							radius={16}
+							size={'md'}
+							placeholder="Search Apps"
+						/>
+						<Space h={24} />
 						<Grid>
 							{availableIntegrations.map(integration => (
 								<Grid.Col
