@@ -275,6 +275,9 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		Integration[]
 	>([])
 	const [allIntegrations, setAllIntegrations] = useState<Integration[]>([])
+	const [searchedIntegrations, setSearchedIntegrations] = useState<
+		Integration[]
+	>([])
 	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] =
 		useState(false)
 
