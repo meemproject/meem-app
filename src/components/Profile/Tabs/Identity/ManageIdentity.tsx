@@ -434,13 +434,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					)
 					break
 				case 'Email':
-					showNotification({
-						radius: 'lg',
-						title: 'Coming soon!',
-						message:
-							'Linking your email to your account will be added at a later date.'
-					})
-					//setIsEmailModalOpen(true)
+					setIsEmailModalOpen(true)
 					break
 			}
 		}
