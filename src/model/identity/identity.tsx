@@ -68,7 +68,14 @@ export async function identityFromApi(
 					visibility: inte.visibility,
 					metadata: inte.metadata
 				}
-				integrations.push(integration)
+
+				if (integration.name !== 'Email') {
+					integrations.push(integration)
+				} else {
+					if (integration.metadata.isVerified) {
+						integrations.push(integration)
+					}
+				}
 			})
 		}
 
