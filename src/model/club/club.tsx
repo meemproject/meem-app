@@ -40,9 +40,18 @@ export interface ClubMember {
 	emailAddress?: string
 }
 
+export interface ClubRolePermission {
+	id: string
+	name: string
+	enabled: boolean
+	locked: boolean
+}
+
 export interface ClubRole {
 	id: string
 	name: string
+	members: ClubMember[]
+	permissions: ClubRolePermission[]
 }
 
 export interface Club {

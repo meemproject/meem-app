@@ -4,6 +4,7 @@ import { createStyles, Text, Button, Textarea, Space } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { ethers } from 'ethers'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
@@ -63,6 +64,11 @@ interface IProps {
 
 export const CARoles: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
+	const router = useRouter()
+
+	const createRole = () => {
+		router.push({ pathname: `/${club.slug}/roles` })
+	}
 
 	return (
 		<>
@@ -71,7 +77,10 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 
 				<Text className={classes.manageClubHeader}>Roles</Text>
 			</div>
-
+			<Space h={32} />
+			<Button className={classes.buttonSaveChanges} onClick={createRole}>
+				+ Create Role
+			</Button>
 			<Space h={64} />
 		</>
 	)

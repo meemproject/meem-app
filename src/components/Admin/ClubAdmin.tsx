@@ -32,6 +32,7 @@ import { CAClubIcon } from './Tabs/CAClubIcon'
 import { CAContractAddress } from './Tabs/CAContractAddress'
 import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
 import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
+import { CARoles } from './Tabs/CARoles'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -214,6 +215,7 @@ enum Tab {
 	ContractAddress,
 	MembershipSettings,
 	MembershipRequirements,
+	Roles,
 	Admins,
 	ClubDetails,
 	ClubIcon,
@@ -289,6 +291,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				break
 			case 'membershipsettings':
 				setCurrentTab(Tab.MembershipSettings)
+				break
+			case 'roles':
+				setCurrentTab(Tab.Roles)
 				break
 		}
 	}, [router.query.tab])
@@ -473,6 +478,15 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								/>
 								<NavLink
 									className={classes.adminNavItem}
+									active={currentTab === Tab.Roles}
+									label={'Roles'}
+									onClick={() => {
+										setCurrentTab(Tab.Roles)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+								<NavLink
+									className={classes.adminNavItem}
 									active={currentTab === Tab.Apps}
 									label={'Club Apps'}
 									onClick={() => {
@@ -538,6 +552,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									)}
 									{currentTab === Tab.Airdrops && (
 										<CABulkMint club={club} />
+									)}
+									{currentTab === Tab.Roles && (
+										<CARoles club={club} />
 									)}
 								</div>
 							)}
