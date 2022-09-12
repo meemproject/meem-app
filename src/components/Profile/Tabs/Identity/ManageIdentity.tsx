@@ -592,9 +592,9 @@ export const ManageIdentityComponent: React.FC = () => {
 															)}
 															{integration
 																.metadata
-																.emailAddress && (
+																.email && (
 																<Text>
-																	{`${integration.metadata.emailAddress}`}
+																	{`${integration.metadata.email}`}
 																</Text>
 															)}
 														</div>
