@@ -29,17 +29,6 @@ export interface Integration {
 	publicationName?: string
 }
 
-export interface ClubMember {
-	displayName?: string
-	wallet: string
-	ens?: string
-	profilePicture?: string
-	twitterUsername?: string
-	discordUsername?: string
-	discordUserId?: string
-	emailAddress?: string
-}
-
 export interface ClubRolePermission {
 	id: string
 	name: string
@@ -52,6 +41,18 @@ export interface ClubRole {
 	name: string
 	members: ClubMember[]
 	permissions: ClubRolePermission[]
+}
+
+export interface ClubMember {
+	displayName?: string
+	wallet: string
+	ens?: string
+	profilePicture?: string
+	twitterUsername?: string
+	discordUsername?: string
+	discordUserId?: string
+	emailAddress?: string
+	roles?: string[]
 }
 
 export interface Club {
