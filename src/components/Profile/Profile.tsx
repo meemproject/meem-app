@@ -278,12 +278,7 @@ export const ProfileComponent: React.FC = () => {
 
 					wallet.setJwt(loginRequest.jwt)
 					Cookies.remove('redirectPath')
-
-					router.push({
-						pathname: router.query.return
-							? (router.query.return as string)
-							: '/'
-					})
+					setIsSigningIn(false)
 				} catch (e) {
 					setIsSigningIn(false)
 					log.error(e)
