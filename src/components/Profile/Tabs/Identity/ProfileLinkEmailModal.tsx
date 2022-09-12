@@ -136,7 +136,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 				autoClose: 5000,
 				color: 'red',
 				icon: <AlertCircle />,
-				message: `Please make sure your tweet was public and try again.`
+				message: `Please make sure your email address exists and try again.`
 			})
 			setIsLoading(false)
 			setStep(Step.Start)
