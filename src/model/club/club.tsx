@@ -40,6 +40,11 @@ export interface ClubMember {
 	emailAddress?: string
 }
 
+export interface ClubRole {
+	id: string
+	name: string
+}
+
 export interface Club {
 	id?: string
 	name?: string
