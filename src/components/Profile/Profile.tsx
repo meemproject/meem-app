@@ -292,7 +292,7 @@ export const ProfileComponent: React.FC = () => {
 				}
 			}
 		},
-		[router, wallet]
+		[wallet]
 	)
 
 	useEffect(() => {
