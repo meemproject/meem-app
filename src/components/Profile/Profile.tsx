@@ -13,9 +13,10 @@ import {
 	Navbar,
 	NavLink
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
+import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { LoginState, makeRequest, useWallet } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
@@ -228,8 +229,7 @@ export const ProfileComponent: React.FC = () => {
 	const [isSigningIn, setIsSigningIn] = useState(false)
 
 	useEffect(() => {
-		const shouldSignIn = router.asPath.includes('#')
-		if (wallet.loginState === LoginState.NotLoggedIn && !shouldSignIn) {
+		if (wallet.loginState === LoginState.NotLoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -277,6 +277,7 @@ export const ProfileComponent: React.FC = () => {
 					log.debug(`logged in successfully.`)
 
 					wallet.setJwt(loginRequest.jwt)
+					Cookies.remove('redirectPath')
 
 					router.push({
 						pathname: router.query.return
@@ -286,6 +287,8 @@ export const ProfileComponent: React.FC = () => {
 				} catch (e) {
 					setIsSigningIn(false)
 					log.error(e)
+					cleanNotifications()
+					Cookies.remove('redirectPath')
 					showNotification({
 						radius: 'lg',
 						title: 'Login Failed',
@@ -299,21 +302,24 @@ export const ProfileComponent: React.FC = () => {
 
 	useEffect(() => {
 		const hashQueryParams: { [key: string]: string } = {}
-		const hashPath = router.asPath.split('#')
+		const possiblePath = Cookies.get('redirectPath')
+		if (possiblePath && possiblePath.includes('access_token')) {
+			const hashPath = possiblePath.split('#')
 
-		if (hashPath.length > 1) {
-			hashPath[1].split('&').forEach(value => {
-				const keyVal = value.split('=')
-				hashQueryParams[keyVal[0]] = keyVal[1]
-			})
+			if (hashPath.length > 1) {
+				hashPath[1].split('&').forEach(value => {
+					const keyVal = value.split('=')
+					hashQueryParams[keyVal[0]] = keyVal[1]
+				})
+			}
+			log.debug('ACCESS TOKEN', hashQueryParams)
+			if (hashQueryParams.access_token) {
+				login({
+					accessToken: hashQueryParams.access_token
+				})
+			}
 		}
-		log.debug('ACCESS TOKEN', hashQueryParams)
-		if (hashQueryParams.access_token) {
-			login({
-				accessToken: hashQueryParams.access_token
-			})
-		}
-	}, [login, router.asPath])
+	}, [login])
 
 	return (
 		<>
