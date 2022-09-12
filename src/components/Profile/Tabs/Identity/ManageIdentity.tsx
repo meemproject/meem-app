@@ -680,6 +680,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				}}
 			/>
 			<ProfileLinkEmailModal
+				integrationId={integrationCurrentlyEditing?.id}
 				identity={id.identity}
 				isOpened={isEmailModalOpen}
 				onModalClosed={() => {
