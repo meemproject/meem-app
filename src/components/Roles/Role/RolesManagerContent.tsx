@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createStyles, Text, Space } from '@mantine/core'
+import { createStyles, Text, Space, TextInput, Tabs } from '@mantine/core'
 import React from 'react'
 import { ClubRole } from '../../../model/club/club'
 
 const useStyles = createStyles(theme => ({
+	row: {
+		display: 'flex'
+	},
 	manageClubHeader: {
 		fontWeight: 600,
 		fontSize: 20,
@@ -63,10 +66,32 @@ export const RolesManagerContent: React.FC<IProps> = ({ role }) => {
 		<>
 			<div>
 				<Space h={14} />
-
 				<Text className={classes.manageClubHeader}>
-					{role ? role.name : 'Add Role'}{' '}
+					{role ? role.name : 'Add Role'}
 				</Text>
+				<div className={classes.row}>
+					<Text>Role Name</Text>
+					<Space w={4} />
+					<Text color={'red'}>*</Text>
+				</div>
+				<Space h={12} />
+				<TextInput size={'lg'} radius={16} />
+				<Space h={12} />
+
+				<Tabs color="dark" defaultValue="gallery">
+					<Tabs.List>
+						<Tabs.Tab value="permissions">Permissions</Tabs.Tab>
+						<Tabs.Tab value="members">Members</Tabs.Tab>
+					</Tabs.List>
+
+					<Tabs.Panel value="permissions" pt="xs">
+						Gallery tab content
+					</Tabs.Panel>
+
+					<Tabs.Panel value="members" pt="xs">
+						Messages tab content
+					</Tabs.Panel>
+				</Tabs>
 			</div>
 
 			<Space h={64} />
