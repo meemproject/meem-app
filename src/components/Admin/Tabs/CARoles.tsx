@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import log from '@kengoldfarb/log'
-import { createStyles, Text, Button, Textarea, Space } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
-import { ethers } from 'ethers'
+import { createStyles, Text, Button, Space } from '@mantine/core'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { AlertCircle, Check } from 'tabler-icons-react'
+import React from 'react'
 import { Club } from '../../../model/club/club'
 
 const useStyles = createStyles(theme => ({

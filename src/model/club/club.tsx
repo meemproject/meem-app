@@ -39,7 +39,6 @@ export interface ClubRolePermission {
 export interface ClubRole {
 	id: string
 	name: string
-	members: ClubMember[]
 	permissions: ClubRolePermission[]
 }
 
@@ -66,6 +65,7 @@ export interface Club {
 	membershipSettings?: MembershipSettings
 	slotsLeft?: number
 	members?: ClubMember[]
+	roles?: ClubRole[]
 	isClubMember?: boolean
 	membershipToken?: string
 	isClubAdmin?: boolean
@@ -544,6 +544,83 @@ export default async function clubFromMeemContract(
 			})
 		}
 
+		// Parse roles
+		// TODO: Use real data
+		const roles: ClubRole[] = [
+			{
+				name: 'Admin',
+				id: 'admin',
+				permissions: [
+					{
+						id: 'membership',
+						name: 'Manage membership settings',
+						locked: !isClubAdmin,
+						enabled: true
+					},
+					{
+						id: 'manage-roles',
+						name: 'Manage roles',
+						locked: !isClubAdmin,
+						enabled: true
+					},
+					{
+						id: 'edit-profile',
+						name: 'Edit profile',
+						locked: !isClubAdmin,
+						enabled: true
+					},
+					{
+						id: 'manage-apps',
+						name: 'Manage apps',
+						locked: false,
+						enabled: true
+					},
+					{
+						id: 'view-apps',
+						name: 'View apps',
+						locked: false,
+						enabled: true
+					}
+				]
+			},
+			{
+				name: 'Club Member',
+				id: 'club-member',
+				permissions: [
+					{
+						id: 'membership',
+						name: 'Manage membership settings',
+						locked: false,
+						enabled: false
+					},
+					{
+						id: 'manage-roles',
+						name: 'Manage roles',
+						locked: false,
+						enabled: false
+					},
+					{
+						id: 'edit-profile',
+						name: 'Edit profile',
+						locked: false,
+						enabled: false
+					},
+					{
+						id: 'manage-apps',
+						name: 'Manage apps',
+						locked: false,
+						enabled: false
+					},
+					{
+						id: 'view-apps',
+						name: 'View apps',
+						locked: false,
+						enabled: true
+					}
+				]
+			}
+		]
+
 		// Calculate slots left if totalOriginSupply > 0
 		let slotsLeft = -1
 		if (totalMemberships > 0) {
@@ -563,6 +640,7 @@ export default async function clubFromMeemContract(
 			gnosisSafeAddress: clubData.gnosisSafeAddress,
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
+			roles,
 			isClubMember,
 			membershipToken,
 			members,
