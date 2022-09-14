@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -12,10 +13,12 @@ import {
 	Navbar,
 	NavLink
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { cleanNotifications, showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import { LoginState, makeRequest, useWallet } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import IdentityContext from './IdentityProvider'
@@ -223,6 +226,8 @@ export const ProfileComponent: React.FC = () => {
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
+	const [isSigningIn, setIsSigningIn] = useState(false)
+
 	useEffect(() => {
 		if (wallet.loginState === LoginState.NotLoggedIn) {
 			router.push({
@@ -242,9 +247,78 @@ export const ProfileComponent: React.FC = () => {
 		}
 	}, [router.query.tab])
 
+	//
+	const login = useCallback(
+		async (options: { walletSig?: string; accessToken?: string }) => {
+			setIsSigningIn(true)
+			const address = wallet.accounts[0]
+			const { walletSig, accessToken } = options
+			log.info('Logging in to Meem...')
+			log.debug(`address = ${wallet.accounts[0]}`)
+			log.debug(`sig = ${walletSig}`)
+
+			if (accessToken || (address && walletSig)) {
+				log.debug('HERE', accessToken, address)
+				try {
+					// 1. Log in
+					const loginRequest =
+						await makeRequest<MeemAPI.v1.Login.IDefinition>(
+							MeemAPI.v1.Login.path(),
+							{
+								method: MeemAPI.v1.Login.method,
+								body: {
+									...(address && { address }),
+									...(walletSig && { signature: walletSig }),
+									...(accessToken && { accessToken })
+								}
+							}
+						)
+
+					log.debug(`logged in successfully.`)
+
+					wallet.setJwt(loginRequest.jwt)
+					Cookies.remove('redirectPath')
+					setIsSigningIn(false)
+				} catch (e) {
+					setIsSigningIn(false)
+					log.error(e)
+					cleanNotifications()
+					Cookies.remove('redirectPath')
+					showNotification({
+						radius: 'lg',
+						title: 'Login Failed',
+						message: 'Please refresh the page and try again.'
+					})
+				}
+			}
+		},
+		[wallet]
+	)
+
+	useEffect(() => {
+		const hashQueryParams: { [key: string]: string } = {}
+		const possiblePath = Cookies.get('redirectPath')
+		if (possiblePath && possiblePath.includes('access_token')) {
+			const hashPath = possiblePath.split('#')
+
+			if (hashPath.length > 1) {
+				hashPath[1].split('&').forEach(value => {
+					const keyVal = value.split('=')
+					hashQueryParams[keyVal[0]] = keyVal[1]
+				})
+			}
+			log.debug('ACCESS TOKEN', hashQueryParams)
+			if (hashQueryParams.access_token) {
+				login({
+					accessToken: hashQueryParams.access_token
+				})
+			}
+		}
+	}, [login])
+
 	return (
 		<>
-			{!wallet.isConnected && !id.isLoadingIdentity && (
+			{!wallet.isConnected && !id.isLoadingIdentity && !isSigningIn && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -252,7 +326,7 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && id.isLoadingIdentity && (
+			{wallet.isConnected && (id.isLoadingIdentity || isSigningIn) && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -260,138 +334,155 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && !id.isLoadingIdentity && !id.identity && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							Unable to load your profile. Please try again later.
-						</Text>
-					</Center>
-				</Container>
-			)}
-			{wallet.isConnected && !id.isLoadingIdentity && id.identity && (
-				<>
-					<div className={classes.header}>
-						<div className={classes.headerTitle}>
-							{id.identity.profilePic && (
-								<>
-									<Image
-										radius={32}
-										height={64}
-										width={64}
-										fit={'cover'}
-										className={classes.profileLogoImage}
-										src={id.identity.profilePic ?? ''}
-									/>
-								</>
-							)}
+			{wallet.isConnected &&
+				!id.isLoadingIdentity &&
+				!isSigningIn &&
+				!id.identity && (
+					<Container>
+						<Space h={120} />
+						<Center>
+							<Text>
+								Unable to load your profile. Please try again
+								later.
+							</Text>
+						</Center>
+					</Container>
+				)}
+			{wallet.isConnected &&
+				!id.isLoadingIdentity &&
+				!isSigningIn &&
+				id.identity && (
+					<>
+						<div className={classes.header}>
+							<div className={classes.headerTitle}>
+								{id.identity.profilePic && (
+									<>
+										<Image
+											radius={32}
+											height={64}
+											width={64}
+											fit={'cover'}
+											className={classes.profileLogoImage}
+											src={id.identity.profilePic ?? ''}
+										/>
+									</>
+								)}
 
-							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
-							<div className={classes.headerProfileNameContainer}>
-								<Text className={classes.headerProfileName}>
-									{id.identity.displayName ?? 'My Profile'}
-								</Text>
-								<div className={classes.profileUrlContainer}>
-									<Text className={classes.profileUrl}>
-										{id.identity.ensAddress
-											? id.identity.ensAddress
-											: id.identity.walletAddress
-											? quickTruncate(
-													id.identity.walletAddress
-											  )
-											: 'No wallet address found'}
+								{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
+								<div
+									className={
+										classes.headerProfileNameContainer
+									}
+								>
+									<Text className={classes.headerProfileName}>
+										{id.identity.displayName ??
+											'My Profile'}
 									</Text>
-									{id.identity.id && (
-										<>
-											<Image
-												className={classes.copy}
-												src="/copy.png"
-												height={20}
-												onClick={() => {
-													navigator.clipboard.writeText(
-														`${
-															id.identity
-																.ensAddress ??
-															id.identity
-																.walletAddress
-														}`
-													)
-													showNotification({
-														title: 'Wallet info copied',
-														autoClose: 2000,
-														color: 'green',
-														icon: <Check />,
+									<div
+										className={classes.profileUrlContainer}
+									>
+										<Text className={classes.profileUrl}>
+											{id.identity.ensAddress
+												? id.identity.ensAddress
+												: id.identity.walletAddress
+												? quickTruncate(
+														id.identity
+															.walletAddress
+												  )
+												: 'No wallet address found'}
+										</Text>
+										{id.identity.id && (
+											<>
+												<Image
+													className={classes.copy}
+													src="/copy.png"
+													height={20}
+													onClick={() => {
+														navigator.clipboard.writeText(
+															`${
+																id.identity
+																	.ensAddress ??
+																id.identity
+																	.walletAddress
+															}`
+														)
+														showNotification({
+															title: 'Wallet info copied',
+															autoClose: 2000,
+															color: 'green',
+															icon: <Check />,
 
-														message: `Wallet info was copied to your clipboard.`
-													})
-												}}
-												width={20}
-											/>
-										</>
-									)}
+															message: `Wallet info was copied to your clipboard.`
+														})
+													}}
+													width={20}
+												/>
+											</>
+										)}
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
 
-					<div className={classes.profileContainer}>
-						<MediaQuery
-							largerThan="sm"
-							styles={{ display: 'none' }}
-						>
-							<Burger
-								className={classes.profileMobileBurger}
-								opened={mobileNavBarVisible}
-								onClick={() => setMobileNavBarVisible(o => !o)}
-								size="sm"
-								mr="xl"
-							/>
-						</MediaQuery>
-						<Navbar
-							className={classes.profileNavBar}
-							width={{ base: 288 }}
-							height={400}
-							hidden={!mobileNavBarVisible}
-							hiddenBreakpoint={'sm'}
-							withBorder={false}
-							p="xs"
-						>
-							<Text className={classes.profileNavHeader}>
-								SETTINGS
-							</Text>
-							<NavLink
-								className={classes.profileNavItem}
-								active={currentTab === Tab.Profile}
-								label={'Manage Identity'}
-								onClick={() => {
-									setCurrentTab(Tab.Profile)
-									setMobileNavBarVisible(false)
-								}}
-							/>
-							<NavLink
-								className={classes.profileNavItem}
-								active={currentTab === Tab.MyClubs}
-								label={'My Clubs'}
-								onClick={() => {
-									setCurrentTab(Tab.MyClubs)
-									setMobileNavBarVisible(false)
-								}}
-							/>
-						</Navbar>
-						{!mobileNavBarVisible && (
-							<div className={classes.profileContent}>
-								{currentTab === Tab.Profile && (
-									<ManageIdentityComponent />
-								)}
-								{currentTab === Tab.MyClubs && (
-									<MyClubsComponent />
-								)}
-							</div>
-						)}
-					</div>
-				</>
-			)}
+						<div className={classes.profileContainer}>
+							<MediaQuery
+								largerThan="sm"
+								styles={{ display: 'none' }}
+							>
+								<Burger
+									className={classes.profileMobileBurger}
+									opened={mobileNavBarVisible}
+									onClick={() =>
+										setMobileNavBarVisible(o => !o)
+									}
+									size="sm"
+									mr="xl"
+								/>
+							</MediaQuery>
+							<Navbar
+								className={classes.profileNavBar}
+								width={{ base: 288 }}
+								height={400}
+								hidden={!mobileNavBarVisible}
+								hiddenBreakpoint={'sm'}
+								withBorder={false}
+								p="xs"
+							>
+								<Text className={classes.profileNavHeader}>
+									SETTINGS
+								</Text>
+								<NavLink
+									className={classes.profileNavItem}
+									active={currentTab === Tab.Profile}
+									label={'Manage Identity'}
+									onClick={() => {
+										setCurrentTab(Tab.Profile)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+								<NavLink
+									className={classes.profileNavItem}
+									active={currentTab === Tab.MyClubs}
+									label={'My Clubs'}
+									onClick={() => {
+										setCurrentTab(Tab.MyClubs)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+							</Navbar>
+							{!mobileNavBarVisible && (
+								<div className={classes.profileContent}>
+									{currentTab === Tab.Profile && (
+										<ManageIdentityComponent />
+									)}
+									{currentTab === Tab.MyClubs && (
+										<MyClubsComponent />
+									)}
+								</div>
+							)}
+						</div>
+					</>
+				)}
 		</>
 	)
 }

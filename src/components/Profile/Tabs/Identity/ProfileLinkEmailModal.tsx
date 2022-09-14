@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -9,7 +10,11 @@ import {
 	TextInput
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { MeemAPI } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import React, { useState } from 'react'
+import request from 'superagent'
+import { AlertCircle } from 'tabler-icons-react'
 import { Identity } from '../../../../model/identity/identity'
 
 const useStyles = createStyles(theme => ({
@@ -63,6 +68,11 @@ const useStyles = createStyles(theme => ({
 	stepDescription: {
 		fontSize: 14
 	},
+	newEmailLink: {
+		fontSize: 14,
+		textDecoration: 'underline',
+		cursor: 'pointer'
+	},
 	currentTwitterVerification: {
 		fontWeight: 600
 	},
@@ -76,6 +86,7 @@ interface IProps {
 	identity: Identity
 	isOpened: boolean
 	onModalClosed: () => void
+	integrationId?: string
 }
 
 enum Step {
@@ -85,15 +96,53 @@ enum Step {
 
 export const ProfileLinkEmailModal: React.FC<IProps> = ({
 	isOpened,
-	onModalClosed
+	onModalClosed,
+	integrationId
 }) => {
 	const { classes } = useStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
+	const [isLoading, setIsLoading] = useState(false)
+
+	const wallet = useWallet()
+
 	const [emailAddress, setEmailAddress] = useState('')
 
-	const sendVerificationLink = async () => {}
+	const sendVerificationLink = async () => {
+		try {
+			setIsLoading(true)
+			await request
+				.post(
+					`${
+						process.env.NEXT_PUBLIC_API_URL
+					}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
+						integrationId: integrationId ?? ''
+					})}`
+				)
+				.set('Authorization', `JWT ${wallet.jwt}`)
+				.send({
+					visibility: 'mutual-club-members',
+					metadata: {
+						email: emailAddress
+					}
+				})
+			setIsLoading(false)
+			setStep(Step.SendEmail)
+		} catch (e) {
+			log.debug(e)
+			showNotification({
+				title: 'Verification failed',
+				autoClose: 5000,
+				color: 'red',
+				icon: <AlertCircle />,
+				message: `Please make sure your email address exists and try again.`
+			})
+			setIsLoading(false)
+			setStep(Step.Start)
+			return
+		}
+	}
 
 	// TODO: Listen out for successful verification (subscription to identity?)
 
@@ -155,6 +204,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 							}
 						>
 							<Stepper.Step
+								loading={isLoading}
 								label="What's your email address?"
 								description={
 									step !== Step.Start &&
@@ -204,9 +254,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 																)
 															}
 
-															setStep(
-																Step.SendEmail
-															)
+															setIsLoading(true)
 															sendVerificationLink()
 														}}
 														className={
@@ -262,8 +310,11 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 
 												<Space h={8} />
 												<Text
+													onClick={() => {
+														sendVerificationLink()
+													}}
 													className={
-														classes.stepDescription
+														classes.newEmailLink
 													}
 												>
 													{`Didn't receive an email? Send a new link`}
