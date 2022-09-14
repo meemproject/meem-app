@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createStyles, Text, Space, TextInput, Tabs } from '@mantine/core'
-import React from 'react'
-import { ClubRole } from '../../../model/club/club'
+import {
+	createStyles,
+	Text,
+	Space,
+	TextInput,
+	Tabs,
+	Button
+} from '@mantine/core'
+import React, { useState } from 'react'
+import { ClubMember, ClubRole } from '../../../model/club/club'
+import { RolesManagerMembers } from './RolesManagerMembers'
+import { RolesManagerPermissions } from './RolesManagerPermissions'
 
 const useStyles = createStyles(theme => ({
 	row: {
@@ -52,6 +61,11 @@ const useStyles = createStyles(theme => ({
 	},
 	textField: {
 		maxWidth: 800
+	},
+	spacedRow: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between'
 	}
 }))
 
@@ -62,13 +76,21 @@ interface IProps {
 export const RolesManagerContent: React.FC<IProps> = ({ role }) => {
 	const { classes } = useStyles()
 
+	const [members, setMembers] = useState<ClubMember[]>([])
+
 	return (
 		<>
 			<div>
 				<Space h={14} />
-				<Text className={classes.manageClubHeader}>
-					{role ? role.name : 'Add Role'}
-				</Text>
+				<div className={classes.spacedRow}>
+					<Text className={classes.manageClubHeader}>
+						{role ? role.name : 'Add Role'}
+					</Text>
+					<Button className={classes.buttonSaveChanges}>
+						Save Changes
+					</Button>
+				</div>
+
 				<div className={classes.row}>
 					<Text>Role Name</Text>
 					<Space w={4} />
@@ -78,18 +100,18 @@ export const RolesManagerContent: React.FC<IProps> = ({ role }) => {
 				<TextInput size={'lg'} radius={16} />
 				<Space h={12} />
 
-				<Tabs color="dark" defaultValue="gallery">
+				<Tabs color="dark" defaultValue="permissions">
 					<Tabs.List>
 						<Tabs.Tab value="permissions">Permissions</Tabs.Tab>
 						<Tabs.Tab value="members">Members</Tabs.Tab>
 					</Tabs.List>
 
 					<Tabs.Panel value="permissions" pt="xs">
-						Gallery tab content
+						<RolesManagerPermissions role={role} />
 					</Tabs.Panel>
 
 					<Tabs.Panel value="members" pt="xs">
-						Messages tab content
+						<RolesManagerMembers members={members} />
 					</Tabs.Panel>
 				</Tabs>
 			</div>
