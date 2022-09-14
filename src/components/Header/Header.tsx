@@ -186,7 +186,7 @@ export function HeaderMenu() {
 	}
 
 	const handleJoinClubClub = () => {
-		window.open('/clubclub')
+		window.open('/club-club')
 	}
 
 	const handlePoweredByMeem = () => {
