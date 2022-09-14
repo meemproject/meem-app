@@ -10,6 +10,7 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet, makeFetcher, makeRequest } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 
@@ -85,6 +86,11 @@ const MAuthenticate: React.FC = () => {
 
 					log.debug(`logged in successfully.`)
 					wallet.setJwt(loginRequest.jwt)
+					log.debug(`setting full pathname as ${router.asPath}`)
+					Cookies.set(
+						'redirectPath',
+						JSON.stringify(router.asPath ?? '')
+					)
 
 					router.push({
 						pathname: router.query.return

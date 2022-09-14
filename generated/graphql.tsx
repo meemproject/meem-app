@@ -240,6 +240,26 @@ export type BundleContracts_Stddev_Samp_Order_By = {
   order?: InputMaybe<Order_By>;
 };
 
+/** Streaming cursor of the table "BundleContracts" */
+export type BundleContracts_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: BundleContracts_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type BundleContracts_Stream_Cursor_Value_Input = {
+  BundleId?: InputMaybe<Scalars['uuid']>;
+  ContractId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  functionSelectors?: InputMaybe<Scalars['jsonb']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  order?: InputMaybe<Scalars['Int']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** aggregate sum on columns */
 export type BundleContracts_Sum_Fields = {
   __typename?: 'BundleContracts_sum_fields';
@@ -464,6 +484,27 @@ export enum Bundles_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** Streaming cursor of the table "Bundles" */
+export type Bundles_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Bundles_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Bundles_Stream_Cursor_Value_Input = {
+  CreatorId?: InputMaybe<Scalars['uuid']>;
+  abi?: InputMaybe<Scalars['jsonb']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  description?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  types?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** columns and relationships of "ContractInstances" */
 export type ContractInstances = {
   __typename?: 'ContractInstances';
@@ -682,6 +723,25 @@ export type ContractInstances_Stddev_Samp_Fields = {
 /** order by stddev_samp() on columns of table "ContractInstances" */
 export type ContractInstances_Stddev_Samp_Order_By = {
   chainId?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "ContractInstances" */
+export type ContractInstances_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: ContractInstances_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type ContractInstances_Stream_Cursor_Value_Input = {
+  ContractId?: InputMaybe<Scalars['uuid']>;
+  address?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** aggregate sum on columns */
@@ -939,6 +999,30 @@ export type Contracts_Stddev_Samp_Order_By = {
   version?: InputMaybe<Order_By>;
 };
 
+/** Streaming cursor of the table "Contracts" */
+export type Contracts_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Contracts_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Contracts_Stream_Cursor_Value_Input = {
+  CreatorId?: InputMaybe<Scalars['uuid']>;
+  abi?: InputMaybe<Scalars['jsonb']>;
+  bytecode?: InputMaybe<Scalars['String']>;
+  contractType?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  description?: InputMaybe<Scalars['String']>;
+  functionSelectors?: InputMaybe<Scalars['jsonb']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  version?: InputMaybe<Scalars['Int']>;
+};
+
 /** order by sum() on columns of table "Contracts" */
 export type Contracts_Sum_Order_By = {
   version?: InputMaybe<Order_By>;
@@ -1017,6 +1101,23 @@ export enum Hashtags_Select_Column {
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** Streaming cursor of the table "Hashtags" */
+export type Hashtags_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Hashtags_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Hashtags_Stream_Cursor_Value_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  tag?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** columns and relationships of "IdentityIntegrations" */
 export type IdentityIntegrations = {
@@ -1145,6 +1246,25 @@ export enum IdentityIntegrations_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** Streaming cursor of the table "IdentityIntegrations" */
+export type IdentityIntegrations_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: IdentityIntegrations_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type IdentityIntegrations_Stream_Cursor_Value_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  description?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']>;
@@ -1217,6 +1337,26 @@ export enum Integrations_Select_Column {
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** Streaming cursor of the table "Integrations" */
+export type Integrations_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Integrations_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Integrations_Stream_Cursor_Value_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  description?: InputMaybe<Scalars['String']>;
+  guideUrl?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** columns and relationships of "MeemContractIntegrations" */
 export type MeemContractIntegrations = {
@@ -1324,6 +1464,27 @@ export enum MeemContractIntegrations_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** Streaming cursor of the table "MeemContractIntegrations" */
+export type MeemContractIntegrations_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MeemContractIntegrations_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MeemContractIntegrations_Stream_Cursor_Value_Input = {
+  IntegrationId?: InputMaybe<Scalars['uuid']>;
+  MeemContractId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
+  isPublic?: InputMaybe<Scalars['Boolean']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** columns and relationships of "MeemContractWallets" */
 export type MeemContractWallets = {
   __typename?: 'MeemContractWallets';
@@ -1415,6 +1576,25 @@ export enum MeemContractWallets_Select_Column {
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** Streaming cursor of the table "MeemContractWallets" */
+export type MeemContractWallets_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MeemContractWallets_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MeemContractWallets_Stream_Cursor_Value_Input = {
+  MeemContractId?: InputMaybe<Scalars['uuid']>;
+  WalletId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  role?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** columns and relationships of "MeemContracts" */
 export type MeemContracts = {
@@ -1649,6 +1829,35 @@ export enum MeemContracts_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** Streaming cursor of the table "MeemContracts" */
+export type MeemContracts_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MeemContracts_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MeemContracts_Stream_Cursor_Value_Input = {
+  address?: InputMaybe<Scalars['String']>;
+  contractURI?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  ens?: InputMaybe<Scalars['String']>;
+  ensFetchedAt?: InputMaybe<Scalars['timestamptz']>;
+  gnosisSafeAddress?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isMaxSupplyLocked?: InputMaybe<Scalars['Boolean']>;
+  isTransferrable?: InputMaybe<Scalars['Boolean']>;
+  maxSupply?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  mintPermissions?: InputMaybe<Scalars['jsonb']>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  splits?: InputMaybe<Scalars['jsonb']>;
+  symbol?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** columns and relationships of "MeemIdentifications" */
 export type MeemIdentifications = {
   __typename?: 'MeemIdentifications';
@@ -1694,9 +1903,28 @@ export enum MeemIdentifications_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** Streaming cursor of the table "MeemIdentifications" */
+export type MeemIdentifications_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MeemIdentifications_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MeemIdentifications_Stream_Cursor_Value_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  hasOnboarded?: InputMaybe<Scalars['Boolean']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** columns and relationships of "MeemIdentities" */
 export type MeemIdentities = {
   __typename?: 'MeemIdentities';
+  /** An object relationship */
+  DefaultWallet?: Maybe<Wallets>;
   DefaultWalletId?: Maybe<Scalars['uuid']>;
   /** An array relationship */
   MeemIdentityIntegrations: Array<MeemIdentityIntegrations>;
@@ -1706,8 +1934,6 @@ export type MeemIdentities = {
   MeemIdentityWallets: Array<MeemIdentityWallets>;
   /** An aggregate relationship */
   MeemIdentityWallets_aggregate: MeemIdentityWallets_Aggregate;
-  /** An object relationship */
-  Wallet?: Maybe<Wallets>;
   createdAt: Scalars['timestamptz'];
   deletedAt?: Maybe<Scalars['timestamptz']>;
   displayName?: Maybe<Scalars['String']>;
@@ -1787,10 +2013,10 @@ export type MeemIdentities_Aggregate_Order_By = {
 
 /** Boolean expression to filter rows from the table "MeemIdentities". All fields are combined with a logical 'AND'. */
 export type MeemIdentities_Bool_Exp = {
+  DefaultWallet?: InputMaybe<Wallets_Bool_Exp>;
   DefaultWalletId?: InputMaybe<Uuid_Comparison_Exp>;
   MeemIdentityIntegrations?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
   MeemIdentityWallets?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
-  Wallet?: InputMaybe<Wallets_Bool_Exp>;
   _and?: InputMaybe<Array<MeemIdentities_Bool_Exp>>;
   _not?: InputMaybe<MeemIdentities_Bool_Exp>;
   _or?: InputMaybe<Array<MeemIdentities_Bool_Exp>>;
@@ -1850,10 +2076,10 @@ export type MeemIdentities_Min_Order_By = {
 
 /** Ordering options when selecting data from "MeemIdentities". */
 export type MeemIdentities_Order_By = {
+  DefaultWallet?: InputMaybe<Wallets_Order_By>;
   DefaultWalletId?: InputMaybe<Order_By>;
   MeemIdentityIntegrations_aggregate?: InputMaybe<MeemIdentityIntegrations_Aggregate_Order_By>;
   MeemIdentityWallets_aggregate?: InputMaybe<MeemIdentityWallets_Aggregate_Order_By>;
-  Wallet?: InputMaybe<Wallets_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
   displayName?: InputMaybe<Order_By>;
@@ -1879,6 +2105,25 @@ export enum MeemIdentities_Select_Column {
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** Streaming cursor of the table "MeemIdentities" */
+export type MeemIdentities_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MeemIdentities_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MeemIdentities_Stream_Cursor_Value_Input = {
+  DefaultWalletId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  displayName?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  profilePicUrl?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** columns and relationships of "MeemIdentityIntegrations" */
 export type MeemIdentityIntegrations = {
@@ -2029,6 +2274,26 @@ export enum MeemIdentityIntegrations_Select_Column {
   Visibility = 'visibility'
 }
 
+/** Streaming cursor of the table "MeemIdentityIntegrations" */
+export type MeemIdentityIntegrations_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MeemIdentityIntegrations_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MeemIdentityIntegrations_Stream_Cursor_Value_Input = {
+  IdentityIntegrationId?: InputMaybe<Scalars['uuid']>;
+  MeemIdentityId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  visibility?: InputMaybe<Scalars['String']>;
+};
+
 /** columns and relationships of "MeemIdentityWallets" */
 export type MeemIdentityWallets = {
   __typename?: 'MeemIdentityWallets';
@@ -2157,6 +2422,24 @@ export enum MeemIdentityWallets_Select_Column {
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** Streaming cursor of the table "MeemIdentityWallets" */
+export type MeemIdentityWallets_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MeemIdentityWallets_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MeemIdentityWallets_Stream_Cursor_Value_Input = {
+  MeemIdentityId?: InputMaybe<Scalars['uuid']>;
+  WalletId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** columns and relationships of "Meems" */
 export type Meems = {
@@ -2422,6 +2705,29 @@ export type Meems_Stddev_Samp_Order_By = {
   meemType?: InputMaybe<Order_By>;
 };
 
+/** Streaming cursor of the table "Meems" */
+export type Meems_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Meems_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Meems_Stream_Cursor_Value_Input = {
+  MeemContractId?: InputMaybe<Scalars['uuid']>;
+  OwnerId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  meemType?: InputMaybe<Scalars['Int']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  mintedAt?: InputMaybe<Scalars['timestamptz']>;
+  mintedBy?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+  tokenURI?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** aggregate sum on columns */
 export type Meems_Sum_Fields = {
   __typename?: 'Meems_sum_fields';
@@ -2684,6 +2990,24 @@ export type Transactions_Stddev_Samp_Order_By = {
   chainId?: InputMaybe<Order_By>;
 };
 
+/** Streaming cursor of the table "Transactions" */
+export type Transactions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Transactions_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Transactions_Stream_Cursor_Value_Input = {
+  WalletId?: InputMaybe<Scalars['uuid']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  hash?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** aggregate sum on columns */
 export type Transactions_Sum_Fields = {
   __typename?: 'Transactions_sum_fields';
@@ -2830,6 +3154,27 @@ export enum Transfers_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** Streaming cursor of the table "Transfers" */
+export type Transfers_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Transfers_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Transfers_Stream_Cursor_Value_Input = {
+  MeemId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  from?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  to?: InputMaybe<Scalars['String']>;
+  transactionHash?: InputMaybe<Scalars['String']>;
+  transferredAt?: InputMaybe<Scalars['timestamptz']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** columns and relationships of "TweetHashtags" */
 export type TweetHashtags = {
   __typename?: 'TweetHashtags';
@@ -2914,6 +3259,24 @@ export enum TweetHashtags_Select_Column {
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** Streaming cursor of the table "TweetHashtags" */
+export type TweetHashtags_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: TweetHashtags_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type TweetHashtags_Stream_Cursor_Value_Input = {
+  HashtagId?: InputMaybe<Scalars['uuid']>;
+  TweetId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** columns and relationships of "Tweets" */
 export type Tweets = {
@@ -3044,6 +3407,29 @@ export enum Tweets_Select_Column {
   /** column name */
   Username = 'username'
 }
+
+/** Streaming cursor of the table "Tweets" */
+export type Tweets_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tweets_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tweets_Stream_Cursor_Value_Input = {
+  MeemId?: InputMaybe<Scalars['uuid']>;
+  conversationId?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  deletedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  text?: InputMaybe<Scalars['String']>;
+  tweetId?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  userId?: InputMaybe<Scalars['String']>;
+  userProfileImageUrl?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
+};
 
 /** columns and relationships of "WalletContractInstances" */
 export type WalletContractInstances = {
@@ -3182,6 +3568,25 @@ export enum WalletContractInstances_Select_Column {
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** Streaming cursor of the table "WalletContractInstances" */
+export type WalletContractInstances_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: WalletContractInstances_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type WalletContractInstances_Stream_Cursor_Value_Input = {
+  ContractInstanceId?: InputMaybe<Scalars['uuid']>;
+  WalletId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  note?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** columns and relationships of "Wallets" */
 export type Wallets = {
@@ -3500,6 +3905,25 @@ export type Wallets_Stddev_Samp_Fields = {
   dailyTXLimit?: Maybe<Scalars['Float']>;
 };
 
+/** Streaming cursor of the table "Wallets" */
+export type Wallets_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Wallets_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Wallets_Stream_Cursor_Value_Input = {
+  address?: InputMaybe<Scalars['String']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  dailyTXLimit?: InputMaybe<Scalars['Int']>;
+  ens?: InputMaybe<Scalars['String']>;
+  ensFetchedAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** aggregate sum on columns */
 export type Wallets_Sum_Fields = {
   __typename?: 'Wallets_sum_fields';
@@ -3523,6 +3947,14 @@ export type Wallets_Variance_Fields = {
   __typename?: 'Wallets_variance_fields';
   dailyTXLimit?: Maybe<Scalars['Float']>;
 };
+
+/** ordering argument of a cursor */
+export enum Cursor_Ordering {
+  /** ascending ordering of the cursor */
+  Asc = 'ASC',
+  /** descending ordering of the cursor */
+  Desc = 'DESC'
+}
 
 export type Jsonb_Cast_Exp = {
   String?: InputMaybe<String_Comparison_Exp>;
@@ -4090,108 +4522,150 @@ export type Subscription_Root = {
   BundleContracts_aggregate: BundleContracts_Aggregate;
   /** fetch data from the table: "BundleContracts" using primary key columns */
   BundleContracts_by_pk?: Maybe<BundleContracts>;
+  /** fetch data from the table in a streaming manner : "BundleContracts" */
+  BundleContracts_stream: Array<BundleContracts>;
   /** An array relationship */
   Bundles: Array<Bundles>;
   /** An aggregate relationship */
   Bundles_aggregate: Bundles_Aggregate;
   /** fetch data from the table: "Bundles" using primary key columns */
   Bundles_by_pk?: Maybe<Bundles>;
+  /** fetch data from the table in a streaming manner : "Bundles" */
+  Bundles_stream: Array<Bundles>;
   /** An array relationship */
   ContractInstances: Array<ContractInstances>;
   /** An aggregate relationship */
   ContractInstances_aggregate: ContractInstances_Aggregate;
   /** fetch data from the table: "ContractInstances" using primary key columns */
   ContractInstances_by_pk?: Maybe<ContractInstances>;
+  /** fetch data from the table in a streaming manner : "ContractInstances" */
+  ContractInstances_stream: Array<ContractInstances>;
   /** An array relationship */
   Contracts: Array<Contracts>;
   /** fetch data from the table: "Contracts" using primary key columns */
   Contracts_by_pk?: Maybe<Contracts>;
+  /** fetch data from the table in a streaming manner : "Contracts" */
+  Contracts_stream: Array<Contracts>;
   /** fetch data from the table: "Hashtags" */
   Hashtags: Array<Hashtags>;
   /** fetch data from the table: "Hashtags" using primary key columns */
   Hashtags_by_pk?: Maybe<Hashtags>;
+  /** fetch data from the table in a streaming manner : "Hashtags" */
+  Hashtags_stream: Array<Hashtags>;
   /** fetch data from the table: "IdentityIntegrations" */
   IdentityIntegrations: Array<IdentityIntegrations>;
   /** fetch aggregated fields from the table: "IdentityIntegrations" */
   IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
   /** fetch data from the table: "IdentityIntegrations" using primary key columns */
   IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
+  /** fetch data from the table in a streaming manner : "IdentityIntegrations" */
+  IdentityIntegrations_stream: Array<IdentityIntegrations>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
   /** fetch data from the table: "Integrations" using primary key columns */
   Integrations_by_pk?: Maybe<Integrations>;
+  /** fetch data from the table in a streaming manner : "Integrations" */
+  Integrations_stream: Array<Integrations>;
   /** An array relationship */
   MeemContractIntegrations: Array<MeemContractIntegrations>;
   /** fetch data from the table: "MeemContractIntegrations" using primary key columns */
   MeemContractIntegrations_by_pk?: Maybe<MeemContractIntegrations>;
+  /** fetch data from the table in a streaming manner : "MeemContractIntegrations" */
+  MeemContractIntegrations_stream: Array<MeemContractIntegrations>;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
   MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
+  /** fetch data from the table in a streaming manner : "MeemContractWallets" */
+  MeemContractWallets_stream: Array<MeemContractWallets>;
   /** fetch data from the table: "MeemContracts" */
   MeemContracts: Array<MeemContracts>;
   /** fetch aggregated fields from the table: "MeemContracts" */
   MeemContracts_aggregate: MeemContracts_Aggregate;
   /** fetch data from the table: "MeemContracts" using primary key columns */
   MeemContracts_by_pk?: Maybe<MeemContracts>;
+  /** fetch data from the table in a streaming manner : "MeemContracts" */
+  MeemContracts_stream: Array<MeemContracts>;
   /** fetch data from the table: "MeemIdentifications" */
   MeemIdentifications: Array<MeemIdentifications>;
   /** fetch data from the table: "MeemIdentifications" using primary key columns */
   MeemIdentifications_by_pk?: Maybe<MeemIdentifications>;
+  /** fetch data from the table in a streaming manner : "MeemIdentifications" */
+  MeemIdentifications_stream: Array<MeemIdentifications>;
   /** An array relationship */
   MeemIdentities: Array<MeemIdentities>;
   /** An aggregate relationship */
   MeemIdentities_aggregate: MeemIdentities_Aggregate;
   /** fetch data from the table: "MeemIdentities" using primary key columns */
   MeemIdentities_by_pk?: Maybe<MeemIdentities>;
+  /** fetch data from the table in a streaming manner : "MeemIdentities" */
+  MeemIdentities_stream: Array<MeemIdentities>;
   /** An array relationship */
   MeemIdentityIntegrations: Array<MeemIdentityIntegrations>;
   /** An aggregate relationship */
   MeemIdentityIntegrations_aggregate: MeemIdentityIntegrations_Aggregate;
   /** fetch data from the table: "MeemIdentityIntegrations" using primary key columns */
   MeemIdentityIntegrations_by_pk?: Maybe<MeemIdentityIntegrations>;
+  /** fetch data from the table in a streaming manner : "MeemIdentityIntegrations" */
+  MeemIdentityIntegrations_stream: Array<MeemIdentityIntegrations>;
   /** An array relationship */
   MeemIdentityWallets: Array<MeemIdentityWallets>;
   /** An aggregate relationship */
   MeemIdentityWallets_aggregate: MeemIdentityWallets_Aggregate;
   /** fetch data from the table: "MeemIdentityWallets" using primary key columns */
   MeemIdentityWallets_by_pk?: Maybe<MeemIdentityWallets>;
+  /** fetch data from the table in a streaming manner : "MeemIdentityWallets" */
+  MeemIdentityWallets_stream: Array<MeemIdentityWallets>;
   /** An array relationship */
   Meems: Array<Meems>;
   /** An aggregate relationship */
   Meems_aggregate: Meems_Aggregate;
   /** fetch data from the table: "Meems" using primary key columns */
   Meems_by_pk?: Maybe<Meems>;
+  /** fetch data from the table in a streaming manner : "Meems" */
+  Meems_stream: Array<Meems>;
   /** An array relationship */
   Transactions: Array<Transactions>;
   /** An aggregate relationship */
   Transactions_aggregate: Transactions_Aggregate;
   /** fetch data from the table: "Transactions" using primary key columns */
   Transactions_by_pk?: Maybe<Transactions>;
+  /** fetch data from the table in a streaming manner : "Transactions" */
+  Transactions_stream: Array<Transactions>;
   /** An array relationship */
   Transfers: Array<Transfers>;
   /** fetch data from the table: "Transfers" using primary key columns */
   Transfers_by_pk?: Maybe<Transfers>;
+  /** fetch data from the table in a streaming manner : "Transfers" */
+  Transfers_stream: Array<Transfers>;
   /** An array relationship */
   TweetHashtags: Array<TweetHashtags>;
   /** fetch data from the table: "TweetHashtags" using primary key columns */
   TweetHashtags_by_pk?: Maybe<TweetHashtags>;
+  /** fetch data from the table in a streaming manner : "TweetHashtags" */
+  TweetHashtags_stream: Array<TweetHashtags>;
   /** An array relationship */
   Tweets: Array<Tweets>;
   /** fetch data from the table: "Tweets" using primary key columns */
   Tweets_by_pk?: Maybe<Tweets>;
+  /** fetch data from the table in a streaming manner : "Tweets" */
+  Tweets_stream: Array<Tweets>;
   /** An array relationship */
   WalletContractInstances: Array<WalletContractInstances>;
   /** An aggregate relationship */
   WalletContractInstances_aggregate: WalletContractInstances_Aggregate;
   /** fetch data from the table: "WalletContractInstances" using primary key columns */
   WalletContractInstances_by_pk?: Maybe<WalletContractInstances>;
+  /** fetch data from the table in a streaming manner : "WalletContractInstances" */
+  WalletContractInstances_stream: Array<WalletContractInstances>;
   /** fetch data from the table: "Wallets" */
   Wallets: Array<Wallets>;
   /** fetch aggregated fields from the table: "Wallets" */
   Wallets_aggregate: Wallets_Aggregate;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
+  /** fetch data from the table in a streaming manner : "Wallets" */
+  Wallets_stream: Array<Wallets>;
 };
 
 
@@ -4218,6 +4692,13 @@ export type Subscription_RootBundleContracts_By_PkArgs = {
 };
 
 
+export type Subscription_RootBundleContracts_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<BundleContracts_Stream_Cursor_Input>>;
+  where?: InputMaybe<BundleContracts_Bool_Exp>;
+};
+
+
 export type Subscription_RootBundlesArgs = {
   distinct_on?: InputMaybe<Array<Bundles_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4238,6 +4719,13 @@ export type Subscription_RootBundles_AggregateArgs = {
 
 export type Subscription_RootBundles_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootBundles_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Bundles_Stream_Cursor_Input>>;
+  where?: InputMaybe<Bundles_Bool_Exp>;
 };
 
 
@@ -4264,6 +4752,13 @@ export type Subscription_RootContractInstances_By_PkArgs = {
 };
 
 
+export type Subscription_RootContractInstances_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<ContractInstances_Stream_Cursor_Input>>;
+  where?: InputMaybe<ContractInstances_Bool_Exp>;
+};
+
+
 export type Subscription_RootContractsArgs = {
   distinct_on?: InputMaybe<Array<Contracts_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4278,6 +4773,13 @@ export type Subscription_RootContracts_By_PkArgs = {
 };
 
 
+export type Subscription_RootContracts_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Contracts_Stream_Cursor_Input>>;
+  where?: InputMaybe<Contracts_Bool_Exp>;
+};
+
+
 export type Subscription_RootHashtagsArgs = {
   distinct_on?: InputMaybe<Array<Hashtags_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4289,6 +4791,13 @@ export type Subscription_RootHashtagsArgs = {
 
 export type Subscription_RootHashtags_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootHashtags_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Hashtags_Stream_Cursor_Input>>;
+  where?: InputMaybe<Hashtags_Bool_Exp>;
 };
 
 
@@ -4315,6 +4824,13 @@ export type Subscription_RootIdentityIntegrations_By_PkArgs = {
 };
 
 
+export type Subscription_RootIdentityIntegrations_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<IdentityIntegrations_Stream_Cursor_Input>>;
+  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+};
+
+
 export type Subscription_RootIntegrationsArgs = {
   distinct_on?: InputMaybe<Array<Integrations_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4326,6 +4842,13 @@ export type Subscription_RootIntegrationsArgs = {
 
 export type Subscription_RootIntegrations_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootIntegrations_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Integrations_Stream_Cursor_Input>>;
+  where?: InputMaybe<Integrations_Bool_Exp>;
 };
 
 
@@ -4343,6 +4866,13 @@ export type Subscription_RootMeemContractIntegrations_By_PkArgs = {
 };
 
 
+export type Subscription_RootMeemContractIntegrations_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<MeemContractIntegrations_Stream_Cursor_Input>>;
+  where?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+};
+
+
 export type Subscription_RootMeemContractWalletsArgs = {
   distinct_on?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4354,6 +4884,13 @@ export type Subscription_RootMeemContractWalletsArgs = {
 
 export type Subscription_RootMeemContractWallets_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeemContractWallets_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<MeemContractWallets_Stream_Cursor_Input>>;
+  where?: InputMaybe<MeemContractWallets_Bool_Exp>;
 };
 
 
@@ -4380,6 +4917,13 @@ export type Subscription_RootMeemContracts_By_PkArgs = {
 };
 
 
+export type Subscription_RootMeemContracts_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<MeemContracts_Stream_Cursor_Input>>;
+  where?: InputMaybe<MeemContracts_Bool_Exp>;
+};
+
+
 export type Subscription_RootMeemIdentificationsArgs = {
   distinct_on?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4391,6 +4935,13 @@ export type Subscription_RootMeemIdentificationsArgs = {
 
 export type Subscription_RootMeemIdentifications_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeemIdentifications_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<MeemIdentifications_Stream_Cursor_Input>>;
+  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
 };
 
 
@@ -4417,6 +4968,13 @@ export type Subscription_RootMeemIdentities_By_PkArgs = {
 };
 
 
+export type Subscription_RootMeemIdentities_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<MeemIdentities_Stream_Cursor_Input>>;
+  where?: InputMaybe<MeemIdentities_Bool_Exp>;
+};
+
+
 export type Subscription_RootMeemIdentityIntegrationsArgs = {
   distinct_on?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4437,6 +4995,13 @@ export type Subscription_RootMeemIdentityIntegrations_AggregateArgs = {
 
 export type Subscription_RootMeemIdentityIntegrations_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeemIdentityIntegrations_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<MeemIdentityIntegrations_Stream_Cursor_Input>>;
+  where?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
 };
 
 
@@ -4463,6 +5028,13 @@ export type Subscription_RootMeemIdentityWallets_By_PkArgs = {
 };
 
 
+export type Subscription_RootMeemIdentityWallets_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<MeemIdentityWallets_Stream_Cursor_Input>>;
+  where?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+};
+
+
 export type Subscription_RootMeemsArgs = {
   distinct_on?: InputMaybe<Array<Meems_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4483,6 +5055,13 @@ export type Subscription_RootMeems_AggregateArgs = {
 
 export type Subscription_RootMeems_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootMeems_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Meems_Stream_Cursor_Input>>;
+  where?: InputMaybe<Meems_Bool_Exp>;
 };
 
 
@@ -4509,6 +5088,13 @@ export type Subscription_RootTransactions_By_PkArgs = {
 };
 
 
+export type Subscription_RootTransactions_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Transactions_Stream_Cursor_Input>>;
+  where?: InputMaybe<Transactions_Bool_Exp>;
+};
+
+
 export type Subscription_RootTransfersArgs = {
   distinct_on?: InputMaybe<Array<Transfers_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4520,6 +5106,13 @@ export type Subscription_RootTransfersArgs = {
 
 export type Subscription_RootTransfers_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootTransfers_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Transfers_Stream_Cursor_Input>>;
+  where?: InputMaybe<Transfers_Bool_Exp>;
 };
 
 
@@ -4537,6 +5130,13 @@ export type Subscription_RootTweetHashtags_By_PkArgs = {
 };
 
 
+export type Subscription_RootTweetHashtags_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<TweetHashtags_Stream_Cursor_Input>>;
+  where?: InputMaybe<TweetHashtags_Bool_Exp>;
+};
+
+
 export type Subscription_RootTweetsArgs = {
   distinct_on?: InputMaybe<Array<Tweets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4548,6 +5148,13 @@ export type Subscription_RootTweetsArgs = {
 
 export type Subscription_RootTweets_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootTweets_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Tweets_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tweets_Bool_Exp>;
 };
 
 
@@ -4574,6 +5181,13 @@ export type Subscription_RootWalletContractInstances_By_PkArgs = {
 };
 
 
+export type Subscription_RootWalletContractInstances_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<WalletContractInstances_Stream_Cursor_Input>>;
+  where?: InputMaybe<WalletContractInstances_Bool_Exp>;
+};
+
+
 export type Subscription_RootWalletsArgs = {
   distinct_on?: InputMaybe<Array<Wallets_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -4594,6 +5208,13 @@ export type Subscription_RootWallets_AggregateArgs = {
 
 export type Subscription_RootWallets_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootWallets_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Wallets_Stream_Cursor_Input>>;
+  where?: InputMaybe<Wallets_Bool_Exp>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
@@ -4651,6 +5272,7 @@ export type GetClubSlugQuery = { __typename?: 'query_root', MeemContracts: Array
 export type GetClubQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
   visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  showPublicApps?: InputMaybe<Array<Scalars['Boolean']> | Scalars['Boolean']>;
 }>;
 
 
@@ -4659,6 +5281,7 @@ export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ _
 export type GetClubSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
   visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
+  showPublicApps?: InputMaybe<Array<Scalars['Boolean']> | Scalars['Boolean']>;
 }>;
 
 
@@ -4682,14 +5305,14 @@ export type AllClubsQueryVariables = Exact<{
 }>;
 
 
-export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, Meems_aggregate: { __typename?: 'Meems_aggregate', aggregate?: { __typename?: 'Meems_aggregate_fields', count: number } | null } }> };
+export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
 
 export type MyClubsSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type MyClubsSubscriptionSubscription = { __typename?: 'subscription_root', Meems: Array<{ __typename?: 'Meems', tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, Meems_aggregate: { __typename?: 'Meems_aggregate', aggregate?: { __typename?: 'Meems_aggregate_fields', count: number } | null } } | null }> };
+export type MyClubsSubscriptionSubscription = { __typename?: 'subscription_root', Meems: Array<{ __typename?: 'Meems', tokenId: string, MeemContractId?: any | null, MeemContract?: { __typename?: 'MeemContracts', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, updatedAt: any, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, Meems_aggregate: { __typename?: 'Meems_aggregate', aggregate?: { __typename?: 'Meems_aggregate_fields', count: number } | null }, Meems: Array<{ __typename?: 'Meems', Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> } | null }> };
 
 export type GetBundleByIdQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -4703,7 +5326,7 @@ export type MeemIdSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', MeemIdentities: Array<{ __typename?: 'MeemIdentities', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string } | null }> }> };
+export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', MeemIdentities: Array<{ __typename?: 'MeemIdentities', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string } | null }> }> };
 
 export type GetIdentityIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4846,7 +5469,7 @@ export type GetClubSlugQueryHookResult = ReturnType<typeof useGetClubSlugQuery>;
 export type GetClubSlugLazyQueryHookResult = ReturnType<typeof useGetClubSlugLazyQuery>;
 export type GetClubSlugQueryResult = Apollo.QueryResult<GetClubSlugQuery, GetClubSlugQueryVariables>;
 export const GetClubDocument = gql`
-    query GetClub($slug: String, $visibilityLevel: [String!]) {
+    query GetClub($slug: String, $visibilityLevel: [String!], $showPublicApps: [Boolean!]) {
   MeemContracts(where: {slug: {_eq: $slug}}) {
     slug
     address
@@ -4884,7 +5507,9 @@ export const GetClubDocument = gql`
       }
     }
     id
-    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
+    MeemContractIntegrations(
+      where: {isPublic: {_in: $showPublicApps}, isEnabled: {_eq: true}}
+    ) {
       IntegrationId
       id
       isEnabled
@@ -4916,6 +5541,7 @@ export const GetClubDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      visibilityLevel: // value for 'visibilityLevel'
+ *      showPublicApps: // value for 'showPublicApps'
  *   },
  * });
  */
@@ -4931,7 +5557,7 @@ export type GetClubQueryHookResult = ReturnType<typeof useGetClubQuery>;
 export type GetClubLazyQueryHookResult = ReturnType<typeof useGetClubLazyQuery>;
 export type GetClubQueryResult = Apollo.QueryResult<GetClubQuery, GetClubQueryVariables>;
 export const GetClubSubscriptionDocument = gql`
-    subscription GetClubSubscription($slug: String, $visibilityLevel: [String!]) {
+    subscription GetClubSubscription($slug: String, $visibilityLevel: [String!], $showPublicApps: [Boolean!]) {
   MeemContracts(where: {slug: {_eq: $slug}}) {
     slug
     address
@@ -4969,7 +5595,9 @@ export const GetClubSubscriptionDocument = gql`
       }
     }
     id
-    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
+    MeemContractIntegrations(
+      where: {isPublic: {_in: $showPublicApps}, isEnabled: {_eq: true}}
+    ) {
       IntegrationId
       id
       isEnabled
@@ -5001,6 +5629,7 @@ export const GetClubSubscriptionDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      visibilityLevel: // value for 'visibilityLevel'
+ *      showPublicApps: // value for 'showPublicApps'
  *   },
  * });
  */
@@ -5137,9 +5766,10 @@ export const AllClubsDocument = gql`
         address
       }
     }
-    Meems_aggregate {
-      aggregate {
-        count
+    Meems {
+      Owner {
+        address
+        ens
       }
     }
   }
@@ -5178,7 +5808,7 @@ export const MyClubsSubscriptionDocument = gql`
     subscription MyClubsSubscription($walletAddress: String) {
   Meems(
     where: {MeemContractId: {_is_null: false}, Owner: {address: {_ilike: $walletAddress}}}
-    distinct_on: MeemContractId
+    order_by: {MeemContract: {Meems_aggregate: {count: desc}}}
   ) {
     tokenId
     MeemContractId
@@ -5205,6 +5835,13 @@ export const MyClubsSubscriptionDocument = gql`
           count
         }
       }
+      Meems {
+        Owner {
+          address
+          ens
+        }
+      }
+      updatedAt
     }
   }
 }
@@ -5278,14 +5915,14 @@ export type GetBundleByIdLazyQueryHookResult = ReturnType<typeof useGetBundleByI
 export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, GetBundleByIdQueryVariables>;
 export const MeemIdSubscriptionDocument = gql`
     subscription MeemIdSubscription($walletAddress: String) {
-  MeemIdentities(where: {Wallet: {address: {_ilike: $walletAddress}}}) {
+  MeemIdentities(where: {DefaultWallet: {address: {_ilike: $walletAddress}}}) {
     updatedAt
     profilePicUrl
     id
     displayName
     deletedAt
     createdAt
-    Wallet {
+    DefaultWallet {
       address
       ens
     }

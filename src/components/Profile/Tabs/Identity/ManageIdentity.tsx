@@ -434,13 +434,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					)
 					break
 				case 'Email':
-					showNotification({
-						radius: 'lg',
-						title: 'Coming soon!',
-						message:
-							'Linking your email to your account will be added at a later date.'
-					})
-					//setIsEmailModalOpen(true)
+					setIsEmailModalOpen(true)
 					break
 			}
 		}
@@ -598,9 +592,9 @@ export const ManageIdentityComponent: React.FC = () => {
 															)}
 															{integration
 																.metadata
-																.emailAddress && (
+																.email && (
 																<Text>
-																	{`${integration.metadata.emailAddress}`}
+																	{`${integration.metadata.email}`}
 																</Text>
 															)}
 														</div>
@@ -686,6 +680,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				}}
 			/>
 			<ProfileLinkEmailModal
+				integrationId={integrationCurrentlyEditing?.id}
 				identity={id.identity}
 				isOpened={isEmailModalOpen}
 				onModalClosed={() => {
