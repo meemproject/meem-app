@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/meemproject/clubs-web/compare/v1.6.1...v1.7.0) (2022-09-14)
+
+
+### Features
+
+* upgrade lint rules ([f8d1034](https://github.com/meemproject/clubs-web/commit/f8d1034))
+
+## [1.6.1](https://github.com/meemproject/clubs-web/compare/v1.6.0...v1.6.1) (2022-09-08)
+
 # [1.6.0](https://github.com/meemproject/clubs-web/compare/v1.5.5...v1.6.0) (2022-09-02)
 
 
