@@ -60,68 +60,10 @@ export const GET_CLUB_SLUG = gql`
 `
 
 export const GET_CLUB = gql`
-	query GetClub($slug: String, $visibilityLevel: [String!]) {
-		MeemContracts(where: { slug: { _eq: $slug } }) {
-			slug
-			address
-			metadata
-			createdAt
-			name
-			gnosisSafeAddress
-			Meems {
-				Owner {
-					address
-					ens
-					MeemIdentities {
-						displayName
-						profilePicUrl
-						MeemIdentityIntegrations(
-							where: { visibility: { _in: $visibilityLevel } }
-						) {
-							metadata
-							visibility
-						}
-					}
-				}
-				tokenId
-				tokenURI
-				mintedAt
-				mintedBy
-			}
-			splits
-			maxSupply
-			mintPermissions
-			symbol
-			MeemContractWallets {
-				role
-				Wallet {
-					address
-					ens
-				}
-			}
-			id
-			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
-				IntegrationId
-				id
-				isEnabled
-				metadata
-				Integration {
-					description
-					guideUrl
-					icon
-					id
-					name
-				}
-				isPublic
-			}
-		}
-	}
-`
-
-export const SUB_CLUB = gql`
-	subscription GetClubSubscription(
+	query GetClub(
 		$slug: String
 		$visibilityLevel: [String!]
+		$showPublicApps: [Boolean!]
 	) {
 		MeemContracts(where: { slug: { _eq: $slug } }) {
 			slug
@@ -162,7 +104,80 @@ export const SUB_CLUB = gql`
 				}
 			}
 			id
-			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
+			MeemContractIntegrations(
+				where: {
+					isPublic: { _in: $showPublicApps }
+					isEnabled: { _eq: true }
+				}
+			) {
+				IntegrationId
+				id
+				isEnabled
+				metadata
+				Integration {
+					description
+					guideUrl
+					icon
+					id
+					name
+				}
+				isPublic
+			}
+		}
+	}
+`
+
+export const SUB_CLUB = gql`
+	subscription GetClubSubscription(
+		$slug: String
+		$visibilityLevel: [String!]
+		$showPublicApps: [Boolean!]
+	) {
+		MeemContracts(where: { slug: { _eq: $slug } }) {
+			slug
+			address
+			metadata
+			createdAt
+			name
+			gnosisSafeAddress
+			Meems {
+				Owner {
+					address
+					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations(
+							where: { visibility: { _in: $visibilityLevel } }
+						) {
+							metadata
+							visibility
+						}
+					}
+				}
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+			}
+			splits
+			maxSupply
+			mintPermissions
+			symbol
+			MeemContractWallets {
+				role
+				Wallet {
+					address
+					ens
+				}
+			}
+			id
+			MeemContractIntegrations(
+				where: {
+					isPublic: { _in: $showPublicApps }
+					isEnabled: { _eq: true }
+				}
+			) {
 				IntegrationId
 				id
 				isEnabled

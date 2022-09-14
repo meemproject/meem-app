@@ -68,14 +68,21 @@ export async function identityFromApi(
 					visibility: inte.visibility,
 					metadata: inte.metadata
 				}
-				integrations.push(integration)
+
+				if (integration.name !== 'Email') {
+					integrations.push(integration)
+				} else {
+					if (integration.metadata.isVerified) {
+						integrations.push(integration)
+					}
+				}
 			})
 		}
 
 		return {
 			id: id?.id,
 			walletAddress: address,
-			ensAddress: id?.Wallet?.ens ?? undefined,
+			ensAddress: id?.DefaultWallet?.ens ?? undefined,
 			displayName: id?.displayName ?? undefined,
 			profilePic:
 				id?.profilePicUrl && id?.profilePicUrl.length > 0
