@@ -1100,75 +1100,69 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</div>
 
 					<Container>
-						{!club.isClubMember ||
-							(club.isClubAdmin && (
-								<>
-									<Text
+						{(!club.isClubMember || club.isClubAdmin) && (
+							<>
+								<Text
+									className={classes.clubDetailSectionTitle}
+								>
+									Membership Requirements
+								</Text>
+								{!areRequirementsParsed && (
+									<div
 										className={
-											classes.clubDetailSectionTitle
+											classes.requirementsContainer
 										}
 									>
-										Membership Requirements
-									</Text>
-									{!areRequirementsParsed && (
+										<Loader color="red" variant="oval" />
+									</div>
+								)}
+
+								{parsedRequirements.length > 0 &&
+									areRequirementsParsed && (
 										<div
 											className={
 												classes.requirementsContainer
 											}
 										>
-											<Loader
-												color="red"
-												variant="oval"
-											/>
+											{parsedRequirements.map(
+												requirement => (
+													<div
+														className={
+															classes.requirementItem
+														}
+														key={
+															requirement.requirementKey
+														}
+													>
+														{requirement.meetsRequirement && (
+															<CircleCheck
+																className={
+																	classes.requirementIcon
+																}
+																color="green"
+															/>
+														)}
+
+														{!requirement.meetsRequirement && (
+															<CircleX
+																className={
+																	classes.requirementIcon
+																}
+																color="red"
+															/>
+														)}
+
+														<Space w={'xs'} />
+														{
+															requirement.requirementComponent
+														}
+													</div>
+												)
+											)}
 										</div>
 									)}
-
-									{parsedRequirements.length > 0 &&
-										areRequirementsParsed && (
-											<div
-												className={
-													classes.requirementsContainer
-												}
-											>
-												{parsedRequirements.map(
-													requirement => (
-														<div
-															className={
-																classes.requirementItem
-															}
-															key={
-																requirement.requirementKey
-															}
-														>
-															{requirement.meetsRequirement && (
-																<CircleCheck
-																	className={
-																		classes.requirementIcon
-																	}
-																	color="green"
-																/>
-															)}
-
-															{!requirement.meetsRequirement && (
-																<CircleX
-																	className={
-																		classes.requirementIcon
-																	}
-																	color="red"
-																/>
-															)}
-
-															<Space w={'xs'} />
-															{
-																requirement.requirementComponent
-															}
-														</div>
-													)
-												)}
-											</div>
-										)}
-								</>
-							))}
+							</>
+						)}
 
 						{club.isClubAdmin && (
 							<>
