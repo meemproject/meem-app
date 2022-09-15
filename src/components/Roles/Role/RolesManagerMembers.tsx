@@ -93,9 +93,13 @@ const useStyles = createStyles(theme => ({
 
 interface IProps {
 	role?: ClubRole
+	onSaveChanges: (members: ClubMember[]) => void
 }
 
-export const RolesManagerMembers: React.FC<IProps> = ({ role }) => {
+export const RolesManagerMembers: React.FC<IProps> = ({
+	role,
+	onSaveChanges
+}) => {
 	const { classes } = useStyles()
 
 	// TODO: fetch role members
@@ -198,7 +202,12 @@ export const RolesManagerMembers: React.FC<IProps> = ({ role }) => {
 				<Space h={32} />
 
 				<Space h={24} />
-				<Button className={classes.buttonSaveChanges}>
+				<Button
+					className={classes.buttonSaveChanges}
+					onClick={() => {
+						onSaveChanges(members)
+					}}
+				>
 					Save Changes
 				</Button>
 			</div>

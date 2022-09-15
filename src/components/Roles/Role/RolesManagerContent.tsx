@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -93,7 +92,8 @@ export const RolesManagerContent: React.FC<IProps> = ({ initialRole }) => {
 	}
 
 	// Save any changes to the role
-	const saveChanges = () => {
+	const saveChanges = (clubMembers?: ClubMember[]) => {
+		// TODO: Handle changes to club members
 		// TODO
 	}
 
@@ -145,7 +145,12 @@ export const RolesManagerContent: React.FC<IProps> = ({ initialRole }) => {
 					</Tabs.Panel>
 
 					<Tabs.Panel value="members" pt="xs">
-						<RolesManagerMembers role={role} />
+						<RolesManagerMembers
+							role={role}
+							onSaveChanges={members => {
+								saveChanges(members)
+							}}
+						/>
 					</Tabs.Panel>
 				</Tabs>
 			</div>
