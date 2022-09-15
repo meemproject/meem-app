@@ -464,7 +464,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 												currentTab.name ===
 													tab.name && (
 													<RolesManagerContent
-														role={
+														initialRole={
 															tab.associatedRole
 														}
 													/>

@@ -84,9 +84,15 @@ const useStyles = createStyles(theme => ({
 
 interface IProps {
 	role?: ClubRole
+	onSaveChanges: () => void
+	onRoleUpdated: (role: ClubRole) => void
 }
 
-export const RolesManagerPermissions: React.FC<IProps> = ({ role }) => {
+export const RolesManagerPermissions: React.FC<IProps> = ({
+	role,
+	onSaveChanges,
+	onRoleUpdated
+}) => {
 	const { classes } = useStyles()
 
 	return (
@@ -104,7 +110,34 @@ export const RolesManagerPermissions: React.FC<IProps> = ({ role }) => {
 									<div className={classes.roleSwitchRow}>
 										{permission.locked && <Lock />}
 										<Space w={4} />
-										<Switch checked={permission.enabled} />
+										<Switch
+											checked={permission.enabled}
+											onChange={value => {
+												if (value) {
+													const newPermissions = [
+														...role.permissions
+													]
+													newPermissions.forEach(
+														perm => {
+															if (
+																perm.id ===
+																permission.id
+															) {
+																perm.enabled =
+																	value.currentTarget.checked
+															}
+														}
+													)
+													const newRole: ClubRole = {
+														name: role.name,
+														id: role.id,
+														permissions:
+															newPermissions
+													}
+													onRoleUpdated(newRole)
+												}
+											}}
+										/>
 									</div>
 								</div>
 								<Space h={16} />
@@ -120,7 +153,10 @@ export const RolesManagerPermissions: React.FC<IProps> = ({ role }) => {
 					Connect Discord
 				</Button>
 				<Space h={24} />
-				<Button className={classes.buttonSaveChanges}>
+				<Button
+					className={classes.buttonSaveChanges}
+					onClick={onSaveChanges}
+				>
 					Save Changes
 				</Button>
 			</div>

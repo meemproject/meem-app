@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -7,7 +8,7 @@ import {
 	Tabs,
 	Button
 } from '@mantine/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ClubMember, ClubRole } from '../../../model/club/club'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
@@ -70,13 +71,34 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
-	role?: ClubRole
+	initialRole?: ClubRole
 }
 
-export const RolesManagerContent: React.FC<IProps> = ({ role }) => {
+export const RolesManagerContent: React.FC<IProps> = ({ initialRole }) => {
 	const { classes } = useStyles()
 
 	const [members, setMembers] = useState<ClubMember[]>([])
+	const [role, setRole] = useState<ClubRole>()
+	const [roleName, setRoleName] = useState('')
+
+	// TODO: fetch role members
+
+	// Set initial role (updated later when changes are made in subcomponents)
+	useEffect(() => {
+		if (initialRole && !role) {
+			setRole(initialRole)
+			setRoleName(initialRole.name)
+		}
+	}, [initialRole, role])
+
+	const updateRole = (newRole: ClubRole) => {
+		setRole(newRole)
+	}
+
+	// Save any changes to the role
+	const saveChanges = () => {
+		// TODO
+	}
 
 	return (
 		<>
@@ -97,7 +119,16 @@ export const RolesManagerContent: React.FC<IProps> = ({ role }) => {
 					<Text color={'red'}>*</Text>
 				</div>
 				<Space h={12} />
-				<TextInput size={'lg'} radius={16} />
+				<TextInput
+					size={'lg'}
+					radius={16}
+					value={roleName}
+					onChange={event => {
+						if (event) {
+							setRoleName(event.target.value)
+						}
+					}}
+				/>
 				<Space h={12} />
 
 				<Tabs color="dark" defaultValue="permissions">
@@ -107,7 +138,13 @@ export const RolesManagerContent: React.FC<IProps> = ({ role }) => {
 					</Tabs.List>
 
 					<Tabs.Panel value="permissions" pt="xs">
-						<RolesManagerPermissions role={role} />
+						<RolesManagerPermissions
+							role={role}
+							onSaveChanges={saveChanges}
+							onRoleUpdated={newRole => {
+								updateRole(newRole)
+							}}
+						/>
 					</Tabs.Panel>
 
 					<Tabs.Panel value="members" pt="xs">
