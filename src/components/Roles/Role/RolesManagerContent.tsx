@@ -77,11 +77,8 @@ interface IProps {
 export const RolesManagerContent: React.FC<IProps> = ({ initialRole }) => {
 	const { classes } = useStyles()
 
-	const [members, setMembers] = useState<ClubMember[]>([])
 	const [role, setRole] = useState<ClubRole>()
 	const [roleName, setRoleName] = useState('')
-
-	// TODO: fetch role members
 
 	// Set initial role (updated later when changes are made in subcomponents)
 	useEffect(() => {
@@ -148,7 +145,7 @@ export const RolesManagerContent: React.FC<IProps> = ({ initialRole }) => {
 					</Tabs.Panel>
 
 					<Tabs.Panel value="members" pt="xs">
-						<RolesManagerMembers members={members} />
+						<RolesManagerMembers role={role} />
 					</Tabs.Panel>
 				</Tabs>
 			</div>
