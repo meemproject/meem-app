@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Text,
@@ -9,7 +10,7 @@ import {
 	TextInput,
 	Center
 } from '@mantine/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CircleMinus } from 'tabler-icons-react'
 import { ClubMember, ClubRole } from '../../../model/club/club'
 
@@ -124,6 +125,43 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		}
 	])
 
+	const [filteredMembers, setFilteredMembers] = useState<ClubMember[]>()
+
+	useEffect(() => {
+		if (!filteredMembers && members) {
+			setFilteredMembers([...members])
+		}
+	}, [filteredMembers, members])
+
+	const filterMembers = (
+		allMembers: ClubMember[],
+		currentSearchTerm: string
+	) => {
+		const search = currentSearchTerm
+		const newFiltered: ClubMember[] = []
+
+		if (currentSearchTerm.length > 0) {
+			allMembers.forEach(member => {
+				if (
+					(member.displayName &&
+						member.displayName.toLowerCase().includes(search)) ||
+					(member.ens && member.ens.toLowerCase().includes(search)) ||
+					(member.wallet &&
+						member.wallet.toLowerCase().includes(search))
+				) {
+					newFiltered.push(member)
+				}
+			})
+			log.debug(
+				`found ${newFiltered.length} entries matching search term ${currentSearchTerm}`
+			)
+			setFilteredMembers(newFiltered)
+		} else {
+			log.debug('no search term, resetting to all members')
+			setFilteredMembers(allMembers)
+		}
+	}
+
 	const addMember = (member: ClubMember) => {
 		const newMembers = [...members]
 		newMembers.push(member)
@@ -135,6 +173,8 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		setMembers(newMembers)
 	}
 
+	const [isMembersModalOpen, setIsMembersModalOpen] = useState(false)
+
 	return (
 		<>
 			<div>
@@ -144,6 +184,13 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						size={'md'}
 						radius={16}
 						className={classes.fullWidthTextInput}
+						onChange={event => {
+							if (event.target.value) {
+								filterMembers(members, event.target.value)
+							} else {
+								filterMembers(members, '')
+							}
+						}}
 					/>
 					<Space w={16} />
 					<Button className={classes.outlineButton}>
@@ -152,9 +199,9 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 				</div>
 				<Space h={16} />
 
-				{members && (
+				{filteredMembers && (
 					<>
-						{members.map(member => (
+						{filteredMembers.map(member => (
 							<div key={member.wallet}>
 								<Space h={16} />
 								<div className={classes.memberItemRow}>
@@ -199,6 +246,19 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						</Center>
 					</>
 				)}
+				{members.length > 0 &&
+					filteredMembers &&
+					filteredMembers.length === 0 && (
+						<>
+							<Space h={24} />
+							<Center>
+								<Text>
+									No members found with that search term. Try
+									something else.
+								</Text>
+							</Center>
+						</>
+					)}
 				<Space h={32} />
 
 				<Space h={24} />
