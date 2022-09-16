@@ -106,6 +106,8 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 }) => {
 	const { classes } = useStyles()
 
+	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
+
 	// TODO: fetch role members
 	const [members, setMembers] = useState<ClubMember[]>([
 		{
@@ -136,14 +138,11 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		}
 	}, [filteredMembers, members])
 
-	const filterMembers = (
-		allMembers: ClubMember[],
-		currentSearchTerm: string
-	) => {
-		const search = currentSearchTerm
+	const filterMembers = (allMembers: ClubMember[], searchTerm: string) => {
+		const search = searchTerm
 		const newFiltered: ClubMember[] = []
 
-		if (currentSearchTerm.length > 0) {
+		if (searchTerm.length > 0) {
 			allMembers.forEach(member => {
 				if (
 					(member.displayName &&
@@ -156,7 +155,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 				}
 			})
 			log.debug(
-				`found ${newFiltered.length} entries matching search term ${currentSearchTerm}`
+				`found ${newFiltered.length} entries matching search term ${searchTerm}`
 			)
 			setFilteredMembers(newFiltered)
 		} else {
@@ -166,13 +165,16 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 	}
 
 	const addMember = (member: ClubMember) => {
+		log.debug('add member')
 		const newMembers = [...members]
 		newMembers.push(member)
+		filterMembers(newMembers, currentSearchTerm)
 		setMembers(newMembers)
 	}
 
 	const removeMember = (member: ClubMember) => {
 		const newMembers = members.filter(memb => memb.wallet !== member.wallet)
+		filterMembers(newMembers, currentSearchTerm)
 		setMembers(newMembers)
 	}
 
@@ -189,8 +191,10 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						className={classes.fullWidthTextInput}
 						onChange={event => {
 							if (event.target.value) {
+								setCurrentSearchTerm(event.target.value)
 								filterMembers(members, event.target.value)
 							} else {
+								setCurrentSearchTerm('')
 								filterMembers(members, '')
 							}
 						}}

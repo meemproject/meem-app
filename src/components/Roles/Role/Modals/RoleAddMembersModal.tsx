@@ -192,6 +192,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 							setCurrentSearchTerm(event.target.value)
 							filterMembers(members, event.target.value)
 						} else {
+							setCurrentSearchTerm('')
 							filterMembers(members, '')
 						}
 					}}
@@ -255,7 +256,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					<>
 						<Space h={24} />
 						<Center>
-							<Text>No members found...</Text>
+							<Text>
+								All members of this club already have this role.
+							</Text>
 						</Center>
 					</>
 				)}
@@ -282,6 +285,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 							)
 							if (chosenMembers.length > 0) {
 								onMembersSaved(chosenMembers)
+								onModalClosed()
 							} else {
 								showNotification({
 									radius: 'lg',
