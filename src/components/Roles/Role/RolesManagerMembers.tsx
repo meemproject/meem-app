@@ -12,7 +12,8 @@ import {
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { CircleMinus } from 'tabler-icons-react'
-import { ClubMember, ClubRole } from '../../../model/club/club'
+import { Club, ClubMember, ClubRole } from '../../../model/club/club'
+import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
 const useStyles = createStyles(theme => ({
 	row: {
@@ -93,11 +94,13 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
+	club: Club
 	role?: ClubRole
 	onSaveChanges: (members: ClubMember[]) => void
 }
 
 export const RolesManagerMembers: React.FC<IProps> = ({
+	club,
 	role,
 	onSaveChanges
 }) => {
@@ -193,7 +196,12 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						}}
 					/>
 					<Space w={16} />
-					<Button className={classes.outlineButton}>
+					<Button
+						className={classes.outlineButton}
+						onClick={() => {
+							setIsMembersModalOpen(true)
+						}}
+					>
 						+ Add Members
 					</Button>
 				</div>
@@ -273,6 +281,19 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 			</div>
 
 			<Space h={64} />
+			<RoleAddMembersModal
+				existingRoleMembers={members}
+				club={club}
+				onModalClosed={() => {
+					setIsMembersModalOpen(false)
+				}}
+				isOpened={isMembersModalOpen}
+				onMembersSaved={newMembers => {
+					newMembers.forEach(member => {
+						addMember(member)
+					})
+				}}
+			/>
 		</>
 	)
 }

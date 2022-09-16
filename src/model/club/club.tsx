@@ -52,6 +52,9 @@ export interface ClubMember {
 	discordUserId?: string
 	emailAddress?: string
 	roles?: string[]
+
+	// Convenience bool for roles
+	chosen?: boolean
 }
 
 export interface Club {

@@ -70,10 +70,14 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
+	club: Club
 	initialRole?: ClubRole
 }
 
-export const RolesManagerContent: React.FC<IProps> = ({ initialRole }) => {
+export const RolesManagerContent: React.FC<IProps> = ({
+	initialRole,
+	club
+}) => {
 	const { classes } = useStyles()
 
 	const [role, setRole] = useState<ClubRole>()
@@ -147,6 +151,7 @@ export const RolesManagerContent: React.FC<IProps> = ({ initialRole }) => {
 					<Tabs.Panel value="members" pt="xs">
 						<RolesManagerMembers
 							role={role}
+							club={club}
 							onSaveChanges={members => {
 								saveChanges(members)
 							}}
