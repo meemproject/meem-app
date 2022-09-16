@@ -120,8 +120,15 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 
+	const [hasFilteredMembers, setHasFilteredMembers] = useState(false)
+
 	useEffect(() => {
-		if (isOpened && members.length === 0 && club.members) {
+		if (
+			isOpened &&
+			members.length === 0 &&
+			!hasFilteredMembers &&
+			club.members
+		) {
 			log.debug('filter out club members...')
 			// filter out club members by whether they're already added to this role
 			const filteredClubMembers: ClubMember[] = []
@@ -130,13 +137,27 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					memb => memb.wallet === member.wallet
 				)
 				if (filter.length === 0) {
+					member.chosen = false
 					filteredClubMembers.push(member)
 				}
 			})
 			setMembers(filteredClubMembers)
 			setFilteredMembers(filteredClubMembers)
+			setHasFilteredMembers(true)
 		}
-	}, [club.members, existingRoleMembers, filteredMembers, isOpened, members])
+
+		if (!isOpened && hasFilteredMembers) {
+			setHasFilteredMembers(false)
+			setMembers([])
+		}
+	}, [
+		club.members,
+		existingRoleMembers,
+		filteredMembers,
+		hasFilteredMembers,
+		isOpened,
+		members
+	])
 
 	const filterMembers = (allMembers: ClubMember[], searchTerm: string) => {
 		const search = searchTerm
@@ -181,8 +202,6 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider />
-
 				<TextInput
 					size={'md'}
 					radius={16}
@@ -197,6 +216,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						}
 					}}
 				/>
+
 				{filteredMembers && (
 					<>
 						{filteredMembers.map(member => (
@@ -207,23 +227,27 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 										<Checkbox
 											checked={member.chosen}
 											onChange={event => {
-												const newMembers = [...members]
-												newMembers.forEach(
-													newMember => {
-														if (
-															newMember.wallet ===
-															member.wallet
-														) {
-															newMember.chosen =
-																event.currentTarget.checked
+												if (event.target.value) {
+													const newMembers = [
+														...members
+													]
+													newMembers.forEach(
+														newMember => {
+															if (
+																newMember.wallet ===
+																member.wallet
+															) {
+																newMember.chosen =
+																	event.currentTarget.checked
+															}
 														}
-													}
-												)
-												setMembers(newMembers)
-												filterMembers(
-													newMembers,
-													currentSearchTerm
-												)
+													)
+													setMembers(newMembers)
+													filterMembers(
+														newMembers,
+														currentSearchTerm
+													)
+												}
 											}}
 										/>
 										<Image
@@ -275,6 +299,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 							</Center>
 						</>
 					)}
+				<Space h={24} />
 
 				<div className={classes.row}>
 					<Button
@@ -297,7 +322,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					>
 						{'+ Add Members'}
 					</Button>
-					<Space w={16} />
+					<Space w={8} />
 					<Button
 						onClick={() => {
 							onModalClosed()
@@ -307,8 +332,6 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						Cancel
 					</Button>
 				</div>
-
-				<Space h={24} />
 			</Modal>
 		</>
 	)
