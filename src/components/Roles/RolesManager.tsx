@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -23,7 +24,11 @@ import {
 	MeemContracts
 } from '../../../generated/graphql'
 import { SUB_CLUB } from '../../graphql/clubs'
-import clubFromMeemContract, { Club, ClubRole } from '../../model/club/club'
+import clubFromMeemContract, {
+	Club,
+	ClubRole,
+	emptyRole
+} from '../../model/club/club'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 
 const useStyles = createStyles(theme => ({
@@ -236,6 +241,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 
 	const [tabs, setTabs] = useState<Tab[]>([])
 	const [currentTab, setCurrentTab] = useState<Tab>()
+	const [isAddingNewRole, setIsAddingNewRole] = useState(false)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	const navigateToClubAdmin = () => {
@@ -243,9 +249,13 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	}
 
 	const addRole = () => {
-		const newTabs = [...tabs]
-		newTabs.push({ name: 'Add Role' })
-		setTabs(newTabs)
+		if (!isAddingNewRole) {
+			setIsAddingNewRole(true)
+			const newTabs = [...tabs]
+			newTabs.push({ name: 'Add Role', associatedRole: emptyRole() })
+			setTabs(newTabs)
+			setCurrentTab(newTabs[newTabs.length - 1])
+		}
 	}
 
 	const {
@@ -283,11 +293,26 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 				})
 			}
 
-			if (router.query.tab === 'newRole') {
-				newTabs.push({ name: 'Add Role' })
+			let displayedTab = newTabs[newTabs.length - 1]
+			if (router.query.role) {
+				const roleId = router.query.role.toString().replaceAll('/', '')
+				log.debug(`roleid = ${roleId}`)
+
+				newTabs.forEach(tab => {
+					if (
+						tab.associatedRole &&
+						tab.associatedRole.id === roleId
+					) {
+						log.debug(`tab should be ${tab.associatedRole.id}`)
+						displayedTab = tab
+					}
+				})
+			} else if (router.query.createRole) {
+				newTabs.push({ name: 'Add Role', associatedRole: emptyRole() })
+				displayedTab = newTabs[newTabs.length - 1]
 			}
 
-			setCurrentTab(newTabs[newTabs.length - 1])
+			setCurrentTab(displayedTab)
 
 			setTabs(newTabs)
 		}
@@ -308,7 +333,15 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 		if (!loading && !error && !club && clubData) {
 			getClub(clubData)
 		}
-	}, [club, clubData, error, loading, router.query.tab, wallet])
+	}, [
+		club,
+		clubData,
+		error,
+		loading,
+		router.query.createRole,
+		router.query.role,
+		wallet
+	])
 
 	return (
 		<>
@@ -459,7 +492,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 							{!mobileNavBarVisible && (
 								<div className={classes.adminContent}>
 									{tabs.map(tab => (
-										<>
+										<div key={tab.name}>
 											{currentTab &&
 												currentTab.name ===
 													tab.name && (
@@ -468,9 +501,26 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 														initialRole={
 															tab.associatedRole
 														}
+														onRoleUpdated={newRole => {
+															tabs.forEach(
+																theTab => {
+																	if (
+																		theTab.associatedRole &&
+																		theTab
+																			.associatedRole
+																			.id ===
+																			newRole.id
+																	) {
+																		theTab.associatedRole =
+																			newRole
+																	}
+																}
+															)
+															setTabs(tabs)
+														}}
 													/>
 												)}
-										</>
+										</div>
 									))}
 								</div>
 							)}

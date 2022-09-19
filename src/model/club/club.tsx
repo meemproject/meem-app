@@ -42,6 +42,13 @@ export interface ClubRole {
 	permissions: ClubRolePermission[]
 }
 
+export function emptyRole(): ClubRole {
+	return {
+		id: 'addRole',
+		name: '',
+		permissions: []
+	}
+}
 export interface ClubMember {
 	displayName?: string
 	wallet: string
