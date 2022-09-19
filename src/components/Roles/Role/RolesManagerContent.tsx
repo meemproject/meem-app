@@ -17,6 +17,7 @@ import {
 	ClubRole,
 	ClubRolePermission
 } from '../../../model/club/club'
+import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
 
@@ -91,9 +92,13 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const { classes } = useStyles()
 
 	const [role, setRole] = useState<ClubRole>()
+	const [roleMembers, setRoleMembers] = useState<ClubMember[]>([])
 
 	const [isLoadingPermissions, setIsLoadingPermissons] = useState(false)
 	const [roleName, setRoleName] = useState('')
+
+	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
+		useState(false)
 
 	// Set initial role (updated later when changes are made in subcomponents)
 	useEffect(() => {
@@ -159,8 +164,16 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 	// Save any changes to the role
 	const saveChanges = (clubMembers?: ClubMember[]) => {
-		// TODO: Handle changes to club members
-		// TODO
+		// Save process
+		// 1. Open modal
+		// 2. Listen for changes in the club
+		// 3. Trigger transaction
+		// 4. When change detected, refresh the page, ideally to where the previous tab was
+		// TODO: Trigger save changes modal.
+		if (clubMembers) {
+			setRoleMembers(clubMembers)
+		}
+		setIsSaveChangesModalOpened(true)
 	}
 
 	return (
@@ -236,6 +249,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					</Tabs.Panel>
 				</Tabs>
 			</div>
+
+			<RoleManagerChangesModal
+				isOpened={isSaveChangesModalOpened}
+				onModalClosed={() => {}}
+				role={role}
+				roleMembers={roleMembers}
+				club={club}
+			/>
 
 			<Space h={64} />
 		</>
