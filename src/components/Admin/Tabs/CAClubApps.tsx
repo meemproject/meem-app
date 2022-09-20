@@ -342,6 +342,9 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				updatedInte.verifiedTwitterUser =
 					extraData.twitterUsername ?? ''
 				updatedInte.publicationSlug = extraData.publicationSlug ?? ''
+				if (extraData.publicationSlug) {
+					updatedInte.url = `https://paragraph.xyz/@${extraData.publicationSlug}`
+				}
 				updatedInte.publicationName = extraData.publicatioName ?? ''
 			}
 			setIntegrationBeingEdited(updatedInte)
