@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createStyles, Text, Button, Space, Badge } from '@mantine/core'
+import { createStyles, Text, Button, Space, Badge, Menu } from '@mantine/core'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
 
@@ -55,7 +55,8 @@ const useStyles = createStyles(theme => ({
 	},
 	roleLeftRow: {
 		display: 'flex',
-		alignItems: 'center'
+		alignItems: 'center',
+		marginTop: 4
 	},
 	roleItem: {
 		display: 'flex',
@@ -76,6 +77,20 @@ const useStyles = createStyles(theme => ({
 	badge: {
 		paddingLeft: 8,
 		paddingRight: 8
+	},
+	menuItem: {
+		fontWeight: 600
+	},
+	redMenuItem: {
+		fontWeight: 600,
+		color: 'rgba(255, 102, 81, 1)',
+		marginBottom: '-2px',
+		marginTop: '-2px'
+	},
+	roleMenu: {
+		width: 32,
+		marginTop: 4,
+		marginBottom: -4
 	}
 }))
 
@@ -86,6 +101,7 @@ interface IProps {
 export const CARoles: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
+	const [isRoleMenuOpened, setRoleMenuOpened] = useState(false)
 
 	const createRole = () => {
 		router.push({
@@ -106,19 +122,18 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			{club.roles && (
 				<>
 					{club.roles.map(role => (
-						<div
-							className={classes.roleItem}
-							key={role.id}
-							onClick={() => {
-								router.push({
-									pathname: `/${club.slug}/roles`,
-									query: {
-										role: `/${role.id}`
-									}
-								})
-							}}
-						>
-							<div className={classes.roleLeftRow}>
+						<div className={classes.roleItem} key={role.id}>
+							<div
+								className={classes.roleLeftRow}
+								onClick={() => {
+									router.push({
+										pathname: `/${club.slug}/roles`,
+										query: {
+											role: `/${role.id}`
+										}
+									})
+								}}
+							>
 								<Lock size={16} style={{ marginBottom: 1 }} />
 								<Space w={4} />
 								<Text>{role.name}</Text>
@@ -148,7 +163,39 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 									{'member count'}
 								</Badge>
 							</div>
-							<Dots onClick={() => {}} />
+							<div className={classes.roleMenu}>
+								<Menu
+									radius={8}
+									shadow={'lg'}
+									onClose={() => setRoleMenuOpened(false)}
+									onOpen={() => setRoleMenuOpened(true)}
+								>
+									<Menu.Target>
+										<Dots />
+									</Menu.Target>
+									<Menu.Dropdown>
+										<Menu.Item
+											onClick={() => {
+												router.push({
+													pathname: `/${club.slug}/roles`,
+													query: {
+														role: `/${role.id}`
+													}
+												})
+											}}
+											className={classes.menuItem}
+										>
+											Manage Role
+										</Menu.Item>
+										<Menu.Item
+											onClick={() => {}}
+											className={classes.redMenuItem}
+										>
+											Delete Role
+										</Menu.Item>
+									</Menu.Dropdown>
+								</Menu>
+							</div>
 						</div>
 					))}
 				</>
