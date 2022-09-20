@@ -1279,7 +1279,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											className={classes.buttonJoinClub}
 										>
 											{' '}
-											{`Add your first apps`}
+											{`Add apps`}
 										</Button>
 									</Alert>
 								</>
