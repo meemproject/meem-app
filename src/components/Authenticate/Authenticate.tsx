@@ -104,10 +104,9 @@ const MAuthenticate: React.FC = () => {
 						title: 'Login Failed',
 						message: 'Please refresh the page and try again.'
 					})
+					setIsLoading(false)
 				}
 			}
-
-			setIsLoading(false)
 		},
 		[router, wallet]
 	)
