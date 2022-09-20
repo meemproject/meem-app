@@ -210,17 +210,22 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 		)}&publicationUrl=${publicationUrl}`
 
 		if (isClubMembersOnly) {
+			log.debug('set additional properties for members-only pub')
 			const communityName = encodeURIComponent(`${club.name} Members`)
 			const clubUrl = encodeURIComponent(
 				`https://clubs.link/${club.slug}`
 			)
 			const membershipName = encodeURIComponent(`${club.name} Token`)
-			url += `&tokenAddress=${club.address}&communityName=${communityName}&tokenUrl=${clubUrl}&membershipName=${membershipName}`
+			url = `https://paragraph.xyz/link?publicationName=${encodeURIComponent(
+				publicationName
+			)}&publicationUrl=${publicationUrl}&tokenAddress=${
+				club.address
+			}&communityName=${communityName}&tokenUrl=${clubUrl}&membershipName=${membershipName}`
 		}
 
 		log.debug(`launching paragraph modal with url: ${url}`)
 
-		const popup = window.open(url, 'popup', 'width=600,height=700')
+		const popup = window.open(url)
 
 		if (popup) {
 			const listener = function (e: any) {
