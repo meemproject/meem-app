@@ -101,7 +101,6 @@ interface IProps {
 export const CARoles: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
-	const [isRoleMenuOpened, setRoleMenuOpened] = useState(false)
 
 	const createRole = () => {
 		router.push({
@@ -164,12 +163,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 								</Badge>
 							</div>
 							<div className={classes.roleMenu}>
-								<Menu
-									radius={8}
-									shadow={'lg'}
-									onClose={() => setRoleMenuOpened(false)}
-									onOpen={() => setRoleMenuOpened(true)}
-								>
+								<Menu radius={8} shadow={'lg'}>
 									<Menu.Target>
 										<Dots />
 									</Menu.Target>
