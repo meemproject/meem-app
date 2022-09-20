@@ -1262,7 +1262,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											className={
 												classes.appsEmptyStateTitle
 											}
-										>{`This club is boring! 🙄`}</Text>
+										>{`Add your first apps`}</Text>
 										<Space h={4} />
 										<Text
 											className={
