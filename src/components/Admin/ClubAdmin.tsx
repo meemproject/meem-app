@@ -165,7 +165,7 @@ const useStyles = createStyles(theme => ({
 	},
 	adminContainer: {
 		display: 'flex',
-		width: '100%',
+		width: '90%',
 		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
 			flexDirection: 'column'
 		}
@@ -194,7 +194,7 @@ const useStyles = createStyles(theme => ({
 	adminContent: {
 		marginLeft: 32,
 		marginRight: 32,
-		width: '100%',
+		width: '90%',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8,
 			width: 'auto'
