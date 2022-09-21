@@ -225,6 +225,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						{!isLoadingPermissions && (
 							<RolesManagerPermissions
 								role={role}
+								club={club}
 								onSaveChanges={saveChanges}
 								onRoleUpdated={newRole => {
 									updateRole(newRole)

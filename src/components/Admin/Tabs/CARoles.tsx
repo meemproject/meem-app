@@ -2,7 +2,7 @@
 import { createStyles, Text, Button, Space, Badge, Menu } from '@mantine/core'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
 
