@@ -283,7 +283,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
-	const [isWrongNetwork, setIsWrongNetwork] = useState(false)
+	// const [isWrongNetwork, setIsWrongNetwork] = useState(false)
 
 	const [club, setClub] = useState<Club | undefined>()
 
@@ -295,6 +295,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug,
+			chainId: wallet.chainId,
 			visibilityLevel: club?.isClubMember
 				? ['mutual-club-members', 'anyone']
 				: ['anyone'],
@@ -425,7 +426,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 					// @ts-ignore
 					await tx.wait()
-				} else if (club?.address) {
+				} else if (club?.address && wallet.chainId) {
 					// No cost to join. Call the API
 					const joinClubFetcher = makeFetcher<
 						MeemAPI.v1.MintOriginalMeem.IQueryParams,
@@ -446,7 +447,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								description: club?.description,
 								image: club?.image,
 								meem_metadata_version: 'MeemClub_Token_20220718'
-							}
+							},
+							chainId: wallet.chainId
 						}
 					)
 				} else {
@@ -893,16 +895,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		wallet
 	])
 
-	useEffect(() => {
-		if (
-			wallet.isConnected &&
-			process.env.NEXT_PUBLIC_CHAIN_ID &&
-			+process.env.NEXT_PUBLIC_CHAIN_ID !== wallet.chainId
-		) {
-			setIsWrongNetwork(true)
-		}
-	}, [wallet])
-
 	const navigateToSettings = () => {
 		router.push({ pathname: `/${slug}/admin` })
 	}
@@ -1049,16 +1041,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														club.membershipSettings
 															?.costToJoin ?? 0
 												  } MATIC`
-												: wallet.isConnected &&
-												  !isWrongNetwork
+												: wallet.isConnected
 												? `Join`
 												: '')}
 										{!doesMeetAllRequirements &&
 											wallet.isConnected &&
-											!isWrongNetwork &&
 											'Requirements not met'}
-										{(!wallet.isConnected ||
-											isWrongNetwork) &&
+										{!wallet.isConnected &&
 											'Connect wallet to join'}
 									</Button>
 								)}

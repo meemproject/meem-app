@@ -5,6 +5,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { hostnameToChainId } from '../../components/App'
 import { ClubDetailComponent } from '../../components/Detail/ClubDetail'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
@@ -96,7 +97,10 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 	)
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+	params,
+	req
+}) => {
 	let club: ClubPropViewModel | undefined
 	const client = ssrGraphqlClient
 
@@ -106,6 +110,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 				query: GET_CLUB,
 				variables: {
 					slug: params.slug,
+					chainId: hostnameToChainId(req.headers.host ?? ''),
 					visibilityLevel: ['anyone'],
 					showPublicApps: [true]
 				}

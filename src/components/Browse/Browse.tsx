@@ -12,6 +12,7 @@ import {
 	Grid,
 	Badge
 } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -119,6 +120,7 @@ const useStyles = createStyles(theme => ({
 export const BrowseComponent: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
+	const { chainId } = useWallet()
 	const limit = 20
 	const [page, setPage] = useState(0)
 
@@ -129,7 +131,11 @@ export const BrowseComponent: React.FC = () => {
 		error,
 		data: clubData
 	} = useQuery<AllClubsQuery>(GET_ALL_CLUBS, {
-		variables: { limit, offset: limit * page }
+		variables: {
+			chainId,
+			limit,
+			offset: limit * page
+		}
 	})
 
 	const navigateHome = () => {

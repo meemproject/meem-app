@@ -41,8 +41,10 @@ export const GET_IS_MEMBER_OF_CLUB = gql`
 `
 
 export const GET_CLUBS_AUTOCOMPLETE = gql`
-	query GetClubsAutocomplete($query: String) {
-		MeemContracts(where: { name: { _ilike: $query } }) {
+	query GetClubsAutocomplete($query: String, $chainId: Int) {
+		MeemContracts(
+			where: { name: { _ilike: $query }, chainId: { _eq: $chainId } }
+		) {
 			id
 			name
 			metadata
@@ -62,10 +64,13 @@ export const GET_CLUB_SLUG = gql`
 export const GET_CLUB = gql`
 	query GetClub(
 		$slug: String
+		$chainId: Int
 		$visibilityLevel: [String!]
 		$showPublicApps: [Boolean!]
 	) {
-		MeemContracts(where: { slug: { _eq: $slug } }) {
+		MeemContracts(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
 			slug
 			address
 			metadata
@@ -130,10 +135,13 @@ export const GET_CLUB = gql`
 export const SUB_CLUB = gql`
 	subscription GetClubSubscription(
 		$slug: String
+		$chainId: Int
 		$visibilityLevel: [String!]
 		$showPublicApps: [Boolean!]
 	) {
-		MeemContracts(where: { slug: { _eq: $slug } }) {
+		MeemContracts(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
 			slug
 			address
 			metadata
@@ -196,8 +204,10 @@ export const SUB_CLUB = gql`
 `
 
 export const SUB_CLUBS = gql`
-	subscription ClubSubscription($address: String) {
-		MeemContracts(where: { address: { _eq: $address } }) {
+	subscription ClubSubscription($address: String, $chainId: Int) {
+		MeemContracts(
+			where: { address: { _eq: $address }, chainId: { _eq: $chainId } }
+		) {
 			slug
 			address
 			createdAt
@@ -243,8 +253,9 @@ export const GET_INTEGRATIONS = gql`
 `
 
 export const GET_ALL_CLUBS = gql`
-	query AllClubs($limit: Int, $offset: Int) {
+	query AllClubs($chainId: Int, $limit: Int, $offset: Int) {
 		MeemContracts(
+			where: { chainId: { _eq: $chainId } }
 			order_by: { Meems_aggregate: { count: desc } }
 			limit: $limit
 			offset: $offset
@@ -285,11 +296,12 @@ export const GET_ALL_CLUBS = gql`
 `
 
 export const SUB_MY_CLUBS = gql`
-	subscription MyClubsSubscription($walletAddress: String) {
+	subscription MyClubsSubscription($walletAddress: String, $chainId: Int) {
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
 				Owner: { address: { _ilike: $walletAddress } }
+				MeemContract: { chainId: { _eq: $chainId } }
 			}
 			order_by: { MeemContract: { Meems_aggregate: { count: desc } } }
 		) {
