@@ -21,6 +21,9 @@ import { SUB_MY_CLUBS } from '../../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../../model/club/club'
 
 const useStyles = createStyles(theme => ({
+	row: {
+		display: 'flex'
+	},
 	header: {
 		marginBottom: 60,
 		display: 'flex',
@@ -214,30 +217,47 @@ export const MyClubsComponent: React.FC = () => {
 												{club.name}
 											</Text>
 											<Space h={4} />
-											<Badge
-												variant="gradient"
-												gradient={{
-													from: '#DCDCDC',
-													to: '#DCDCDC',
-													deg: 35
-												}}
-												classNames={{
-													inner: classes.badgeText,
-													root: classes.badge
-												}}
-												leftSection={
-													<>
-														<Group
-															color="#000"
-															style={{
-																marginTop: 5
-															}}
-														/>
-													</>
-												}
-											>
-												{club.memberCount}
-											</Badge>
+											<div className={classes.row}>
+												<Badge
+													variant="gradient"
+													gradient={{
+														from: '#DCDCDC',
+														to: '#DCDCDC',
+														deg: 35
+													}}
+													classNames={{
+														inner: classes.badgeText,
+														root: classes.badge
+													}}
+													leftSection={
+														<>
+															<Group
+																color="#000"
+																style={{
+																	marginTop: 5
+																}}
+															/>
+														</>
+													}
+												>
+													{club.memberCount}
+												</Badge>
+												<Space w={4} />
+												<Badge
+													variant="gradient"
+													gradient={{
+														from: '#DCDCDC',
+														to: '#DCDCDC',
+														deg: 35
+													}}
+													classNames={{
+														inner: classes.badgeText,
+														root: classes.badge
+													}}
+												>
+													<Text>{'3 Roles'}</Text>
+												</Badge>
+											</div>
 										</div>
 									</div>
 								</div>

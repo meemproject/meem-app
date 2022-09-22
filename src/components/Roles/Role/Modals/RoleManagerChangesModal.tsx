@@ -12,33 +12,8 @@ import {
 } from '../../../../../generated/graphql'
 import { SUB_CLUB } from '../../../../graphql/clubs'
 import { Club, ClubMember, ClubRole } from '../../../../model/club/club'
+import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 // eslint-disable-next-line import/namespace
-
-const useStyles = createStyles(() => ({
-	header: {
-		display: 'flex',
-		alignItems: 'center',
-		flexDirection: 'column',
-		paddingTop: 8,
-		paddingBottom: 8,
-		paddingLeft: 16,
-		paddingRight: 16,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	title: {
-		fontWeight: 600,
-		fontSize: 24
-	},
-	info: {
-		fontWeight: 600,
-		textAlign: 'center',
-		fontSize: 18
-	}
-}))
 
 interface IProps {
 	club?: Club
@@ -57,7 +32,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 }) => {
 	const wallet = useWallet()
 
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -208,18 +183,19 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={classes.header}>
+				<div className={styles.modalHeader}>
 					<Space h={128} />
 
 					<Loader color="red" variant="oval" />
 					<Space h={24} />
 					<Text
-						className={classes.title}
+						className={styles.tTitle}
 					>{`There's magic happening on the blockchain.`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={classes.info}
+						className={styles.tSubtitle}
+						styles={{ textAlign: 'center' }}
 					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
 				</div>
 				<Space h={12} />

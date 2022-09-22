@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	TextInput,
@@ -11,73 +10,11 @@ import {
 	Center
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import {
-	Club,
-	ClubMember,
-	ClubRole,
-	ClubRolePermission
-} from '../../../model/club/club'
+import { Club, ClubMember, ClubRole } from '../../../model/club/club'
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
-
-const useStyles = createStyles(theme => ({
-	row: {
-		display: 'flex'
-	},
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	buttonSaveChangesInHeader: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	textField: {
-		maxWidth: 800
-	},
-	spacedRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between'
-	}
-}))
-
 interface IProps {
 	club: Club
 	initialRole?: ClubRole
@@ -89,7 +26,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	club,
 	onRoleUpdated
 }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const [role, setRole] = useState<ClubRole>()
 	const [roleMembers, setRoleMembers] = useState<ClubMember[]>([])
@@ -180,24 +117,25 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h={14} />
-				<div className={classes.spacedRow}>
-					<Text className={classes.manageClubHeader}>
+				<div className={styles.spacedRow} style={{ marginBottom: 32 }}>
+					<Text className={styles.tSectionTitle}>
 						{role && role.name.length > 0 ? role.name : 'Add Role'}
 					</Text>
-					<Button className={classes.buttonSaveChanges}>
-						Save Changes
-					</Button>
+					<Button className={styles.buttonBlack}>Save Changes</Button>
 				</div>
 
-				<div className={classes.row}>
-					<Text>Role Name</Text>
-					<Space w={4} />
+				<div className={styles.row}>
+					<Text className={styles.tSectionTitleSmall}>ROLE NAME</Text>
+					<Space w={2} />
 					<Text color={'red'}>*</Text>
 				</div>
 				<Space h={12} />
 				<TextInput
 					size={'lg'}
-					radius={16}
+					radius={20}
+					classNames={{
+						input: styles.fTextField
+					}}
 					value={roleName}
 					onChange={event => {
 						if (event) {
@@ -217,15 +155,21 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 				<Tabs color="dark" defaultValue="permissions">
 					<Tabs.List>
-						<Tabs.Tab value="permissions">Permissions</Tabs.Tab>
-						<Tabs.Tab value="members">Members</Tabs.Tab>
+						<Tabs.Tab
+							style={{ fontWeight: 700 }}
+							value="permissions"
+						>
+							Permissions
+						</Tabs.Tab>
+						<Tabs.Tab style={{ fontWeight: 700 }} value="members">
+							Members
+						</Tabs.Tab>
 					</Tabs.List>
 
 					<Tabs.Panel value="permissions" pt="xs">
 						{!isLoadingPermissions && (
 							<RolesManagerPermissions
 								role={role}
-								club={club}
 								onSaveChanges={saveChanges}
 								onRoleUpdated={newRole => {
 									updateRole(newRole)

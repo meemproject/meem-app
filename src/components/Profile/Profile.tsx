@@ -159,38 +159,6 @@ const useStyles = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row'
 	},
-
-	activeTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-		fontWeight: 600,
-		color: 'black',
-		textDecoration: 'underline',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
-	},
-	inactiveTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-
-		fontWeight: 600,
-		color: 'rgba(45, 28, 28, 0.3)',
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
-	},
-	visibleTab: {
-		display: 'block'
-	},
-	invisibleTab: {
-		display: 'none'
-	},
 	profileIntegrationsSectionTitle: {
 		fontSize: 20,
 		marginBottom: 16,

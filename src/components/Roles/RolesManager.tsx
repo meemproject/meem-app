@@ -493,33 +493,36 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								<div className={classes.adminContent}>
 									{tabs.map(tab => (
 										<div key={tab.name}>
-											{currentTab &&
-												currentTab.name ===
-													tab.name && (
-													<RolesManagerContent
-														club={club}
-														initialRole={
-															tab.associatedRole
-														}
-														onRoleUpdated={newRole => {
-															tabs.forEach(
-																theTab => {
-																	if (
-																		theTab.associatedRole &&
-																		theTab
-																			.associatedRole
-																			.id ===
-																			newRole.id
-																	) {
-																		theTab.associatedRole =
-																			newRole
-																	}
-																}
-															)
-															setTabs(tabs)
-														}}
-													/>
-												)}
+											<div
+												className={
+													currentTab &&
+													currentTab.name === tab.name
+														? classes.visibleTab
+														: classes.invisibleTab
+												}
+											>
+												<RolesManagerContent
+													club={club}
+													initialRole={
+														tab.associatedRole
+													}
+													onRoleUpdated={newRole => {
+														tabs.forEach(theTab => {
+															if (
+																theTab.associatedRole &&
+																theTab
+																	.associatedRole
+																	.id ===
+																	newRole.id
+															) {
+																theTab.associatedRole =
+																	newRole
+															}
+														})
+														setTabs(tabs)
+													}}
+												/>
+											</div>
 										</div>
 									))}
 								</div>

@@ -1,3 +1,6 @@
+// Disabled unused vars for dev purposes
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -7,104 +10,15 @@ import {
 	Button,
 	Center,
 	Loader,
-	TextInput,
 	Select,
 	// Bug in mantine imports here
 	// eslint-disable-next-line import/named
 	SelectItemProps,
-	// eslint-disable-next-line import/named
-	MantineColor,
 	Radio
 } from '@mantine/core'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { Club, ClubRole } from '../../../../model/club/club'
-
-const useStyles = createStyles(theme => ({
-	row: { display: 'flex' },
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	modalText: {
-		fontSize: 16
-	},
-	modalQuestion: {
-		fontSize: 14,
-		fontWeight: 600
-	},
-	fullWidthTextInput: {
-		width: '100%'
-	},
-	clickable: {
-		cursor: 'pointer'
-	},
-	buttonModalSave: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonModalCancel: {
-		marginLeft: 8,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	memberItemRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center'
-	},
-	memberDataRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-	separatedRow: {
-		display: 'flex',
-		justifyContent: 'space-between'
-	},
-	radio: { fontWeight: 600, fontFamily: 'Inter' }
-}))
+import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 
 interface IProps {
 	club: Club
@@ -125,7 +39,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>()
 
@@ -168,13 +82,15 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 
 	const saveChanges = () => {
 		setIsSavingChanges(true)
+		log.debug(isSavingChanges)
+		log.debug(selectedDiscordRole)
 	}
 
 	// eslint-disable-next-line react/display-name
 	const SelectItem = forwardRef<HTMLDivElement, DiscordRole>(
 		({ label, value, memberCount, ...others }: DiscordRole, ref) => (
 			<div ref={ref} {...others} key={value}>
-				<div className={classes.separatedRow}>
+				<div className={styles.spacedRow}>
 					<Text>{label}</Text>
 					<Text>{`${memberCount} members`}</Text>
 				</div>
@@ -195,7 +111,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
+					<Text className={styles.tModalTitle}>
 						Sync Existing Discord Role
 					</Text>
 				}
@@ -222,7 +138,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={classes.buttonModalCancel}
+								className={styles.buttonGrey}
 							>
 								Close
 							</Button>
@@ -251,7 +167,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 						</Text>
 						<Space h={8} />
 						<Radio.Group
-							classNames={{ label: classes.radio }}
+							classNames={{ label: styles.fRadio }}
 							orientation="vertical"
 							spacing={10}
 							size="md"
@@ -277,9 +193,9 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 						</Radio.Group>
 						<Space h={32} />
 
-						<div className={classes.row}>
+						<div className={styles.row}>
 							<Button
-								className={classes.buttonModalSave}
+								className={styles.buttonBlack}
 								onClick={async () => {
 									saveChanges()
 								}}
@@ -291,7 +207,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={classes.buttonModalCancel}
+								className={styles.buttonGrey}
 							>
 								Cancel
 							</Button>

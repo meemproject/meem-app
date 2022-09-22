@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
@@ -13,89 +12,9 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
+import { Search } from 'tabler-icons-react'
 import { Club, ClubMember } from '../../../../model/club/club'
-
-const useStyles = createStyles(theme => ({
-	row: { display: 'flex' },
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	modalText: {
-		fontSize: 16
-	},
-	modalQuestion: {
-		fontSize: 14,
-		fontWeight: 600
-	},
-	fullWidthTextInput: {
-		width: '100%'
-	},
-	clickable: {
-		cursor: 'pointer'
-	},
-	buttonModalSave: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonModalCancel: {
-		marginLeft: 8,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	memberItemRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center'
-	},
-	memberDataRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center'
-	}
-}))
+import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 
 interface IProps {
 	club: Club
@@ -112,7 +31,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 	onMembersSaved,
 	onModalClosed
 }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const [members, setMembers] = useState<ClubMember[]>([])
 
@@ -197,15 +116,20 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				size={'50%'}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={classes.modalTitle}>Add Members</Text>}
+				title={<Text className={styles.tModalTitle}>Add Members</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
 			>
 				<TextInput
-					size={'md'}
-					radius={16}
-					className={classes.fullWidthTextInput}
+					radius={20}
+					classNames={{
+						input: styles.fTextField
+					}}
+					icon={<Search />}
+					placeholder={'Search Members'}
+					className={styles.fullWidth}
+					size={'lg'}
 					onChange={event => {
 						if (event.target.value) {
 							setCurrentSearchTerm(event.target.value)
@@ -216,14 +140,15 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						}
 					}}
 				/>
+				<Space h={16} />
 
 				{filteredMembers && (
 					<>
 						{filteredMembers.map(member => (
 							<div key={member.wallet}>
 								<Space h={16} />
-								<div className={classes.memberItemRow}>
-									<div className={classes.memberDataRow}>
+								<div className={styles.tListItemTitle}>
+									<div className={styles.centeredRow}>
 										<Checkbox
 											checked={member.chosen}
 											onChange={event => {
@@ -250,6 +175,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 												}
 											}}
 										/>
+										<Space w={16} />
 										<Image
 											height={40}
 											width={40}
@@ -258,11 +184,19 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 										/>
 										<Space w={16} />
 										<div>
-											<Text>
+											<Text
+												className={
+													styles.tListItemTitle
+												}
+											>
 												{member.displayName ??
 													'Club Member'}
 											</Text>
-											<Text>
+											<Text
+												className={
+													styles.tListItemSubtitle
+												}
+											>
 												{member.ens
 													? member.ens
 													: member.wallet}
@@ -301,9 +235,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					)}
 				<Space h={24} />
 
-				<div className={classes.row}>
+				<div className={styles.row}>
 					<Button
-						className={classes.buttonModalSave}
+						className={styles.buttonBlack}
 						onClick={async () => {
 							const chosenMembers = members.filter(
 								member => member.chosen
@@ -327,7 +261,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						onClick={() => {
 							onModalClosed()
 						}}
-						className={classes.buttonModalCancel}
+						className={styles.buttonGrey}
 					>
 						Cancel
 					</Button>
