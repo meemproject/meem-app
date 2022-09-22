@@ -13,7 +13,8 @@ import {
 	// eslint-disable-next-line import/named
 	SelectItemProps,
 	// eslint-disable-next-line import/named
-	MantineColor
+	MantineColor,
+	Radio
 } from '@mantine/core'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { Club, ClubRole } from '../../../../model/club/club'
@@ -101,7 +102,8 @@ const useStyles = createStyles(theme => ({
 	separatedRow: {
 		display: 'flex',
 		justifyContent: 'space-between'
-	}
+	},
+	radio: { fontWeight: 600, fontFamily: 'Inter' }
 }))
 
 interface IProps {
@@ -131,6 +133,9 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 		useState<DiscordRole>()
 
 	const [isFetchingDiscordRoles, setIsFetchingDiscordRoles] = useState(true)
+
+	const [selectedRemoveRoleOption, setSelectedRemoveRoleOption] =
+		useState('dont-remove')
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -240,6 +245,36 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 							}}
 							data={discordRoles ?? []}
 						/>
+						<Space h={32} />
+						<Text>
+							Remove this Discord role unauthenticated users?
+						</Text>
+						<Space h={8} />
+						<Radio.Group
+							classNames={{ label: classes.radio }}
+							orientation="vertical"
+							spacing={10}
+							size="md"
+							color="dark"
+							value={selectedRemoveRoleOption}
+							onChange={(value: any) => {
+								setSelectedRemoveRoleOption(value)
+							}}
+							required
+						>
+							<Radio
+								value="dont-remove"
+								label="No, don't remove"
+							/>
+							<Radio
+								value="remove"
+								label="Yes, remove immediately"
+							/>
+							<Radio
+								value="remove-7-days"
+								label="Yes, remove in 7 days"
+							/>
+						</Radio.Group>
 						<Space h={32} />
 
 						<div className={classes.row}>
