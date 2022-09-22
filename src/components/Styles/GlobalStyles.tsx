@@ -43,6 +43,11 @@ export const useGlobalStyles = createStyles(theme => ({
 		display: 'flex',
 		alignItems: 'center'
 	},
+	centeredRowClickable: {
+		display: 'flex',
+		alignItems: 'center',
+		cursor: 'pointer'
+	},
 	fullWidth: {
 		width: '100%'
 	},
@@ -111,8 +116,16 @@ export const useGlobalStyles = createStyles(theme => ({
 	clickable: {
 		cursor: 'pointer'
 	},
+	copyIcon: {
+		marginLeft: 4,
+		padding: 2,
+		cursor: 'pointer'
+	},
 
 	// Text
+	tBold: {
+		fontWeight: 700
+	},
 	tLink: {
 		textDecoration: 'underline',
 		cursor: 'pointer',
@@ -129,6 +142,9 @@ export const useGlobalStyles = createStyles(theme => ({
 	tListItemSubtitle: {
 		opacity: 0.6,
 		fontSize: 14
+	},
+	tPartialTransparent: {
+		opacity: 0.6
 	},
 	tSectionTitleSmall: {
 		fontSize: 14,

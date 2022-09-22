@@ -7,11 +7,13 @@ import {
 	Button,
 	Image,
 	TextInput,
-	Center
+	Center,
+	HoverCard
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { CircleMinus, Search } from 'tabler-icons-react'
 import { Club, ClubMember, ClubRole } from '../../../model/club/club'
+import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
@@ -144,34 +146,47 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 							<div key={member.wallet}>
 								<Space h={16} />
 								<div className={styles.spacedRowCentered}>
-									<div className={styles.centeredRow}>
-										<Image
-											height={36}
-											width={36}
-											radius={18}
-											src={member.profilePicture ?? ''}
-										/>
-										<Space w={16} />
-										<div>
-											<Text
-												className={
-													styles.tListItemTitle
-												}
-											>
-												{member.displayName ??
-													'Club Member'}
-											</Text>
-											<Text
-												className={
-													styles.tListItemSubtitle
-												}
-											>
-												{member.ens
-													? member.ens
-													: member.wallet}
-											</Text>
-										</div>
-									</div>
+									<HoverCard
+										width={280}
+										shadow="md"
+										radius={16}
+									>
+										<HoverCard.Target>
+											<div className={styles.centeredRow}>
+												<Image
+													height={36}
+													width={36}
+													radius={18}
+													src={
+														member.profilePicture ??
+														''
+													}
+												/>
+												<Space w={16} />
+												<div>
+													<Text
+														className={
+															styles.tListItemTitle
+														}
+													>
+														{member.displayName ??
+															'Club Member'}
+													</Text>
+													<Text
+														className={
+															styles.tListItemSubtitle
+														}
+													>
+														{member.ens
+															? member.ens
+															: member.wallet}
+													</Text>
+												</div>
+											</div>
+										</HoverCard.Target>
+										<ClubMemberCard member={member} />
+									</HoverCard>
+
 									<CircleMinus
 										className={styles.clickable}
 										onClick={() => {
