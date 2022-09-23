@@ -138,7 +138,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600
 	},
 	clubContractAddress: {
-		wordBreak: 'break-all'
+		wordBreak: 'break-word'
 	},
 	contractAddressContainer: {
 		display: 'flex',

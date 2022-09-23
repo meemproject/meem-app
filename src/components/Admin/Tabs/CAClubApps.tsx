@@ -145,7 +145,7 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 	clubContractAddress: {
-		wordBreak: 'break-all',
+		wordBreak: 'break-word',
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	header: {
