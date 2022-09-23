@@ -27,6 +27,7 @@ export interface Integration {
 	verifiedTwitterUser?: string
 	publicationSlug?: string
 	publicationName?: string
+	gatherTownSpacePw?: string
 }
 
 export interface ClubMember {
@@ -515,7 +516,8 @@ export default async function clubFromMeemContract(
 						verifiedTwitterUser:
 							inte.metadata.twitterUsername ?? '',
 						publicationSlug: inte.metadata.publicationSlug ?? '',
-						publicationName: inte.metadata.publicationName ?? ''
+						publicationName: inte.metadata.publicationName ?? '',
+						gatherTownSpacePw: inte.metadata.gatherTownSpacePw ?? ''
 					}
 
 					if (inte.isPublic) {

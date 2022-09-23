@@ -31,6 +31,7 @@ import {
 	Check,
 	CircleCheck,
 	CircleX,
+	Key,
 	Settings
 } from 'tabler-icons-react'
 import {
@@ -958,6 +959,43 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								<Text className={classes.integrationDetailText}>
 									{integration.publicationName}
 								</Text>
+							</>
+						)}
+					{integration.gatherTownSpacePw &&
+						integration.gatherTownSpacePw.length > 0 && (
+							<>
+								<div className={classes.rowCentered}>
+									<Key size={20} />
+									<Space w={4} />
+									<Text
+										className={
+											classes.integrationDetailText
+										}
+									>
+										{integration.gatherTownSpacePw}
+									</Text>
+									<Image
+										className={classes.copy}
+										src="/copy.png"
+										height={20}
+										onClick={e => {
+											e.stopPropagation()
+											navigator.clipboard.writeText(
+												integration.gatherTownSpacePw ??
+													''
+											)
+											showNotification({
+												radius: 'lg',
+												title: 'Password copied!',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+												message: `This club's Gather Town Space password was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
 							</>
 						)}
 				</div>
