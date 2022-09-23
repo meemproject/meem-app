@@ -90,13 +90,16 @@ export function MembershipRequirementToMeemPermission(
 	}
 ): MeemAPI.IMeemPermission {
 	let permission = MeemAPI.Permission.Anyone
+	let addresses: string[] = []
 
 	switch (mr.type) {
 		case MembershipReqType.ApprovedApplicants:
 			permission = MeemAPI.Permission.Addresses
+			addresses = mr.approvedAddresses
 			break
 		case MembershipReqType.TokenHolders:
 			permission = MeemAPI.Permission.Holders
+			addresses = [mr.tokenContractAddress]
 			break
 		case MembershipReqType.None:
 		default:
@@ -108,13 +111,13 @@ export function MembershipRequirementToMeemPermission(
 	const mintEndTimestamp = `${mr.mintEndTimestamp ?? 0}`
 
 	return {
-		addresses: mr.approvedAddresses,
+		addresses,
 		costWei: ethers.utils.parseEther(`${costEth}`).toHexString(),
 		mintStartTimestamp,
 		mintEndTimestamp,
 		numTokens: `${mr.tokenMinQuantity}`,
 		permission,
-		merkleRoot: ''
+		merkleRoot: ethers.utils.formatBytes32String('')
 	}
 }
 
