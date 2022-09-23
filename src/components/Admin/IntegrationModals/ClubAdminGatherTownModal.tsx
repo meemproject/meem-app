@@ -302,7 +302,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 											color="red"
 											radius="lg"
 										>
-											<Text>{`Our APIs are partially public. A skilled developer may be able to obtain this password, so consider it a deterrent rather than iron-clad security for your Gather Space. We're working on it!`}</Text>
+											<Text>{`Our APIs are partially public. A skilled developer may be able to obtain this password, so consider it a deterrent rather than iron-clad security for your Gather Space. You could also use Gather's 'whitelist' feature for better security. We're working on it!`}</Text>
 										</Alert>
 									</>
 								)}
