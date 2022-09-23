@@ -276,6 +276,18 @@ export const CreateClubModal: React.FC<IProps> = ({
 					}
 				})
 
+				if (mintPermissions.length === 0) {
+					showNotification({
+						radius: 'lg',
+						title: 'Oops!',
+						message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
+						color: 'red'
+					})
+					closeModal()
+					setHasStartedCreating(false)
+					return
+				}
+
 				const data = {
 					shouldMintAdminTokens: true,
 					metadata: {
