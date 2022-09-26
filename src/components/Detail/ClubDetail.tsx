@@ -78,7 +78,7 @@ const useStyles = createStyles(theme => ({
 	},
 	headerClubDescription: {
 		fontSize: 16,
-		wordBreak: 'break-all',
+		wordBreak: 'break-word',
 		marginTop: 4,
 		marginRight: 16,
 		fontWeight: 500,
@@ -87,7 +87,7 @@ const useStyles = createStyles(theme => ({
 	headerClubName: {
 		fontWeight: 600,
 		fontSize: 24,
-		wordBreak: 'break-all',
+		wordBreak: 'break-word',
 		marginTop: -8
 	},
 	headerLinks: {
@@ -241,7 +241,7 @@ const useStyles = createStyles(theme => ({
 		alignItems: 'center'
 	},
 	clubContractAddress: {
-		wordBreak: 'break-all',
+		wordBreak: 'break-word',
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	contractAddressContainer: {

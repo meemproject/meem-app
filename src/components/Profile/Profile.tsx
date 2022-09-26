@@ -197,7 +197,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600
 	},
 	profileContractAddress: {
-		wordBreak: 'break-all',
+		wordBreak: 'break-word',
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	contractAddressContainer: {
