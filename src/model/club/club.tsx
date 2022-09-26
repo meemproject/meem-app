@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-loop-func */
 import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
-import { MeemContracts } from '../../../generated/graphql'
+import { MeemContractRoles, MeemContracts } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
 
 export const ClubAdminRole =
@@ -32,10 +33,10 @@ export interface Integration {
 
 export interface ClubRolePermission {
 	id: string
-	name: string
-	description: string
-	enabled: boolean
-	locked: boolean
+	name?: string
+	description?: string
+	enabled?: boolean
+	locked?: boolean
 }
 
 export interface ClubRole {
@@ -63,7 +64,7 @@ export interface ClubMember {
 	discordUsername?: string
 	discordUserId?: string
 	emailAddress?: string
-	roles?: string[]
+	roles?: ClubRole[]
 
 	// Convenience bool for roles
 	chosen?: boolean
@@ -148,6 +149,32 @@ export function MembershipRequirementToMeemPermission(
 		permission,
 		merkleRoot: ethers.utils.formatBytes32String('')
 	}
+}
+
+export function meemContractRolesToClubRoles(
+	meemContractRoles: MeemContractRoles[]
+): ClubRole[] {
+	const roles: ClubRole[] = []
+	meemContractRoles.forEach(rawRole => {
+		const permissions: ClubRolePermission[] = []
+		if (rawRole.MeemContractRolePermissions) {
+			rawRole.MeemContractRolePermissions.forEach(rolePermission => {
+				const rp: ClubRolePermission = {
+					id: rolePermission.id
+				}
+				permissions.push(rp)
+			})
+		}
+
+		const clubRole: ClubRole = {
+			id: rawRole.id,
+			isAdminRole: rawRole.isAdminRole,
+			name: rawRole.name,
+			permissions
+		}
+		roles.push(clubRole)
+	})
+	return roles
 }
 
 export enum MembershipReqAndor {
@@ -269,29 +296,29 @@ export default async function clubFromMeemContract(
 		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
 
-		// Look up admin addresses and convert to ENS where necessary
-		if (
-			clubData.MeemContractWallets &&
-			clubData.MeemContractWallets.length > 0
-		) {
-			await Promise.all(
-				clubData.MeemContractWallets.map(function (wall) {
-					if (wall.Wallet) {
-						const address = wall.Wallet.address
-						adminRawAddresses.push(address)
-						admins.push(address)
-					}
+		// // Look up admin addresses and convert to ENS where necessary
+		// if (
+		// 	clubData.MeemContractWallets &&
+		// 	clubData.MeemContractWallets.length > 0
+		// ) {
+		// 	await Promise.all(
+		// 		clubData.MeemContractWallets.map(function (wall) {
+		// 			if (wall.Wallet) {
+		// 				const address = wall.Wallet.address
+		// 				adminRawAddresses.push(address)
+		// 				admins.push(address)
+		// 			}
 
-					if (
-						wall.Wallet?.address.toLowerCase() ===
-							walletAddress?.toLowerCase() &&
-						wall.role === ClubAdminRole
-					) {
-						isClubAdmin = true
-					}
-				})
-			)
-		}
+		// 			if (
+		// 				wall.Wallet?.address.toLowerCase() ===
+		// 					walletAddress?.toLowerCase() &&
+		// 				wall.role === ClubAdminRole
+		// 			) {
+		// 				isClubAdmin = true
+		// 			}
+		// 		})
+		// 	)
+		// }
 
 		let membershipStartDate: Date | undefined
 		let membershipEndDate: Date | undefined
@@ -446,6 +473,12 @@ export default async function clubFromMeemContract(
 
 		let membershipToken = undefined
 
+		// Parse roles
+		let clubRoles: ClubRole[] = []
+		if (clubData.MeemContractRoles) {
+			clubRoles = meemContractRolesToClubRoles(clubData.MeemContractRoles)
+		}
+
 		// Parse members
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
@@ -456,6 +489,27 @@ export default async function clubFromMeemContract(
 				) {
 					isClubMember = true
 					membershipToken = meem.tokenId
+				}
+
+				let memberRoles: ClubRole[] = []
+
+				if (meem.MeemContract?.MeemContractRoles) {
+					// Convert member roles
+					memberRoles = meemContractRolesToClubRoles(
+						meem.MeemContract?.MeemContractRoles
+					)
+
+					// Determine if the current user is a club admin
+					meem.MeemContract.MeemContractRoles.forEach(
+						clubMemberRole => {
+							if (clubMemberRole.isAdminRole) {
+								isClubAdmin = true
+								if (meem.Owner) {
+									adminRawAddresses.push(meem.Owner.address)
+								}
+							}
+						}
+					)
 				}
 
 				if (
@@ -504,6 +558,7 @@ export default async function clubFromMeemContract(
 							members.push({
 								wallet: meem.Owner.address,
 								ens: meem.Owner.ens ?? undefined,
+								roles: memberRoles,
 								displayName: memberIdentity?.displayName
 									? memberIdentity?.displayName
 									: '',
@@ -563,93 +618,6 @@ export default async function clubFromMeemContract(
 			})
 		}
 
-		// Parse roles
-		// TODO: Use real data
-		const roles: ClubRole[] = [
-			{
-				name: 'Admin',
-				id: 'admin',
-				permissions: [
-					{
-						id: 'membership',
-						name: 'Manage membership settings',
-						description: '',
-						locked: !isClubAdmin,
-						enabled: true
-					},
-					{
-						id: 'manage-roles',
-						name: 'Manage roles',
-						description: '',
-						locked: !isClubAdmin,
-						enabled: true
-					},
-					{
-						id: 'edit-profile',
-						name: 'Edit profile',
-						description: '',
-						locked: !isClubAdmin,
-						enabled: true
-					},
-					{
-						id: 'manage-apps',
-						name: 'Manage apps',
-						description: '',
-						locked: false,
-						enabled: true
-					},
-					{
-						id: 'view-apps',
-						name: 'View apps',
-						description: '',
-						locked: false,
-						enabled: true
-					}
-				]
-			},
-			{
-				name: 'Club Member',
-				id: 'club-member',
-				permissions: [
-					{
-						id: 'membership',
-						name: 'Manage membership settings',
-						locked: false,
-						description: '',
-						enabled: false
-					},
-					{
-						id: 'manage-roles',
-						name: 'Manage roles',
-						locked: false,
-						description: '',
-						enabled: false
-					},
-					{
-						id: 'edit-profile',
-						name: 'Edit profile',
-						locked: false,
-						description: '',
-						enabled: false
-					},
-					{
-						id: 'manage-apps',
-						name: 'Manage apps',
-						locked: false,
-						description: '',
-						enabled: false
-					},
-					{
-						id: 'view-apps',
-						name: 'View apps',
-						locked: false,
-						description: '',
-						enabled: true
-					}
-				]
-			}
-		]
-
 		// Calculate slots left if totalOriginSupply > 0
 		let slotsLeft = -1
 		if (totalMemberships > 0) {
@@ -669,7 +637,7 @@ export default async function clubFromMeemContract(
 			gnosisSafeAddress: clubData.gnosisSafeAddress,
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
-			roles,
+			roles: clubRoles,
 			isClubMember,
 			membershipToken,
 			members,

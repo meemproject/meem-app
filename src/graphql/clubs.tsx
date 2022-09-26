@@ -184,6 +184,7 @@ export const SUB_CLUB = gql`
 					address
 					ens
 				}
+				role
 			}
 			id
 			MeemContractIntegrations(
