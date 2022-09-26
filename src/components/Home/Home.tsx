@@ -202,7 +202,8 @@ export function HomeComponent() {
 				const { data } = await autocompleteClient.query({
 					query: GET_CLUBS_AUTOCOMPLETE,
 					variables: {
-						query: `%${val.trim()}%`
+						query: `%${val.trim()}%`,
+						chainId: wallet.chainId
 					}
 				})
 

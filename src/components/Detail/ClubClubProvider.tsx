@@ -37,6 +37,7 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 	} = useQuery<GetIsMemberOfClubQuery>(GET_IS_MEMBER_OF_CLUB, {
 		variables: {
 			walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+			chainId: wallet.chainId,
 			clubSlug: 'club-club'
 		}
 	})

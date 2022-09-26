@@ -23,32 +23,66 @@ const useStyles = createStyles(_theme => ({
 	}
 }))
 
+export function hostnameToChainId(hostname: string): number {
+	const subHostname = hostname.split('.')[0]
+	let expectedChainId = 0
+
+	switch (subHostname) {
+		case 'rinkeby':
+			expectedChainId = 4
+			break
+
+		case 'goerli':
+			expectedChainId = 5
+			break
+
+		case 'mumbai':
+			expectedChainId = 80001
+			break
+
+		case 'arbitrum-goerli':
+			expectedChainId = 421613
+			break
+
+		case 'optimism-goerli':
+			expectedChainId = 420
+			break
+
+		default:
+			throw new Error('Unable to connect. Unknown chain.')
+	}
+
+	return expectedChainId
+}
+
 export const App: React.FC<IProps> = ({ children }) => {
 	const { chainId, setChain } = useWallet()
 	const styles = useStyles()
 
+	let expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID
+		? +process.env.NEXT_PUBLIC_CHAIN_ID
+		: 0
+
+	if (typeof window !== 'undefined' && !expectedChainId) {
+		expectedChainId = hostnameToChainId(window.location.hostname)
+	}
+
 	return (
 		<>
-			{process.env.NEXT_PUBLIC_CHAIN_ID &&
-				chainId &&
-				chainId !== +process.env.NEXT_PUBLIC_CHAIN_ID && (
-					<div className={styles.classes.overlay}>
-						<div>
-							<h2>Please switch your network</h2>
-							<Button
-								onClick={() => {
-									if (process.env.NEXT_PUBLIC_CHAIN_ID) {
-										setChain(
-											+process.env.NEXT_PUBLIC_CHAIN_ID
-										)
-									}
-								}}
-							>
-								Switch Network
-							</Button>
-						</div>
+			{chainId && chainId !== expectedChainId && (
+				<div className={styles.classes.overlay}>
+					<div>
+						<h2>Please switch your network</h2>
+						<Button
+							onClick={() => {
+								setChain(expectedChainId)
+							}}
+						>
+							Switch Network
+						</Button>
 					</div>
-				)}
+				</div>
+			)}
 			{children}
 		</>
 	)

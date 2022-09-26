@@ -87,6 +87,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug: club?.slug ?? '',
+			chainId: wallet.chainId,
 			visibilityLevel: ['mutual-club-members', 'anyone'],
 			showPublicApps: [true, false]
 		}
@@ -180,6 +181,18 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						message: `Please get in touch!`,
 						color: 'red'
 					})
+					closeModal()
+					return
+				}
+
+				if (mintPermissions.length === 0) {
+					showNotification({
+						radius: 'lg',
+						title: 'Oops!',
+						message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
+						color: 'red'
+					})
+					closeModal()
 					return
 				}
 

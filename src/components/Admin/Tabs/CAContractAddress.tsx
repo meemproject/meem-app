@@ -138,7 +138,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600
 	},
 	clubContractAddress: {
-		wordBreak: 'break-all'
+		wordBreak: 'break-word'
 	},
 	contractAddressContainer: {
 		display: 'flex',
@@ -425,13 +425,13 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 				</>
 			)}
 
-			{!club.gnosisSafeAddress && (
+			{!club.gnosisSafeAddress && wallet.chainId !== 420 && (
 				<Button
 					className={classes.buttonCreate}
 					disabled={isCreatingSafe}
 					loading={isCreatingSafe}
 					onClick={async () => {
-						if (!club.id || !club.admins) {
+						if (!club.id || !club.admins || !wallet.chainId) {
 							return
 						}
 						try {
@@ -450,7 +450,8 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 								}),
 								undefined,
 								{
-									safeOwners: club.admins
+									safeOwners: club.admins,
+									chainId: wallet.chainId
 								}
 							)
 							await new Promise(f => setTimeout(f, 10000))

@@ -109,7 +109,10 @@ export const CreateClubModal: React.FC<IProps> = ({
 	// Club subscription - watch for specific changes in order to update correctly
 	const { data: myClubsData } =
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
-			variables: { walletAddress: wallet.accounts[0] }
+			variables: {
+				walletAddress: wallet.accounts[0],
+				chainId: wallet.chainId
+			}
 		})
 
 	useEffect(() => {
@@ -147,7 +150,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 		}
 
 		async function createSafe(club: Club) {
-			if (hasStartedCreatingSafe) {
+			if (hasStartedCreatingSafe || !wallet.chainId) {
 				return
 			}
 			setHasStartedCreatingSafe(true)
@@ -172,7 +175,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 					}),
 					undefined,
 					{
-						safeOwners: club.admins ?? []
+						safeOwners: club.admins ?? [],
+						chainId: wallet.chainId
 					}
 				)
 			} catch (e) {
@@ -183,7 +187,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 		async function create() {
 			log.debug('creating club...')
-			if (!wallet.web3Provider) {
+			if (!wallet.web3Provider || !wallet.chainId) {
 				log.debug('no web3 provider, returning.')
 				showNotification({
 					radius: 'lg',
@@ -272,6 +276,18 @@ export const CreateClubModal: React.FC<IProps> = ({
 					}
 				})
 
+				if (mintPermissions.length === 0) {
+					showNotification({
+						radius: 'lg',
+						title: 'Oops!',
+						message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
+						color: 'red'
+					})
+					closeModal()
+					setHasStartedCreating(false)
+					return
+				}
+
 				const data = {
 					shouldMintAdminTokens: true,
 					metadata: {
@@ -303,7 +319,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 						image: Cookies.get(CookieKeys.clubImage),
 						associations: [],
 						external_url: ''
-					}
+					},
+					chainId: wallet.chainId
 				}
 
 				log.debug(`${JSON.stringify(data, null, 2)}`)
@@ -393,8 +410,10 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 					setClubSlug(clubModel.slug ?? '')
 
-					// Create club safe
-					await createSafe(clubModel)
+					// Create club safe (if not on Optimism Goerli)
+					if (wallet.chainId !== 420) {
+						await createSafe(clubModel)
+					}
 				}
 			}
 		}

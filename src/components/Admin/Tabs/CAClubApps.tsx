@@ -25,6 +25,7 @@ import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetIntegrationsQuery } from '../../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../../graphql/clubs'
 import { Club, Integration } from '../../../model/club/club'
+import { ClubAdminGatherTownModal } from '../IntegrationModals/ClubAdminGatherTownModal'
 import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
 import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'
 
@@ -144,7 +145,7 @@ const useStyles = createStyles(theme => ({
 		}
 	},
 	clubContractAddress: {
-		wordBreak: 'break-all',
+		wordBreak: 'break-word',
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	header: {
@@ -308,6 +309,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
 		useState(false)
 	const [isParagraphModalOpened, setParagraphModalOpened] = useState(false)
+	const [isGatherTownModalOpened, setGatherTownModalOpened] = useState(false)
 
 	const filterIntegrations = (available: Integration[]) => {
 		const search = currentSearchTerm
@@ -339,13 +341,28 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				updatedInte.isEnabled =
 					extraData.isEnabled ?? isCurrentIntegrationEnabled
 				updatedInte.isVerified = extraData.isVerified ?? false
+				updatedInte.isPublic =
+					extraData.isPublic ?? isCurrentIntegrationPublic
+
+				// Twitter
 				updatedInte.verifiedTwitterUser =
 					extraData.twitterUsername ?? ''
+
+				// Paragraph
 				updatedInte.publicationSlug = extraData.publicationSlug ?? ''
 				if (extraData.publicationSlug) {
 					updatedInte.url = `https://paragraph.xyz/@${extraData.publicationSlug}`
 				}
 				updatedInte.publicationName = extraData.publicatioName ?? ''
+
+				// Gather Town
+				if (extraData.spaceName) {
+					updatedInte.url = extraData.spaceName
+					updatedInte.isEnabled = true
+					updatedInte.isPublic = extraData.isPublic
+				}
+				updatedInte.gatherTownSpacePw =
+					extraData.gatherTownSpacePw ?? ''
 			}
 			setIntegrationBeingEdited(updatedInte)
 
@@ -534,6 +551,9 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		} else if (integration.name === 'Paragraph') {
 			// Open paragraph integration modal
 			setParagraphModalOpened(true)
+		} else if (integration.name === 'Gather Town') {
+			// Open paragraph integration modal
+			setGatherTownModalOpened(true)
 		} else {
 			setIntegrationModalOpened(true)
 		}
@@ -792,6 +812,28 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					}}
 					onModalClosed={() => {
 						setParagraphModalOpened(false)
+					}}
+				/>
+				<ClubAdminGatherTownModal
+					club={club}
+					integration={integrationBeingEdited}
+					isOpened={isGatherTownModalOpened}
+					onSpaceSaved={(
+						spaceName,
+						isEnabled,
+						isPublic,
+						spacePassword
+					) => {
+						setGatherTownModalOpened(false)
+						updateIntegrationLocally({
+							spaceName,
+							isEnabled,
+							isPublic,
+							gatherTownSpacePw: spacePassword
+						})
+					}}
+					onModalClosed={() => {
+						setGatherTownModalOpened(false)
 					}}
 				/>
 				<Modal

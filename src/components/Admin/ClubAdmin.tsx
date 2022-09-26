@@ -152,7 +152,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600
 	},
 	clubContractAddress: {
-		wordBreak: 'break-all',
+		wordBreak: 'break-word',
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	contractAddressContainer: {
@@ -247,6 +247,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug,
+			chainId: wallet.chainId,
 			visibilityLevel: ['mutual-club-members', 'anyone'],
 			showPublicApps: [true, false]
 		}

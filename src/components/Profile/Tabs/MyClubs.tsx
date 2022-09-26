@@ -126,6 +126,7 @@ export const MyClubsComponent: React.FC = () => {
 	const { loading, data: clubData } =
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
 			variables: {
+				chainId: wallet.chainId,
 				walletAddress:
 					wallet.accounts &&
 					wallet.accounts[0] &&
