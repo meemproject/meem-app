@@ -33,6 +33,7 @@ export interface Integration {
 export interface ClubRolePermission {
 	id: string
 	name: string
+	description: string
 	enabled: boolean
 	locked: boolean
 }
@@ -40,12 +41,15 @@ export interface ClubRolePermission {
 export interface ClubRole {
 	id: string
 	name: string
+	isAdminRole?: boolean
 	permissions: ClubRolePermission[]
+	guildRoleId?: string
 }
 
 export function emptyRole(): ClubRole {
 	return {
 		id: 'addRole',
+		isAdminRole: false,
 		name: '',
 		permissions: []
 	}
@@ -569,30 +573,35 @@ export default async function clubFromMeemContract(
 					{
 						id: 'membership',
 						name: 'Manage membership settings',
+						description: '',
 						locked: !isClubAdmin,
 						enabled: true
 					},
 					{
 						id: 'manage-roles',
 						name: 'Manage roles',
+						description: '',
 						locked: !isClubAdmin,
 						enabled: true
 					},
 					{
 						id: 'edit-profile',
 						name: 'Edit profile',
+						description: '',
 						locked: !isClubAdmin,
 						enabled: true
 					},
 					{
 						id: 'manage-apps',
 						name: 'Manage apps',
+						description: '',
 						locked: false,
 						enabled: true
 					},
 					{
 						id: 'view-apps',
 						name: 'View apps',
+						description: '',
 						locked: false,
 						enabled: true
 					}
@@ -606,30 +615,35 @@ export default async function clubFromMeemContract(
 						id: 'membership',
 						name: 'Manage membership settings',
 						locked: false,
+						description: '',
 						enabled: false
 					},
 					{
 						id: 'manage-roles',
 						name: 'Manage roles',
 						locked: false,
+						description: '',
 						enabled: false
 					},
 					{
 						id: 'edit-profile',
 						name: 'Edit profile',
 						locked: false,
+						description: '',
 						enabled: false
 					},
 					{
 						id: 'manage-apps',
 						name: 'Manage apps',
 						locked: false,
+						description: '',
 						enabled: false
 					},
 					{
 						id: 'view-apps',
 						name: 'View apps',
 						locked: false,
+						description: '',
 						enabled: true
 					}
 				]
