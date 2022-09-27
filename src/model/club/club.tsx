@@ -496,29 +496,6 @@ export default async function clubFromMeemContract(
 					membershipToken = meem.tokenId
 				}
 
-				let memberRoles: ClubRole[] = []
-
-				if (meem.MeemContract?.MeemContractRoles) {
-					// Convert member roles
-					memberRoles = meemContractRolesToClubRoles(
-						meem.MeemContract?.MeemContractRoles
-					)
-
-					// Determine if the current user is a club admin
-					// Plus extract the role for the flattened member roles array
-					meem.MeemContract.MeemContractRoles.forEach(
-						clubMemberRole => {
-							flattenedMemberRoles.push(clubMemberRole)
-							if (clubMemberRole.isAdminRole) {
-								isClubAdmin = true
-								if (meem.Owner) {
-									adminRawAddresses.push(meem.Owner.address)
-								}
-							}
-						}
-					)
-				}
-
 				if (
 					meem.Owner?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&
@@ -534,6 +511,33 @@ export default async function clubFromMeemContract(
 							}
 						})
 						if (!hasAlreadyBeenAdded) {
+							let memberRoles: ClubRole[] = []
+
+							// Convert member roles if the member hasn't already been added
+							if (meem.MeemContract?.MeemContractRoles) {
+								memberRoles = meemContractRolesToClubRoles(
+									meem.MeemContract?.MeemContractRoles
+								)
+
+								// Determine if the current user is a club admin
+								// Plus extract the role for the flattened member roles array
+								meem.MeemContract.MeemContractRoles.forEach(
+									clubMemberRole => {
+										flattenedMemberRoles.push(
+											clubMemberRole
+										)
+										if (clubMemberRole.isAdminRole) {
+											isClubAdmin = true
+											if (meem.Owner) {
+												adminRawAddresses.push(
+													meem.Owner.address
+												)
+											}
+										}
+									}
+								)
+							}
+
 							const memberIdentity =
 								meem.Owner.MeemIdentities &&
 								meem.Owner.MeemIdentities.length > 0
