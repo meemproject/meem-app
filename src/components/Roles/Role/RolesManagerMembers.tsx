@@ -32,35 +32,16 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 
-	// TODO: fetch role members
-	const [members, setMembers] = useState<ClubMember[]>([
-		{
-			displayName: 'Role Member 1',
-			profilePicture: '/exampleclub.png',
-			wallet: '0x1EcE5F31d84aD3f56DD07B26fBD816126D8aB5',
-			ens: ''
-		},
-		{
-			displayName: 'Role Member 2',
-			profilePicture: '/exampleclub.png',
-			wallet: '0x1EcE5F31d84aD3f56DD07B26fBD598161e6D8aB5',
-			ens: 'gadsby.eth'
-		},
-		{
-			displayName: 'Role Member 3',
-			profilePicture: '/exampleclub.png',
-			wallet: '0x1Ec31d84aD3f56DD07B26fBD59816126D8aB5',
-			ens: ''
-		}
-	])
+	const [members, setMembers] = useState<ClubMember[]>([])
 
 	const [filteredMembers, setFilteredMembers] = useState<ClubMember[]>()
 
 	useEffect(() => {
-		if (!filteredMembers && members) {
-			setFilteredMembers([...members])
+		if (!filteredMembers && club && role && club.memberRolesMap) {
+			setMembers(club.memberRolesMap.get(role.id) ?? [])
+			setFilteredMembers(club.memberRolesMap.get(role.id) ?? [])
 		}
-	}, [filteredMembers, members])
+	}, [club, filteredMembers, members, role])
 
 	const filterMembers = (allMembers: ClubMember[], searchTerm: string) => {
 		const search = searchTerm

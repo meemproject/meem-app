@@ -55,6 +55,7 @@ export function emptyRole(): ClubRole {
 		permissions: []
 	}
 }
+
 export interface ClubMember {
 	displayName?: string
 	wallet: string
@@ -69,7 +70,6 @@ export interface ClubMember {
 	// Convenience bool for roles
 	chosen?: boolean
 }
-
 export interface Club {
 	id?: string
 	name?: string
@@ -82,7 +82,7 @@ export interface Club {
 	slotsLeft?: number
 	members?: ClubMember[]
 	roles?: ClubRole[]
-	roleMemberCounts?: Map<string, number>
+	memberRolesMap?: Map<string, ClubMember[]>
 	isClubMember?: boolean
 	membershipToken?: string
 	isClubAdmin?: boolean
@@ -481,9 +481,6 @@ export default async function clubFromMeemContract(
 			clubRoles = meemContractRolesToClubRoles(clubData.MeemContractRoles)
 		}
 
-		// Used for calculating how many members belong to a particular role
-		const flattenedMemberRoles: MeemContractRoles[] = []
-
 		// Parse members
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
@@ -520,12 +517,8 @@ export default async function clubFromMeemContract(
 								)
 
 								// Determine if the current user is a club admin
-								// Plus extract the role for the flattened member roles array
 								meem.MeemContract.MeemContractRoles.forEach(
 									clubMemberRole => {
-										flattenedMemberRoles.push(
-											clubMemberRole
-										)
 										if (clubMemberRole.isAdminRole) {
 											isClubAdmin = true
 											if (meem.Owner) {
@@ -589,16 +582,29 @@ export default async function clubFromMeemContract(
 			}
 		}
 
-		// Now calculate member role totals
-		const rolesCountMap: Map<string, number> = new Map([])
-		flattenedMemberRoles.forEach(role => {
-			if (rolesCountMap.has(role.id)) {
-				const currentCount = rolesCountMap.get(role.id) ?? 0
-				rolesCountMap.set(role.id, currentCount + 1)
-			} else {
-				rolesCountMap.set(role.id, 1)
+		// role id => club member relation
+		const memberRolesMap: Map<string, ClubMember[]> = new Map()
+
+		// Populate the above map with all role ids
+		clubRoles.forEach(role => {
+			memberRolesMap.set(role.id, [])
+		})
+
+		// Build a relationship between role id <> ClubMember[]
+		members.forEach(member => {
+			if (member.roles) {
+				member.roles.forEach(memberRole => {
+					const currentRoleMembers =
+						memberRolesMap.get(memberRole.id) ?? []
+					currentRoleMembers?.push(member)
+					memberRolesMap.set(memberRole.id, currentRoleMembers)
+				})
 			}
 		})
+
+		// memberRolesMap.forEach((value, key) => {
+		// 	log.debug(`members for role ${key} = ${JSON.stringify(value)}`)
+		// })
 
 		// Integrations
 		const allIntegrations: Integration[] = []
@@ -660,7 +666,7 @@ export default async function clubFromMeemContract(
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			roles: clubRoles,
-			roleMemberCounts: rolesCountMap,
+			memberRolesMap,
 			isClubMember,
 			membershipToken,
 			members,
