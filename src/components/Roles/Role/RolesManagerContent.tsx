@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import log from '@kengoldfarb/log'
+import { useQuery } from '@apollo/client'
 import {
 	Text,
 	Space,
@@ -10,7 +10,14 @@ import {
 	Center
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import { Club, ClubMember, ClubRole } from '../../../model/club/club'
+import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
+import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/clubs'
+import {
+	Club,
+	ClubMember,
+	ClubRole,
+	ClubRolePermission
+} from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
@@ -37,62 +44,74 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
 		useState(false)
 
-	// Set initial role (updated later when changes are made in subcomponents)
+	const { data: availablePermissions } =
+		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS)
+
+	// Set initial role + parse permissions (updated later when changes are made in subcomponents)
 	useEffect(() => {
-		async function fetchPermissions(theRole: ClubRole) {
-			log.debug('fetched permissions for new role')
+		async function parsePermissions(
+			theRole: ClubRole,
+			allPermissions: GetAvailablePermissionQuery
+		) {
 			const permissionedRole = theRole
-			// TODO: Fetch permissions here
-			const fetchedPermissions = [
-				{
-					id: 'membership',
-					name: 'Manage membership settings',
-					locked: false,
-					enabled: false
-				},
-				{
-					id: 'manage-roles',
-					name: 'Manage roles',
-					locked: false,
-					enabled: false
-				},
-				{
-					id: 'edit-profile',
-					name: 'Edit profile',
-					locked: false,
-					enabled: false
-				},
-				{
-					id: 'manage-apps',
-					name: 'Manage apps',
-					locked: false,
-					enabled: false
-				},
-				{
-					id: 'view-apps',
-					name: 'View apps',
-					locked: false,
-					enabled: false
+
+			// This is a new role, set default permissions
+			if (permissionedRole.permissions.length === 0) {
+				const convertedPermissions: ClubRolePermission[] = []
+				if (allPermissions.RolePermissions) {
+					allPermissions.RolePermissions.forEach(permission => {
+						const convertedPermission: ClubRolePermission = {
+							id: permission.id,
+							description: permission.description,
+							name: permission.name,
+							enabled: false,
+							locked: !club.isClubAdmin
+						}
+						convertedPermissions.push(convertedPermission)
+					})
 				}
-			]
-			permissionedRole.permissions = fetchedPermissions
+				permissionedRole.permissions = convertedPermissions
+			} else {
+				// This is an existing role, determine what permissions are enabled
+				// by looking at the permissions added at the club level and reconciling
+				// them with the avilable permissions
+				const convertedPermissions: ClubRolePermission[] = []
+				if (allPermissions.RolePermissions) {
+					allPermissions.RolePermissions.forEach(permission => {
+						let isPermissionEnabled = false
+						if (club && club.roles) {
+							club.roles.forEach(clubRole => {
+								if (clubRole.id === theRole.id) {
+									clubRole.permissions.forEach(rp => {
+										if (rp.id === permission.id) {
+											isPermissionEnabled = true
+										}
+									})
+								}
+							})
+						}
+
+						const convertedPermission: ClubRolePermission = {
+							id: permission.id,
+							description: permission.description,
+							name: permission.name,
+							enabled: isPermissionEnabled,
+							locked: !club.isClubAdmin
+						}
+						convertedPermissions.push(convertedPermission)
+					})
+				}
+				permissionedRole.permissions = convertedPermissions
+			}
+
 			setIsLoadingPermissons(false)
+			setRoleName(permissionedRole.name)
 			setRole(permissionedRole)
 		}
-		if (initialRole && !role) {
-			if (initialRole.permissions.length === 0) {
-				// If this is a new role, fetch the current available permissions from DB
-				setIsLoadingPermissons(true)
-				fetchPermissions(initialRole)
-				setRoleName(initialRole.name)
-			} else {
-				// Otherise, we can leave things as they are
-				setIsLoadingPermissons(false)
-				setRole(initialRole)
-				setRoleName(initialRole.name)
-			}
+		if (initialRole && !role && availablePermissions) {
+			parsePermissions(initialRole, availablePermissions)
 		}
-	}, [initialRole, role])
+	}, [availablePermissions, club, initialRole, role])
 
 	const updateRole = (newRole: ClubRole) => {
 		setRole(newRole)

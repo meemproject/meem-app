@@ -161,7 +161,7 @@ export function meemContractRolesToClubRoles(
 		if (rawRole.MeemContractRolePermissions) {
 			rawRole.MeemContractRolePermissions.forEach(rolePermission => {
 				const rp: ClubRolePermission = {
-					id: rolePermission.id
+					id: rolePermission.RolePermissionId ?? ''
 				}
 				permissions.push(rp)
 			})

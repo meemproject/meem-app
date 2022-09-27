@@ -211,9 +211,7 @@ export const SUB_CLUB = gql`
 				name
 				isAdminRole
 				MeemContractRolePermissions {
-					RolePermission {
-						id
-					}
+					RolePermissionId
 				}
 			}
 		}
@@ -269,8 +267,8 @@ export const GET_INTEGRATIONS = gql`
 	}
 `
 
-export const GET_AVAILABLE_ROLES = gql`
-	query GetAvailableRoles {
+export const GET_AVAILABLE_PERMISSIONS = gql`
+	query GetAvailablePermission {
 		RolePermissions {
 			description
 			id

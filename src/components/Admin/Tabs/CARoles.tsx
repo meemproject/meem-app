@@ -159,7 +159,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										</>
 									}
 								>
-									{club.roleMemberCounts?.get(role.id)}
+									{club.memberRolesMap?.get(role.id)?.length}
 								</Badge>
 							</div>
 							<div className={classes.roleMenu}>

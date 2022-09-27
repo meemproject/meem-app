@@ -5914,7 +5914,7 @@ export type GetClubSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, name: string }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermission?: { __typename?: 'RolePermissions', id: string } | null }> }> }> };
+export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, name: string }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermission?: { __typename?: 'RolePermissions', id: string } | null }> }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -5929,10 +5929,10 @@ export type GetIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetIntegrationsQuery = { __typename?: 'query_root', Integrations: Array<{ __typename?: 'Integrations', createdAt: any, deletedAt?: any | null, description: string, guideUrl: string, icon: string, id: any, name: string, updatedAt: any }> };
 
-export type GetAvailableRolesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAvailablePermissionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAvailableRolesQuery = { __typename?: 'query_root', RolePermissions: Array<{ __typename?: 'RolePermissions', description: string, id: string, name: string }> };
+export type GetAvailablePermissionQuery = { __typename?: 'query_root', RolePermissions: Array<{ __typename?: 'RolePermissions', description: string, id: string, name: string }> };
 
 export type GetClubMembersForRoleQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -6247,6 +6247,7 @@ export const GetClubSubscriptionDocument = gql`
         address
         ens
       }
+      role
     }
     id
     MeemContractIntegrations(
@@ -6400,8 +6401,8 @@ export function useGetIntegrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetIntegrationsQueryHookResult = ReturnType<typeof useGetIntegrationsQuery>;
 export type GetIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIntegrationsLazyQuery>;
 export type GetIntegrationsQueryResult = Apollo.QueryResult<GetIntegrationsQuery, GetIntegrationsQueryVariables>;
-export const GetAvailableRolesDocument = gql`
-    query GetAvailableRoles {
+export const GetAvailablePermissionDocument = gql`
+    query GetAvailablePermission {
   RolePermissions {
     description
     id
@@ -6411,31 +6412,31 @@ export const GetAvailableRolesDocument = gql`
     `;
 
 /**
- * __useGetAvailableRolesQuery__
+ * __useGetAvailablePermissionQuery__
  *
- * To run a query within a React component, call `useGetAvailableRolesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAvailableRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAvailablePermissionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAvailablePermissionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAvailableRolesQuery({
+ * const { data, loading, error } = useGetAvailablePermissionQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetAvailableRolesQuery(baseOptions?: Apollo.QueryHookOptions<GetAvailableRolesQuery, GetAvailableRolesQueryVariables>) {
+export function useGetAvailablePermissionQuery(baseOptions?: Apollo.QueryHookOptions<GetAvailablePermissionQuery, GetAvailablePermissionQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAvailableRolesQuery, GetAvailableRolesQueryVariables>(GetAvailableRolesDocument, options);
+        return Apollo.useQuery<GetAvailablePermissionQuery, GetAvailablePermissionQueryVariables>(GetAvailablePermissionDocument, options);
       }
-export function useGetAvailableRolesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAvailableRolesQuery, GetAvailableRolesQueryVariables>) {
+export function useGetAvailablePermissionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAvailablePermissionQuery, GetAvailablePermissionQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAvailableRolesQuery, GetAvailableRolesQueryVariables>(GetAvailableRolesDocument, options);
+          return Apollo.useLazyQuery<GetAvailablePermissionQuery, GetAvailablePermissionQueryVariables>(GetAvailablePermissionDocument, options);
         }
-export type GetAvailableRolesQueryHookResult = ReturnType<typeof useGetAvailableRolesQuery>;
-export type GetAvailableRolesLazyQueryHookResult = ReturnType<typeof useGetAvailableRolesLazyQuery>;
-export type GetAvailableRolesQueryResult = Apollo.QueryResult<GetAvailableRolesQuery, GetAvailableRolesQueryVariables>;
+export type GetAvailablePermissionQueryHookResult = ReturnType<typeof useGetAvailablePermissionQuery>;
+export type GetAvailablePermissionLazyQueryHookResult = ReturnType<typeof useGetAvailablePermissionLazyQuery>;
+export type GetAvailablePermissionQueryResult = Apollo.QueryResult<GetAvailablePermissionQuery, GetAvailablePermissionQueryVariables>;
 export const GetClubMembersForRoleDocument = gql`
     query GetClubMembersForRole($slug: String, $chainId: Int, $roleId: uuid) {
   MeemContracts(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
