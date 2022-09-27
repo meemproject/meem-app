@@ -82,6 +82,7 @@ export interface Club {
 	slotsLeft?: number
 	members?: ClubMember[]
 	roles?: ClubRole[]
+	roleMemberCounts?: Map<string, number>
 	isClubMember?: boolean
 	membershipToken?: string
 	isClubAdmin?: boolean
@@ -254,6 +255,7 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			isClubMember: true,
 			membershipToken: '',
 			members,
+
 			slotsLeft: 0,
 			membershipSettings: {
 				requirements: [],
@@ -479,6 +481,9 @@ export default async function clubFromMeemContract(
 			clubRoles = meemContractRolesToClubRoles(clubData.MeemContractRoles)
 		}
 
+		// Used for calculating how many members belong to a particular role
+		const flattenedMemberRoles: MeemContractRoles[] = []
+
 		// Parse members
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
@@ -500,8 +505,10 @@ export default async function clubFromMeemContract(
 					)
 
 					// Determine if the current user is a club admin
+					// Plus extract the role for the flattened member roles array
 					meem.MeemContract.MeemContractRoles.forEach(
 						clubMemberRole => {
+							flattenedMemberRoles.push(clubMemberRole)
 							if (clubMemberRole.isAdminRole) {
 								isClubAdmin = true
 								if (meem.Owner) {
@@ -578,6 +585,17 @@ export default async function clubFromMeemContract(
 			}
 		}
 
+		// Now calculate member role totals
+		const rolesCountMap: Map<string, number> = new Map([])
+		flattenedMemberRoles.forEach(role => {
+			if (rolesCountMap.has(role.id)) {
+				const currentCount = rolesCountMap.get(role.id) ?? 0
+				rolesCountMap.set(role.id, currentCount + 1)
+			} else {
+				rolesCountMap.set(role.id, 1)
+			}
+		})
+
 		// Integrations
 		const allIntegrations: Integration[] = []
 		const publicIntegrations: Integration[] = []
@@ -638,6 +656,7 @@ export default async function clubFromMeemContract(
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			roles: clubRoles,
+			roleMemberCounts: rolesCountMap,
 			isClubMember,
 			membershipToken,
 			members,
