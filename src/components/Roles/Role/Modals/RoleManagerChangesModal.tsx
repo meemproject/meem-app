@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { createStyles, Text, Space, Modal, Loader } from '@mantine/core'
+import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { makeFetcher, useSockets, useWallet } from '@meemproject/react'
+import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
+import { AlertCircle, Check } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription // eslint-disable-next-line import/namespace
 } from '../../../../../generated/graphql'
@@ -17,6 +18,7 @@ import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 
 interface IProps {
 	club?: Club
+	isExistingRole?: boolean
 	role?: ClubRole
 	roleMembers?: ClubMember[]
 	isOpened: boolean
@@ -28,9 +30,12 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 	onModalClosed,
 	club,
 	role,
+	isExistingRole,
 	roleMembers
 }) => {
 	const wallet = useWallet()
+
+	const router = useRouter()
 
 	const { classes: styles } = useGlobalStyles()
 
@@ -77,9 +82,96 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 
 			setIsSavingChanges(true)
 
-			// TODO: Save role change(s)
+			if (!role) {
+				closeModal()
+				return
+			}
 
-			//setIsSavingChanges(false)
+			const permissionsArray: string[] = []
+			role.permissions.forEach(permission => {
+				permissionsArray.push(permission.id)
+			})
+
+			const membersArray: string[] = []
+			if (roleMembers) {
+				roleMembers.forEach(member => {
+					membersArray.push(member.wallet)
+				})
+			}
+
+			if (isExistingRole) {
+				// Save the updates to the existing role
+				try {
+					const updateRoleFetcher = makeFetcher<
+						MeemAPI.v1.UpdateMeemContractRole.IQueryParams,
+						MeemAPI.v1.UpdateMeemContractRole.IRequestBody,
+						MeemAPI.v1.UpdateMeemContractRole.IResponseBody
+					>({
+						method: MeemAPI.v1.UpdateMeemContractRole.method
+					})
+
+					await updateRoleFetcher(
+						MeemAPI.v1.UpdateMeemContractRole.path({
+							meemContractId: club.id ?? '',
+							meemContractRoleId: role.id ?? ''
+						}),
+						undefined,
+						{
+							permissions: permissionsArray,
+							members: membersArray
+						}
+					)
+
+					// Now wait for change on club
+				} catch (e) {
+					log.debug(e)
+					showNotification({
+						title: 'Error',
+						autoClose: 5000,
+						color: 'red',
+						icon: <AlertCircle />,
+						message: `Unable to save role. Please let us know!`
+					})
+					setIsSavingChanges(false)
+					return
+				}
+			} else {
+				// Create a new role
+				try {
+					const saveRoleFetcher = makeFetcher<
+						MeemAPI.v1.CreateMeemContractRole.IQueryParams,
+						MeemAPI.v1.CreateMeemContractRole.IRequestBody,
+						MeemAPI.v1.CreateMeemContractRole.IResponseBody
+					>({
+						method: MeemAPI.v1.CreateMeemContractRole.method
+					})
+
+					await saveRoleFetcher(
+						MeemAPI.v1.CreateMeemContractRole.path({
+							meemContractId: club.id ?? ''
+						}),
+						undefined,
+						{
+							name: role.name,
+							permissions: permissionsArray,
+							members: membersArray
+						}
+					)
+					// Now wait for change on club
+				} catch (e) {
+					log.debug(e)
+					showNotification({
+						title: 'Error',
+						autoClose: 5000,
+						color: 'red',
+						icon: <AlertCircle />,
+						message: `Unable to save role. Please let us know!`
+					})
+					setIsSavingChanges(false)
+					closeModal()
+					return
+				}
+			}
 		}
 		function compareClubData() {
 			if (clubData) {
@@ -100,6 +192,25 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 
 						message: `${clubData.MeemContracts[0].name} has been updated.`
 					})
+
+					if (isExistingRole) {
+						if (club && role) {
+							// Navigate to the saved role
+							router.push({
+								pathname: `/${club.slug}/roles`,
+								query: {
+									role: `/${role.id}`
+								}
+							})
+						}
+					} else {
+						// Navigate to the roles list
+						if (club) {
+							router.push({
+								pathname: `/${club.slug}/roles`
+							})
+						}
+					}
 				}
 			}
 		}
@@ -166,7 +277,11 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		loading,
 		onModalClosed,
 		sockets,
-		wallet
+		wallet,
+		role,
+		isExistingRole,
+		roleMembers,
+		router
 	])
 
 	return (

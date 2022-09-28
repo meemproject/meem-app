@@ -39,6 +39,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [roleMembers, setRoleMembers] = useState<ClubMember[]>([])
 
 	const [isLoadingPermissions, setIsLoadingPermissons] = useState(false)
+	const [isExistingRole, setIsExistingRole] = useState(false)
 	const [roleName, setRoleName] = useState('')
 
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
@@ -57,6 +58,8 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 			// This is a new role, set default permissions
 			if (permissionedRole.permissions.length === 0) {
+				setIsExistingRole(false)
+
 				const convertedPermissions: ClubRolePermission[] = []
 				if (allPermissions.RolePermissions) {
 					allPermissions.RolePermissions.forEach(permission => {
@@ -75,6 +78,8 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				// This is an existing role, determine what permissions are enabled
 				// by looking at the permissions added at the club level and reconciling
 				// them with the avilable permissions
+				setIsExistingRole(true)
+
 				const convertedPermissions: ClubRolePermission[] = []
 				if (allPermissions.RolePermissions) {
 					allPermissions.RolePermissions.forEach(permission => {
@@ -216,8 +221,11 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 			<RoleManagerChangesModal
 				isOpened={isSaveChangesModalOpened}
-				onModalClosed={() => {}}
+				onModalClosed={() => {
+					setIsSaveChangesModalOpened(false)
+				}}
 				role={role}
+				isExistingRole={isExistingRole}
 				roleMembers={roleMembers}
 				club={club}
 			/>
