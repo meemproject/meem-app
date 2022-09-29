@@ -9,6 +9,7 @@ import {
 	Loader,
 	Center
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
 import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/clubs'
@@ -57,7 +58,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 			const permissionedRole = theRole
 
 			// This is a new role, set default permissions
-			if (permissionedRole.permissions.length === 0) {
+			if (permissionedRole.id === 'addRole') {
 				setIsExistingRole(false)
 
 				const convertedPermissions: ClubRolePermission[] = []
@@ -74,6 +75,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					})
 				}
 				permissionedRole.permissions = convertedPermissions
+				setRoleMembers([])
 			} else {
 				// This is an existing role, determine what permissions are enabled
 				// by looking at the permissions added at the club level and reconciling
@@ -110,7 +112,20 @@ export const RolesManagerContent: React.FC<IProps> = ({
 			}
 
 			setIsLoadingPermissons(false)
+
+			// Role name
 			setRoleName(permissionedRole.name)
+
+			// Any existing role members
+			const initialRoleMembers: ClubMember[] | undefined =
+				club.memberRolesMap
+					? club.memberRolesMap.get(permissionedRole.id)
+					: []
+			if (initialRoleMembers) {
+				setRoleMembers(initialRoleMembers)
+			}
+
+			// Set the role itself
 			setRole(permissionedRole)
 		}
 		if (initialRole && !role && availablePermissions) {
@@ -125,12 +140,19 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 	// Save any changes to the role
 	const saveChanges = (clubMembers?: ClubMember[]) => {
+		if (!clubMembers || clubMembers.length === 0) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message: `Please add at least one member to this role!`
+			})
+			return
+		}
+
 		// Save process
 		// 1. Open modal
-		// 2. Listen for changes in the club
-		// 3. Trigger transaction
-		// 4. When change detected, refresh the page, ideally to where the previous tab was
-		// TODO: Trigger save changes modal.
+		// 2. Save changes
+		// 3. When change detected, refresh the page, ideally to where the previous tab was
 		if (clubMembers) {
 			setRoleMembers(clubMembers)
 		}
@@ -145,7 +167,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					<Text className={styles.tSectionTitle}>
 						{role && role.name.length > 0 ? role.name : 'Add Role'}
 					</Text>
-					<Button className={styles.buttonBlack}>Save Changes</Button>
+					<Button
+						onClick={() => {
+							saveChanges(roleMembers)
+						}}
+						className={styles.buttonBlack}
+					>
+						Save Changes
+					</Button>
 				</div>
 
 				<div className={styles.row}>
@@ -194,7 +223,9 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						{!isLoadingPermissions && (
 							<RolesManagerPermissions
 								role={role}
-								onSaveChanges={saveChanges}
+								onSaveChanges={() => {
+									saveChanges(roleMembers)
+								}}
 								onRoleUpdated={newRole => {
 									updateRole(newRole)
 								}}
@@ -211,8 +242,11 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						<RolesManagerMembers
 							role={role}
 							club={club}
-							onSaveChanges={members => {
-								saveChanges(members)
+							onMembersUpdated={members => {
+								setRoleMembers(members)
+							}}
+							onSaveChanges={() => {
+								saveChanges()
 							}}
 						/>
 					</Tabs.Panel>

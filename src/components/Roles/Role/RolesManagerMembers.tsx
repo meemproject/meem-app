@@ -20,13 +20,15 @@ import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 interface IProps {
 	club: Club
 	role?: ClubRole
-	onSaveChanges: (members: ClubMember[]) => void
+	onSaveChanges: () => void
+	onMembersUpdated: (members: ClubMember[]) => void
 }
 
 export const RolesManagerMembers: React.FC<IProps> = ({
 	club,
 	role,
-	onSaveChanges
+	onSaveChanges,
+	onMembersUpdated
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
@@ -208,7 +210,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 				<Button
 					className={styles.buttonBlack}
 					onClick={() => {
-						onSaveChanges(members)
+						onSaveChanges()
 					}}
 				>
 					Save Changes
@@ -227,6 +229,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 					newMembers.forEach(member => {
 						addMember(member)
 					})
+					onMembersUpdated(members)
 				}}
 			/>
 		</>
