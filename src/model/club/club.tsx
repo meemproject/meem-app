@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
-import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
+import log from '@kengoldfarb/log'
+import { makeFetcher, MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { MeemContractRoles, MeemContracts } from '../../../generated/graphql'
@@ -83,6 +84,7 @@ export interface Club {
 	members?: ClubMember[]
 	roles?: ClubRole[]
 	memberRolesMap?: Map<string, ClubMember[]>
+	currentUserClubPermissions?: string[]
 	isClubMember?: boolean
 	membershipToken?: string
 	isClubAdmin?: boolean
@@ -285,6 +287,30 @@ export default async function clubFromMeemContract(
 		// Parse the contract URI
 		// const metadata = clubMetadataFromContractUri(clubData.contractURI)
 
+		// Fetch the current user's permissions for this club, if they exist
+		if (walletAddress) {
+			// Send request
+			try {
+				const userClubPermissionsFetcher = makeFetcher<
+					MeemAPI.v1.GetUserMeemContractRolesAccess.IQueryParams,
+					MeemAPI.v1.GetUserMeemContractRolesAccess.IRequestBody,
+					MeemAPI.v1.GetUserMeemContractRolesAccess.IResponseBody
+				>({
+					method: MeemAPI.v1.GetUserMeemContractRolesAccess.method
+				})
+
+				const userPermissions = await userClubPermissionsFetcher(
+					MeemAPI.v1.GetUserMeemContractRolesAccess.path({
+						meemContractId: walletAddress
+					})
+				)
+
+				log.debug(userPermissions)
+			} catch (e) {
+				log.debug(e)
+			}
+		}
+
 		// Convert minting permissions to membership requirements
 		const reqs: MembershipRequirement[] = []
 		let costToJoin = 0
@@ -297,30 +323,6 @@ export default async function clubFromMeemContract(
 		// Raw admin addresses stored on contract, used to filter out admin-only mintPermissions
 		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
-
-		// // Look up admin addresses and convert to ENS where necessary
-		// if (
-		// 	clubData.MeemContractWallets &&
-		// 	clubData.MeemContractWallets.length > 0
-		// ) {
-		// 	await Promise.all(
-		// 		clubData.MeemContractWallets.map(function (wall) {
-		// 			if (wall.Wallet) {
-		// 				const address = wall.Wallet.address
-		// 				adminRawAddresses.push(address)
-		// 				admins.push(address)
-		// 			}
-
-		// 			if (
-		// 				wall.Wallet?.address.toLowerCase() ===
-		// 					walletAddress?.toLowerCase() &&
-		// 				wall.role === ClubAdminRole
-		// 			) {
-		// 				isClubAdmin = true
-		// 			}
-		// 		})
-		// 	)
-		// }
 
 		let membershipStartDate: Date | undefined
 		let membershipEndDate: Date | undefined
