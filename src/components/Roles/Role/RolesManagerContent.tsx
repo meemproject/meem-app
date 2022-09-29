@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	Text,
 	Space,
@@ -139,8 +140,8 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	}
 
 	// Save any changes to the role
-	const saveChanges = (clubMembers?: ClubMember[]) => {
-		if (!clubMembers || clubMembers.length === 0) {
+	const saveChanges = () => {
+		if (!roleMembers || roleMembers.length === 0) {
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
@@ -153,9 +154,6 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		// 1. Open modal
 		// 2. Save changes
 		// 3. When change detected, refresh the page, ideally to where the previous tab was
-		if (clubMembers) {
-			setRoleMembers(clubMembers)
-		}
 		setIsSaveChangesModalOpened(true)
 	}
 
@@ -169,7 +167,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					</Text>
 					<Button
 						onClick={() => {
-							saveChanges(roleMembers)
+							saveChanges()
 						}}
 						className={styles.buttonBlack}
 					>
@@ -224,7 +222,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							<RolesManagerPermissions
 								role={role}
 								onSaveChanges={() => {
-									saveChanges(roleMembers)
+									saveChanges()
 								}}
 								onRoleUpdated={newRole => {
 									updateRole(newRole)
@@ -243,6 +241,9 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							role={role}
 							club={club}
 							onMembersUpdated={members => {
+								log.debug(
+									`on members updated - members length = ${members.length}`
+								)
 								setRoleMembers(members)
 							}}
 							onSaveChanges={() => {

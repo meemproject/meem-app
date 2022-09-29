@@ -229,7 +229,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 					newMembers.forEach(member => {
 						addMember(member)
 					})
-					onMembersUpdated(members)
+					onMembersUpdated(newMembers)
 				}}
 			/>
 		</>
