@@ -15,6 +15,7 @@ interface IProps {
 	isExistingRole?: boolean
 	role?: ClubRole
 	roleMembers?: ClubMember[]
+	roleName?: string
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -118,6 +119,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						}),
 						undefined,
 						{
+							//name: role.name,
 							permissions: permissionsArray,
 							members: membersArray
 						}

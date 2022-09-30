@@ -25,7 +25,6 @@ import {
 import { SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
 import { CABulkMint } from './Tabs/CABulkMint'
-import { CAClubAdmins } from './Tabs/CAClubAdmins'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
 import { CAClubIcon } from './Tabs/CAClubIcon'
@@ -216,7 +215,6 @@ enum Tab {
 	MembershipSettings,
 	MembershipRequirements,
 	Roles,
-	Admins,
 	ClubDetails,
 	ClubIcon,
 	Apps,
@@ -269,9 +267,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		switch (router.query.tab) {
-			case 'admins':
-				setCurrentTab(Tab.Admins)
-				break
 			case 'airdrops':
 				setCurrentTab(Tab.Airdrops)
 				break
@@ -468,15 +463,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										setMobileNavBarVisible(false)
 									}}
 								/>
-								<NavLink
-									className={classes.adminNavItem}
-									active={currentTab === Tab.Admins}
-									label={'Club Admins'}
-									onClick={() => {
-										setCurrentTab(Tab.Admins)
-										setMobileNavBarVisible(false)
-									}}
-								/>
+
 								<NavLink
 									className={classes.adminNavItem}
 									active={currentTab === Tab.Roles}
@@ -538,9 +525,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									{currentTab ===
 										Tab.MembershipRequirements && (
 										<CAMembershipRequirements club={club} />
-									)}
-									{currentTab === Tab.Admins && (
-										<CAClubAdmins club={club} />
 									)}
 									{currentTab === Tab.ClubDetails && (
 										<CAClubDetails club={club} />

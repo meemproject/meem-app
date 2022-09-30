@@ -2,9 +2,10 @@
 import { createStyles, Text, Button, Space, Badge, Menu } from '@mantine/core'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
-import { Club } from '../../../model/club/club'
+import { Club, ClubRole } from '../../../model/club/club'
+import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
 
 const useStyles = createStyles(theme => ({
 	manageClubHeader: {
@@ -111,6 +112,10 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 		})
 	}
 
+	const [isDeleteRoleModalOpen, setIsDeleteRoleModalOpened] = useState(false)
+
+	const [roleToDelete, setRoleToDelete] = useState<ClubRole>()
+
 	return (
 		<>
 			<div>
@@ -165,7 +170,9 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 							<div className={classes.roleMenu}>
 								<Menu radius={8} shadow={'lg'}>
 									<Menu.Target>
-										<Dots />
+										<div>
+											<Dots />
+										</div>
 									</Menu.Target>
 									<Menu.Dropdown>
 										<Menu.Item
@@ -182,7 +189,10 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 											Manage Role
 										</Menu.Item>
 										<Menu.Item
-											onClick={() => {}}
+											onClick={() => {
+												setRoleToDelete(role)
+												setIsDeleteRoleModalOpened(true)
+											}}
 											className={classes.redMenuItem}
 										>
 											Delete Role
@@ -200,6 +210,13 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 				+ Create Role
 			</Button>
 			<Space h={64} />
+			<DeleteRoleModal
+				role={roleToDelete}
+				onModalClosed={() => {
+					setIsDeleteRoleModalOpened(false)
+				}}
+				isOpened={isDeleteRoleModalOpen}
+			/>
 		</>
 	)
 }
