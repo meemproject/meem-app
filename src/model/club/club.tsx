@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
 import log from '@kengoldfarb/log'
-import { makeFetcher, MeemAPI, normalizeImageUrl } from '@meemproject/api'
+import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { MeemContractRoles, MeemContracts } from '../../../generated/graphql'
@@ -287,41 +287,6 @@ export default async function clubFromMeemContract(
 		// Parse the contract URI
 		// const metadata = clubMetadataFromContractUri(clubData.contractURI)
 
-		// Fetch the current user's permissions for this club, if they exist
-		const currentUserClubPermissions: string[] = []
-		if (walletAddress) {
-			// Send request
-			try {
-				const userClubPermissionsFetcher = makeFetcher<
-					MeemAPI.v1.GetUserMeemContractRolesAccess.IQueryParams,
-					MeemAPI.v1.GetUserMeemContractRolesAccess.IRequestBody,
-					MeemAPI.v1.GetUserMeemContractRolesAccess.IResponseBody
-				>({
-					method: MeemAPI.v1.GetUserMeemContractRolesAccess.method
-				})
-
-				const userPermissions = await userClubPermissionsFetcher(
-					MeemAPI.v1.GetUserMeemContractRolesAccess.path({
-						meemContractId: clubData.id
-					})
-				)
-
-				log.debug(userPermissions)
-
-				if (userPermissions.hasRolesAccess) {
-					userPermissions.roles.forEach(role => {
-						role.permissions.forEach(permsission => {
-							currentUserClubPermissions.push(permsission)
-						})
-					})
-				} else {
-					log.debug(`current user has no permissions currently`)
-				}
-			} catch (e) {
-				log.debug(e)
-			}
-		}
-
 		// Convert minting permissions to membership requirements
 		const reqs: MembershipRequirement[] = []
 		let costToJoin = 0
@@ -341,6 +306,7 @@ export default async function clubFromMeemContract(
 
 		// Parse roles
 		let clubRoles: ClubRole[] = []
+		const currentUserClubPermissions: string[] = []
 		if (clubData.MeemContractRoles) {
 			clubRoles = meemContractRolesToClubRoles(clubData.MeemContractRoles)
 		}
@@ -381,27 +347,50 @@ export default async function clubFromMeemContract(
 								)
 
 								// Determine if member is a club admin
+								// Plus other things
 								meem.MeemContract.MeemContractRoles.forEach(
 									clubMemberRole => {
-										if (clubMemberRole.isAdminRole) {
-											// If the member is the current member, make sure we set
-											// 'isClubAdmin'
-											if (
-												meem.Owner &&
-												meem.Owner.address.toLowerCase() ===
-													walletAddress.toLowerCase()
-											) {
+										// parsing the current user
+										if (
+											meem.Owner &&
+											meem.Owner.address.toLowerCase() ===
+												walletAddress.toLowerCase()
+										) {
+											// Set current user as admin for frontend
+											if (clubMemberRole.isAdminRole) {
 												isClubAdmin = true
-												log.debug(
-													'current user is a club admin'
-												)
-											}
-
-											// Add to adminRawAddresses
-											if (meem.Owner) {
 												adminRawAddresses.push(
 													meem.Owner.address
 												)
+											}
+
+											// Set the current user's available permissions
+											if (
+												clubMemberRole.MeemContractRolePermissions
+											) {
+												clubMemberRole.MeemContractRolePermissions.forEach(
+													permission => {
+														if (
+															permission.RolePermissionId
+														) {
+															currentUserClubPermissions.push(
+																permission.RolePermissionId
+															)
+															log.debug(
+																`current user has permission = ${permission.RolePermissionId}`
+															)
+														}
+													}
+												)
+											}
+										} else {
+											// parsing other users
+											if (clubMemberRole.isAdminRole) {
+												if (meem.Owner) {
+													adminRawAddresses.push(
+														meem.Owner.address
+													)
+												}
 											}
 										}
 									}

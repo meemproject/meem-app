@@ -24,6 +24,12 @@ import {
 } from '../../../generated/graphql'
 import { SUB_CLUB } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
+import {
+	userHasPermissionEditProfile,
+	userHasPermissionManageApps,
+	userHasPermissionManageMembershipSettings,
+	userHasPermissionManageRoles
+} from '../../model/identity/permissions'
 import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
@@ -437,51 +443,69 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										setMobileNavBarVisible(false)
 									}}
 								/>
-								<NavLink
-									className={classes.adminNavItem}
-									active={
-										currentTab === Tab.MembershipSettings
-									}
-									label={'Membership Settings'}
-									onClick={() => {
-										setCurrentTab(Tab.MembershipSettings)
-										setMobileNavBarVisible(false)
-									}}
-								/>
+								{userHasPermissionManageMembershipSettings(
+									club
+								) && (
+									<div>
+										<NavLink
+											className={classes.adminNavItem}
+											active={
+												currentTab ===
+												Tab.MembershipSettings
+											}
+											label={'Membership Settings'}
+											onClick={() => {
+												setCurrentTab(
+													Tab.MembershipSettings
+												)
+												setMobileNavBarVisible(false)
+											}}
+										/>
+										<NavLink
+											className={classes.adminNavItem}
+											active={
+												currentTab ===
+												Tab.MembershipRequirements
+											}
+											label={'Membership Requirements'}
+											onClick={() => {
+												setCurrentTab(
+													Tab.MembershipRequirements
+												)
+												setMobileNavBarVisible(false)
+											}}
+										/>
+									</div>
+								)}
 
-								<NavLink
-									className={classes.adminNavItem}
-									active={
-										currentTab ===
-										Tab.MembershipRequirements
-									}
-									label={'Membership Requirements'}
-									onClick={() => {
-										setCurrentTab(
-											Tab.MembershipRequirements
-										)
-										setMobileNavBarVisible(false)
-									}}
-								/>
+								{userHasPermissionManageRoles(club) && (
+									<>
+										<NavLink
+											className={classes.adminNavItem}
+											active={currentTab === Tab.Roles}
+											label={'Roles'}
+											onClick={() => {
+												setCurrentTab(Tab.Roles)
+												setMobileNavBarVisible(false)
+											}}
+										/>
+									</>
+								)}
 
-								<NavLink
-									className={classes.adminNavItem}
-									active={currentTab === Tab.Roles}
-									label={'Roles'}
-									onClick={() => {
-										setCurrentTab(Tab.Roles)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-								<NavLink
-									className={classes.adminNavItem}
-									active={currentTab === Tab.Apps}
-									label={'Club Apps'}
-									onClick={() => {
-										setCurrentTab(Tab.Apps)
-										setMobileNavBarVisible(false)
-									}}
-								/>
+								{userHasPermissionManageApps(club) && (
+									<>
+										<NavLink
+											className={classes.adminNavItem}
+											active={currentTab === Tab.Apps}
+											label={'Club Apps'}
+											onClick={() => {
+												setCurrentTab(Tab.Apps)
+												setMobileNavBarVisible(false)
+											}}
+										/>
+									</>
+								)}
+
 								<NavLink
 									className={classes.adminNavItem}
 									active={currentTab === Tab.Airdrops}
@@ -491,56 +515,77 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										setMobileNavBarVisible(false)
 									}}
 								/>
-								<Space h={32} />
-								<Text className={classes.adminNavHeader}>
-									EDIT PROFILE
-								</Text>
-								<NavLink
-									className={classes.adminNavItem}
-									active={currentTab === Tab.ClubDetails}
-									label={'Club Details'}
-									onClick={() => {
-										setCurrentTab(Tab.ClubDetails)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-								<NavLink
-									className={classes.adminNavItem}
-									active={currentTab === Tab.ClubIcon}
-									label={'Club Icon'}
-									onClick={() => {
-										setCurrentTab(Tab.ClubIcon)
-										setMobileNavBarVisible(false)
-									}}
-								/>
+
+								{userHasPermissionEditProfile(club) && (
+									<div>
+										<Space h={32} />
+										<Text
+											className={classes.adminNavHeader}
+										>
+											EDIT PROFILE
+										</Text>
+										<NavLink
+											className={classes.adminNavItem}
+											active={
+												currentTab === Tab.ClubDetails
+											}
+											label={'Club Details'}
+											onClick={() => {
+												setCurrentTab(Tab.ClubDetails)
+												setMobileNavBarVisible(false)
+											}}
+										/>
+										<NavLink
+											className={classes.adminNavItem}
+											active={currentTab === Tab.ClubIcon}
+											label={'Club Icon'}
+											onClick={() => {
+												setCurrentTab(Tab.ClubIcon)
+												setMobileNavBarVisible(false)
+											}}
+										/>
+									</div>
+								)}
 							</Navbar>
 							{!mobileNavBarVisible && (
 								<div className={classes.adminContent}>
 									{currentTab === Tab.ContractAddress && (
 										<CAContractAddress club={club} />
 									)}
-									{currentTab === Tab.MembershipSettings && (
-										<CAMembershipSettings club={club} />
-									)}
+									{currentTab === Tab.MembershipSettings &&
+										userHasPermissionManageMembershipSettings(
+											club
+										) && (
+											<CAMembershipSettings club={club} />
+										)}
 									{currentTab ===
-										Tab.MembershipRequirements && (
-										<CAMembershipRequirements club={club} />
-									)}
-									{currentTab === Tab.ClubDetails && (
-										<CAClubDetails club={club} />
-									)}
-									{currentTab === Tab.ClubIcon && (
-										<CAClubIcon club={club} />
-									)}
-									{currentTab === Tab.Apps && (
-										<CAClubApps club={club} />
-									)}
+										Tab.MembershipRequirements &&
+										userHasPermissionManageMembershipSettings(
+											club
+										) && (
+											<CAMembershipRequirements
+												club={club}
+											/>
+										)}
+									{currentTab === Tab.ClubDetails &&
+										userHasPermissionEditProfile(club) && (
+											<CAClubDetails club={club} />
+										)}
+									{currentTab === Tab.ClubIcon &&
+										userHasPermissionEditProfile(club) && (
+											<CAClubIcon club={club} />
+										)}
+									{currentTab === Tab.Apps &&
+										userHasPermissionManageApps(club) && (
+											<CAClubApps club={club} />
+										)}
 									{currentTab === Tab.Airdrops && (
 										<CABulkMint club={club} />
 									)}
-									{currentTab === Tab.Roles && (
-										<CARoles club={club} />
-									)}
+									{currentTab === Tab.Roles &&
+										userHasPermissionManageRoles(club) && (
+											<CARoles club={club} />
+										)}
 								</div>
 							)}
 						</div>

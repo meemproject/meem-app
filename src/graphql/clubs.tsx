@@ -172,6 +172,9 @@ export const SUB_CLUB = gql`
 						id
 						isAdminRole
 						name
+						MeemContractRolePermissions {
+							RolePermissionId
+						}
 					}
 				}
 			}
