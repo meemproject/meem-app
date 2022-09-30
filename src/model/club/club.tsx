@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
-import log from '@kengoldfarb/log'
 import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
@@ -375,9 +374,6 @@ export default async function clubFromMeemContract(
 														) {
 															currentUserClubPermissions.push(
 																permission.RolePermissionId
-															)
-															log.debug(
-																`current user has permission = ${permission.RolePermissionId}`
 															)
 														}
 													}
