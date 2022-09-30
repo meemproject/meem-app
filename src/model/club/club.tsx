@@ -288,6 +288,7 @@ export default async function clubFromMeemContract(
 		// const metadata = clubMetadataFromContractUri(clubData.contractURI)
 
 		// Fetch the current user's permissions for this club, if they exist
+		const currentUserClubPermissions: string[] = []
 		if (walletAddress) {
 			// Send request
 			try {
@@ -301,11 +302,21 @@ export default async function clubFromMeemContract(
 
 				const userPermissions = await userClubPermissionsFetcher(
 					MeemAPI.v1.GetUserMeemContractRolesAccess.path({
-						meemContractId: walletAddress
+						meemContractId: clubData.id
 					})
 				)
 
 				log.debug(userPermissions)
+
+				if (userPermissions.hasRolesAccess) {
+					userPermissions.roles.forEach(role => {
+						role.permissions.forEach(permsission => {
+							currentUserClubPermissions.push(permsission)
+						})
+					})
+				} else {
+					log.debug(`current user has no permissions currently`)
+				}
 			} catch (e) {
 				log.debug(e)
 			}
@@ -668,6 +679,7 @@ export default async function clubFromMeemContract(
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
 			roles: clubRoles,
+			currentUserClubPermissions,
 			memberRolesMap,
 			isClubMember,
 			membershipToken,
