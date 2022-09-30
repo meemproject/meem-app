@@ -119,7 +119,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						}),
 						undefined,
 						{
-							//name: role.name,
+							name: role.name,
 							permissions: permissionsArray,
 							members: membersArray
 						}
