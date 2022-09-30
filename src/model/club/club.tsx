@@ -327,13 +327,161 @@ export default async function clubFromMeemContract(
 		let costToJoin = 0
 		let index = 0
 
-		// Set up club admins
-		// Is the current user a club admin?
-		const admins: string[] = [] // ENS-resolved list of admin addresses
-
 		// Raw admin addresses stored on contract, used to filter out admin-only mintPermissions
 		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
+
+		// Club members
+		const members: ClubMember[] = []
+
+		// Is the current user a club member?
+		let isClubMember = false
+
+		let membershipToken = undefined
+
+		// Parse roles
+		let clubRoles: ClubRole[] = []
+		if (clubData.MeemContractRoles) {
+			clubRoles = meemContractRolesToClubRoles(clubData.MeemContractRoles)
+		}
+
+		// Parse members
+		if (clubData.Meems) {
+			for (const meem of clubData.Meems) {
+				if (
+					walletAddress &&
+					walletAddress?.toLowerCase() ===
+						meem.Owner?.address.toLowerCase()
+				) {
+					isClubMember = true
+					membershipToken = meem.tokenId
+				}
+
+				if (
+					meem.Owner?.address.toLowerCase() !==
+						MeemAPI.zeroAddress.toLowerCase() &&
+					// 0xfurnace address
+					meem.Owner?.address.toLowerCase() !==
+						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
+				) {
+					if (meem.Owner) {
+						let hasAlreadyBeenAdded = false
+						members.forEach(member => {
+							if (member.wallet === meem.Owner?.address) {
+								hasAlreadyBeenAdded = true
+							}
+						})
+						if (!hasAlreadyBeenAdded) {
+							let memberRoles: ClubRole[] = []
+
+							// Convert member roles if the member hasn't already been added
+							if (meem.MeemContract?.MeemContractRoles) {
+								memberRoles = meemContractRolesToClubRoles(
+									meem.MeemContract?.MeemContractRoles
+								)
+
+								// Determine if member is a club admin
+								meem.MeemContract.MeemContractRoles.forEach(
+									clubMemberRole => {
+										if (clubMemberRole.isAdminRole) {
+											// If the member is the current member, make sure we set
+											// 'isClubAdmin'
+											if (
+												meem.Owner &&
+												meem.Owner.address.toLowerCase() ===
+													walletAddress.toLowerCase()
+											) {
+												isClubAdmin = true
+												log.debug(
+													'current user is a club admin'
+												)
+											}
+
+											// Add to adminRawAddresses
+											if (meem.Owner) {
+												adminRawAddresses.push(
+													meem.Owner.address
+												)
+											}
+										}
+									}
+								)
+							}
+
+							const memberIdentity =
+								meem.Owner.MeemIdentities &&
+								meem.Owner.MeemIdentities.length > 0
+									? meem.Owner.MeemIdentities[0]
+									: undefined
+
+							let twitterUsername = ''
+							let discordUsername = ''
+							let discordUserId = ''
+							let emailAddress = ''
+
+							memberIdentity?.MeemIdentityIntegrations.forEach(
+								inte => {
+									if (inte.metadata.twitterUsername) {
+										twitterUsername =
+											inte.metadata.twitterUsername
+									} else if (inte.metadata.discordUsername) {
+										discordUsername =
+											inte.metadata.discordUsername
+										discordUserId =
+											inte.metadata.discordUserId
+									} else if (inte.metadata.emailAddress) {
+										emailAddress =
+											inte.metadata.emailAddress
+									}
+								}
+							)
+
+							members.push({
+								wallet: meem.Owner.address,
+								ens: meem.Owner.ens ?? undefined,
+								roles: memberRoles,
+								displayName: memberIdentity?.displayName
+									? memberIdentity?.displayName
+									: '',
+								profilePicture: memberIdentity?.profilePicUrl
+									? normalizeImageUrl(
+											memberIdentity?.profilePicUrl
+									  )
+									: '',
+								twitterUsername,
+								discordUsername,
+								discordUserId,
+								emailAddress
+							})
+						}
+					}
+				}
+			}
+		}
+
+		// role id => club member relation
+		const memberRolesMap: Map<string, ClubMember[]> = new Map()
+
+		// Populate the above map with all role ids
+		clubRoles.forEach(role => {
+			memberRolesMap.set(role.id, [])
+		})
+
+		// Build a relationship between role id <> ClubMember[]
+		members.forEach(member => {
+			if (member.roles) {
+				member.roles.forEach(memberRole => {
+					const currentRoleMembers =
+						memberRolesMap.get(memberRole.id) ?? []
+					currentRoleMembers?.push(member)
+					memberRolesMap.set(memberRole.id, currentRoleMembers)
+				})
+			}
+		})
+
+		// memberRolesMap.forEach((value, key) => {
+		// 	log.debug(`members for role ${key} = ${JSON.stringify(value)}`)
+		// })
 
 		let membershipStartDate: Date | undefined
 		let membershipEndDate: Date | undefined
@@ -480,145 +628,6 @@ export default async function clubFromMeemContract(
 			totalMemberships = 0
 		}
 
-		// Club members
-		const members: ClubMember[] = []
-
-		// Is the current user a club member?
-		let isClubMember = false
-
-		let membershipToken = undefined
-
-		// Parse roles
-		let clubRoles: ClubRole[] = []
-		if (clubData.MeemContractRoles) {
-			clubRoles = meemContractRolesToClubRoles(clubData.MeemContractRoles)
-		}
-
-		// Parse members
-		if (clubData.Meems) {
-			for (const meem of clubData.Meems) {
-				if (
-					walletAddress &&
-					walletAddress?.toLowerCase() ===
-						meem.Owner?.address.toLowerCase()
-				) {
-					isClubMember = true
-					membershipToken = meem.tokenId
-				}
-
-				if (
-					meem.Owner?.address.toLowerCase() !==
-						MeemAPI.zeroAddress.toLowerCase() &&
-					// 0xfurnace address
-					meem.Owner?.address.toLowerCase() !==
-						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
-				) {
-					if (meem.Owner) {
-						let hasAlreadyBeenAdded = false
-						members.forEach(member => {
-							if (member.wallet === meem.Owner?.address) {
-								hasAlreadyBeenAdded = true
-							}
-						})
-						if (!hasAlreadyBeenAdded) {
-							let memberRoles: ClubRole[] = []
-
-							// Convert member roles if the member hasn't already been added
-							if (meem.MeemContract?.MeemContractRoles) {
-								memberRoles = meemContractRolesToClubRoles(
-									meem.MeemContract?.MeemContractRoles
-								)
-
-								// Determine if the current user is a club admin
-								meem.MeemContract.MeemContractRoles.forEach(
-									clubMemberRole => {
-										if (clubMemberRole.isAdminRole) {
-											isClubAdmin = true
-											if (meem.Owner) {
-												adminRawAddresses.push(
-													meem.Owner.address
-												)
-											}
-										}
-									}
-								)
-							}
-
-							const memberIdentity =
-								meem.Owner.MeemIdentities &&
-								meem.Owner.MeemIdentities.length > 0
-									? meem.Owner.MeemIdentities[0]
-									: undefined
-
-							let twitterUsername = ''
-							let discordUsername = ''
-							let discordUserId = ''
-							let emailAddress = ''
-
-							memberIdentity?.MeemIdentityIntegrations.forEach(
-								inte => {
-									if (inte.metadata.twitterUsername) {
-										twitterUsername =
-											inte.metadata.twitterUsername
-									} else if (inte.metadata.discordUsername) {
-										discordUsername =
-											inte.metadata.discordUsername
-										discordUserId =
-											inte.metadata.discordUserId
-									} else if (inte.metadata.emailAddress) {
-										emailAddress =
-											inte.metadata.emailAddress
-									}
-								}
-							)
-
-							members.push({
-								wallet: meem.Owner.address,
-								ens: meem.Owner.ens ?? undefined,
-								roles: memberRoles,
-								displayName: memberIdentity?.displayName
-									? memberIdentity?.displayName
-									: '',
-								profilePicture: memberIdentity?.profilePicUrl
-									? normalizeImageUrl(
-											memberIdentity?.profilePicUrl
-									  )
-									: '',
-								twitterUsername,
-								discordUsername,
-								discordUserId,
-								emailAddress
-							})
-						}
-					}
-				}
-			}
-		}
-
-		// role id => club member relation
-		const memberRolesMap: Map<string, ClubMember[]> = new Map()
-
-		// Populate the above map with all role ids
-		clubRoles.forEach(role => {
-			memberRolesMap.set(role.id, [])
-		})
-
-		// Build a relationship between role id <> ClubMember[]
-		members.forEach(member => {
-			if (member.roles) {
-				member.roles.forEach(memberRole => {
-					const currentRoleMembers =
-						memberRolesMap.get(memberRole.id) ?? []
-					currentRoleMembers?.push(member)
-					memberRolesMap.set(memberRole.id, currentRoleMembers)
-				})
-			}
-		})
-
-		// memberRolesMap.forEach((value, key) => {
-		// 	log.debug(`members for role ${key} = ${JSON.stringify(value)}`)
-		// })
-
 		// Integrations
 		const allIntegrations: Integration[] = []
 		const publicIntegrations: Integration[] = []
@@ -672,7 +681,7 @@ export default async function clubFromMeemContract(
 			id: clubData.id,
 			name: clubData.name,
 			address: clubData.address,
-			admins,
+			admins: adminRawAddresses,
 			isClubAdmin,
 			slug: clubData.slug,
 			gnosisSafeAddress: clubData.gnosisSafeAddress,
