@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -17,29 +18,33 @@ import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
+import { ArrowLeft, Check, Plus } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
 import { SUB_CLUB } from '../../graphql/clubs'
-import clubFromMeemContract, { Club } from '../../model/club/club'
-import {
-	userHasPermissionEditProfile,
-	userHasPermissionManageApps,
-	userHasPermissionManageMembershipSettings,
-	userHasPermissionManageRoles
-} from '../../model/identity/permissions'
-import { CABulkMint } from './Tabs/CABulkMint'
-import { CAClubApps } from './Tabs/CAClubApps'
-import { CAClubDetails } from './Tabs/CAClubDetails'
-import { CAClubIcon } from './Tabs/CAClubIcon'
-import { CAContractAddress } from './Tabs/CAContractAddress'
-import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
-import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
-import { CARoles } from './Tabs/CARoles'
+import clubFromMeemContract, {
+	Club,
+	ClubRole,
+	emptyRole
+} from '../../model/club/club'
+import { RolesManagerContent } from './Role/RolesManagerContent'
 
 const useStyles = createStyles(theme => ({
+	manageRolesRow: {
+		display: 'flex',
+		alignItems: 'center',
+		marginLeft: 18,
+		marginBottom: 24
+	},
+	rolesHeaderRow: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+		marginLeft: 20
+	},
 	header: {
 		marginBottom: 32,
 		display: 'flex',
@@ -157,7 +162,7 @@ const useStyles = createStyles(theme => ({
 		fontWeight: 600
 	},
 	clubContractAddress: {
-		wordBreak: 'break-word',
+		wordBreak: 'break-all',
 		color: 'rgba(0, 0, 0, 0.5)'
 	},
 	contractAddressContainer: {
@@ -171,16 +176,14 @@ const useStyles = createStyles(theme => ({
 	},
 	adminContainer: {
 		display: 'flex',
-		width: '90%',
+		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
 			flexDirection: 'column'
 		}
 	},
 	adminNavHeader: {
 		fontWeight: 600,
-		opacity: 0.5,
-		marginLeft: 20,
-		marginBottom: 4
+		opacity: 0.5
 	},
 	adminNavItem: {
 		borderRadius: 8
@@ -200,7 +203,7 @@ const useStyles = createStyles(theme => ({
 	adminContent: {
 		marginLeft: 32,
 		marginRight: 32,
-		width: '90%',
+		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8,
 			width: 'auto'
@@ -213,35 +216,46 @@ const useStyles = createStyles(theme => ({
 			display: 'none'
 		},
 		cursor: 'pointer'
-	}
+	},
+	manageRolesHeader: {
+		fontWeight: 600,
+		fontSize: 20
+	},
+	link: { cursor: 'pointer' }
 }))
-
-enum Tab {
-	ContractAddress,
-	MembershipSettings,
-	MembershipRequirements,
-	Roles,
-	ClubDetails,
-	ClubIcon,
-	Apps,
-	Airdrops
-}
 
 interface IProps {
 	slug: string
 }
 
-export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
+interface Tab {
+	name: string
+	associatedRole?: ClubRole
+}
+
+export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractAddress)
+	const [tabs, setTabs] = useState<Tab[]>([])
+	const [currentTab, setCurrentTab] = useState<Tab>()
+	const [isAddingNewRole, setIsAddingNewRole] = useState(false)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
-	const navigateToClubDetail = () => {
-		router.push({ pathname: `/${slug}` })
+	const navigateToClubAdmin = () => {
+		router.push({ pathname: `/${slug}/admin` })
+	}
+
+	const addRole = () => {
+		if (!isAddingNewRole) {
+			setIsAddingNewRole(true)
+			const newTabs = [...tabs]
+			newTabs.push({ name: 'Add Role', associatedRole: emptyRole() })
+			setTabs(newTabs)
+			setCurrentTab(newTabs[newTabs.length - 1])
+		}
 	}
 
 	const {
@@ -251,7 +265,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug,
-			chainId: wallet.chainId,
+			chainId: wallet.chainId ?? 4,
 			visibilityLevel: ['mutual-club-members', 'anyone'],
 			showPublicApps: [true, false]
 		}
@@ -272,35 +286,38 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	}, [router, slug, wallet.loginState])
 
 	useEffect(() => {
-		switch (router.query.tab) {
-			case 'airdrops':
-				setCurrentTab(Tab.Airdrops)
-				break
-			case 'apps':
-				setCurrentTab(Tab.Apps)
-				break
-			case 'clubdetails':
-				setCurrentTab(Tab.ClubDetails)
-				break
-			case 'clubicon':
-				setCurrentTab(Tab.ClubIcon)
-				break
-			case 'contractaddress':
-				setCurrentTab(Tab.ContractAddress)
-				break
-			case 'membershiprequirements':
-				setCurrentTab(Tab.MembershipRequirements)
-				break
-			case 'membershipsettings':
-				setCurrentTab(Tab.MembershipSettings)
-				break
-			case 'roles':
-				setCurrentTab(Tab.Roles)
-				break
-		}
-	}, [router.query.tab])
+		function setupTabs(theClub: Club) {
+			const newTabs: Tab[] = []
+			if (theClub && theClub.roles) {
+				theClub.roles.forEach(role => {
+					newTabs.push({ name: role.name, associatedRole: role })
+				})
+			}
 
-	useEffect(() => {
+			let displayedTab = newTabs[newTabs.length - 1]
+			if (router.query.role) {
+				const roleId = router.query.role.toString().replaceAll('/', '')
+				log.debug(`roleid = ${roleId}`)
+
+				newTabs.forEach(tab => {
+					if (
+						tab.associatedRole &&
+						tab.associatedRole.id === roleId
+					) {
+						log.debug(`tab should be ${tab.associatedRole.id}`)
+						displayedTab = tab
+					}
+				})
+			} else if (router.query.createRole) {
+				newTabs.push({ name: 'Add Role', associatedRole: emptyRole() })
+				displayedTab = newTabs[newTabs.length - 1]
+			}
+
+			setCurrentTab(displayedTab)
+
+			setTabs(newTabs)
+		}
+
 		async function getClub(data: GetClubSubscriptionSubscription) {
 			const possibleClub = await clubFromMeemContract(
 				wallet,
@@ -310,6 +327,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 			if (possibleClub && possibleClub.name) {
 				setClub(possibleClub)
+				setupTabs(possibleClub)
 			}
 			setIsLoadingClub(false)
 		}
@@ -321,9 +339,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		clubData,
 		error,
 		loading,
-		wallet,
-		wallet.accounts,
-		wallet.isConnected
+		router.query.createRole,
+		router.query.role,
+		wallet
 	])
 
 	return (
@@ -389,7 +407,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</div>
 						<a
 							className={classes.exitButton}
-							onClick={navigateToClubDetail}
+							onClick={navigateToClubAdmin}
 						>
 							<Image src="/delete.png" width={24} height={24} />
 						</a>
@@ -431,161 +449,83 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={classes.adminNavHeader}>
-									MANAGE CLUB
-								</Text>
-								<NavLink
-									className={classes.adminNavItem}
-									active={currentTab === Tab.ContractAddress}
-									label={'Contract Address'}
-									onClick={() => {
-										setCurrentTab(Tab.ContractAddress)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-								{userHasPermissionManageMembershipSettings(
-									club
-								) && (
-									<div>
-										<NavLink
-											className={classes.adminNavItem}
-											active={
-												currentTab ===
-												Tab.MembershipSettings
-											}
-											label={'Membership Settings'}
-											onClick={() => {
-												setCurrentTab(
-													Tab.MembershipSettings
-												)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-										<NavLink
-											className={classes.adminNavItem}
-											active={
-												currentTab ===
-												Tab.MembershipRequirements
-											}
-											label={'Membership Requirements'}
-											onClick={() => {
-												setCurrentTab(
-													Tab.MembershipRequirements
-												)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</div>
-								)}
+								<div className={classes.manageRolesRow}>
+									<ArrowLeft
+										className={classes.link}
+										onClick={() => {
+											navigateToClubAdmin()
+										}}
+									/>
+									<Space w={8} />
+									<Text className={classes.manageRolesHeader}>
+										Manage Roles
+									</Text>
+								</div>
+								<div className={classes.rolesHeaderRow}>
+									<Text className={classes.adminNavHeader}>
+										ROLES
+									</Text>
+									<Plus
+										className={classes.link}
+										onClick={() => {
+											addRole()
+										}}
+									/>
+								</div>
+								<Space h={8} />
 
-								{userHasPermissionManageRoles(club) && (
-									<>
-										<NavLink
-											className={classes.adminNavItem}
-											active={currentTab === Tab.Roles}
-											label={'Roles'}
-											onClick={() => {
-												setCurrentTab(Tab.Roles)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</>
-								)}
-
-								{userHasPermissionManageApps(club) && (
-									<>
-										<NavLink
-											className={classes.adminNavItem}
-											active={currentTab === Tab.Apps}
-											label={'Club Apps'}
-											onClick={() => {
-												setCurrentTab(Tab.Apps)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</>
-								)}
-
-								<NavLink
-									className={classes.adminNavItem}
-									active={currentTab === Tab.Airdrops}
-									label={'Airdrops'}
-									onClick={() => {
-										setCurrentTab(Tab.Airdrops)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-
-								{userHasPermissionEditProfile(club) && (
-									<div>
-										<Space h={32} />
-										<Text
-											className={classes.adminNavHeader}
-										>
-											EDIT PROFILE
-										</Text>
-										<NavLink
-											className={classes.adminNavItem}
-											active={
-												currentTab === Tab.ClubDetails
-											}
-											label={'Club Details'}
-											onClick={() => {
-												setCurrentTab(Tab.ClubDetails)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-										<NavLink
-											className={classes.adminNavItem}
-											active={currentTab === Tab.ClubIcon}
-											label={'Club Icon'}
-											onClick={() => {
-												setCurrentTab(Tab.ClubIcon)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</div>
-								)}
+								{tabs.map(tab => (
+									<NavLink
+										key={tab.name}
+										className={classes.adminNavItem}
+										active={
+											currentTab &&
+											currentTab.name === tab.name
+										}
+										label={tab.name}
+										onClick={() => {
+											setCurrentTab(tab)
+											setMobileNavBarVisible(false)
+										}}
+									/>
+								))}
 							</Navbar>
 							{!mobileNavBarVisible && (
 								<div className={classes.adminContent}>
-									{currentTab === Tab.ContractAddress && (
-										<CAContractAddress club={club} />
-									)}
-									{currentTab === Tab.MembershipSettings &&
-										userHasPermissionManageMembershipSettings(
-											club
-										) && (
-											<CAMembershipSettings club={club} />
-										)}
-									{currentTab ===
-										Tab.MembershipRequirements &&
-										userHasPermissionManageMembershipSettings(
-											club
-										) && (
-											<CAMembershipRequirements
-												club={club}
-											/>
-										)}
-									{currentTab === Tab.ClubDetails &&
-										userHasPermissionEditProfile(club) && (
-											<CAClubDetails club={club} />
-										)}
-									{currentTab === Tab.ClubIcon &&
-										userHasPermissionEditProfile(club) && (
-											<CAClubIcon club={club} />
-										)}
-									{currentTab === Tab.Apps &&
-										userHasPermissionManageApps(club) && (
-											<CAClubApps club={club} />
-										)}
-									{currentTab === Tab.Airdrops && (
-										<CABulkMint club={club} />
-									)}
-									{currentTab === Tab.Roles &&
-										userHasPermissionManageRoles(club) && (
-											<CARoles club={club} />
-										)}
+									{tabs.map(tab => (
+										<div key={tab.name}>
+											<div
+												className={
+													currentTab &&
+													currentTab.name === tab.name
+														? classes.visibleTab
+														: classes.invisibleTab
+												}
+											>
+												<RolesManagerContent
+													club={club}
+													initialRole={
+														tab.associatedRole
+													}
+													onRoleUpdated={newRole => {
+														tabs.forEach(theTab => {
+															if (
+																theTab.associatedRole &&
+																theTab
+																	.associatedRole
+																	.id ===
+																	newRole.id
+															) {
+																theTab.associatedRole =
+																	newRole
+															}
+														})
+														setTabs(tabs)
+													}}
+												/>
+											</div>
+										</div>
+									))}
 								</div>
 							)}
 						</div>

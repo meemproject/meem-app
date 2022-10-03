@@ -167,17 +167,27 @@ export const SUB_CLUB = gql`
 				tokenURI
 				mintedAt
 				mintedBy
+				MeemContract {
+					MeemContractRoles {
+						id
+						isAdminRole
+						name
+						MeemContractRolePermissions {
+							RolePermissionId
+						}
+					}
+				}
 			}
 			splits
 			maxSupply
 			mintPermissions
 			symbol
 			MeemContractWallets {
-				role
 				Wallet {
 					address
 					ens
 				}
+				role
 			}
 			id
 			MeemContractIntegrations(
@@ -198,6 +208,14 @@ export const SUB_CLUB = gql`
 					name
 				}
 				isPublic
+			}
+			MeemContractRoles {
+				id
+				name
+				isAdminRole
+				MeemContractRolePermissions {
+					RolePermissionId
+				}
 			}
 		}
 	}
@@ -248,6 +266,45 @@ export const GET_INTEGRATIONS = gql`
 			id
 			name
 			updatedAt
+		}
+	}
+`
+
+export const GET_AVAILABLE_PERMISSIONS = gql`
+	query GetAvailablePermission {
+		RolePermissions {
+			description
+			id
+			name
+		}
+	}
+`
+
+export const GET_MEMBERS_FOR_ROLE = gql`
+	query GetClubMembersForRole($slug: String, $chainId: Int, $roleId: uuid) {
+		MeemContracts(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
+			Meems(
+				where: {
+					MeemContract: {
+						MeemContractRoles: { id: { _eq: $roleId } }
+					}
+				}
+			) {
+				Owner {
+					address
+					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations {
+							metadata
+							visibility
+						}
+					}
+				}
+			}
 		}
 	}
 `
