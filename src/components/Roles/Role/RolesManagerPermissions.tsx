@@ -34,6 +34,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 						{permission.locked && <Lock />}
 						<Space w={4} />
 						<Switch
+							disabled={permission.locked}
 							checked={permission.enabled}
 							onChange={value => {
 								if (value && role) {
