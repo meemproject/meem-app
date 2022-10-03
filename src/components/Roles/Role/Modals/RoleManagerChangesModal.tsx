@@ -56,8 +56,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				icon: <Check color="green" />,
 				message: `This role has been saved. Please wait...`
 			})
-
-			router.reload()
+			if (club) {
+				if (router.query.createRole) {
+					router.push({
+						pathname: `/${club.slug}/admin`,
+						query: { tab: 'roles' }
+					})
+				} else {
+					router.reload()
+				}
+			}
 		}
 
 		async function saveRoleChanges() {

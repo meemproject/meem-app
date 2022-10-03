@@ -245,7 +245,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	const navigateToClubAdmin = () => {
-		router.push({ pathname: `/${slug}/admin` })
+		router.push({ pathname: `/${slug}/admin`, query: { tab: 'roles' } })
 	}
 
 	const addRole = () => {
