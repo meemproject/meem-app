@@ -70,7 +70,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							description: permission.description,
 							name: permission.name,
 							enabled: false,
-							locked: !club.isClubAdmin
+							locked: permission.id.includes('admin')
 						}
 						convertedPermissions.push(convertedPermission)
 					})
@@ -104,7 +104,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							description: permission.description,
 							name: permission.name,
 							enabled: isPermissionEnabled,
-							locked: !club.isClubAdmin
+							locked: permission.id.includes('admin')
 						}
 						convertedPermissions.push(convertedPermission)
 					})

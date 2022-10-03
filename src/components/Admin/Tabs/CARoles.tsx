@@ -188,15 +188,23 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										>
 											Manage Role
 										</Menu.Item>
-										<Menu.Item
-											onClick={() => {
-												setRoleToDelete(role)
-												setIsDeleteRoleModalOpened(true)
-											}}
-											className={classes.redMenuItem}
-										>
-											Delete Role
-										</Menu.Item>
+										{!role.isAdminRole && (
+											<>
+												<Menu.Item
+													onClick={() => {
+														setRoleToDelete(role)
+														setIsDeleteRoleModalOpened(
+															true
+														)
+													}}
+													className={
+														classes.redMenuItem
+													}
+												>
+													Delete Role
+												</Menu.Item>
+											</>
+										)}
 									</Menu.Dropdown>
 								</Menu>
 							</div>
@@ -212,6 +220,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			<Space h={64} />
 			<DeleteRoleModal
 				role={roleToDelete}
+				club={club}
 				onModalClosed={() => {
 					setIsDeleteRoleModalOpened(false)
 				}}
