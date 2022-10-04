@@ -113,6 +113,10 @@ export const useGlobalStyles = createStyles(theme => ({
 			display: 'none'
 		}
 	},
+	badge: {
+		paddingLeft: 8,
+		paddingRight: 8
+	},
 	clickable: {
 		cursor: 'pointer'
 	},
@@ -123,6 +127,10 @@ export const useGlobalStyles = createStyles(theme => ({
 	},
 
 	// Text
+	tBadge: {
+		color: '#FF6651'
+	},
+
 	tBold: {
 		fontWeight: 700
 	},

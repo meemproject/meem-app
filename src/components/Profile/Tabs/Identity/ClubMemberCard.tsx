@@ -1,4 +1,4 @@
-import { HoverCard, Image, Space, Text } from '@mantine/core'
+import { Badge, HoverCard, Image, Space, Text } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React from 'react'
 import { Check } from 'tabler-icons-react'
@@ -139,6 +139,31 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							</Text>
 						</div>
 					)}
+				</>
+			)}
+			{member.roles && (
+				<>
+					<Space h={24} />
+					<Text className={styles.tBold}>{'Roles'}</Text>
+					<Space h={4} />
+					{member.roles.map(role => (
+						<div className={styles.row} key={role.id}>
+							<Badge
+								variant="gradient"
+								gradient={{
+									from: 'rgba(255, 102, 81, 0.1)',
+									to: 'rgba(255, 102, 81, 0.1)',
+									deg: 35
+								}}
+								classNames={{
+									inner: styles.tBadge,
+									root: styles.badge
+								}}
+							>
+								{role.name}
+							</Badge>
+						</div>
+					))}
 				</>
 			)}
 		</HoverCard.Dropdown>
