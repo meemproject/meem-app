@@ -81,6 +81,20 @@ export const useGlobalStyles = createStyles(theme => ({
 			paddingTop: 16
 		}
 	},
+	headerTitleContainer: {
+		marginLeft: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginLeft: 16
+		}
+	},
+	headerExitButton: {
+		marginRight: 48,
+		marginLeft: 'auto',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		},
+		cursor: 'pointer'
+	},
 	modalHeader: {
 		display: 'flex',
 		alignItems: 'center',
@@ -91,6 +105,34 @@ export const useGlobalStyles = createStyles(theme => ({
 		paddingRight: 16,
 		position: 'relative'
 	},
+	panelLayoutContainer: {
+		display: 'flex',
+		width: '100%',
+		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+			flexDirection: 'column'
+		}
+	},
+
+	panelLayoutContent: {
+		marginLeft: 32,
+		marginRight: 32,
+		width: '100%',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingTop: 8,
+			width: 'auto'
+		}
+	},
+	panelLayoutNavBar: {
+		minWidth: 288,
+		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
+			paddingLeft: 32
+		},
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			paddingTop: 24
+		}
+	},
+	panelLayoutNavItem: { borderRadius: 8 },
+
 	row: {
 		display: 'flex'
 	},
@@ -106,12 +148,31 @@ export const useGlobalStyles = createStyles(theme => ({
 		justifyContent: 'space-between'
 	},
 
+	// Images
+	imageClubLogo: {
+		imageRendering: 'pixelated',
+		width: 80,
+		height: 80,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: 40,
+			height: 40,
+			minHeight: 40,
+			minWidth: 40,
+			marginLeft: 16,
+			marginRight: 16
+		}
+	},
+
 	// Misc
 	backArrow: {
 		cursor: 'pointer',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
 		}
+	},
+	badge: {
+		paddingLeft: 8,
+		paddingRight: 8
 	},
 	clickable: {
 		cursor: 'pointer'
@@ -121,10 +182,23 @@ export const useGlobalStyles = createStyles(theme => ({
 		padding: 2,
 		cursor: 'pointer'
 	},
+	invisibleContainer: { display: 'none' },
+	visibleContainer: { display: 'block' },
 
 	// Text
+	tBadge: {
+		color: '#FF6651'
+	},
+
 	tBold: {
 		fontWeight: 700
+	},
+	tHeaderTitleText: {
+		fontWeight: 600,
+		fontSize: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
 	},
 	tLink: {
 		textDecoration: 'underline',
@@ -142,6 +216,10 @@ export const useGlobalStyles = createStyles(theme => ({
 	tListItemSubtitle: {
 		opacity: 0.6,
 		fontSize: 14
+	},
+	tPanelLayoutNavHeader: {
+		fontWeight: 600,
+		opacity: 0.5
 	},
 	tPartialTransparent: {
 		opacity: 0.6
@@ -163,5 +241,10 @@ export const useGlobalStyles = createStyles(theme => ({
 	tSubtitle: {
 		fontWeight: 600,
 		fontSize: 18
+	},
+	tSmallSubtitle: {
+		opacity: 0.6,
+		fontWeight: 500,
+		fontSize: 14
 	}
 }))

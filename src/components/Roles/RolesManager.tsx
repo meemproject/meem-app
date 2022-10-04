@@ -2,7 +2,6 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -29,201 +28,8 @@ import clubFromMeemContract, {
 	ClubRole,
 	emptyRole
 } from '../../model/club/club'
+import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { RolesManagerContent } from './Role/RolesManagerContent'
-
-const useStyles = createStyles(theme => ({
-	manageRolesRow: {
-		display: 'flex',
-		alignItems: 'center',
-		marginLeft: 18,
-		marginBottom: 24
-	},
-	rolesHeaderRow: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		marginLeft: 20
-	},
-	header: {
-		marginBottom: 32,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		backgroundColor: '#FAFAFA',
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 48,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 16,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 24,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubNameContainer: {
-		marginLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	clubUrlContainer: {
-		marginTop: 8,
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	clubUrl: {
-		fontSize: 14,
-		opacity: 0.6,
-		fontWeight: 500
-	},
-
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 80,
-		height: 80,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 40,
-			height: 40,
-			minHeight: 40,
-			minWidth: 40,
-			marginLeft: 16,
-			marginRight: 16
-		}
-	},
-	clubSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
-		}
-	},
-	buttonEditProfile: {
-		borderRadius: 24,
-		marginRight: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 0,
-			marginLeft: 16,
-			marginRight: 0,
-			borderColor: 'transparent'
-		}
-	},
-	buttonCreate: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	tabs: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	visibleTab: {
-		display: 'block'
-	},
-	invisibleTab: {
-		display: 'none'
-	},
-	clubIntegrationsSectionTitle: {
-		fontSize: 20,
-		marginBottom: 16,
-		fontWeight: 600
-	},
-	clubContractAddress: {
-		wordBreak: 'break-all',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	contractAddressContainer: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	copy: {
-		marginLeft: 4,
-		padding: 2,
-		cursor: 'pointer'
-	},
-	adminContainer: {
-		display: 'flex',
-		width: '100%',
-		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-			flexDirection: 'column'
-		}
-	},
-	adminNavHeader: {
-		fontWeight: 600,
-		opacity: 0.5
-	},
-	adminNavItem: {
-		borderRadius: 8
-	},
-	adminMobileBurger: {
-		marginLeft: 24
-	},
-	adminNavBar: {
-		minWidth: 288,
-		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
-			paddingLeft: 32
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 24
-		}
-	},
-	adminContent: {
-		marginLeft: 32,
-		marginRight: 32,
-		width: '100%',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 8,
-			width: 'auto'
-		}
-	},
-	exitButton: {
-		marginRight: 48,
-		marginLeft: 'auto',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		},
-		cursor: 'pointer'
-	},
-	manageRolesHeader: {
-		fontWeight: 600,
-		fontSize: 20
-	},
-	link: { cursor: 'pointer' }
-}))
-
 interface IProps {
 	slug: string
 }
@@ -235,7 +41,7 @@ interface Tab {
 
 export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 
@@ -365,25 +171,27 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={classes.header}>
-						<div className={classes.headerTitle}>
+					<div className={styles.header}>
+						<div className={styles.spacedRowCentered}>
 							<Image
 								width={56}
 								height={56}
-								className={classes.clubLogoImage}
+								className={styles.imageClubLogo}
 								src={club.image}
 							/>
-							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<div className={classes.headerClubNameContainer}>
-								<Text className={classes.headerClubName}>
+							<div className={styles.headerTitleContainer}>
+								<Text className={styles.tHeaderTitleText}>
 									{club.name}
 								</Text>
-								<div className={classes.clubUrlContainer}>
+								<div
+									className={styles.row}
+									style={{ marginTop: 8 }}
+								>
 									<Text
-										className={classes.clubUrl}
+										className={styles.tSmallSubtitle}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
-										className={classes.copy}
+										className={styles.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
@@ -406,7 +214,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 							</div>
 						</div>
 						<a
-							className={classes.exitButton}
+							className={styles.headerExitButton}
 							onClick={navigateToClubAdmin}
 						>
 							<Image src="/delete.png" width={24} height={24} />
@@ -425,13 +233,13 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 						</Container>
 					)}
 					{club?.isClubAdmin && (
-						<div className={classes.adminContainer}>
+						<div className={styles.panelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
 							>
 								<Burger
-									className={classes.adminMobileBurger}
+									style={{ marginLeft: 24 }}
 									opened={mobileNavBarVisible}
 									onClick={() =>
 										setMobileNavBarVisible(o => !o)
@@ -441,7 +249,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={classes.adminNavBar}
+								className={styles.panelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -449,24 +257,32 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<div className={classes.manageRolesRow}>
+								<div
+									className={styles.centeredRow}
+									style={{ marginLeft: 18, marginBottom: 24 }}
+								>
 									<ArrowLeft
-										className={classes.link}
+										className={styles.clickable}
 										onClick={() => {
 											navigateToClubAdmin()
 										}}
 									/>
 									<Space w={8} />
-									<Text className={classes.manageRolesHeader}>
+									<Text className={styles.tSectionTitle}>
 										Manage Roles
 									</Text>
 								</div>
-								<div className={classes.rolesHeaderRow}>
-									<Text className={classes.adminNavHeader}>
+								<div
+									className={styles.spacedRowCentered}
+									style={{ marginLeft: 20 }}
+								>
+									<Text
+										className={styles.tPanelLayoutNavHeader}
+									>
 										ROLES
 									</Text>
 									<Plus
-										className={classes.link}
+										className={styles.clickable}
 										onClick={() => {
 											addRole()
 										}}
@@ -477,7 +293,8 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								{tabs.map(tab => (
 									<NavLink
 										key={tab.name}
-										className={classes.adminNavItem}
+										style={{ marginLeft: 8 }}
+										className={styles.panelLayoutNavItem}
 										active={
 											currentTab &&
 											currentTab.name === tab.name
@@ -491,15 +308,15 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								))}
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={classes.adminContent}>
+								<div className={styles.panelLayoutContent}>
 									{tabs.map(tab => (
 										<div key={tab.name}>
 											<div
 												className={
 													currentTab &&
 													currentTab.name === tab.name
-														? classes.visibleTab
-														: classes.invisibleTab
+														? styles.visibleContainer
+														: styles.invisibleContainer
 												}
 											>
 												<RolesManagerContent

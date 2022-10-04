@@ -171,6 +171,7 @@ export const SUB_CLUB = gql`
 					MeemContractRoles {
 						id
 						isAdminRole
+						isDefaultRole
 						name
 						MeemContractRolePermissions {
 							RolePermissionId
@@ -213,6 +214,7 @@ export const SUB_CLUB = gql`
 				id
 				name
 				isAdminRole
+				isDefaultRole
 				MeemContractRolePermissions {
 					RolePermissionId
 				}
