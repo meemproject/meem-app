@@ -111,9 +111,11 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 							}
 						}}
 					/>
+
 					{!role?.isDefaultRole && role?.name !== 'Club Member' && (
-						<div>
+						<div className={styles.row}>
 							<Space w={16} />
+
 							<Button
 								className={styles.buttonWhite}
 								onClick={() => {
