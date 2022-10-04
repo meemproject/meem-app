@@ -111,15 +111,19 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 							}
 						}}
 					/>
-					<Space w={16} />
-					<Button
-						className={styles.buttonWhite}
-						onClick={() => {
-							setIsMembersModalOpen(true)
-						}}
-					>
-						+ Add Members
-					</Button>
+					{!role?.isDefaultRole && role?.name !== 'Club Member' && (
+						<div>
+							<Space w={16} />
+							<Button
+								className={styles.buttonWhite}
+								onClick={() => {
+									setIsMembersModalOpen(true)
+								}}
+							>
+								+ Add Members
+							</Button>
+						</div>
+					)}
 				</div>
 				<Space h={16} />
 
@@ -170,12 +174,17 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 										<ClubMemberCard member={member} />
 									</HoverCard>
 
-									<CircleMinus
-										className={styles.clickable}
-										onClick={() => {
-											removeMember(member)
-										}}
-									/>
+									{!role?.isDefaultRole &&
+										role?.name !== 'Club Member' && (
+											<>
+												<CircleMinus
+													className={styles.clickable}
+													onClick={() => {
+														removeMember(member)
+													}}
+												/>
+											</>
+										)}
 								</div>
 								<Space h={16} />
 								<Divider />

@@ -1589,8 +1589,11 @@ export type MeemContractRoles = {
   /** An array relationship */
   MeemContractRolePermissions: Array<MeemContractRolePermissions>;
   createdAt: Scalars['timestamptz'];
+  description: Scalars['String'];
   id: Scalars['uuid'];
+  imageUrl: Scalars['String'];
   isAdminRole: Scalars['Boolean'];
+  isDefaultRole: Scalars['Boolean'];
   name: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
 };
@@ -1621,8 +1624,11 @@ export type MeemContractRoles_Bool_Exp = {
   _not?: InputMaybe<MeemContractRoles_Bool_Exp>;
   _or?: InputMaybe<Array<MeemContractRoles_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  description?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  imageUrl?: InputMaybe<String_Comparison_Exp>;
   isAdminRole?: InputMaybe<Boolean_Comparison_Exp>;
+  isDefaultRole?: InputMaybe<Boolean_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -1631,7 +1637,9 @@ export type MeemContractRoles_Bool_Exp = {
 export type MeemContractRoles_Max_Order_By = {
   MeemContractId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  imageUrl?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -1640,7 +1648,9 @@ export type MeemContractRoles_Max_Order_By = {
 export type MeemContractRoles_Min_Order_By = {
   MeemContractId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  imageUrl?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -1651,8 +1661,11 @@ export type MeemContractRoles_Order_By = {
   MeemContractId?: InputMaybe<Order_By>;
   MeemContractRolePermissions_aggregate?: InputMaybe<MeemContractRolePermissions_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  imageUrl?: InputMaybe<Order_By>;
   isAdminRole?: InputMaybe<Order_By>;
+  isDefaultRole?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -1664,9 +1677,15 @@ export enum MeemContractRoles_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
+  Description = 'description',
+  /** column name */
   Id = 'id',
   /** column name */
+  ImageUrl = 'imageUrl',
+  /** column name */
   IsAdminRole = 'isAdminRole',
+  /** column name */
+  IsDefaultRole = 'isDefaultRole',
   /** column name */
   Name = 'name',
   /** column name */
@@ -1685,8 +1704,11 @@ export type MeemContractRoles_Stream_Cursor_Input = {
 export type MeemContractRoles_Stream_Cursor_Value_Input = {
   MeemContractId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
+  description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
+  imageUrl?: InputMaybe<Scalars['String']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
+  isDefaultRole?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -5914,7 +5936,7 @@ export type GetClubSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, name: string }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermission?: { __typename?: 'RolePermissions', id: string } | null }> }> }> };
+export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -6234,7 +6256,11 @@ export const GetClubSubscriptionDocument = gql`
         MeemContractRoles {
           id
           isAdminRole
+          isDefaultRole
           name
+          MeemContractRolePermissions {
+            RolePermissionId
+          }
         }
       }
     }
@@ -6270,10 +6296,9 @@ export const GetClubSubscriptionDocument = gql`
       id
       name
       isAdminRole
+      isDefaultRole
       MeemContractRolePermissions {
-        RolePermission {
-          id
-        }
+        RolePermissionId
       }
     }
   }

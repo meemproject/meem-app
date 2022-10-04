@@ -184,6 +184,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				<TextInput
 					size={'lg'}
 					radius={20}
+					disabled={role?.isDefaultRole}
 					classNames={{
 						input: styles.fTextField
 					}}

@@ -43,6 +43,7 @@ export interface ClubRole {
 	id: string
 	name: string
 	isAdminRole?: boolean
+	isDefaultRole?: boolean
 	permissions: ClubRolePermission[]
 	guildRoleId?: string
 }
@@ -51,6 +52,7 @@ export function emptyRole(): ClubRole {
 	return {
 		id: 'addRole',
 		isAdminRole: false,
+		isDefaultRole: false,
 		name: '',
 		permissions: []
 	}
@@ -171,6 +173,7 @@ export function meemContractRolesToClubRoles(
 		const clubRole: ClubRole = {
 			id: rawRole.id,
 			isAdminRole: rawRole.isAdminRole,
+			isDefaultRole: rawRole.isDefaultRole,
 			name: rawRole.name,
 			permissions
 		}
