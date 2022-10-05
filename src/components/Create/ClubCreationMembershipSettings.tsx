@@ -28,7 +28,6 @@ import {
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { ClubAdminChangesModal } from '../Admin/ClubAdminChangesModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { CreateClubModal } from './CreateClubModal'
 
@@ -164,14 +163,10 @@ const useStyles = createStyles(theme => ({
 }))
 
 interface IProps {
-	isCreatingClub: boolean
 	club?: Club
 }
 
-export const ClubCreationMembershipSettings: React.FC<IProps> = ({
-	isCreatingClub,
-	club
-}) => {
+export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 	const { classes } = useStyles()
 
 	const router = useRouter()
@@ -183,8 +178,6 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
-
-	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 
 	// Membership
 	const [membershipSettings, setMembershipSettings] =
@@ -361,14 +354,6 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 		setIsClubCreationModalOpened(true)
 	}
 
-	const [newClubData, setNewClubData] = useState<Club>()
-	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
-		useState(false)
-	const openSaveChangesModal = async () => {
-		// 'save changes' modal for execution club settings updates
-		setSaveChangesModalOpened(true)
-	}
-
 	const membershipTypeStringForFirstReq = (
 		req: MembershipRequirement
 	): string => {
@@ -429,11 +414,9 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 		)
 
-		// Add current user as an admin if this is a new club
+		// Add current user as admin
 		const finalClubAdmins = Object.assign([], clubAdmins)
-		if (isCreatingClub) {
-			finalClubAdmins.push(wallet.accounts[0])
-		}
+		finalClubAdmins.push(wallet.accounts[0])
 
 		// Start saving changes on UI
 		setIsSavingChanges(true)
@@ -548,111 +531,25 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 			membershipFundsAddress: rawMembershipFundsAddress,
 			membershipQuantity,
 			membershipStartDate,
-			membershipEndDate
-		}
-
-		if (!isCreatingClub) {
-			// Now compare to see if there's anything to change - if saving changes
-
-			// Compare membership settings
-			const oldMembershipSettings = JSON.stringify(
-				club?.membershipSettings
-			)
-			const newMembershipSettings = JSON.stringify(settings)
-			const isMembershipSettingsSame =
-				oldMembershipSettings === newMembershipSettings
-
-			// Compare club admins
-			const oldClubAdmins = club?.admins ?? []
-			const newClubAdmins = clubAdmins
-			const isClubAdminsSame = oldClubAdmins == newClubAdmins
-
-			if (isMembershipSettingsSame && isClubAdminsSame) {
-				log.debug('no changes, nothing to save. Tell user.')
-				setIsSavingChanges(false)
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message: 'There are no changes to save.'
-				})
-				return
-			}
-		} else {
-			settings.clubAdminsAtClubCreation = clubAdminAddresses
+			membershipEndDate,
+			clubAdminsAtClubCreation: clubAdminAddresses
 		}
 
 		setMembershipSettings(settings)
 
-		// Show the appropriate modal (create vs edit)
-		if (isCreatingClub) {
-			openClubCreationModal()
-		} else {
-			const newClub = club
-			if (newClub) {
-				newClub.admins = clubAdminAddresses
-				newClub.membershipSettings = settings
-				setNewClubData(newClub)
-				openSaveChangesModal()
-			}
-		}
+		openClubCreationModal()
 	}
 
 	useEffect(() => {
-		if (isCreatingClub) {
-			if (wallet.isConnected && !hasAddedInitialAdmin) {
-				setHasAddedInitialAdmin(true)
-				setClubAdmins([wallet.accounts[0]])
-				setClubAdminsString(`${wallet.accounts[0]}\n`)
-			}
-		} else {
-			if (club && !hasLoadedClubData) {
-				setHasLoadedClubData(true)
-
-				// Set the club admins array + string, used by the club admins textfield
-				let adminsString = ''
-				const admins: string[] = []
-				if (club.admins) {
-					club.admins.forEach(admin => {
-						admins.push(admin)
-						adminsString = adminsString + `${admin}\n`
-					})
-				}
-				setClubAdmins(admins)
-				setClubAdminsString(adminsString)
-
-				// Create a deep copy of original settings which we can use later to compare
-				const originalSettings: MembershipSettings = JSON.parse(
-					JSON.stringify(club.membershipSettings)
-				)
-
-				setMembershipRequirements(originalSettings.requirements)
-				setMembershipSettings(originalSettings)
-
-				setCostToJoin(originalSettings.costToJoin)
-				setMembershipQuantity(originalSettings.membershipQuantity ?? 0)
-
-				if (originalSettings?.membershipStartDate) {
-					setMembershipStartDate(
-						new Date(originalSettings.membershipStartDate)
-					)
-				}
-				if (originalSettings?.membershipEndDate) {
-					setMembershipEndDate(
-						new Date(originalSettings.membershipEndDate)
-					)
-				}
-
-				setMembershipFundsAddress(
-					originalSettings.membershipFundsAddress ?? ''
-				)
-			}
+		if (wallet.isConnected && !hasAddedInitialAdmin) {
+			setHasAddedInitialAdmin(true)
+			setClubAdmins([wallet.accounts[0]])
+			setClubAdminsString(`${wallet.accounts[0]}\n`)
 		}
 	}, [
 		club,
 		clubAdmins.length,
 		hasAddedInitialAdmin,
-		hasLoadedClubData,
-		isCreatingClub,
 		wallet.accounts,
 		wallet.isConnected
 	])
@@ -886,7 +783,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 					className={classes.buttonSaveChanges}
 					onClick={saveChanges}
 				>
-					{isCreatingClub ? 'Launch Club' : 'Save Changes'}
+					{'Launch Club'}
 				</Button>
 				<Space h="lg" />
 				<Modal
@@ -1661,14 +1558,6 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({
 					onModalClosed={() => {
 						setIsSavingChanges(false)
 						setIsClubCreationModalOpened(false)
-					}}
-				/>
-				<ClubAdminChangesModal
-					club={newClubData}
-					isOpened={isSaveChangesModalOpened}
-					onModalClosed={() => {
-						setIsSavingChanges(false)
-						setSaveChangesModalOpened(false)
 					}}
 				/>
 			</div>

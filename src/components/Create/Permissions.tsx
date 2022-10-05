@@ -157,7 +157,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 			</div>
 
 			<Container className={classes.memberSettingsComponent}>
-				<ClubCreationMembershipSettings isCreatingClub />
+				<ClubCreationMembershipSettings />
 			</Container>
 		</>
 	)
