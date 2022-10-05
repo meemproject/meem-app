@@ -118,8 +118,10 @@ export const CreateClubModal: React.FC<IProps> = ({
 	useEffect(() => {
 		if (!isSocketsConnected && isOpened) {
 			connect()
+
+			log.debug(`${JSON.stringify(membershipSettings)}`)
 		}
-	}, [connect, isOpened, isSocketsConnected])
+	}, [connect, isOpened, isSocketsConnected, membershipSettings])
 
 	useEffect(() => {
 		async function finishClubCreation() {
@@ -131,7 +133,6 @@ export const CreateClubModal: React.FC<IProps> = ({
 			Cookies.remove(CookieKeys.clubDescription)
 			Cookies.remove(CookieKeys.clubImage)
 			Cookies.remove(CookieKeys.clubExternalUrl)
-			Cookies.remove(CookieKeys.clubSlug)
 
 			// Route to the created club detail page
 			showNotification({
@@ -145,8 +146,9 @@ export const CreateClubModal: React.FC<IProps> = ({
 			})
 
 			router.push({
-				pathname: `/${clubSlug}`
+				pathname: `/${Cookies.get(CookieKeys.clubSlug)}`
 			})
+			Cookies.remove(CookieKeys.clubSlug)
 		}
 
 		async function createSafe(club: Club) {
@@ -156,7 +158,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 			setHasStartedCreatingSafe(true)
 			log.debug(
 				`creating safe with id ${club.id}, admins ${JSON.stringify(
-					club.admins
+					membershipSettings?.clubAdminsAtClubCreation
 				)} ...`
 			)
 
@@ -175,7 +177,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 					}),
 					undefined,
 					{
-						safeOwners: club.admins ?? [],
+						safeOwners:
+							membershipSettings?.clubAdminsAtClubCreation ?? [],
 						chainId: wallet.chainId
 					}
 				)
@@ -302,7 +305,6 @@ export const CreateClubModal: React.FC<IProps> = ({
 					},
 					name: Cookies.get(CookieKeys.clubName) ?? '',
 					admins: membershipSettings.clubAdminsAtClubCreation,
-					safeOwners: membershipSettings.clubAdminsAtClubCreation,
 					minters: membershipSettings.clubAdminsAtClubCreation,
 					maxSupply: ethers.BigNumber.from(
 						membershipSettings.membershipQuantity
