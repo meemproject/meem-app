@@ -19,6 +19,7 @@ import {
 	// eslint-disable-next-line import/named
 	AutocompleteItem
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
@@ -278,10 +279,22 @@ export function HomeComponent() {
 				}
 			})
 		} else {
-			router.push({
-				pathname: `/create`,
-				query: { clubname: autocompleteFormValue }
-			})
+			if (
+				autocompleteFormValue.length < 3 ||
+				autocompleteFormValue.length > 50
+			) {
+				showNotification({
+					radius: 'lg',
+					title: 'Oops!',
+					message: `That club name is too long or short. Choose something else.`,
+					color: 'red'
+				})
+			} else {
+				router.push({
+					pathname: `/create`,
+					query: { clubname: autocompleteFormValue }
+				})
+			}
 		}
 	}
 
