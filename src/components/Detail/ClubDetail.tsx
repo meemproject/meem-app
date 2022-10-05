@@ -49,6 +49,7 @@ import clubFromMeemContract, {
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { ClubMemberCard } from '../Profile/Tabs/Identity/ClubMemberCard'
+import { JoinLeaveClubModal } from './JoinLeaveClubModal'
 
 const useStyles = createStyles(theme => ({
 	row: { display: 'flex' },
@@ -1436,6 +1437,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							the total allowed for this club.
 						</Text>
 					</Modal>
+					<JoinLeaveClubModal
+						isOpened={isJoiningClub || isLeavingClub}
+						onModalClosed={() => {}}
+					/>
 				</>
 			)}
 		</>
