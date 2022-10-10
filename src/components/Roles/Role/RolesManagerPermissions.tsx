@@ -29,6 +29,8 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
 		useState(false)
 
+	const startDiscordAuth = () => {}
+
 	const permissionItem = (permission: ClubRolePermission) => (
 		<>
 			<div key={permission.id}>
@@ -124,6 +126,9 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					<Button
 						className={styles.buttonWhite}
 						leftIcon={<Discord />}
+						onClick={() => {
+							startDiscordAuth()
+						}}
 					>
 						Connect Discord
 					</Button>

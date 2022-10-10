@@ -193,6 +193,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 							{!isSavingChanges && (
 								<Button
 									onClick={() => {
+										setSelectedDiscordChannels([])
 										onModalClosed()
 									}}
 									className={styles.buttonGrey}
