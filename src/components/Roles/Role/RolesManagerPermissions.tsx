@@ -3,17 +3,21 @@ import { Text, Space, Switch, Divider, Button, Image } from '@mantine/core'
 import { Discord } from 'iconoir-react'
 import React, { useState } from 'react'
 import { CirclePlus, Link, Lock } from 'tabler-icons-react'
-import { ClubRole, ClubRolePermission } from '../../../model/club/club'
+import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { RoleDiscordNewRoleModal } from './Modals/RoleDiscordNewRoleModal'
+import { RoleDiscordSyncModal } from './Modals/RoleDiscordSyncModal'
 
 interface IProps {
 	role?: ClubRole
+	club?: Club
 	onSaveChanges: () => void
 	onRoleUpdated: (role: ClubRole) => void
 }
 
 export const RolesManagerPermissions: React.FC<IProps> = ({
 	role,
+	club,
 	onSaveChanges,
 	onRoleUpdated
 }) => {
@@ -127,6 +131,9 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					<Button
 						className={styles.buttonWhite}
 						leftIcon={<CirclePlus />}
+						onClick={() => {
+							setIsRoleDiscordCreateModalOpened(true)
+						}}
 					>
 						Create New Discord Role
 					</Button>
@@ -148,16 +155,26 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				</Button>
 			</div>
 
-			{/* {role && club && (
-				<RoleDiscordSyncModal
-					isOpened={isRoleDiscordSyncModalOpened}
-					onModalClosed={() => {
-						setIsRoleDiscordSyncModalOpened(false)
-					}}
-					role={role}
-					club={club}
-				/>
-			)} */}
+			{role && club && (
+				<>
+					<RoleDiscordSyncModal
+						isOpened={isRoleDiscordSyncModalOpened}
+						onModalClosed={() => {
+							setIsRoleDiscordSyncModalOpened(false)
+						}}
+						role={role}
+						club={club}
+					/>
+					<RoleDiscordNewRoleModal
+						isOpened={isRoleDiscordCreateModalOpened}
+						onModalClosed={() => {
+							setIsRoleDiscordCreateModalOpened(false)
+						}}
+						role={role}
+						club={club}
+					/>
+				</>
+			)}
 
 			<Space h={64} />
 		</>
