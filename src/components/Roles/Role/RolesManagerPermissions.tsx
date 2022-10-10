@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Text, Space, Switch, Divider, Button } from '@mantine/core'
-import React from 'react'
-import { Lock } from 'tabler-icons-react'
+import { Text, Space, Switch, Divider, Button, Image } from '@mantine/core'
+import { Discord } from 'iconoir-react'
+import React, { useState } from 'react'
+import { CirclePlus, Link, Lock } from 'tabler-icons-react'
 import { ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
@@ -18,11 +19,11 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
-	// const [isRoleDiscordSyncModalOpened, setIsRoleDiscordSyncModalOpened] =
-	// 	useState(false)
+	const [isRoleDiscordSyncModalOpened, setIsRoleDiscordSyncModalOpened] =
+		useState(false)
 
-	// const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
-	// 	useState(false)
+	const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
+		useState(false)
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<>
@@ -97,45 +98,41 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				{/* <div>
-					<Text className={classes.manageClubHeader}>
-						Discord Role
-					</Text>
-					<div className={classes.rowCentered}>
+				<div>
+					<Text className={styles.tSectionTitle}>Discord Role</Text>
+					<Space h={24} />
+
+					<div className={styles.centeredRow}>
 						<Image
 							src={'/exampleclub.png'}
 							height={48}
 							width={48}
 							radius={24}
 						/>
-						<Space w={12} />
+						<Space w={16} />
 						<div>
-							<Text className={classes.discordServerNameText}>
-								MEEM
-							</Text>
-							<Text className={classes.discordServerSettingsLink}>
-								Server Settings
-							</Text>
+							<Text className={styles.tTitle}>MEEM</Text>
+							<Text className={styles.tLink}>Disconnect</Text>
 						</div>
 					</div>
 					<Space h={24} />
 
 					<Button
-						className={classes.outlineButton}
+						className={styles.buttonWhite}
 						leftIcon={<Discord />}
 					>
 						Connect Discord
 					</Button>
 					<Space h={8} />
 					<Button
-						className={classes.outlineButton}
+						className={styles.buttonWhite}
 						leftIcon={<CirclePlus />}
 					>
 						Create New Discord Role
 					</Button>
 					<Space h={8} />
 					<Button
-						className={classes.outlineButton}
+						className={styles.buttonWhite}
 						leftIcon={<Link />}
 						onClick={() => {
 							setIsRoleDiscordSyncModalOpened(true)
@@ -144,7 +141,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 						Sync Existing Discord Role
 					</Button>
 					<Space h={24} />
-				</div> */}
+				</div>
 
 				<Button className={styles.buttonBlack} onClick={onSaveChanges}>
 					Save Changes
