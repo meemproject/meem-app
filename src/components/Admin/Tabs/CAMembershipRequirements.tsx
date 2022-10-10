@@ -895,8 +895,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							switch (currentRequirement?.type) {
 								case MembershipReqType.ApprovedApplicants:
 									// Make sure there's no admin addresses in here
-									if (club && club.admins) {
-										club?.admins.forEach(admin => {
+									if (club && club.adminAddresses) {
+										club?.adminAddresses.forEach(admin => {
 											if (
 												currentRequirement?.approvedAddressesString
 													.toLowerCase()

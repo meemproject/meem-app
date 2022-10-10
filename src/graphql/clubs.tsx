@@ -168,6 +168,9 @@ export const SUB_CLUB = gql`
 				mintedAt
 				mintedBy
 				MeemContract {
+					MeemContractWallets {
+						role
+					}
 					MeemContractRoles {
 						id
 						isAdminRole
@@ -183,13 +186,6 @@ export const SUB_CLUB = gql`
 			maxSupply
 			mintPermissions
 			symbol
-			MeemContractWallets {
-				Wallet {
-					address
-					ens
-				}
-				role
-			}
 			id
 			MeemContractIntegrations(
 				where: {

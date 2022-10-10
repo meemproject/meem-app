@@ -431,7 +431,11 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					disabled={isCreatingSafe}
 					loading={isCreatingSafe}
 					onClick={async () => {
-						if (!club.id || !club.admins || !wallet.chainId) {
+						if (
+							!club.id ||
+							!club.adminAddresses ||
+							!wallet.chainId
+						) {
 							return
 						}
 						try {
@@ -450,7 +454,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 								}),
 								undefined,
 								{
-									safeOwners: club.admins,
+									safeOwners: club.adminAddresses ?? [],
 									chainId: wallet.chainId
 								}
 							)
