@@ -183,8 +183,8 @@ export const MyClubsComponent: React.FC = () => {
 						{clubs.map(club => (
 							<Grid.Col
 								xs={6}
-								sm={4}
-								md={4}
+								sm={6}
+								md={6}
 								lg={4}
 								xl={4}
 								key={club.address}
