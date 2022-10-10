@@ -243,7 +243,7 @@ export const MyClubsComponent: React.FC = () => {
 												>
 													{club.memberCount}
 												</Badge>
-												<Space w={4} />
+												{/* <Space w={4} />
 												<Badge
 													variant="gradient"
 													gradient={{
@@ -257,7 +257,7 @@ export const MyClubsComponent: React.FC = () => {
 													}}
 												>
 													<Text>{'3 Roles'}</Text>
-												</Badge>
+												</Badge> */}
 											</div>
 										</div>
 									</div>

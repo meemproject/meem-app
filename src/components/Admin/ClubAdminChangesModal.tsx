@@ -210,7 +210,6 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					},
 					name: club.name ?? '',
 					admins: club.admins,
-					safeOwners: club.admins,
 					minters: club.admins,
 					maxSupply: !isNaN(
 						club.membershipSettings?.membershipQuantity ?? 0
