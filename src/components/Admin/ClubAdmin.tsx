@@ -35,6 +35,7 @@ import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
 import { CAClubIcon } from './Tabs/CAClubIcon'
 import { CAContractAddress } from './Tabs/CAContractAddress'
+import { CADeleteClub } from './Tabs/CADeleteClub'
 import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
 import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
 import { CARoles } from './Tabs/CARoles'
@@ -224,7 +225,8 @@ enum Tab {
 	ClubDetails,
 	ClubIcon,
 	Apps,
-	Airdrops
+	Airdrops,
+	DeleteClub
 }
 
 interface IProps {
@@ -296,6 +298,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				break
 			case 'roles':
 				setCurrentTab(Tab.Roles)
+				break
+			case 'deleteClub':
+				setCurrentTab(Tab.DeleteClub)
 				break
 		}
 	}, [router.query.tab])
@@ -395,7 +400,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</a>
 					</div>
 
-					{!club?.isClubAdmin && (
+					{!club?.isCurrentUserClubAdmin && (
 						<Container>
 							<Space h={120} />
 							<Center>
@@ -406,7 +411,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</Center>
 						</Container>
 					)}
-					{club?.isClubAdmin && (
+					{club?.isCurrentUserClubAdmin && (
 						<div className={classes.adminContainer}>
 							<MediaQuery
 								largerThan="sm"
@@ -490,6 +495,18 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 											}}
 										/>
 									</>
+								)}
+
+								{club.isCurrentUserClubOwner && (
+									<NavLink
+										className={classes.adminNavItem}
+										active={currentTab === Tab.DeleteClub}
+										label={'Delete Club'}
+										onClick={() => {
+											setCurrentTab(Tab.DeleteClub)
+											setMobileNavBarVisible(false)
+										}}
+									/>
 								)}
 
 								{userHasPermissionManageApps(club) && (
@@ -585,6 +602,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									{currentTab === Tab.Roles &&
 										userHasPermissionManageRoles(club) && (
 											<CARoles club={club} />
+										)}
+									{currentTab === Tab.DeleteClub &&
+										club.isCurrentUserClubAdmin && (
+											<CADeleteClub club={club} />
 										)}
 								</div>
 							)}

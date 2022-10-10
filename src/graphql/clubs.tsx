@@ -148,7 +148,9 @@ export const SUB_CLUB = gql`
 			createdAt
 			name
 			gnosisSafeAddress
+			OwnerId
 			Meems {
+				OwnerId
 				Owner {
 					address
 					ens
