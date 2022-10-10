@@ -246,7 +246,7 @@ export const CAClubAdmins: React.FC<IProps> = ({ club }) => {
 		// Compare to see if there's anything to change - if saving changes
 
 		// Compare club admins
-		const oldClubAdmins = club?.admins ?? []
+		const oldClubAdmins = club?.adminAddresses ?? []
 		const newClubAdmins = clubAdmins
 		const isClubAdminsSame = oldClubAdmins == newClubAdmins
 
@@ -263,7 +263,7 @@ export const CAClubAdmins: React.FC<IProps> = ({ club }) => {
 
 		const newClub = club
 		if (newClub) {
-			newClub.admins = clubAdminAddresses
+			newClub.adminAddresses = clubAdminAddresses
 			setNewClubData(newClub)
 			openSaveChangesModal()
 		}
@@ -276,8 +276,8 @@ export const CAClubAdmins: React.FC<IProps> = ({ club }) => {
 			// Set the club admins array + string, used by the club admins textfield
 			let adminsString = ''
 			const admins: string[] = []
-			if (club.admins) {
-				club.admins.forEach(admin => {
+			if (club.adminAddresses) {
+				club.adminAddresses.forEach(admin => {
 					admins.push(admin)
 					adminsString = adminsString + `${admin}\n`
 				})

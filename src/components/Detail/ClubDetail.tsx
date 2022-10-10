@@ -35,7 +35,6 @@ import {
 	Settings
 } from 'tabler-icons-react'
 import {
-	ClubSubscriptionSubscription,
 	GetBundleByIdQuery,
 	GetClubSubscriptionSubscription,
 	MeemContracts
@@ -829,7 +828,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			setPreviousClubDataString(JSON.stringify(clubData))
 		}
 
-		async function join(data: ClubSubscriptionSubscription) {
+		async function join(data: GetClubSubscriptionSubscription) {
 			const possibleClub = await clubFromMeemContract(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
@@ -852,7 +851,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 		}
 
-		async function leave(data: ClubSubscriptionSubscription) {
+		async function leave(data: GetClubSubscriptionSubscription) {
 			const possibleClub = await clubFromMeemContract(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
@@ -905,7 +904,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const memberIsAdmin = (member: string): boolean => {
 		if (club) {
 			let isAdmin = false
-			club.admins?.forEach(admin => {
+			club.adminAddresses?.forEach(admin => {
 				if (admin === member) {
 					isAdmin = true
 				}

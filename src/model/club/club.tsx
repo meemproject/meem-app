@@ -7,7 +7,10 @@ import { tokenFromContractAddress } from '../token/token'
 
 export const ClubAdminRole =
 	'0xa49807205ce4d355092ef5a8a18f56e8913cf4a201fbe287825b095693c21775'
-
+export const ClubMinterRole =
+	'0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6'
+export const ClubUpgraderRole =
+	'0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3'
 export interface Integration {
 	// Convenience for admin screen
 	isExistingIntegration?: boolean
@@ -79,7 +82,8 @@ export interface Club {
 	slug?: string
 	description?: string
 	image?: string
-	admins?: string[]
+	admins?: ClubMember[]
+	adminAddresses?: string[]
 	membershipSettings?: MembershipSettings
 	slotsLeft?: number
 	members?: ClubMember[]
@@ -252,6 +256,7 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			name: clubData.name,
 			address: clubData.address,
 			admins: [],
+			adminAddresses: [],
 			isClubAdmin: false,
 			slug: clubData.slug,
 			description: clubData.metadata.description,
@@ -298,8 +303,9 @@ export default async function clubFromMeemContract(
 		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
 
-		// Club members
+		// Club members and admins
 		const members: ClubMember[] = []
+		const admins: ClubMember[] = []
 
 		// Is the current user a club member?
 		let isClubMember = false
@@ -317,15 +323,7 @@ export default async function clubFromMeemContract(
 		if (clubData.Meems) {
 			for (const meem of clubData.Meems) {
 				if (
-					walletAddress &&
-					walletAddress?.toLowerCase() ===
-						meem.Owner?.address.toLowerCase()
-				) {
-					isClubMember = true
-					membershipToken = meem.tokenId
-				}
-
-				if (
+					// Filter out 0xfurnace + zero address
 					meem.Owner?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
@@ -333,39 +331,74 @@ export default async function clubFromMeemContract(
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
 					if (meem.Owner) {
+						// Filter duplicate meem owners
 						let hasAlreadyBeenAdded = false
 						members.forEach(member => {
 							if (member.wallet === meem.Owner?.address) {
 								hasAlreadyBeenAdded = true
 							}
 						})
-						if (!hasAlreadyBeenAdded) {
-							let memberRoles: ClubRole[] = []
 
-							// Convert member roles if the member hasn't already been added
+						// Is this member an admin?
+						let isMemberAnAdmin = false
+
+						if (!hasAlreadyBeenAdded) {
+							// Is this the current user?
+							const isCurrentUser =
+								walletAddress &&
+								walletAddress?.toLowerCase() ===
+									meem.Owner?.address.toLowerCase()
+
+							// Does this member have a contract role?
+							const memberMeemContractWallet =
+								meem?.MeemContract?.MeemContractWallets[0]
+
+							// Logic specific to the current user
+							if (isCurrentUser) {
+								isClubMember = true
+								membershipToken = meem.tokenId
+
+								// Is the current user an admin?
+								if (memberMeemContractWallet) {
+									if (
+										memberMeemContractWallet.role.toLowerCase() ===
+										ClubAdminRole.toLowerCase()
+									) {
+										isClubAdmin = true
+									}
+								}
+							}
+
+							// Is this member an admin?
+							if (memberMeemContractWallet) {
+								if (
+									memberMeemContractWallet.role.toLowerCase() ===
+									ClubAdminRole.toLowerCase()
+								) {
+									isMemberAnAdmin = true
+									adminRawAddresses.push(
+										meem.Owner.address ?? ''
+									)
+								}
+							}
+
+							// Roles + permissions logic
+							let memberRoles: ClubRole[] = []
 							if (meem.MeemContract?.MeemContractRoles) {
+								// Convert member roles
 								memberRoles = meemContractRolesToClubRoles(
 									meem.MeemContract?.MeemContractRoles
 								)
 
-								// Determine if member is a club admin
-								// Plus other things
+								// Set the current user's available permissions, if they exist
 								meem.MeemContract.MeemContractRoles.forEach(
 									clubMemberRole => {
-										// parsing the current user
+										// Current member logic
 										if (
 											meem.Owner &&
 											meem.Owner.address.toLowerCase() ===
 												walletAddress.toLowerCase()
 										) {
-											// Set current user as admin for frontend
-											if (clubMemberRole.isAdminRole) {
-												isClubAdmin = true
-												adminRawAddresses.push(
-													meem.Owner.address
-												)
-											}
-
 											// Set the current user's available permissions
 											if (
 												clubMemberRole.MeemContractRolePermissions
@@ -382,20 +415,12 @@ export default async function clubFromMeemContract(
 													}
 												)
 											}
-										} else {
-											// parsing other users
-											if (clubMemberRole.isAdminRole) {
-												if (meem.Owner) {
-													adminRawAddresses.push(
-														meem.Owner.address
-													)
-												}
-											}
 										}
 									}
 								)
 							}
 
+							// Club member metadata + integrations
 							const memberIdentity =
 								meem.Owner.MeemIdentities &&
 								meem.Owner.MeemIdentities.length > 0
@@ -424,7 +449,9 @@ export default async function clubFromMeemContract(
 								}
 							)
 
-							members.push({
+							// Assemble member
+
+							const memberData = {
 								wallet: meem.Owner.address,
 								ens: meem.Owner.ens ?? undefined,
 								roles: memberRoles,
@@ -440,7 +467,12 @@ export default async function clubFromMeemContract(
 								discordUsername,
 								discordUserId,
 								emailAddress
-							})
+							}
+							members.push(memberData)
+
+							if (isMemberAnAdmin) {
+								admins.push(memberData)
+							}
 						}
 					}
 				}
@@ -663,13 +695,12 @@ export default async function clubFromMeemContract(
 			slotsLeft = totalMemberships - membersCount
 		}
 
-		// Parse club metadata
-
 		return {
 			id: clubData.id,
 			name: clubData.name,
 			address: clubData.address,
-			admins: adminRawAddresses,
+			adminAddresses: adminRawAddresses,
+			admins,
 			isClubAdmin,
 			slug: clubData.slug,
 			gnosisSafeAddress: clubData.gnosisSafeAddress,
