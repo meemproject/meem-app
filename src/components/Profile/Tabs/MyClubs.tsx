@@ -19,6 +19,7 @@ import {
 } from '../../../../generated/graphql'
 import { SUB_MY_CLUBS } from '../../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../../model/club/club'
+import { useCustomApollo } from '../../../providers/ApolloProvider'
 
 const useStyles = createStyles(theme => ({
 	row: {
@@ -122,6 +123,7 @@ export const MyClubsComponent: React.FC = () => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { mutualMembersClient } = useCustomApollo()
 
 	const { loading, data: clubData } =
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
@@ -131,7 +133,8 @@ export const MyClubsComponent: React.FC = () => {
 					wallet.accounts &&
 					wallet.accounts[0] &&
 					wallet.accounts[0].toLowerCase()
-			}
+			},
+			client: mutualMembersClient
 		})
 
 	const navigateToCreate = () => {
