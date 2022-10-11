@@ -28,6 +28,7 @@ import clubFromMeemContract, {
 	ClubRole,
 	emptyRole
 } from '../../model/club/club'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface IProps {
