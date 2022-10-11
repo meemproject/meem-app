@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { CirclePlus, Link, Lock } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { RoleDiscordConnectServerModal } from './Modals/RoleDiscordConnectServerModal'
 import { RoleDiscordNewRoleModal } from './Modals/RoleDiscordNewRoleModal'
 import { RoleDiscordSyncModal } from './Modals/RoleDiscordSyncModal'
 
@@ -23,13 +24,20 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
+	const [
+		isRoleDiscordConnectModalOpened,
+		setIsRoleDiscordConnectModalOpened
+	] = useState(false)
+
 	const [isRoleDiscordSyncModalOpened, setIsRoleDiscordSyncModalOpened] =
 		useState(false)
 
 	const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
 		useState(false)
 
-	const startDiscordAuth = () => {}
+	const startDiscordAuth = () => {
+		setIsRoleDiscordConnectModalOpened(true)
+	}
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<>
@@ -162,6 +170,14 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 
 			{role && club && (
 				<>
+					<RoleDiscordConnectServerModal
+						isOpened={isRoleDiscordConnectModalOpened}
+						onModalClosed={() => {
+							setIsRoleDiscordConnectModalOpened(false)
+						}}
+						role={role}
+						club={club}
+					/>
 					<RoleDiscordSyncModal
 						isOpened={isRoleDiscordSyncModalOpened}
 						onModalClosed={() => {
