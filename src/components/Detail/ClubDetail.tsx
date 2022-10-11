@@ -37,9 +37,15 @@ import {
 import {
 	GetBundleByIdQuery,
 	GetClubSubscriptionSubscription,
+	GetIsMemberOfClubQuery,
 	MeemContracts
 } from '../../../generated/graphql'
-import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
+import {
+	GET_BUNDLE_BY_ID,
+	GET_IS_MEMBER_OF_CLUB,
+	SUB_CLUB,
+	SUB_CLUB_AS_MEMBER
+} from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	Integration,
@@ -286,27 +292,47 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { anonClient } = useCustomApollo()
+	const { anonClient, mutualMembersClient } = useCustomApollo()
 
 	const [club, setClub] = useState<Club | undefined>()
 
 	const [previousClubDataString, setPreviousClubDataString] = useState('')
 
-	// TODO: if current user is a club member we should fetch using the SUB_CLUB_AS_MEMBER query
+	const { data: isClubMemberData } = useQuery<GetIsMemberOfClubQuery>(
+		GET_IS_MEMBER_OF_CLUB,
+		{
+			variables: {
+				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+				chainId: wallet.chainId,
+				clubSlug: slug
+			}
+		}
+	)
+
 	const {
-		loading,
-		error,
-		data: clubData
+		loading: loadingAnonClub,
+		error: errorAnonClub,
+		data: anonClubData
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug,
-			chainId: wallet.chainId,
-			visibilityLevel: club?.isClubMember
-				? ['mutual-club-members', 'anyone']
-				: ['anyone'],
-			showPublicApps: club?.isClubMember ? [true, false] : [true]
+			chainId: wallet.chainId
 		},
-		client: anonClient
+		client: anonClient,
+		skip: !isClubMemberData || isClubMemberData.Meems.length > 0
+	})
+
+	const {
+		loading: loadingMemberClub,
+		error: errorMemberClub,
+		data: memberClubData
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
+		variables: {
+			slug,
+			chainId: wallet.chainId
+		},
+		client: mutualMembersClient,
+		skip: !isClubMemberData || isClubMemberData.Meems.length === 0
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
@@ -799,9 +825,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		async function getClub() {
-			if (!clubData) {
+			if (!anonClubData || !memberClubData) {
 				return
 			}
+
+			const clubData = memberClubData ?? anonClubData
 
 			if (clubData.MeemContracts.length === 0) {
 				setIsLoadingClub(false)
@@ -879,25 +907,36 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 		}
 
-		if (!loading && !error && clubData) {
+		// Parse data for anonymous club
+		if (!loadingAnonClub && !errorAnonClub && anonClubData) {
 			getClub()
 		}
 
-		if (isJoiningClub && clubData) {
-			join(clubData)
-		} else if (isLeavingClub && clubData) {
-			leave(clubData)
+		// Parse data as club member
+		if (!loadingMemberClub && !errorMemberClub && memberClubData) {
+			getClub()
+		}
+
+		if (isJoiningClub && (anonClubData || memberClubData)) {
+			const clubData = memberClubData ?? anonClubData
+			if (clubData) join(clubData)
+		} else if (isLeavingClub && (anonClubData || memberClubData)) {
+			const clubData = memberClubData ?? anonClubData
+			if (clubData) leave(clubData)
 		}
 	}, [
 		club,
-		clubData,
 		previousClubDataString,
-		error,
 		isJoiningClub,
 		isLeavingClub,
-		loading,
 		parseRequirements,
-		wallet
+		wallet,
+		loadingAnonClub,
+		errorAnonClub,
+		anonClubData,
+		loadingMemberClub,
+		errorMemberClub,
+		memberClubData
 	])
 
 	const navigateToSettings = () => {

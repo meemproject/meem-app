@@ -62,12 +62,58 @@ export const GET_CLUB_SLUG = gql`
 `
 
 export const GET_CLUB = gql`
-	query GetClub(
-		$slug: String
-		$chainId: Int
-		$visibilityLevel: [String!]
-		$showPublicApps: [Boolean!]
-	) {
+	query GetClub($slug: String, $chainId: Int) {
+		MeemContracts(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
+			slug
+			address
+			metadata
+			createdAt
+			name
+			Meems {
+				Owner {
+					address
+					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations {
+							metadata
+							visibility
+						}
+					}
+				}
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+			}
+			splits
+			maxSupply
+			mintPermissions
+			symbol
+			id
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
+				IntegrationId
+				id
+				isEnabled
+				metadata
+				Integration {
+					description
+					guideUrl
+					icon
+					id
+					name
+				}
+				isPublic
+			}
+		}
+	}
+`
+
+export const GET_CLUB_AS_MEMBER = gql`
+	query GetClub($slug: String, $chainId: Int) {
 		MeemContracts(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
@@ -84,9 +130,7 @@ export const GET_CLUB = gql`
 					MeemIdentities {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations(
-							where: { visibility: { _in: $visibilityLevel } }
-						) {
+						MeemIdentityIntegrations {
 							metadata
 							visibility
 						}
@@ -109,12 +153,7 @@ export const GET_CLUB = gql`
 				}
 			}
 			id
-			MeemContractIntegrations(
-				where: {
-					isPublic: { _in: $showPublicApps }
-					isEnabled: { _eq: true }
-				}
-			) {
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
 				IntegrationId
 				id
 				isEnabled
@@ -147,12 +186,7 @@ export const GET_CLUB_INFO = gql`
 `
 
 export const SUB_CLUB = gql`
-	subscription GetClubSubscription(
-		$slug: String
-		$chainId: Int
-		$visibilityLevel: [String!]
-		$showPublicApps: [Boolean!]
-	) {
+	subscription GetClubSubscription($slug: String, $chainId: Int) {
 		MeemContracts(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
@@ -161,7 +195,6 @@ export const SUB_CLUB = gql`
 			metadata
 			createdAt
 			name
-			# gnosisSafeAddress
 			Meems {
 				Owner {
 					address
@@ -169,9 +202,7 @@ export const SUB_CLUB = gql`
 					MeemIdentities {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations(
-							where: { visibility: { _in: $visibilityLevel } }
-						) {
+						MeemIdentityIntegrations {
 							metadata
 							visibility
 						}
@@ -181,32 +212,13 @@ export const SUB_CLUB = gql`
 				tokenURI
 				mintedAt
 				mintedBy
-				# MeemContract {
-				# 	MeemContractWallets {
-				# 		role
-				# 	}
-				# 	MeemContractRoles {
-				# 		id
-				# 		isAdminRole
-				# 		isDefaultRole
-				# 		name
-				# 		MeemContractRolePermissions {
-				# 			RolePermissionId
-				# 		}
-				# 	}
-				# }
 			}
 			splits
 			maxSupply
 			mintPermissions
 			symbol
 			id
-			MeemContractIntegrations(
-				where: {
-					isPublic: { _in: $showPublicApps }
-					isEnabled: { _eq: true }
-				}
-			) {
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
 				IntegrationId
 				id
 				isEnabled
@@ -220,26 +232,12 @@ export const SUB_CLUB = gql`
 				}
 				isPublic
 			}
-			# MeemContractRoles {
-			# 	id
-			# 	name
-			# 	isAdminRole
-			# 	isDefaultRole
-			# 	MeemContractRolePermissions {
-			# 		RolePermissionId
-			# 	}
-			# }
 		}
 	}
 `
 
 export const SUB_CLUB_AS_MEMBER = gql`
-	subscription GetClubAsMemberSubscription(
-		$slug: String
-		$chainId: Int
-		$visibilityLevel: [String!]
-		$showPublicApps: [Boolean!]
-	) {
+	subscription GetClubAsMemberSubscription($slug: String, $chainId: Int) {
 		MeemContracts(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
@@ -256,9 +254,7 @@ export const SUB_CLUB_AS_MEMBER = gql`
 					MeemIdentities {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations(
-							where: { visibility: { _in: $visibilityLevel } }
-						) {
+						MeemIdentityIntegrations {
 							metadata
 							visibility
 						}
@@ -288,12 +284,7 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			mintPermissions
 			symbol
 			id
-			MeemContractIntegrations(
-				where: {
-					isPublic: { _in: $showPublicApps }
-					isEnabled: { _eq: true }
-				}
-			) {
+			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
 				IntegrationId
 				id
 				isEnabled
