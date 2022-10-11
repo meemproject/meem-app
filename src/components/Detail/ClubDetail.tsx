@@ -286,7 +286,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { mutualMembersClient } = useCustomApollo()
+	const { anonClient } = useCustomApollo()
 
 	const [club, setClub] = useState<Club | undefined>()
 
@@ -304,8 +304,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				: ['anyone'],
 			showPublicApps: club?.isClubMember ? [true, false] : [true]
 		},
-		// client: userClient
-		client: mutualMembersClient
+		client: anonClient
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
@@ -363,7 +362,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const joinClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			await wallet.connectWallet()
-			router.reload()
 			return
 		}
 
@@ -1097,7 +1095,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									<Button
 										onClick={async () => {
 											await wallet.connectWallet()
-											router.reload()
 										}}
 										className={classes.buttonJoinClub}
 									>

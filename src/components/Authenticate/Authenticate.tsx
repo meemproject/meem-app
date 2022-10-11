@@ -8,11 +8,11 @@ import {
 	Loader
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet, makeFetcher, makeRequest } from '@meemproject/react'
+import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/api'
+import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useWallet()
@@ -44,7 +44,6 @@ const MAuthenticate: React.FC = () => {
 		}
 	}))
 
-	const [isConnected, setIsConnected] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const { classes } = useStyles()
 
@@ -55,10 +54,6 @@ const MAuthenticate: React.FC = () => {
 	>({
 		method: MeemAPI.v1.GetNonce.method
 	})
-
-	useEffect(() => {
-		setIsConnected(wallet.isConnected)
-	}, [wallet.isConnected])
 
 	const login = useCallback(
 		async (walletSig: string) => {
@@ -84,14 +79,13 @@ const MAuthenticate: React.FC = () => {
 							}
 						)
 
-					log.debug(`logged in successfully.`)
+					log.debug(`logged in successfully.`, { loginRequest })
 					wallet.setJwt(loginRequest.jwt)
 					log.debug(`setting full pathname as ${router.asPath}`)
 					Cookies.set(
 						'redirectPath',
 						JSON.stringify(router.asPath ?? '')
 					)
-
 					router.push({
 						pathname: router.query.return
 							? (router.query.return as string)
@@ -154,19 +148,7 @@ const MAuthenticate: React.FC = () => {
 		setIsLoading(true)
 		await wallet.connectWallet()
 
-		const address = wallet.accounts[0]
-		if (address) {
-			setIsConnected(true)
-			setIsLoading(false)
-		} else {
-			log.debug('Unable to authenticate - wallet address not found.')
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'Unable to authenticate with your wallet. Please try again.'
-			})
-		}
+		setIsLoading(false)
 	}, [wallet])
 
 	return (
@@ -200,7 +182,7 @@ const MAuthenticate: React.FC = () => {
 				/>
 			)}
 			<div>
-				{!isLoading && !isConnected && (
+				{!isLoading && !wallet.isConnected && (
 					<Button
 						className={classes.buttonSaveChanges}
 						onClick={connectWallet}
@@ -208,7 +190,7 @@ const MAuthenticate: React.FC = () => {
 						Connect wallet
 					</Button>
 				)}
-				{!isLoading && isConnected && (
+				{!isLoading && wallet.isConnected && (
 					<Button
 						className={classes.buttonSaveChanges}
 						onClick={sign}

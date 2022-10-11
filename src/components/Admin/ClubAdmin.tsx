@@ -22,7 +22,7 @@ import {
 	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { SUB_CLUB } from '../../graphql/clubs'
+import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
 import clubFromMeemContract, { Club } from '../../model/club/club'
 import {
 	userHasPermissionEditProfile,
@@ -30,6 +30,7 @@ import {
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
@@ -236,6 +237,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { mutualMembersClient } = useCustomApollo()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractAddress)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
@@ -248,13 +250,15 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 		loading,
 		error,
 		data: clubData
-	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug,
 			chainId: wallet.chainId,
 			visibilityLevel: ['mutual-club-members', 'anyone'],
 			showPublicApps: [true, false]
-		}
+		},
+		client: mutualMembersClient,
+		skip: !wallet.chainId
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
@@ -269,7 +273,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			})
 		}
-	}, [router, slug, wallet.loginState])
+	}, [router, slug, wallet])
 
 	useEffect(() => {
 		switch (router.query.tab) {
