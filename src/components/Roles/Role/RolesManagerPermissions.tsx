@@ -35,6 +35,8 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
 		useState(false)
 
+	// TODO: UseEffect to listen for the right query param, consume it and launch the server modal
+
 	const startDiscordAuth = () => {
 		setIsRoleDiscordConnectModalOpened(true)
 	}
