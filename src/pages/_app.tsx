@@ -1,66 +1,19 @@
-import {
-	ApolloClient,
-	InMemoryCache,
-	ApolloProvider,
-	HttpLink,
-	split
-} from '@apollo/client'
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
-import { getMainDefinition } from '@apollo/client/utilities'
 import log, { LogLevel } from '@kengoldfarb/log'
 import { MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
 import { WalletProvider, SocketProvider } from '@meemproject/react'
-import { createClient } from 'graphql-ws'
 import type { AppProps } from 'next/app'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { App } from '../components/App'
 import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
 import '@fontsource/inter'
 import { IdentityProvider } from '../components/Profile/IdentityProvider'
+import { CustomApolloProvider } from '../providers/ApolloProvider'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
 
-	const httpLink = new HttpLink({
-		uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
-	})
-
-	const wsLink =
-		typeof window !== 'undefined'
-			? new GraphQLWsLink(
-					createClient({
-						url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? ''
-					})
-			  )
-			: null
-
-	// The split function takes three parameters:
-	//
-	// * A function that's called for each operation to execute
-	// * The Link to use for an operation if the function returns a "truthy" value
-	// * The Link to use for an operation if the function returns a "falsy" value
-	const splitLink =
-		typeof window !== 'undefined' && wsLink != null
-			? split(
-					({ query }) => {
-						const definition = getMainDefinition(query)
-						return (
-							definition.kind === 'OperationDefinition' &&
-							definition.operation === 'subscription'
-						)
-					},
-					wsLink,
-					httpLink
-			  )
-			: httpLink
-
-	const client = new ApolloClient({
-		link: splitLink,
-		cache: new InMemoryCache()
-	})
-
-	React.useEffect(() => {
+	useEffect(() => {
 		const jssStyles = document.querySelector('#jss-server-side')
 		if (jssStyles) {
 			jssStyles.parentElement?.removeChild(jssStyles)
@@ -115,8 +68,8 @@ function MyApp(props: AppProps) {
 			}}
 		>
 			<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL ?? ''}>
-				<ApolloProvider client={client}>
-					<WalletProvider rpcs={rpcs}>
+				<WalletProvider rpcs={rpcs}>
+					<CustomApolloProvider>
 						<NotificationsProvider>
 							<ClubClubProvider>
 								<IdentityProvider>
@@ -126,8 +79,8 @@ function MyApp(props: AppProps) {
 								</IdentityProvider>
 							</ClubClubProvider>
 						</NotificationsProvider>
-					</WalletProvider>
-				</ApolloProvider>
+					</CustomApolloProvider>
+				</WalletProvider>
 			</SocketProvider>
 		</MantineProvider>
 	)

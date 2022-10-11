@@ -16,6 +16,7 @@ import {
 	Identity,
 	identityFromApi
 } from '../../model/identity/identity'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 
 const defaultState = {
 	identity: getDefaultIdentity(''),
@@ -33,13 +34,16 @@ export interface IIdentityProviderProps {
 export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 	const wallet = useWallet()
 
+	const { userClient } = useCustomApollo()
+
 	// Fetch profile info
 	const {
 		loading,
 		error,
 		data: identityData
 	} = useSubscription<MeemIdSubscriptionSubscription>(MEEM_ID_SUBSCRIPTION, {
-		variables: { walletAddress: wallet.accounts[0] ?? '' }
+		variables: { walletAddress: wallet.accounts[0] ?? '' },
+		client: userClient
 	})
 	const [isLoadingIdentity, setIsLoadingIdentity] = useState(
 		defaultState.isLoadingIdentity

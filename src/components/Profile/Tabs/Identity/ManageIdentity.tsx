@@ -31,6 +31,7 @@ import {
 	IdentityIntegration,
 	identityIntegrationFromApi
 } from '../../../../model/identity/identity'
+import { useCustomApollo } from '../../../../providers/ApolloProvider'
 import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
@@ -235,6 +236,8 @@ export const ManageIdentityComponent: React.FC = () => {
 	const wallet = useWallet()
 	const id = useContext(IdentityContext)
 
+	const { anonClient } = useCustomApollo()
+
 	// Mutable identity data
 	const [displayName, setDisplayName] = useState('')
 	const [profilePicture, setProfilePicture] = useState('')
@@ -251,7 +254,10 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	// Fetch a list of available integrations.
 	const { data: inteData } = useQuery<GetIdentityIntegrationsQuery>(
-		IDENTITY_INTEGRATIONS_QUERY
+		IDENTITY_INTEGRATIONS_QUERY,
+		{
+			client: anonClient
+		}
 	)
 
 	// Discord-specific integration data
