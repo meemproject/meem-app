@@ -46,6 +46,7 @@ import clubFromMeemContract, {
 	MembershipReqType
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { ClubMemberCard } from '../Profile/Tabs/Identity/ClubMemberCard'
 import { JoinLeaveClubModal } from './JoinLeaveClubModal'
@@ -285,7 +286,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
-	// const [isWrongNetwork, setIsWrongNetwork] = useState(false)
+	const { mutualMembersClient } = useCustomApollo()
 
 	const [club, setClub] = useState<Club | undefined>()
 
@@ -302,7 +303,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				? ['mutual-club-members', 'anyone']
 				: ['anyone'],
 			showPublicApps: club?.isClubMember ? [true, false] : [true]
-		}
+		},
+		// client: userClient
+		client: mutualMembersClient
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
