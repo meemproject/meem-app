@@ -16,6 +16,7 @@ import {
 	Club,
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 
 const useStyles = createStyles(() => ({
 	header: {
@@ -58,6 +59,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 	const { classes } = useStyles()
 
+	const { mutualMembersClient } = useCustomApollo()
+
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const [currentClubDataString, setCurrentClubDataString] = useState('')
@@ -90,7 +93,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 			chainId: wallet.chainId,
 			visibilityLevel: ['mutual-club-members', 'anyone'],
 			showPublicApps: [true, false]
-		}
+		},
+		client: mutualMembersClient
 	})
 
 	useEffect(() => {

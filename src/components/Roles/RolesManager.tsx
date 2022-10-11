@@ -28,6 +28,7 @@ import clubFromMeemContract, {
 	ClubRole,
 	emptyRole
 } from '../../model/club/club'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface IProps {
@@ -44,6 +45,8 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	const { classes: styles } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
+
+	const { mutualMembersClient } = useCustomApollo()
 
 	const [tabs, setTabs] = useState<Tab[]>([])
 	const [currentTab, setCurrentTab] = useState<Tab>()
@@ -74,7 +77,8 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 			chainId: wallet.chainId ?? 4,
 			visibilityLevel: ['mutual-club-members', 'anyone'],
 			showPublicApps: [true, false]
-		}
+		},
+		client: mutualMembersClient
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
