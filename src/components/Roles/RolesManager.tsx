@@ -45,6 +45,8 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 
+	const { mutualMembersClient } = useCustomApollo()
+
 	const [tabs, setTabs] = useState<Tab[]>([])
 	const [currentTab, setCurrentTab] = useState<Tab>()
 	const [isAddingNewRole, setIsAddingNewRole] = useState(false)
@@ -74,7 +76,8 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 			chainId: wallet.chainId ?? 4,
 			visibilityLevel: ['mutual-club-members', 'anyone'],
 			showPublicApps: [true, false]
-		}
+		},
+		client: mutualMembersClient
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)

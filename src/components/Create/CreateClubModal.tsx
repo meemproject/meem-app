@@ -19,6 +19,7 @@ import clubFromMeemContract, {
 	MembershipRequirementToMeemPermission,
 	Club
 } from '../../model/club/club'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 import { CookieKeys } from '../../utils/cookies'
 
 const useStyles = createStyles(() => ({
@@ -79,6 +80,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const wallet = useWallet()
 
+	const { userClient } = useCustomApollo()
+
 	const { classes } = useStyles()
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
@@ -112,7 +115,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 			variables: {
 				walletAddress: wallet.accounts[0],
 				chainId: wallet.chainId
-			}
+			},
+			client: userClient
 		})
 
 	useEffect(() => {
