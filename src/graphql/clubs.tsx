@@ -132,8 +132,109 @@ export const GET_CLUB = gql`
 	}
 `
 
+export const GET_CLUB_INFO = gql`
+	query GetClubInfo($slug: String, $chainId: Int) {
+		MeemContracts(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
+			slug
+			address
+			metadata
+			createdAt
+			name
+		}
+	}
+`
+
 export const SUB_CLUB = gql`
 	subscription GetClubSubscription(
+		$slug: String
+		$chainId: Int
+		$visibilityLevel: [String!]
+		$showPublicApps: [Boolean!]
+	) {
+		MeemContracts(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
+			slug
+			address
+			metadata
+			createdAt
+			name
+			# gnosisSafeAddress
+			Meems {
+				Owner {
+					address
+					ens
+					MeemIdentities {
+						displayName
+						profilePicUrl
+						MeemIdentityIntegrations(
+							where: { visibility: { _in: $visibilityLevel } }
+						) {
+							metadata
+							visibility
+						}
+					}
+				}
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+				# MeemContract {
+				# 	MeemContractWallets {
+				# 		role
+				# 	}
+				# 	MeemContractRoles {
+				# 		id
+				# 		isAdminRole
+				# 		isDefaultRole
+				# 		name
+				# 		MeemContractRolePermissions {
+				# 			RolePermissionId
+				# 		}
+				# 	}
+				# }
+			}
+			splits
+			maxSupply
+			mintPermissions
+			symbol
+			id
+			MeemContractIntegrations(
+				where: {
+					isPublic: { _in: $showPublicApps }
+					isEnabled: { _eq: true }
+				}
+			) {
+				IntegrationId
+				id
+				isEnabled
+				metadata
+				Integration {
+					description
+					guideUrl
+					icon
+					id
+					name
+				}
+				isPublic
+			}
+			# MeemContractRoles {
+			# 	id
+			# 	name
+			# 	isAdminRole
+			# 	isDefaultRole
+			# 	MeemContractRolePermissions {
+			# 		RolePermissionId
+			# 	}
+			# }
+		}
+	}
+`
+
+export const SUB_CLUB_AS_MEMBER = gql`
+	subscription GetClubAsMemberSubscription(
 		$slug: String
 		$chainId: Int
 		$visibilityLevel: [String!]

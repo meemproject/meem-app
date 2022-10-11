@@ -14,8 +14,8 @@ import {
 	NavLink
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { LoginState, makeRequest, useWallet } from '@meemproject/react'
+import { MeemAPI, makeRequest } from '@meemproject/api'
+import { LoginState, useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
@@ -205,7 +205,7 @@ export const ProfileComponent: React.FC = () => {
 				}
 			})
 		}
-	}, [router, wallet.loginState])
+	}, [router, wallet])
 
 	useEffect(() => {
 		if (router.query.tab === 'myClubs') {

@@ -3,7 +3,9 @@ module.exports = {
         {
             'https://dev-gql.meem.wtf/v1/graphql': {
                 //'https://alpha-gql.meem.wtf/v1/graphql': {
-                headers: {},
+                headers: {
+                    'x-hasura-admin-secret': process.env.HASURA_SECRET
+                },
             },
         },
     ],

@@ -25,7 +25,7 @@
 		"test": "echo \"TODO: Implement tests\"",
 		"localPackageLink": "yarn link @meemproject/api @meemproject/react @meemproject/utils react react-dom @meemproject/meem-contracts",
 		"apollo": "apollo",
-		"codegen": "graphql-codegen --config codegen.js"
+		"codegen": "graphql-codegen -r dotenv/config --config codegen.js"
 	},
 	"resolutions": {
 		"graphql": "^15.7.2",
@@ -44,9 +44,9 @@
 		"@mantine/hooks": "5.1.0",
 		"@mantine/next": "5.1.0",
 		"@mantine/notifications": "5.1.0",
-		"@meemproject/api": "^0.8.9",
-		"@meemproject/meem-contracts": "^0.8.9",
-		"@meemproject/react": "^0.8.9",
+		"@meemproject/api": "^0.9.0",
+		"@meemproject/meem-contracts": "^0.9.0",
+		"@meemproject/react": "^0.9.0",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@types/superagent": "^4.1.15",
 		"blob-util": "^2.0.2",
