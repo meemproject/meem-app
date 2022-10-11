@@ -291,6 +291,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [club, setClub] = useState<Club | undefined>()
 
 	const [previousClubDataString, setPreviousClubDataString] = useState('')
+
+	// TODO: if current user is a club member we should fetch using the SUB_CLUB_AS_MEMBER query
 	const {
 		loading,
 		error,
