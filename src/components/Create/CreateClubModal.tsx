@@ -6,6 +6,7 @@ import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useSockets, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
+import { uniq } from 'lodash'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
@@ -182,7 +183,9 @@ export const CreateClubModal: React.FC<IProps> = ({
 					undefined,
 					{
 						safeOwners:
-							membershipSettings?.clubAdminsAtClubCreation ?? [],
+							uniq(
+								membershipSettings?.clubAdminsAtClubCreation
+							) ?? [],
 						chainId: wallet.chainId
 					}
 				)
