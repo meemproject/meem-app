@@ -298,16 +298,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const [previousClubDataString, setPreviousClubDataString] = useState('')
 
-	const { data: isClubMemberData } = useQuery<GetIsMemberOfClubQuery>(
-		GET_IS_MEMBER_OF_CLUB,
-		{
+	const { data: isCurrentUserClubMemberData } =
+		useQuery<GetIsMemberOfClubQuery>(GET_IS_MEMBER_OF_CLUB, {
 			variables: {
 				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
 				chainId: wallet.chainId,
 				clubSlug: slug
 			}
-		}
-	)
+		})
 
 	const {
 		loading: loadingAnonClub,
@@ -319,7 +317,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			chainId: wallet.chainId
 		},
 		client: anonClient,
-		skip: !isClubMemberData || isClubMemberData.Meems.length > 0
+		skip:
+			!isCurrentUserClubMemberData ||
+			isCurrentUserClubMemberData.Meems.length > 0
 	})
 
 	const {
@@ -332,7 +332,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			chainId: wallet.chainId
 		},
 		client: mutualMembersClient,
-		skip: !isClubMemberData || isClubMemberData.Meems.length === 0
+		skip:
+			!isCurrentUserClubMemberData ||
+			isCurrentUserClubMemberData.Meems.length === 0
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
@@ -361,10 +363,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const checkEligibility = useCallback(
 		(
 			reqs: RequirementString[],
-			isClubAdmin: boolean,
+			isCurrentUserClubAdmin: boolean,
 			slotsLeft: number
 		) => {
-			if (reqs.length === 0 || isClubAdmin) {
+			if (reqs.length === 0 || isCurrentUserClubAdmin) {
 				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
@@ -512,7 +514,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (club?.isClubAdmin) {
+		if (club?.isCurrentUserClubAdmin) {
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
@@ -808,7 +810,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			setParsedRequirements(reqs)
 			checkEligibility(
 				reqs,
-				possibleClub.isClubAdmin ?? false,
+				possibleClub.isCurrentUserClubAdmin ?? false,
 				possibleClub.slotsLeft ?? -1
 			)
 
@@ -865,7 +867,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				wallet.isConnected ? wallet.accounts[0] : '',
 				data.MeemContracts[0] as MeemContracts
 			)
-			if (possibleClub.isClubMember) {
+			if (possibleClub.isCurrentUserClubMember) {
 				log.debug('current user has joined the club!')
 				setIsJoiningClub(false)
 
@@ -888,7 +890,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				wallet.isConnected ? wallet.accounts[0] : '',
 				data.MeemContracts[0] as MeemContracts
 			)
-			if (!possibleClub.isClubMember) {
+			if (!possibleClub.isCurrentUserClubMember) {
 				log.debug('current user has left the club')
 
 				setIsLeavingClub(false)
@@ -1099,39 +1101,43 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
 										</Button>
 									)}
-								{club.isClubMember && wallet.isConnected && (
-									<Button
-										onClick={leaveClub}
-										loading={isLeavingClub}
-										className={classes.buttonJoinClub}
-									>
-										Leave
-									</Button>
-								)}
-								{!club.isClubMember && wallet.isConnected && (
-									<Button
-										disabled={!doesMeetAllRequirements}
-										loading={isJoiningClub}
-										onClick={joinClub}
-										className={classes.buttonJoinClub}
-									>
-										{doesMeetAllRequirements &&
-											((club.membershipSettings
-												?.costToJoin ?? 0) > 0
-												? `Join - ${
-														club.membershipSettings
-															?.costToJoin ?? 0
-												  } MATIC`
-												: wallet.isConnected
-												? `Join`
-												: '')}
-										{!doesMeetAllRequirements &&
-											wallet.isConnected &&
-											'Requirements not met'}
-										{!wallet.isConnected &&
-											'Connect wallet to join'}
-									</Button>
-								)}
+								{club.isCurrentUserClubMember &&
+									wallet.isConnected && (
+										<Button
+											onClick={leaveClub}
+											loading={isLeavingClub}
+											className={classes.buttonJoinClub}
+										>
+											Leave
+										</Button>
+									)}
+								{!club.isCurrentUserClubMember &&
+									wallet.isConnected && (
+										<Button
+											disabled={!doesMeetAllRequirements}
+											loading={isJoiningClub}
+											onClick={joinClub}
+											className={classes.buttonJoinClub}
+										>
+											{doesMeetAllRequirements &&
+												((club.membershipSettings
+													?.costToJoin ?? 0) > 0
+													? `Join - ${
+															club
+																.membershipSettings
+																?.costToJoin ??
+															0
+													  } MATIC`
+													: wallet.isConnected
+													? `Join`
+													: '')}
+											{!doesMeetAllRequirements &&
+												wallet.isConnected &&
+												'Requirements not met'}
+											{!wallet.isConnected &&
+												'Connect wallet to join'}
+										</Button>
+									)}
 								{!wallet.isConnected && (
 									<Button
 										onClick={async () => {
@@ -1152,24 +1158,26 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									<QrCode />
 								</Button>
 
-								{club.isClubAdmin && wallet.isConnected && (
-									<>
-										<Button
-											onClick={navigateToSettings}
-											className={
-												classes.outlineHeaderButton
-											}
-										>
-											<Settings />
-										</Button>
-									</>
-								)}
+								{club.isCurrentUserClubAdmin &&
+									wallet.isConnected && (
+										<>
+											<Button
+												onClick={navigateToSettings}
+												className={
+													classes.outlineHeaderButton
+												}
+											>
+												<Settings />
+											</Button>
+										</>
+									)}
 							</Group>
 						</div>
 					</div>
 
 					<Container>
-						{(!club.isClubMember || club.isClubAdmin) && (
+						{(!club.isCurrentUserClubMember ||
+							club.isCurrentUserClubAdmin) && (
 							<>
 								<Text
 									className={classes.clubDetailSectionTitle}
@@ -1233,7 +1241,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</>
 						)}
 
-						{club.isClubAdmin && (
+						{club.isCurrentUserClubAdmin && (
 							<>
 								<Text
 									className={classes.clubDetailSectionTitle}
@@ -1269,7 +1277,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						)}
 
 						{/* Public integrations for club visitors */}
-						{!club.isClubMember &&
+						{!club.isCurrentUserClubMember &&
 							club.publicIntegrations &&
 							club.allIntegrations &&
 							club.publicIntegrations.length > 0 && (
@@ -1296,7 +1304,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 
 						{/* All integrations for club members */}
-						{club.isClubMember &&
+						{club.isCurrentUserClubMember &&
 							club.allIntegrations &&
 							club.allIntegrations.length > 0 && (
 								<>
@@ -1313,7 +1321,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								</>
 							)}
 
-						{club.isClubAdmin &&
+						{club.isCurrentUserClubAdmin &&
 							club.allIntegrations &&
 							club.allIntegrations.length === 0 && (
 								<>

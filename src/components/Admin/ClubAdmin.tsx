@@ -225,7 +225,8 @@ enum Tab {
 	ClubDetails,
 	ClubIcon,
 	Apps,
-	Airdrops
+	Airdrops,
+	DeleteClub
 }
 
 interface IProps {
@@ -299,6 +300,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 			case 'roles':
 				setCurrentTab(Tab.Roles)
 				break
+			// case 'deleteClub':
+			// 	setCurrentTab(Tab.DeleteClub)
+			// 	break
 		}
 	}, [router.query.tab])
 
@@ -397,7 +401,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</a>
 					</div>
 
-					{!club?.isClubAdmin && (
+					{!club?.isCurrentUserClubAdmin && (
 						<Container>
 							<Space h={120} />
 							<Center>
@@ -408,7 +412,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</Center>
 						</Container>
 					)}
-					{club?.isClubAdmin && (
+					{club?.isCurrentUserClubAdmin && (
 						<div className={classes.adminContainer}>
 							<MediaQuery
 								largerThan="sm"
@@ -493,6 +497,18 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										/>
 									</>
 								)}
+
+								{/* {club.isCurrentUserClubOwner && (
+									<NavLink
+										className={classes.adminNavItem}
+										active={currentTab === Tab.DeleteClub}
+										label={'Delete Club'}
+										onClick={() => {
+											setCurrentTab(Tab.DeleteClub)
+											setMobileNavBarVisible(false)
+										}}
+									/>
+								)} */}
 
 								{userHasPermissionManageApps(club) && (
 									<>
@@ -588,6 +604,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										userHasPermissionManageRoles(club) && (
 											<CARoles club={club} />
 										)}
+									{/* {currentTab === Tab.DeleteClub &&
+										club.isCurrentUserClubAdmin && (
+											<CADeleteClub club={club} />
+										)} */}
 								</div>
 							)}
 						</div>

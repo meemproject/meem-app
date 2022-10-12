@@ -223,7 +223,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 						</a>
 					</div>
 
-					{!club?.isClubAdmin && (
+					{!club?.isCurrentUserClubAdmin && (
 						<Container>
 							<Space h={120} />
 							<Center>
@@ -234,7 +234,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 							</Center>
 						</Container>
 					)}
-					{club?.isClubAdmin && (
+					{club?.isCurrentUserClubAdmin && (
 						<div className={styles.panelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"

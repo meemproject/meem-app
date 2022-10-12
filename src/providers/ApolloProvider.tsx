@@ -143,9 +143,7 @@ export const CustomApolloProvider: FC<IApolloProviderProps> = ({
 			}
 		})
 		const aClient = createApolloClient({
-			jwt,
 			headers: {
-				...headers,
 				'x-hasura-role': 'anonymous'
 			}
 		})

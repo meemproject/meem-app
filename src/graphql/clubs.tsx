@@ -247,7 +247,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			createdAt
 			name
 			gnosisSafeAddress
+			OwnerId
 			Meems {
+				OwnerId
 				Owner {
 					address
 					ens
@@ -425,19 +427,19 @@ export const GET_ALL_CLUBS = gql`
 			splits
 			mintPermissions
 			symbol
-			MeemContractWallets {
-				role
-				Wallet {
-					ens
-					address
-				}
-			}
-			Meems {
-				Owner {
-					address
-					ens
-				}
-			}
+			# MeemContractWallets {
+			# 	role
+			# 	Wallet {
+			# 		ens
+			# 		address
+			# 	}
+			# }
+			# Meems {
+			# 	Owner {
+			# 		address
+			# 		ens
+			# 	}
+			# }
 		}
 	}
 `
