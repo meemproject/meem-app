@@ -117,9 +117,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 				query: GET_CLUB,
 				variables: {
 					chainId: hostnameToChainId(req.headers.host ?? ''),
-					slug: params.slug,
-					visibilityLevel: ['anyone'],
-					showPublicApps: [true]
+					slug: params.slug
 				}
 			})
 

@@ -253,9 +253,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug,
-			chainId: wallet.chainId,
-			visibilityLevel: ['mutual-club-members', 'anyone'],
-			showPublicApps: [true, false]
+			chainId: wallet.chainId
 		},
 		client: mutualMembersClient,
 		skip: !wallet.chainId
