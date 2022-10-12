@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'

@@ -305,7 +305,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			{
 				variables: {
 					walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-
 					clubSlug: slug
 				},
 				client: anonClient
