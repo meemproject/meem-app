@@ -11,12 +11,13 @@ import { Check } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription // eslint-disable-next-line import/namespace
 } from '../../../generated/graphql'
-import { SUB_CLUB } from '../../graphql/clubs'
+import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
 import {
 	Club,
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 
 const useStyles = createStyles(() => ({
 	header: {
@@ -87,10 +88,14 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		loading,
 		error,
 		data: clubData
-	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug: club?.slug ?? '',
-			chainId: wallet.chainId
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: mutualMembersClient
 	})

@@ -12,6 +12,7 @@ import React, {
 // eslint-disable-next-line import/namespace
 import { GetIsMemberOfClubQuery } from '../../../generated/graphql'
 import { GET_IS_MEMBER_OF_CLUB } from '../../graphql/clubs'
+import { hostnameToChainId } from '../App'
 
 const defaultState = {
 	isMember: false
@@ -37,7 +38,11 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 	} = useQuery<GetIsMemberOfClubQuery>(GET_IS_MEMBER_OF_CLUB, {
 		variables: {
 			walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-			chainId: wallet.chainId,
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				),
 			clubSlug: 'club-club'
 		}
 	})

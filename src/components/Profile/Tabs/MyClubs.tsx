@@ -12,7 +12,7 @@ import {
 import { useWallet } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
 	MeemContracts,
 	MyClubsSubscriptionSubscription
@@ -20,6 +20,7 @@ import {
 import { SUB_MY_CLUBS } from '../../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
+import { hostnameToChainId } from '../../App'
 
 const useStyles = createStyles(theme => ({
 	row: {
@@ -125,17 +126,39 @@ export const MyClubsComponent: React.FC = () => {
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
 
-	const { loading, data: clubData } =
-		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
-			variables: {
-				chainId: wallet.chainId,
-				walletAddress:
-					wallet.accounts &&
-					wallet.accounts[0] &&
-					wallet.accounts[0].toLowerCase()
-			},
-			client: mutualMembersClient
-		})
+	const {
+		loading,
+		data: clubData,
+		error
+	} = useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
+		variables: {
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				),
+			walletAddress:
+				wallet.accounts &&
+				wallet.accounts[0] &&
+				wallet.accounts[0].toLowerCase()
+		},
+		client: mutualMembersClient
+	})
+
+	useEffect(() => {
+		if (
+			error &&
+			error.graphQLErrors.length > 0 &&
+			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/profile?tab=myClubs`
+				}
+			})
+		}
+	}, [error, router])
 
 	const navigateToCreate = () => {
 		router.push({ pathname: '/' })

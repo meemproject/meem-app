@@ -31,6 +31,7 @@ import {
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
@@ -225,7 +226,8 @@ enum Tab {
 	ClubDetails,
 	ClubIcon,
 	Apps,
-	Airdrops
+	Airdrops,
+	DeleteClub
 }
 
 interface IProps {
@@ -253,7 +255,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug,
-			chainId: wallet.chainId
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: mutualMembersClient,
 		skip: !wallet.chainId
@@ -271,7 +277,20 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			})
 		}
-	}, [router, slug, wallet])
+
+		if (
+			error &&
+			error.graphQLErrors.length > 0 &&
+			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/${slug}/admin`
+				}
+			})
+		}
+	}, [error, router, slug, wallet])
 
 	useEffect(() => {
 		switch (router.query.tab) {
@@ -299,6 +318,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 			case 'roles':
 				setCurrentTab(Tab.Roles)
 				break
+			// case 'deleteClub':
+			// 	setCurrentTab(Tab.DeleteClub)
+			// 	break
 		}
 	}, [router.query.tab])
 
@@ -397,7 +419,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</a>
 					</div>
 
-					{!club?.isClubAdmin && (
+					{!club?.isCurrentUserClubAdmin && (
 						<Container>
 							<Space h={120} />
 							<Center>
@@ -408,7 +430,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</Center>
 						</Container>
 					)}
-					{club?.isClubAdmin && (
+					{club?.isCurrentUserClubAdmin && (
 						<div className={classes.adminContainer}>
 							<MediaQuery
 								largerThan="sm"
@@ -493,6 +515,18 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										/>
 									</>
 								)}
+
+								{/* {club.isCurrentUserClubOwner && (
+									<NavLink
+										className={classes.adminNavItem}
+										active={currentTab === Tab.DeleteClub}
+										label={'Delete Club'}
+										onClick={() => {
+											setCurrentTab(Tab.DeleteClub)
+											setMobileNavBarVisible(false)
+										}}
+									/>
+								)} */}
 
 								{userHasPermissionManageApps(club) && (
 									<>
@@ -588,6 +622,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										userHasPermissionManageRoles(club) && (
 											<CARoles club={club} />
 										)}
+									{/* {currentTab === Tab.DeleteClub &&
+										club.isCurrentUserClubAdmin && (
+											<CADeleteClub club={club} />
+										)} */}
 								</div>
 							)}
 						</div>

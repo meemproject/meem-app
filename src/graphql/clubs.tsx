@@ -40,6 +40,27 @@ export const GET_IS_MEMBER_OF_CLUB = gql`
 	}
 `
 
+export const SUB_IS_MEMBER_OF_CLUB = gql`
+	subscription GetIsMemberOfClubSubscription(
+		$walletAddress: String
+		$clubSlug: String
+	) {
+		Meems(
+			where: {
+				MeemContractId: { _is_null: false }
+				MeemContract: { slug: { _eq: $clubSlug } }
+				Owner: { address: { _ilike: $walletAddress } }
+			}
+		) {
+			id
+			tokenId
+			Owner {
+				address
+			}
+		}
+	}
+`
+
 export const GET_CLUBS_AUTOCOMPLETE = gql`
 	query GetClubsAutocomplete($query: String, $chainId: Int) {
 		MeemContracts(
@@ -113,7 +134,7 @@ export const GET_CLUB = gql`
 `
 
 export const GET_CLUB_AS_MEMBER = gql`
-	query GetClub($slug: String, $chainId: Int) {
+	query GetClubAsMember($slug: String, $chainId: Int) {
 		MeemContracts(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
@@ -247,7 +268,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			createdAt
 			name
 			gnosisSafeAddress
+			OwnerId
 			Meems {
+				OwnerId
 				Owner {
 					address
 					ens
@@ -425,19 +448,19 @@ export const GET_ALL_CLUBS = gql`
 			splits
 			mintPermissions
 			symbol
-			MeemContractWallets {
-				role
-				Wallet {
-					ens
-					address
-				}
-			}
-			Meems {
-				Owner {
-					address
-					ens
-				}
-			}
+			# MeemContractWallets {
+			# 	role
+			# 	Wallet {
+			# 		ens
+			# 		address
+			# 	}
+			# }
+			# Meems {
+			# 	Owner {
+			# 		address
+			# 		ens
+			# 	}
+			# }
 		}
 	}
 `

@@ -22,6 +22,7 @@ import clubFromMeemContract, {
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { CookieKeys } from '../../utils/cookies'
+import { hostnameToChainId } from '../App'
 
 const useStyles = createStyles(() => ({
 	header: {
@@ -115,7 +116,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
 			variables: {
 				walletAddress: wallet.accounts[0],
-				chainId: wallet.chainId
+				chainId:
+					wallet.chainId ??
+					hostnameToChainId(
+						global.window ? global.window.location.host : ''
+					)
 			},
 			client: userClient
 		})
@@ -186,7 +191,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 							uniq(
 								membershipSettings?.clubAdminsAtClubCreation
 							) ?? [],
-						chainId: wallet.chainId
+						chainId:
+							wallet.chainId ??
+							hostnameToChainId(
+								global.window ? global.window.location.host : ''
+							)
 					}
 				)
 			} catch (e) {
@@ -330,7 +339,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 						associations: [],
 						external_url: ''
 					},
-					chainId: wallet.chainId
+					chainId:
+						wallet.chainId ??
+						hostnameToChainId(
+							global.window ? global.window.location.host : ''
+						)
 				}
 
 				log.debug(`${JSON.stringify(data, null, 2)}`)

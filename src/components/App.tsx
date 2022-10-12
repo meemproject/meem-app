@@ -53,7 +53,7 @@ export function hostnameToChainId(hostname: string): number {
 			break
 
 		default:
-			throw new Error('Unable to connect. Unknown chain.')
+			break
 	}
 
 	return expectedChainId

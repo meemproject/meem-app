@@ -22,13 +22,14 @@ import {
 	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { SUB_CLUB } from '../../graphql/clubs'
+import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	ClubRole,
 	emptyRole
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface IProps {
@@ -71,10 +72,14 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 		loading,
 		error,
 		data: clubData
-	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug,
-			chainId: wallet.chainId ?? 4
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: mutualMembersClient
 	})
@@ -223,7 +228,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 						</a>
 					</div>
 
-					{!club?.isClubAdmin && (
+					{!club?.isCurrentUserClubAdmin && (
 						<Container>
 							<Space h={120} />
 							<Center>
@@ -234,7 +239,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 							</Center>
 						</Container>
 					)}
-					{club?.isClubAdmin && (
+					{club?.isCurrentUserClubAdmin && (
 						<div className={styles.panelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
