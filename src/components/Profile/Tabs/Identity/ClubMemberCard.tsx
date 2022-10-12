@@ -141,7 +141,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 					)}
 				</>
 			)}
-			{member.roles && (
+			{member.roles && member.roles.length > 0 && (
 				<>
 					<Space h={24} />
 					<Text className={styles.tBold}>{'Roles'}</Text>

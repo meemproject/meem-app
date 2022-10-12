@@ -825,11 +825,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		async function getClub() {
-			if (!anonClubData || !memberClubData) {
+			const clubData = memberClubData ?? anonClubData
+
+			if (!clubData) {
 				return
 			}
-
-			const clubData = memberClubData ?? anonClubData
 
 			if (clubData.MeemContracts.length === 0) {
 				setIsLoadingClub(false)
