@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
-import log from '@kengoldfarb/log'
 import {
 	createStyles,
 	Container,
@@ -16,12 +15,13 @@ import {
 import { useWallet } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
 import { AllClubsQuery, MeemContracts } from '../../../generated/graphql'
 import { GET_ALL_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -136,7 +136,11 @@ export const BrowseComponent: React.FC = () => {
 		data: clubData
 	} = useQuery<AllClubsQuery>(GET_ALL_CLUBS, {
 		variables: {
-			chainId,
+			chainId:
+				chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				),
 			limit,
 			offset: limit * page
 		},

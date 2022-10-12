@@ -31,6 +31,7 @@ import {
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
@@ -254,7 +255,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug,
-			chainId: wallet.chainId
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: mutualMembersClient,
 		skip: !wallet.chainId
@@ -272,7 +277,20 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			})
 		}
-	}, [router, slug, wallet])
+
+		if (
+			error &&
+			error.graphQLErrors.length > 0 &&
+			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/${slug}/admin`
+				}
+			})
+		}
+	}, [error, router, slug, wallet])
 
 	useEffect(() => {
 		switch (router.query.tab) {

@@ -37,14 +37,14 @@ import {
 import {
 	GetBundleByIdQuery,
 	GetClubSubscriptionSubscription,
-	GetIsMemberOfClubQuery,
+	GetIsMemberOfClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
 import {
 	GET_BUNDLE_BY_ID,
-	GET_IS_MEMBER_OF_CLUB,
 	SUB_CLUB,
-	SUB_CLUB_AS_MEMBER
+	SUB_CLUB_AS_MEMBER,
+	SUB_IS_MEMBER_OF_CLUB
 } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
@@ -54,6 +54,7 @@ import clubFromMeemContract, {
 import { tokenFromContractAddress } from '../../model/token/token'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { quickTruncate } from '../../utils/truncated_wallet'
+import { hostnameToChainId } from '../App'
 import { ClubMemberCard } from '../Profile/Tabs/Identity/ClubMemberCard'
 import { JoinLeaveClubModal } from './JoinLeaveClubModal'
 
@@ -298,14 +299,18 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	const [previousClubDataString, setPreviousClubDataString] = useState('')
 
-	const { data: isCurrentUserClubMemberData } =
-		useQuery<GetIsMemberOfClubQuery>(GET_IS_MEMBER_OF_CLUB, {
-			variables: {
-				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-				chainId: wallet.chainId,
-				clubSlug: slug
+	const { data: isCurrentUserClubMemberData, error: userClubMemberError } =
+		useSubscription<GetIsMemberOfClubSubscriptionSubscription>(
+			SUB_IS_MEMBER_OF_CLUB,
+			{
+				variables: {
+					walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+
+					clubSlug: slug
+				},
+				client: anonClient
 			}
-		})
+		)
 
 	const {
 		loading: loadingAnonClub,
@@ -314,7 +319,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug,
-			chainId: wallet.chainId
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: anonClient,
 		skip:
@@ -329,7 +338,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug,
-			chainId: wallet.chainId
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: mutualMembersClient,
 		skip:
@@ -481,7 +494,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								image: club?.image,
 								meem_metadata_version: 'MeemClub_Token_20220718'
 							},
-							chainId: wallet.chainId
+							chainId:
+								wallet.chainId ??
+								hostnameToChainId(
+									global.window
+										? global.window.location.host
+										: ''
+								)
 						}
 					)
 				} else {
@@ -926,6 +945,19 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			const clubData = memberClubData ?? anonClubData
 			if (clubData) leave(clubData)
 		}
+
+		if (
+			errorMemberClub &&
+			errorMemberClub.graphQLErrors.length > 0 &&
+			errorMemberClub.graphQLErrors[0].extensions.code === 'invalid-jwt'
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/browse`
+				}
+			})
+		}
 	}, [
 		club,
 		previousClubDataString,
@@ -938,7 +970,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		anonClubData,
 		loadingMemberClub,
 		errorMemberClub,
-		memberClubData
+		memberClubData,
+		userClubMemberError,
+		router
 	])
 
 	const navigateToSettings = () => {

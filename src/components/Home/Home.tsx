@@ -28,6 +28,7 @@ import React, { forwardRef, useContext, useRef, useState } from 'react'
 import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
 import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
 import { CookieKeys } from '../../utils/cookies'
+import { hostnameToChainId } from '../App'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
 
@@ -204,7 +205,11 @@ export function HomeComponent() {
 					query: GET_CLUBS_AUTOCOMPLETE,
 					variables: {
 						query: `%${val.trim()}%`,
-						chainId: wallet.chainId
+						chainId:
+							wallet.chainId ??
+							hostnameToChainId(
+								global.window ? global.window.location.host : ''
+							)
 					}
 				})
 

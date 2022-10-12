@@ -17,6 +17,7 @@ import {
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 
 const useStyles = createStyles(() => ({
 	header: {
@@ -90,7 +91,11 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug: club?.slug ?? '',
-			chainId: wallet.chainId
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: mutualMembersClient
 	})

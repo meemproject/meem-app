@@ -3212,7 +3212,7 @@ export type MeemContractIntegrations_Bool_Exp = {
 /** unique or primary key constraints on table "MeemContractIntegrations" */
 export enum MeemContractIntegrations_Constraint {
   /** unique or primary key constraint on columns "MeemContractId", "IntegrationId" */
-  MeemContractIntegrationsIntegrationIdMeemContractIdKey = 'MeemContractIntegrations_IntegrationId_MeemContractId_key',
+  MeemContractIntegrationsMeemContractIdIntegrationIdKey = 'MeemContractIntegrations_MeemContractId_IntegrationId_key',
   /** unique or primary key constraint on columns "id" */
   MeemContractIntegrationsPkey = 'MeemContractIntegrations_pkey'
 }
@@ -3650,9 +3650,11 @@ export type MeemContractRoles = {
   guildRoleId?: Maybe<Scalars['Int']>;
   id: Scalars['uuid'];
   imageUrl: Scalars['String'];
+  integrationsMetadata: Scalars['jsonb'];
   isAdminRole: Scalars['Boolean'];
   isDefaultRole: Scalars['Boolean'];
   name: Scalars['String'];
+  tokenAddress?: Maybe<Scalars['String']>;
   updatedAt: Scalars['timestamptz'];
 };
 
@@ -3674,6 +3676,12 @@ export type MeemContractRolesMeemContractRolePermissions_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<MeemContractRolePermissions_Order_By>>;
   where?: InputMaybe<MeemContractRolePermissions_Bool_Exp>;
+};
+
+
+/** columns and relationships of "MeemContractRoles" */
+export type MeemContractRolesIntegrationsMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregated selection of "MeemContractRoles" */
@@ -3721,6 +3729,11 @@ export type MeemContractRoles_Aggregate_Order_By = {
   variance?: InputMaybe<MeemContractRoles_Variance_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type MeemContractRoles_Append_Input = {
+  integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** input type for inserting array relation for remote table "MeemContractRoles" */
 export type MeemContractRoles_Arr_Rel_Insert_Input = {
   data: Array<MeemContractRoles_Insert_Input>;
@@ -3754,9 +3767,11 @@ export type MeemContractRoles_Bool_Exp = {
   guildRoleId?: InputMaybe<Int_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   imageUrl?: InputMaybe<String_Comparison_Exp>;
+  integrationsMetadata?: InputMaybe<Jsonb_Comparison_Exp>;
   isAdminRole?: InputMaybe<Boolean_Comparison_Exp>;
   isDefaultRole?: InputMaybe<Boolean_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  tokenAddress?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -3765,6 +3780,21 @@ export enum MeemContractRoles_Constraint {
   /** unique or primary key constraint on columns "id" */
   MeemContractRolesPkey = 'MeemContractRoles_pkey'
 }
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type MeemContractRoles_Delete_At_Path_Input = {
+  integrationsMetadata?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type MeemContractRoles_Delete_Elem_Input = {
+  integrationsMetadata?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type MeemContractRoles_Delete_Key_Input = {
+  integrationsMetadata?: InputMaybe<Scalars['String']>;
+};
 
 /** input type for incrementing numeric columns in table "MeemContractRoles" */
 export type MeemContractRoles_Inc_Input = {
@@ -3783,9 +3813,11 @@ export type MeemContractRoles_Insert_Input = {
   guildRoleId?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['uuid']>;
   imageUrl?: InputMaybe<Scalars['String']>;
+  integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -3800,6 +3832,7 @@ export type MeemContractRoles_Max_Fields = {
   id?: Maybe<Scalars['uuid']>;
   imageUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  tokenAddress?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -3813,6 +3846,7 @@ export type MeemContractRoles_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   imageUrl?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  tokenAddress?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -3827,6 +3861,7 @@ export type MeemContractRoles_Min_Fields = {
   id?: Maybe<Scalars['uuid']>;
   imageUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  tokenAddress?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -3840,6 +3875,7 @@ export type MeemContractRoles_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   imageUrl?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  tokenAddress?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -3878,15 +3914,22 @@ export type MeemContractRoles_Order_By = {
   guildRoleId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   imageUrl?: InputMaybe<Order_By>;
+  integrationsMetadata?: InputMaybe<Order_By>;
   isAdminRole?: InputMaybe<Order_By>;
   isDefaultRole?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  tokenAddress?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: MeemContractRoles */
 export type MeemContractRoles_Pk_Columns_Input = {
   id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type MeemContractRoles_Prepend_Input = {
+  integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "MeemContractRoles" */
@@ -3906,11 +3949,15 @@ export enum MeemContractRoles_Select_Column {
   /** column name */
   ImageUrl = 'imageUrl',
   /** column name */
+  IntegrationsMetadata = 'integrationsMetadata',
+  /** column name */
   IsAdminRole = 'isAdminRole',
   /** column name */
   IsDefaultRole = 'isDefaultRole',
   /** column name */
   Name = 'name',
+  /** column name */
+  TokenAddress = 'tokenAddress',
   /** column name */
   UpdatedAt = 'updatedAt'
 }
@@ -3924,9 +3971,11 @@ export type MeemContractRoles_Set_Input = {
   guildRoleId?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['uuid']>;
   imageUrl?: InputMaybe<Scalars['String']>;
+  integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -3980,9 +4029,11 @@ export type MeemContractRoles_Stream_Cursor_Value_Input = {
   guildRoleId?: InputMaybe<Scalars['Int']>;
   id?: InputMaybe<Scalars['uuid']>;
   imageUrl?: InputMaybe<Scalars['String']>;
+  integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
+  tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -4014,18 +4065,32 @@ export enum MeemContractRoles_Update_Column {
   /** column name */
   ImageUrl = 'imageUrl',
   /** column name */
+  IntegrationsMetadata = 'integrationsMetadata',
+  /** column name */
   IsAdminRole = 'isAdminRole',
   /** column name */
   IsDefaultRole = 'isDefaultRole',
   /** column name */
   Name = 'name',
   /** column name */
+  TokenAddress = 'tokenAddress',
+  /** column name */
   UpdatedAt = 'updatedAt'
 }
 
 export type MeemContractRoles_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<MeemContractRoles_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<MeemContractRoles_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<MeemContractRoles_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<MeemContractRoles_Delete_Key_Input>;
   /** increments the numeric columns with given value of the filtered values */
   _inc?: InputMaybe<MeemContractRoles_Inc_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<MeemContractRoles_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<MeemContractRoles_Set_Input>;
   where: MeemContractRoles_Bool_Exp;
@@ -5015,173 +5080,6 @@ export type MeemContracts_Variance_Fields = {
 /** order by variance() on columns of table "MeemContracts" */
 export type MeemContracts_Variance_Order_By = {
   chainId?: InputMaybe<Order_By>;
-};
-
-/** columns and relationships of "MeemIdentifications" */
-export type MeemIdentifications = {
-  __typename?: 'MeemIdentifications';
-  createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  hasOnboarded: Scalars['Boolean'];
-  id: Scalars['uuid'];
-  updatedAt: Scalars['timestamptz'];
-};
-
-/** aggregated selection of "MeemIdentifications" */
-export type MeemIdentifications_Aggregate = {
-  __typename?: 'MeemIdentifications_aggregate';
-  aggregate?: Maybe<MeemIdentifications_Aggregate_Fields>;
-  nodes: Array<MeemIdentifications>;
-};
-
-/** aggregate fields of "MeemIdentifications" */
-export type MeemIdentifications_Aggregate_Fields = {
-  __typename?: 'MeemIdentifications_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<MeemIdentifications_Max_Fields>;
-  min?: Maybe<MeemIdentifications_Min_Fields>;
-};
-
-
-/** aggregate fields of "MeemIdentifications" */
-export type MeemIdentifications_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** Boolean expression to filter rows from the table "MeemIdentifications". All fields are combined with a logical 'AND'. */
-export type MeemIdentifications_Bool_Exp = {
-  _and?: InputMaybe<Array<MeemIdentifications_Bool_Exp>>;
-  _not?: InputMaybe<MeemIdentifications_Bool_Exp>;
-  _or?: InputMaybe<Array<MeemIdentifications_Bool_Exp>>;
-  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  hasOnboarded?: InputMaybe<Boolean_Comparison_Exp>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "MeemIdentifications" */
-export enum MeemIdentifications_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  MeemIdentificationsPkey = 'MeemIdentifications_pkey'
-}
-
-/** input type for inserting data into table "MeemIdentifications" */
-export type MeemIdentifications_Insert_Input = {
-  createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
-  hasOnboarded?: InputMaybe<Scalars['Boolean']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate max on columns */
-export type MeemIdentifications_Max_Fields = {
-  __typename?: 'MeemIdentifications_max_fields';
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-};
-
-/** aggregate min on columns */
-export type MeemIdentifications_Min_Fields = {
-  __typename?: 'MeemIdentifications_min_fields';
-  createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['uuid']>;
-  updatedAt?: Maybe<Scalars['timestamptz']>;
-};
-
-/** response of any mutation on the table "MeemIdentifications" */
-export type MeemIdentifications_Mutation_Response = {
-  __typename?: 'MeemIdentifications_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<MeemIdentifications>;
-};
-
-/** on_conflict condition type for table "MeemIdentifications" */
-export type MeemIdentifications_On_Conflict = {
-  constraint: MeemIdentifications_Constraint;
-  update_columns?: Array<MeemIdentifications_Update_Column>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "MeemIdentifications". */
-export type MeemIdentifications_Order_By = {
-  createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
-  hasOnboarded?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  updatedAt?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: MeemIdentifications */
-export type MeemIdentifications_Pk_Columns_Input = {
-  id: Scalars['uuid'];
-};
-
-/** select columns of table "MeemIdentifications" */
-export enum MeemIdentifications_Select_Column {
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
-  /** column name */
-  HasOnboarded = 'hasOnboarded',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  UpdatedAt = 'updatedAt'
-}
-
-/** input type for updating data in table "MeemIdentifications" */
-export type MeemIdentifications_Set_Input = {
-  createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
-  hasOnboarded?: InputMaybe<Scalars['Boolean']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** Streaming cursor of the table "MeemIdentifications" */
-export type MeemIdentifications_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: MeemIdentifications_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type MeemIdentifications_Stream_Cursor_Value_Input = {
-  createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
-  hasOnboarded?: InputMaybe<Scalars['Boolean']>;
-  id?: InputMaybe<Scalars['uuid']>;
-  updatedAt?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** update columns of table "MeemIdentifications" */
-export enum MeemIdentifications_Update_Column {
-  /** column name */
-  CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
-  /** column name */
-  HasOnboarded = 'hasOnboarded',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  UpdatedAt = 'updatedAt'
-}
-
-export type MeemIdentifications_Updates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<MeemIdentifications_Set_Input>;
-  where: MeemIdentifications_Bool_Exp;
 };
 
 /** columns and relationships of "MeemIdentities" */
@@ -9320,10 +9218,6 @@ export type Mutation_Root = {
   delete_MeemContracts?: Maybe<MeemContracts_Mutation_Response>;
   /** delete single row from the table: "MeemContracts" */
   delete_MeemContracts_by_pk?: Maybe<MeemContracts>;
-  /** delete data from the table: "MeemIdentifications" */
-  delete_MeemIdentifications?: Maybe<MeemIdentifications_Mutation_Response>;
-  /** delete single row from the table: "MeemIdentifications" */
-  delete_MeemIdentifications_by_pk?: Maybe<MeemIdentifications>;
   /** delete data from the table: "MeemIdentities" */
   delete_MeemIdentities?: Maybe<MeemIdentities_Mutation_Response>;
   /** delete single row from the table: "MeemIdentities" */
@@ -9440,10 +9334,6 @@ export type Mutation_Root = {
   insert_MeemContracts?: Maybe<MeemContracts_Mutation_Response>;
   /** insert a single row into the table: "MeemContracts" */
   insert_MeemContracts_one?: Maybe<MeemContracts>;
-  /** insert data into the table: "MeemIdentifications" */
-  insert_MeemIdentifications?: Maybe<MeemIdentifications_Mutation_Response>;
-  /** insert a single row into the table: "MeemIdentifications" */
-  insert_MeemIdentifications_one?: Maybe<MeemIdentifications>;
   /** insert data into the table: "MeemIdentities" */
   insert_MeemIdentities?: Maybe<MeemIdentities_Mutation_Response>;
   /** insert a single row into the table: "MeemIdentities" */
@@ -9590,12 +9480,6 @@ export type Mutation_Root = {
   update_MeemContracts_by_pk?: Maybe<MeemContracts>;
   /** update multiples rows of table: "MeemContracts" */
   update_MeemContracts_many?: Maybe<Array<Maybe<MeemContracts_Mutation_Response>>>;
-  /** update data of the table: "MeemIdentifications" */
-  update_MeemIdentifications?: Maybe<MeemIdentifications_Mutation_Response>;
-  /** update single row of the table: "MeemIdentifications" */
-  update_MeemIdentifications_by_pk?: Maybe<MeemIdentifications>;
-  /** update multiples rows of table: "MeemIdentifications" */
-  update_MeemIdentifications_many?: Maybe<Array<Maybe<MeemIdentifications_Mutation_Response>>>;
   /** update data of the table: "MeemIdentities" */
   update_MeemIdentities?: Maybe<MeemIdentities_Mutation_Response>;
   /** update single row of the table: "MeemIdentities" */
@@ -9859,18 +9743,6 @@ export type Mutation_RootDelete_MeemContractsArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_MeemContracts_By_PkArgs = {
-  id: Scalars['uuid'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_MeemIdentificationsArgs = {
-  where: MeemIdentifications_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_MeemIdentifications_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -10250,20 +10122,6 @@ export type Mutation_RootInsert_MeemContractsArgs = {
 export type Mutation_RootInsert_MeemContracts_OneArgs = {
   object: MeemContracts_Insert_Input;
   on_conflict?: InputMaybe<MeemContracts_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_MeemIdentificationsArgs = {
-  objects: Array<MeemIdentifications_Insert_Input>;
-  on_conflict?: InputMaybe<MeemIdentifications_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_MeemIdentifications_OneArgs = {
-  object: MeemIdentifications_Insert_Input;
-  on_conflict?: InputMaybe<MeemIdentifications_On_Conflict>;
 };
 
 
@@ -10753,7 +10611,12 @@ export type Mutation_RootUpdate_MeemContractRolePermissions_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_MeemContractRolesArgs = {
+  _append?: InputMaybe<MeemContractRoles_Append_Input>;
+  _delete_at_path?: InputMaybe<MeemContractRoles_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<MeemContractRoles_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<MeemContractRoles_Delete_Key_Input>;
   _inc?: InputMaybe<MeemContractRoles_Inc_Input>;
+  _prepend?: InputMaybe<MeemContractRoles_Prepend_Input>;
   _set?: InputMaybe<MeemContractRoles_Set_Input>;
   where: MeemContractRoles_Bool_Exp;
 };
@@ -10761,7 +10624,12 @@ export type Mutation_RootUpdate_MeemContractRolesArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_MeemContractRoles_By_PkArgs = {
+  _append?: InputMaybe<MeemContractRoles_Append_Input>;
+  _delete_at_path?: InputMaybe<MeemContractRoles_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<MeemContractRoles_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<MeemContractRoles_Delete_Key_Input>;
   _inc?: InputMaybe<MeemContractRoles_Inc_Input>;
+  _prepend?: InputMaybe<MeemContractRoles_Prepend_Input>;
   _set?: InputMaybe<MeemContractRoles_Set_Input>;
   pk_columns: MeemContractRoles_Pk_Columns_Input;
 };
@@ -10822,26 +10690,6 @@ export type Mutation_RootUpdate_MeemContracts_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_MeemContracts_ManyArgs = {
   updates: Array<MeemContracts_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_MeemIdentificationsArgs = {
-  _set?: InputMaybe<MeemIdentifications_Set_Input>;
-  where: MeemIdentifications_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_MeemIdentifications_By_PkArgs = {
-  _set?: InputMaybe<MeemIdentifications_Set_Input>;
-  pk_columns: MeemIdentifications_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_MeemIdentifications_ManyArgs = {
-  updates: Array<MeemIdentifications_Updates>;
 };
 
 
@@ -11258,12 +11106,6 @@ export type Query_Root = {
   MeemContracts_aggregate: MeemContracts_Aggregate;
   /** fetch data from the table: "MeemContracts" using primary key columns */
   MeemContracts_by_pk?: Maybe<MeemContracts>;
-  /** fetch data from the table: "MeemIdentifications" */
-  MeemIdentifications: Array<MeemIdentifications>;
-  /** fetch aggregated fields from the table: "MeemIdentifications" */
-  MeemIdentifications_aggregate: MeemIdentifications_Aggregate;
-  /** fetch data from the table: "MeemIdentifications" using primary key columns */
-  MeemIdentifications_by_pk?: Maybe<MeemIdentifications>;
   /** An array relationship */
   MeemIdentities: Array<MeemIdentities>;
   /** An aggregate relationship */
@@ -11692,29 +11534,6 @@ export type Query_RootMeemContracts_AggregateArgs = {
 
 
 export type Query_RootMeemContracts_By_PkArgs = {
-  id: Scalars['uuid'];
-};
-
-
-export type Query_RootMeemIdentificationsArgs = {
-  distinct_on?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemIdentifications_Order_By>>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
-};
-
-
-export type Query_RootMeemIdentifications_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemIdentifications_Order_By>>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
-};
-
-
-export type Query_RootMeemIdentifications_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -12162,14 +11981,6 @@ export type Subscription_Root = {
   MeemContracts_by_pk?: Maybe<MeemContracts>;
   /** fetch data from the table in a streaming manner : "MeemContracts" */
   MeemContracts_stream: Array<MeemContracts>;
-  /** fetch data from the table: "MeemIdentifications" */
-  MeemIdentifications: Array<MeemIdentifications>;
-  /** fetch aggregated fields from the table: "MeemIdentifications" */
-  MeemIdentifications_aggregate: MeemIdentifications_Aggregate;
-  /** fetch data from the table: "MeemIdentifications" using primary key columns */
-  MeemIdentifications_by_pk?: Maybe<MeemIdentifications>;
-  /** fetch data from the table in a streaming manner : "MeemIdentifications" */
-  MeemIdentifications_stream: Array<MeemIdentifications>;
   /** An array relationship */
   MeemIdentities: Array<MeemIdentities>;
   /** An aggregate relationship */
@@ -12735,36 +12546,6 @@ export type Subscription_RootMeemContracts_StreamArgs = {
 };
 
 
-export type Subscription_RootMeemIdentificationsArgs = {
-  distinct_on?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemIdentifications_Order_By>>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
-};
-
-
-export type Subscription_RootMeemIdentifications_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<MeemIdentifications_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<MeemIdentifications_Order_By>>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
-};
-
-
-export type Subscription_RootMeemIdentifications_By_PkArgs = {
-  id: Scalars['uuid'];
-};
-
-
-export type Subscription_RootMeemIdentifications_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<MeemIdentifications_Stream_Cursor_Input>>;
-  where?: InputMaybe<MeemIdentifications_Bool_Exp>;
-};
-
-
 export type Subscription_RootMeemIdentitiesArgs = {
   distinct_on?: InputMaybe<Array<MeemIdentities_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -13222,6 +13003,14 @@ export type GetIsMemberOfClubQueryVariables = Exact<{
 
 export type GetIsMemberOfClubQuery = { __typename?: 'query_root', Meems: Array<{ __typename?: 'Meems', id: any, tokenId: string, Owner?: { __typename?: 'Wallets', address: string } | null }> };
 
+export type GetIsMemberOfClubSubscriptionSubscriptionVariables = Exact<{
+  walletAddress?: InputMaybe<Scalars['String']>;
+  clubSlug?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetIsMemberOfClubSubscriptionSubscription = { __typename?: 'subscription_root', Meems: Array<{ __typename?: 'Meems', id: any, tokenId: string, Owner?: { __typename?: 'Wallets', address: string } | null }> };
+
 export type GetClubsAutocompleteQueryVariables = Exact<{
   query?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
@@ -13240,12 +13029,18 @@ export type GetClubSlugQuery = { __typename?: 'query_root', MeemContracts: Array
 export type GetClubQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
-  visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
-  showPublicApps?: InputMaybe<Array<Scalars['Boolean']> | Scalars['Boolean']>;
 }>;
 
 
-export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+
+export type GetClubAsMemberQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetClubAsMemberQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type GetClubInfoQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -13258,12 +13053,18 @@ export type GetClubInfoQuery = { __typename?: 'query_root', MeemContracts: Array
 export type GetClubSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
-  visibilityLevel?: InputMaybe<Array<Scalars['String']> | Scalars['String']>;
-  showPublicApps?: InputMaybe<Array<Scalars['Boolean']> | Scalars['Boolean']>;
 }>;
 
 
-export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> }> };
+export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+
+export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -13299,7 +13100,7 @@ export type AllClubsQueryVariables = Exact<{
 }>;
 
 
-export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
+export type AllClubsQuery = { __typename?: 'query_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, Meems: Array<{ __typename?: 'Meems', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> };
 
 export type MyClubsSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
@@ -13390,6 +13191,43 @@ export function useGetIsMemberOfClubLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetIsMemberOfClubQueryHookResult = ReturnType<typeof useGetIsMemberOfClubQuery>;
 export type GetIsMemberOfClubLazyQueryHookResult = ReturnType<typeof useGetIsMemberOfClubLazyQuery>;
 export type GetIsMemberOfClubQueryResult = Apollo.QueryResult<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>;
+export const GetIsMemberOfClubSubscriptionDocument = gql`
+    subscription GetIsMemberOfClubSubscription($walletAddress: String, $clubSlug: String) {
+  Meems(
+    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}}, Owner: {address: {_ilike: $walletAddress}}}
+  ) {
+    id
+    tokenId
+    Owner {
+      address
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetIsMemberOfClubSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useGetIsMemberOfClubSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetIsMemberOfClubSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIsMemberOfClubSubscriptionSubscription({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *      clubSlug: // value for 'clubSlug'
+ *   },
+ * });
+ */
+export function useGetIsMemberOfClubSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetIsMemberOfClubSubscriptionSubscription, GetIsMemberOfClubSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetIsMemberOfClubSubscriptionSubscription, GetIsMemberOfClubSubscriptionSubscriptionVariables>(GetIsMemberOfClubSubscriptionDocument, options);
+      }
+export type GetIsMemberOfClubSubscriptionSubscriptionHookResult = ReturnType<typeof useGetIsMemberOfClubSubscriptionSubscription>;
+export type GetIsMemberOfClubSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetIsMemberOfClubSubscriptionSubscription>;
 export const GetClubsAutocompleteDocument = gql`
     query GetClubsAutocomplete($query: String, $chainId: Int) {
   MeemContracts(where: {name: {_ilike: $query}, chainId: {_eq: $chainId}}) {
@@ -13465,14 +13303,13 @@ export type GetClubSlugQueryHookResult = ReturnType<typeof useGetClubSlugQuery>;
 export type GetClubSlugLazyQueryHookResult = ReturnType<typeof useGetClubSlugLazyQuery>;
 export type GetClubSlugQueryResult = Apollo.QueryResult<GetClubSlugQuery, GetClubSlugQueryVariables>;
 export const GetClubDocument = gql`
-    query GetClub($slug: String, $chainId: Int, $visibilityLevel: [String!], $showPublicApps: [Boolean!]) {
+    query GetClub($slug: String, $chainId: Int) {
   MeemContracts(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
     slug
     address
     metadata
     createdAt
     name
-    gnosisSafeAddress
     Meems {
       Owner {
         address
@@ -13480,7 +13317,7 @@ export const GetClubDocument = gql`
         MeemIdentities {
           displayName
           profilePicUrl
-          MeemIdentityIntegrations(where: {visibility: {_in: $visibilityLevel}}) {
+          MeemIdentityIntegrations {
             metadata
             visibility
           }
@@ -13495,17 +13332,8 @@ export const GetClubDocument = gql`
     maxSupply
     mintPermissions
     symbol
-    MeemContractWallets {
-      role
-      Wallet {
-        address
-        ens
-      }
-    }
     id
-    MeemContractIntegrations(
-      where: {isPublic: {_in: $showPublicApps}, isEnabled: {_eq: true}}
-    ) {
+    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
       IntegrationId
       id
       isEnabled
@@ -13537,8 +13365,6 @@ export const GetClubDocument = gql`
  *   variables: {
  *      slug: // value for 'slug'
  *      chainId: // value for 'chainId'
- *      visibilityLevel: // value for 'visibilityLevel'
- *      showPublicApps: // value for 'showPublicApps'
  *   },
  * });
  */
@@ -13553,6 +13379,91 @@ export function useGetClubLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetClubQueryHookResult = ReturnType<typeof useGetClubQuery>;
 export type GetClubLazyQueryHookResult = ReturnType<typeof useGetClubLazyQuery>;
 export type GetClubQueryResult = Apollo.QueryResult<GetClubQuery, GetClubQueryVariables>;
+export const GetClubAsMemberDocument = gql`
+    query GetClubAsMember($slug: String, $chainId: Int) {
+  MeemContracts(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    slug
+    address
+    metadata
+    createdAt
+    name
+    gnosisSafeAddress
+    Meems {
+      Owner {
+        address
+        ens
+        MeemIdentities {
+          displayName
+          profilePicUrl
+          MeemIdentityIntegrations {
+            metadata
+            visibility
+          }
+        }
+      }
+      tokenId
+      tokenURI
+      mintedAt
+      mintedBy
+    }
+    splits
+    maxSupply
+    mintPermissions
+    symbol
+    MeemContractWallets {
+      role
+      Wallet {
+        address
+        ens
+      }
+    }
+    id
+    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
+      IntegrationId
+      id
+      isEnabled
+      metadata
+      Integration {
+        description
+        guideUrl
+        icon
+        id
+        name
+      }
+      isPublic
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetClubAsMemberQuery__
+ *
+ * To run a query within a React component, call `useGetClubAsMemberQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetClubAsMemberQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClubAsMemberQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetClubAsMemberQuery(baseOptions?: Apollo.QueryHookOptions<GetClubAsMemberQuery, GetClubAsMemberQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetClubAsMemberQuery, GetClubAsMemberQueryVariables>(GetClubAsMemberDocument, options);
+      }
+export function useGetClubAsMemberLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetClubAsMemberQuery, GetClubAsMemberQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetClubAsMemberQuery, GetClubAsMemberQueryVariables>(GetClubAsMemberDocument, options);
+        }
+export type GetClubAsMemberQueryHookResult = ReturnType<typeof useGetClubAsMemberQuery>;
+export type GetClubAsMemberLazyQueryHookResult = ReturnType<typeof useGetClubAsMemberLazyQuery>;
+export type GetClubAsMemberQueryResult = Apollo.QueryResult<GetClubAsMemberQuery, GetClubAsMemberQueryVariables>;
 export const GetClubInfoDocument = gql`
     query GetClubInfo($slug: String, $chainId: Int) {
   MeemContracts(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
@@ -13594,7 +13505,79 @@ export type GetClubInfoQueryHookResult = ReturnType<typeof useGetClubInfoQuery>;
 export type GetClubInfoLazyQueryHookResult = ReturnType<typeof useGetClubInfoLazyQuery>;
 export type GetClubInfoQueryResult = Apollo.QueryResult<GetClubInfoQuery, GetClubInfoQueryVariables>;
 export const GetClubSubscriptionDocument = gql`
-    subscription GetClubSubscription($slug: String, $chainId: Int, $visibilityLevel: [String!], $showPublicApps: [Boolean!]) {
+    subscription GetClubSubscription($slug: String, $chainId: Int) {
+  MeemContracts(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    slug
+    address
+    metadata
+    createdAt
+    name
+    Meems {
+      Owner {
+        address
+        ens
+        MeemIdentities {
+          displayName
+          profilePicUrl
+          MeemIdentityIntegrations {
+            metadata
+            visibility
+          }
+        }
+      }
+      tokenId
+      tokenURI
+      mintedAt
+      mintedBy
+    }
+    splits
+    maxSupply
+    mintPermissions
+    symbol
+    id
+    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
+      IntegrationId
+      id
+      isEnabled
+      metadata
+      Integration {
+        description
+        guideUrl
+        icon
+        id
+        name
+      }
+      isPublic
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetClubSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useGetClubSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetClubSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetClubSubscriptionSubscription({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetClubSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetClubSubscriptionSubscription, GetClubSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetClubSubscriptionSubscription, GetClubSubscriptionSubscriptionVariables>(GetClubSubscriptionDocument, options);
+      }
+export type GetClubSubscriptionSubscriptionHookResult = ReturnType<typeof useGetClubSubscriptionSubscription>;
+export type GetClubSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetClubSubscriptionSubscription>;
+export const GetClubAsMemberSubscriptionDocument = gql`
+    subscription GetClubAsMemberSubscription($slug: String, $chainId: Int) {
   MeemContracts(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
     slug
     address
@@ -13611,7 +13594,7 @@ export const GetClubSubscriptionDocument = gql`
         MeemIdentities {
           displayName
           profilePicUrl
-          MeemIdentityIntegrations(where: {visibility: {_in: $visibilityLevel}}) {
+          MeemIdentityIntegrations {
             metadata
             visibility
           }
@@ -13641,9 +13624,7 @@ export const GetClubSubscriptionDocument = gql`
     mintPermissions
     symbol
     id
-    MeemContractIntegrations(
-      where: {isPublic: {_in: $showPublicApps}, isEnabled: {_eq: true}}
-    ) {
+    MeemContractIntegrations(where: {isEnabled: {_eq: true}}) {
       IntegrationId
       id
       isEnabled
@@ -13671,30 +13652,28 @@ export const GetClubSubscriptionDocument = gql`
     `;
 
 /**
- * __useGetClubSubscriptionSubscription__
+ * __useGetClubAsMemberSubscriptionSubscription__
  *
- * To run a query within a React component, call `useGetClubSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useGetClubSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetClubAsMemberSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetClubAsMemberSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetClubSubscriptionSubscription({
+ * const { data, loading, error } = useGetClubAsMemberSubscriptionSubscription({
  *   variables: {
  *      slug: // value for 'slug'
  *      chainId: // value for 'chainId'
- *      visibilityLevel: // value for 'visibilityLevel'
- *      showPublicApps: // value for 'showPublicApps'
  *   },
  * });
  */
-export function useGetClubSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetClubSubscriptionSubscription, GetClubSubscriptionSubscriptionVariables>) {
+export function useGetClubAsMemberSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetClubAsMemberSubscriptionSubscription, GetClubAsMemberSubscriptionSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<GetClubSubscriptionSubscription, GetClubSubscriptionSubscriptionVariables>(GetClubSubscriptionDocument, options);
+        return Apollo.useSubscription<GetClubAsMemberSubscriptionSubscription, GetClubAsMemberSubscriptionSubscriptionVariables>(GetClubAsMemberSubscriptionDocument, options);
       }
-export type GetClubSubscriptionSubscriptionHookResult = ReturnType<typeof useGetClubSubscriptionSubscription>;
-export type GetClubSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetClubSubscriptionSubscription>;
+export type GetClubAsMemberSubscriptionSubscriptionHookResult = ReturnType<typeof useGetClubAsMemberSubscriptionSubscription>;
+export type GetClubAsMemberSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetClubAsMemberSubscriptionSubscription>;
 export const ClubSubscriptionDocument = gql`
     subscription ClubSubscription($address: String, $chainId: Int) {
   MeemContracts(where: {address: {_eq: $address}, chainId: {_eq: $chainId}}) {
@@ -13903,19 +13882,6 @@ export const AllClubsDocument = gql`
     splits
     mintPermissions
     symbol
-    MeemContractWallets {
-      role
-      Wallet {
-        ens
-        address
-      }
-    }
-    Meems {
-      Owner {
-        address
-        ens
-      }
-    }
   }
 }
     `;

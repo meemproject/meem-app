@@ -29,6 +29,7 @@ import clubFromMeemContract, {
 	emptyRole
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface IProps {
@@ -74,7 +75,11 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug,
-			chainId: wallet.chainId ?? 4
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
 		client: mutualMembersClient
 	})
