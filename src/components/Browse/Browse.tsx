@@ -136,7 +136,7 @@ export const BrowseComponent: React.FC = () => {
 		data: clubData
 	} = useQuery<AllClubsQuery>(GET_ALL_CLUBS, {
 		variables: {
-			chainId: 4,
+			chainId,
 			limit,
 			offset: limit * page
 		},
