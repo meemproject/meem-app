@@ -20,6 +20,7 @@ import {
 	ClubRole,
 	ClubRolePermission
 } from '../../../model/club/club'
+import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
@@ -44,11 +45,15 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [isExistingRole, setIsExistingRole] = useState(false)
 	const [roleName, setRoleName] = useState('')
 
+	const { anonClient } = useCustomApollo()
+
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
 		useState(false)
 
 	const { data: availablePermissions } =
-		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS)
+		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS, {
+			client: anonClient
+		})
 
 	// Set initial role + parse permissions (updated later when changes are made in subcomponents)
 	useEffect(() => {

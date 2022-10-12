@@ -375,6 +375,8 @@ export default async function clubFromMeemContract(
 									) {
 										isClubAdmin = true
 									}
+								} else if (isClubOwner) {
+									isClubAdmin = true
 								}
 							}
 

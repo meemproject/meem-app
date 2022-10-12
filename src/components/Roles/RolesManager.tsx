@@ -22,7 +22,7 @@ import {
 	GetClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { SUB_CLUB } from '../../graphql/clubs'
+import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	ClubRole,
@@ -72,7 +72,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 		loading,
 		error,
 		data: clubData
-	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug,
 			chainId:
