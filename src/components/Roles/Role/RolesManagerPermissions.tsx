@@ -59,7 +59,8 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 		Cookies.set('clubSlug', club && club.slug ? club.slug : '')
 		setIsRoleDiscordCloseTabModalOpened(true)
 		window.open(
-			`https://discord.com/api/oauth2/authorize?client_id=967119580088660039&redirect_uri=${uri}&response_type=code&scope=${scope}`
+			`https://discord.com/api/oauth2/authorize?client_id=967119580088660039&redirect_uri=${uri}&response_type=code&scope=${scope}`,
+			'_self'
 		)
 	}
 	useEffect(() => {
