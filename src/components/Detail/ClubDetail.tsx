@@ -51,6 +51,7 @@ import clubFromMeemContract, {
 	Integration,
 	MembershipReqType
 } from '../../model/club/club'
+import { userHasPermissionManageApps } from '../../model/identity/permissions'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { quickTruncate } from '../../utils/truncated_wallet'
@@ -1355,6 +1356,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 
 						{club.isCurrentUserClubAdmin &&
+							userHasPermissionManageApps(club) &&
 							club.allIntegrations &&
 							club.allIntegrations.length === 0 && (
 								<>
