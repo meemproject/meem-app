@@ -88,7 +88,9 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 				opened={isOpened}
 				title={
 					<Text className={styles.tModalTitle}>
-						Which Discord server would you like to connect?
+						{isSavingChanges
+							? ``
+							: `Which Discord server would you like to connect?`}
 					</Text>
 				}
 				onClose={() => {
@@ -99,14 +101,19 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 					isSavingChanges) && (
 					<>
 						<Center>
-							{isSavingChanges && (
-								<div>
-									<Text>Connecting server...</Text>
-									<Space h={16} />
-								</div>
-							)}
+							<div>
+								{isSavingChanges && (
+									<div>
+										<Text>Connecting server...</Text>
+										<Space h={16} />
+									</div>
+								)}
+								<Center>
+									<Loader variant="oval" color={'red'} />
+								</Center>
 
-							<Loader />
+								<Space h={16} />
+							</div>
 						</Center>
 					</>
 				)}
@@ -129,63 +136,65 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 						</Center>
 					</>
 				)}
-				{availableDiscordServers && !isFetchingDiscordServers && (
-					<>
-						<Space h={32} />
+				{availableDiscordServers &&
+					!isFetchingDiscordServers &&
+					!isSavingChanges && (
+						<>
+							<Space h={32} />
 
-						{availableDiscordServers.map(server => (
-							<div
-								key={server.id}
-								style={{
-									backgroundColor: '#FAFAFA',
-									borderRadius: 16,
-									padding: 16,
-									marginBottom: 16
-								}}
-							>
-								<div className={styles.spacedRowCentered}>
-									<div className={styles.row}>
-										<Image
-											height={48}
-											width={48}
-											src={server.icon}
-										/>
-										<Space w={16} />
-										<div>
-											<Text className={styles.tBold}>
-												{server.name}
-											</Text>
-											<Space h={8} />
-											<Text>Admin</Text>
+							{availableDiscordServers.map(server => (
+								<div
+									key={server.id}
+									style={{
+										backgroundColor: '#FAFAFA',
+										borderRadius: 16,
+										padding: 16,
+										marginBottom: 16
+									}}
+								>
+									<div className={styles.spacedRowCentered}>
+										<div className={styles.row}>
+											<Image
+												height={48}
+												width={48}
+												src={server.icon}
+											/>
+											<Space w={16} />
+											<div>
+												<Text className={styles.tBold}>
+													{server.name}
+												</Text>
+												<Space h={8} />
+												<Text>Admin</Text>
+											</div>
 										</div>
+										<Button
+											onClick={() => {
+												connectServer(server)
+											}}
+											className={styles.buttonBlack}
+										>
+											Connect
+										</Button>
 									</div>
+								</div>
+							))}
+
+							<div className={styles.row}>
+								<Space w={8} />
+								{!isSavingChanges && (
 									<Button
 										onClick={() => {
-											connectServer(server)
+											onModalClosed()
 										}}
-										className={styles.buttonBlack}
+										className={styles.buttonGrey}
 									>
-										Connect
+										Cancel
 									</Button>
-								</div>
+								)}
 							</div>
-						))}
-
-						<div className={styles.row}>
-							<Space w={8} />
-							{!isSavingChanges && (
-								<Button
-									onClick={() => {
-										onModalClosed()
-									}}
-									className={styles.buttonGrey}
-								>
-									Cancel
-								</Button>
-							)}
-						</div>
-					</>
-				)}
+						</>
+					)}
 			</Modal>
 		</>
 	)
