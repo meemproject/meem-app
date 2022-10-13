@@ -140,8 +140,6 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 					!isFetchingDiscordServers &&
 					!isSavingChanges && (
 						<>
-							<Space h={32} />
-
 							{availableDiscordServers.map(server => (
 								<div
 									key={server.id}
@@ -153,8 +151,9 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 									}}
 								>
 									<div className={styles.spacedRowCentered}>
-										<div className={styles.row}>
+										<div className={styles.centeredRow}>
 											<Image
+												radius={24}
 												height={48}
 												width={48}
 												src={server.icon}
@@ -164,7 +163,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 												<Text className={styles.tBold}>
 													{server.name}
 												</Text>
-												<Space h={8} />
+												<Space h={4} />
 												<Text>Admin</Text>
 											</div>
 										</div>
@@ -180,9 +179,10 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 								</div>
 							))}
 
-							<div className={styles.row}>
-								<Space w={8} />
-								{!isSavingChanges && (
+							{!isSavingChanges && (
+								<div>
+									<Space h={16} />
+
 									<Button
 										onClick={() => {
 											onModalClosed()
@@ -191,8 +191,8 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 									>
 										Cancel
 									</Button>
-								)}
-							</div>
+								</div>
+							)}
 						</>
 					)}
 			</Modal>
