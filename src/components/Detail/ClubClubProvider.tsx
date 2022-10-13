@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useQuery } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import { useWallet } from '@meemproject/react'
 import React, {
 	useState,
@@ -10,9 +10,9 @@ import React, {
 	ReactNode
 } from 'react'
 // eslint-disable-next-line import/namespace
-import { GetIsMemberOfClubQuery } from '../../../generated/graphql'
-import { GET_IS_MEMBER_OF_CLUB } from '../../graphql/clubs'
-import { hostnameToChainId } from '../App'
+import { GetIsMemberOfClubSubscriptionSubscription } from '../../../generated/graphql'
+import { SUB_IS_MEMBER_OF_CLUB } from '../../graphql/clubs'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 
 const defaultState = {
 	isMember: false
@@ -31,21 +31,22 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 
 	const wallet = useWallet()
 
+	const { anonClient } = useCustomApollo()
+
 	const {
 		loading,
 		error: errorFetchingIsClubClub,
 		data: clubClubData
-	} = useQuery<GetIsMemberOfClubQuery>(GET_IS_MEMBER_OF_CLUB, {
-		variables: {
-			walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-			chainId:
-				wallet.chainId ??
-				hostnameToChainId(
-					global.window ? global.window.location.host : ''
-				),
-			clubSlug: 'club-club'
+	} = useSubscription<GetIsMemberOfClubSubscriptionSubscription>(
+		SUB_IS_MEMBER_OF_CLUB,
+		{
+			variables: {
+				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+				clubSlug: 'club-club'
+			},
+			client: anonClient
 		}
-	})
+	)
 
 	useEffect(() => {
 		if (!loading && !errorFetchingIsClubClub && clubClubData) {

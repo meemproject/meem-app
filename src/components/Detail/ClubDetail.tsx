@@ -51,6 +51,7 @@ import clubFromMeemContract, {
 	Integration,
 	MembershipReqType
 } from '../../model/club/club'
+import { userHasPermissionManageApps } from '../../model/identity/permissions'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { quickTruncate } from '../../utils/truncated_wallet'
@@ -532,11 +533,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (club?.isCurrentUserClubAdmin) {
+		if (club?.isCurrentUserClubAdmin && club?.admins?.length === 1) {
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
-				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
+				message: `You cannot leave this club because you are the only admin.`
 			})
 			return
 		}
@@ -568,7 +569,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			showNotification({
 				radius: 'lg',
 				title: 'Error leaving this club.',
-				message: `${e as string}`
+				message: `Did you cancel the transaction?`
 			})
 		}
 	}
@@ -1355,6 +1356,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 
 						{club.isCurrentUserClubAdmin &&
+							userHasPermissionManageApps(club) &&
 							club.allIntegrations &&
 							club.allIntegrations.length === 0 && (
 								<>
