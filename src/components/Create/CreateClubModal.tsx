@@ -436,6 +436,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 					// Create club safe (if not on Optimism Goerli)
 					if (wallet.chainId !== 420) {
 						await createSafe(clubModel)
+					} else {
+						finishClubCreation()
 					}
 				}
 			}
