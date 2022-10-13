@@ -533,14 +533,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		// if (club?.isCurrentUserClubAdmin) {
-		// 	showNotification({
-		// 		radius: 'lg',
-		// 		title: 'Oops!',
-		// 		message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
-		// 	})
-		// 	return
-		// }
+		if (club?.isCurrentUserClubAdmin && club?.admins?.length === 1) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message: `You cannot leave this club because you are the only admin.`
+			})
+			return
+		}
 
 		if (wallet.loginState !== LoginState.LoggedIn) {
 			router.push({
@@ -569,7 +569,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			showNotification({
 				radius: 'lg',
 				title: 'Error leaving this club.',
-				message: `${e as string}`
+				message: `Did you cancel the transaction?`
 			})
 		}
 	}
