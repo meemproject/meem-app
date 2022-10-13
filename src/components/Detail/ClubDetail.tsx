@@ -533,14 +533,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (club?.isCurrentUserClubAdmin) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
-			})
-			return
-		}
+		// if (club?.isCurrentUserClubAdmin) {
+		// 	showNotification({
+		// 		radius: 'lg',
+		// 		title: 'Oops!',
+		// 		message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
+		// 	})
+		// 	return
+		// }
 
 		if (wallet.loginState !== LoginState.LoggedIn) {
 			router.push({

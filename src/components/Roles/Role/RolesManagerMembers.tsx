@@ -142,16 +142,21 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 									>
 										<HoverCard.Target>
 											<div className={styles.centeredRow}>
-												<Image
-													height={36}
-													width={36}
-													radius={18}
-													src={
-														member.profilePicture ??
-														''
-													}
-												/>
-												<Space w={16} />
+												{member.profilePicture && (
+													<>
+														<Image
+															height={36}
+															width={36}
+															radius={18}
+															src={
+																member.profilePicture ??
+																''
+															}
+														/>
+														<Space w={16} />
+													</>
+												)}
+
 												<div>
 													<Text
 														className={
