@@ -50,13 +50,17 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
 		useState(false)
 
-	const { data: availablePermissions } =
+	const { data: availablePermissions, error } =
 		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS, {
 			client: anonClient
 		})
 
 	// Set initial role + parse permissions (updated later when changes are made in subcomponents)
 	useEffect(() => {
+		if (error) {
+			log.debug(JSON.stringify(error))
+		}
+
 		async function parsePermissions(
 			theRole: ClubRole,
 			allPermissions: GetAvailablePermissionQuery
@@ -137,7 +141,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		if (initialRole && !role && availablePermissions) {
 			parsePermissions(initialRole, availablePermissions)
 		}
-	}, [availablePermissions, club, initialRole, role])
+	}, [availablePermissions, club, error, initialRole, role])
 
 	const updateRole = (newRole: ClubRole) => {
 		setRole(newRole)

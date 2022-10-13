@@ -25,41 +25,39 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	// 	useState(false)
 
 	const permissionItem = (permission: ClubRolePermission) => (
-		<>
-			<div key={permission.id}>
-				<Space h={16} />
-				<div className={styles.spacedRow}>
-					<Text>{permission.name}</Text>
-					<div className={styles.centeredRow}>
-						{permission.locked && <Lock />}
-						<Space w={4} />
-						<Switch
-							disabled={permission.locked}
-							checked={permission.enabled}
-							onChange={value => {
-								if (value && role) {
-									const newPermissions = [...role.permissions]
-									newPermissions.forEach(perm => {
-										if (perm.id === permission.id) {
-											perm.enabled =
-												value.currentTarget.checked
-										}
-									})
-									const newRole: ClubRole = {
-										name: role.name,
-										id: role.id,
-										permissions: newPermissions
+		<div key={permission.id}>
+			<Space h={16} />
+			<div className={styles.spacedRow}>
+				<Text>{permission.name}</Text>
+				<div className={styles.centeredRow}>
+					{permission.locked && <Lock />}
+					<Space w={4} />
+					<Switch
+						disabled={permission.locked}
+						checked={permission.enabled}
+						onChange={value => {
+							if (value && role) {
+								const newPermissions = [...role.permissions]
+								newPermissions.forEach(perm => {
+									if (perm.id === permission.id) {
+										perm.enabled =
+											value.currentTarget.checked
 									}
-									onRoleUpdated(newRole)
+								})
+								const newRole: ClubRole = {
+									name: role.name,
+									id: role.id,
+									permissions: newPermissions
 								}
-							}}
-						/>
-					</div>
+								onRoleUpdated(newRole)
+							}
+						}}
+					/>
 				</div>
-				<Space h={16} />
-				<Divider />
 			</div>
-		</>
+			<Space h={16} />
+			<Divider />
+		</div>
 	)
 
 	return (
