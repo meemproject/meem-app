@@ -6,6 +6,7 @@ import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { useSockets, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
+import { uniq } from 'lodash'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
@@ -19,7 +20,9 @@ import clubFromMeemContract, {
 	MembershipRequirementToMeemPermission,
 	Club
 } from '../../model/club/club'
+import { useCustomApollo } from '../../providers/ApolloProvider'
 import { CookieKeys } from '../../utils/cookies'
+import { hostnameToChainId } from '../App'
 
 const useStyles = createStyles(() => ({
 	header: {
@@ -79,6 +82,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const wallet = useWallet()
 
+	const { userClient } = useCustomApollo()
+
 	const { classes } = useStyles()
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
@@ -111,8 +116,13 @@ export const CreateClubModal: React.FC<IProps> = ({
 		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
 			variables: {
 				walletAddress: wallet.accounts[0],
-				chainId: wallet.chainId
-			}
+				chainId:
+					wallet.chainId ??
+					hostnameToChainId(
+						global.window ? global.window.location.host : ''
+					)
+			},
+			client: userClient
 		})
 
 	useEffect(() => {
@@ -178,8 +188,14 @@ export const CreateClubModal: React.FC<IProps> = ({
 					undefined,
 					{
 						safeOwners:
-							membershipSettings?.clubAdminsAtClubCreation ?? [],
-						chainId: wallet.chainId
+							uniq(
+								membershipSettings?.clubAdminsAtClubCreation
+							) ?? [],
+						chainId:
+							wallet.chainId ??
+							hostnameToChainId(
+								global.window ? global.window.location.host : ''
+							)
 					}
 				)
 			} catch (e) {
@@ -323,7 +339,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 						associations: [],
 						external_url: ''
 					},
-					chainId: wallet.chainId
+					chainId:
+						wallet.chainId ??
+						hostnameToChainId(
+							global.window ? global.window.location.host : ''
+						)
 				}
 
 				log.debug(`${JSON.stringify(data, null, 2)}`)
@@ -416,6 +436,8 @@ export const CreateClubModal: React.FC<IProps> = ({
 					// Create club safe (if not on Optimism Goerli)
 					if (wallet.chainId !== 420) {
 						await createSafe(clubModel)
+					} else {
+						finishClubCreation()
 					}
 				}
 			}

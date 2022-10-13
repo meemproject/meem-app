@@ -283,7 +283,6 @@ export function HeaderMenu() {
 									className={classes.menuItem}
 									onClick={async () => {
 										await wallet.disconnectWallet()
-										router.reload()
 									}}
 									color="red"
 									icon={<Logout size={14} />}
@@ -298,7 +297,6 @@ export function HeaderMenu() {
 							<a
 								onClick={async () => {
 									await wallet.connectWallet()
-									router.reload()
 								}}
 							>
 								Connect wallet

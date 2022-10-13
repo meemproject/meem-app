@@ -20,6 +20,8 @@ import { ArrowLeft } from 'tabler-icons-react'
 import { AllClubsQuery, MeemContracts } from '../../../generated/graphql'
 import { GET_ALL_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
+import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -126,16 +128,23 @@ export const BrowseComponent: React.FC = () => {
 
 	const [clubs] = useState<Club[]>([])
 
+	const { anonClient } = useCustomApollo()
+
 	const {
 		loading,
 		error,
 		data: clubData
 	} = useQuery<AllClubsQuery>(GET_ALL_CLUBS, {
 		variables: {
-			chainId,
+			chainId:
+				chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				),
 			limit,
 			offset: limit * page
-		}
+		},
+		client: anonClient
 	})
 
 	const navigateHome = () => {
@@ -188,7 +197,7 @@ export const BrowseComponent: React.FC = () => {
 			</div>
 
 			<Container>
-				{isLoadingClubs && (
+				{!error && isLoadingClubs && (
 					<Container>
 						<Space h={60} />
 						<Center>
@@ -201,10 +210,14 @@ export const BrowseComponent: React.FC = () => {
 					<Container>
 						<Space h={60} />
 						<Center>
-							<Text>
-								An error occurred loading clubs. Try again
-								later.
-							</Text>
+							<div>
+								<Text>
+									An error occurred loading clubs. Try again
+									later.
+								</Text>
+								<Space h={8} />
+								<Text>{JSON.stringify(error)}</Text>
+							</div>
 						</Center>
 					</Container>
 				)}

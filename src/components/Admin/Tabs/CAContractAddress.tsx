@@ -20,6 +20,7 @@ import { Check } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club } from '../../../model/club/club'
+import { hostnameToChainId } from '../../App'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -455,7 +456,13 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 								undefined,
 								{
 									safeOwners: club.adminAddresses ?? [],
-									chainId: wallet.chainId
+									chainId:
+										wallet.chainId ??
+										hostnameToChainId(
+											global.window
+												? global.window.location.host
+												: ''
+										)
 								}
 							)
 							await new Promise(f => setTimeout(f, 10000))

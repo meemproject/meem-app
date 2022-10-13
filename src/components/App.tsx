@@ -24,6 +24,10 @@ const useStyles = createStyles(_theme => ({
 }))
 
 export function hostnameToChainId(hostname: string): number {
+	if (process.env.NEXT_PUBLIC_CHAIN_ID) {
+		return +process.env.NEXT_PUBLIC_CHAIN_ID
+	}
+
 	const subHostname = hostname.split('.')[0]
 	let expectedChainId = 0
 
@@ -49,7 +53,7 @@ export function hostnameToChainId(hostname: string): number {
 			break
 
 		default:
-			throw new Error('Unable to connect. Unknown chain.')
+			break
 	}
 
 	return expectedChainId

@@ -12,6 +12,8 @@ export function userHasPermissionEditProfile(club: Club): boolean {
 		if (club.currentUserClubPermissions.includes(PERMISSION_EDIT_PROFILE)) {
 			return true
 		}
+	} else if (club.isCurrentUserClubAdmin) {
+		return true
 	}
 
 	return false
@@ -26,6 +28,8 @@ export function userHasPermissionManageMembershipSettings(club: Club): boolean {
 		) {
 			return true
 		}
+	} else if (club.isCurrentUserClubAdmin) {
+		return true
 	}
 
 	return false
@@ -36,6 +40,8 @@ export function userHasPermissionManageRoles(club: Club): boolean {
 		if (club.currentUserClubPermissions.includes(PERMISSION_MANAGE_ROLES)) {
 			return true
 		}
+	} else if (club.isCurrentUserClubAdmin) {
+		return true
 	}
 
 	return false
@@ -46,6 +52,8 @@ export function userHasPermissionManageApps(club: Club): boolean {
 		if (club.currentUserClubPermissions.includes(PERMISSION_MANAGE_APPS)) {
 			return true
 		}
+	} else if (club.isCurrentUserClubAdmin) {
+		return true
 	}
 
 	return false
@@ -56,6 +64,8 @@ export function userHasPermissionViewApps(club: Club): boolean {
 		if (club.currentUserClubPermissions.includes(PERMISSION_VIEW_APPS)) {
 			return true
 		}
+	} else if (club.isCurrentUserClubAdmin) {
+		return true
 	}
 
 	return false

@@ -37,17 +37,25 @@ import {
 import {
 	GetBundleByIdQuery,
 	GetClubSubscriptionSubscription,
+	GetIsMemberOfClubSubscriptionSubscription,
 	MeemContracts
 } from '../../../generated/graphql'
-import { GET_BUNDLE_BY_ID, SUB_CLUB } from '../../graphql/clubs'
+import {
+	GET_BUNDLE_BY_ID,
+	SUB_CLUB,
+	SUB_CLUB_AS_MEMBER,
+	SUB_IS_MEMBER_OF_CLUB
+} from '../../graphql/clubs'
 import clubFromMeemContract, {
 	Club,
 	Integration,
 	MembershipReqType
 } from '../../model/club/club'
+import { userHasPermissionManageApps } from '../../model/identity/permissions'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { quickTruncate } from '../../utils/truncated_wallet'
+import { hostnameToChainId } from '../App'
 import { ClubMemberCard } from '../Profile/Tabs/Identity/ClubMemberCard'
 import { JoinLeaveClubModal } from './JoinLeaveClubModal'
 
@@ -286,26 +294,60 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes } = useStyles()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { mutualMembersClient } = useCustomApollo()
+	const { anonClient, mutualMembersClient } = useCustomApollo()
 
 	const [club, setClub] = useState<Club | undefined>()
 
 	const [previousClubDataString, setPreviousClubDataString] = useState('')
+
+	const { data: isCurrentUserClubMemberData, error: userClubMemberError } =
+		useSubscription<GetIsMemberOfClubSubscriptionSubscription>(
+			SUB_IS_MEMBER_OF_CLUB,
+			{
+				variables: {
+					walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+					clubSlug: slug
+				},
+				client: anonClient
+			}
+		)
+
 	const {
-		loading,
-		error,
-		data: clubData
+		loading: loadingAnonClub,
+		error: errorAnonClub,
+		data: anonClubData
 	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
 		variables: {
 			slug,
-			chainId: wallet.chainId,
-			visibilityLevel: club?.isClubMember
-				? ['mutual-club-members', 'anyone']
-				: ['anyone'],
-			showPublicApps: club?.isClubMember ? [true, false] : [true]
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
 		},
-		// client: userClient
-		client: mutualMembersClient
+		client: anonClient,
+		skip:
+			!isCurrentUserClubMemberData ||
+			isCurrentUserClubMemberData.Meems.length > 0
+	})
+
+	const {
+		loading: loadingMemberClub,
+		error: errorMemberClub,
+		data: memberClubData
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
+		variables: {
+			slug,
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
+		},
+		client: mutualMembersClient,
+		skip:
+			!isCurrentUserClubMemberData ||
+			isCurrentUserClubMemberData.Meems.length === 0
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
@@ -334,10 +376,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const checkEligibility = useCallback(
 		(
 			reqs: RequirementString[],
-			isClubAdmin: boolean,
+			isCurrentUserClubAdmin: boolean,
 			slotsLeft: number
 		) => {
-			if (reqs.length === 0 || isClubAdmin) {
+			if (reqs.length === 0 || isCurrentUserClubAdmin) {
 				setMeetsAllRequirements(true)
 			} else {
 				let reqsMet = 0
@@ -363,7 +405,6 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const joinClub = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			await wallet.connectWallet()
-			router.reload()
 			return
 		}
 
@@ -453,7 +494,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								image: club?.image,
 								meem_metadata_version: 'MeemClub_Token_20220718'
 							},
-							chainId: wallet.chainId
+							chainId:
+								wallet.chainId ??
+								hostnameToChainId(
+									global.window
+										? global.window.location.host
+										: ''
+								)
 						}
 					)
 				} else {
@@ -486,11 +533,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			return
 		}
 
-		if (club?.isClubAdmin) {
+		if (club?.isCurrentUserClubAdmin && club?.admins?.length === 1) {
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
-				message: `You cannot leave a club you are an admin of. Remove yourself as an admin, or make someone else an admin first.`
+				message: `You cannot leave this club because you are the only admin.`
 			})
 			return
 		}
@@ -522,7 +569,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			showNotification({
 				radius: 'lg',
 				title: 'Error leaving this club.',
-				message: `${e as string}`
+				message: `Did you cancel the transaction?`
 			})
 		}
 	}
@@ -782,7 +829,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			setParsedRequirements(reqs)
 			checkEligibility(
 				reqs,
-				possibleClub.isClubAdmin ?? false,
+				possibleClub.isCurrentUserClubAdmin ?? false,
 				possibleClub.slotsLeft ?? -1
 			)
 
@@ -799,6 +846,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		async function getClub() {
+			const clubData = memberClubData ?? anonClubData
+
 			if (!clubData) {
 				return
 			}
@@ -837,7 +886,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				wallet.isConnected ? wallet.accounts[0] : '',
 				data.MeemContracts[0] as MeemContracts
 			)
-			if (possibleClub.isClubMember) {
+			if (possibleClub.isCurrentUserClubMember) {
 				log.debug('current user has joined the club!')
 				setIsJoiningClub(false)
 
@@ -860,7 +909,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				wallet.isConnected ? wallet.accounts[0] : '',
 				data.MeemContracts[0] as MeemContracts
 			)
-			if (!possibleClub.isClubMember) {
+			if (!possibleClub.isCurrentUserClubMember) {
 				log.debug('current user has left the club')
 
 				setIsLeavingClub(false)
@@ -879,25 +928,51 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			}
 		}
 
-		if (!loading && !error && clubData) {
+		// Parse data for anonymous club
+		if (!loadingAnonClub && !errorAnonClub && anonClubData) {
 			getClub()
 		}
 
-		if (isJoiningClub && clubData) {
-			join(clubData)
-		} else if (isLeavingClub && clubData) {
-			leave(clubData)
+		// Parse data as club member
+		if (!loadingMemberClub && !errorMemberClub && memberClubData) {
+			getClub()
+		}
+
+		if (isJoiningClub && (anonClubData || memberClubData)) {
+			const clubData = memberClubData ?? anonClubData
+			if (clubData) join(clubData)
+		} else if (isLeavingClub && (anonClubData || memberClubData)) {
+			const clubData = memberClubData ?? anonClubData
+			if (clubData) leave(clubData)
+		}
+
+		if (
+			errorMemberClub &&
+			errorMemberClub.graphQLErrors.length > 0 &&
+			errorMemberClub.graphQLErrors[0].extensions.code === 'invalid-jwt'
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/browse`
+				}
+			})
 		}
 	}, [
 		club,
-		clubData,
 		previousClubDataString,
-		error,
 		isJoiningClub,
 		isLeavingClub,
-		loading,
 		parseRequirements,
-		wallet
+		wallet,
+		loadingAnonClub,
+		errorAnonClub,
+		anonClubData,
+		loadingMemberClub,
+		errorMemberClub,
+		memberClubData,
+		userClubMemberError,
+		router
 	])
 
 	const navigateToSettings = () => {
@@ -1060,44 +1135,47 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
 										</Button>
 									)}
-								{club.isClubMember && wallet.isConnected && (
-									<Button
-										onClick={leaveClub}
-										loading={isLeavingClub}
-										className={classes.buttonJoinClub}
-									>
-										Leave
-									</Button>
-								)}
-								{!club.isClubMember && wallet.isConnected && (
-									<Button
-										disabled={!doesMeetAllRequirements}
-										loading={isJoiningClub}
-										onClick={joinClub}
-										className={classes.buttonJoinClub}
-									>
-										{doesMeetAllRequirements &&
-											((club.membershipSettings
-												?.costToJoin ?? 0) > 0
-												? `Join - ${
-														club.membershipSettings
-															?.costToJoin ?? 0
-												  } MATIC`
-												: wallet.isConnected
-												? `Join`
-												: '')}
-										{!doesMeetAllRequirements &&
-											wallet.isConnected &&
-											'Requirements not met'}
-										{!wallet.isConnected &&
-											'Connect wallet to join'}
-									</Button>
-								)}
+								{club.isCurrentUserClubMember &&
+									wallet.isConnected && (
+										<Button
+											onClick={leaveClub}
+											loading={isLeavingClub}
+											className={classes.buttonJoinClub}
+										>
+											Leave
+										</Button>
+									)}
+								{!club.isCurrentUserClubMember &&
+									wallet.isConnected && (
+										<Button
+											disabled={!doesMeetAllRequirements}
+											loading={isJoiningClub}
+											onClick={joinClub}
+											className={classes.buttonJoinClub}
+										>
+											{doesMeetAllRequirements &&
+												((club.membershipSettings
+													?.costToJoin ?? 0) > 0
+													? `Join - ${
+															club
+																.membershipSettings
+																?.costToJoin ??
+															0
+													  } MATIC`
+													: wallet.isConnected
+													? `Join`
+													: '')}
+											{!doesMeetAllRequirements &&
+												wallet.isConnected &&
+												'Requirements not met'}
+											{!wallet.isConnected &&
+												'Connect wallet to join'}
+										</Button>
+									)}
 								{!wallet.isConnected && (
 									<Button
 										onClick={async () => {
 											await wallet.connectWallet()
-											router.reload()
 										}}
 										className={classes.buttonJoinClub}
 									>
@@ -1114,24 +1192,26 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									<QrCode />
 								</Button>
 
-								{club.isClubAdmin && wallet.isConnected && (
-									<>
-										<Button
-											onClick={navigateToSettings}
-											className={
-												classes.outlineHeaderButton
-											}
-										>
-											<Settings />
-										</Button>
-									</>
-								)}
+								{club.isCurrentUserClubAdmin &&
+									wallet.isConnected && (
+										<>
+											<Button
+												onClick={navigateToSettings}
+												className={
+													classes.outlineHeaderButton
+												}
+											>
+												<Settings />
+											</Button>
+										</>
+									)}
 							</Group>
 						</div>
 					</div>
 
 					<Container>
-						{(!club.isClubMember || club.isClubAdmin) && (
+						{(!club.isCurrentUserClubMember ||
+							club.isCurrentUserClubAdmin) && (
 							<>
 								<Text
 									className={classes.clubDetailSectionTitle}
@@ -1195,7 +1275,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</>
 						)}
 
-						{club.isClubAdmin && (
+						{club.isCurrentUserClubAdmin && (
 							<>
 								<Text
 									className={classes.clubDetailSectionTitle}
@@ -1231,7 +1311,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						)}
 
 						{/* Public integrations for club visitors */}
-						{!club.isClubMember &&
+						{!club.isCurrentUserClubMember &&
 							club.publicIntegrations &&
 							club.allIntegrations &&
 							club.publicIntegrations.length > 0 && (
@@ -1258,7 +1338,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 
 						{/* All integrations for club members */}
-						{club.isClubMember &&
+						{club.isCurrentUserClubMember &&
 							club.allIntegrations &&
 							club.allIntegrations.length > 0 && (
 								<>
@@ -1275,7 +1355,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								</>
 							)}
 
-						{club.isClubAdmin &&
+						{club.isCurrentUserClubAdmin &&
+							userHasPermissionManageApps(club) &&
 							club.allIntegrations &&
 							club.allIntegrations.length === 0 && (
 								<>

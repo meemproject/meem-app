@@ -3,19 +3,21 @@ import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { createStyles, Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { makeFetcher, useSockets, useWallet } from '@meemproject/react'
+import { MeemAPI, makeFetcher } from '@meemproject/api'
+import { useSockets, useWallet } from '@meemproject/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
 import {
 	GetClubSubscriptionSubscription // eslint-disable-next-line import/namespace
 } from '../../../generated/graphql'
-import { SUB_CLUB } from '../../graphql/clubs'
+import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
 import {
 	Club,
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
+import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 
 const useStyles = createStyles(() => ({
 	header: {
@@ -58,6 +60,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 	const { classes } = useStyles()
 
+	const { mutualMembersClient } = useCustomApollo()
+
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const [currentClubDataString, setCurrentClubDataString] = useState('')
@@ -84,13 +88,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		loading,
 		error,
 		data: clubData
-	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB, {
+	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
 		variables: {
 			slug: club?.slug ?? '',
-			chainId: wallet.chainId,
-			visibilityLevel: ['mutual-club-members', 'anyone'],
-			showPublicApps: [true, false]
-		}
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
+		},
+		client: mutualMembersClient
 	})
 
 	useEffect(() => {

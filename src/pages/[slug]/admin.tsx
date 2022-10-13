@@ -113,13 +113,11 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 	try {
 		if (params?.slug) {
-			const { data } = await client.query({
+			const { data, errors } = await client.query({
 				query: GET_CLUB,
 				variables: {
 					chainId: hostnameToChainId(req.headers.host ?? ''),
-					slug: params.slug,
-					visibilityLevel: ['anyone'],
-					showPublicApps: [true]
+					slug: params.slug
 				}
 			})
 
@@ -137,13 +135,16 @@ export const getServerSideProps: GetServerSideProps = async ({
 						data.MeemContracts[0].metadata.description ?? ''
 				}
 			}
-		}
-
-		return {
-			props: {
-				club
+			return {
+				props: {
+					club,
+					isError: !!errors,
+					description: 'There was an error fetching club data'
+				}
 			}
 		}
+
+		return { props: {} }
 	} catch (e) {
 		log.debug(e)
 		club = {

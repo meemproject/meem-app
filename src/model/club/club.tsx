@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
+import log from '@kengoldfarb/log'
 import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
@@ -82,17 +83,19 @@ export interface Club {
 	slug?: string
 	description?: string
 	image?: string
-	admins?: ClubMember[]
 	adminAddresses?: string[]
 	membershipSettings?: MembershipSettings
 	slotsLeft?: number
+	clubOwner?: ClubMember
+	admins?: ClubMember[]
 	members?: ClubMember[]
 	roles?: ClubRole[]
 	memberRolesMap?: Map<string, ClubMember[]>
-	currentUserClubPermissions?: string[]
-	isClubMember?: boolean
 	membershipToken?: string
-	isClubAdmin?: boolean
+	currentUserClubPermissions?: string[]
+	isCurrentUserClubMember?: boolean
+	isCurrentUserClubAdmin?: boolean
+	isCurrentUserClubOwner?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
 	allIntegrations?: Integration[]
@@ -257,11 +260,11 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			address: clubData.address,
 			admins: [],
 			adminAddresses: [],
-			isClubAdmin: false,
+			isCurrentUserClubAdmin: false,
 			slug: clubData.slug,
 			description: clubData.metadata.description,
 			image: clubData.metadata.image,
-			isClubMember: true,
+			isCurrentUserClubMember: true,
 			membershipToken: '',
 			members,
 
@@ -302,10 +305,12 @@ export default async function clubFromMeemContract(
 		// Raw admin addresses stored on contract, used to filter out admin-only mintPermissions
 		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
+		let isClubOwner = false
 
 		// Club members and admins
-		const members: ClubMember[] = []
+		let clubOwner = undefined
 		const admins: ClubMember[] = []
+		const members: ClubMember[] = []
 
 		// Is the current user a club member?
 		let isClubMember = false
@@ -358,6 +363,10 @@ export default async function clubFromMeemContract(
 								isClubMember = true
 								membershipToken = meem.tokenId
 
+								log.debug(`meem ownerId ${meem.OwnerId}`)
+								log.debug(`club ownerId ${clubData.OwnerId}`)
+								isClubOwner = meem.OwnerId === clubData.OwnerId
+
 								// Is the current user an admin?
 								if (memberMeemContractWallet) {
 									if (
@@ -366,6 +375,8 @@ export default async function clubFromMeemContract(
 									) {
 										isClubAdmin = true
 									}
+								} else if (isClubOwner) {
+									isClubAdmin = true
 								}
 							}
 
@@ -450,7 +461,6 @@ export default async function clubFromMeemContract(
 							)
 
 							// Assemble member
-
 							const memberData = {
 								wallet: meem.Owner.address,
 								ens: meem.Owner.ens ?? undefined,
@@ -468,10 +478,18 @@ export default async function clubFromMeemContract(
 								discordUserId,
 								emailAddress
 							}
+
+							// Add to members
 							members.push(memberData)
 
+							// Add to admins if necessary
 							if (isMemberAnAdmin) {
 								admins.push(memberData)
+							}
+
+							// Set club owner if necessary
+							if (meem.OwnerId === clubData.OwnerId) {
+								clubOwner = memberData
 							}
 						}
 					}
@@ -701,7 +719,9 @@ export default async function clubFromMeemContract(
 			address: clubData.address,
 			adminAddresses: adminRawAddresses,
 			admins,
-			isClubAdmin,
+			isCurrentUserClubAdmin: isClubAdmin,
+			isCurrentUserClubOwner: isClubOwner,
+			clubOwner,
 			slug: clubData.slug,
 			gnosisSafeAddress: clubData.gnosisSafeAddress,
 			description: clubData.metadata.description,
@@ -709,7 +729,7 @@ export default async function clubFromMeemContract(
 			roles: clubRoles,
 			currentUserClubPermissions,
 			memberRolesMap,
-			isClubMember,
+			isCurrentUserClubMember: isClubMember,
 			membershipToken,
 			members,
 			slotsLeft,

@@ -20,6 +20,7 @@ import {
 	ClubRole,
 	ClubRolePermission
 } from '../../../model/club/club'
+import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
@@ -44,14 +45,22 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [isExistingRole, setIsExistingRole] = useState(false)
 	const [roleName, setRoleName] = useState('')
 
+	const { anonClient } = useCustomApollo()
+
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
 		useState(false)
 
-	const { data: availablePermissions } =
-		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS)
+	const { data: availablePermissions, error } =
+		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS, {
+			client: anonClient
+		})
 
 	// Set initial role + parse permissions (updated later when changes are made in subcomponents)
 	useEffect(() => {
+		if (error) {
+			log.debug(JSON.stringify(error))
+		}
+
 		async function parsePermissions(
 			theRole: ClubRole,
 			allPermissions: GetAvailablePermissionQuery
@@ -132,7 +141,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		if (initialRole && !role && availablePermissions) {
 			parsePermissions(initialRole, availablePermissions)
 		}
-	}, [availablePermissions, club, initialRole, role])
+	}, [availablePermissions, club, error, initialRole, role])
 
 	const updateRole = (newRole: ClubRole) => {
 		setRole(newRole)

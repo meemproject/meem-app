@@ -19,6 +19,15 @@ export const useGlobalStyles = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
+	buttonRed: {
+		color: 'white',
+		marginLeft: 8,
+		backgroundColor: 'rgba(217, 92, 75, 1)',
+		'&:hover': {
+			backgroundColor: theme.colors.red[8]
+		},
+		borderRadius: 24
+	},
 	buttonWhite: {
 		borderRadius: 24,
 		color: 'black',
@@ -193,6 +202,7 @@ export const useGlobalStyles = createStyles(theme => ({
 	tBold: {
 		fontWeight: 700
 	},
+
 	tHeaderTitleText: {
 		fontWeight: 600,
 		fontSize: 24,
@@ -233,6 +243,9 @@ export const useGlobalStyles = createStyles(theme => ({
 	tSectionTitle: {
 		fontWeight: 600,
 		fontSize: 20
+	},
+	tSmall: {
+		fontSize: 16
 	},
 	tTitle: {
 		fontWeight: 600,
