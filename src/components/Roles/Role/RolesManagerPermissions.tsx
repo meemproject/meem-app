@@ -1,10 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import log from '@kengoldfarb/log'
 import { Text, Space, Switch, Divider, Button, Image } from '@mantine/core'
 import { Discord } from 'iconoir-react'
-import React, { useState } from 'react'
-import { CirclePlus, Link, Lock } from 'tabler-icons-react'
+import Cookies from 'js-cookie'
+import React, { useEffect, useState } from 'react'
+import {
+	CirclePlus,
+	ExternalLink,
+	Link,
+	Lock,
+	Settings
+} from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { RoleDiscordCloseTabModal } from './Modals/RoleDiscordCloseTabModal'
 import { RoleDiscordConnectServerModal } from './Modals/RoleDiscordConnectServerModal'
 import { RoleDiscordNewRoleModal } from './Modals/RoleDiscordNewRoleModal'
 import { RoleDiscordSyncModal } from './Modals/RoleDiscordSyncModal'
@@ -35,11 +44,32 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
 		useState(false)
 
-	// TODO: UseEffect to listen for the right query param, consume it and launch the server modal
+	const [
+		isRoleDiscordCloseTabModalOpened,
+		setIsRoleDiscordCloseTabModalOpened
+	] = useState(false)
+
+	const [discordAccessToken, setDiscordAccessToken] = useState('')
 
 	const startDiscordAuth = () => {
-		setIsRoleDiscordConnectModalOpened(true)
+		const uri = encodeURIComponent(`${window.location.origin}/profile`)
+		const scope = encodeURIComponent(`identify guilds`)
+		Cookies.set('authForDiscordRole', 'true')
+		Cookies.set('roleId', role ? role.id : '')
+		Cookies.set('clubSlug', club && club.slug ? club.slug : '')
+		setIsRoleDiscordCloseTabModalOpened(true)
+		window.open(
+			`https://discord.com/api/oauth2/authorize?client_id=967119580088660039&redirect_uri=${uri}&response_type=code&scope=${scope}`
+		)
 	}
+	useEffect(() => {
+		if (Cookies.get('discordAccessToken')) {
+			setDiscordAccessToken(Cookies.get('discordAccessToken') ?? '')
+			log.debug(
+				`discordAccessToken = ${Cookies.get('discordAccessToken')}`
+			)
+		}
+	}, [])
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<div key={permission.id}>
@@ -131,36 +161,94 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</div>
 					<Space h={24} />
 
-					<Button
-						className={styles.buttonWhite}
-						leftIcon={<Discord />}
-						onClick={() => {
-							startDiscordAuth()
-						}}
+					<div
+						className={styles.enabledClubIntegrationItem}
+						style={{ width: 300 }}
 					>
-						Connect Discord
-					</Button>
-					<Space h={8} />
-					<Button
-						className={styles.buttonWhite}
-						leftIcon={<CirclePlus />}
-						onClick={() => {
-							setIsRoleDiscordCreateModalOpened(true)
-						}}
-					>
-						Create New Discord Role
-					</Button>
-					<Space h={8} />
-					<Button
-						className={styles.buttonWhite}
-						leftIcon={<Link />}
-						onClick={() => {
-							setIsRoleDiscordSyncModalOpened(true)
-						}}
-					>
-						Sync Existing Discord Role
-					</Button>
-					<Space h={24} />
+						<div className={styles.enabledIntHeaderBg} />
+						<div className={styles.intItemHeader}>
+							<Image
+								src={`/integration-discord.png`}
+								width={16}
+								height={16}
+								fit={'contain'}
+							/>
+							<Space w={8} />
+							<Text>{`Admin role in Meem`}</Text>
+						</div>
+						<div
+							style={{
+								width: '100%'
+							}}
+						>
+							<Space h={12} />
+							<Divider />
+						</div>
+						<div className={styles.integrationActions}>
+							<a onClick={() => {}}>
+								<div className={styles.integrationAction}>
+									<ExternalLink size={20} />
+									<Space w={4} />
+									<Text className={styles.tExtraSmall}>
+										Launch Discord
+									</Text>
+								</div>
+							</a>
+							<Space w={4} />
+							<Divider orientation="vertical" />
+							<Space w={4} />
+
+							<a onClick={() => {}}>
+								<div className={styles.integrationAction}>
+									<Settings size={20} />
+									<Space w={4} />
+									<Text className={styles.tExtraSmall}>
+										Settings
+									</Text>
+								</div>
+							</a>
+						</div>
+					</div>
+					{!discordAccessToken && (
+						<div>
+							<Button
+								className={styles.buttonWhite}
+								leftIcon={<Discord />}
+								onClick={() => {
+									startDiscordAuth()
+								}}
+							>
+								Connect Discord
+							</Button>
+							<Space h={32} />
+						</div>
+					)}
+					{discordAccessToken && (
+						<>
+							<div>
+								<Button
+									className={styles.buttonWhite}
+									leftIcon={<CirclePlus />}
+									onClick={() => {
+										setIsRoleDiscordCreateModalOpened(true)
+									}}
+								>
+									Create New Discord Role
+								</Button>
+								<Space h={8} />
+								<Button
+									className={styles.buttonWhite}
+									leftIcon={<Link />}
+									onClick={() => {
+										setIsRoleDiscordSyncModalOpened(true)
+									}}
+								>
+									Sync Existing Discord Role
+								</Button>
+								<Space h={24} />
+							</div>
+						</>
+					)}
 				</div>
 
 				<Button className={styles.buttonBlack} onClick={onSaveChanges}>
@@ -196,6 +284,13 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					/>
 				</>
 			)}
+
+			<RoleDiscordCloseTabModal
+				isOpened={isRoleDiscordCloseTabModalOpened}
+				onModalClosed={() => {
+					setIsRoleDiscordCloseTabModalOpened(false)
+				}}
+			/>
 
 			<Space h={64} />
 		</>

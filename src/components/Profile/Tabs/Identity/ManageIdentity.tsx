@@ -17,6 +17,7 @@ import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
+import Cookies from 'js-cookie'
 import dynamic from 'next/dynamic'
 import router from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
@@ -33,6 +34,7 @@ import {
 } from '../../../../model/identity/identity'
 import { useCustomApollo } from '../../../../providers/ApolloProvider'
 import IdentityContext from '../../IdentityProvider'
+import { DiscordRoleRedirectModal } from './DiscordRoleRedirectModal'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
 import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
@@ -263,6 +265,11 @@ export const ManageIdentityComponent: React.FC = () => {
 	// Discord-specific integration data
 	const [discordAuthCode, setIsDiscordAuthCode] = useState<string>()
 
+	const [
+		isDiscordRoleRedirectModalOpened,
+		setIsDiscordRoleRedirectModalOpened
+	] = useState(false)
+
 	// Club logo
 	const [
 		openFileSelector,
@@ -372,14 +379,37 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (router.query.code && availableIntegrations.length > 0) {
-			// We have a discord auth code - create or update integration
-			availableIntegrations.forEach(inte => {
-				if (inte.name === 'Discord') {
-					setIntegrationCurrentlyEditing(inte)
-					setIsDiscordAuthCode(router.query.code as string)
-					setIsDiscordModalOpen(true)
-				}
-			})
+			// We have a discord auth code
+
+			// Set the cookie
+			Cookies.set(
+				'discordAccessToken',
+				router.query.code.toString() ?? ''
+			)
+
+			if (Cookies.get('authForDiscordRole')) {
+				setIsDiscordRoleRedirectModalOpened(true)
+				const clubSlug = Cookies.get('clubSlug')
+				const roleId = Cookies.get('roleId')
+				Cookies.remove('authForDiscordRole')
+				Cookies.remove('clubSlug')
+				Cookies.remove('roleId')
+				router.push({
+					pathname: `/${clubSlug}/roles`,
+					query: {
+						role: `/${roleId}`
+					}
+				})
+			} else {
+				// create or update integration
+				availableIntegrations.forEach(inte => {
+					if (inte.name === 'Discord') {
+						setIntegrationCurrentlyEditing(inte)
+						setIsDiscordAuthCode(router.query.code as string)
+						setIsDiscordModalOpen(true)
+					}
+				})
+			}
 		}
 	}, [availableIntegrations])
 
@@ -724,6 +754,12 @@ export const ManageIdentityComponent: React.FC = () => {
 			>
 				<EmojiPicker onEmojiClick={onEmojiClick} />
 			</Modal>
+			<DiscordRoleRedirectModal
+				isOpened={isDiscordRoleRedirectModalOpened}
+				onModalClosed={() => {
+					setIsDiscordRoleRedirectModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }

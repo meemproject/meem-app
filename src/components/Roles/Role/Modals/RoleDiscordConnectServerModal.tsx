@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 // Disabled unused vars for dev purposes
 import log from '@kengoldfarb/log'
 import {
