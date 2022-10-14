@@ -50,6 +50,9 @@ export interface ClubRole {
 	isDefaultRole?: boolean
 	permissions: ClubRolePermission[]
 	guildRoleId?: string
+	guildRoleName?: string
+	guildDiscordServerName?: string
+	guildDiscordServerId?: string
 }
 
 export function emptyRole(): ClubRole {
