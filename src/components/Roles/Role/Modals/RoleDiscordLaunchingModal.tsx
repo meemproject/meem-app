@@ -8,7 +8,7 @@ interface IProps {
 	onModalClosed: () => void
 }
 
-export const RoleDiscordCloseTabModal: React.FC<IProps> = ({
+export const RoleDiscordLaunchingModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
@@ -21,6 +21,7 @@ export const RoleDiscordCloseTabModal: React.FC<IProps> = ({
 	return (
 		<>
 			<Modal
+				transitionDuration={0}
 				fullScreen
 				withCloseButton={false}
 				closeOnClickOutside={false}

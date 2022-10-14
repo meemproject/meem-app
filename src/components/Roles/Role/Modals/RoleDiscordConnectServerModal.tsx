@@ -13,6 +13,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
+import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
@@ -30,6 +31,7 @@ export interface DiscordServer {
 	id: string
 	name: string
 	icon: string
+	isConnectedToGuild: boolean
 }
 
 export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
@@ -51,67 +53,63 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		async function fetchDiscordServers() {
-			setIsFetchingDiscordServers(true)
-			// Send request
-			try {
-				const getDiscordServersFetcher = makeFetcher<
-					MeemAPI.v1.GetDiscordServers.IQueryParams,
-					MeemAPI.v1.GetDiscordServers.IRequestBody,
-					MeemAPI.v1.GetDiscordServers.IResponseBody
-				>({
-					method: MeemAPI.v1.GetDiscordServers.method
-				})
+			if (!isFetchingDiscordServers) {
+				setIsFetchingDiscordServers(true)
+				// Send request
+				try {
+					const getDiscordServersFetcher = makeFetcher<
+						MeemAPI.v1.GetDiscordServers.IQueryParams,
+						MeemAPI.v1.GetDiscordServers.IRequestBody,
+						MeemAPI.v1.GetDiscordServers.IResponseBody
+					>({
+						method: MeemAPI.v1.GetDiscordServers.method
+					})
 
-				const servers = await getDiscordServersFetcher(
-					MeemAPI.v1.GetDiscordServers.path({
-						meemContractId: club.id ?? '',
-						meemContractRoleId: role.id
-					}),
-					undefined,
-					{}
-				)
+					const servers = await getDiscordServersFetcher(
+						MeemAPI.v1.GetDiscordServers.path({}),
+						{ accessToken: Cookies.get('discordAccessToken') ?? '' }
+					)
 
-				// TODO: parse servers and set them
+					const dServers: DiscordServer[] = []
+					servers.discordServers.forEach(server => {
+						const dServer: DiscordServer = {
+							id: server.id,
+							name: server.name,
+							icon: server.icon,
+							isConnectedToGuild: server.guildData.isAdmin
+						}
+						dServers.push(dServer)
+					})
 
-				setIsFetchingDiscordServers(false)
-			} catch (e) {
-				log.debug(e)
-				showNotification({
-					title: 'Error',
-					autoClose: 5000,
-					color: 'red',
-					icon: <AlertCircle />,
-					message: `Unable to fetch Discord servers. Please try again later.`
-				})
-				setIsFetchingDiscordServers(false)
-				onModalClosed()
-				return
-			}
-
-			setAvailableDiscordServers([
-				{
-					id: 'general',
-					name: 'MEEM',
-					icon: '/exampleclub.png'
-				},
-				{
-					id: 'random',
-					name: 'Guild',
-					icon: '/exampleclub.png'
-				},
-				{
-					id: 'members',
-					name: 'Paragraph',
-					icon: '/exampleclub.png'
+					setAvailableDiscordServers(dServers)
+					setIsFetchingDiscordServers(false)
+				} catch (e) {
+					log.debug(e)
+					showNotification({
+						title: 'Error',
+						autoClose: 5000,
+						color: 'red',
+						icon: <AlertCircle />,
+						message: `Unable to fetch Discord servers. Please try again later.`
+					})
+					setIsFetchingDiscordServers(false)
+					onModalClosed()
+					return
 				}
-			])
-			setIsFetchingDiscordServers(false)
+			}
 		}
 
 		if (isOpened && !availableDiscordServers) {
 			fetchDiscordServers()
 		}
-	}, [availableDiscordServers, isFetchingDiscordServers, isOpened])
+	}, [
+		availableDiscordServers,
+		club.id,
+		isFetchingDiscordServers,
+		isOpened,
+		onModalClosed,
+		role.id
+	])
 
 	const connectServer = (server: DiscordServer) => {
 		setIsSavingChanges(true)

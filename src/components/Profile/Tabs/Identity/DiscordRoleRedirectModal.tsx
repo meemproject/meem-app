@@ -22,6 +22,7 @@ export const DiscordRoleRedirectModal: React.FC<IProps> = ({
 		<>
 			<Modal
 				fullScreen
+				transitionDuration={0}
 				withCloseButton={false}
 				closeOnClickOutside={false}
 				closeOnEscape={false}

@@ -13,11 +13,11 @@ import {
 } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
-import { RoleDiscordCloseTabModal } from './Modals/RoleDiscordCloseTabModal'
 import {
 	DiscordServer,
 	RoleDiscordConnectServerModal
 } from './Modals/RoleDiscordConnectServerModal'
+import { RoleDiscordLaunchingModal } from './Modals/RoleDiscordLaunchingModal'
 import { RoleDiscordNewRoleModal } from './Modals/RoleDiscordNewRoleModal'
 import { RoleDiscordSyncModal } from './Modals/RoleDiscordSyncModal'
 
@@ -370,7 +370,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				</>
 			)}
 
-			<RoleDiscordCloseTabModal
+			<RoleDiscordLaunchingModal
 				isOpened={isRoleDiscordCloseTabModalOpened}
 				onModalClosed={() => {
 					setIsRoleDiscordCloseTabModalOpened(false)
