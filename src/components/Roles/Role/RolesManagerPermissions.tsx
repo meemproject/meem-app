@@ -14,7 +14,10 @@ import {
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleDiscordCloseTabModal } from './Modals/RoleDiscordCloseTabModal'
-import { RoleDiscordConnectServerModal } from './Modals/RoleDiscordConnectServerModal'
+import {
+	DiscordServer,
+	RoleDiscordConnectServerModal
+} from './Modals/RoleDiscordConnectServerModal'
 import { RoleDiscordNewRoleModal } from './Modals/RoleDiscordNewRoleModal'
 import { RoleDiscordSyncModal } from './Modals/RoleDiscordSyncModal'
 
@@ -43,6 +46,9 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 
 	const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
 		useState(false)
+
+	const [chosenDiscordServer, setChosenDiscordServer] =
+		useState<DiscordServer>()
 
 	const [
 		isRoleDiscordCloseTabModalOpened,
@@ -159,11 +165,11 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				{/* If role already exists, show Discord settings */}
 				{role?.id !== 'addRole' && (
 					<div>
-						{role?.guildDiscordServerId && (
+						{discordAccessToken && chosenDiscordServer && (
 							<div>
 								<div className={styles.centeredRow}>
 									<Image
-										src={'/exampleclub.png'}
+										src={chosenDiscordServer.icon}
 										height={48}
 										width={48}
 										radius={24}
@@ -171,14 +177,74 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 									<Space w={16} />
 									<div>
 										<Text className={styles.tTitle}>
-											MEEM
+											{chosenDiscordServer.name}
 										</Text>
-										<Text className={styles.tLink}>
+										<Text
+											className={styles.tLink}
+											onClick={() => {
+												if (chosenDiscordServer) {
+													// Just clear chosen discord server
+													setChosenDiscordServer(
+														undefined
+													)
+												} else {
+													// TODO: Handle disconnecting a server already linked
+												}
+											}}
+										>
 											Disconnect
 										</Text>
 									</div>
 								</div>
 								<Space h={24} />
+								{discordAccessToken && (
+									<div>
+										<Button
+											className={styles.buttonWhite}
+											leftIcon={<CirclePlus />}
+											onClick={() => {
+												setIsRoleDiscordCreateModalOpened(
+													true
+												)
+											}}
+										>
+											Create New Discord Role
+										</Button>
+										<Space h={8} />
+										<Button
+											className={styles.buttonWhite}
+											leftIcon={<Link />}
+											onClick={() => {
+												setIsRoleDiscordSyncModalOpened(
+													true
+												)
+											}}
+										>
+											Sync Existing Discord Role
+										</Button>
+										<Space h={40} />
+									</div>
+								)}
+							</div>
+						)}
+
+						{discordAccessToken && !chosenDiscordServer && (
+							<div>
+								<Button
+									className={styles.buttonWhite}
+									leftIcon={<Discord />}
+									onClick={() => {
+										setIsRoleDiscordConnectModalOpened(true)
+									}}
+								>
+									Choose a Discord Server
+								</Button>
+								<Space h={40} />
+							</div>
+						)}
+
+						{role?.guildDiscordServerId && (
+							<div>
 								<div
 									className={
 										styles.enabledClubIntegrationItem
@@ -264,36 +330,6 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 								<Space h={32} />
 							</div>
 						)}
-						{discordAccessToken && (
-							<>
-								<div>
-									<Button
-										className={styles.buttonWhite}
-										leftIcon={<CirclePlus />}
-										onClick={() => {
-											setIsRoleDiscordCreateModalOpened(
-												true
-											)
-										}}
-									>
-										Create New Discord Role
-									</Button>
-									<Space h={8} />
-									<Button
-										className={styles.buttonWhite}
-										leftIcon={<Link />}
-										onClick={() => {
-											setIsRoleDiscordSyncModalOpened(
-												true
-											)
-										}}
-									>
-										Sync Existing Discord Role
-									</Button>
-									<Space h={40} />
-								</div>
-							</>
-						)}
 					</div>
 				)}
 
@@ -308,6 +344,9 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 						isOpened={isRoleDiscordConnectModalOpened}
 						onModalClosed={() => {
 							setIsRoleDiscordConnectModalOpened(false)
+						}}
+						onServerChosen={server => {
+							setChosenDiscordServer(server)
 						}}
 						role={role}
 						club={club}

@@ -11,7 +11,10 @@ import {
 	Loader,
 	Image
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import { makeFetcher, MeemAPI } from '@meemproject/api'
 import React, { useEffect, useState } from 'react'
+import { AlertCircle } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
 import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 
@@ -20,9 +23,10 @@ interface IProps {
 	role: ClubRole
 	isOpened: boolean
 	onModalClosed: () => void
+	onServerChosen: (server: DiscordServer) => void
 }
 
-interface DiscordServer {
+export interface DiscordServer {
 	id: string
 	name: string
 	icon: string
@@ -32,7 +36,8 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 	club,
 	role,
 	isOpened,
-	onModalClosed
+	onModalClosed,
+	onServerChosen
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
@@ -46,6 +51,43 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		async function fetchDiscordServers() {
+			setIsFetchingDiscordServers(true)
+			// Send request
+			try {
+				const getDiscordServersFetcher = makeFetcher<
+					MeemAPI.v1.GetDiscordServers.IQueryParams,
+					MeemAPI.v1.GetDiscordServers.IRequestBody,
+					MeemAPI.v1.GetDiscordServers.IResponseBody
+				>({
+					method: MeemAPI.v1.GetDiscordServers.method
+				})
+
+				const servers = await getDiscordServersFetcher(
+					MeemAPI.v1.GetDiscordServers.path({
+						meemContractId: club.id ?? '',
+						meemContractRoleId: role.id
+					}),
+					undefined,
+					{}
+				)
+
+				// TODO: parse servers and set them
+
+				setIsFetchingDiscordServers(false)
+			} catch (e) {
+				log.debug(e)
+				showNotification({
+					title: 'Error',
+					autoClose: 5000,
+					color: 'red',
+					icon: <AlertCircle />,
+					message: `Unable to fetch Discord servers. Please try again later.`
+				})
+				setIsFetchingDiscordServers(false)
+				onModalClosed()
+				return
+			}
+
 			setAvailableDiscordServers([
 				{
 					id: 'general',
@@ -73,6 +115,10 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 
 	const connectServer = (server: DiscordServer) => {
 		setIsSavingChanges(true)
+		onServerChosen(server)
+		onModalClosed()
+		setIsSavingChanges(false)
+
 		log.debug(isSavingChanges)
 	}
 
