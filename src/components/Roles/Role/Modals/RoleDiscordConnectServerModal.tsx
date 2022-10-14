@@ -14,7 +14,7 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import Cookies from 'js-cookie'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
 import { useGlobalStyles } from '../../../Styles/GlobalStyles'
@@ -51,51 +51,56 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
+	const fetch = useCallback(async () => {
+		setIsFetchingDiscordServers(true)
+		// Send request
+		try {
+			const getDiscordServersFetcher = makeFetcher<
+				MeemAPI.v1.GetDiscordServers.IQueryParams,
+				MeemAPI.v1.GetDiscordServers.IRequestBody,
+				MeemAPI.v1.GetDiscordServers.IResponseBody
+			>({
+				method: MeemAPI.v1.GetDiscordServers.method
+			})
+
+			const servers = await getDiscordServersFetcher(
+				MeemAPI.v1.GetDiscordServers.path({}),
+				{ accessToken: Cookies.get('discordAccessToken') ?? '' }
+			)
+
+			const dServers: DiscordServer[] = []
+			servers.discordServers.forEach(server => {
+				const dServer: DiscordServer = {
+					id: server.id,
+					name: server.name,
+					// TODO: Note that this is just an id, not a url...
+					icon: server.icon,
+					isConnectedToGuild: server.guildData.isAdmin
+				}
+				dServers.push(dServer)
+			})
+
+			setAvailableDiscordServers(dServers)
+			setIsFetchingDiscordServers(false)
+		} catch (e) {
+			log.debug(e)
+			showNotification({
+				title: 'Error',
+				autoClose: 5000,
+				color: 'red',
+				icon: <AlertCircle />,
+				message: `Unable to fetch Discord servers. Please try again later.`
+			})
+			setIsFetchingDiscordServers(false)
+			onModalClosed()
+			return
+		}
+	}, [onModalClosed])
+
 	useEffect(() => {
 		async function fetchDiscordServers() {
 			if (!isFetchingDiscordServers) {
-				setIsFetchingDiscordServers(true)
-				// Send request
-				try {
-					const getDiscordServersFetcher = makeFetcher<
-						MeemAPI.v1.GetDiscordServers.IQueryParams,
-						MeemAPI.v1.GetDiscordServers.IRequestBody,
-						MeemAPI.v1.GetDiscordServers.IResponseBody
-					>({
-						method: MeemAPI.v1.GetDiscordServers.method
-					})
-
-					const servers = await getDiscordServersFetcher(
-						MeemAPI.v1.GetDiscordServers.path({}),
-						{ accessToken: Cookies.get('discordAccessToken') ?? '' }
-					)
-
-					const dServers: DiscordServer[] = []
-					servers.discordServers.forEach(server => {
-						const dServer: DiscordServer = {
-							id: server.id,
-							name: server.name,
-							icon: server.icon,
-							isConnectedToGuild: server.guildData.isAdmin
-						}
-						dServers.push(dServer)
-					})
-
-					setAvailableDiscordServers(dServers)
-					setIsFetchingDiscordServers(false)
-				} catch (e) {
-					log.debug(e)
-					showNotification({
-						title: 'Error',
-						autoClose: 5000,
-						color: 'red',
-						icon: <AlertCircle />,
-						message: `Unable to fetch Discord servers. Please try again later.`
-					})
-					setIsFetchingDiscordServers(false)
-					onModalClosed()
-					return
-				}
+				await fetch()
 			}
 		}
 
@@ -105,19 +110,36 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 	}, [
 		availableDiscordServers,
 		club.id,
+		fetch,
 		isFetchingDiscordServers,
 		isOpened,
 		onModalClosed,
 		role.id
 	])
 
-	const connectServer = (server: DiscordServer) => {
-		setIsSavingChanges(true)
-		onServerChosen(server)
-		onModalClosed()
-		setIsSavingChanges(false)
+	const connectServer = async (server: DiscordServer) => {
+		if (server.isConnectedToGuild) {
+			// Continue and close modal
+			onServerChosen(server)
+			onModalClosed()
+		} else {
+			setIsSavingChanges(true)
+			const discordAuth = window.open(
+				`https://discord.com/oauth2/authorize?client_id=868172385000509460&guild_id=${server.id}&permissions=8&scope=bot%20applications.commands`
+			)
 
-		log.debug(isSavingChanges)
+			// This is a neat hack to see if the auth window has been closed!
+			const timer = setInterval(function () {
+				if (discordAuth && discordAuth.closed) {
+					clearInterval(timer)
+
+					// Refetch servers
+					setAvailableDiscordServers(undefined)
+					setIsSavingChanges(false)
+					fetch()
+				}
+			}, 500)
+		}
 	}
 
 	return (
@@ -209,8 +231,13 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 												<Text className={styles.tBold}>
 													{server.name}
 												</Text>
+
 												<Space h={4} />
-												<Text>Admin</Text>
+												<Text>
+													{server.isConnectedToGuild
+														? 'Admin'
+														: 'Requires Guild Bot'}
+												</Text>
 											</div>
 										</div>
 										<Button
@@ -219,7 +246,9 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											}}
 											className={styles.buttonBlack}
 										>
-											Connect
+											{server.isConnectedToGuild
+												? 'Connect'
+												: 'Add Guild Bot'}
 										</Button>
 									</div>
 								</div>
