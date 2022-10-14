@@ -143,114 +143,131 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				<div>
-					<Text className={styles.tSectionTitle}>Discord Role</Text>
-					<Space h={24} />
 
-					<div className={styles.centeredRow}>
-						<Image
-							src={'/exampleclub.png'}
-							height={48}
-							width={48}
-							radius={24}
-						/>
-						<Space w={16} />
-						<div>
-							<Text className={styles.tTitle}>MEEM</Text>
-							<Text className={styles.tLink}>Disconnect</Text>
-						</div>
+				<Text className={styles.tSectionTitle}>Discord Role</Text>
+				{role?.id === 'addRole' && (
+					<div>
+						<Space h={8} />
+						<Text>
+							Save this role first to connect it to Discord
+						</Text>
+						<Space h={16} />
 					</div>
-					<Space h={24} />
+				)}
+				<Space h={24} />
 
-					<div
-						className={styles.enabledClubIntegrationItem}
-						style={{ width: 300 }}
-					>
-						<div className={styles.enabledIntHeaderBg} />
-						<div className={styles.intItemHeader}>
+				{/* If role already exists, show Discord settings */}
+				{role?.id !== 'addRole' && (
+					<div>
+						<div className={styles.centeredRow}>
 							<Image
-								src={`/integration-discord.png`}
-								width={16}
-								height={16}
-								fit={'contain'}
+								src={'/exampleclub.png'}
+								height={48}
+								width={48}
+								radius={24}
 							/>
-							<Space w={8} />
-							<Text>{`Admin role in Meem`}</Text>
+							<Space w={16} />
+							<div>
+								<Text className={styles.tTitle}>MEEM</Text>
+								<Text className={styles.tLink}>Disconnect</Text>
+							</div>
 						</div>
-						<div
-							style={{
-								width: '100%'
-							}}
-						>
-							<Space h={12} />
-							<Divider />
-						</div>
-						<div className={styles.integrationActions}>
-							<a onClick={() => {}}>
-								<div className={styles.integrationAction}>
-									<ExternalLink size={20} />
-									<Space w={4} />
-									<Text className={styles.tExtraSmall}>
-										Launch Discord
-									</Text>
-								</div>
-							</a>
-							<Space w={4} />
-							<Divider orientation="vertical" />
-							<Space w={4} />
+						<Space h={24} />
 
-							<a onClick={() => {}}>
-								<div className={styles.integrationAction}>
-									<Settings size={20} />
-									<Space w={4} />
-									<Text className={styles.tExtraSmall}>
-										Settings
-									</Text>
-								</div>
-							</a>
-						</div>
-					</div>
-					{!discordAccessToken && (
-						<div>
-							<Button
-								className={styles.buttonWhite}
-								leftIcon={<Discord />}
-								onClick={() => {
-									startDiscordAuth()
+						<div
+							className={styles.enabledClubIntegrationItem}
+							style={{ width: 300 }}
+						>
+							<div className={styles.enabledIntHeaderBg} />
+							<div className={styles.intItemHeader}>
+								<Image
+									src={`/integration-discord.png`}
+									width={16}
+									height={16}
+									fit={'contain'}
+								/>
+								<Space w={8} />
+								<Text>{`Admin role in Meem`}</Text>
+							</div>
+							<div
+								style={{
+									width: '100%'
 								}}
 							>
-								Connect Discord
-							</Button>
-							<Space h={32} />
+								<Space h={12} />
+								<Divider />
+							</div>
+							<div className={styles.integrationActions}>
+								<a onClick={() => {}}>
+									<div className={styles.integrationAction}>
+										<ExternalLink size={20} />
+										<Space w={4} />
+										<Text className={styles.tExtraSmall}>
+											Launch Discord
+										</Text>
+									</div>
+								</a>
+								<Space w={4} />
+								<Divider orientation="vertical" />
+								<Space w={4} />
+
+								<a onClick={() => {}}>
+									<div className={styles.integrationAction}>
+										<Settings size={20} />
+										<Space w={4} />
+										<Text className={styles.tExtraSmall}>
+											Settings
+										</Text>
+									</div>
+								</a>
+							</div>
 						</div>
-					)}
-					{discordAccessToken && (
-						<>
+						{!discordAccessToken && (
 							<div>
 								<Button
 									className={styles.buttonWhite}
-									leftIcon={<CirclePlus />}
+									leftIcon={<Discord />}
 									onClick={() => {
-										setIsRoleDiscordCreateModalOpened(true)
+										startDiscordAuth()
 									}}
 								>
-									Create New Discord Role
+									Connect Discord
 								</Button>
-								<Space h={8} />
-								<Button
-									className={styles.buttonWhite}
-									leftIcon={<Link />}
-									onClick={() => {
-										setIsRoleDiscordSyncModalOpened(true)
-									}}
-								>
-									Sync Existing Discord Role
-								</Button>
-								<Space h={24} />
+								<Space h={32} />
 							</div>
-						</>
-					)}
-				</div>
+						)}
+						{discordAccessToken && (
+							<>
+								<div>
+									<Button
+										className={styles.buttonWhite}
+										leftIcon={<CirclePlus />}
+										onClick={() => {
+											setIsRoleDiscordCreateModalOpened(
+												true
+											)
+										}}
+									>
+										Create New Discord Role
+									</Button>
+									<Space h={8} />
+									<Button
+										className={styles.buttonWhite}
+										leftIcon={<Link />}
+										onClick={() => {
+											setIsRoleDiscordSyncModalOpened(
+												true
+											)
+										}}
+									>
+										Sync Existing Discord Role
+									</Button>
+									<Space h={40} />
+								</div>
+							</>
+						)}
+					</div>
+				)}
 
 				<Button className={styles.buttonBlack} onClick={onSaveChanges}>
 					Save Changes
