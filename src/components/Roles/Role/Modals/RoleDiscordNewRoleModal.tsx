@@ -18,6 +18,7 @@ import {
 	TextInput,
 	Checkbox
 } from '@mantine/core'
+import { MeemAPI } from '@meemproject/api'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { Club, ClubRole } from '../../../../model/club/club'
 import { useGlobalStyles } from '../../../Styles/GlobalStyles'
@@ -25,18 +26,15 @@ import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 interface IProps {
 	club: Club
 	role: ClubRole
+	server?: MeemAPI.IDiscordServer
 	isOpened: boolean
 	onModalClosed: () => void
-}
-
-interface DiscordChannel {
-	id: string
-	name: string
 }
 
 export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 	club,
 	role,
+	server,
 	isOpened,
 	onModalClosed
 }) => {
@@ -44,40 +42,13 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 
 	const [discordRoleName, setDiscordRoleName] = useState('')
 
-	const [availableDiscordChannels, setAvailableDiscordChannels] =
-		useState<DiscordChannel[]>()
+	const [selectedDiscordCategories, setSelectedDiscordCategories] =
+		useState<string[]>()
 
 	const [selectedDiscordChannels, setSelectedDiscordChannels] =
 		useState<string[]>()
 
-	const [isFetchingDiscordChannels, setIsFetchingDiscordChannels] =
-		useState(true)
-
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-
-	useEffect(() => {
-		async function fetchDiscordChannels() {
-			setAvailableDiscordChannels([
-				{
-					id: 'general',
-					name: 'General'
-				},
-				{
-					id: 'random',
-					name: 'Random'
-				},
-				{
-					id: 'members',
-					name: 'Members'
-				}
-			])
-			setIsFetchingDiscordChannels(false)
-		}
-
-		if (isOpened && !availableDiscordChannels) {
-			fetchDiscordChannels()
-		}
-	}, [availableDiscordChannels, isFetchingDiscordChannels, isOpened])
 
 	const saveChanges = () => {
 		setIsSavingChanges(true)
@@ -105,19 +76,20 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				{!availableDiscordChannels && isFetchingDiscordChannels && (
+				{isOpened && isSavingChanges && (
 					<>
 						<Center>
 							<Loader />
 						</Center>
 					</>
 				)}
-				{!availableDiscordChannels && !isFetchingDiscordChannels && (
+				{server && server.guildData.channels.length === 0 && (
 					<>
 						<Center>
 							<Text>
 								Sorry - unable to load Discord channels. Try
-								again later.
+								again later, or make sure the server you
+								selected has at least one channel.
 							</Text>
 							<Space h={16} />
 							<Button
@@ -131,7 +103,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 						</Center>
 					</>
 				)}
-				{availableDiscordChannels && !isFetchingDiscordChannels && (
+				{server && server.guildData.channels.length > 0 && (
 					<>
 						<Space h={8} />
 						<div className={styles.row}>
@@ -164,17 +136,73 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 						<Checkbox.Group
 							orientation="vertical"
 							spacing={'xs'}
+							value={selectedDiscordCategories}
+							onChange={categories => {
+								// Logic to select / de-select all the channels in a category when a category is selected
+								setSelectedDiscordCategories(categories)
+								const channels: string[] = []
+								categories.forEach(category => {
+									let matchingCategory: any
+									server.guildData.categories.forEach(
+										originalCategory => {
+											if (
+												category === originalCategory.id
+											) {
+												matchingCategory =
+													originalCategory
+											}
+										}
+									)
+									matchingCategory.channels.forEach(
+										(channel: any) => {
+											channels.push(channel.id)
+										}
+									)
+								})
+								setSelectedDiscordChannels(channels)
+							}}
+						>
+							{server.guildData.categories.map(category => (
+								<div key={category.id}>
+									<Checkbox
+										value={category.id}
+										label={category.name}
+									/>
+									<div style={{ marginLeft: 32 }}>
+										<Checkbox.Group
+											orientation="vertical"
+											spacing={'xs'}
+											value={selectedDiscordChannels}
+											onChange={
+												setSelectedDiscordChannels
+											}
+										>
+											{category.channels.map(channel => (
+												<Checkbox
+													key={channel.id}
+													value={channel.id}
+													label={channel.name}
+												/>
+											))}
+										</Checkbox.Group>
+									</div>
+								</div>
+							))}
+						</Checkbox.Group>
+						{/* <Checkbox.Group
+							orientation="vertical"
+							spacing={'xs'}
 							value={selectedDiscordChannels}
 							onChange={setSelectedDiscordChannels}
 						>
-							{availableDiscordChannels.map(channel => (
+							{server.guildData.channels.map(channel => (
 								<Checkbox
 									key={channel.id}
 									value={channel.id}
 									label={channel.name}
 								/>
 							))}
-						</Checkbox.Group>
+						</Checkbox.Group> */}
 
 						<Space h={32} />
 

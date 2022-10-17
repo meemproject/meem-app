@@ -24,14 +24,7 @@ interface IProps {
 	role: ClubRole
 	isOpened: boolean
 	onModalClosed: () => void
-	onServerChosen: (server: DiscordServer) => void
-}
-
-export interface DiscordServer {
-	id: string
-	name: string
-	icon: string
-	isConnectedToGuild: boolean
+	onServerChosen: (server: MeemAPI.IDiscordServer) => void
 }
 
 export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
@@ -44,7 +37,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 	const { classes: styles } = useGlobalStyles()
 
 	const [availableDiscordServers, setAvailableDiscordServers] =
-		useState<DiscordServer[]>()
+		useState<MeemAPI.IDiscordServer[]>()
 
 	const [isFetchingDiscordServers, setIsFetchingDiscordServers] =
 		useState(false)
@@ -68,16 +61,9 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 				{ accessToken: Cookies.get('discordAccessToken') ?? '' }
 			)
 
-			const dServers: DiscordServer[] = []
+			const dServers: MeemAPI.IDiscordServer[] = []
 			servers.discordServers.forEach(server => {
-				const dServer: DiscordServer = {
-					id: server.id,
-					name: server.name,
-					// TODO: Note that this is just an id, not a url...
-					icon: server.icon,
-					isConnectedToGuild: server.guildData.isAdmin
-				}
-				dServers.push(dServer)
+				dServers.push(server)
 			})
 
 			setAvailableDiscordServers(dServers)
@@ -117,8 +103,8 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 		role.id
 	])
 
-	const connectServer = async (server: DiscordServer) => {
-		if (server.isConnectedToGuild) {
+	const connectServer = async (server: MeemAPI.IDiscordServer) => {
+		if (server.guildData.isAdmin) {
 			// Continue and close modal
 			onServerChosen(server)
 			onModalClosed()
@@ -234,7 +220,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 
 												<Space h={4} />
 												<Text>
-													{server.isConnectedToGuild
+													{server.guildData.isAdmin
 														? 'Admin'
 														: 'Requires Guild Bot'}
 												</Text>
@@ -246,7 +232,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											}}
 											className={styles.buttonBlack}
 										>
-											{server.isConnectedToGuild
+											{server.guildData.isAdmin
 												? 'Connect'
 												: 'Add Guild Bot'}
 										</Button>

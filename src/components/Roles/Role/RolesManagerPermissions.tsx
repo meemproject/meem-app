@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
 import { Text, Space, Switch, Divider, Button, Image } from '@mantine/core'
+import { MeemAPI } from '@meemproject/api'
 import { Discord } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
@@ -13,10 +14,7 @@ import {
 } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
-import {
-	DiscordServer,
-	RoleDiscordConnectServerModal
-} from './Modals/RoleDiscordConnectServerModal'
+import { RoleDiscordConnectServerModal } from './Modals/RoleDiscordConnectServerModal'
 import { RoleDiscordLaunchingModal } from './Modals/RoleDiscordLaunchingModal'
 import { RoleDiscordNewRoleModal } from './Modals/RoleDiscordNewRoleModal'
 import { RoleDiscordSyncModal } from './Modals/RoleDiscordSyncModal'
@@ -48,7 +46,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 		useState(false)
 
 	const [chosenDiscordServer, setChosenDiscordServer] =
-		useState<DiscordServer>()
+		useState<MeemAPI.IDiscordServer>()
 
 	const [
 		isRoleDiscordCloseTabModalOpened,
@@ -364,6 +362,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 						onModalClosed={() => {
 							setIsRoleDiscordCreateModalOpened(false)
 						}}
+						server={chosenDiscordServer}
 						role={role}
 						club={club}
 					/>
