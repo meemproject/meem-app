@@ -845,6 +845,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
+		if (errorAnonClub) {
+			log.debug(JSON.stringify(errorAnonClub))
+			setIsLoadingClub(false)
+		}
+
+		if (errorMemberClub) {
+			log.debug(JSON.stringify(errorMemberClub))
+			setIsLoadingClub(false)
+		}
+
 		async function getClub() {
 			const clubData = memberClubData ?? anonClubData
 
@@ -1092,11 +1102,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!isLoadingClub && !club?.name && (
+			{!isLoadingClub &&
+				!errorAnonClub &&
+				!errorMemberClub &&
+				!club?.name && (
+					<Container>
+						<Space h={120} />
+						<Center>
+							<Text>Sorry, that club does not exist!</Text>
+						</Center>
+					</Container>
+				)}
+			{!isLoadingClub && (errorAnonClub || errorMemberClub) && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that club does not exist!</Text>
+						<Text>
+							There was an error loading this club. Please let us
+							know!
+						</Text>
 					</Center>
 				</Container>
 			)}

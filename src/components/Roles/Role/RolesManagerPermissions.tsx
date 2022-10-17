@@ -5,13 +5,7 @@ import { MeemAPI } from '@meemproject/api'
 import { Discord } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
-import {
-	CirclePlus,
-	ExternalLink,
-	Link,
-	Lock,
-	Settings
-} from 'tabler-icons-react'
+import { CirclePlus, ExternalLink, Lock, Settings } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleDiscordConnectServerModal } from './Modals/RoleDiscordConnectServerModal'
@@ -74,7 +68,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				`discordAccessToken = ${Cookies.get('discordAccessToken')}`
 			)
 		}
-	}, [])
+	}, [role?.rolesIntegrationData])
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<div key={permission.id}>
@@ -208,7 +202,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 										>
 											Create New Discord Role
 										</Button>
-										<Space h={8} />
+										{/* <Space h={8} />
 										<Button
 											className={styles.buttonWhite}
 											leftIcon={<Link />}
@@ -219,7 +213,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 											}}
 										>
 											Sync Existing Discord Role
-										</Button>
+										</Button> */}
 										<Space h={40} />
 									</div>
 								)}

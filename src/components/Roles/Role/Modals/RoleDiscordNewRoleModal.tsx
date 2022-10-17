@@ -18,8 +18,12 @@ import {
 	TextInput,
 	Checkbox
 } from '@mantine/core'
-import { MeemAPI } from '@meemproject/api'
+import { showNotification } from '@mantine/notifications'
+import { makeFetcher, MeemAPI } from '@meemproject/api'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
 import React, { forwardRef, useEffect, useState } from 'react'
+import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
 import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 
@@ -40,6 +44,8 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
+	const router = useRouter()
+
 	const [discordRoleName, setDiscordRoleName] = useState('')
 
 	const [selectedDiscordCategories, setSelectedDiscordCategories] =
@@ -50,8 +56,62 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const saveChanges = () => {
+	const saveChanges = async () => {
 		setIsSavingChanges(true)
+
+		const accessToken = Cookies.get('discordAccessToken')
+
+		// TODO: How do I send the discord role name?
+		if (server && accessToken) {
+			try {
+				const createDiscordRoleFetcher = makeFetcher<
+					MeemAPI.v1.UpdateMeemContractRole.IQueryParams,
+					MeemAPI.v1.UpdateMeemContractRole.IRequestBody,
+					MeemAPI.v1.UpdateMeemContractRole.IResponseBody
+				>({
+					method: MeemAPI.v1.UpdateMeemContractRole.method
+				})
+
+				await createDiscordRoleFetcher(
+					MeemAPI.v1.UpdateMeemContractRole.path({
+						meemContractId: club.id ?? '',
+						meemContractRoleId: role.id ?? ''
+					}),
+					undefined,
+					{
+						roleIntegrationsData: [
+							{
+								discordServerId: server.id,
+								discordGatedChannels: selectedDiscordChannels,
+								discordAccessToken: accessToken
+							}
+						]
+					}
+				)
+
+				showNotification({
+					title: 'Success!',
+					autoClose: 5000,
+					color: 'green',
+					icon: <CircleCheck />,
+					message: `Discord role created. Just a moment...`
+				})
+
+				router.reload()
+			} catch (e) {
+				log.debug(e)
+				showNotification({
+					title: 'Error',
+					autoClose: 5000,
+					color: 'red',
+					icon: <AlertCircle />,
+					message: `Unable to create this role on Discord. Please let us know!`
+				})
+				setIsSavingChanges(false)
+				return
+			}
+		}
+
 		log.debug(isSavingChanges)
 	}
 
@@ -74,6 +134,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 				}
 				onClose={() => {
 					onModalClosed()
+					setSelectedDiscordCategories([])
 				}}
 			>
 				{isOpened && isSavingChanges && (
@@ -222,6 +283,8 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 								<Button
 									onClick={() => {
 										setSelectedDiscordChannels([])
+										setSelectedDiscordCategories([])
+										setDiscordRoleName('')
 										onModalClosed()
 									}}
 									className={styles.buttonGrey}
