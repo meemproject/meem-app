@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
 import { Text, Space, Switch, Divider, Button, Image } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { Discord } from 'iconoir-react'
 import Cookies from 'js-cookie'
@@ -179,8 +180,6 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 													setChosenDiscordServer(
 														undefined
 													)
-												} else {
-													// TODO: Handle disconnecting a server already linked
 												}
 											}}
 										>
@@ -235,8 +234,36 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 							</div>
 						)}
 
-						{role?.guildDiscordServerId && (
+						{role?.guildDiscordServerId && !chosenDiscordServer && (
 							<div>
+								<div className={styles.centeredRow}>
+									<Image
+										src={role.guildDiscordServerIcon}
+										height={48}
+										width={48}
+										radius={24}
+									/>
+									<Space w={16} />
+									<div>
+										<Text className={styles.tTitle}>
+											{role.guildDiscordServerName}
+										</Text>
+										<Text
+											className={styles.tLink}
+											onClick={() => {
+												if (chosenDiscordServer) {
+													// Just clear chosen discord server
+													setChosenDiscordServer(
+														undefined
+													)
+												}
+											}}
+										>
+											Disconnect
+										</Text>
+									</div>
+								</div>
+								<Space h={24} />
 								<div
 									className={
 										styles.enabledClubIntegrationItem
@@ -254,7 +281,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 											fit={'contain'}
 										/>
 										<Space w={8} />
-										<Text>{`Admin role in Meem`}</Text>
+										<Text>{`Discord Role in ${role.guildDiscordServerName}`}</Text>
 									</div>
 									<div
 										style={{
@@ -286,7 +313,15 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 										<Divider orientation="vertical" />
 										<Space w={4} />
 
-										<a onClick={() => {}}>
+										<a
+											onClick={() => {
+												showNotification({
+													title: 'Coming soon!',
+													autoClose: 5000,
+													message: `For now, disconnect and reconnect to this server to edit this Discord Role.`
+												})
+											}}
+										>
 											<div
 												className={
 													styles.integrationAction

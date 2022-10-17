@@ -54,6 +54,7 @@ export interface ClubRole {
 	guildRoleName?: string
 	guildDiscordServerName?: string
 	guildDiscordServerId?: string
+	guildDiscordServerIcon?: string
 }
 
 export function emptyRole(): ClubRole {
