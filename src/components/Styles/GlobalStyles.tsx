@@ -48,6 +48,10 @@ export const useGlobalStyles = createStyles(theme => ({
 	fTextFieldRoot: {},
 
 	// Layout
+	centered: {
+		alignItems: 'center',
+		textAlign: 'center'
+	},
 	centeredRow: {
 		display: 'flex',
 		alignItems: 'center'
