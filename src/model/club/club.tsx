@@ -184,6 +184,7 @@ export function meemContractRolesToClubRoles(
 
 		// Roles integration metadata
 		const metadata = rawRole.integrationsMetadata
+		log.debug(JSON.stringify(metadata))
 
 		const clubRole: ClubRole = {
 			id: rawRole.id,
