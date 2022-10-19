@@ -23,6 +23,7 @@ import {
 	Mail
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
+import { JoinClubsModal } from '../Authenticate/JoinClubsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
 import { ClubsFAQModal } from './ClubsFAQModal'
@@ -211,6 +212,8 @@ export function HeaderMenu() {
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
+	const [isJoinClubsModalOpen, setIsJoinClubsModalOpen] = useState(false)
+
 	return (
 		<Header className={classes.header} height={56}>
 			<div className={classes.inner}>
@@ -295,11 +298,11 @@ export function HeaderMenu() {
 					{!wallet.isConnected && (
 						<Text className={classes.connectWallet}>
 							<a
-								onClick={async () => {
-									await wallet.connectWallet()
+								onClick={() => {
+									setIsJoinClubsModalOpen(true)
 								}}
 							>
-								Connect wallet
+								Join Clubs
 							</a>
 						</Text>
 					)}
@@ -320,7 +323,7 @@ export function HeaderMenu() {
 									Meem
 								</span>
 							</Menu.Item>
-							{!clubclub.isMember && (
+							{wallet.isConnected && !clubclub.isMember && (
 								<Menu.Item
 									onClick={handleJoinClubClub}
 									className={classes.menuItem}
@@ -384,6 +387,12 @@ export function HeaderMenu() {
 					setIsClubsFAQModalOpen(false)
 				}}
 				isOpened={isClubsFAQModalOpen}
+			/>
+			<JoinClubsModal
+				onModalClosed={() => {
+					setIsJoinClubsModalOpen(false)
+				}}
+				isOpened={isJoinClubsModalOpen}
 			/>
 		</Header>
 	)
