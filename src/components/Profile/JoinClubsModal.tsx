@@ -24,6 +24,7 @@ import { useGlobalStyles } from '../Styles/GlobalStyles'
 interface IProps {
 	isOpened: boolean
 	onModalClosed: () => void
+	isLoginForced: boolean
 }
 
 interface ConnectionMethod {
@@ -34,7 +35,8 @@ interface ConnectionMethod {
 
 export const JoinClubsModal: React.FC<IProps> = ({
 	isOpened,
-	onModalClosed
+	onModalClosed,
+	isLoginForced
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
@@ -226,6 +228,8 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					overlayBlur={8}
 					padding={'sm'}
 					fullScreen
+					withCloseButton={!isLoginForced}
+					closeOnClickOutside={!isLoginForced}
 					opened={isOpened}
 					title={
 						<Text className={styles.tModalTitle}>
@@ -276,6 +280,8 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					centered
 					radius={16}
 					overlayBlur={8}
+					withCloseButton={!isLoginForced}
+					closeOnClickOutside={!isLoginForced}
 					padding={isEmailState ? 'md' : 'lg'}
 					size={isEmailState ? '' : '47%'}
 					opened={isOpened}

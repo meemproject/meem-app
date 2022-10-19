@@ -24,7 +24,6 @@ import {
 	Mail
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { JoinClubsModal } from '../Authenticate/JoinClubsModal'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
 import { ClubsFAQModal } from './ClubsFAQModal'
@@ -206,8 +205,6 @@ export function HeaderMenu() {
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
-	const [isJoinClubsModalOpen, setIsJoinClubsModalOpen] = useState(false)
-
 	return (
 		<Header className={classes.header} height={56}>
 			<div className={classes.inner}>
@@ -309,7 +306,7 @@ export function HeaderMenu() {
 						<Text className={classes.connectWallet}>
 							<a
 								onClick={() => {
-									setIsJoinClubsModalOpen(true)
+									id.login(false)
 								}}
 							>
 								Join Clubs
@@ -397,12 +394,6 @@ export function HeaderMenu() {
 					setIsClubsFAQModalOpen(false)
 				}}
 				isOpened={isClubsFAQModalOpen}
-			/>
-			<JoinClubsModal
-				onModalClosed={() => {
-					setIsJoinClubsModalOpen(false)
-				}}
-				isOpened={isJoinClubsModalOpen}
 			/>
 		</Header>
 	)
