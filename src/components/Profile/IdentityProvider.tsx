@@ -57,6 +57,7 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 	useEffect(() => {
 		async function getIdentity() {
 			if (identityData) {
+				setIsLoadingIdentity(true)
 				const id = await identityFromApi(
 					wallet.accounts[0],
 					identityData
