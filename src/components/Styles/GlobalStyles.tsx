@@ -149,6 +149,14 @@ export const useGlobalStyles = createStyles(theme => ({
 	row: {
 		display: 'flex'
 	},
+	// A row which turns into a column when display is narrow enough
+	rowResponsive: {
+		display: 'flex',
+		flexDirection: 'row',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			flexDirection: 'column'
+		}
+	},
 	spacedRowCentered: {
 		display: 'flex',
 		flexDirection: 'row',

@@ -234,6 +234,7 @@ export function HeaderMenu() {
 								>
 									{id.isLoadingIdentity && (
 										<Loader
+											style={{ marginTop: 4 }}
 											variant="oval"
 											color="red"
 											size={20}

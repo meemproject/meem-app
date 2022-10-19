@@ -30,7 +30,7 @@ export const MeemFooter: React.FC = () => {
 
 	return (
 		<div>
-			<Space h={32} />
+			<Space h={128} />
 			<div className={classes.footerContainer}>
 				<Divider />
 				<div className={classes.footerBackground}>

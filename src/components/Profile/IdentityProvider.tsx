@@ -57,11 +57,11 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 	useEffect(() => {
 		async function getIdentity() {
 			if (identityData) {
-				setIsLoadingIdentity(true)
 				const id = await identityFromApi(
 					wallet.accounts[0],
 					identityData
 				)
+				setIsLoadingIdentity(false)
 				setHasFetchedIdentity(true)
 
 				let hasIdentityChanged = true
@@ -78,7 +78,6 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 					if (!previousIdentity) {
 						setPreviousIdentity(id)
 					}
-					setIsLoadingIdentity(false)
 					// if (!hasIdentity) {
 					// 	log.debug(`got identity for ${wallet.accounts[0]}`)
 					// }
