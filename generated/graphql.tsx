@@ -4397,6 +4397,7 @@ export type MeemContracts = {
   Owner?: Maybe<Wallets>;
   OwnerId?: Maybe<Scalars['uuid']>;
   address: Scalars['String'];
+  adminContractAddress?: Maybe<Scalars['String']>;
   chainId: Scalars['Int'];
   contractURI: Scalars['String'];
   createdAt: Scalars['timestamptz'];
@@ -4618,6 +4619,7 @@ export type MeemContracts_Bool_Exp = {
   _not?: InputMaybe<MeemContracts_Bool_Exp>;
   _or?: InputMaybe<Array<MeemContracts_Bool_Exp>>;
   address?: InputMaybe<String_Comparison_Exp>;
+  adminContractAddress?: InputMaybe<String_Comparison_Exp>;
   chainId?: InputMaybe<Int_Comparison_Exp>;
   contractURI?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -4680,6 +4682,7 @@ export type MeemContracts_Insert_Input = {
   Owner?: InputMaybe<Wallets_Obj_Rel_Insert_Input>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
+  adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   contractURI?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4705,6 +4708,7 @@ export type MeemContracts_Max_Fields = {
   __typename?: 'MeemContracts_max_fields';
   OwnerId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
+  adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
   contractURI?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -4724,6 +4728,7 @@ export type MeemContracts_Max_Fields = {
 export type MeemContracts_Max_Order_By = {
   OwnerId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
+  adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   contractURI?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -4744,6 +4749,7 @@ export type MeemContracts_Min_Fields = {
   __typename?: 'MeemContracts_min_fields';
   OwnerId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
+  adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
   contractURI?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -4763,6 +4769,7 @@ export type MeemContracts_Min_Fields = {
 export type MeemContracts_Min_Order_By = {
   OwnerId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
+  adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   contractURI?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -4811,6 +4818,7 @@ export type MeemContracts_Order_By = {
   Owner?: InputMaybe<Wallets_Order_By>;
   OwnerId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
+  adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   contractURI?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -4849,6 +4857,8 @@ export enum MeemContracts_Select_Column {
   OwnerId = 'OwnerId',
   /** column name */
   Address = 'address',
+  /** column name */
+  AdminContractAddress = 'adminContractAddress',
   /** column name */
   ChainId = 'chainId',
   /** column name */
@@ -4891,6 +4901,7 @@ export enum MeemContracts_Select_Column {
 export type MeemContracts_Set_Input = {
   OwnerId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
+  adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   contractURI?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4956,6 +4967,7 @@ export type MeemContracts_Stream_Cursor_Input = {
 export type MeemContracts_Stream_Cursor_Value_Input = {
   OwnerId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
+  adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   contractURI?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4993,6 +5005,8 @@ export enum MeemContracts_Update_Column {
   OwnerId = 'OwnerId',
   /** column name */
   Address = 'address',
+  /** column name */
+  AdminContractAddress = 'adminContractAddress',
   /** column name */
   ChainId = 'chainId',
   /** column name */
@@ -12998,6 +13012,7 @@ export type MeemContractPartsFragment = { __typename?: 'MeemContracts', slug: st
 export type GetIsMemberOfClubQueryVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
   clubSlug?: InputMaybe<Scalars['String']>;
+  chainId: Scalars['Int'];
 }>;
 
 
@@ -13006,6 +13021,7 @@ export type GetIsMemberOfClubQuery = { __typename?: 'query_root', Meems: Array<{
 export type GetIsMemberOfClubSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
   clubSlug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -13150,9 +13166,9 @@ export const MeemContractPartsFragmentDoc = gql`
 }
     `;
 export const GetIsMemberOfClubDocument = gql`
-    query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
+    query GetIsMemberOfClub($walletAddress: String, $clubSlug: String, $chainId: Int!) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}}, Owner: {address: {_ilike: $walletAddress}}}
+    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}, chainId: {_eq: $chainId}}, Owner: {address: {_ilike: $walletAddress}}}
   ) {
     id
     tokenId
@@ -13177,10 +13193,11 @@ export const GetIsMemberOfClubDocument = gql`
  *   variables: {
  *      walletAddress: // value for 'walletAddress'
  *      clubSlug: // value for 'clubSlug'
+ *      chainId: // value for 'chainId'
  *   },
  * });
  */
-export function useGetIsMemberOfClubQuery(baseOptions?: Apollo.QueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
+export function useGetIsMemberOfClubQuery(baseOptions: Apollo.QueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>(GetIsMemberOfClubDocument, options);
       }
@@ -13192,9 +13209,9 @@ export type GetIsMemberOfClubQueryHookResult = ReturnType<typeof useGetIsMemberO
 export type GetIsMemberOfClubLazyQueryHookResult = ReturnType<typeof useGetIsMemberOfClubLazyQuery>;
 export type GetIsMemberOfClubQueryResult = Apollo.QueryResult<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>;
 export const GetIsMemberOfClubSubscriptionDocument = gql`
-    subscription GetIsMemberOfClubSubscription($walletAddress: String, $clubSlug: String) {
+    subscription GetIsMemberOfClubSubscription($walletAddress: String, $clubSlug: String, $chainId: Int) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}}, Owner: {address: {_ilike: $walletAddress}}}
+    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}, chainId: {_eq: $chainId}}, Owner: {address: {_ilike: $walletAddress}}}
   ) {
     id
     tokenId
@@ -13219,6 +13236,7 @@ export const GetIsMemberOfClubSubscriptionDocument = gql`
  *   variables: {
  *      walletAddress: // value for 'walletAddress'
  *      clubSlug: // value for 'clubSlug'
+ *      chainId: // value for 'chainId'
  *   },
  * });
  */

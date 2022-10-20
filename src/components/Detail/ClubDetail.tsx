@@ -306,7 +306,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			{
 				variables: {
 					walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-					clubSlug: slug
+					clubSlug: slug,
+					chainId:
+						wallet.chainId ??
+						hostnameToChainId(
+							global.window ? global.window.location.host : ''
+						)
 				},
 				client: anonClient
 			}
@@ -982,7 +987,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		errorMemberClub,
 		memberClubData,
 		userClubMemberError,
-		router
+		router,
+		isCurrentUserClubMemberData
 	])
 
 	const navigateToSettings = () => {
