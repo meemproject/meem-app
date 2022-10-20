@@ -14,14 +14,15 @@ import {
 	NavLink
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { MeemAPI, makeRequest } from '@meemproject/api'
+import { MeemAPI, makeRequest, makeFetcher } from '@meemproject/api'
 import { LoginState, useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
+import { AlertCircle, Check } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import IdentityContext from './IdentityProvider'
+import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyClubsComponent } from './Tabs/MyClubs'
 
@@ -196,6 +197,11 @@ export const ProfileComponent: React.FC = () => {
 
 	const [isSigningIn, setIsSigningIn] = useState(false)
 
+	const [
+		isDiscordRoleRedirectModalOpened,
+		setIsDiscordRoleRedirectModalOpened
+	] = useState(false)
+
 	useEffect(() => {
 		if (wallet.loginState === LoginState.NotLoggedIn) {
 			router.push({
@@ -262,6 +268,79 @@ export const ProfileComponent: React.FC = () => {
 		},
 		[wallet]
 	)
+
+	useEffect(() => {
+		async function finishDiscordAuth(code: string) {
+			// Fetch cookies
+			const clubSlug = Cookies.get('clubSlug')
+			const roleId = Cookies.get('roleId')
+
+			if (clubSlug && roleId) {
+				// Send request
+				try {
+					const finishDiscordAuthFetcher = makeFetcher<
+						MeemAPI.v1.AuthenticateWithDiscord.IQueryParams,
+						MeemAPI.v1.AuthenticateWithDiscord.IRequestBody,
+						MeemAPI.v1.AuthenticateWithDiscord.IResponseBody
+					>({
+						method: MeemAPI.v1.AuthenticateWithDiscord.method
+					})
+
+					const authResult = await finishDiscordAuthFetcher(
+						MeemAPI.v1.AuthenticateWithDiscord.path({}),
+						{},
+						{
+							authCode: code,
+							redirectUri: `${window.location.origin}/profile`
+						}
+					)
+
+					// Set the cookie
+					Cookies.set('discordAccessToken', authResult.accessToken)
+
+					// Redirect / cleanup
+					Cookies.remove('authForDiscordRole')
+					Cookies.remove('clubSlug')
+					Cookies.remove('roleId')
+					router.push({
+						pathname: `/${clubSlug}/roles`,
+						query: {
+							role: `/${roleId}`
+						}
+					})
+				} catch (e) {
+					log.debug(e)
+					showNotification({
+						title: 'Error',
+						autoClose: 5000,
+						color: 'red',
+						icon: <AlertCircle />,
+						message: `Unable to authenticate with Discord. Please try again later.`
+					})
+					setIsDiscordRoleRedirectModalOpened(false)
+					return
+				}
+			} else {
+				setIsDiscordRoleRedirectModalOpened(false)
+				log.error('Failed to redirect due to missing cookies')
+				showNotification({
+					title: 'Error',
+					autoClose: 5000,
+					color: 'red',
+					icon: <AlertCircle />,
+					message: `Unable to authenticate with Discord. Please try again later.`
+				})
+			}
+		}
+
+		if (router.query.code && Cookies.get('authForDiscordRole')) {
+			// We have a discord auth code -> turn into access token
+
+			setIsDiscordRoleRedirectModalOpened(true)
+
+			finishDiscordAuth(router.query.code.toString())
+		}
+	}, [router])
 
 	useEffect(() => {
 		const hashQueryParams: { [key: string]: string } = {}
@@ -451,6 +530,12 @@ export const ProfileComponent: React.FC = () => {
 						</div>
 					</>
 				)}
+			<DiscordRoleRedirectModal
+				isOpened={isDiscordRoleRedirectModalOpened}
+				onModalClosed={() => {
+					setIsDiscordRoleRedirectModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }

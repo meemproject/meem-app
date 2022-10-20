@@ -49,7 +49,12 @@ export interface ClubRole {
 	isAdminRole?: boolean
 	isDefaultRole?: boolean
 	permissions: ClubRolePermission[]
+	rolesIntegrationData?: any
 	guildRoleId?: string
+	guildRoleName?: string
+	guildDiscordServerName?: string
+	guildDiscordServerId?: string
+	guildDiscordServerIcon?: string
 }
 
 export function emptyRole(): ClubRole {
@@ -177,10 +182,15 @@ export function meemContractRolesToClubRoles(
 			})
 		}
 
+		// Roles integration metadata
+		const metadata = rawRole.integrationsMetadata
+		log.debug(JSON.stringify(metadata))
+
 		const clubRole: ClubRole = {
 			id: rawRole.id,
 			isAdminRole: rawRole.isAdminRole,
 			isDefaultRole: rawRole.isDefaultRole,
+			rolesIntegrationData: metadata,
 			name: rawRole.name,
 			permissions
 		}
