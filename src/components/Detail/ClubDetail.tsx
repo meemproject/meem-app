@@ -453,7 +453,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 					const uri = JSON.stringify({
 						name: club?.name ?? '',
-						description: club?.description,
+						description:
+							club?.description && club?.description?.length > 0
+								? club?.description
+								: 'Club Token',
 						image: club?.image,
 						external_link: '',
 						application_instructions: []
@@ -487,26 +490,31 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						method: MeemAPI.v1.MintOriginalMeem.method
 					})
 
+					const data = {
+						meemContractAddress: club.address,
+						to: wallet.accounts[0],
+						metadata: {
+							name: club?.name ?? '',
+							description:
+								club?.description &&
+								club?.description?.length > 0
+									? club?.description
+									: 'Club Token',
+							image: club?.image,
+							meem_metadata_version: 'MeemClub_Token_20220718'
+						},
+						chainId:
+							wallet.chainId ??
+							hostnameToChainId(
+								global.window ? global.window.location.host : ''
+							)
+					}
+					log.debug(JSON.stringify(data))
+
 					await joinClubFetcher(
 						MeemAPI.v1.MintOriginalMeem.path(),
 						undefined,
-						{
-							meemContractAddress: club.address,
-							to: wallet.accounts[0],
-							metadata: {
-								name: club?.name ?? '',
-								description: club?.description,
-								image: club?.image,
-								meem_metadata_version: 'MeemClub_Token_20220718'
-							},
-							chainId:
-								wallet.chainId ??
-								hostnameToChainId(
-									global.window
-										? global.window.location.host
-										: ''
-								)
-						}
+						data
 					)
 				} else {
 					showNotification({
