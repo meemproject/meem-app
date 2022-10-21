@@ -11,7 +11,7 @@ import {
 	HoverCard
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
-import { CircleMinus, Search } from 'tabler-icons-react'
+import { CircleMinus, Lock, Search } from 'tabler-icons-react'
 import { Club, ClubMember, ClubRole } from '../../../model/club/club'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
@@ -163,8 +163,13 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 															styles.tListItemTitle
 														}
 													>
-														{member.displayName ??
-															'Club Member'}
+														{member.displayName
+															? member.displayName
+															: member.isClubOwner
+															? 'Club Owner'
+															: member.isClubAdmin
+															? 'Club Admin'
+															: 'Club Member'}
 													</Text>
 													<Text
 														className={
@@ -181,17 +186,25 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 										<ClubMemberCard member={member} />
 									</HoverCard>
 
-									{!role?.isDefaultRole &&
-										role?.name !== 'Club Member' && (
-											<>
-												<CircleMinus
-													className={styles.clickable}
-													onClick={() => {
-														removeMember(member)
-													}}
-												/>
-											</>
-										)}
+									{(!role?.isDefaultRole ||
+										(role.isAdminRole &&
+											!member.isClubOwner)) && (
+										<>
+											<CircleMinus
+												className={styles.clickable}
+												onClick={() => {
+													removeMember(member)
+												}}
+											/>
+										</>
+									)}
+									{(role?.name === 'Token Holder' ||
+										(role?.isAdminRole &&
+											member.isClubOwner)) && (
+										<>
+											<Lock />
+										</>
+									)}
 								</div>
 								<Space h={16} />
 								<Divider />

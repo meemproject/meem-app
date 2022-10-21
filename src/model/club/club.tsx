@@ -77,6 +77,8 @@ export interface ClubMember {
 	discordUserId?: string
 	emailAddress?: string
 	roles?: ClubRole[]
+	isClubOwner?: boolean
+	isClubAdmin?: boolean
 
 	// Convenience bool for roles
 	chosen?: boolean
@@ -357,6 +359,9 @@ export default async function clubFromMeemContract(
 						// Is this member an admin?
 						let isMemberAnAdmin = false
 
+						// Is this member the club owner?
+						let isMemberTheClubOwner = false
+
 						if (!hasAlreadyBeenAdded) {
 							// Is this the current user?
 							const isCurrentUser =
@@ -388,9 +393,11 @@ export default async function clubFromMeemContract(
 								} else if (isClubOwner) {
 									isClubAdmin = true
 								}
+
+								isMemberAnAdmin = isClubAdmin
 							}
 
-							// Is this member an admin?
+							// Is this member an admin
 							if (memberMeemContractWallet) {
 								if (
 									memberMeemContractWallet.role.toLowerCase() ===
@@ -402,6 +409,10 @@ export default async function clubFromMeemContract(
 									)
 								}
 							}
+
+							// Is this member the club owner?
+							isMemberTheClubOwner =
+								meem.OwnerId === clubData.OwnerId
 
 							// Roles + permissions logic
 							let memberRoles: ClubRole[] = []
@@ -486,7 +497,9 @@ export default async function clubFromMeemContract(
 								twitterUsername,
 								discordUsername,
 								discordUserId,
-								emailAddress
+								emailAddress,
+								isClubOwner: isMemberTheClubOwner,
+								isClubAdmin: isMemberAnAdmin
 							}
 
 							// Add to members
