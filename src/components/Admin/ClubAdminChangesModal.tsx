@@ -326,13 +326,24 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
 					log.crit(err.detail.code)
-					showNotification({
-						radius: 'lg',
-						title: 'Error saving changes',
-						message:
-							'An error occurred while saving changes. Please try again.',
-						color: 'red'
-					})
+
+					if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
+						showNotification({
+							radius: 'lg',
+							title: 'Transaction limit exceeded',
+							message:
+								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
+							color: 'red'
+						})
+					} else {
+						showNotification({
+							radius: 'lg',
+							title: 'Error saving changes',
+							message:
+								'An error occurred while saving changes. Please try again.',
+							color: 'red'
+						})
+					}
 
 					closeModal()
 				}
