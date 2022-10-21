@@ -517,6 +517,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						data
 					)
 				} else {
+					setIsJoiningClub(false)
 					showNotification({
 						radius: 'lg',
 						title: 'Error joining this club.',
@@ -525,14 +526,24 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			}
 		} catch (e) {
-			log.debug(e)
+			const error: any = JSON.parse(
+				(e as any).toString().split('Error: ')[1]
+			)
+			log.debug(error.code)
+			if (error.code === 'TX_LIMIT_EXCEEDED') {
+				showNotification({
+					radius: 'lg',
+					title: 'Transaction limit exceeded',
+					message: `Come back tomorrow or get in touch!`
+				})
+			} else {
+				showNotification({
+					radius: 'lg',
+					title: 'Error joining this club.',
+					message: `Please get in touch!`
+				})
+			}
 			setIsJoiningClub(false)
-
-			showNotification({
-				radius: 'lg',
-				title: 'Error joining this club.',
-				message: `Please get in touch!`
-			})
 		}
 	}
 
