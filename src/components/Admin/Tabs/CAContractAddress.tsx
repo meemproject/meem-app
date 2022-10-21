@@ -172,6 +172,26 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 		}
 	)
 
+	const chainIdToGnosisUrlPrefix = (): string => {
+		switch (process.env.NEXT_PUBLIC_CHAIN_ID) {
+			case '5':
+				return 'gor'
+			case '10':
+				return 'oeth'
+			case '420':
+				return 'gor'
+			case '42161':
+				return 'arb1'
+			case '43114':
+				return 'avax'
+			case '421613':
+				return 'gor'
+		}
+
+		// Default to polygon
+		return 'matic'
+	}
+
 	useEffect(() => {
 		const fetchFacets = async () => {
 			// TODO: Move this to meem-contracts package?
@@ -413,11 +433,9 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						className={classes.buttonCreate}
 						onClick={() => {
 							window.open(
-								`https://gnosis-safe.io/app/${
-									process.env.NEXT_PUBLIC_CHAIN_ID === '4'
-										? 'rin'
-										: 'matic'
-								}:${club.gnosisSafeAddress}/home`
+								`https://gnosis-safe.io/app/${chainIdToGnosisUrlPrefix()}:${
+									club.gnosisSafeAddress
+								}/home`
 							)
 						}}
 					>
