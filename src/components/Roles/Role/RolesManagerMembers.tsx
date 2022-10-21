@@ -203,7 +203,10 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 					<>
 						<Space h={24} />
 						<Center>
-							<Text>This role has no members!</Text>
+							<Text>
+								{`This role hasn’t been assigned to any members
+								yet.`}
+							</Text>
 						</Center>
 					</>
 				)}
