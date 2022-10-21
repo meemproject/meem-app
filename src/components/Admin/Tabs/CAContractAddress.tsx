@@ -184,6 +184,8 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 				return 'arb1'
 			case '43114':
 				return 'avax'
+			case '80001':
+				return 'matic'
 			case '421613':
 				return 'gor'
 		}
