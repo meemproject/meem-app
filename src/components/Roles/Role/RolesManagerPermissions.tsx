@@ -52,13 +52,13 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 
 	const startDiscordAuth = () => {
 		const uri = encodeURIComponent(`${window.location.origin}/profile`)
-		const scope = encodeURIComponent(`bot applications.commands`)
+		const scope = encodeURIComponent(`identify guilds`)
 		Cookies.set('authForDiscordRole', 'true')
 		Cookies.set('roleId', role ? role.id : '')
 		Cookies.set('clubSlug', club && club.slug ? club.slug : '')
 		setIsRoleDiscordCloseTabModalOpened(true)
 		window.open(
-			`https://discord.com/api/oauth2/authorize?client_id=868172385000509460&guild_id=1026951452582760558&permissions=268782673&redirect_uri=${uri}&response_type=code&scope=${scope}`,
+			`https://discord.com/api/oauth2/authorize?client_id=967119580088660039&redirect_uri=${uri}&response_type=code&scope=${scope}`,
 			'_self'
 		)
 	}

@@ -110,8 +110,9 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 			onModalClosed()
 		} else {
 			setIsSavingChanges(true)
+			const scope = encodeURIComponent(`bot applications.commands`)
 			const discordAuth = window.open(
-				`https://discord.com/oauth2/authorize?client_id=868172385000509460&guild_id=${server.id}&permissions=8&scope=bot%20applications.commands`
+				`https://discord.com/api/oauth2/authorize?client_id=868172385000509460&guild_id=${server.id}&permissions=268782673&scope=${scope}`
 			)
 
 			// This is a neat hack to see if the auth window has been closed!

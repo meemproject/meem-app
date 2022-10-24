@@ -185,11 +185,11 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 							<TextInput
 								size={'lg'}
 								radius={20}
-								placeholder={'Enter Role Name'}
+								disabled
 								classNames={{
 									input: styles.fTextField
 								}}
-								value={discordRoleName}
+								value={role.name}
 								onChange={event => {
 									if (event) {
 										setDiscordRoleName(event.target.value)
