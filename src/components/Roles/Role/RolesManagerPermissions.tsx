@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import log from '@kengoldfarb/log'
 import { Text, Space, Switch, Divider, Button, Image } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -65,11 +64,8 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	useEffect(() => {
 		if (Cookies.get('discordAccessToken')) {
 			setDiscordAccessToken(Cookies.get('discordAccessToken') ?? '')
-			log.debug(
-				`discordAccessToken = ${Cookies.get('discordAccessToken')}`
-			)
 		}
-	}, [role?.rolesIntegrationData])
+	}, [role?.guildDiscordServerId])
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<div key={permission.id}>
@@ -219,22 +215,26 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 							</div>
 						)}
 
-						{discordAccessToken && !chosenDiscordServer && (
-							<div>
-								<Button
-									className={styles.buttonWhite}
-									leftIcon={<Discord />}
-									onClick={() => {
-										setIsRoleDiscordConnectModalOpened(true)
-									}}
-								>
-									Choose a Discord Server
-								</Button>
-								<Space h={40} />
-							</div>
-						)}
+						{!role?.guildRoleId &&
+							discordAccessToken &&
+							!chosenDiscordServer && (
+								<div>
+									<Button
+										className={styles.buttonWhite}
+										leftIcon={<Discord />}
+										onClick={() => {
+											setIsRoleDiscordConnectModalOpened(
+												true
+											)
+										}}
+									>
+										Choose a Discord Server
+									</Button>
+									<Space h={40} />
+								</div>
+							)}
 
-						{role?.guildDiscordServerId && !chosenDiscordServer && (
+						{role?.guildRoleId && !chosenDiscordServer && (
 							<div>
 								<div className={styles.centeredRow}>
 									<Image
@@ -268,7 +268,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 									className={
 										styles.enabledClubIntegrationItem
 									}
-									style={{ width: 300 }}
+									style={{ width: 400 }}
 								>
 									<div
 										className={styles.enabledIntHeaderBg}
@@ -281,7 +281,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 											fit={'contain'}
 										/>
 										<Space w={8} />
-										<Text>{`Discord Role in ${role.guildDiscordServerName}`}</Text>
+										<Text>{`${role.guildRoleName} in ${role.guildDiscordServerName}`}</Text>
 									</div>
 									<div
 										style={{
@@ -340,6 +340,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 										</a>
 									</div>
 								</div>
+								<Space h={40} />
 							</div>
 						)}
 

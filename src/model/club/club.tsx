@@ -63,7 +63,13 @@ export function emptyRole(): ClubRole {
 		isAdminRole: false,
 		isDefaultRole: false,
 		name: '',
-		permissions: []
+		permissions: [],
+		rolesIntegrationData: '',
+		guildRoleId: '',
+		guildRoleName: '',
+		guildDiscordServerId: '',
+		guildDiscordServerIcon: '',
+		guildDiscordServerName: ''
 	}
 }
 
@@ -182,9 +188,30 @@ export function meemContractRolesToClubRoles(
 			})
 		}
 
-		// Roles integration metadata
+		// Roles discord integration metadata
 		const metadata = rawRole.integrationsMetadata
-		log.debug(JSON.stringify(metadata))
+
+		let guildDiscordServerIcon = ''
+		let guildDiscordServerId = ''
+		let guildDiscordServerName = ''
+		let guildRoleName = ''
+		let guildRoleId = ''
+
+		if (metadata && metadata.length > 0 && metadata[0].discordServerData) {
+			const data = metadata[0].discordServerData
+			guildDiscordServerIcon = data.serverIcon
+			guildDiscordServerId = data.serverId
+			guildDiscordServerName = data.serverName
+
+			if (data.roles && data.roles.length > 0) {
+				data.roles.forEach((role: any) => {
+					if (role.name === rawRole.name) {
+						guildRoleName = role.name
+						guildRoleId = role.id
+					}
+				})
+			}
+		}
 
 		const clubRole: ClubRole = {
 			id: rawRole.id,
@@ -192,10 +219,16 @@ export function meemContractRolesToClubRoles(
 			isDefaultRole: rawRole.isDefaultRole,
 			rolesIntegrationData: metadata,
 			name: rawRole.name,
+			guildDiscordServerIcon,
+			guildDiscordServerId,
+			guildDiscordServerName,
+			guildRoleId,
+			guildRoleName,
 			permissions
 		}
 		roles.push(clubRole)
 	})
+
 	return roles
 }
 
