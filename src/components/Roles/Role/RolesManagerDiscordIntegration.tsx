@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
 import { Text, Space, Divider, Button, Image, Loader } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { Discord } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
-import { ExternalLink, Settings } from 'tabler-icons-react'
+import { ExternalLink } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleDiscordConnectServerModal } from './Modals/RoleDiscordConnectServerModal'
@@ -210,7 +209,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 														guildPlatform.platformGuildName
 													}
 												</Text>
-												<Text
+												{/* <Text
 													className={styles.tLink}
 													onClick={() => {
 														if (
@@ -224,7 +223,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 													}}
 												>
 													Disconnect
-												</Text>
+												</Text> */}
 											</div>
 										</div>
 										<Space h={24} />
@@ -289,7 +288,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 														</Text>
 													</div>
 												</a>
-												<Space w={4} />
+												{/* <Space w={4} />
 												<Divider orientation="vertical" />
 												<Space w={4} />
 
@@ -317,7 +316,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 															Settings
 														</Text>
 													</div>
-												</a>
+												</a> */}
 											</div>
 										</div>
 										<Space h={40} />
