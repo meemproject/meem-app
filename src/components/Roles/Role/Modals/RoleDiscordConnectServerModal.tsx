@@ -23,6 +23,7 @@ interface IProps {
 	club: Club
 	role: ClubRole
 	isOpened: boolean
+	existingServerId: string
 	onModalClosed: () => void
 	onServerChosen: (server: MeemAPI.IDiscordServer) => void
 }
@@ -31,6 +32,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 	club,
 	role,
 	isOpened,
+	existingServerId,
 	onModalClosed,
 	onServerChosen
 }) => {
@@ -67,6 +69,16 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 			})
 
 			setAvailableDiscordServers(dServers)
+
+			// This club already has a discord role, so we'll use this discord server info instead of offering a selection
+			if (existingServerId) {
+				dServers.forEach(server => {
+					if (server.id === existingServerId) {
+						onServerChosen(server)
+						onModalClosed()
+					}
+				})
+			}
 			setIsFetchingDiscordServers(false)
 		} catch (e) {
 			log.debug(e)
@@ -81,7 +93,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 			onModalClosed()
 			return
 		}
-	}, [onModalClosed])
+	}, [existingServerId, onModalClosed, onServerChosen])
 
 	useEffect(() => {
 		async function fetchDiscordServers() {
@@ -93,13 +105,26 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 		if (isOpened && !availableDiscordServers) {
 			fetchDiscordServers()
 		}
+
+		if (isOpened && existingServerId && availableDiscordServers) {
+			// This club already has a discord role, so we'll use this discord server info instead of offering a selection
+
+			availableDiscordServers.forEach(server => {
+				if (server.id === existingServerId) {
+					onServerChosen(server)
+					onModalClosed()
+				}
+			})
+		}
 	}, [
 		availableDiscordServers,
 		club.id,
+		existingServerId,
 		fetch,
 		isFetchingDiscordServers,
 		isOpened,
 		onModalClosed,
+		onServerChosen,
 		role.id
 	])
 
@@ -110,8 +135,9 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 			onModalClosed()
 		} else {
 			setIsSavingChanges(true)
+			const scope = encodeURIComponent(`bot applications.commands`)
 			const discordAuth = window.open(
-				`https://discord.com/oauth2/authorize?client_id=868172385000509460&guild_id=${server.id}&permissions=8&scope=bot%20applications.commands`
+				`https://discord.com/api/oauth2/authorize?client_id=868172385000509460&guild_id=${server.id}&permissions=268782673&scope=${scope}`
 			)
 
 			// This is a neat hack to see if the auth window has been closed!
@@ -210,7 +236,13 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 												radius={24}
 												height={48}
 												width={48}
-												src={server.icon}
+												src={
+													server.guildData.serverIcon
+														.length > 0
+														? server.guildData
+																.serverIcon
+														: '/apple-touch-icon.png'
+												}
 											/>
 											<Space w={16} />
 											<div>
@@ -227,12 +259,18 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											</div>
 										</div>
 										<Button
+											disabled={
+												server.guildData
+													.connectedGuildId !== null
+											}
 											onClick={() => {
 												connectServer(server)
 											}}
 											className={styles.buttonBlack}
 										>
-											{server.guildData.isAdmin
+											{server.guildData.connectedGuildId
+												? 'Connected to another Guild'
+												: server.guildData.isAdmin
 												? 'Connect'
 												: 'Add Guild Bot'}
 										</Button>
