@@ -23,6 +23,7 @@ interface IProps {
 	club: Club
 	role: ClubRole
 	isOpened: boolean
+	existingServerId: string
 	onModalClosed: () => void
 	onServerChosen: (server: MeemAPI.IDiscordServer) => void
 }
@@ -31,6 +32,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 	club,
 	role,
 	isOpened,
+	existingServerId,
 	onModalClosed,
 	onServerChosen
 }) => {
@@ -67,6 +69,16 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 			})
 
 			setAvailableDiscordServers(dServers)
+
+			// This club already has a discord role, so we'll use this discord server info instead of offering a selection
+			if (existingServerId) {
+				dServers.forEach(server => {
+					if (server.id === existingServerId) {
+						onServerChosen(server)
+						onModalClosed()
+					}
+				})
+			}
 			setIsFetchingDiscordServers(false)
 		} catch (e) {
 			log.debug(e)
@@ -81,7 +93,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 			onModalClosed()
 			return
 		}
-	}, [onModalClosed])
+	}, [existingServerId, onModalClosed, onServerChosen])
 
 	useEffect(() => {
 		async function fetchDiscordServers() {
@@ -93,13 +105,26 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 		if (isOpened && !availableDiscordServers) {
 			fetchDiscordServers()
 		}
+
+		if (isOpened && existingServerId && availableDiscordServers) {
+			// This club already has a discord role, so we'll use this discord server info instead of offering a selection
+
+			availableDiscordServers.forEach(server => {
+				if (server.id === existingServerId) {
+					onServerChosen(server)
+					onModalClosed()
+				}
+			})
+		}
 	}, [
 		availableDiscordServers,
 		club.id,
+		existingServerId,
 		fetch,
 		isFetchingDiscordServers,
 		isOpened,
 		onModalClosed,
+		onServerChosen,
 		role.id
 	])
 
