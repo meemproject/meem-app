@@ -236,7 +236,13 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 												radius={24}
 												height={48}
 												width={48}
-												src={server.icon}
+												src={
+													server.guildData.serverIcon
+														.length > 0
+														? server.guildData
+																.serverIcon
+														: '/apple-touch-icon.png'
+												}
 											/>
 											<Space w={16} />
 											<div>
@@ -253,12 +259,18 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											</div>
 										</div>
 										<Button
+											disabled={
+												server.guildData
+													.connectedGuildId !== null
+											}
 											onClick={() => {
 												connectServer(server)
 											}}
 											className={styles.buttonBlack}
 										>
-											{server.guildData.isAdmin
+											{server.guildData.connectedGuildId
+												? 'Connected to another Guild'
+												: server.guildData.isAdmin
 												? 'Connect'
 												: 'Add Guild Bot'}
 										</Button>

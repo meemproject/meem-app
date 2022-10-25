@@ -193,15 +193,17 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 								{guildPlatform && role?.guildDiscordServerId && (
 									<div>
 										<div className={styles.centeredRow}>
-											{/* <Image
+											<Image
 												src={
-													role.guildDiscordServerIcon
+													guildPlatform
+														.platformGuildData
+														.serverIcon
 												}
 												height={48}
 												width={48}
 												radius={24}
 											/>
-											<Space w={16} /> */}
+											<Space w={16} />
 											<div>
 												<Text className={styles.tTitle}>
 													{
