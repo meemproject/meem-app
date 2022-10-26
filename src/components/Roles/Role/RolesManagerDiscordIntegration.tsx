@@ -159,9 +159,17 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 											className={styles.buttonWhite}
 											leftIcon={<Discord />}
 											onClick={() => {
-												setIsRoleDiscordConnectModalOpened(
-													true
-												)
+												if (
+													Cookies.get(
+														'discordAccessToken'
+													)
+												) {
+													setIsRoleDiscordConnectModalOpened(
+														true
+													)
+												} else {
+													startDiscordAuth()
+												}
 											}}
 										>
 											Choose a Discord Server
