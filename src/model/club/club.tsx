@@ -48,6 +48,8 @@ export interface ClubRole {
 	name: string
 	isAdminRole?: boolean
 	isDefaultRole?: boolean
+	isTransferrable?: boolean
+	tokenAddress?: string
 	permissions: ClubRolePermission[]
 	rolesIntegrationData?: any
 	guildRoleId?: string

@@ -39,10 +39,26 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 											value.currentTarget.checked
 									}
 								})
+
+								// TODO: there's got to be a better way to update a single element of an object and
+								// TODO: have it apply to useState, instead of recreating the entire object. surely?
 								const newRole: ClubRole = {
 									name: role.name,
 									id: role.id,
-									permissions: newPermissions
+									permissions: newPermissions,
+									isTransferrable: role.isTransferrable,
+									isAdminRole: role.isAdminRole,
+									isDefaultRole: role.isDefaultRole,
+									rolesIntegrationData:
+										role.rolesIntegrationData,
+									guildDiscordServerId:
+										role.guildDiscordServerId ?? '',
+									guildDiscordServerIcon:
+										role.guildDiscordServerIcon ?? '',
+									guildDiscordServerName:
+										role.guildDiscordServerName ?? '',
+									guildRoleId: role.guildRoleId ?? '',
+									guildRoleName: role.guildRoleName ?? ''
 								}
 								onRoleUpdated(newRole)
 							}
