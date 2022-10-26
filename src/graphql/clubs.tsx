@@ -343,6 +343,11 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				}
 				integrationsMetadata
 			}
+			MeemContractWallets {
+				Wallet {
+					address
+				}
+			}
 		}
 	}
 `

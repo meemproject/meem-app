@@ -169,6 +169,11 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			}
 		}
 		fetchFacets()
+
+		// set the Meem API control radio button selection based on club data
+		setSmartContractPermission(
+			club.isClubControlledByMeemApi ? 'members-and-meem' : 'members'
+		)
 	}, [club, wallet, bundleData, shouldShowUpgrade])
 
 	return (
@@ -256,12 +261,35 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 							wallet.signer
 						)
 
-						const tx = await meemContract?.grantRole(
-							ClubAdminRole,
-							process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
-						)
+						if (
+							// If not controlled by meem api and the user wants to enable control...
+							smartContractPermission === 'members-and-meem' &&
+							!club.isClubControlledByMeemApi
+						) {
+							const tx = await meemContract?.grantRole(
+								ClubAdminRole,
+								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
+							)
 
-						await tx.wait()
+							await tx.wait()
+						} else if (
+							// If controlled by meem api and user wants to remove control...
+							smartContractPermission === 'members' &&
+							club.isClubControlledByMeemApi
+						) {
+							const tx = await meemContract?.revokeRole(
+								ClubAdminRole,
+								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
+							)
+
+							await tx.wait()
+						} else {
+							showNotification({
+								title: 'Oops!',
+								color: 'red',
+								message: `There are no changes to save.`
+							})
+						}
 					} catch (e) {
 						log.debug(e)
 					}

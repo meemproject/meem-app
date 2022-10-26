@@ -109,6 +109,7 @@ export interface Club {
 	isCurrentUserClubMember?: boolean
 	isCurrentUserClubAdmin?: boolean
 	isCurrentUserClubOwner?: boolean
+	isClubControlledByMeemApi?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
 	allIntegrations?: Integration[]
@@ -769,6 +770,23 @@ export default async function clubFromMeemContract(
 			slotsLeft = totalMemberships - membersCount
 		}
 
+		// Determine if the club is controlled by the Meem API wallet address
+		let isClubControlledByMeemApi = false
+		clubData.MeemContractWallets.forEach(contractWallet => {
+			if (contractWallet.Wallet) {
+				if (
+					contractWallet.Wallet.address.toLowerCase() ===
+					process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
+				) {
+					isClubControlledByMeemApi = true
+				}
+			}
+		})
+
+		log.debug(
+			`club is controlled by meem api = ${isClubControlledByMeemApi}`
+		)
+
 		return {
 			id: clubData.id,
 			name: clubData.name,
@@ -786,6 +804,7 @@ export default async function clubFromMeemContract(
 			currentUserClubPermissions,
 			memberRolesMap,
 			isCurrentUserClubMember: isClubMember,
+			isClubControlledByMeemApi,
 			membershipToken,
 			members,
 			slotsLeft,
