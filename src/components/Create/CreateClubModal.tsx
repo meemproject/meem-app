@@ -247,15 +247,15 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 				const splits =
 					membershipSettings.membershipFundsAddress.length > 0 &&
-					membershipSettings.costToJoin > 0
+						membershipSettings.costToJoin > 0
 						? [
-								{
-									amount: 10000,
-									toAddress:
-										membershipSettings.membershipFundsAddress,
-									lockedBy: MeemAPI.zeroAddress
-								}
-						  ]
+							{
+								amount: 10000,
+								toAddress:
+									membershipSettings.membershipFundsAddress,
+								lockedBy: MeemAPI.zeroAddress
+							}
+						]
 						: []
 
 				const mintPermissions: MeemAPI.IMeemPermission[] =
@@ -266,12 +266,12 @@ export const CreateClubModal: React.FC<IProps> = ({
 							mintStartTimestamp:
 								membershipSettings.membershipStartDate
 									? membershipSettings.membershipStartDate.getTime() /
-									  1000
+									1000
 									: 0,
 							mintEndTimestamp:
 								membershipSettings.membershipEndDate
 									? membershipSettings.membershipEndDate.getTime() /
-									  1000
+									1000
 									: 0
 						})
 					})
@@ -308,7 +308,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				}
 
 				const data = {
-					shouldMintAdminTokens: true,
+					shouldMintTokens: true,
 					metadata: {
 						meem_contract_type: 'meem-club',
 						meem_metadata_version: 'MeemClub_Contract_20220718',
@@ -327,7 +327,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					).toHexString(),
 					mintPermissions,
 					splits,
-					adminTokenMetadata: {
+					tokenMetadata: {
 						meem_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${Cookies.get(
 							CookieKeys.clubName

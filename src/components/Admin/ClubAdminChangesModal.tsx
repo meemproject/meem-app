@@ -161,12 +161,12 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 								mintStartTimestamp: club.membershipSettings
 									?.membershipStartDate
 									? club.membershipSettings?.membershipStartDate.getTime() /
-									  1000
+									1000
 									: 0,
 								mintEndTimestamp: club.membershipSettings
 									?.membershipEndDate
 									? club.membershipSettings?.membershipEndDate.getTime() /
-									  1000
+									1000
 									: 0
 							})
 						}
@@ -204,7 +204,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}
 
 				const data = {
-					shouldMintAdminTokens: true,
+					shouldMintTokens: true,
 					metadata: {
 						meem_contract_type: 'meem-club',
 						meem_metadata_version: 'MeemClub_Contract_20220718',
@@ -226,21 +226,21 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					mintPermissions,
 					splits:
 						club.membershipSettings &&
-						club.membershipSettings.membershipFundsAddress.length >
+							club.membershipSettings.membershipFundsAddress.length >
 							0
 							? [
-									{
-										toAddress: club.membershipSettings
-											? club.membershipSettings
-													.membershipFundsAddress
-											: wallet.accounts[0],
-										// Amount in basis points 10000 == 100%
-										amount: 10000,
-										lockedBy: MeemAPI.zeroAddress
-									}
-							  ]
+								{
+									toAddress: club.membershipSettings
+										? club.membershipSettings
+											.membershipFundsAddress
+										: wallet.accounts[0],
+									// Amount in basis points 10000 == 100%
+									amount: 10000,
+									lockedBy: MeemAPI.zeroAddress
+								}
+							]
 							: [],
-					adminTokenMetadata: {
+					tokenMetadata: {
 						meem_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${club.name}`,
 						name: `${club.name} membership token`,
