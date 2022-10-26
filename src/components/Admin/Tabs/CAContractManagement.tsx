@@ -5,14 +5,14 @@ import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
 import { useWallet } from '@meemproject/react'
-import { ethers } from 'ethers'
+import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
-import { Club } from '../../../model/club/club'
+import { Club, ClubAdminRole } from '../../../model/club/club'
 import { hostnameToChainId } from '../../App'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
@@ -243,6 +243,32 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					label="No, only club members with the Admin role can manage this contract"
 				/>
 			</Radio.Group>
+
+			<Space h={16} />
+
+			<Button
+				className={styles.buttonBlack}
+				onClick={async () => {
+					try {
+						const meemContract = new Contract(
+							club?.address ?? '',
+							bundleData?.Bundles[0].abi,
+							wallet.signer
+						)
+
+						const tx = await meemContract?.grantRole(
+							ClubAdminRole,
+							process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
+						)
+
+						await tx.wait()
+					} catch (e) {
+						log.debug(e)
+					}
+				}}
+			>
+				Save Changes
+			</Button>
 
 			{shouldShowUpgrade && (
 				<>
