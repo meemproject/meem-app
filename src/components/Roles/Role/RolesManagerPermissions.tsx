@@ -4,7 +4,6 @@ import React from 'react'
 import { Lock } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
-import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
 
 interface IProps {
 	role?: ClubRole
@@ -15,7 +14,6 @@ interface IProps {
 
 export const RolesManagerPermissions: React.FC<IProps> = ({
 	role,
-	club,
 	onSaveChanges,
 	onRoleUpdated
 }) => {
@@ -92,9 +90,6 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-
-				<RolesManagerDiscordIntegration club={club} role={role} />
-				<Space h={24} />
 
 				<Button className={styles.buttonBlack} onClick={onSaveChanges}>
 					Save Changes

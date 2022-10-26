@@ -5,13 +5,16 @@ import {
 	Text,
 	Space,
 	TextInput,
+	Image,
 	Tabs,
 	Button,
 	Loader,
-	Center
+	Center,
+	Divider
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
+import { Check } from 'tabler-icons-react'
 import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
 import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/clubs'
 import {
@@ -23,6 +26,7 @@ import {
 import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
+import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
 interface IProps {
@@ -189,7 +193,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					<Space w={2} />
 					<Text color={'red'}>*</Text>
 				</div>
-				<Space h={12} />
+				<Space h={24} />
 				<TextInput
 					size={'lg'}
 					radius={20}
@@ -212,7 +216,81 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						}
 					}}
 				/>
-				<Space h={12} />
+				<Space h={40} />
+
+				<Text className={styles.tSectionTitleSmall}>
+					CONTRACT ADDRESS
+				</Text>
+
+				<Space h={24} />
+
+				<div className={styles.row}>
+					<Text style={{ wordBreak: 'break-word' }}>
+						{club.address}{' '}
+						{`THIS NEEDS TO BE THE ROLE ADDRESS, NOT CLUB`}
+					</Text>
+					<Image
+						style={{
+							marginLeft: 4,
+							padding: 2,
+							cursor: 'pointer'
+						}}
+						src="/copy.png"
+						height={20}
+						onClick={() => {
+							navigator.clipboard.writeText(club.address ?? '')
+							showNotification({
+								radius: 'lg',
+								title: 'Address copied',
+								autoClose: 2000,
+								color: 'green',
+								icon: <Check />,
+
+								message: `This role's contract address was copied to your clipboard.`
+							})
+						}}
+						width={20}
+					/>
+				</div>
+
+				<Space h={40} />
+
+				<Text className={styles.tSectionTitleSmall}>
+					TOKEN SETTINGS
+				</Text>
+				<Space h={24} />
+
+				{role?.isDefaultRole && role?.isAdminRole && (
+					<div>
+						<Text>
+							{`This is a default role and is currently the only
+							role that has contract management capabilities.`}
+						</Text>
+						<Text>{`The
+							role cannot be deleted and members with this role
+							cannot transfer their token to another wallet.`}</Text>
+					</div>
+				)}
+
+				{role?.isDefaultRole && !role?.isAdminRole && (
+					<div>
+						<Text>
+							{`This is a default role that’s automatically assigned
+							to club members who have connected a wallet.`}
+						</Text>
+						<Text>{`The
+							role cannot be deleted and members with this role
+							cannot transfer their token to another wallet.`}</Text>
+					</div>
+				)}
+
+				<Space h={40} />
+
+				<RolesManagerDiscordIntegration club={club} role={role} />
+
+				<Divider />
+
+				<Space h={40} />
 
 				<Tabs color="dark" defaultValue="permissions">
 					<Tabs.List>
