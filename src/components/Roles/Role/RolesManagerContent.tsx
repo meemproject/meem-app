@@ -224,134 +224,142 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 				{role?.id !== 'addRole' && (
 					<div>
-						<Text className={styles.tSectionTitleSmall}>
-							CONTRACT ADDRESS
-						</Text>
-
-						<Space h={24} />
-
-						<div className={styles.row}>
-							<Text style={{ wordBreak: 'break-word' }}>
-								{club.address}{' '}
-								{`THIS NEEDS TO BE THE ROLE ADDRESS, NOT CLUB`}
-							</Text>
-							<Image
-								style={{
-									marginLeft: 4,
-									padding: 2,
-									cursor: 'pointer'
-								}}
-								src="/copy.png"
-								height={20}
-								onClick={() => {
-									navigator.clipboard.writeText(
-										club.address ?? ''
-									)
-									showNotification({
-										radius: 'lg',
-										title: 'Address copied',
-										autoClose: 2000,
-										color: 'green',
-										icon: <Check />,
-
-										message: `This role's contract address was copied to your clipboard.`
-									})
-								}}
-								width={20}
-							/>
-						</div>
-
-						<Space h={40} />
-
-						<Text className={styles.tSectionTitleSmall}>
-							TOKEN SETTINGS
-						</Text>
-						<Space h={24} />
-
-						{role?.isDefaultRole && role?.isAdminRole && (
+						{role?.tokenAddress && (
 							<div>
-								<Text>
-									{`This is a default role and is currently the only
+								<Text className={styles.tSectionTitleSmall}>
+									CONTRACT ADDRESS
+								</Text>
+
+								<Space h={24} />
+
+								<div className={styles.row}>
+									<Text style={{ wordBreak: 'break-word' }}>
+										{role?.tokenAddress}
+									</Text>
+									<Image
+										style={{
+											marginLeft: 4,
+											padding: 2,
+											cursor: 'pointer'
+										}}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												club.address ?? ''
+											)
+											showNotification({
+												radius: 'lg',
+												title: 'Address copied',
+												autoClose: 2000,
+												color: 'green',
+												icon: <Check />,
+
+												message: `This role's contract address was copied to your clipboard.`
+											})
+										}}
+										width={20}
+									/>
+								</div>
+
+								<Space h={40} />
+
+								<Text className={styles.tSectionTitleSmall}>
+									TOKEN SETTINGS
+								</Text>
+								<Space h={24} />
+
+								{role?.isDefaultRole && role?.isAdminRole && (
+									<div>
+										<Text>
+											{`This is a default role and is currently the only
 							role that has contract management capabilities.`}
-								</Text>
-								<Text>{`The
+										</Text>
+										<Text>{`The
 							role cannot be deleted and members with this role
 							cannot transfer their token to another wallet.`}</Text>
-							</div>
-						)}
+									</div>
+								)}
 
-						{role?.isDefaultRole && !role?.isAdminRole && (
-							<div>
-								<Text>
-									{`This is a default role that’s automatically assigned
+								{role?.isDefaultRole && !role?.isAdminRole && (
+									<div>
+										<Text>
+											{`This is a default role that’s automatically assigned
 							to club members who have connected a wallet.`}
-								</Text>
-								<Text>{`The
+										</Text>
+										<Text>{`The
 							role cannot be deleted and members with this role
 							cannot transfer their token to another wallet.`}</Text>
+									</div>
+								)}
+
+								{!role?.isDefaultRole && (
+									<div>
+										<Text
+											className={styles.tBold}
+										>{`Can members with this role transfer their token to another wallet?`}</Text>
+										<Space h={4} />
+
+										<Radio.Group
+											orientation="vertical"
+											spacing={10}
+											size="sm"
+											color="dark"
+											value={isTokenTransferrable}
+											onChange={(value: any) => {
+												setIsTokenTransferrable(value)
+
+												// Update the role's state in this component and all subcomponents
+												// TODO: there's got to be a better way to update a single element of an object and
+												// TODO: have it apply to useState, instead of recreating the entire object. surely?
+												const newRole: ClubRole = {
+													name: role?.name ?? '',
+													id: role?.id ?? '',
+													permissions:
+														role?.permissions ?? [],
+													isTransferrable:
+														isTokenTransferrable ===
+														'transferrable',
+													isAdminRole:
+														role?.isAdminRole,
+													isDefaultRole:
+														role?.isDefaultRole,
+													rolesIntegrationData:
+														role?.rolesIntegrationData,
+													guildDiscordServerId:
+														role?.guildDiscordServerId ??
+														'',
+													guildDiscordServerIcon:
+														role?.guildDiscordServerIcon ??
+														'',
+													guildDiscordServerName:
+														role?.guildDiscordServerName ??
+														'',
+													guildRoleId:
+														role?.guildRoleId ?? '',
+													guildRoleName:
+														role?.guildRoleName ??
+														''
+												}
+												updateRole(newRole)
+											}}
+											required
+										>
+											<Radio
+												value="non-transferrable"
+												label="No, this role cannot be transferred"
+											/>
+											<Radio
+												value="transferrable"
+												label="Yes, this role can be transferred to someone else"
+											/>
+										</Radio.Group>
+									</div>
+								)}
+
+								<Space h={40} />
 							</div>
 						)}
-
-						{role?.isDefaultRole && (
-							<div>
-								<Text
-									className={styles.tBold}
-								>{`Can members with this role transfer their token to another wallet?`}</Text>
-								<Space h={4} />
-
-								<Radio.Group
-									orientation="vertical"
-									spacing={10}
-									size="sm"
-									color="dark"
-									value={isTokenTransferrable}
-									onChange={(value: any) => {
-										setIsTokenTransferrable(value)
-
-										// Update the role's state in this component and all subcomponents
-										// TODO: there's got to be a better way to update a single element of an object and
-										// TODO: have it apply to useState, instead of recreating the entire object. surely?
-										const newRole: ClubRole = {
-											name: role?.name ?? '',
-											id: role?.id ?? '',
-											permissions:
-												role?.permissions ?? [],
-											isTransferrable:
-												isTokenTransferrable ===
-												'transferrable',
-											isAdminRole: role?.isAdminRole,
-											isDefaultRole: role?.isDefaultRole,
-											rolesIntegrationData:
-												role.rolesIntegrationData,
-											guildDiscordServerId:
-												role.guildDiscordServerId ?? '',
-											guildDiscordServerIcon:
-												role.guildDiscordServerIcon ??
-												'',
-											guildDiscordServerName:
-												role.guildDiscordServerName ??
-												'',
-											guildRoleId: role.guildRoleId ?? '',
-											guildRoleName:
-												role.guildRoleName ?? ''
-										}
-										updateRole(newRole)
-									}}
-									required
-								>
-									<Radio
-										value="non-transferrable"
-										label="No, this role cannot be transferred"
-									/>
-									<Radio
-										value="transferrable"
-										label="Yes, this role can be transferred to someone else"
-									/>
-								</Radio.Group>
-							</div>
-						)}
-
-						<Space h={40} />
 
 						<RolesManagerDiscordIntegration
 							club={club}

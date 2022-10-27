@@ -223,6 +223,7 @@ export function meemContractRolesToClubRoles(
 			isAdminRole: rawRole.isAdminRole,
 			isDefaultRole: rawRole.isDefaultRole,
 			rolesIntegrationData: metadata,
+			tokenAddress: rawRole.tokenAddress ?? '',
 			name: rawRole.name,
 			guildDiscordServerIcon,
 			guildDiscordServerId,
