@@ -204,7 +204,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}
 
 				const data = {
-					shouldMintAdminTokens: true,
+					shouldMintTokens: true,
 					metadata: {
 						meem_contract_type: 'meem-club',
 						meem_metadata_version: 'MeemClub_Contract_20220718',
@@ -240,7 +240,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 									}
 							  ]
 							: [],
-					adminTokenMetadata: {
+					tokenMetadata: {
 						meem_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${club.name}`,
 						name: `${club.name} membership token`,
@@ -326,13 +326,24 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
 					log.crit(err)
 					log.crit(err.detail.code)
-					showNotification({
-						radius: 'lg',
-						title: 'Error saving changes',
-						message:
-							'An error occurred while saving changes. Please try again.',
-						color: 'red'
-					})
+
+					if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
+						showNotification({
+							radius: 'lg',
+							title: 'Transaction limit exceeded',
+							message:
+								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
+							color: 'red'
+						})
+					} else {
+						showNotification({
+							radius: 'lg',
+							title: 'Error saving changes',
+							message:
+								'An error occurred while saving changes. Please try again.',
+							color: 'red'
+						})
+					}
 
 					closeModal()
 				}

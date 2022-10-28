@@ -150,6 +150,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 						<Select
 							placeholder="Select a role"
 							itemComponent={SelectItem}
+							size={'md'}
 							onChange={value => {
 								if (value != null && discordRoles) {
 									discordRoles.forEach(dRole => {

@@ -3653,6 +3653,7 @@ export type MeemContractRoles = {
   integrationsMetadata: Scalars['jsonb'];
   isAdminRole: Scalars['Boolean'];
   isDefaultRole: Scalars['Boolean'];
+  isTokenTransferrable: Scalars['Boolean'];
   name: Scalars['String'];
   tokenAddress?: Maybe<Scalars['String']>;
   updatedAt: Scalars['timestamptz'];
@@ -3770,6 +3771,7 @@ export type MeemContractRoles_Bool_Exp = {
   integrationsMetadata?: InputMaybe<Jsonb_Comparison_Exp>;
   isAdminRole?: InputMaybe<Boolean_Comparison_Exp>;
   isDefaultRole?: InputMaybe<Boolean_Comparison_Exp>;
+  isTokenTransferrable?: InputMaybe<Boolean_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   tokenAddress?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -3816,6 +3818,7 @@ export type MeemContractRoles_Insert_Input = {
   integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
+  isTokenTransferrable?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
@@ -3917,6 +3920,7 @@ export type MeemContractRoles_Order_By = {
   integrationsMetadata?: InputMaybe<Order_By>;
   isAdminRole?: InputMaybe<Order_By>;
   isDefaultRole?: InputMaybe<Order_By>;
+  isTokenTransferrable?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   tokenAddress?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
@@ -3955,6 +3959,8 @@ export enum MeemContractRoles_Select_Column {
   /** column name */
   IsDefaultRole = 'isDefaultRole',
   /** column name */
+  IsTokenTransferrable = 'isTokenTransferrable',
+  /** column name */
   Name = 'name',
   /** column name */
   TokenAddress = 'tokenAddress',
@@ -3974,6 +3980,7 @@ export type MeemContractRoles_Set_Input = {
   integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
+  isTokenTransferrable?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4032,6 +4039,7 @@ export type MeemContractRoles_Stream_Cursor_Value_Input = {
   integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
+  isTokenTransferrable?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4070,6 +4078,8 @@ export enum MeemContractRoles_Update_Column {
   IsAdminRole = 'isAdminRole',
   /** column name */
   IsDefaultRole = 'isDefaultRole',
+  /** column name */
+  IsTokenTransferrable = 'isTokenTransferrable',
   /** column name */
   Name = 'name',
   /** column name */
@@ -4397,6 +4407,7 @@ export type MeemContracts = {
   Owner?: Maybe<Wallets>;
   OwnerId?: Maybe<Scalars['uuid']>;
   address: Scalars['String'];
+  adminContractAddress?: Maybe<Scalars['String']>;
   chainId: Scalars['Int'];
   contractURI: Scalars['String'];
   createdAt: Scalars['timestamptz'];
@@ -4618,6 +4629,7 @@ export type MeemContracts_Bool_Exp = {
   _not?: InputMaybe<MeemContracts_Bool_Exp>;
   _or?: InputMaybe<Array<MeemContracts_Bool_Exp>>;
   address?: InputMaybe<String_Comparison_Exp>;
+  adminContractAddress?: InputMaybe<String_Comparison_Exp>;
   chainId?: InputMaybe<Int_Comparison_Exp>;
   contractURI?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -4680,6 +4692,7 @@ export type MeemContracts_Insert_Input = {
   Owner?: InputMaybe<Wallets_Obj_Rel_Insert_Input>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
+  adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   contractURI?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4705,6 +4718,7 @@ export type MeemContracts_Max_Fields = {
   __typename?: 'MeemContracts_max_fields';
   OwnerId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
+  adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
   contractURI?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -4724,6 +4738,7 @@ export type MeemContracts_Max_Fields = {
 export type MeemContracts_Max_Order_By = {
   OwnerId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
+  adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   contractURI?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -4744,6 +4759,7 @@ export type MeemContracts_Min_Fields = {
   __typename?: 'MeemContracts_min_fields';
   OwnerId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
+  adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
   contractURI?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -4763,6 +4779,7 @@ export type MeemContracts_Min_Fields = {
 export type MeemContracts_Min_Order_By = {
   OwnerId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
+  adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   contractURI?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -4811,6 +4828,7 @@ export type MeemContracts_Order_By = {
   Owner?: InputMaybe<Wallets_Order_By>;
   OwnerId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
+  adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   contractURI?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -4849,6 +4867,8 @@ export enum MeemContracts_Select_Column {
   OwnerId = 'OwnerId',
   /** column name */
   Address = 'address',
+  /** column name */
+  AdminContractAddress = 'adminContractAddress',
   /** column name */
   ChainId = 'chainId',
   /** column name */
@@ -4891,6 +4911,7 @@ export enum MeemContracts_Select_Column {
 export type MeemContracts_Set_Input = {
   OwnerId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
+  adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   contractURI?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4956,6 +4977,7 @@ export type MeemContracts_Stream_Cursor_Input = {
 export type MeemContracts_Stream_Cursor_Value_Input = {
   OwnerId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
+  adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   contractURI?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4993,6 +5015,8 @@ export enum MeemContracts_Update_Column {
   OwnerId = 'OwnerId',
   /** column name */
   Address = 'address',
+  /** column name */
+  AdminContractAddress = 'adminContractAddress',
   /** column name */
   ChainId = 'chainId',
   /** column name */
@@ -12998,6 +13022,7 @@ export type MeemContractPartsFragment = { __typename?: 'MeemContracts', slug: st
 export type GetIsMemberOfClubQueryVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
   clubSlug?: InputMaybe<Scalars['String']>;
+  chainId: Scalars['Int'];
 }>;
 
 
@@ -13006,6 +13031,7 @@ export type GetIsMemberOfClubQuery = { __typename?: 'query_root', Meems: Array<{
 export type GetIsMemberOfClubSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
   clubSlug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
 }>;
 
 
@@ -13064,7 +13090,7 @@ export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> }> };
+export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, tokenAddress?: string | null, integrationsMetadata: any, isTokenTransferrable: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, tokenAddress?: string | null, integrationsMetadata: any, isTokenTransferrable: boolean, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -13150,9 +13176,9 @@ export const MeemContractPartsFragmentDoc = gql`
 }
     `;
 export const GetIsMemberOfClubDocument = gql`
-    query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
+    query GetIsMemberOfClub($walletAddress: String, $clubSlug: String, $chainId: Int!) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}}, Owner: {address: {_ilike: $walletAddress}}}
+    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}, chainId: {_eq: $chainId}}, Owner: {address: {_ilike: $walletAddress}}}
   ) {
     id
     tokenId
@@ -13177,10 +13203,11 @@ export const GetIsMemberOfClubDocument = gql`
  *   variables: {
  *      walletAddress: // value for 'walletAddress'
  *      clubSlug: // value for 'clubSlug'
+ *      chainId: // value for 'chainId'
  *   },
  * });
  */
-export function useGetIsMemberOfClubQuery(baseOptions?: Apollo.QueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
+export function useGetIsMemberOfClubQuery(baseOptions: Apollo.QueryHookOptions<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>(GetIsMemberOfClubDocument, options);
       }
@@ -13192,9 +13219,9 @@ export type GetIsMemberOfClubQueryHookResult = ReturnType<typeof useGetIsMemberO
 export type GetIsMemberOfClubLazyQueryHookResult = ReturnType<typeof useGetIsMemberOfClubLazyQuery>;
 export type GetIsMemberOfClubQueryResult = Apollo.QueryResult<GetIsMemberOfClubQuery, GetIsMemberOfClubQueryVariables>;
 export const GetIsMemberOfClubSubscriptionDocument = gql`
-    subscription GetIsMemberOfClubSubscription($walletAddress: String, $clubSlug: String) {
+    subscription GetIsMemberOfClubSubscription($walletAddress: String, $clubSlug: String, $chainId: Int) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}}, Owner: {address: {_ilike: $walletAddress}}}
+    where: {MeemContractId: {_is_null: false}, MeemContract: {slug: {_eq: $clubSlug}, chainId: {_eq: $chainId}}, Owner: {address: {_ilike: $walletAddress}}}
   ) {
     id
     tokenId
@@ -13219,6 +13246,7 @@ export const GetIsMemberOfClubSubscriptionDocument = gql`
  *   variables: {
  *      walletAddress: // value for 'walletAddress'
  *      clubSlug: // value for 'clubSlug'
+ *      chainId: // value for 'chainId'
  *   },
  * });
  */
@@ -13616,6 +13644,9 @@ export const GetClubAsMemberSubscriptionDocument = gql`
           MeemContractRolePermissions {
             RolePermissionId
           }
+          tokenAddress
+          integrationsMetadata
+          isTokenTransferrable
         }
       }
     }
@@ -13645,6 +13676,14 @@ export const GetClubAsMemberSubscriptionDocument = gql`
       isDefaultRole
       MeemContractRolePermissions {
         RolePermissionId
+      }
+      tokenAddress
+      integrationsMetadata
+      isTokenTransferrable
+    }
+    MeemContractWallets {
+      Wallet {
+        address
       }
     }
   }

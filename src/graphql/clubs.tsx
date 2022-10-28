@@ -23,11 +23,18 @@ export const MEEM_CONTRACT_PARTS = gql`
 `
 
 export const GET_IS_MEMBER_OF_CLUB = gql`
-	query GetIsMemberOfClub($walletAddress: String, $clubSlug: String) {
+	query GetIsMemberOfClub(
+		$walletAddress: String
+		$clubSlug: String
+		$chainId: Int!
+	) {
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				MeemContract: { slug: { _eq: $clubSlug } }
+				MeemContract: {
+					slug: { _eq: $clubSlug }
+					chainId: { _eq: $chainId }
+				}
 				Owner: { address: { _ilike: $walletAddress } }
 			}
 		) {
@@ -44,11 +51,15 @@ export const SUB_IS_MEMBER_OF_CLUB = gql`
 	subscription GetIsMemberOfClubSubscription(
 		$walletAddress: String
 		$clubSlug: String
+		$chainId: Int
 	) {
 		Meems(
 			where: {
 				MeemContractId: { _is_null: false }
-				MeemContract: { slug: { _eq: $clubSlug } }
+				MeemContract: {
+					slug: { _eq: $clubSlug }
+					chainId: { _eq: $chainId }
+				}
 				Owner: { address: { _ilike: $walletAddress } }
 			}
 		) {
@@ -299,6 +310,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 						MeemContractRolePermissions {
 							RolePermissionId
 						}
+						tokenAddress
+						integrationsMetadata
+						isTokenTransferrable
 					}
 				}
 			}
@@ -328,6 +342,14 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				isDefaultRole
 				MeemContractRolePermissions {
 					RolePermissionId
+				}
+				tokenAddress
+				integrationsMetadata
+				isTokenTransferrable
+			}
+			MeemContractWallets {
+				Wallet {
+					address
 				}
 			}
 		}

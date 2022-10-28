@@ -228,6 +228,45 @@ export const useGlobalStyles = createStyles(theme => ({
 		padding: 2,
 		cursor: 'pointer'
 	},
+	enabledClubIntegrationItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		marginBottom: 12,
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: 'white',
+		borderRadius: 16,
+		paddingTop: 16,
+		position: 'relative'
+	},
+	enabledIntHeaderBg: {
+		backgroundColor: '#FAFAFA',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		height: 53,
+		borderTopLeftRadius: 16,
+		borderTopRightRadius: 16
+	},
+	integrationActions: {
+		display: 'flex',
+		flexDirection: 'row',
+		height: 46
+	},
+	integrationAction: {
+		cursor: 'pointer',
+		display: 'flex',
+		flexDirection: 'row',
+		padding: 12
+	},
+	intItemHeader: {
+		fontWeight: 600,
+		display: 'flex',
+		alignItems: 'center',
+		zIndex: 1
+	},
+
 	invisibleContainer: { display: 'none' },
 	visibleContainer: { display: 'block' },
 
@@ -239,7 +278,9 @@ export const useGlobalStyles = createStyles(theme => ({
 	tBold: {
 		fontWeight: 700
 	},
-
+	tExtraSmall: {
+		fontSize: 14
+	},
 	tHeaderTitleText: {
 		fontWeight: 600,
 		fontSize: 24,

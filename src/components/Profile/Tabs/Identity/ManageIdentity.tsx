@@ -17,6 +17,7 @@ import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
+import Cookies from 'js-cookie'
 import dynamic from 'next/dynamic'
 import router from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
@@ -371,8 +372,14 @@ export const ManageIdentityComponent: React.FC = () => {
 	}
 
 	useEffect(() => {
-		if (router.query.code && availableIntegrations.length > 0) {
-			// We have a discord auth code - create or update integration
+		if (
+			router.query.code &&
+			availableIntegrations.length > 0 &&
+			!Cookies.get('authForDiscordRole')
+		) {
+			// We have a discord auth code
+
+			// create or update integration
 			availableIntegrations.forEach(inte => {
 				if (inte.name === 'Discord') {
 					setIntegrationCurrentlyEditing(inte)

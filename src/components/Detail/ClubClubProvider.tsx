@@ -13,6 +13,7 @@ import React, {
 import { GetIsMemberOfClubSubscriptionSubscription } from '../../../generated/graphql'
 import { SUB_IS_MEMBER_OF_CLUB } from '../../graphql/clubs'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { hostnameToChainId } from '../App'
 
 const defaultState = {
 	isMember: false
@@ -42,8 +43,14 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 		{
 			variables: {
 				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-				clubSlug: 'club-club'
+				clubSlug: 'club-club',
+				chainId:
+					wallet.chainId ??
+					hostnameToChainId(
+						global.window ? global.window.location.host : ''
+					)
 			},
+
 			client: anonClient
 		}
 	)

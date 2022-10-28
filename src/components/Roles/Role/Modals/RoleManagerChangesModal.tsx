@@ -165,7 +165,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						{
 							name: role.name,
 							permissions: permissionsArray,
-							members: membersArray
+							members: membersArray,
+							isTokenBasedRole: true,
+							isTokenTransferrable: role.isTransferrable ?? false
 						}
 					)
 

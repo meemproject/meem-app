@@ -308,7 +308,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				}
 
 				const data = {
-					shouldMintAdminTokens: true,
+					shouldMintTokens: true,
 					metadata: {
 						meem_contract_type: 'meem-club',
 						meem_metadata_version: 'MeemClub_Contract_20220718',
@@ -327,7 +327,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					).toHexString(),
 					mintPermissions,
 					splits,
-					adminTokenMetadata: {
+					tokenMetadata: {
 						meem_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${Cookies.get(
 							CookieKeys.clubName
@@ -393,6 +393,14 @@ export const CreateClubModal: React.FC<IProps> = ({
 						// and proceed to club homepage
 						log.debug('Safe creation failed. Skipping for now...')
 						finishClubCreation()
+					} else if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
+						showNotification({
+							radius: 'lg',
+							title: 'Transaction limit exceeded',
+							message:
+								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
+							color: 'red'
+						})
 					} else {
 						// Handle a generic socket error too
 						showNotification({

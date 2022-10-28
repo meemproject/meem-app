@@ -2,11 +2,12 @@
 import { Text, Space, Switch, Divider, Button } from '@mantine/core'
 import React from 'react'
 import { Lock } from 'tabler-icons-react'
-import { ClubRole, ClubRolePermission } from '../../../model/club/club'
+import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
 interface IProps {
 	role?: ClubRole
+	club?: Club
 	onSaveChanges: () => void
 	onRoleUpdated: (role: ClubRole) => void
 }
@@ -17,12 +18,6 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	onRoleUpdated
 }) => {
 	const { classes: styles } = useGlobalStyles()
-
-	// const [isRoleDiscordSyncModalOpened, setIsRoleDiscordSyncModalOpened] =
-	// 	useState(false)
-
-	// const [isRoleDiscordCreateModalOpened, setIsRoleDiscordCreateModalOpened] =
-	// 	useState(false)
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<div key={permission.id}>
@@ -44,10 +39,26 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 											value.currentTarget.checked
 									}
 								})
+
+								// TODO: there's got to be a better way to update a single element of an object and
+								// TODO: have it apply to useState, instead of recreating the entire object. surely?
 								const newRole: ClubRole = {
 									name: role.name,
 									id: role.id,
-									permissions: newPermissions
+									permissions: newPermissions,
+									isTransferrable: role.isTransferrable,
+									isAdminRole: role.isAdminRole,
+									isDefaultRole: role.isDefaultRole,
+									rolesIntegrationData:
+										role.rolesIntegrationData,
+									guildDiscordServerId:
+										role.guildDiscordServerId ?? '',
+									guildDiscordServerIcon:
+										role.guildDiscordServerIcon ?? '',
+									guildDiscordServerName:
+										role.guildDiscordServerName ?? '',
+									guildRoleId: role.guildRoleId ?? '',
+									guildRoleName: role.guildRoleName ?? ''
 								}
 								onRoleUpdated(newRole)
 							}
@@ -95,70 +106,11 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				{/* <div>
-					<Text className={classes.manageClubHeader}>
-						Discord Role
-					</Text>
-					<div className={classes.rowCentered}>
-						<Image
-							src={'/exampleclub.png'}
-							height={48}
-							width={48}
-							radius={24}
-						/>
-						<Space w={12} />
-						<div>
-							<Text className={classes.discordServerNameText}>
-								MEEM
-							</Text>
-							<Text className={classes.discordServerSettingsLink}>
-								Server Settings
-							</Text>
-						</div>
-					</div>
-					<Space h={24} />
-
-					<Button
-						className={classes.outlineButton}
-						leftIcon={<Discord />}
-					>
-						Connect Discord
-					</Button>
-					<Space h={8} />
-					<Button
-						className={classes.outlineButton}
-						leftIcon={<CirclePlus />}
-					>
-						Create New Discord Role
-					</Button>
-					<Space h={8} />
-					<Button
-						className={classes.outlineButton}
-						leftIcon={<Link />}
-						onClick={() => {
-							setIsRoleDiscordSyncModalOpened(true)
-						}}
-					>
-						Sync Existing Discord Role
-					</Button>
-					<Space h={24} />
-				</div> */}
 
 				<Button className={styles.buttonBlack} onClick={onSaveChanges}>
 					Save Changes
 				</Button>
 			</div>
-
-			{/* {role && club && (
-				<RoleDiscordSyncModal
-					isOpened={isRoleDiscordSyncModalOpened}
-					onModalClosed={() => {
-						setIsRoleDiscordSyncModalOpened(false)
-					}}
-					role={role}
-					club={club}
-				/>
-			)} */}
 
 			<Space h={64} />
 		</>

@@ -48,8 +48,15 @@ export interface ClubRole {
 	name: string
 	isAdminRole?: boolean
 	isDefaultRole?: boolean
+	isTransferrable?: boolean
+	tokenAddress?: string
 	permissions: ClubRolePermission[]
+	rolesIntegrationData?: any
 	guildRoleId?: string
+	guildRoleName?: string
+	guildDiscordServerName?: string
+	guildDiscordServerId?: string
+	guildDiscordServerIcon?: string
 }
 
 export function emptyRole(): ClubRole {
@@ -58,7 +65,13 @@ export function emptyRole(): ClubRole {
 		isAdminRole: false,
 		isDefaultRole: false,
 		name: '',
-		permissions: []
+		permissions: [],
+		rolesIntegrationData: '',
+		guildRoleId: '',
+		guildRoleName: '',
+		guildDiscordServerId: '',
+		guildDiscordServerIcon: '',
+		guildDiscordServerName: ''
 	}
 }
 
@@ -72,6 +85,8 @@ export interface ClubMember {
 	discordUserId?: string
 	emailAddress?: string
 	roles?: ClubRole[]
+	isClubOwner?: boolean
+	isClubAdmin?: boolean
 
 	// Convenience bool for roles
 	chosen?: boolean
@@ -96,6 +111,7 @@ export interface Club {
 	isCurrentUserClubMember?: boolean
 	isCurrentUserClubAdmin?: boolean
 	isCurrentUserClubOwner?: boolean
+	isClubControlledByMeemApi?: boolean
 	isValid?: boolean
 	rawClub?: MeemContracts
 	allIntegrations?: Integration[]
@@ -177,15 +193,49 @@ export function meemContractRolesToClubRoles(
 			})
 		}
 
+		// Roles discord integration metadata
+		const metadata = rawRole.integrationsMetadata
+
+		let guildDiscordServerIcon = ''
+		let guildDiscordServerId = ''
+		let guildDiscordServerName = ''
+		let guildRoleName = ''
+		let guildRoleId = ''
+
+		if (metadata && metadata.length > 0 && metadata[0].discordServerData) {
+			const data = metadata[0].discordServerData
+			guildDiscordServerIcon = data.serverIcon
+			guildDiscordServerId = data.serverId
+			guildDiscordServerName = data.serverName
+
+			if (data.roles && data.roles.length > 0) {
+				data.roles.forEach((role: any) => {
+					if (role.name === rawRole.name) {
+						guildRoleName = role.name
+						guildRoleId = role.id
+					}
+				})
+			}
+		}
+
 		const clubRole: ClubRole = {
 			id: rawRole.id,
 			isAdminRole: rawRole.isAdminRole,
 			isDefaultRole: rawRole.isDefaultRole,
+			rolesIntegrationData: metadata,
+			tokenAddress: rawRole.tokenAddress ?? '',
+			isTransferrable: rawRole.isTokenTransferrable,
 			name: rawRole.name,
+			guildDiscordServerIcon,
+			guildDiscordServerId,
+			guildDiscordServerName,
+			guildRoleId,
+			guildRoleName,
 			permissions
 		}
 		roles.push(clubRole)
 	})
+
 	return roles
 }
 
@@ -347,6 +397,9 @@ export default async function clubFromMeemContract(
 						// Is this member an admin?
 						let isMemberAnAdmin = false
 
+						// Is this member the club owner?
+						let isMemberTheClubOwner = false
+
 						if (!hasAlreadyBeenAdded) {
 							// Is this the current user?
 							const isCurrentUser =
@@ -378,9 +431,11 @@ export default async function clubFromMeemContract(
 								} else if (isClubOwner) {
 									isClubAdmin = true
 								}
+
+								isMemberAnAdmin = isClubAdmin
 							}
 
-							// Is this member an admin?
+							// Is this member an admin
 							if (memberMeemContractWallet) {
 								if (
 									memberMeemContractWallet.role.toLowerCase() ===
@@ -392,6 +447,10 @@ export default async function clubFromMeemContract(
 									)
 								}
 							}
+
+							// Is this member the club owner?
+							isMemberTheClubOwner =
+								meem.OwnerId === clubData.OwnerId
 
 							// Roles + permissions logic
 							let memberRoles: ClubRole[] = []
@@ -476,7 +535,9 @@ export default async function clubFromMeemContract(
 								twitterUsername,
 								discordUsername,
 								discordUserId,
-								emailAddress
+								emailAddress,
+								isClubOwner: isMemberTheClubOwner,
+								isClubAdmin: isMemberAnAdmin
 							}
 
 							// Add to members
@@ -713,6 +774,23 @@ export default async function clubFromMeemContract(
 			slotsLeft = totalMemberships - membersCount
 		}
 
+		// Determine if the club is controlled by the Meem API wallet address
+		let isClubControlledByMeemApi = false
+		clubData.MeemContractWallets.forEach(contractWallet => {
+			if (contractWallet.Wallet) {
+				if (
+					contractWallet.Wallet.address.toLowerCase() ===
+					process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
+				) {
+					isClubControlledByMeemApi = true
+				}
+			}
+		})
+
+		log.debug(
+			`club is controlled by meem api = ${isClubControlledByMeemApi}`
+		)
+
 		return {
 			id: clubData.id,
 			name: clubData.name,
@@ -730,6 +808,7 @@ export default async function clubFromMeemContract(
 			currentUserClubPermissions,
 			memberRolesMap,
 			isCurrentUserClubMember: isClubMember,
+			isClubControlledByMeemApi,
 			membershipToken,
 			members,
 			slotsLeft,

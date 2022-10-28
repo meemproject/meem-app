@@ -306,7 +306,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			{
 				variables: {
 					walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-					clubSlug: slug
+					clubSlug: slug,
+					chainId:
+						wallet.chainId ??
+						hostnameToChainId(
+							global.window ? global.window.location.host : ''
+						)
 				},
 				client: anonClient
 			}
@@ -448,7 +453,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 					const uri = JSON.stringify({
 						name: club?.name ?? '',
-						description: club?.description,
+						description:
+							club?.description && club?.description?.length > 0
+								? club?.description
+								: 'Club Token',
 						image: club?.image,
 						external_link: '',
 						application_instructions: []
@@ -482,28 +490,34 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						method: MeemAPI.v1.MintOriginalMeem.method
 					})
 
+					const data = {
+						meemContractAddress: club.address,
+						to: wallet.accounts[0],
+						metadata: {
+							name: club?.name ?? '',
+							description:
+								club?.description &&
+								club?.description?.length > 0
+									? club?.description
+									: 'Club Token',
+							image: club?.image,
+							meem_metadata_version: 'MeemClub_Token_20220718'
+						},
+						chainId:
+							wallet.chainId ??
+							hostnameToChainId(
+								global.window ? global.window.location.host : ''
+							)
+					}
+					log.debug(JSON.stringify(data))
+
 					await joinClubFetcher(
 						MeemAPI.v1.MintOriginalMeem.path(),
 						undefined,
-						{
-							meemContractAddress: club.address,
-							to: wallet.accounts[0],
-							metadata: {
-								name: club?.name ?? '',
-								description: club?.description,
-								image: club?.image,
-								meem_metadata_version: 'MeemClub_Token_20220718'
-							},
-							chainId:
-								wallet.chainId ??
-								hostnameToChainId(
-									global.window
-										? global.window.location.host
-										: ''
-								)
-						}
+						data
 					)
 				} else {
+					setIsJoiningClub(false)
 					showNotification({
 						radius: 'lg',
 						title: 'Error joining this club.',
@@ -512,14 +526,24 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				}
 			}
 		} catch (e) {
-			log.debug(e)
+			const error: any = JSON.parse(
+				(e as any).toString().split('Error: ')[1]
+			)
+			log.debug(error.code)
+			if (error.code === 'TX_LIMIT_EXCEEDED') {
+				showNotification({
+					radius: 'lg',
+					title: 'Transaction limit exceeded',
+					message: `Come back tomorrow or get in touch!`
+				})
+			} else {
+				showNotification({
+					radius: 'lg',
+					title: 'Error joining this club.',
+					message: `Please get in touch!`
+				})
+			}
 			setIsJoiningClub(false)
-
-			showNotification({
-				radius: 'lg',
-				title: 'Error joining this club.',
-				message: `Please get in touch!`
-			})
 		}
 	}
 
@@ -845,6 +869,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	)
 
 	useEffect(() => {
+		if (errorAnonClub) {
+			log.debug(JSON.stringify(errorAnonClub))
+			setIsLoadingClub(false)
+		}
+
+		if (errorMemberClub) {
+			log.debug(JSON.stringify(errorMemberClub))
+			setIsLoadingClub(false)
+		}
+
 		async function getClub() {
 			const clubData = memberClubData ?? anonClubData
 
@@ -972,7 +1006,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		errorMemberClub,
 		memberClubData,
 		userClubMemberError,
-		router
+		router,
+		isCurrentUserClubMemberData
 	])
 
 	const navigateToSettings = () => {
@@ -1092,11 +1127,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					</Center>
 				</Container>
 			)}
-			{!isLoadingClub && !club?.name && (
+			{!isLoadingClub &&
+				!errorAnonClub &&
+				!errorMemberClub &&
+				!club?.name && (
+					<Container>
+						<Space h={120} />
+						<Center>
+							<Text>Sorry, that club does not exist!</Text>
+						</Center>
+					</Container>
+				)}
+			{!isLoadingClub && (errorAnonClub || errorMemberClub) && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that club does not exist!</Text>
+						<Text>
+							There was an error loading this club. Please let us
+							know!
+						</Text>
 					</Center>
 				</Container>
 			)}
