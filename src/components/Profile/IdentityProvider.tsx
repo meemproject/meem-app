@@ -7,7 +7,8 @@ import React, {
 	createContext,
 	FC,
 	useMemo,
-	ReactNode
+	ReactNode,
+	useCallback
 } from 'react'
 import { MeemIdSubscriptionSubscription } from '../../../generated/graphql'
 import { MEEM_ID_SUBSCRIPTION } from '../../graphql/id'
@@ -17,11 +18,15 @@ import {
 	identityFromApi
 } from '../../model/identity/identity'
 import { useCustomApollo } from '../../providers/ApolloProvider'
+import { JoinClubsModal } from './JoinClubsModal'
 
 const defaultState = {
 	identity: getDefaultIdentity(''),
 	isLoadingIdentity: true,
-	hasFetchedIdentity: false
+	hasFetchedIdentity: false,
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+	login: (forced: boolean) => {},
+	cancelLogin: () => {}
 }
 const IdentityContext = createContext(defaultState)
 
@@ -54,6 +59,9 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 	const [identity, setIdentity] = useState<Identity>(defaultState.identity)
 	const [previousIdentity, setPreviousIdentity] = useState<Identity>()
 
+	const [isJoinClubsModalOpen, setIsJoinClubsModalOpen] = useState(false)
+	const [isLoginForced, setIsLoginForced] = useState(false)
+
 	useEffect(() => {
 		async function getIdentity() {
 			if (identityData) {
@@ -61,6 +69,7 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 					wallet.accounts[0],
 					identityData
 				)
+				setIsLoadingIdentity(false)
 				setHasFetchedIdentity(true)
 
 				let hasIdentityChanged = true
@@ -77,7 +86,6 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 					if (!previousIdentity) {
 						setPreviousIdentity(id)
 					}
-					setIsLoadingIdentity(false)
 					// if (!hasIdentity) {
 					// 	log.debug(`got identity for ${wallet.accounts[0]}`)
 					// }
@@ -98,13 +106,44 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 		previousIdentity,
 		wallet
 	])
+
+	const login = useCallback((forced: boolean) => {
+		setIsLoginForced(forced)
+		setIsJoinClubsModalOpen(true)
+	}, [])
+
+	const cancelLogin = useCallback(() => {
+		setIsJoinClubsModalOpen(false)
+	}, [])
+
 	const value = useMemo(
 		() => ({
 			identity,
 			isLoadingIdentity,
-			hasFetchedIdentity
+			hasFetchedIdentity,
+			isLoginForced,
+			login,
+			cancelLogin
 		}),
-		[hasFetchedIdentity, identity, isLoadingIdentity]
+		[
+			cancelLogin,
+			hasFetchedIdentity,
+			identity,
+			isLoadingIdentity,
+			isLoginForced,
+			login
+		]
 	)
-	return <IdentityContext.Provider value={value} {...props} />
+	return (
+		<>
+			<IdentityContext.Provider value={value} {...props} />
+			<JoinClubsModal
+				isLoginForced={isLoginForced}
+				onModalClosed={() => {
+					setIsJoinClubsModalOpen(false)
+				}}
+				isOpened={isJoinClubsModalOpen}
+			/>
+		</>
+	)
 }

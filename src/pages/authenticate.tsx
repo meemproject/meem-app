@@ -7,7 +7,7 @@ import { HeaderMenu } from '../components/Header/Header'
 
 const AuthenticatePage: NextPage = () => {
 	return (
-		<>
+		<div style={{ position: 'relative' }}>
 			<Head>
 				<title>Authenticate | Clubs</title>
 				<meta name="title" content="Clubs" />
@@ -60,7 +60,7 @@ const AuthenticatePage: NextPage = () => {
 			<HeaderMenu />
 			<Authenticate />
 			<MeemFooter />
-		</>
+		</div>
 	)
 }
 

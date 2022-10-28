@@ -1,7 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -31,114 +30,7 @@ import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
-
-const useStyles = createStyles(theme => ({
-	wrapper: {
-		position: 'relative',
-		boxSizing: 'border-box',
-		backgroundColor:
-			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
-	},
-
-	inner: {
-		position: 'relative',
-		paddingTop: 0,
-		paddingBottom: 32,
-		marginTop: 70,
-
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingBottom: 80,
-			paddingTop: 0,
-			marginTop: 40
-		}
-	},
-
-	title: {
-		paddingBottom: 64
-	},
-
-	searchPrompt: {
-		marginTop: 64,
-		fontSize: 20,
-		fontWeight: 'bold',
-		color: 'black',
-
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 18,
-			marginTop: 48
-		}
-	},
-
-	clubSearch: {
-		marginTop: 16,
-		input: {
-			borderRadius: 16
-		}
-	},
-
-	joinMeemLink: {
-		marginTop: 24,
-		cursor: 'pointer',
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	createButton: {
-		marginRight: 64,
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 32
-	},
-	joinButton: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 12
-	},
-	joinMeemDialogText: {
-		marginBottom: 8,
-		fontSize: 14
-	},
-	header: {
-		backgroundColor: 'rgba(255, 102, 81, 0.1)'
-	},
-	headerContainer: { display: 'flex', paddingTop: 32, paddingBottom: 32 },
-	headerLogoContainer: {
-		marginRight: 48,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 32
-		}
-	},
-	headerLogo: {
-		filter: 'invert(52%) sepia(97%) saturate(1775%) hue-rotate(326deg) brightness(99%) contrast(105%)'
-	},
-	headerTextContainer: {
-		color: 'rgba(255, 102, 81, 1)',
-		fontWeight: 600,
-		marginTop: 6
-	},
-	headerPitchText: {
-		fontSize: 22,
-		fontWeight: 800,
-		lineHeight: 1.3,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	headerLinkText: {
-		fontSize: 18,
-		textDecoration: 'underline',
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 15
-		}
-	}
-}))
+import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 interface ItemProps extends SelectItemProps {
 	color: MantineColor
@@ -166,7 +58,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 )
 
 export function HomeComponent() {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 
@@ -306,24 +198,41 @@ export function HomeComponent() {
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
 	return (
-		<div className={classes.wrapper}>
-			<div className={classes.header}>
-				<Container size={900} className={classes.headerContainer}>
-					<div className={classes.headerLogoContainer}>
-						<Image
-							className={classes.headerLogo}
-							src="/clubs-home.svg"
-							height={120}
-							width={120}
-							fit={'contain'}
-						>
-							{' '}
-							className={classes.title}{' '}
-						</Image>
-					</div>
+		<div>
+			<div style={{ backgroundColor: 'rgba(255, 102, 81, 0.1)' }}>
+				<Container
+					size={900}
+					className={styles.rowResponsive}
+					style={{
+						paddingTop: 32,
+						paddingBottom: 32
+					}}
+				>
+					<Image
+						style={{
+							filter: 'invert(52%) sepia(97%) saturate(1775%) hue-rotate(326deg) brightness(99%) contrast(105%)',
+							marginRight: 48
+						}}
+						src="/clubs-home.svg"
+						height={120}
+						width={120}
+						fit={'contain'}
+					/>
 
-					<div className={classes.headerTextContainer}>
-						<Text className={classes.headerPitchText}>
+					<div
+						style={{
+							color: 'rgba(255, 102, 81, 1)',
+							fontWeight: 600,
+							marginTop: 6
+						}}
+					>
+						<Text
+							style={{
+								fontSize: 22,
+								fontWeight: 800,
+								lineHeight: 1.3
+							}}
+						>
 							Effortless access management and collaborative
 							publishing tools for your online community
 						</Text>
@@ -332,7 +241,10 @@ export function HomeComponent() {
 							onClick={() => {
 								setIsClubsFAQModalOpen(true)
 							}}
-							className={classes.headerLinkText}
+							className={styles.tLink}
+							style={{
+								fontSize: 18
+							}}
 						>
 							Get to know Clubs
 						</Text>
@@ -340,12 +252,32 @@ export function HomeComponent() {
 				</Container>
 			</div>
 
-			<Container size={900} className={classes.inner}>
-				<Text className={classes.searchPrompt} color="dimmed">
+			<Container
+				size={900}
+				style={{
+					position: 'relative',
+					paddingTop: 0,
+					paddingBottom: 32,
+					marginTop: 70
+				}}
+			>
+				<Text className={styles.tSectionTitleSmall}>CREATE A CLUB</Text>
+				<Space h={16} />
+				<Text
+					style={{
+						fontSize: 20,
+						fontWeight: 'bold',
+						color: 'black'
+					}}
+					color="dimmed"
+				>
 					{`What's your club called?`}
 				</Text>
 				<Autocomplete
-					className={classes.clubSearch}
+					style={{
+						marginTop: 16
+					}}
+					radius={16}
 					value={autocompleteFormValue}
 					data={autocompleteData}
 					limit={2}
@@ -368,7 +300,8 @@ export function HomeComponent() {
 						  isShowingCreateButton &&
 						  clubclub.isMember ? (
 							<Button
-								className={classes.createButton}
+								style={{ marginRight: 64 }}
+								className={styles.buttonBlack}
 								onClick={goToCreate}
 							>
 								Create
@@ -377,7 +310,7 @@ export function HomeComponent() {
 					}
 				/>
 				{!clubclub.isMember && (
-					<Text className={classes.joinMeemLink}>
+					<Text className={styles.tLink} style={{ marginTop: 16 }}>
 						<a
 							onClick={() => {
 								router.push({ pathname: '/club-club' })
@@ -387,10 +320,24 @@ export function HomeComponent() {
 						</a>
 					</Text>
 				)}
-				<Space h={24} />
-				<Button className={classes.createButton} onClick={goToBrowse}>
+				<Space h={64} />
+				<Text className={styles.tSectionTitleSmall}>JOIN A CLUB</Text>
+				<Space h={16} />
+				<Text
+					style={{
+						fontSize: 20,
+						fontWeight: 'bold',
+						color: 'black'
+					}}
+					color="dimmed"
+				>
+					{`Find your community on Clubs`}
+				</Text>
+				<Space h={16} />
+				<Button className={styles.buttonBlack} onClick={goToBrowse}>
 					Browse all clubs
 				</Button>
+				<Space h={64} />
 			</Container>
 			<ClubsFAQModal
 				onModalClosed={() => {

@@ -7,7 +7,8 @@ import {
 	Group,
 	Avatar,
 	Divider,
-	Space
+	Space,
+	Loader
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
@@ -126,19 +127,12 @@ const useStyles = createStyles(theme => ({
 	},
 
 	user: {
-		marginBottom: '3px',
+		marginBottom: '5px',
 		color:
 			theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
 		borderRadius: theme.radius.sm,
-		transition: 'background-color 100ms ease',
-
-		'&:hover': {
-			backgroundColor:
-				theme.colorScheme === 'dark'
-					? theme.colors.dark[8]
-					: theme.white
-		}
+		transition: 'background-color 100ms ease'
 	},
 
 	userActive: {
@@ -235,33 +229,47 @@ export function HeaderMenu() {
 										[classes.userActive]: isUserMenuOpened
 									})}
 								>
-									<Group spacing={7}>
-										<Avatar
-											src={id.identity.profilePic ?? ''}
-											alt={'Profile photo'}
-											radius="xl"
-											size={24}
+									{id.isLoadingIdentity && (
+										<Loader
+											style={{ marginTop: 4 }}
+											variant="oval"
+											color="red"
+											size={20}
 										/>
-										<Text
-											weight={500}
-											size="sm"
-											sx={{ lineHeight: 1 }}
-											mr={3}
-										>
-											{id.identity.displayName &&
-											id.identity.displayName?.length > 0
-												? id.identity.displayName
-												: id.identity.ensAddress &&
-												  id.identity.ensAddress
-														?.length > 0
-												? id.identity.ensAddress
-												: quickTruncate(
-														id.identity
-															.walletAddress ?? ''
-												  )}
-										</Text>
-										<ChevronDown size={12} />
-									</Group>
+									)}
+									{!id.isLoadingIdentity && (
+										<Group spacing={7}>
+											<Avatar
+												src={
+													id.identity.profilePic ?? ''
+												}
+												alt={'Profile photo'}
+												radius="xl"
+												size={24}
+											/>
+											<Text
+												weight={500}
+												size="sm"
+												sx={{ lineHeight: 1 }}
+												mr={3}
+											>
+												{id.identity.displayName &&
+												id.identity.displayName
+													?.length > 0
+													? id.identity.displayName
+													: id.identity.ensAddress &&
+													  id.identity.ensAddress
+															?.length > 0
+													? id.identity.ensAddress
+													: quickTruncate(
+															id.identity
+																.walletAddress ??
+																''
+													  )}
+											</Text>
+											<ChevronDown size={12} />
+										</Group>
+									)}
 								</UnstyledButton>
 							</Menu.Target>
 							<Menu.Dropdown>
@@ -287,7 +295,9 @@ export function HeaderMenu() {
 									color="red"
 									icon={<Logout size={14} />}
 								>
-									Disconnect
+									{wallet.isConnected
+										? 'Disconnect'
+										: 'Sign Out'}
 								</Menu.Item>
 							</Menu.Dropdown>
 						</Menu>
@@ -295,11 +305,11 @@ export function HeaderMenu() {
 					{!wallet.isConnected && (
 						<Text className={classes.connectWallet}>
 							<a
-								onClick={async () => {
-									await wallet.connectWallet()
+								onClick={() => {
+									id.login(false)
 								}}
 							>
-								Connect wallet
+								Join Clubs
 							</a>
 						</Text>
 					)}
@@ -320,7 +330,7 @@ export function HeaderMenu() {
 									Meem
 								</span>
 							</Menu.Item>
-							{!clubclub.isMember && (
+							{wallet.isConnected && !clubclub.isMember && (
 								<Menu.Item
 									onClick={handleJoinClubClub}
 									className={classes.menuItem}

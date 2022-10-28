@@ -1,51 +1,19 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Button,
-	Space,
-	Container,
-	Loader
-} from '@mantine/core'
+import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
+import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useWallet()
 	const router = useRouter()
 
-	const useStyles = createStyles(theme => ({
-		buttonSaveChanges: {
-			marginTop: 48,
-			marginBottom: 48,
-
-			backgroundColor: 'black',
-			'&:hover': {
-				backgroundColor: theme.colors.gray[8]
-			},
-			borderRadius: 24
-		},
-		authHeader: {
-			fontSize: 24,
-			fontWeight: 600,
-			marginTop: 60
-		},
-		authSubHeader: {
-			fontSize: 20,
-			fontWeight: 600,
-			marginTop: 16
-		},
-		loader: {
-			marginTop: 48
-		}
-	}))
-
 	const [isLoading, setIsLoading] = useState(false)
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const getNonceFetcher = makeFetcher<
 		MeemAPI.v1.GetNonce.IQueryParams,
@@ -152,54 +120,47 @@ const MAuthenticate: React.FC = () => {
 	}, [wallet])
 
 	return (
-		<Container>
-			<Text
-				className={classes.authHeader}
-			>{`Let's make sure it's really you.`}</Text>
-			<div>
-				<Text className={classes.authSubHeader}>
-					{wallet.isConnected
-						? 'Add Your Signature'
-						: 'Connect Your Wallet'}
-				</Text>
-				<Space h={16} />
-			</div>
+		<Center>
+			<Container>
+				<div className={styles.centered}>
+					<Space h={80} />
+					<Text
+						className={styles.tTitle}
+					>{`Let's make sure it's really you.`}</Text>
+					<Space h={16} />
 
-			<div>
-				<Text>
-					{wallet.isConnected
-						? `Let's connect your wallet again.`
-						: `Please sign a message to confirm it's really you. The signature request might take a moment
-					to pop up - please be patient!`}
-				</Text>
-			</div>
+					<div>
+						<Text>
+							{wallet.isConnected
+								? `Please sign the message below.`
+								: `Please reconnect your wallet below first.`}
+						</Text>
+					</div>
 
-			{isLoading && (
-				<Loader
-					className={classes.loader}
-					variant="oval"
-					color={'red'}
-				/>
-			)}
-			<div>
-				{!isLoading && !wallet.isConnected && (
-					<Button
-						className={classes.buttonSaveChanges}
-						onClick={connectWallet}
-					>
-						Connect wallet
-					</Button>
-				)}
-				{!isLoading && wallet.isConnected && (
-					<Button
-						className={classes.buttonSaveChanges}
-						onClick={sign}
-					>
-						Add your signature
-					</Button>
-				)}
-			</div>
-		</Container>
+					<Space h={40} />
+
+					{isLoading && <Loader variant="oval" color={'red'} />}
+					<div>
+						{!isLoading && !wallet.isConnected && (
+							<Button
+								className={styles.buttonBlack}
+								onClick={connectWallet}
+							>
+								Connect Wallet
+							</Button>
+						)}
+						{!isLoading && wallet.isConnected && (
+							<Button
+								className={styles.buttonBlack}
+								onClick={sign}
+							>
+								Sign Message
+							</Button>
+						)}
+					</div>
+				</div>
+			</Container>
+		</Center>
 	)
 }
 

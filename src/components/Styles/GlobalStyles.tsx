@@ -48,6 +48,10 @@ export const useGlobalStyles = createStyles(theme => ({
 	fTextFieldRoot: {},
 
 	// Layout
+	centered: {
+		alignItems: 'center',
+		textAlign: 'center'
+	},
 	centeredRow: {
 		display: 'flex',
 		alignItems: 'center'
@@ -145,6 +149,14 @@ export const useGlobalStyles = createStyles(theme => ({
 	row: {
 		display: 'flex'
 	},
+	// A row which turns into a column when display is narrow enough
+	rowResponsive: {
+		display: 'flex',
+		flexDirection: 'row',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			flexDirection: 'column'
+		}
+	},
 	spacedRowCentered: {
 		display: 'flex',
 		flexDirection: 'row',
@@ -186,6 +198,31 @@ export const useGlobalStyles = createStyles(theme => ({
 	clickable: {
 		cursor: 'pointer'
 	},
+	connectMethodButton: {
+		backgroundColor: '#FAFAFA',
+		width: 200,
+		height: 200,
+		borderRadius: 20,
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		cursor: 'pointer',
+		position: 'relative'
+	},
+	connectMethodButtonSmall: {
+		backgroundColor: '#FAFAFA',
+		display: 'flex',
+		flexDirection: 'row',
+		borderRadius: 32,
+		padding: 8,
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		cursor: 'pointer',
+		alignItems: 'center'
+	},
+	connectMethodButtonContent: {
+		marginTop: 55,
+		alignItems: 'center',
+		textAlign: 'center'
+	},
+
 	copyIcon: {
 		marginLeft: 4,
 		padding: 2,
