@@ -224,6 +224,7 @@ export function meemContractRolesToClubRoles(
 			isDefaultRole: rawRole.isDefaultRole,
 			rolesIntegrationData: metadata,
 			tokenAddress: rawRole.tokenAddress ?? '',
+			isTransferrable: rawRole.isTokenTransferrable,
 			name: rawRole.name,
 			guildDiscordServerIcon,
 			guildDiscordServerId,

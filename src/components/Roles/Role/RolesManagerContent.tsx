@@ -149,6 +149,11 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		if (initialRole && !role && availablePermissions) {
 			parsePermissions(initialRole, availablePermissions)
 		}
+
+		// Set 'token transferrable' setting
+		if (role?.isTransferrable) {
+			setIsTokenTransferrable('transferrable')
+		}
 	}, [availablePermissions, club, error, initialRole, role])
 
 	const updateRole = (newRole: ClubRole) => {
