@@ -247,15 +247,15 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 				const splits =
 					membershipSettings.membershipFundsAddress.length > 0 &&
-						membershipSettings.costToJoin > 0
+					membershipSettings.costToJoin > 0
 						? [
-							{
-								amount: 10000,
-								toAddress:
-									membershipSettings.membershipFundsAddress,
-								lockedBy: MeemAPI.zeroAddress
-							}
-						]
+								{
+									amount: 10000,
+									toAddress:
+										membershipSettings.membershipFundsAddress,
+									lockedBy: MeemAPI.zeroAddress
+								}
+						  ]
 						: []
 
 				const mintPermissions: MeemAPI.IMeemPermission[] =
@@ -266,12 +266,12 @@ export const CreateClubModal: React.FC<IProps> = ({
 							mintStartTimestamp:
 								membershipSettings.membershipStartDate
 									? membershipSettings.membershipStartDate.getTime() /
-									1000
+									  1000
 									: 0,
 							mintEndTimestamp:
 								membershipSettings.membershipEndDate
 									? membershipSettings.membershipEndDate.getTime() /
-									1000
+									  1000
 									: 0
 						})
 					})
