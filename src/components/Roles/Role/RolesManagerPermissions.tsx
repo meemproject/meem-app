@@ -4,7 +4,6 @@ import React from 'react'
 import { Lock } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
-import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
 
 interface IProps {
 	role?: ClubRole
@@ -15,7 +14,6 @@ interface IProps {
 
 export const RolesManagerPermissions: React.FC<IProps> = ({
 	role,
-	club,
 	onSaveChanges,
 	onRoleUpdated
 }) => {
@@ -41,10 +39,26 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 											value.currentTarget.checked
 									}
 								})
+
+								// TODO: there's got to be a better way to update a single element of an object and
+								// TODO: have it apply to useState, instead of recreating the entire object. surely?
 								const newRole: ClubRole = {
 									name: role.name,
 									id: role.id,
-									permissions: newPermissions
+									permissions: newPermissions,
+									isTransferrable: role.isTransferrable,
+									isAdminRole: role.isAdminRole,
+									isDefaultRole: role.isDefaultRole,
+									rolesIntegrationData:
+										role.rolesIntegrationData,
+									guildDiscordServerId:
+										role.guildDiscordServerId ?? '',
+									guildDiscordServerIcon:
+										role.guildDiscordServerIcon ?? '',
+									guildDiscordServerName:
+										role.guildDiscordServerName ?? '',
+									guildRoleId: role.guildRoleId ?? '',
+									guildRoleName: role.guildRoleName ?? ''
 								}
 								onRoleUpdated(newRole)
 							}
@@ -92,9 +106,6 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-
-				<RolesManagerDiscordIntegration club={club} role={role} />
-				<Space h={24} />
 
 				<Button className={styles.buttonBlack} onClick={onSaveChanges}>
 					Save Changes

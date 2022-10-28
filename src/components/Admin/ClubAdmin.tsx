@@ -36,7 +36,7 @@ import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
 import { CAClubIcon } from './Tabs/CAClubIcon'
-import { CAContractAddress } from './Tabs/CAContractAddress'
+import { CAContractAddress as CAContractManagement } from './Tabs/CAContractManagement'
 import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
 import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
 import { CARoles } from './Tabs/CARoles'
@@ -219,7 +219,7 @@ const useStyles = createStyles(theme => ({
 }))
 
 enum Tab {
-	ContractAddress,
+	ContractManagement,
 	MembershipSettings,
 	MembershipRequirements,
 	Roles,
@@ -241,7 +241,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractAddress)
+	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	const navigateToClubDetail = () => {
@@ -306,8 +306,8 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 			case 'clubicon':
 				setCurrentTab(Tab.ClubIcon)
 				break
-			case 'contractaddress':
-				setCurrentTab(Tab.ContractAddress)
+			case 'contractmanagement':
+				setCurrentTab(Tab.ContractManagement)
 				break
 			case 'membershiprequirements':
 				setCurrentTab(Tab.MembershipRequirements)
@@ -460,10 +460,12 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								</Text>
 								<NavLink
 									className={classes.adminNavItem}
-									active={currentTab === Tab.ContractAddress}
-									label={'Contract Address'}
+									active={
+										currentTab === Tab.ContractManagement
+									}
+									label={'Contract Management'}
 									onClick={() => {
-										setCurrentTab(Tab.ContractAddress)
+										setCurrentTab(Tab.ContractManagement)
 										setMobileNavBarVisible(false)
 									}}
 								/>
@@ -585,8 +587,8 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</Navbar>
 							{!mobileNavBarVisible && (
 								<div className={classes.adminContent}>
-									{currentTab === Tab.ContractAddress && (
-										<CAContractAddress club={club} />
+									{currentTab === Tab.ContractManagement && (
+										<CAContractManagement club={club} />
 									)}
 									{currentTab === Tab.MembershipSettings &&
 										userHasPermissionManageMembershipSettings(

@@ -308,7 +308,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				}
 
 				const data = {
-					shouldMintAdminTokens: true,
+					shouldMintTokens: true,
 					metadata: {
 						meem_contract_type: 'meem-club',
 						meem_metadata_version: 'MeemClub_Contract_20220718',
@@ -327,7 +327,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					).toHexString(),
 					mintPermissions,
 					splits,
-					adminTokenMetadata: {
+					tokenMetadata: {
 						meem_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${Cookies.get(
 							CookieKeys.clubName

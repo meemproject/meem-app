@@ -129,7 +129,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 	return (
 		<>
 			<div>
-				<Text className={styles.tSectionTitle}>Discord Role</Text>
+				<Text className={styles.tSectionTitleSmall}>DISCORD ROLE</Text>
 				{role?.id === 'addRole' && (
 					<div>
 						<Space h={8} />
@@ -174,7 +174,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 										>
 											Choose a Discord Server
 										</Button>
-										<Space h={40} />
+										<Space h={48} />
 									</div>
 								)}
 
@@ -193,7 +193,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 											>
 												{`Add to ${guildPlatform.platformGuildName}`}
 											</Button>
-											<Space h={40} />
+											<Space h={48} />
 										</div>
 									)}
 
@@ -327,7 +327,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												</a> */}
 											</div>
 										</div>
-										<Space h={40} />
+										<Space h={48} />
 									</div>
 								)}
 
@@ -342,7 +342,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 										>
 											Connect Discord
 										</Button>
-										<Space h={32} />
+										<Space h={48} />
 									</div>
 								)}
 							</div>

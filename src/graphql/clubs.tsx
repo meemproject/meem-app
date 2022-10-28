@@ -310,7 +310,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 						MeemContractRolePermissions {
 							RolePermissionId
 						}
+						tokenAddress
 						integrationsMetadata
+						isTokenTransferrable
 					}
 				}
 			}
@@ -341,7 +343,14 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				MeemContractRolePermissions {
 					RolePermissionId
 				}
+				tokenAddress
 				integrationsMetadata
+				isTokenTransferrable
+			}
+			MeemContractWallets {
+				Wallet {
+					address
+				}
 			}
 		}
 	}
