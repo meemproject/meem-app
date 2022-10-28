@@ -310,7 +310,7 @@ export function HomeComponent() {
 					}
 				/>
 				{!clubclub.isMember && (
-					<Text className={styles.tLink} style={{ marginTop: 24 }}>
+					<Text className={styles.tLink} style={{ marginTop: 16 }}>
 						<a
 							onClick={() => {
 								router.push({ pathname: '/club-club' })

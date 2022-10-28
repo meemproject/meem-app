@@ -1,4 +1,3 @@
-import log from '@kengoldfarb/log'
 import {
 	Text,
 	Space,
@@ -12,13 +11,9 @@ import {
 	Button,
 	Loader
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
-import request from 'superagent'
-import { AlertCircle } from 'tabler-icons-react'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 interface IProps {
@@ -31,6 +26,7 @@ interface ConnectionMethod {
 	id: string
 	name: string
 	icon: string
+	enabled: boolean
 }
 
 export const JoinClubsModal: React.FC<IProps> = ({
@@ -43,6 +39,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 	// Email state controls
 	const [isEmailState, setIsEmailState] = useState(false)
 
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 	const [isLoading, setIsLoading] = useState(false)
 
 	const [email, setEmail] = useState('')
@@ -53,27 +50,32 @@ export const JoinClubsModal: React.FC<IProps> = ({
 		{
 			id: 'walletconnect',
 			name: 'WalletConnect',
-			icon: 'connect-walletconnect.png'
+			icon: 'connect-walletconnect.png',
+			enabled: true
 		},
 		{
 			id: 'email',
 			name: 'Email Address',
-			icon: 'connect-email.png'
+			icon: 'connect-email.png',
+			enabled: false
 		},
 		{
 			id: 'discord',
 			name: 'Discord',
-			icon: 'connect-discord.png'
+			icon: 'connect-discord.png',
+			enabled: false
 		},
 		{
 			id: 'twitter',
 			name: 'Twitter',
-			icon: 'connect-twitter.png'
+			icon: 'connect-twitter.png',
+			enabled: false
 		},
 		{
 			id: 'google',
 			name: 'Google',
-			icon: 'connect-google.png'
+			icon: 'connect-google.png',
+			enabled: false
 		}
 	]
 
@@ -248,12 +250,17 @@ export const JoinClubsModal: React.FC<IProps> = ({
 							{methods.map(method => (
 								<div key={method.id}>
 									<div
+										style={{
+											position: 'relative'
+										}}
 										className={
 											styles.connectMethodButtonSmall
 										}
 										key={method.id}
 										onClick={() => {
-											connectWithMethod(method)
+											if (method.enabled) {
+												connectWithMethod(method)
+											}
 										}}
 									>
 										<Image
@@ -265,6 +272,32 @@ export const JoinClubsModal: React.FC<IProps> = ({
 										<Text className={styles.tBold}>
 											{method.name}
 										</Text>
+										{!method.enabled && (
+											<div className={styles.row}>
+												<Space w={8} />
+												<Text
+													className={
+														styles.tPartialTransparent
+													}
+												>
+													Coming soon
+												</Text>
+											</div>
+										)}
+										{!method.enabled && (
+											<div
+												style={{
+													position: 'absolute',
+													top: 0,
+													left: 0,
+													borderRadius: 32,
+													width: '100%',
+													height: '100%',
+													backgroundColor: 'white',
+													opacity: '0.7'
+												}}
+											/>
+										)}
 									</div>
 									<Space h={16} />
 								</div>
@@ -314,8 +347,13 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											className={
 												styles.connectMethodButton
 											}
+											style={{
+												position: 'relative'
+											}}
 											onClick={() => {
-												connectWithMethod(method)
+												if (method.enabled) {
+													connectWithMethod(method)
+												}
 											}}
 										>
 											<Center>
@@ -335,6 +373,34 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													>
 														{method.name}
 													</Text>
+													{!method.enabled && (
+														<Text
+															className={
+																styles.tPartialTransparent
+															}
+															style={{
+																fontSize: 14
+															}}
+														>
+															Coming soon
+														</Text>
+													)}
+													{!method.enabled && (
+														<div
+															style={{
+																position:
+																	'absolute',
+																top: 0,
+																left: 0,
+																borderRadius: 20,
+																width: '100%',
+																height: '100%',
+																backgroundColor:
+																	'white',
+																opacity: '0.7'
+															}}
+														/>
+													)}
 												</div>
 											</Center>
 										</div>
