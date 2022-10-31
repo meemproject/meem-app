@@ -224,7 +224,8 @@ export function meemContractRolesToClubRoles(
 			isDefaultRole: rawRole.isDefaultRole,
 			rolesIntegrationData: metadata,
 			tokenAddress: rawRole.tokenAddress ?? '',
-			isTransferrable: rawRole.isTokenTransferrable,
+			isTransferrable: false,
+			// isTransferrable: rawRole.isTokenTransferrable,
 			name: rawRole.name,
 			guildDiscordServerIcon,
 			guildDiscordServerId,
@@ -776,16 +777,18 @@ export default async function clubFromMeemContract(
 
 		// Determine if the club is controlled by the Meem API wallet address
 		let isClubControlledByMeemApi = false
-		clubData.MeemContractWallets.forEach(contractWallet => {
-			if (contractWallet.Wallet) {
-				if (
-					contractWallet.Wallet.address.toLowerCase() ===
-					process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
-				) {
-					isClubControlledByMeemApi = true
+		if (clubData.MeemContractWallets) {
+			clubData.MeemContractWallets.forEach(contractWallet => {
+				if (contractWallet.Wallet) {
+					if (
+						contractWallet.Wallet.address.toLowerCase() ===
+						process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
+					) {
+						isClubControlledByMeemApi = true
+					}
 				}
-			}
-		})
+			})
+		}
 
 		log.debug(
 			`club is controlled by meem api = ${isClubControlledByMeemApi}`
