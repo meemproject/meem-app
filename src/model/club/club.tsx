@@ -679,34 +679,31 @@ export default async function clubFromMeemContract(
 								break
 						}
 
-						// Construct a requirement - only push if it is not 'anyone'
-						if (
-							permission.permission !== MeemAPI.Permission.Anyone
-						) {
-							reqs.push({
-								index,
-								andor: MembershipReqAndor.Or,
-								type,
-								applicationInstructions: clubData.metadata
-									.application_instructions
-									? clubData.metadata.application_instructions
-											.length > 0
-										? clubData.metadata
-												.application_instructions[0]
-										: undefined
-									: undefined,
-								approvedAddresses,
-								approvedAddressesString,
-								tokenName,
-								tokenMinQuantity,
-								tokenChain: '',
-								clubContractAddress,
-								tokenContractAddress,
-								otherClubName: clubName
-							})
+						// Construct a requirement
 
-							index++
-						}
+						reqs.push({
+							index,
+							andor: MembershipReqAndor.Or,
+							type,
+							applicationInstructions: clubData.metadata
+								.application_instructions
+								? clubData.metadata.application_instructions
+										.length > 0
+									? clubData.metadata
+											.application_instructions[0]
+									: undefined
+								: undefined,
+							approvedAddresses,
+							approvedAddressesString,
+							tokenName,
+							tokenMinQuantity,
+							tokenChain: '',
+							clubContractAddress,
+							tokenContractAddress,
+							otherClubName: clubName
+						})
+
+						index++
 					}
 				})
 			)
