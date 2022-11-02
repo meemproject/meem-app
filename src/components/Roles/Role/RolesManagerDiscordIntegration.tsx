@@ -24,7 +24,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
-	const [isFetchingGuildInfo, setIsFetchingGuildInfo] = useState(false)
+	const [isFetchingGuildInfo, setIsFetchingGuildInfo] = useState(true)
 
 	const [hasFetchedGuildInfo, setHasFetchedGuildInfo] = useState(false)
 
@@ -106,11 +106,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 			setDiscordAccessToken(Cookies.get('discordAccessToken') ?? '')
 		}
 
-		if (
-			!isFetchingGuildInfo &&
-			!hasFetchedGuildInfo &&
-			role?.id !== 'addRole'
-		) {
+		if (!hasFetchedGuildInfo && role?.id !== 'addRole') {
 			fetchGuildInfo()
 		} else {
 			setHasFetchedGuildInfo(true)
