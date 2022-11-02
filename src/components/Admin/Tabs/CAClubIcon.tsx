@@ -278,7 +278,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 		// 'save changes' modal for execution club settings updates
 		// convert current settings and update for the modal
 		const oldClub = JSON.stringify(club)
-		const newClub = club
+		const newClub = JSON.parse(oldClub)
 		newClub.name = club.name
 		newClub.description = club.description
 		newClub.image = smallClubLogo
