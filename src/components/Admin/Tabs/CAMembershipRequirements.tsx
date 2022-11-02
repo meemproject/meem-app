@@ -468,7 +468,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			}
 
 			// Show the appropriate modal (create vs edit)
-			const newClub = club
+			const oldClub = JSON.stringify(club)
+			const newClub = JSON.parse(oldClub)
 			if (newClub) {
 				newClub.membershipSettings = settings
 				setNewClubData(newClub)
