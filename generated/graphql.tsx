@@ -61,6 +61,17 @@ export type BundleContracts_Aggregate = {
   nodes: Array<BundleContracts>;
 };
 
+export type BundleContracts_Aggregate_Bool_Exp = {
+  count?: InputMaybe<BundleContracts_Aggregate_Bool_Exp_Count>;
+};
+
+export type BundleContracts_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<BundleContracts_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<BundleContracts_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "BundleContracts" */
 export type BundleContracts_Aggregate_Fields = {
   __typename?: 'BundleContracts_aggregate_fields';
@@ -487,6 +498,17 @@ export type Bundles_Aggregate = {
   nodes: Array<Bundles>;
 };
 
+export type Bundles_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Bundles_Aggregate_Bool_Exp_Count>;
+};
+
+export type Bundles_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Bundles_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Bundles_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "Bundles" */
 export type Bundles_Aggregate_Fields = {
   __typename?: 'Bundles_aggregate_fields';
@@ -524,6 +546,7 @@ export type Bundles_Arr_Rel_Insert_Input = {
 /** Boolean expression to filter rows from the table "Bundles". All fields are combined with a logical 'AND'. */
 export type Bundles_Bool_Exp = {
   BundleContracts?: InputMaybe<BundleContracts_Bool_Exp>;
+  BundleContracts_aggregate?: InputMaybe<BundleContracts_Aggregate_Bool_Exp>;
   Creator?: InputMaybe<Wallets_Bool_Exp>;
   CreatorId?: InputMaybe<Uuid_Comparison_Exp>;
   _and?: InputMaybe<Array<Bundles_Bool_Exp>>;
@@ -788,6 +811,17 @@ export type Clippings_Aggregate = {
   nodes: Array<Clippings>;
 };
 
+export type Clippings_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Clippings_Aggregate_Bool_Exp_Count>;
+};
+
+export type Clippings_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Clippings_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Clippings_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "Clippings" */
 export type Clippings_Aggregate_Fields = {
   __typename?: 'Clippings_aggregate_fields';
@@ -1046,6 +1080,17 @@ export type ContractInstances_Aggregate = {
   nodes: Array<ContractInstances>;
 };
 
+export type ContractInstances_Aggregate_Bool_Exp = {
+  count?: InputMaybe<ContractInstances_Aggregate_Bool_Exp_Count>;
+};
+
+export type ContractInstances_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<ContractInstances_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<ContractInstances_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "ContractInstances" */
 export type ContractInstances_Aggregate_Fields = {
   __typename?: 'ContractInstances_aggregate_fields';
@@ -1107,6 +1152,7 @@ export type ContractInstances_Bool_Exp = {
   Contract?: InputMaybe<Contracts_Bool_Exp>;
   ContractId?: InputMaybe<Uuid_Comparison_Exp>;
   WalletContractInstances?: InputMaybe<WalletContractInstances_Bool_Exp>;
+  WalletContractInstances_aggregate?: InputMaybe<WalletContractInstances_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<ContractInstances_Bool_Exp>>;
   _not?: InputMaybe<ContractInstances_Bool_Exp>;
   _or?: InputMaybe<Array<ContractInstances_Bool_Exp>>;
@@ -1466,6 +1512,17 @@ export type Contracts_Aggregate = {
   nodes: Array<Contracts>;
 };
 
+export type Contracts_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Contracts_Aggregate_Bool_Exp_Count>;
+};
+
+export type Contracts_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Contracts_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Contracts_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "Contracts" */
 export type Contracts_Aggregate_Fields = {
   __typename?: 'Contracts_aggregate_fields';
@@ -1531,7 +1588,9 @@ export type Contracts_Avg_Order_By = {
 /** Boolean expression to filter rows from the table "Contracts". All fields are combined with a logical 'AND'. */
 export type Contracts_Bool_Exp = {
   BundleContracts?: InputMaybe<BundleContracts_Bool_Exp>;
+  BundleContracts_aggregate?: InputMaybe<BundleContracts_Aggregate_Bool_Exp>;
   ContractInstances?: InputMaybe<ContractInstances_Bool_Exp>;
+  ContractInstances_aggregate?: InputMaybe<ContractInstances_Aggregate_Bool_Exp>;
   Creator?: InputMaybe<Wallets_Bool_Exp>;
   CreatorId?: InputMaybe<Uuid_Comparison_Exp>;
   _and?: InputMaybe<Array<Contracts_Bool_Exp>>;
@@ -2152,6 +2211,7 @@ export type Hashtags_Aggregate_FieldsCountArgs = {
 /** Boolean expression to filter rows from the table "Hashtags". All fields are combined with a logical 'AND'. */
 export type Hashtags_Bool_Exp = {
   TweetHashtags?: InputMaybe<TweetHashtags_Bool_Exp>;
+  TweetHashtags_aggregate?: InputMaybe<TweetHashtags_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Hashtags_Bool_Exp>>;
   _not?: InputMaybe<Hashtags_Bool_Exp>;
   _or?: InputMaybe<Array<Hashtags_Bool_Exp>>;
@@ -2357,6 +2417,7 @@ export type IdentityIntegrations_Aggregate_FieldsCountArgs = {
 /** Boolean expression to filter rows from the table "IdentityIntegrations". All fields are combined with a logical 'AND'. */
 export type IdentityIntegrations_Bool_Exp = {
   MeemIdentityIntegrations?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+  MeemIdentityIntegrations_aggregate?: InputMaybe<MeemIdentityIntegrations_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
   _not?: InputMaybe<IdentityIntegrations_Bool_Exp>;
   _or?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
@@ -2598,6 +2659,7 @@ export type Integrations_Aggregate_FieldsCountArgs = {
 /** Boolean expression to filter rows from the table "Integrations". All fields are combined with a logical 'AND'. */
 export type Integrations_Bool_Exp = {
   MeemContractIntegrations?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+  MeemContractIntegrations_aggregate?: InputMaybe<MeemContractIntegrations_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Integrations_Bool_Exp>>;
   _not?: InputMaybe<Integrations_Bool_Exp>;
   _or?: InputMaybe<Array<Integrations_Bool_Exp>>;
@@ -2818,6 +2880,17 @@ export type MeemContractGuilds_Aggregate = {
   nodes: Array<MeemContractGuilds>;
 };
 
+export type MeemContractGuilds_Aggregate_Bool_Exp = {
+  count?: InputMaybe<MeemContractGuilds_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemContractGuilds_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemContractGuilds_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractGuilds_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "MeemContractGuilds" */
 export type MeemContractGuilds_Aggregate_Fields = {
   __typename?: 'MeemContractGuilds_aggregate_fields';
@@ -2879,6 +2952,7 @@ export type MeemContractGuilds_Bool_Exp = {
   MeemContract?: InputMaybe<MeemContracts_Bool_Exp>;
   MeemContractId?: InputMaybe<Uuid_Comparison_Exp>;
   MeemContractRoles?: InputMaybe<MeemContractRoles_Bool_Exp>;
+  MeemContractRoles_aggregate?: InputMaybe<MeemContractRoles_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<MeemContractGuilds_Bool_Exp>>;
   _not?: InputMaybe<MeemContractGuilds_Bool_Exp>;
   _or?: InputMaybe<Array<MeemContractGuilds_Bool_Exp>>;
@@ -3157,6 +3231,33 @@ export type MeemContractIntegrations_Aggregate = {
   nodes: Array<MeemContractIntegrations>;
 };
 
+export type MeemContractIntegrations_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<MeemContractIntegrations_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<MeemContractIntegrations_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<MeemContractIntegrations_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemContractIntegrations_Aggregate_Bool_Exp_Bool_And = {
+  arguments: MeemContractIntegrations_Select_Column_MeemContractIntegrations_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type MeemContractIntegrations_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: MeemContractIntegrations_Select_Column_MeemContractIntegrations_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type MeemContractIntegrations_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemContractIntegrations_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "MeemContractIntegrations" */
 export type MeemContractIntegrations_Aggregate_Fields = {
   __typename?: 'MeemContractIntegrations_aggregate_fields';
@@ -3352,6 +3453,22 @@ export enum MeemContractIntegrations_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** select "MeemContractIntegrations_aggregate_bool_exp_bool_and_arguments_columns" columns of table "MeemContractIntegrations" */
+export enum MeemContractIntegrations_Select_Column_MeemContractIntegrations_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsEnabled = 'isEnabled',
+  /** column name */
+  IsPublic = 'isPublic'
+}
+
+/** select "MeemContractIntegrations_aggregate_bool_exp_bool_or_arguments_columns" columns of table "MeemContractIntegrations" */
+export enum MeemContractIntegrations_Select_Column_MeemContractIntegrations_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsEnabled = 'isEnabled',
+  /** column name */
+  IsPublic = 'isPublic'
+}
+
 /** input type for updating data in table "MeemContractIntegrations" */
 export type MeemContractIntegrations_Set_Input = {
   IntegrationId?: InputMaybe<Scalars['uuid']>;
@@ -3441,6 +3558,17 @@ export type MeemContractRolePermissions_Aggregate = {
   __typename?: 'MeemContractRolePermissions_aggregate';
   aggregate?: Maybe<MeemContractRolePermissions_Aggregate_Fields>;
   nodes: Array<MeemContractRolePermissions>;
+};
+
+export type MeemContractRolePermissions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<MeemContractRolePermissions_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemContractRolePermissions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemContractRolePermissions_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractRolePermissions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "MeemContractRolePermissions" */
@@ -3645,6 +3773,9 @@ export type MeemContractRoles = {
   MeemContractRolePermissions: Array<MeemContractRolePermissions>;
   /** An aggregate relationship */
   MeemContractRolePermissions_aggregate: MeemContractRolePermissions_Aggregate;
+  /** An object relationship */
+  RoleMeemContract?: Maybe<MeemContracts>;
+  RoleMeemContractId?: Maybe<Scalars['uuid']>;
   createdAt: Scalars['timestamptz'];
   description: Scalars['String'];
   guildRoleId?: Maybe<Scalars['Int']>;
@@ -3653,7 +3784,6 @@ export type MeemContractRoles = {
   integrationsMetadata: Scalars['jsonb'];
   isAdminRole: Scalars['Boolean'];
   isDefaultRole: Scalars['Boolean'];
-  isTokenTransferrable: Scalars['Boolean'];
   name: Scalars['String'];
   tokenAddress?: Maybe<Scalars['String']>;
   updatedAt: Scalars['timestamptz'];
@@ -3690,6 +3820,33 @@ export type MeemContractRoles_Aggregate = {
   __typename?: 'MeemContractRoles_aggregate';
   aggregate?: Maybe<MeemContractRoles_Aggregate_Fields>;
   nodes: Array<MeemContractRoles>;
+};
+
+export type MeemContractRoles_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<MeemContractRoles_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<MeemContractRoles_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<MeemContractRoles_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemContractRoles_Aggregate_Bool_Exp_Bool_And = {
+  arguments: MeemContractRoles_Select_Column_MeemContractRoles_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractRoles_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type MeemContractRoles_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: MeemContractRoles_Select_Column_MeemContractRoles_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractRoles_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type MeemContractRoles_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemContractRoles_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractRoles_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "MeemContractRoles" */
@@ -3760,6 +3917,9 @@ export type MeemContractRoles_Bool_Exp = {
   MeemContractGuildId?: InputMaybe<Uuid_Comparison_Exp>;
   MeemContractId?: InputMaybe<Uuid_Comparison_Exp>;
   MeemContractRolePermissions?: InputMaybe<MeemContractRolePermissions_Bool_Exp>;
+  MeemContractRolePermissions_aggregate?: InputMaybe<MeemContractRolePermissions_Aggregate_Bool_Exp>;
+  RoleMeemContract?: InputMaybe<MeemContracts_Bool_Exp>;
+  RoleMeemContractId?: InputMaybe<Uuid_Comparison_Exp>;
   _and?: InputMaybe<Array<MeemContractRoles_Bool_Exp>>;
   _not?: InputMaybe<MeemContractRoles_Bool_Exp>;
   _or?: InputMaybe<Array<MeemContractRoles_Bool_Exp>>;
@@ -3771,7 +3931,6 @@ export type MeemContractRoles_Bool_Exp = {
   integrationsMetadata?: InputMaybe<Jsonb_Comparison_Exp>;
   isAdminRole?: InputMaybe<Boolean_Comparison_Exp>;
   isDefaultRole?: InputMaybe<Boolean_Comparison_Exp>;
-  isTokenTransferrable?: InputMaybe<Boolean_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   tokenAddress?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -3810,6 +3969,8 @@ export type MeemContractRoles_Insert_Input = {
   MeemContractGuildId?: InputMaybe<Scalars['uuid']>;
   MeemContractId?: InputMaybe<Scalars['uuid']>;
   MeemContractRolePermissions?: InputMaybe<MeemContractRolePermissions_Arr_Rel_Insert_Input>;
+  RoleMeemContract?: InputMaybe<MeemContracts_Obj_Rel_Insert_Input>;
+  RoleMeemContractId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guildRoleId?: InputMaybe<Scalars['Int']>;
@@ -3818,7 +3979,6 @@ export type MeemContractRoles_Insert_Input = {
   integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
-  isTokenTransferrable?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
@@ -3829,6 +3989,7 @@ export type MeemContractRoles_Max_Fields = {
   __typename?: 'MeemContractRoles_max_fields';
   MeemContractGuildId?: Maybe<Scalars['uuid']>;
   MeemContractId?: Maybe<Scalars['uuid']>;
+  RoleMeemContractId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   guildRoleId?: Maybe<Scalars['Int']>;
@@ -3843,6 +4004,7 @@ export type MeemContractRoles_Max_Fields = {
 export type MeemContractRoles_Max_Order_By = {
   MeemContractGuildId?: InputMaybe<Order_By>;
   MeemContractId?: InputMaybe<Order_By>;
+  RoleMeemContractId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   guildRoleId?: InputMaybe<Order_By>;
@@ -3858,6 +4020,7 @@ export type MeemContractRoles_Min_Fields = {
   __typename?: 'MeemContractRoles_min_fields';
   MeemContractGuildId?: Maybe<Scalars['uuid']>;
   MeemContractId?: Maybe<Scalars['uuid']>;
+  RoleMeemContractId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   guildRoleId?: Maybe<Scalars['Int']>;
@@ -3872,6 +4035,7 @@ export type MeemContractRoles_Min_Fields = {
 export type MeemContractRoles_Min_Order_By = {
   MeemContractGuildId?: InputMaybe<Order_By>;
   MeemContractId?: InputMaybe<Order_By>;
+  RoleMeemContractId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   guildRoleId?: InputMaybe<Order_By>;
@@ -3912,6 +4076,8 @@ export type MeemContractRoles_Order_By = {
   MeemContractGuildId?: InputMaybe<Order_By>;
   MeemContractId?: InputMaybe<Order_By>;
   MeemContractRolePermissions_aggregate?: InputMaybe<MeemContractRolePermissions_Aggregate_Order_By>;
+  RoleMeemContract?: InputMaybe<MeemContracts_Order_By>;
+  RoleMeemContractId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   guildRoleId?: InputMaybe<Order_By>;
@@ -3920,7 +4086,6 @@ export type MeemContractRoles_Order_By = {
   integrationsMetadata?: InputMaybe<Order_By>;
   isAdminRole?: InputMaybe<Order_By>;
   isDefaultRole?: InputMaybe<Order_By>;
-  isTokenTransferrable?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   tokenAddress?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
@@ -3943,6 +4108,8 @@ export enum MeemContractRoles_Select_Column {
   /** column name */
   MeemContractId = 'MeemContractId',
   /** column name */
+  RoleMeemContractId = 'RoleMeemContractId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
@@ -3959,8 +4126,6 @@ export enum MeemContractRoles_Select_Column {
   /** column name */
   IsDefaultRole = 'isDefaultRole',
   /** column name */
-  IsTokenTransferrable = 'isTokenTransferrable',
-  /** column name */
   Name = 'name',
   /** column name */
   TokenAddress = 'tokenAddress',
@@ -3968,10 +4133,27 @@ export enum MeemContractRoles_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** select "MeemContractRoles_aggregate_bool_exp_bool_and_arguments_columns" columns of table "MeemContractRoles" */
+export enum MeemContractRoles_Select_Column_MeemContractRoles_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsAdminRole = 'isAdminRole',
+  /** column name */
+  IsDefaultRole = 'isDefaultRole'
+}
+
+/** select "MeemContractRoles_aggregate_bool_exp_bool_or_arguments_columns" columns of table "MeemContractRoles" */
+export enum MeemContractRoles_Select_Column_MeemContractRoles_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsAdminRole = 'isAdminRole',
+  /** column name */
+  IsDefaultRole = 'isDefaultRole'
+}
+
 /** input type for updating data in table "MeemContractRoles" */
 export type MeemContractRoles_Set_Input = {
   MeemContractGuildId?: InputMaybe<Scalars['uuid']>;
   MeemContractId?: InputMaybe<Scalars['uuid']>;
+  RoleMeemContractId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guildRoleId?: InputMaybe<Scalars['Int']>;
@@ -3980,7 +4162,6 @@ export type MeemContractRoles_Set_Input = {
   integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
-  isTokenTransferrable?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4031,6 +4212,7 @@ export type MeemContractRoles_Stream_Cursor_Input = {
 export type MeemContractRoles_Stream_Cursor_Value_Input = {
   MeemContractGuildId?: InputMaybe<Scalars['uuid']>;
   MeemContractId?: InputMaybe<Scalars['uuid']>;
+  RoleMeemContractId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guildRoleId?: InputMaybe<Scalars['Int']>;
@@ -4039,7 +4221,6 @@ export type MeemContractRoles_Stream_Cursor_Value_Input = {
   integrationsMetadata?: InputMaybe<Scalars['jsonb']>;
   isAdminRole?: InputMaybe<Scalars['Boolean']>;
   isDefaultRole?: InputMaybe<Scalars['Boolean']>;
-  isTokenTransferrable?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   tokenAddress?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4063,6 +4244,8 @@ export enum MeemContractRoles_Update_Column {
   /** column name */
   MeemContractId = 'MeemContractId',
   /** column name */
+  RoleMeemContractId = 'RoleMeemContractId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
@@ -4078,8 +4261,6 @@ export enum MeemContractRoles_Update_Column {
   IsAdminRole = 'isAdminRole',
   /** column name */
   IsDefaultRole = 'isDefaultRole',
-  /** column name */
-  IsTokenTransferrable = 'isTokenTransferrable',
   /** column name */
   Name = 'name',
   /** column name */
@@ -4160,6 +4341,17 @@ export type MeemContractWallets_Aggregate = {
   __typename?: 'MeemContractWallets_aggregate';
   aggregate?: Maybe<MeemContractWallets_Aggregate_Fields>;
   nodes: Array<MeemContractWallets>;
+};
+
+export type MeemContractWallets_Aggregate_Bool_Exp = {
+  count?: InputMaybe<MeemContractWallets_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemContractWallets_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemContractWallets_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContractWallets_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "MeemContractWallets" */
@@ -4553,6 +4745,33 @@ export type MeemContracts_Aggregate = {
   nodes: Array<MeemContracts>;
 };
 
+export type MeemContracts_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<MeemContracts_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<MeemContracts_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<MeemContracts_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemContracts_Aggregate_Bool_Exp_Bool_And = {
+  arguments: MeemContracts_Select_Column_MeemContracts_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContracts_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type MeemContracts_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: MeemContracts_Select_Column_MeemContracts_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContracts_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type MeemContracts_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemContracts_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemContracts_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "MeemContracts" */
 export type MeemContracts_Aggregate_Fields = {
   __typename?: 'MeemContracts_aggregate_fields';
@@ -4619,10 +4838,15 @@ export type MeemContracts_Avg_Order_By = {
 /** Boolean expression to filter rows from the table "MeemContracts". All fields are combined with a logical 'AND'. */
 export type MeemContracts_Bool_Exp = {
   MeemContractGuilds?: InputMaybe<MeemContractGuilds_Bool_Exp>;
+  MeemContractGuilds_aggregate?: InputMaybe<MeemContractGuilds_Aggregate_Bool_Exp>;
   MeemContractIntegrations?: InputMaybe<MeemContractIntegrations_Bool_Exp>;
+  MeemContractIntegrations_aggregate?: InputMaybe<MeemContractIntegrations_Aggregate_Bool_Exp>;
   MeemContractRoles?: InputMaybe<MeemContractRoles_Bool_Exp>;
+  MeemContractRoles_aggregate?: InputMaybe<MeemContractRoles_Aggregate_Bool_Exp>;
   MeemContractWallets?: InputMaybe<MeemContractWallets_Bool_Exp>;
+  MeemContractWallets_aggregate?: InputMaybe<MeemContractWallets_Aggregate_Bool_Exp>;
   Meems?: InputMaybe<Meems_Bool_Exp>;
+  Meems_aggregate?: InputMaybe<Meems_Aggregate_Bool_Exp>;
   Owner?: InputMaybe<Wallets_Bool_Exp>;
   OwnerId?: InputMaybe<Uuid_Comparison_Exp>;
   _and?: InputMaybe<Array<MeemContracts_Bool_Exp>>;
@@ -4907,6 +5131,22 @@ export enum MeemContracts_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** select "MeemContracts_aggregate_bool_exp_bool_and_arguments_columns" columns of table "MeemContracts" */
+export enum MeemContracts_Select_Column_MeemContracts_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsMaxSupplyLocked = 'isMaxSupplyLocked',
+  /** column name */
+  IsTransferrable = 'isTransferrable'
+}
+
+/** select "MeemContracts_aggregate_bool_exp_bool_or_arguments_columns" columns of table "MeemContracts" */
+export enum MeemContracts_Select_Column_MeemContracts_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsMaxSupplyLocked = 'isMaxSupplyLocked',
+  /** column name */
+  IsTransferrable = 'isTransferrable'
+}
+
 /** input type for updating data in table "MeemContracts" */
 export type MeemContracts_Set_Input = {
   OwnerId?: InputMaybe<Scalars['uuid']>;
@@ -5175,6 +5415,17 @@ export type MeemIdentities_Aggregate = {
   nodes: Array<MeemIdentities>;
 };
 
+export type MeemIdentities_Aggregate_Bool_Exp = {
+  count?: InputMaybe<MeemIdentities_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemIdentities_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemIdentities_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemIdentities_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "MeemIdentities" */
 export type MeemIdentities_Aggregate_Fields = {
   __typename?: 'MeemIdentities_aggregate_fields';
@@ -5209,7 +5460,9 @@ export type MeemIdentities_Bool_Exp = {
   DefaultWallet?: InputMaybe<Wallets_Bool_Exp>;
   DefaultWalletId?: InputMaybe<Uuid_Comparison_Exp>;
   MeemIdentityIntegrations?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+  MeemIdentityIntegrations_aggregate?: InputMaybe<MeemIdentityIntegrations_Aggregate_Bool_Exp>;
   MeemIdentityWallets?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+  MeemIdentityWallets_aggregate?: InputMaybe<MeemIdentityWallets_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<MeemIdentities_Bool_Exp>>;
   _not?: InputMaybe<MeemIdentities_Bool_Exp>;
   _or?: InputMaybe<Array<MeemIdentities_Bool_Exp>>;
@@ -5429,6 +5682,17 @@ export type MeemIdentityIntegrations_Aggregate = {
   __typename?: 'MeemIdentityIntegrations_aggregate';
   aggregate?: Maybe<MeemIdentityIntegrations_Aggregate_Fields>;
   nodes: Array<MeemIdentityIntegrations>;
+};
+
+export type MeemIdentityIntegrations_Aggregate_Bool_Exp = {
+  count?: InputMaybe<MeemIdentityIntegrations_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemIdentityIntegrations_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemIdentityIntegrations_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemIdentityIntegrations_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "MeemIdentityIntegrations" */
@@ -5713,6 +5977,17 @@ export type MeemIdentityWallets_Aggregate = {
   __typename?: 'MeemIdentityWallets_aggregate';
   aggregate?: Maybe<MeemIdentityWallets_Aggregate_Fields>;
   nodes: Array<MeemIdentityWallets>;
+};
+
+export type MeemIdentityWallets_Aggregate_Bool_Exp = {
+  count?: InputMaybe<MeemIdentityWallets_Aggregate_Bool_Exp_Count>;
+};
+
+export type MeemIdentityWallets_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<MeemIdentityWallets_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "MeemIdentityWallets" */
@@ -6049,6 +6324,17 @@ export type Meems_Aggregate = {
   nodes: Array<Meems>;
 };
 
+export type Meems_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Meems_Aggregate_Bool_Exp_Count>;
+};
+
+export type Meems_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Meems_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Meems_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "Meems" */
 export type Meems_Aggregate_Fields = {
   __typename?: 'Meems_aggregate_fields';
@@ -6113,13 +6399,17 @@ export type Meems_Avg_Order_By = {
 /** Boolean expression to filter rows from the table "Meems". All fields are combined with a logical 'AND'. */
 export type Meems_Bool_Exp = {
   Clippings?: InputMaybe<Clippings_Bool_Exp>;
+  Clippings_aggregate?: InputMaybe<Clippings_Aggregate_Bool_Exp>;
   MeemContract?: InputMaybe<MeemContracts_Bool_Exp>;
   MeemContractId?: InputMaybe<Uuid_Comparison_Exp>;
   Owner?: InputMaybe<Wallets_Bool_Exp>;
   OwnerId?: InputMaybe<Uuid_Comparison_Exp>;
   Reactions?: InputMaybe<Reactions_Bool_Exp>;
+  Reactions_aggregate?: InputMaybe<Reactions_Aggregate_Bool_Exp>;
   Transfers?: InputMaybe<Transfers_Bool_Exp>;
+  Transfers_aggregate?: InputMaybe<Transfers_Aggregate_Bool_Exp>;
   Tweets?: InputMaybe<Tweets_Bool_Exp>;
+  Tweets_aggregate?: InputMaybe<Tweets_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Meems_Bool_Exp>>;
   _not?: InputMaybe<Meems_Bool_Exp>;
   _or?: InputMaybe<Array<Meems_Bool_Exp>>;
@@ -6498,6 +6788,17 @@ export type Reactions_Aggregate = {
   __typename?: 'Reactions_aggregate';
   aggregate?: Maybe<Reactions_Aggregate_Fields>;
   nodes: Array<Reactions>;
+};
+
+export type Reactions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Reactions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Reactions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Reactions_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Reactions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "Reactions" */
@@ -7081,6 +7382,17 @@ export type Transactions_Aggregate = {
   nodes: Array<Transactions>;
 };
 
+export type Transactions_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Transactions_Aggregate_Bool_Exp_Count>;
+};
+
+export type Transactions_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Transactions_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Transactions_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "Transactions" */
 export type Transactions_Aggregate_Fields = {
   __typename?: 'Transactions_aggregate_fields';
@@ -7415,6 +7727,17 @@ export type Transfers_Aggregate = {
   nodes: Array<Transfers>;
 };
 
+export type Transfers_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Transfers_Aggregate_Bool_Exp_Count>;
+};
+
+export type Transfers_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Transfers_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Transfers_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "Transfers" */
 export type Transfers_Aggregate_Fields = {
   __typename?: 'Transfers_aggregate_fields';
@@ -7676,6 +7999,17 @@ export type TweetHashtags_Aggregate = {
   nodes: Array<TweetHashtags>;
 };
 
+export type TweetHashtags_Aggregate_Bool_Exp = {
+  count?: InputMaybe<TweetHashtags_Aggregate_Bool_Exp_Count>;
+};
+
+export type TweetHashtags_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<TweetHashtags_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<TweetHashtags_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "TweetHashtags" */
 export type TweetHashtags_Aggregate_Fields = {
   __typename?: 'TweetHashtags_aggregate_fields';
@@ -7930,6 +8264,17 @@ export type Tweets_Aggregate = {
   nodes: Array<Tweets>;
 };
 
+export type Tweets_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Tweets_Aggregate_Bool_Exp_Count>;
+};
+
+export type Tweets_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Tweets_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Tweets_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
 /** aggregate fields of "Tweets" */
 export type Tweets_Aggregate_Fields = {
   __typename?: 'Tweets_aggregate_fields';
@@ -7964,6 +8309,7 @@ export type Tweets_Bool_Exp = {
   Meem?: InputMaybe<Meems_Bool_Exp>;
   MeemId?: InputMaybe<Uuid_Comparison_Exp>;
   TweetHashtags?: InputMaybe<TweetHashtags_Bool_Exp>;
+  TweetHashtags_aggregate?: InputMaybe<TweetHashtags_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Tweets_Bool_Exp>>;
   _not?: InputMaybe<Tweets_Bool_Exp>;
   _or?: InputMaybe<Array<Tweets_Bool_Exp>>;
@@ -8395,6 +8741,17 @@ export type WalletContractInstances_Aggregate = {
   __typename?: 'WalletContractInstances_aggregate';
   aggregate?: Maybe<WalletContractInstances_Aggregate_Fields>;
   nodes: Array<WalletContractInstances>;
+};
+
+export type WalletContractInstances_Aggregate_Bool_Exp = {
+  count?: InputMaybe<WalletContractInstances_Aggregate_Bool_Exp_Count>;
+};
+
+export type WalletContractInstances_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<WalletContractInstances_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<WalletContractInstances_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "WalletContractInstances" */
@@ -8882,14 +9239,23 @@ export type Wallets_Avg_Fields = {
 /** Boolean expression to filter rows from the table "Wallets". All fields are combined with a logical 'AND'. */
 export type Wallets_Bool_Exp = {
   Bundles?: InputMaybe<Bundles_Bool_Exp>;
+  Bundles_aggregate?: InputMaybe<Bundles_Aggregate_Bool_Exp>;
   Contracts?: InputMaybe<Contracts_Bool_Exp>;
+  Contracts_aggregate?: InputMaybe<Contracts_Aggregate_Bool_Exp>;
   MeemContractWallets?: InputMaybe<MeemContractWallets_Bool_Exp>;
+  MeemContractWallets_aggregate?: InputMaybe<MeemContractWallets_Aggregate_Bool_Exp>;
   MeemContracts?: InputMaybe<MeemContracts_Bool_Exp>;
+  MeemContracts_aggregate?: InputMaybe<MeemContracts_Aggregate_Bool_Exp>;
   MeemIdentities?: InputMaybe<MeemIdentities_Bool_Exp>;
+  MeemIdentities_aggregate?: InputMaybe<MeemIdentities_Aggregate_Bool_Exp>;
   MeemIdentityWallets?: InputMaybe<MeemIdentityWallets_Bool_Exp>;
+  MeemIdentityWallets_aggregate?: InputMaybe<MeemIdentityWallets_Aggregate_Bool_Exp>;
   Meems?: InputMaybe<Meems_Bool_Exp>;
+  Meems_aggregate?: InputMaybe<Meems_Aggregate_Bool_Exp>;
   Transactions?: InputMaybe<Transactions_Bool_Exp>;
+  Transactions_aggregate?: InputMaybe<Transactions_Aggregate_Bool_Exp>;
   WalletContractInstances?: InputMaybe<WalletContractInstances_Bool_Exp>;
+  WalletContractInstances_aggregate?: InputMaybe<WalletContractInstances_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Wallets_Bool_Exp>>;
   _not?: InputMaybe<Wallets_Bool_Exp>;
   _or?: InputMaybe<Array<Wallets_Bool_Exp>>;
@@ -11891,7 +12257,7 @@ export type Subscription_Root = {
   BundleContracts_aggregate: BundleContracts_Aggregate;
   /** fetch data from the table: "BundleContracts" using primary key columns */
   BundleContracts_by_pk?: Maybe<BundleContracts>;
-  /** fetch data from the table in a streaming manner : "BundleContracts" */
+  /** fetch data from the table in a streaming manner: "BundleContracts" */
   BundleContracts_stream: Array<BundleContracts>;
   /** An array relationship */
   Bundles: Array<Bundles>;
@@ -11899,7 +12265,7 @@ export type Subscription_Root = {
   Bundles_aggregate: Bundles_Aggregate;
   /** fetch data from the table: "Bundles" using primary key columns */
   Bundles_by_pk?: Maybe<Bundles>;
-  /** fetch data from the table in a streaming manner : "Bundles" */
+  /** fetch data from the table in a streaming manner: "Bundles" */
   Bundles_stream: Array<Bundles>;
   /** An array relationship */
   Clippings: Array<Clippings>;
@@ -11907,7 +12273,7 @@ export type Subscription_Root = {
   Clippings_aggregate: Clippings_Aggregate;
   /** fetch data from the table: "Clippings" using primary key columns */
   Clippings_by_pk?: Maybe<Clippings>;
-  /** fetch data from the table in a streaming manner : "Clippings" */
+  /** fetch data from the table in a streaming manner: "Clippings" */
   Clippings_stream: Array<Clippings>;
   /** An array relationship */
   ContractInstances: Array<ContractInstances>;
@@ -11915,7 +12281,7 @@ export type Subscription_Root = {
   ContractInstances_aggregate: ContractInstances_Aggregate;
   /** fetch data from the table: "ContractInstances" using primary key columns */
   ContractInstances_by_pk?: Maybe<ContractInstances>;
-  /** fetch data from the table in a streaming manner : "ContractInstances" */
+  /** fetch data from the table in a streaming manner: "ContractInstances" */
   ContractInstances_stream: Array<ContractInstances>;
   /** An array relationship */
   Contracts: Array<Contracts>;
@@ -11923,7 +12289,7 @@ export type Subscription_Root = {
   Contracts_aggregate: Contracts_Aggregate;
   /** fetch data from the table: "Contracts" using primary key columns */
   Contracts_by_pk?: Maybe<Contracts>;
-  /** fetch data from the table in a streaming manner : "Contracts" */
+  /** fetch data from the table in a streaming manner: "Contracts" */
   Contracts_stream: Array<Contracts>;
   /** fetch data from the table: "Discords" */
   Discords: Array<Discords>;
@@ -11931,7 +12297,7 @@ export type Subscription_Root = {
   Discords_aggregate: Discords_Aggregate;
   /** fetch data from the table: "Discords" using primary key columns */
   Discords_by_pk?: Maybe<Discords>;
-  /** fetch data from the table in a streaming manner : "Discords" */
+  /** fetch data from the table in a streaming manner: "Discords" */
   Discords_stream: Array<Discords>;
   /** fetch data from the table: "Hashtags" */
   Hashtags: Array<Hashtags>;
@@ -11939,7 +12305,7 @@ export type Subscription_Root = {
   Hashtags_aggregate: Hashtags_Aggregate;
   /** fetch data from the table: "Hashtags" using primary key columns */
   Hashtags_by_pk?: Maybe<Hashtags>;
-  /** fetch data from the table in a streaming manner : "Hashtags" */
+  /** fetch data from the table in a streaming manner: "Hashtags" */
   Hashtags_stream: Array<Hashtags>;
   /** fetch data from the table: "IdentityIntegrations" */
   IdentityIntegrations: Array<IdentityIntegrations>;
@@ -11947,7 +12313,7 @@ export type Subscription_Root = {
   IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
   /** fetch data from the table: "IdentityIntegrations" using primary key columns */
   IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
-  /** fetch data from the table in a streaming manner : "IdentityIntegrations" */
+  /** fetch data from the table in a streaming manner: "IdentityIntegrations" */
   IdentityIntegrations_stream: Array<IdentityIntegrations>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
@@ -11955,7 +12321,7 @@ export type Subscription_Root = {
   Integrations_aggregate: Integrations_Aggregate;
   /** fetch data from the table: "Integrations" using primary key columns */
   Integrations_by_pk?: Maybe<Integrations>;
-  /** fetch data from the table in a streaming manner : "Integrations" */
+  /** fetch data from the table in a streaming manner: "Integrations" */
   Integrations_stream: Array<Integrations>;
   /** An array relationship */
   MeemContractGuilds: Array<MeemContractGuilds>;
@@ -11963,7 +12329,7 @@ export type Subscription_Root = {
   MeemContractGuilds_aggregate: MeemContractGuilds_Aggregate;
   /** fetch data from the table: "MeemContractGuilds" using primary key columns */
   MeemContractGuilds_by_pk?: Maybe<MeemContractGuilds>;
-  /** fetch data from the table in a streaming manner : "MeemContractGuilds" */
+  /** fetch data from the table in a streaming manner: "MeemContractGuilds" */
   MeemContractGuilds_stream: Array<MeemContractGuilds>;
   /** An array relationship */
   MeemContractIntegrations: Array<MeemContractIntegrations>;
@@ -11971,7 +12337,7 @@ export type Subscription_Root = {
   MeemContractIntegrations_aggregate: MeemContractIntegrations_Aggregate;
   /** fetch data from the table: "MeemContractIntegrations" using primary key columns */
   MeemContractIntegrations_by_pk?: Maybe<MeemContractIntegrations>;
-  /** fetch data from the table in a streaming manner : "MeemContractIntegrations" */
+  /** fetch data from the table in a streaming manner: "MeemContractIntegrations" */
   MeemContractIntegrations_stream: Array<MeemContractIntegrations>;
   /** An array relationship */
   MeemContractRolePermissions: Array<MeemContractRolePermissions>;
@@ -11979,7 +12345,7 @@ export type Subscription_Root = {
   MeemContractRolePermissions_aggregate: MeemContractRolePermissions_Aggregate;
   /** fetch data from the table: "MeemContractRolePermissions" using primary key columns */
   MeemContractRolePermissions_by_pk?: Maybe<MeemContractRolePermissions>;
-  /** fetch data from the table in a streaming manner : "MeemContractRolePermissions" */
+  /** fetch data from the table in a streaming manner: "MeemContractRolePermissions" */
   MeemContractRolePermissions_stream: Array<MeemContractRolePermissions>;
   /** An array relationship */
   MeemContractRoles: Array<MeemContractRoles>;
@@ -11987,7 +12353,7 @@ export type Subscription_Root = {
   MeemContractRoles_aggregate: MeemContractRoles_Aggregate;
   /** fetch data from the table: "MeemContractRoles" using primary key columns */
   MeemContractRoles_by_pk?: Maybe<MeemContractRoles>;
-  /** fetch data from the table in a streaming manner : "MeemContractRoles" */
+  /** fetch data from the table in a streaming manner: "MeemContractRoles" */
   MeemContractRoles_stream: Array<MeemContractRoles>;
   /** An array relationship */
   MeemContractWallets: Array<MeemContractWallets>;
@@ -11995,7 +12361,7 @@ export type Subscription_Root = {
   MeemContractWallets_aggregate: MeemContractWallets_Aggregate;
   /** fetch data from the table: "MeemContractWallets" using primary key columns */
   MeemContractWallets_by_pk?: Maybe<MeemContractWallets>;
-  /** fetch data from the table in a streaming manner : "MeemContractWallets" */
+  /** fetch data from the table in a streaming manner: "MeemContractWallets" */
   MeemContractWallets_stream: Array<MeemContractWallets>;
   /** An array relationship */
   MeemContracts: Array<MeemContracts>;
@@ -12003,7 +12369,7 @@ export type Subscription_Root = {
   MeemContracts_aggregate: MeemContracts_Aggregate;
   /** fetch data from the table: "MeemContracts" using primary key columns */
   MeemContracts_by_pk?: Maybe<MeemContracts>;
-  /** fetch data from the table in a streaming manner : "MeemContracts" */
+  /** fetch data from the table in a streaming manner: "MeemContracts" */
   MeemContracts_stream: Array<MeemContracts>;
   /** An array relationship */
   MeemIdentities: Array<MeemIdentities>;
@@ -12011,7 +12377,7 @@ export type Subscription_Root = {
   MeemIdentities_aggregate: MeemIdentities_Aggregate;
   /** fetch data from the table: "MeemIdentities" using primary key columns */
   MeemIdentities_by_pk?: Maybe<MeemIdentities>;
-  /** fetch data from the table in a streaming manner : "MeemIdentities" */
+  /** fetch data from the table in a streaming manner: "MeemIdentities" */
   MeemIdentities_stream: Array<MeemIdentities>;
   /** An array relationship */
   MeemIdentityIntegrations: Array<MeemIdentityIntegrations>;
@@ -12019,7 +12385,7 @@ export type Subscription_Root = {
   MeemIdentityIntegrations_aggregate: MeemIdentityIntegrations_Aggregate;
   /** fetch data from the table: "MeemIdentityIntegrations" using primary key columns */
   MeemIdentityIntegrations_by_pk?: Maybe<MeemIdentityIntegrations>;
-  /** fetch data from the table in a streaming manner : "MeemIdentityIntegrations" */
+  /** fetch data from the table in a streaming manner: "MeemIdentityIntegrations" */
   MeemIdentityIntegrations_stream: Array<MeemIdentityIntegrations>;
   /** An array relationship */
   MeemIdentityWallets: Array<MeemIdentityWallets>;
@@ -12027,7 +12393,7 @@ export type Subscription_Root = {
   MeemIdentityWallets_aggregate: MeemIdentityWallets_Aggregate;
   /** fetch data from the table: "MeemIdentityWallets" using primary key columns */
   MeemIdentityWallets_by_pk?: Maybe<MeemIdentityWallets>;
-  /** fetch data from the table in a streaming manner : "MeemIdentityWallets" */
+  /** fetch data from the table in a streaming manner: "MeemIdentityWallets" */
   MeemIdentityWallets_stream: Array<MeemIdentityWallets>;
   /** An array relationship */
   Meems: Array<Meems>;
@@ -12035,7 +12401,7 @@ export type Subscription_Root = {
   Meems_aggregate: Meems_Aggregate;
   /** fetch data from the table: "Meems" using primary key columns */
   Meems_by_pk?: Maybe<Meems>;
-  /** fetch data from the table in a streaming manner : "Meems" */
+  /** fetch data from the table in a streaming manner: "Meems" */
   Meems_stream: Array<Meems>;
   /** An array relationship */
   Reactions: Array<Reactions>;
@@ -12043,7 +12409,7 @@ export type Subscription_Root = {
   Reactions_aggregate: Reactions_Aggregate;
   /** fetch data from the table: "Reactions" using primary key columns */
   Reactions_by_pk?: Maybe<Reactions>;
-  /** fetch data from the table in a streaming manner : "Reactions" */
+  /** fetch data from the table in a streaming manner: "Reactions" */
   Reactions_stream: Array<Reactions>;
   /** fetch data from the table: "RolePermissions" */
   RolePermissions: Array<RolePermissions>;
@@ -12051,7 +12417,7 @@ export type Subscription_Root = {
   RolePermissions_aggregate: RolePermissions_Aggregate;
   /** fetch data from the table: "RolePermissions" using primary key columns */
   RolePermissions_by_pk?: Maybe<RolePermissions>;
-  /** fetch data from the table in a streaming manner : "RolePermissions" */
+  /** fetch data from the table in a streaming manner: "RolePermissions" */
   RolePermissions_stream: Array<RolePermissions>;
   /** fetch data from the table: "SequelizeMeta" */
   SequelizeMeta: Array<SequelizeMeta>;
@@ -12059,7 +12425,7 @@ export type Subscription_Root = {
   SequelizeMeta_aggregate: SequelizeMeta_Aggregate;
   /** fetch data from the table: "SequelizeMeta" using primary key columns */
   SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
-  /** fetch data from the table in a streaming manner : "SequelizeMeta" */
+  /** fetch data from the table in a streaming manner: "SequelizeMeta" */
   SequelizeMeta_stream: Array<SequelizeMeta>;
   /** An array relationship */
   Transactions: Array<Transactions>;
@@ -12067,7 +12433,7 @@ export type Subscription_Root = {
   Transactions_aggregate: Transactions_Aggregate;
   /** fetch data from the table: "Transactions" using primary key columns */
   Transactions_by_pk?: Maybe<Transactions>;
-  /** fetch data from the table in a streaming manner : "Transactions" */
+  /** fetch data from the table in a streaming manner: "Transactions" */
   Transactions_stream: Array<Transactions>;
   /** An array relationship */
   Transfers: Array<Transfers>;
@@ -12075,7 +12441,7 @@ export type Subscription_Root = {
   Transfers_aggregate: Transfers_Aggregate;
   /** fetch data from the table: "Transfers" using primary key columns */
   Transfers_by_pk?: Maybe<Transfers>;
-  /** fetch data from the table in a streaming manner : "Transfers" */
+  /** fetch data from the table in a streaming manner: "Transfers" */
   Transfers_stream: Array<Transfers>;
   /** An array relationship */
   TweetHashtags: Array<TweetHashtags>;
@@ -12083,7 +12449,7 @@ export type Subscription_Root = {
   TweetHashtags_aggregate: TweetHashtags_Aggregate;
   /** fetch data from the table: "TweetHashtags" using primary key columns */
   TweetHashtags_by_pk?: Maybe<TweetHashtags>;
-  /** fetch data from the table in a streaming manner : "TweetHashtags" */
+  /** fetch data from the table in a streaming manner: "TweetHashtags" */
   TweetHashtags_stream: Array<TweetHashtags>;
   /** An array relationship */
   Tweets: Array<Tweets>;
@@ -12091,7 +12457,7 @@ export type Subscription_Root = {
   Tweets_aggregate: Tweets_Aggregate;
   /** fetch data from the table: "Tweets" using primary key columns */
   Tweets_by_pk?: Maybe<Tweets>;
-  /** fetch data from the table in a streaming manner : "Tweets" */
+  /** fetch data from the table in a streaming manner: "Tweets" */
   Tweets_stream: Array<Tweets>;
   /** fetch data from the table: "Twitters" */
   Twitters: Array<Twitters>;
@@ -12099,7 +12465,7 @@ export type Subscription_Root = {
   Twitters_aggregate: Twitters_Aggregate;
   /** fetch data from the table: "Twitters" using primary key columns */
   Twitters_by_pk?: Maybe<Twitters>;
-  /** fetch data from the table in a streaming manner : "Twitters" */
+  /** fetch data from the table in a streaming manner: "Twitters" */
   Twitters_stream: Array<Twitters>;
   /** An array relationship */
   WalletContractInstances: Array<WalletContractInstances>;
@@ -12107,7 +12473,7 @@ export type Subscription_Root = {
   WalletContractInstances_aggregate: WalletContractInstances_Aggregate;
   /** fetch data from the table: "WalletContractInstances" using primary key columns */
   WalletContractInstances_by_pk?: Maybe<WalletContractInstances>;
-  /** fetch data from the table in a streaming manner : "WalletContractInstances" */
+  /** fetch data from the table in a streaming manner: "WalletContractInstances" */
   WalletContractInstances_stream: Array<WalletContractInstances>;
   /** fetch data from the table: "Wallets" */
   Wallets: Array<Wallets>;
@@ -12115,7 +12481,7 @@ export type Subscription_Root = {
   Wallets_aggregate: Wallets_Aggregate;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
-  /** fetch data from the table in a streaming manner : "Wallets" */
+  /** fetch data from the table in a streaming manner: "Wallets" */
   Wallets_stream: Array<Wallets>;
 };
 
@@ -13090,7 +13456,7 @@ export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }> }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
+export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -13646,6 +14012,9 @@ export const GetClubAsMemberSubscriptionDocument = gql`
           }
           tokenAddress
           integrationsMetadata
+          RoleMeemContract {
+            isTransferrable
+          }
         }
       }
     }
@@ -13678,6 +14047,9 @@ export const GetClubAsMemberSubscriptionDocument = gql`
       }
       tokenAddress
       integrationsMetadata
+      RoleMeemContract {
+        isTransferrable
+      }
     }
     MeemContractWallets {
       Wallet {

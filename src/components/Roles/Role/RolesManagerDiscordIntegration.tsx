@@ -204,8 +204,14 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												src={
 													guildPlatform
 														.platformGuildData
-														.serverIcon ??
-													'./apple-touch-icon.png'
+														.serverIcon &&
+													guildPlatform
+														.platformGuildData
+														.serverIcon.length > 0
+														? guildPlatform
+																.platformGuildData
+																.serverIcon
+														: '/apple-touch-icon.png'
 												}
 												height={48}
 												width={48}
