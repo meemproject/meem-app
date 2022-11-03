@@ -4617,6 +4617,7 @@ export type MeemContracts = {
   slug: Scalars['String'];
   splits: Scalars['jsonb'];
   symbol: Scalars['String'];
+  type: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
 };
 
@@ -4871,6 +4872,7 @@ export type MeemContracts_Bool_Exp = {
   slug?: InputMaybe<String_Comparison_Exp>;
   splits?: InputMaybe<Jsonb_Comparison_Exp>;
   symbol?: InputMaybe<String_Comparison_Exp>;
+  type?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -4934,6 +4936,7 @@ export type MeemContracts_Insert_Input = {
   slug?: InputMaybe<Scalars['String']>;
   splits?: InputMaybe<Scalars['jsonb']>;
   symbol?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -4955,6 +4958,7 @@ export type MeemContracts_Max_Fields = {
   ownerFetchedAt?: Maybe<Scalars['timestamptz']>;
   slug?: Maybe<Scalars['String']>;
   symbol?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -4975,6 +4979,7 @@ export type MeemContracts_Max_Order_By = {
   ownerFetchedAt?: InputMaybe<Order_By>;
   slug?: InputMaybe<Order_By>;
   symbol?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -4996,6 +5001,7 @@ export type MeemContracts_Min_Fields = {
   ownerFetchedAt?: Maybe<Scalars['timestamptz']>;
   slug?: Maybe<Scalars['String']>;
   symbol?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -5016,6 +5022,7 @@ export type MeemContracts_Min_Order_By = {
   ownerFetchedAt?: InputMaybe<Order_By>;
   slug?: InputMaybe<Order_By>;
   symbol?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -5070,6 +5077,7 @@ export type MeemContracts_Order_By = {
   slug?: InputMaybe<Order_By>;
   splits?: InputMaybe<Order_By>;
   symbol?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -5128,6 +5136,8 @@ export enum MeemContracts_Select_Column {
   /** column name */
   Symbol = 'symbol',
   /** column name */
+  Type = 'type',
+  /** column name */
   UpdatedAt = 'updatedAt'
 }
 
@@ -5169,6 +5179,7 @@ export type MeemContracts_Set_Input = {
   slug?: InputMaybe<Scalars['String']>;
   splits?: InputMaybe<Scalars['jsonb']>;
   symbol?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -5235,6 +5246,7 @@ export type MeemContracts_Stream_Cursor_Value_Input = {
   slug?: InputMaybe<Scalars['String']>;
   splits?: InputMaybe<Scalars['jsonb']>;
   symbol?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -5291,6 +5303,8 @@ export enum MeemContracts_Update_Column {
   Splits = 'splits',
   /** column name */
   Symbol = 'symbol',
+  /** column name */
+  Type = 'type',
   /** column name */
   UpdatedAt = 'updatedAt'
 }
@@ -14327,7 +14341,7 @@ export type AllClubsQueryResult = Apollo.QueryResult<AllClubsQuery, AllClubsQuer
 export const MyClubsSubscriptionDocument = gql`
     subscription MyClubsSubscription($walletAddress: String, $chainId: Int) {
   Meems(
-    where: {MeemContractId: {_is_null: false}, Owner: {address: {_ilike: $walletAddress}}, MeemContract: {chainId: {_eq: $chainId}}}
+    where: {MeemContractId: {_is_null: false}, Owner: {address: {_ilike: $walletAddress}}, MeemContract: {chainId: {_eq: $chainId}, type: {_eq: "meem-club"}}}
     order_by: {MeemContract: {Meems_aggregate: {count: desc}}}
   ) {
     tokenId
