@@ -334,20 +334,21 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 									</div>
 								)}
 
-								{!discordAccessToken && (
-									<div>
-										<Button
-											className={styles.buttonWhite}
-											leftIcon={<Discord />}
-											onClick={() => {
-												startDiscordAuth()
-											}}
-										>
-											Connect Discord
-										</Button>
-										<Space h={48} />
-									</div>
-								)}
+								{!discordAccessToken &&
+									!role?.guildDiscordServerId && (
+										<div>
+											<Button
+												className={styles.buttonWhite}
+												leftIcon={<Discord />}
+												onClick={() => {
+													startDiscordAuth()
+												}}
+											>
+												Connect Discord
+											</Button>
+											<Space h={48} />
+										</div>
+									)}
 							</div>
 						)}
 
