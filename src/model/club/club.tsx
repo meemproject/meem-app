@@ -356,6 +356,7 @@ export default async function clubFromMeemContract(
 		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
 		let isClubOwner = false
+		let isClubControlledByMeemApi = false
 
 		// Club members and admins
 		let clubOwner = undefined
@@ -459,6 +460,20 @@ export default async function clubFromMeemContract(
 								memberRoles = meemContractRolesToClubRoles(
 									meem.MeemContract?.MeemContractRoles
 								)
+
+								// Check to see if the club is controlled by the meem api
+								memberRoles.forEach(role => {
+									if (
+										role.isAdminRole &&
+										meem.Owner?.address.toLowerCase() ===
+											process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
+									) {
+										isClubControlledByMeemApi = true
+										log.debug(
+											`Club is controlled by meem API`
+										)
+									}
+								})
 
 								// Set the current user's available permissions, if they exist
 								meem.MeemContract.MeemContractRoles.forEach(
@@ -771,24 +786,9 @@ export default async function clubFromMeemContract(
 			slotsLeft = totalMemberships - membersCount
 		}
 
-		// Determine if the club is controlled by the Meem API wallet address
-		let isClubControlledByMeemApi = false
-		if (clubData.MeemContractWallets) {
-			clubData.MeemContractWallets.forEach(contractWallet => {
-				if (contractWallet.Wallet) {
-					if (
-						contractWallet.Wallet.address.toLowerCase() ===
-						process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
-					) {
-						isClubControlledByMeemApi = true
-					}
-				}
-			})
+		if (!isClubControlledByMeemApi) {
+			log.debug(`Club is NOT controlled by meem API`)
 		}
-
-		log.debug(
-			`club is controlled by meem api = ${isClubControlledByMeemApi}`
-		)
 
 		return {
 			id: clubData.id,
