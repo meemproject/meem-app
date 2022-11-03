@@ -301,6 +301,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				MeemContract {
 					MeemContractWallets {
 						role
+						Wallet {
+							address
+						}
 					}
 					MeemContractRoles {
 						id
@@ -349,11 +352,6 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				integrationsMetadata
 				RoleMeemContract {
 					isTransferrable
-				}
-			}
-			MeemContractWallets {
-				Wallet {
-					address
 				}
 			}
 		}

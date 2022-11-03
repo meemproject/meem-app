@@ -13470,7 +13470,7 @@ export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }>, MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
+export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, MeemIdentities: Array<{ __typename?: 'MeemIdentities', displayName?: string | null, profilePicUrl?: string | null, MeemIdentityIntegrations: Array<{ __typename?: 'MeemIdentityIntegrations', metadata: any, visibility: string }> }> } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -14015,6 +14015,9 @@ export const GetClubAsMemberSubscriptionDocument = gql`
       MeemContract {
         MeemContractWallets {
           role
+          Wallet {
+            address
+          }
         }
         MeemContractRoles {
           id
@@ -14063,11 +14066,6 @@ export const GetClubAsMemberSubscriptionDocument = gql`
       integrationsMetadata
       RoleMeemContract {
         isTransferrable
-      }
-    }
-    MeemContractWallets {
-      Wallet {
-        address
       }
     }
   }
@@ -14282,7 +14280,7 @@ export type GetClubMembersForRoleQueryResult = Apollo.QueryResult<GetClubMembers
 export const AllClubsDocument = gql`
     query AllClubs($chainId: Int, $limit: Int, $offset: Int) {
   MeemContracts(
-    where: {chainId: {_eq: $chainId}}
+    where: {chainId: {_eq: $chainId}, type: {_eq: "meem-club"}}
     order_by: {Meems_aggregate: {count: desc}}
     limit: $limit
     offset: $offset
