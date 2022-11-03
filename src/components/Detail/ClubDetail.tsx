@@ -1510,7 +1510,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															: member.wallet.toLowerCase() ===
 															  process.env
 																	.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
-															? 'Meem API'
+															? 'meem.eth'
 															: quickTruncate(
 																	member.wallet
 															  )}
