@@ -301,6 +301,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				MeemContract {
 					MeemContractWallets {
 						role
+						Wallet {
+							address
+						}
 					}
 					MeemContractRoles {
 						id
@@ -312,7 +315,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 						}
 						tokenAddress
 						integrationsMetadata
-						isTokenTransferrable
+						RoleMeemContract {
+							isTransferrable
+						}
 					}
 				}
 			}
@@ -345,11 +350,8 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				}
 				tokenAddress
 				integrationsMetadata
-				isTokenTransferrable
-			}
-			MeemContractWallets {
-				Wallet {
-					address
+				RoleMeemContract {
+					isTransferrable
 				}
 			}
 		}
@@ -447,7 +449,7 @@ export const GET_MEMBERS_FOR_ROLE = gql`
 export const GET_ALL_CLUBS = gql`
 	query AllClubs($chainId: Int, $limit: Int, $offset: Int) {
 		MeemContracts(
-			where: { chainId: { _eq: $chainId } }
+			where: { chainId: { _eq: $chainId }, type: { _eq: "meem-club" } }
 			order_by: { Meems_aggregate: { count: desc } }
 			limit: $limit
 			offset: $offset
@@ -493,7 +495,10 @@ export const SUB_MY_CLUBS = gql`
 			where: {
 				MeemContractId: { _is_null: false }
 				Owner: { address: { _ilike: $walletAddress } }
-				MeemContract: { chainId: { _eq: $chainId } }
+				MeemContract: {
+					chainId: { _eq: $chainId }
+					type: { _eq: "meem-club" }
+				}
 			}
 			order_by: { MeemContract: { Meems_aggregate: { count: desc } } }
 		) {

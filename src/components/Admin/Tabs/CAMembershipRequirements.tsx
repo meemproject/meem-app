@@ -468,7 +468,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			}
 
 			// Show the appropriate modal (create vs edit)
-			const newClub = club
+			const oldClub = JSON.stringify(club)
+			const newClub = JSON.parse(oldClub)
 			if (newClub) {
 				newClub.membershipSettings = settings
 				setNewClubData(newClub)
@@ -487,7 +488,12 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			)
 
 			setMembershipRequirements(originalSettings.requirements)
-			setIsClubOpenForAnyone(originalSettings.requirements.length === 0)
+
+			setIsClubOpenForAnyone(
+				originalSettings.requirements.length === 1 &&
+					originalSettings.requirements[0].type ===
+						MembershipReqType.None
+			)
 		}
 	}, [club, hasLoadedClubData, wallet.accounts, wallet.isConnected])
 

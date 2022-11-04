@@ -224,7 +224,7 @@ export function meemContractRolesToClubRoles(
 			isDefaultRole: rawRole.isDefaultRole,
 			rolesIntegrationData: metadata,
 			tokenAddress: rawRole.tokenAddress ?? '',
-			isTransferrable: rawRole.isTokenTransferrable,
+			isTransferrable: rawRole.RoleMeemContract?.isTransferrable ?? false,
 			name: rawRole.name,
 			guildDiscordServerIcon,
 			guildDiscordServerId,
@@ -356,6 +356,7 @@ export default async function clubFromMeemContract(
 		const adminRawAddresses: string[] = []
 		let isClubAdmin = false
 		let isClubOwner = false
+		let isClubControlledByMeemApi = false
 
 		// Club members and admins
 		let clubOwner = undefined
@@ -459,6 +460,20 @@ export default async function clubFromMeemContract(
 								memberRoles = meemContractRolesToClubRoles(
 									meem.MeemContract?.MeemContractRoles
 								)
+
+								// Check to see if the club is controlled by the meem api
+								memberRoles.forEach(role => {
+									if (
+										role.isAdminRole &&
+										meem.Owner?.address.toLowerCase() ===
+											process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
+									) {
+										isClubControlledByMeemApi = true
+										log.debug(
+											`Club is controlled by meem API`
+										)
+									}
+								})
 
 								// Set the current user's available permissions, if they exist
 								meem.MeemContract.MeemContractRoles.forEach(
@@ -679,34 +694,31 @@ export default async function clubFromMeemContract(
 								break
 						}
 
-						// Construct a requirement - only push if it is not 'anyone'
-						if (
-							permission.permission !== MeemAPI.Permission.Anyone
-						) {
-							reqs.push({
-								index,
-								andor: MembershipReqAndor.Or,
-								type,
-								applicationInstructions: clubData.metadata
-									.application_instructions
-									? clubData.metadata.application_instructions
-											.length > 0
-										? clubData.metadata
-												.application_instructions[0]
-										: undefined
-									: undefined,
-								approvedAddresses,
-								approvedAddressesString,
-								tokenName,
-								tokenMinQuantity,
-								tokenChain: '',
-								clubContractAddress,
-								tokenContractAddress,
-								otherClubName: clubName
-							})
+						// Construct a requirement
 
-							index++
-						}
+						reqs.push({
+							index,
+							andor: MembershipReqAndor.Or,
+							type,
+							applicationInstructions: clubData.metadata
+								.application_instructions
+								? clubData.metadata.application_instructions
+										.length > 0
+									? clubData.metadata
+											.application_instructions[0]
+									: undefined
+								: undefined,
+							approvedAddresses,
+							approvedAddressesString,
+							tokenName,
+							tokenMinQuantity,
+							tokenChain: '',
+							clubContractAddress,
+							tokenContractAddress,
+							otherClubName: clubName
+						})
+
+						index++
 					}
 				})
 			)
@@ -774,22 +786,9 @@ export default async function clubFromMeemContract(
 			slotsLeft = totalMemberships - membersCount
 		}
 
-		// Determine if the club is controlled by the Meem API wallet address
-		let isClubControlledByMeemApi = false
-		clubData.MeemContractWallets.forEach(contractWallet => {
-			if (contractWallet.Wallet) {
-				if (
-					contractWallet.Wallet.address.toLowerCase() ===
-					process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
-				) {
-					isClubControlledByMeemApi = true
-				}
-			}
-		})
-
-		log.debug(
-			`club is controlled by meem api = ${isClubControlledByMeemApi}`
-		)
+		if (!isClubControlledByMeemApi) {
+			log.debug(`Club is NOT controlled by meem API`)
+		}
 
 		return {
 			id: clubData.id,

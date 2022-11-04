@@ -1507,6 +1507,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															? member.displayName
 															: member.ens
 															? member.ens
+															: member.wallet.toLowerCase() ===
+															  process.env
+																	.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
+															? 'meem.eth'
 															: quickTruncate(
 																	member.wallet
 															  )}
