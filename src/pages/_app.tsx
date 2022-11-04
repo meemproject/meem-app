@@ -1,3 +1,4 @@
+import { Auth0Provider } from '@auth0/auth0-react'
 import log, { LogLevel } from '@kengoldfarb/log'
 import { MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
@@ -68,19 +69,29 @@ function MyApp(props: AppProps) {
 			}}
 		>
 			<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL ?? ''}>
-				<WalletProvider rpcs={rpcs}>
-					<CustomApolloProvider>
-						<NotificationsProvider>
-							<ClubClubProvider>
-								<IdentityProvider>
-									<App>
-										<Component {...pageProps} />
-									</App>
-								</IdentityProvider>
-							</ClubClubProvider>
-						</NotificationsProvider>
-					</CustomApolloProvider>
-				</WalletProvider>
+				<Auth0Provider
+					domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN ?? ''}
+					clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID ?? ''}
+					redirectUri={
+						typeof window !== 'undefined'
+							? window.location.origin
+							: ''
+					}
+				>
+					<WalletProvider rpcs={rpcs}>
+						<CustomApolloProvider>
+							<NotificationsProvider>
+								<ClubClubProvider>
+									<IdentityProvider>
+										<App>
+											<Component {...pageProps} />
+										</App>
+									</IdentityProvider>
+								</ClubClubProvider>
+							</NotificationsProvider>
+						</CustomApolloProvider>
+					</WalletProvider>
+				</Auth0Provider>
 			</SocketProvider>
 		</MantineProvider>
 	)

@@ -1,3 +1,4 @@
+import { useAuth0 } from '@auth0/auth0-react'
 import {
 	createStyles,
 	Header,
@@ -161,6 +162,7 @@ export function HeaderMenu() {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
 	const { classes, cx } = useStyles()
 	const router = useRouter()
+	const { loginWithRedirect } = useAuth0()
 
 	const id = useContext(IdentityContext)
 
@@ -306,7 +308,8 @@ export function HeaderMenu() {
 						<Text className={classes.connectWallet}>
 							<a
 								onClick={() => {
-									id.login(false)
+									// id.login(false)
+									loginWithRedirect()
 								}}
 							>
 								Join Clubs
