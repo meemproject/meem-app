@@ -342,6 +342,10 @@ export const useGlobalStyles = createStyles(theme => ({
 	tExtraSmall: {
 		fontSize: 14
 	},
+	tExtraSmallBold: {
+		fontSize: 14,
+		fontWeight: 700
+	},
 	tExtraSmallTransparent: {
 		fontSize: 14,
 		opacity: 0.6
