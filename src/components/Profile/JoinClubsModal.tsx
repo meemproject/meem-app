@@ -1,3 +1,5 @@
+import { useAuth0 } from '@auth0/auth0-react'
+import log from '@kengoldfarb/log'
 import {
 	Text,
 	Space,
@@ -11,15 +13,16 @@ import {
 	Button,
 	Loader
 } from '@mantine/core'
+import { makeRequest, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 interface IProps {
 	isOpened: boolean
 	onModalClosed: () => void
-	isLoginForced: boolean
+	isLoginForced?: boolean
 }
 
 interface ConnectionMethod {
@@ -36,15 +39,19 @@ export const JoinClubsModal: React.FC<IProps> = ({
 }) => {
 	const { classes: styles } = useGlobalStyles()
 
+	const { loginWithRedirect, isAuthenticated, getAccessTokenSilently } =
+		useAuth0()
+
 	// Email state controls
 	const [isEmailState, setIsEmailState] = useState(false)
+	const [hasTriedLogin, setHasTriedLogin] = useState(false)
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 	const [isLoading, setIsLoading] = useState(false)
 
 	const [email, setEmail] = useState('')
 
-	const wallet = useWallet()
+	const { connectWallet, setJwt } = useWallet()
 
 	const methods: ConnectionMethod[] = [
 		{
@@ -57,31 +64,39 @@ export const JoinClubsModal: React.FC<IProps> = ({
 			id: 'email',
 			name: 'Email Address',
 			icon: 'connect-email.png',
-			enabled: false
+			enabled: true
 		},
 		{
 			id: 'discord',
 			name: 'Discord',
 			icon: 'connect-discord.png',
-			enabled: false
+			enabled: true
 		},
 		{
 			id: 'twitter',
 			name: 'Twitter',
 			icon: 'connect-twitter.png',
-			enabled: false
+			enabled: true
 		},
 		{
 			id: 'google',
 			name: 'Google',
 			icon: 'connect-google.png',
-			enabled: false
+			enabled: true
+		},
+		{
+			id: 'facebook',
+			name: 'Facebook',
+			icon: 'connect-google.png',
+			enabled: true
 		}
 	]
 
-	const connectWallet = async () => {
-		onModalClosed()
-		await wallet.connectWallet()
+	const handleConnectWallet = async () => {
+		if (onModalClosed) {
+			onModalClosed()
+		}
+		await connectWallet()
 	}
 
 	const connectEmail = () => {
@@ -130,27 +145,32 @@ export const JoinClubsModal: React.FC<IProps> = ({
 		// }
 	}
 
-	// TODO: these sign in methods
-	const connectTwitter = () => {}
-	const connectDiscord = () => {}
-	const connectGoogle = () => {}
-
 	const connectWithMethod = (method: ConnectionMethod) => {
 		switch (method.id) {
 			case 'walletconnect':
-				connectWallet()
+				handleConnectWallet()
 				break
 			case 'email':
-				connectEmail()
+				loginWithRedirect({
+					// connection: 'database'
+				})
 				break
 			case 'discord':
-				connectDiscord()
+				loginWithRedirect({
+					connection: 'discord'
+				})
 				break
 			case 'twitter':
-				connectTwitter()
 				break
 			case 'google':
-				connectGoogle()
+				loginWithRedirect({
+					connection: 'google'
+				})
+				break
+			case 'facebook':
+				loginWithRedirect({
+					connection: 'facebook'
+				})
 				break
 		}
 	}
@@ -220,6 +240,41 @@ export const JoinClubsModal: React.FC<IProps> = ({
 			)}
 		</>
 	)
+
+	useEffect(() => {
+		const fetchToken = async () => {
+			if (isAuthenticated && !hasTriedLogin) {
+				setHasTriedLogin(true)
+				try {
+					const accessToken = await getAccessTokenSilently()
+					console.log({ accessToken })
+
+					const { jwt } =
+						await makeRequest<MeemAPI.v1.Login.IDefinition>(
+							MeemAPI.v1.Login.path(),
+							{
+								method: MeemAPI.v1.Login.method,
+								body: {
+									accessToken
+								}
+							}
+						)
+
+					setJwt(jwt)
+				} catch (e) {
+					log.crit(e)
+				}
+			}
+		}
+
+		fetchToken()
+	}, [
+		isAuthenticated,
+		getAccessTokenSilently,
+		setJwt,
+		hasTriedLogin,
+		setHasTriedLogin
+	])
 
 	return (
 		<>

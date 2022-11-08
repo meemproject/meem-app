@@ -27,6 +27,7 @@ import {
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
+import { JoinClubsModal } from '../Profile/JoinClubsModal'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 const useStyles = createStyles(theme => ({
@@ -160,9 +161,10 @@ const useStyles = createStyles(theme => ({
 
 export function HeaderMenu() {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
+	const [isJoinClubsModalOpen, setIsJoinClubsModalOpen] = useState(false)
 	const { classes, cx } = useStyles()
 	const router = useRouter()
-	const { loginWithRedirect } = useAuth0()
+	const { loginWithRedirect, isAuthenticated } = useAuth0()
 
 	const id = useContext(IdentityContext)
 
@@ -206,6 +208,8 @@ export function HeaderMenu() {
 	}
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+
+	console.log({ isAuthenticated })
 
 	return (
 		<Header className={classes.header} height={56}>
@@ -309,7 +313,8 @@ export function HeaderMenu() {
 							<a
 								onClick={() => {
 									// id.login(false)
-									loginWithRedirect()
+									// loginWithRedirect()
+									setIsJoinClubsModalOpen(true)
 								}}
 							>
 								Join Clubs
@@ -397,6 +402,10 @@ export function HeaderMenu() {
 					setIsClubsFAQModalOpen(false)
 				}}
 				isOpened={isClubsFAQModalOpen}
+			/>
+			<JoinClubsModal
+				isOpened={isJoinClubsModalOpen}
+				onModalClosed={() => setIsJoinClubsModalOpen(false)}
 			/>
 		</Header>
 	)

@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 
 export const MEEM_ID_SUBSCRIPTION = gql`
 	subscription MeemIdSubscription($walletAddress: String) {
-		MeemIdentities(
+		Users(
 			where: { DefaultWallet: { address: { _ilike: $walletAddress } } }
 		) {
 			updatedAt
@@ -15,7 +15,7 @@ export const MEEM_ID_SUBSCRIPTION = gql`
 				address
 				ens
 			}
-			MeemIdentityIntegrations {
+			UserIdentities {
 				metadata
 				visibility
 				IdentityIntegrationId
