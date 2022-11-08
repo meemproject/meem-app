@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Button,
 	Space,
@@ -29,145 +28,15 @@ import {
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
+import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { CreateClubModal } from './CreateClubModal'
-
-const useStyles = createStyles(theme => ({
-	buttonSaveChanges: {
-		marginTop: 48,
-		marginBottom: 48,
-
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-
-	// Membership tab
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-	membershipText: {
-		fontSize: 20,
-		marginBottom: 8,
-		lineHeight: 2,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	membershipTextAdditionalReq: {
-		fontSize: 20,
-		marginBottom: 16,
-		marginTop: 16,
-		lineHeight: 2,
-		position: 'relative',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-
-	membershipSelector: {
-		padding: 4,
-		borderRadius: 8,
-		fontWeight: 'bold',
-		backgroundColor: 'rgba(255, 102, 81, 0.1)',
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer'
-	},
-	addRequirementButton: {
-		backgroundColor: 'white',
-		color: 'rgba(255, 102, 81, 1)',
-		border: '1px dashed rgba(255, 102, 81, 1)',
-		borderRadius: 24,
-		'&:hover': {
-			backgroundColor: 'rgba(255, 102, 81, 0.05)'
-		},
-		marginBottom: 8
-	},
-	membershipSettingHeader: {
-		fontSize: 16,
-		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: 600,
-		marginBottom: 12
-	},
-	removeAdditionalReq: {
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer',
-		marginRight: 8,
-		marginBottom: -4
-	},
-	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	visible: {
-		display: 'block'
-	},
-	invisible: {
-		display: 'none'
-	},
-	buttonModalSave: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonModalCancel: {
-		marginLeft: 8,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	modalHeaderText: {
-		fontSize: 18,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)',
-		marginBottom: 4,
-		marginTop: 16
-	},
-	modalInfoText: {
-		fontSize: 14,
-		opacity: 0.6
-	},
-	// Admins
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	adminsTextAreaContainer: {
-		position: 'relative'
-	},
-	adminsTextArea: {
-		paddingTop: 48,
-		paddingLeft: 32
-	},
-	primaryAdminChip: {
-		position: 'absolute',
-		pointerEvents: 'none',
-		top: 12,
-		left: 12
-	},
-	primaryAdminChipContents: {
-		display: 'flex',
-		alignItems: 'center'
-	}
-}))
 
 interface IProps {
 	club?: Club
 }
 
 export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const router = useRouter()
 
@@ -562,20 +431,23 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Text className={styles.tSectionTitle}>Club Admins</Text>
 
 				<div>
-					<Text className={classes.clubAdminsPrompt}>
+					<Space h={36} />
+					<Text className={styles.tSubtitle}>
 						{club
 							? `Who can manage this club’s profile and membership
 						settings?`
 							: `Who can manage this club’s profile, treasury and membership
 						settings?`}
 					</Text>
-					<Text className={classes.clubAdminsInstructions}>
+					<Space h={16} />
+					<Text className={styles.tSubtitleTransparent}>
 						{club
 							? `Add a line break between each address. Note that at
 						least one club admin is required at all times.`
 							: `Add a line break between each address. Note that at
 						least one club admin is required at all times, and you can update treasury addresses via your club's settings page.`}
 					</Text>
+					<Space h={16} />
 					<Textarea
 						radius="lg"
 						size="sm"
@@ -649,13 +521,22 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					)}
 				</Text>
 				{membershipRequirements.length > 1 && (
-					<Text className={styles.tMembershipSettingAdditionalReq}>
+					<Text
+						className={
+							styles.tMembershipSettingAdditionalRequirement
+						}
+					>
 						<CircleMinus
 							onClick={() => {
 								// Hardcoded for now as there's only one additional req in v1
 								removeMembershipRequirement(1)
 							}}
-							className={classes.removeAdditionalReq}
+							style={{
+								color: 'rgba(255, 102, 81, 1)',
+								cursor: 'pointer',
+								marginRight: 8,
+								marginBottom: -4
+							}}
 						/>
 						{/* <a onClick={openSecondReqTypeModal}>
 							<span className={styles.fOrangeSelectableSpan}>
@@ -689,7 +570,8 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							onClick={() => {
 								addMembershipRequirement()
 							}}
-							className={classes.addRequirementButton}
+							className={styles.buttonWhite}
+							style={{ marginBottom: 8 }}
 							size={'md'}
 							leftIcon={<Plus size={14} />}
 						>
@@ -794,7 +676,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipReqModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: styles.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1132,7 +1014,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setSecondReqTypeModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: styles.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1278,7 +1160,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: styles.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1366,7 +1248,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: styles.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1463,7 +1345,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: styles.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"

@@ -446,7 +446,7 @@ export const CreateComponent: React.FC = () => {
 						clubDescription.length === 0 ||
 						smallClubLogo.length === 0
 					}
-					className={classes.buttonCreate}
+					className={styles.buttonBlack}
 				>
 					Continue
 				</Button>

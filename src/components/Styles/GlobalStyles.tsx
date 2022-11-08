@@ -281,6 +281,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
+
 	enabledClubIntegrationItem: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -367,6 +368,16 @@ export const useGlobalStyles = createStyles(theme => ({
 		fontSize: 20,
 		marginBottom: 8,
 		lineHeight: 2,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
+	},
+	tMembershipSettingAdditionalRequirement: {
+		fontSize: 20,
+		marginBottom: 16,
+		marginTop: 16,
+		lineHeight: 2,
+		position: 'relative',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			fontSize: 16
 		}
