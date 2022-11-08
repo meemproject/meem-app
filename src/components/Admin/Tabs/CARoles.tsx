@@ -1,106 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createStyles, Text, Button, Space, Badge, Menu } from '@mantine/core'
+import { Text, Button, Space, Badge, Menu } from '@mantine/core'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../model/club/club'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
-
-const useStyles = createStyles(theme => ({
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	buttonSaveChangesInHeader: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	textField: {
-		maxWidth: 800
-	},
-	roleLeftRow: {
-		display: 'flex',
-		alignItems: 'center',
-		marginTop: 4
-	},
-	roleItem: {
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'start',
-		justifyContent: 'space-between',
-		fontWeight: 600,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	badgeText: {
-		color: '#000'
-	},
-	badge: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	menuItem: {
-		fontWeight: 600
-	},
-	redMenuItem: {
-		fontWeight: 600,
-		color: 'rgba(255, 102, 81, 1)',
-		marginBottom: '-2px',
-		marginTop: '-2px'
-	},
-	roleMenu: {
-		width: 32,
-		marginTop: 4,
-		marginBottom: -4
-	}
-}))
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
 interface IProps {
 	club: Club
 }
 
 export const CARoles: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 	const router = useRouter()
 
 	const createRole = () => {
@@ -121,14 +34,32 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={classes.manageClubHeader}>Roles</Text>
+				<Text className={styles.tSectionTitle}>Roles</Text>
+
+				<Space h={32} />
 			</div>
 			{club.roles && (
 				<>
 					{club.roles.map(role => (
-						<div className={classes.roleItem} key={role.id}>
+						<div
+							style={{
+								display: 'flex',
+								flexDirection: 'row',
+								alignItems: 'start',
+								justifyContent: 'space-between',
+								fontWeight: 600,
+								marginBottom: 12,
+								cursor: 'pointer',
+								border: '1px solid rgba(0, 0, 0, 0.1)',
+								backgroundColor: '#FAFAFA',
+								borderRadius: 16,
+								padding: 16
+							}}
+							key={role.id}
+						>
+							<Space h={4} />
 							<div
-								className={classes.roleLeftRow}
+								className={styles.centeredRow}
 								onClick={() => {
 									router.push({
 										pathname: `/${club.slug}/roles`,
@@ -150,8 +81,8 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										deg: 35
 									}}
 									classNames={{
-										inner: classes.badgeText,
-										root: classes.badge
+										inner: styles.tBadge,
+										root: styles.badge
 									}}
 									leftSection={
 										<>
@@ -167,7 +98,13 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 									{club.memberRolesMap?.get(role.id)?.length}
 								</Badge>
 							</div>
-							<div className={classes.roleMenu}>
+							<div
+								style={{
+									width: 32,
+									marginTop: 4,
+									marginBottom: -4
+								}}
+							>
 								<Menu radius={8} shadow={'lg'}>
 									<Menu.Target>
 										<div>
@@ -184,7 +121,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 													}
 												})
 											}}
-											className={classes.menuItem}
+											className={styles.tBold}
 										>
 											Manage Role
 										</Menu.Item>
@@ -197,9 +134,11 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 															true
 														)
 													}}
-													className={
-														classes.redMenuItem
-													}
+													style={{
+														marginBottom: '-2px',
+														marginTop: '-2px'
+													}}
+													className={styles.tBoldRed}
 												>
 													Delete Role
 												</Menu.Item>
@@ -214,7 +153,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			)}
 
 			<Space h={32} />
-			<Button className={classes.buttonSaveChanges} onClick={createRole}>
+			<Button className={styles.buttonBlack} onClick={createRole}>
 				+ Create Role
 			</Button>
 			<Space h={64} />

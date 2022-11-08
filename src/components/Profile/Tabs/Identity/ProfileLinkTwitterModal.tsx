@@ -254,7 +254,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 															setStep(Step.Share)
 														}}
 														className={
-															classes.buttonConfirm
+															styles.buttonBlack
 														}
 													>
 														Confirm
@@ -303,7 +303,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 														setStep(Step.Verify)
 													}}
 													className={
-														classes.buttonConfirm
+														styles.buttonBlack
 													}
 												>
 													Post on Twitter
@@ -355,7 +355,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 																verifyTweet
 															}
 															className={
-																classes.buttonConfirm
+																styles.buttonBlack
 															}
 														>
 															Verify Tweet

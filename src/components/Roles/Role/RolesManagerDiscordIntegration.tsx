@@ -246,11 +246,13 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 										>
 											<div
 												className={
-													styles.enabledIntHeaderBg
+													styles.enabledClubIntegrationItemHeaderBackground
 												}
 											/>
 											<div
-												className={styles.intItemHeader}
+												className={
+													styles.clubIntegrationItemHeader
+												}
 											>
 												<Image
 													src={`/integration-discord.png`}

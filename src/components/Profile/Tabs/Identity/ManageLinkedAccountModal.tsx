@@ -230,7 +230,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					<Space h={24} />
 
 					<Button
-						className={classes.buttonConfirm}
+						className={styles.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
 							saveChanges()

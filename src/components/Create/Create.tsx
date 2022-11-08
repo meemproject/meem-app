@@ -120,12 +120,12 @@ const useStyles = createStyles(theme => ({
 	clubLogoImage: {
 		imageRendering: 'pixelated'
 	},
-	clubLogoImageContainer: {
+	imageClubLogoContainer: {
 		marginTop: 32,
 		width: 108,
 		position: 'relative'
 	},
-	clubLogoDeleteButton: {
+	imageClubLogoDeleteButton: {
 		position: 'absolute',
 		top: '-12px',
 		right: '-105px',
@@ -348,7 +348,7 @@ export const CreateComponent: React.FC = () => {
 			</div>
 
 			<Container>
-				{/* <Text className={classes.clubDescriptionPrompt}>
+				{/* <Text className={styles.tSubtitle}>
 					{`Set your club's URL.`}
 				</Text>
 				<Text size="sm" className={classes.clubNamespaceHint}>
@@ -372,10 +372,10 @@ export const CreateComponent: React.FC = () => {
 				</div>
 
 				<Space h={'md'} /> */}
-				<Text className={classes.clubDescriptionPrompt}>
+				<Text className={styles.tSubtitle}>
 					In a sentence, describe what your members do together.
 				</Text>
-				<Space h={8} />
+				<Space h={24} />
 
 				<Textarea
 					radius="lg"
@@ -389,9 +389,11 @@ export const CreateComponent: React.FC = () => {
 					}
 				/>
 
-				<Text className={classes.clubLogoPrompt}>
+				<Space h={16} />
+				<Text className={styles.tSubtitle}>
 					Upload an icon for your club.
 				</Text>
+				<Space h={8} />
 				<Text className={classes.clubLogoInfo}>
 					This will be your club’s membership token. You can change it
 					anytime. Icons should be square and either JPG or PNG files.
@@ -401,7 +403,7 @@ export const CreateComponent: React.FC = () => {
 					<div className={classes.uploadOptions}>
 						<Button
 							leftIcon={<Upload size={14} />}
-							className={classes.buttonUpload}
+							className={styles.buttonWhite}
 							onClick={() => openFileSelector()}
 						>
 							Upload
@@ -409,7 +411,7 @@ export const CreateComponent: React.FC = () => {
 						<Space w={'xs'} />
 						<Button
 							leftIcon={<Text>😈</Text>}
-							className={classes.buttonUpload}
+							className={styles.buttonWhite}
 							onClick={() => openEmojiPicker()}
 						>
 							Choose emoji
@@ -418,7 +420,7 @@ export const CreateComponent: React.FC = () => {
 				)}
 				{isLoadingImage && <Loader color="red" variant="oval" />}
 				{!isLoadingImage && smallClubLogo.length > 0 && (
-					<div className={classes.clubLogoImageContainer}>
+					<div className={classes.imageClubLogoContainer}>
 						<Image
 							className={classes.clubLogoImage}
 							src={smallClubLogo}
@@ -428,7 +430,7 @@ export const CreateComponent: React.FC = () => {
 						/>
 						<a onClick={deleteImage}>
 							<Image
-								className={classes.clubLogoDeleteButton}
+								className={classes.imageClubLogoDeleteButton}
 								src="delete.png"
 								width={24}
 								height={24}

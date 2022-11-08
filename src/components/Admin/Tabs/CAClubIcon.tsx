@@ -1,13 +1,5 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Image,
-	Loader,
-	Button,
-	Space,
-	Modal
-} from '@mantine/core'
+import { Text, Image, Loader, Button, Space, Modal } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
@@ -17,155 +9,19 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Club } from '../../../model/club/club'
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
 })
 
-const useStyles = createStyles(theme => ({
-	header: {
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 24,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerPrompt: {
-		fontSize: 16,
-		marginBottom: 8,
-		fontWeight: 500,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		marginLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginLeft: 16
-		}
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 80,
-		height: 80,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 40,
-			height: 40,
-			minHeight: 40,
-			minWidth: 40,
-			marginLeft: 16
-		}
-	},
-	clubLogoPrompt: {
-		marginTop: 16,
-		fontSize: 18,
-		marginBottom: 8,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-	clubLogoInfo: {
-		fontWeight: 500,
-		fontSize: 14,
-		maxWidth: 650,
-		color: 'rgba(45, 28, 28, 0.6)',
-		marginBottom: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 13
-		}
-	},
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	buttonSaveChangesInHeader: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-
-	clubLogoImageContainer: {
-		marginTop: 32,
-		width: 108,
-		height: 100,
-		position: 'relative'
-	},
-	clubLogoDeleteButton: {
-		position: 'absolute',
-		top: '-12px',
-		right: '-105px',
-		cursor: 'pointer'
-	},
-	uploadOptions: { display: 'flex' },
-	emojiCanvas: {
-		position: 'absolute',
-		top: 40,
-		left: 0,
-		marginTop: -12,
-		marginBottom: -12,
-		lineHeight: 1,
-		fontSize: 24,
-		zIndex: -1000
-	},
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	}
-}))
-
 interface IProps {
 	club: Club
 }
 
 export const CAClubIcon: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -306,21 +162,29 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={classes.manageClubHeader}>Club Icon</Text>
-
-			<Text className={classes.clubLogoPrompt}>
+			<Text className={styles.tSectionTitle}>Club Icon</Text>
+			<Space h={32} />
+			<Text className={styles.tSubtitle}>
 				Upload an icon for your club.
 			</Text>
-			<Text className={classes.clubLogoInfo}>
+			<Text
+				className={styles.tExtraSmall}
+				style={{
+					maxWidth: 650,
+					color: 'rgba(45, 28, 28, 0.6)'
+				}}
+			>
 				This will be your club’s membership token. You can change it
 				anytime. Icons should be square and either JPG or PNG files.
 				Note that all uploads will be rendered at 24x24 px.
 			</Text>
+
+			<Space h={16} />
 			{smallClubLogo.length === 0 && !isLoadingImage && (
-				<div className={classes.uploadOptions}>
+				<div className={styles.row}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={classes.buttonUpload}
+						className={styles.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -328,7 +192,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={classes.buttonUpload}
+						className={styles.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
@@ -337,9 +201,9 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 			)}
 			{isLoadingImage && <Loader color="red" variant="oval" />}
 			{!isLoadingImage && smallClubLogo.length > 0 && (
-				<div className={classes.clubLogoImageContainer}>
+				<div className={styles.imageClubLogoContainer}>
 					<Image
-						className={classes.clubLogoImage}
+						className={styles.imageClubLogo}
 						src={smallClubLogo}
 						width={200}
 						height={200}
@@ -347,7 +211,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					/>
 					<a onClick={deleteImage}>
 						<Image
-							className={classes.clubLogoDeleteButton}
+							className={styles.imageClubLogoDeleteButton}
 							src="/delete.png"
 							width={24}
 							height={24}
@@ -357,7 +221,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 			)}
 			<Space h={smallClubLogo.length > 0 ? 148 : 32} />
 			<Button
-				className={classes.buttonSaveChanges}
+				className={styles.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>
@@ -372,7 +236,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					setSaveChangesModalOpened(false)
 				}}
 			/>
-			<div id="emojiCanvas" className={classes.emojiCanvas}>
+			<div id="emojiCanvas" className={styles.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
 			<Modal

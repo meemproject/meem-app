@@ -28,9 +28,7 @@ export const CADeleteClub: React.FC<IProps> = ({ club }) => {
 			>{`Once deleted, your club will be removed from the Clubs database and will no longer be discoverable for new or existing members. This action cannot be undone.`}</Text>
 			<Space h={16} />
 
-			<Text
-				className={styles.tSmall}
-			>{`Contract admins will still be able to manage the club’s contract either manually or with EPM.`}</Text>
+			<Text>{`Contract admins will still be able to manage the club’s contract either manually or with EPM.`}</Text>
 			<Space h={24} />
 
 			<Button

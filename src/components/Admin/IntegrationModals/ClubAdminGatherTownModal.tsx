@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
@@ -17,70 +16,7 @@ import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { Club, Integration } from '../../../model/club/club'
-
-const useStyles = createStyles(theme => ({
-	row: {
-		display: 'flex'
-	},
-	fullWidth: { width: '100%' },
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	}
-}))
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
 interface IProps {
 	club: Club
@@ -107,7 +43,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 	onModalClosed,
 	onSpaceSaved
 }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const wallet = useWallet()
 
@@ -214,7 +150,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={classes.modalTitle}>Gather Town</Text>}
+				title={<Text className={styles.tModalTitle}>Gather Town</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -227,7 +163,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 					<>
 						<>
 							<div>
-								<Text className={classes.stepDescription}>
+								<Text className={styles.tExtraSmall}>
 									{`Let's create a Gather Town space for your club. Click the link below and follow the instructions.`}
 								</Text>
 
@@ -239,22 +175,22 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 											'https://app.gather.town/get-started'
 										)
 									}}
-									className={classes.buttonConfirm}
+									className={styles.buttonBlack}
 								>
 									Create Space
 								</a>
 								<Space h={32} />
-								<Text className={classes.stepDescription}>
+								<Text className={styles.tExtraSmall}>
 									{`When you have created a space (or already have one), continue below.`}
 								</Text>
 								<Space h={8} />
 
-								<div className={classes.row}>
+								<div className={styles.row}>
 									<a
 										onClick={() => {
 											setStep(Step.AddGatherSpaceDetails)
 										}}
-										className={classes.buttonConfirm}
+										className={styles.buttonBlack}
 									>
 										Next
 									</a>
@@ -267,7 +203,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 					<>
 						<>
 							<div>
-								<Text className={classes.stepDescription}>
+								<Text className={styles.tExtraSmall}>
 									{`Add your club's new Gather Town Space details below. If you are using a Space password, add it here.`}
 								</Text>
 								<Space h={16} />
@@ -344,7 +280,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 											onClick={() => {
 												saveIntegration()
 											}}
-											className={classes.buttonConfirm}
+											className={styles.buttonBlack}
 										>
 											Save
 										</a>

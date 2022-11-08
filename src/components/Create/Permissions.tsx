@@ -101,13 +101,13 @@ const useStyles = createStyles(theme => ({
 	clubLogoImage: {
 		imageRendering: 'pixelated'
 	},
-	clubLogoImageContainer: {
+	imageClubLogoContainer: {
 		marginTop: 24,
 		width: 108,
 		height: 100,
 		position: 'relative'
 	},
-	clubLogoDeleteButton: {
+	imageClubLogoDeleteButton: {
 		position: 'absolute',
 		top: '-12px',
 		right: '-105px',

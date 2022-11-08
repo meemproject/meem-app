@@ -258,7 +258,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 															sendVerificationLink()
 														}}
 														className={
-															classes.buttonConfirm
+															styles.buttonBlack
 														}
 													>
 														Confirm
@@ -302,7 +302,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 														// TODO: Launch email app
 													}}
 													className={
-														classes.buttonConfirm
+														styles.buttonBlack
 													}
 												>
 													Launch Email App

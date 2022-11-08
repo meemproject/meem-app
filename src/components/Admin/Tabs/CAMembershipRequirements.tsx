@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Button,
 	Space,
@@ -25,190 +24,15 @@ import {
 } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
 import ClubClubContext from '../../Detail/ClubClubProvider'
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
-
-const useStyles = createStyles(theme => ({
-	row: { display: 'flex' },
-	buttonSaveChanges: {
-		marginTop: 48,
-		marginBottom: 48,
-
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonAddRequirement: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-
-	// Membership tab
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 24
-	},
-	membershipText: {
-		fontSize: 20,
-		marginBottom: 8,
-		lineHeight: 2,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	membershipSelector: {
-		padding: 4,
-		borderRadius: 8,
-		fontWeight: 'bold',
-		backgroundColor: 'rgba(255, 102, 81, 0.1)',
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer'
-	},
-	addRequirementButton: {
-		backgroundColor: 'white',
-		color: 'rgba(255, 102, 81, 1)',
-		border: '1px dashed rgba(255, 102, 81, 1)',
-		borderRadius: 24,
-		'&:hover': {
-			backgroundColor: 'rgba(255, 102, 81, 0.05)'
-		}
-	},
-	requirementItem: {
-		width: 200,
-		height: 150,
-		border: '1px solid rgba(0, 0, 0, 1)',
-		borderRadius: 16,
-		alignItems: 'center',
-		justifyContent: 'center',
-		display: 'flex',
-		position: 'relative'
-	},
-	requirementRemoveButton: {
-		position: 'absolute',
-		top: 8,
-		left: 8,
-		width: 18,
-		height: 18,
-		cursor: 'pointer',
-		color: 'rgba(255, 102, 81, 1)'
-	},
-	requirementOrContainer: {
-		width: 200,
-		height: 80,
-		alignItems: 'center',
-		justifyContent: 'center',
-		display: 'flex',
-		marginTop: 8,
-		marginBottom: 8
-	},
-	requirementOr: {
-		width: 30,
-		height: 80,
-		display: 'flex',
-		position: 'relative',
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	requirementOrLine: {
-		width: 1,
-		height: 80,
-		border: '1px dashed rgba(0, 0, 0, 1)'
-	},
-	requirementOrTextBackground: {
-		backgroundColor: 'white',
-		padding: 4,
-		position: 'absolute',
-		top: 25
-	},
-	membershipSettingHeader: {
-		fontSize: 16,
-		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: 600,
-		marginBottom: 12
-	},
-	removeAdditionalReq: {
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer',
-		marginRight: 8,
-		marginBottom: -4
-	},
-	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	visible: {
-		display: 'block'
-	},
-	invisible: {
-		display: 'none'
-	},
-	buttonModalSave: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonModalCancel: {
-		marginLeft: 8,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	modalHeaderText: {
-		fontSize: 18,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)',
-		marginBottom: 4,
-		marginTop: 16
-	},
-	modalInfoText: {
-		fontSize: 14,
-		opacity: 0.6
-	},
-	// Admins
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	adminsTextAreaContainer: {
-		position: 'relative'
-	},
-	adminsTextArea: {
-		paddingTop: 48,
-		paddingLeft: 32
-	},
-	primaryAdminChip: {
-		position: 'absolute',
-		pointerEvents: 'none',
-		top: 12,
-		left: 12
-	},
-	primaryAdminChipContents: {
-		display: 'flex',
-		alignItems: 'center'
-	}
-}))
 
 interface IProps {
 	club?: Club
 }
 
 export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const router = useRouter()
 
@@ -502,12 +326,14 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={classes.manageClubHeader}>
+				<Text className={styles.tSectionTitle}>
 					Membership Requirements
 				</Text>
 
+				<Space h={32} />
+
 				<Radio.Group
-					classNames={{ label: classes.radio }}
+					classNames={{ label: styles.fRadio }}
 					orientation="vertical"
 					spacing={16}
 					size="md"
@@ -538,7 +364,15 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 
 						{membershipRequirements.map(requirement => (
 							<div key={requirement.index}>
-								<div className={classes.requirementItem}>
+								<div
+									className={styles.centeredRow}
+									style={{
+										width: 200,
+										height: 150,
+										border: '1px solid rgba(0, 0, 0, 1)',
+										borderRadius: 16
+									}}
+								>
 									<a
 										onClick={() => {
 											openMembershipReqModal(requirement)
@@ -546,7 +380,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									>
 										<span
 											className={
-												classes.membershipSelector
+												styles.fOrangeSelectableSpan
 											}
 										>
 											{membershipTypeString(requirement)}
@@ -558,22 +392,48 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 												requirement.index
 											)
 										}}
-										className={
-											classes.requirementRemoveButton
-										}
+										style={{
+											position: 'absolute',
+											top: 8,
+											left: 8,
+											width: 18,
+											height: 18,
+											cursor: 'pointer',
+											color: 'rgba(255, 102, 81, 1)'
+										}}
 									/>
 								</div>
-								<div className={classes.requirementOrContainer}>
-									<div className={classes.requirementOr}>
+								<div
+									className={styles.centeredRow}
+									style={{
+										width: 200,
+										height: 80,
+
+										marginTop: 8,
+										marginBottom: 8
+									}}
+								>
+									<div
+										className={styles.centeredRow}
+										style={{
+											width: 30,
+											height: 80
+										}}
+									>
 										<div
-											className={
-												classes.requirementOrLine
-											}
+											style={{
+												width: 1,
+												height: 80,
+												border: '1px dashed rgba(0, 0, 0, 1)'
+											}}
 										/>
 										<div
-											className={
-												classes.requirementOrTextBackground
-											}
+											style={{
+												backgroundColor: 'white',
+												padding: 4,
+												position: 'absolute',
+												top: 25
+											}}
 										>
 											<Text>OR</Text>
 										</div>
@@ -581,12 +441,12 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								</div>
 							</div>
 						))}
-						<div className={classes.row}>
+						<div className={styles.row}>
 							<Space
 								w={membershipRequirements.length === 0 ? 0 : 14}
 							/>
 							<Button
-								className={classes.buttonAddRequirement}
+								className={styles.buttonWhite}
 								onClick={addMembershipRequirement}
 							>
 								{'+ Add Requirement'}
@@ -600,7 +460,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
-					className={classes.buttonSaveChanges}
+					className={styles.buttonBlack}
 					onClick={saveChanges}
 				>
 					{'Save Changes'}
@@ -618,7 +478,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipReqModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: styles.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -693,20 +553,20 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						className={
 							currentRequirement?.type ==
 							MembershipReqType.ApprovedApplicants
-								? classes.visible
-								: classes.invisible
+								? styles.visibleContainer
+								: styles.invisibleContainer
 						}
 					>
-						<Space h={8} />
-						<Text className={classes.modalHeaderText}>
+						<Space h={24} />
+						<Text className={styles.tSubtitleTransparentBold}>
 							How to apply
 						</Text>
-						<Text className={classes.modalInfoText}>
+						<Space h={4} />
+						<Text className={styles.tExtraSmallTransparent}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
 						<Space h={'xs'} />
-
 						<Textarea
 							radius="lg"
 							size="sm"
@@ -724,17 +584,16 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={classes.modalHeaderText}>
+						<Text className={styles.tSubtitleTransparentBold}>
 							Approved Addresses
 						</Text>
-						<Text className={classes.modalInfoText}>
+						<Text className={styles.tExtraSmallTransparent}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
 							approved addresses can be added manually anytime.
 						</Text>
 						<Space h={'xs'} />
-
 						<Textarea
 							radius="lg"
 							size="sm"
@@ -760,11 +619,11 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						className={
 							currentRequirement?.type ==
 							MembershipReqType.TokenHolders
-								? classes.visible
-								: classes.invisible
+								? styles.visibleContainer
+								: styles.invisibleContainer
 						}
 					>
-						{/* <Text className={classes.modalHeaderText}>Chain</Text>
+						{/* <Text className={styles.tSubtitleTransparentBold}>Chain</Text>
 						<Select
 							data={[
 								{
@@ -781,7 +640,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing?.tokenChain}
 						/> */}
-						<Text className={classes.modalHeaderText}>
+						<Text className={styles.tSubtitleTransparentBold}>
 							Token Address
 						</Text>
 						<TextInput
@@ -798,7 +657,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={classes.modalHeaderText}>
+						<Text className={styles.tSubtitleTransparentBold}>
 							Minimum Quantity
 						</Text>
 						<TextInput
@@ -821,11 +680,11 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						className={
 							currentRequirement?.type ==
 							MembershipReqType.OtherClubMember
-								? classes.visible
-								: classes.invisible
+								? styles.visibleContainer
+								: styles.invisibleContainer
 						}
 					>
-						<Text className={classes.modalHeaderText}>
+						<Text className={styles.tSubtitleTransparentBold}>
 							Club Name
 						</Text>
 
@@ -944,7 +803,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 
 							setMembershipReqModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={styles.buttonBlack}
 					>
 						Done
 					</Button>
@@ -952,7 +811,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						onClick={() => {
 							setMembershipReqModalOpened(false)
 						}}
-						className={classes.buttonModalCancel}
+						className={styles.buttonGrey}
 					>
 						Cancel
 					</Button>

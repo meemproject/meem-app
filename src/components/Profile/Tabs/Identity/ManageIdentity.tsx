@@ -189,7 +189,7 @@ const useStyles = createStyles(theme => ({
 		backgroundColor: 'white',
 		zIndex: -1
 	},
-	intItemHeader: {
+	clubIntegrationItemHeader: {
 		display: 'flex',
 		alignItems: 'center'
 	},
@@ -466,7 +466,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				<div className={classes.uploadOptions}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={classes.buttonUpload}
+						className={styles.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -474,7 +474,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={classes.buttonUpload}
+						className={styles.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
@@ -579,7 +579,7 @@ export const ManageIdentityComponent: React.FC = () => {
 													>
 														<div
 															className={
-																classes.intItemHeader
+																classes.clubIntegrationItemHeader
 															}
 														>
 															<Image
@@ -653,7 +653,7 @@ export const ManageIdentityComponent: React.FC = () => {
 											>
 												<div
 													className={
-														classes.intItemHeader
+														classes.clubIntegrationItemHeader
 													}
 												>
 													<Image
@@ -678,7 +678,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			)}
 			<Space h={'xl'} />
 			<Button
-				className={classes.buttonSaveChanges}
+				className={styles.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>

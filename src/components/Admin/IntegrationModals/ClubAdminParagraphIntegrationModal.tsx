@@ -29,6 +29,7 @@ import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
 import { Club, Integration } from '../../../model/club/club'
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
 const useStyles = createStyles(theme => ({
 	header: {
@@ -144,7 +145,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 	const wallet = useWallet()
 
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
@@ -270,7 +271,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
+					<Text className={styles.tModalTitle}>
 						{integration && integration.publicationSlug
 							? 'Edit Paragraph settings'
 							: 'Create a Paragraph Publication'}
@@ -291,7 +292,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
+				<div className={styles.modalStepsContainer}>
 					{integration && integration.publicationSlug && (
 						<>
 							<>
@@ -322,7 +323,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										// Close our modal
 										onModalClosed()
 									}}
-									className={classes.buttonConfirm}
+									className={styles.buttonBlack}
 								>
 									Save
 								</Button>
@@ -334,10 +335,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Start && (
 								<>
 									<Text
-										className={classes.title}
+										className={styles.tSubtitle}
 									>{`What's your Publication called?`}</Text>
 									<Space h={2} />
-									<Text className={classes.description}>
+									<Text className={styles.tExtraSmall}>
 										Catchy names are the best.
 									</Text>
 									<Space h={16} />
@@ -355,24 +356,21 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={24} />
 
 									<Text
-										className={classes.title}
+										className={styles.tSubtitle}
 									>{`Your visitors can find your publication at this URL.`}</Text>
 									<Space h={2} />
 
-									<Text className={classes.description}>
+									<Text className={styles.tExtraSmall}>
 										Your visitors can find your publication
 										at this URL.
 									</Text>
 									<Space h={16} />
 
-									<div
-										className={
-											classes.namespaceTextInputContainer
-										}
-									>
+									<div style={{ position: 'relative' }}>
 										<TextInput
-											classNames={{
-												input: classes.namespaceTextInput
+											style={{
+												paddingLeft: 153,
+												paddingBottom: 3
 											}}
 											radius="lg"
 											size="md"
@@ -386,20 +384,23 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											}}
 										/>
 										<Text
-											className={
-												classes.namespaceTextInputUrlPrefix
-											}
+											style={{
+												position: 'absolute',
+												top: 8,
+												left: 24,
+												color: 'rgba(0, 0, 0, 0.5)'
+											}}
 										>{`paragraph.xyz/@`}</Text>
 									</div>
 									<Space h={24} />
 
 									<Text
-										className={classes.title}
+										className={styles.tSubtitle}
 									>{`Who can read your publication?`}</Text>
 									<Space h={2} />
 
 									<Radio.Group
-										classNames={{ label: classes.radio }}
+										classNames={{ label: styles.fRadio }}
 										orientation="vertical"
 										spacing={10}
 										size="md"
@@ -439,7 +440,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										onClick={async () => {
 											setStep(Step.OpenGnosis)
 										}}
-										className={classes.buttonConfirm}
+										className={styles.buttonBlack}
 									>
 										Create
 									</Button>
@@ -449,7 +450,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 								<>
 									<Space h={16} />
 
-									<Text className={classes.title}>
+									<Text className={styles.tSubtitle}>
 										{`Let's connect your club's treasury.`}
 									</Text>
 									<Space h={12} />
@@ -474,7 +475,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 												)
 												window.focus()
 											}}
-											className={classes.buttonConfirm}
+											className={styles.buttonBlack}
 										>
 											Open Treasury
 										</Button>
@@ -485,7 +486,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 												setStep(Step.Transaction)
 												showParagraphPopup()
 											}}
-											className={classes.buttonConfirm}
+											className={styles.buttonBlack}
 										>
 											Continue
 										</Button>
@@ -496,7 +497,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Transaction && (
 								<>
 									<Space h={16} />
-									<Text className={classes.title}>
+									<Text className={styles.tSubtitle}>
 										{`Connect to club treasury and sign`}
 									</Text>
 									<Space h={12} />
@@ -536,13 +537,13 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Center>
 									<Space h={16} />
 									<Center>
-										<Text className={classes.successText}>
+										<Text className={styles.tSuccess}>
 											Success!
 										</Text>
 									</Center>
 									<Space h={16} />
 
-									<Text className={classes.successInfo}>
+									<Text className={styles.centered}>
 										{`Your club's Paragraph publication has been
 								created.`}
 									</Text>
@@ -555,7 +556,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 													'https://paragraph.xyz'
 												)
 											}}
-											className={classes.buttonConfirm}
+											className={styles.buttonBlack}
 										>
 											Launch Paragraph
 										</Button>

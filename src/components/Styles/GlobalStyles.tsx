@@ -46,6 +46,14 @@ export const useGlobalStyles = createStyles(theme => ({
 		height: 60
 	},
 	fTextFieldRoot: {},
+	fOrangeSelectableSpan: {
+		padding: 4,
+		borderRadius: 8,
+		fontWeight: 'bold',
+		backgroundColor: 'rgba(255, 102, 81, 0.1)',
+		color: 'rgba(255, 102, 81, 1)',
+		cursor: 'pointer'
+	},
 
 	// Layout
 	centered: {
@@ -118,6 +126,11 @@ export const useGlobalStyles = createStyles(theme => ({
 		paddingRight: 16,
 		position: 'relative'
 	},
+	modalStepsContainer: {
+		border: '1px solid rgba(204, 204, 204, 1)',
+		borderRadius: 16,
+		padding: 16
+	},
 	panelLayoutContainer: {
 		display: 'flex',
 		width: '100%',
@@ -149,6 +162,11 @@ export const useGlobalStyles = createStyles(theme => ({
 	row: {
 		display: 'flex'
 	},
+	rowEndAlign: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'end'
+	},
 	// A row which turns into a column when display is narrow enough
 	rowResponsive: {
 		display: 'flex',
@@ -170,6 +188,16 @@ export const useGlobalStyles = createStyles(theme => ({
 	},
 
 	// Images
+	emojiCanvas: {
+		position: 'absolute',
+		top: 40,
+		left: 0,
+		marginTop: -12,
+		marginBottom: -12,
+		lineHeight: 1,
+		fontSize: 24,
+		zIndex: -1000
+	},
 	imageClubLogo: {
 		imageRendering: 'pixelated',
 		width: 80,
@@ -182,6 +210,18 @@ export const useGlobalStyles = createStyles(theme => ({
 			marginLeft: 16,
 			marginRight: 16
 		}
+	},
+	imageClubLogoContainer: {
+		marginTop: 32,
+		width: 108,
+		height: 100,
+		position: 'relative'
+	},
+	imageClubLogoDeleteButton: {
+		position: 'absolute',
+		top: '-12px',
+		right: '-105px',
+		cursor: 'pointer'
 	},
 
 	// Misc
@@ -228,6 +268,19 @@ export const useGlobalStyles = createStyles(theme => ({
 		padding: 2,
 		cursor: 'pointer'
 	},
+	clubIntegrationItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		minHeight: 110,
+		marginBottom: 12,
+		cursor: 'pointer',
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		borderRadius: 16,
+		padding: 16
+	},
 	enabledClubIntegrationItem: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -239,7 +292,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		paddingTop: 16,
 		position: 'relative'
 	},
-	enabledIntHeaderBg: {
+	enabledClubIntegrationItemHeaderBackground: {
 		backgroundColor: '#FAFAFA',
 		position: 'absolute',
 		top: 0,
@@ -260,7 +313,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		flexDirection: 'row',
 		padding: 12
 	},
-	intItemHeader: {
+	clubIntegrationItemHeader: {
 		fontWeight: 600,
 		display: 'flex',
 		alignItems: 'center',
@@ -278,8 +331,24 @@ export const useGlobalStyles = createStyles(theme => ({
 	tBold: {
 		fontWeight: 700
 	},
+	tBoldRed: {
+		fontWeight: 600,
+		color: 'rgba(255, 102, 81, 1)'
+	},
+	tBoldTransparent: {
+		fontWeight: 700
+	},
 	tExtraSmall: {
 		fontSize: 14
+	},
+	tExtraSmallTransparent: {
+		fontSize: 14,
+		opacity: 0.6
+	},
+	tExtraSmallBoldTransparent: {
+		fontSize: 14,
+		fontWeight: 700,
+		opacity: 0.6
 	},
 	tHeaderTitleText: {
 		fontWeight: 600,
@@ -294,16 +363,20 @@ export const useGlobalStyles = createStyles(theme => ({
 		color: 'rgba(255, 102, 81, 1)',
 		fontWeight: 700
 	},
+	tMembershipSetting: {
+		fontSize: 20,
+		marginBottom: 8,
+		lineHeight: 2,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			fontSize: 16
+		}
+	},
 	tModalTitle: {
 		fontWeight: 600,
 		fontSize: 18
 	},
 	tListItemTitle: {
 		fontWeight: 700
-	},
-	tListItemSubtitle: {
-		opacity: 0.6,
-		fontSize: 14
 	},
 	tPanelLayoutNavHeader: {
 		fontWeight: 600,
@@ -322,9 +395,6 @@ export const useGlobalStyles = createStyles(theme => ({
 		fontWeight: 600,
 		fontSize: 20
 	},
-	tSmall: {
-		fontSize: 16
-	},
 	tTitle: {
 		fontWeight: 600,
 		fontSize: 24
@@ -332,6 +402,20 @@ export const useGlobalStyles = createStyles(theme => ({
 	tSubtitle: {
 		fontWeight: 600,
 		fontSize: 18
+	},
+	tSubtitleTransparentBold: {
+		fontSize: 18,
+		fontWeight: 600,
+		color: 'rgba(0, 0, 0, 0.6)'
+	},
+	tSubtitleTransparent: {
+		opacity: 0.6,
+		fontSize: 18
+	},
+	tSuccess: {
+		fontWeight: 600,
+		fontSize: 22,
+		color: 'rgba(29, 173, 78, 1)'
 	},
 	tSmallSubtitle: {
 		opacity: 0.6,

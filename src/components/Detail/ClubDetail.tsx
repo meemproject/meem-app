@@ -246,7 +246,7 @@ const useStyles = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
-	intItemHeader: {
+	clubIntegrationItemHeader: {
 		display: 'flex',
 		alignItems: 'center'
 	},
@@ -1043,7 +1043,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				}}
 			>
 				<div className={classes.enabledClubIntegrationItem}>
-					<div className={classes.intItemHeader}>
+					<div className={classes.clubIntegrationItemHeader}>
 						<Image
 							src={`/${integration.icon}`}
 							width={16}

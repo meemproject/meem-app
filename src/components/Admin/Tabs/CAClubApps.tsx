@@ -2,7 +2,6 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Image,
 	Space,
@@ -25,240 +24,16 @@ import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetIntegrationsQuery } from '../../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../../graphql/clubs'
 import { Club, Integration } from '../../../model/club/club'
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { ClubAdminGatherTownModal } from '../IntegrationModals/ClubAdminGatherTownModal'
 import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
 import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'
-
-const useStyles = createStyles(theme => ({
-	// Membership tab
-	membershipText: { fontSize: 20, marginBottom: 8, lineHeight: 2 },
-	membershipSelector: {
-		padding: 4,
-		borderRadius: 8,
-		fontWeight: 'bold',
-		backgroundColor: 'rgba(255, 102, 81, 0.1)',
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer'
-	},
-	addRequirementButton: {
-		backgroundColor: 'white',
-		color: 'rgba(255, 102, 81, 1)',
-		border: '1px dashed rgba(255, 102, 81, 1)',
-		borderRadius: 24,
-		'&:hover': {
-			backgroundColor: 'rgba(255, 102, 81, 0.05)'
-		},
-		marginBottom: 8
-	},
-	// Admins tab
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	adminsTextAreaContainer: {
-		position: 'relative'
-	},
-	adminsTextArea: {
-		paddingTop: 48,
-		paddingLeft: 32
-	},
-	primaryAdminChip: {
-		position: 'absolute',
-		pointerEvents: 'none',
-		top: 12,
-		left: 12
-	},
-	primaryAdminChipContents: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	// Integrations tab
-	clubIntegrationsHeader: {
-		fontSize: 16,
-		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: 600,
-		marginTop: 32,
-		marginBottom: 12,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			fontWeight: 400
-		}
-	},
-	clubIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
-		minHeight: 110,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	enabledClubIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-		marginBottom: 12,
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: 'white',
-		borderRadius: 16,
-		paddingTop: 16,
-		position: 'relative'
-	},
-	intItemHeader: {
-		fontWeight: 600,
-		display: 'flex',
-		alignItems: 'center',
-		zIndex: 1
-	},
-	intItemDescription: {
-		fontWeight: 400,
-		marginTop: 4,
-		fontSize: 14
-	},
-	clubVerificationSectionTitle: {
-		fontSize: 18,
-		marginBottom: 4,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-	clubIntegrationsSectionTitle: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-	clubContractAddress: {
-		wordBreak: 'break-word',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	modalInstructions: {
-		fontWeight: 600,
-		fontSize: 16
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		borderRadius: 16,
-		marginBottom: 24
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	buttonSaveChanges: {
-		marginTop: 16,
-		marginBottom: 0,
-
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonEndAlign: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'end'
-	},
-	integrationActions: {
-		display: 'flex',
-		flexDirection: 'row',
-		height: 46
-	},
-	integrationAction: {
-		cursor: 'pointer',
-		display: 'flex',
-		flexDirection: 'row',
-		padding: 12
-	},
-	integrationActionText: {
-		fontSize: 14
-	},
-	enabledIntHeaderBg: {
-		backgroundColor: '#FAFAFA',
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		right: 0,
-		height: 53,
-		borderTopLeftRadius: 16,
-		borderTopRightRadius: 16
-	},
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-	link: {
-		fontWeight: 'bold',
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer',
-		textDecoration: 'none'
-	}
-}))
-
 interface IProps {
 	club: Club
 }
 
 export const CAClubApps: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 	const wallet = useWallet()
 
 	// Fetch a list of available integrations.
@@ -564,13 +339,15 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={classes.manageClubHeader}>Club Apps</Text>
+				<Text className={styles.tSectionTitle}>Club Apps</Text>
+				<Space h={32} />
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>
 						<Text
-							className={classes.clubIntegrationsSectionTitle}
+							className={styles.tSubtitle}
 						>{`Added apps (${existingIntegrations?.length})`}</Text>
+						<Space h={8} />
 						<Grid>
 							{existingIntegrations.map(integration => (
 								<Grid.Col
@@ -583,15 +360,19 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								>
 									<div
 										className={
-											classes.enabledClubIntegrationItem
+											styles.enabledClubIntegrationItem
 										}
 									>
 										<div
 											className={
-												classes.enabledIntHeaderBg
+												styles.enabledClubIntegrationItemHeaderBackground
 											}
 										/>
-										<div className={classes.intItemHeader}>
+										<div
+											className={
+												styles.clubIntegrationItemHeader
+											}
+										>
 											<Image
 												src={`/${integration.icon}`}
 												width={16}
@@ -627,9 +408,8 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											<Divider />
 										</div>
 										<div
-											className={
-												classes.integrationActions
-											}
+											className={styles.row}
+											style={{ height: 46 }}
 										>
 											<a
 												onClick={() => {
@@ -655,15 +435,17 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												}}
 											>
 												<div
-													className={
-														classes.integrationAction
-													}
+													className={styles.row}
+													style={{
+														cursor: 'pointer',
+														padding: 12
+													}}
 												>
 													<ExternalLink size={20} />
 													<Space w={4} />
 													<Text
 														className={
-															classes.integrationActionText
+															styles.tExtraSmall
 														}
 													>
 														Launch App
@@ -680,15 +462,17 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												}}
 											>
 												<div
-													className={
-														classes.integrationAction
-													}
+													className={styles.row}
+													style={{
+														cursor: 'pointer',
+														padding: 12
+													}}
 												>
 													<Settings size={20} />
 													<Space w={4} />
 													<Text
 														className={
-															classes.integrationActionText
+															styles.tExtraSmall
 														}
 													>
 														Settings
@@ -707,8 +491,10 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				{!loading && inteData && (
 					<>
 						<Text
-							className={classes.clubIntegrationsSectionTitle}
+							className={styles.tSubtitle}
 						>{`Available apps (${searchedIntegrations?.length})`}</Text>
+						<Space h={8} />
+
 						<TextInput
 							radius={16}
 							size={'md'}
@@ -742,12 +528,12 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 									>
 										<div
 											className={
-												classes.clubIntegrationItem
+												styles.clubIntegrationItem
 											}
 										>
 											<div
 												className={
-													classes.intItemHeader
+													styles.clubIntegrationItemHeader
 												}
 											>
 												<Image
@@ -760,9 +546,8 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												<Text>{`${integration.name}`}</Text>
 											</div>
 											<Text
-												className={
-													classes.intItemDescription
-												}
+												className={styles.tExtraSmall}
+												style={{ marginTop: 4 }}
 											>
 												{integration.description}
 											</Text>
@@ -847,7 +632,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					opened={isIntegrationModalOpened}
 					title={
 						<Text
-							className={classes.modalTitle}
+							className={styles.tModalTitle}
 						>{`Add ${integrationBeingEdited?.name}`}</Text>
 					}
 					onClose={() => {
@@ -872,7 +657,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											<Space h={4} />
 											<a
 												target="_blank"
-												className={classes.link}
+												className={styles.tLink}
 												href={
 													integrationBeingEdited.guideUrl
 												}
@@ -886,7 +671,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								)}
 
 							<Text
-								className={classes.modalInstructions}
+								className={styles.tBold}
 							>{`Enter your club's ${
 								integrationBeingEdited.name
 							}${
@@ -940,14 +725,14 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					)}
 
 					{integrationBeingEdited && (
-						<div className={classes.buttonEndAlign}>
+						<div className={styles.rowEndAlign}>
 							<Button
 								loading={isSavingChanges}
 								disabled={isSavingChanges}
 								onClick={async () => {
 									saveSimpleIntegrationChanges()
 								}}
-								className={classes.buttonConfirm}
+								className={styles.buttonBlack}
 							>
 								Save
 							</Button>
