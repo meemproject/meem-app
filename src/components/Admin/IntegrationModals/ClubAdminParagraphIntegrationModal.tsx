@@ -1,15 +1,9 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
 	Divider,
-	Stepper,
-	MantineProvider,
 	TextInput,
 	Radio,
 	Button,
@@ -22,102 +16,11 @@ import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import request from 'superagent'
-import { AlertCircle, Check } from 'tabler-icons-react'
-import twitterIntent from 'twitter-intent'
+import { AlertCircle } from 'tabler-icons-react'
 import { Club, Integration } from '../../../model/club/club'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	title: { fontWeight: 600, fontSize: 18 },
-	description: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	namespaceTextInputContainer: {
-		position: 'relative'
-	},
-	namespaceTextInput: {
-		paddingLeft: 153,
-		paddingBottom: 3
-	},
-	namespaceTextInputUrlPrefix: {
-		position: 'absolute',
-		top: 8,
-		left: 24,
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	clubNamespaceHint: {
-		paddingLeft: 0,
-		paddingBottom: 16,
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	successText: {
-		fontWeight: 600,
-		fontSize: 22,
-		color: 'rgba(29, 173, 78, 1)'
-	},
-	successInfo: { textAlign: 'center' },
-	paragraphFrame: { width: '100%', height: 200 }
-}))
-
 interface IProps {
 	club: Club
 	integration?: Integration
@@ -141,8 +44,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	onModalClosed,
 	onComplete
 }) => {
-	const router = useRouter()
-
 	const wallet = useWallet()
 
 	const { classes: styles } = useGlobalStyles()
@@ -152,13 +53,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	const [publicationName, setPublicationName] = useState('')
 	const [publicationUrl, setPublicationUrl] = useState('')
 	const [isClubMembersOnly, setIsClubMembersOnly] = useState(false)
-
-	// The url with appropriate encoded params to send to paragraph
-	const [paragraphIframeUrl, setParagraphIframeUrl] = useState('')
-	const [hasAddedWindowListener, setHasAddedWindowListener] = useState(false)
-
-	// Data received back from paragraph
-	const [createdPublicationSlug, setCreatedPublicationSlug] = useState('')
 
 	// Is this integration enabled?
 	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(true)
@@ -241,7 +135,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 					window.removeEventListener('message', listener)
 					popup.close()
 					setStep(Step.SavingIntegration)
-					setCreatedPublicationSlug(`@${publicationUrl}`)
 					saveIntegration(!isClubMembersOnly)
 				}
 			}
@@ -252,10 +145,9 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	useEffect(() => {
 		// Used when we want to show integration settings after being saved
 		if (integration && integration.publicationSlug) {
-			setCreatedPublicationSlug(integration.publicationSlug)
 			setIsIntegrationEnabled(integration.isEnabled ?? false)
 		}
-	}, [hasAddedWindowListener, integration, isClubMembersOnly])
+	}, [integration, isClubMembersOnly])
 
 	return (
 		<>

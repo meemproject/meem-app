@@ -485,10 +485,6 @@ export const useGlobalStyles = createStyles(theme => ({
 	tListItemTitle: {
 		fontWeight: 700
 	},
-	tpagePanelLayoutNavHeader: {
-		fontWeight: 600,
-		opacity: 0.5
-	},
 	tFaded: {
 		opacity: 0.6
 	},

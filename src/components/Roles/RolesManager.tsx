@@ -283,11 +283,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 									className={styles.spacedRowCentered}
 									style={{ marginLeft: 20 }}
 								>
-									<Text
-										className={
-											styles.tpagePanelLayoutNavHeader
-										}
-									>
+									<Text className={styles.tBoldFaded}>
 										ROLES
 									</Text>
 									<Plus

@@ -279,9 +279,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text
-									className={styles.tpagePanelLayoutNavHeader}
-								>
+								<Text className={styles.tBoldFaded}>
 									MANAGE CLUB
 								</Text>
 								<NavLink
@@ -391,11 +389,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								{userHasPermissionEditProfile(club) && (
 									<div>
 										<Space h={32} />
-										<Text
-											className={
-												styles.tpagePanelLayoutNavHeader
-											}
-										>
+										<Text className={styles.tBoldFaded}>
 											EDIT PROFILE
 										</Text>
 										<NavLink
