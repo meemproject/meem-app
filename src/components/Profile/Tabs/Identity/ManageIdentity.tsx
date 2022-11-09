@@ -536,7 +536,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					{id.identity.integrations &&
 						id.identity.integrations.length > 0 && (
 							<>
-								<div className={classes.row}>
+								<div className={styles.row}>
 									<Image
 										src="/icon-verified.png"
 										width={18}

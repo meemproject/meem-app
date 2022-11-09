@@ -221,14 +221,15 @@ export const CreateComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={styles.header}>
+			<div className={styles.pageHeader}>
 				<a onClick={navigateHome}>
-					<ArrowLeft className={styles.headerExitButton} size={32} />
+					<ArrowLeft
+						className={styles.pageHeaderExitButton}
+						size={32}
+					/>
 				</a>
 				<div>
-					<Text className={styles.tBoldTransparent}>
-						Create a club
-					</Text>
+					<Text className={styles.tBoldFaded}>Create a club</Text>
 					<Text className={styles.tHeaderTitleText}>{clubName}</Text>
 				</div>
 			</div>
@@ -281,7 +282,7 @@ export const CreateComponent: React.FC = () => {
 				</Text>
 				<Space h={8} />
 				<Text
-					className={styles.tExtraSmallTransparent}
+					className={styles.tExtraSmallFaded}
 					style={{ maxWidth: 650 }}
 				>
 					This will be your club’s membership token. You can change it

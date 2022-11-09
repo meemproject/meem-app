@@ -440,7 +440,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						settings?`}
 					</Text>
 					<Space h={16} />
-					<Text className={styles.tSubtitleTransparent}>
+					<Text className={styles.tSubtitleFaded}>
 						{club
 							? `Add a line break between each address. Note that at
 						least one club admin is required at all times.`
@@ -464,7 +464,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Space h={64} />
 
 				<Text className={styles.tSectionTitle}>Membership</Text>
-				<Text className={styles.tBoldTransparent}>Requirements</Text>
+				<Text className={styles.tBoldFaded}>Requirements</Text>
 				<Text className={styles.tMembershipSetting}>
 					This club is open for{' '}
 					<a
@@ -581,7 +581,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 
 				<Space h="lg" />
 
-				<Text className={styles.tBoldTransparent}>Price</Text>
+				<Text className={styles.tBoldFaded}>Price</Text>
 
 				<Text className={styles.tMembershipSetting}>
 					Our club{' '}
@@ -611,7 +611,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={styles.tBoldTransparent}>Capacity</Text>
+				<Text className={styles.tBoldFaded}>Capacity</Text>
 				<Text className={styles.tMembershipSetting}>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
@@ -625,7 +625,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={styles.tBoldTransparent}>Timing</Text>
+				<Text className={styles.tBoldFaded}>Timing</Text>
 
 				<Text className={styles.tMembershipSetting}>
 					Memberships are available starting{' '}
@@ -764,10 +764,10 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}
 					>
 						<Space h={8} />
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							How to apply
 						</Text>
-						<Text className={styles.tExtraSmallTransparent}>
+						<Text className={styles.tExtraSmallFaded}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
@@ -784,10 +784,10 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Approved Addresses
 						</Text>
-						<Text className={styles.tExtraSmallTransparent}>
+						<Text className={styles.tExtraSmallFaded}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
@@ -820,7 +820,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								: styles.invisibleContainer
 						}
 					>
-						{/* <Text className={styles.tSubtitleTransparentBold}>Chain</Text>
+						{/* <Text className={styles.tSubtitleFadedBold}>Chain</Text>
 						<Select
 							data={[
 								{
@@ -837,7 +837,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing.tokenChain}
 						/> */}
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Token Address
 						</Text>
 						<TextInput
@@ -850,7 +850,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Minimum Quantity
 						</Text>
 						<TextInput
@@ -874,7 +874,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								: styles.invisibleContainer
 						}
 					>
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Club Name
 						</Text>
 
@@ -1068,7 +1068,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={styles.tSubtitleTransparentBold}>
+					<Text className={styles.tSubtitleFadedBold}>
 						Enter cost to join
 					</Text>
 					<TextInput
@@ -1100,7 +1100,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={styles.tSubtitleTransparentBold}>
+					<Text className={styles.tSubtitleFadedBold}>
 						Send funds to this address
 					</Text>
 					<TextInput
@@ -1188,7 +1188,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={styles.tSubtitleTransparentBold}>
+							<Text className={styles.tSubtitleFadedBold}>
 								Enter total memberships
 							</Text>
 

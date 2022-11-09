@@ -42,11 +42,9 @@ export const CreatePermissionsComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={styles.header}>
+			<div className={styles.pageHeader}>
 				<div>
-					<Text className={styles.tBoldTransparent}>
-						Create a club
-					</Text>
+					<Text className={styles.tBoldFaded}>Create a club</Text>
 					<Text className={styles.tHeaderTitleText}>{clubName}</Text>
 				</div>
 			</div>

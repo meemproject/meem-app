@@ -194,7 +194,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={styles.header}>
+					<div className={styles.pageHeader}>
 						<div className={styles.spacedRowCentered}>
 							<Image
 								width={56}
@@ -203,16 +203,14 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								src={club.image}
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<div className={styles.headerTitleContainer}>
+							<div className={styles.pageHeaderTitleContainer}>
 								<Text className={styles.tHeaderTitleText}>
 									{club.name}
 								</Text>
 								<Space h={8} />
 								<div className={styles.row}>
 									<Text
-										className={
-											styles.tExtraSmallBoldTransparent
-										}
+										className={styles.tExtraSmallBoldFaded}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
 										className={styles.copyIcon}
@@ -238,7 +236,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</div>
 						</div>
 						<a
-							className={styles.headerExitButton}
+							className={styles.pageHeaderExitButton}
 							onClick={navigateToClubDetail}
 						>
 							<Image src="/delete.png" width={24} height={24} />
@@ -257,7 +255,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</Container>
 					)}
 					{club?.isCurrentUserClubAdmin && (
-						<div className={styles.panelLayoutContainer}>
+						<div className={styles.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -273,7 +271,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={styles.panelLayoutNavBar}
+								className={styles.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -281,11 +279,13 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={styles.tPanelLayoutNavHeader}>
+								<Text
+									className={styles.tpagePanelLayoutNavHeader}
+								>
 									MANAGE CLUB
 								</Text>
 								<NavLink
-									className={styles.panelLayoutNavItem}
+									className={styles.pagePanelLayoutNavItem}
 									active={
 										currentTab === Tab.ContractManagement
 									}
@@ -301,7 +301,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<div>
 										<NavLink
 											className={
-												styles.panelLayoutNavItem
+												styles.pagePanelLayoutNavItem
 											}
 											active={
 												currentTab ===
@@ -317,7 +317,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										/>
 										<NavLink
 											className={
-												styles.panelLayoutNavItem
+												styles.pagePanelLayoutNavItem
 											}
 											active={
 												currentTab ===
@@ -338,7 +338,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<>
 										<NavLink
 											className={
-												styles.panelLayoutNavItem
+												styles.pagePanelLayoutNavItem
 											}
 											active={currentTab === Tab.Roles}
 											label={'Roles'}
@@ -352,7 +352,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 								{/* {club.isCurrentUserClubOwner && (
 									<NavLink
-										className={styles.panelLayoutNavItem}
+										className={styles.pagePanelLayoutNavItem}
 										active={currentTab === Tab.DeleteClub}
 										label={'Delete Club'}
 										onClick={() => {
@@ -366,7 +366,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<>
 										<NavLink
 											className={
-												styles.panelLayoutNavItem
+												styles.pagePanelLayoutNavItem
 											}
 											active={currentTab === Tab.Apps}
 											label={'Club Apps'}
@@ -379,7 +379,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 
 								<NavLink
-									className={styles.panelLayoutNavItem}
+									className={styles.pagePanelLayoutNavItem}
 									active={currentTab === Tab.Airdrops}
 									label={'Airdrops'}
 									onClick={() => {
@@ -393,14 +393,14 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										<Space h={32} />
 										<Text
 											className={
-												styles.tPanelLayoutNavHeader
+												styles.tpagePanelLayoutNavHeader
 											}
 										>
 											EDIT PROFILE
 										</Text>
 										<NavLink
 											className={
-												styles.panelLayoutNavItem
+												styles.pagePanelLayoutNavItem
 											}
 											active={
 												currentTab === Tab.ClubDetails
@@ -413,7 +413,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										/>
 										<NavLink
 											className={
-												styles.panelLayoutNavItem
+												styles.pagePanelLayoutNavItem
 											}
 											active={currentTab === Tab.ClubIcon}
 											label={'Club Icon'}
@@ -426,7 +426,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={styles.panelLayoutContent}>
+								<div className={styles.pagePanelLayoutContent}>
 									{currentTab === Tab.ContractManagement && (
 										<CAContractManagement club={club} />
 									)}

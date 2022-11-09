@@ -558,11 +558,11 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						}
 					>
 						<Space h={24} />
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							How to apply
 						</Text>
 						<Space h={4} />
-						<Text className={styles.tExtraSmallTransparent}>
+						<Text className={styles.tExtraSmallFaded}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
@@ -584,10 +584,10 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Approved Addresses
 						</Text>
-						<Text className={styles.tExtraSmallTransparent}>
+						<Text className={styles.tExtraSmallFaded}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
@@ -623,7 +623,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								: styles.invisibleContainer
 						}
 					>
-						{/* <Text className={styles.tSubtitleTransparentBold}>Chain</Text>
+						{/* <Text className={styles.tSubtitleFadedBold}>Chain</Text>
 						<Select
 							data={[
 								{
@@ -640,7 +640,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing?.tokenChain}
 						/> */}
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Token Address
 						</Text>
 						<TextInput
@@ -657,7 +657,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Minimum Quantity
 						</Text>
 						<TextInput
@@ -684,7 +684,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								: styles.invisibleContainer
 						}
 					>
-						<Text className={styles.tSubtitleTransparentBold}>
+						<Text className={styles.tSubtitleFadedBold}>
 							Club Name
 						</Text>
 

@@ -83,7 +83,7 @@ export const BrowseComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={styles.header}>
+			<div className={styles.pageHeader}>
 				<div className={styles.centeredRow}>
 					<a onClick={navigateHome}>
 						<ArrowLeft className={styles.backArrow} size={32} />

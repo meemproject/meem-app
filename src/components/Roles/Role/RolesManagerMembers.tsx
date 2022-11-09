@@ -173,7 +173,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 													</Text>
 													<Text
 														className={
-															styles.tExtraSmallTransparent
+															styles.tExtraSmallFaded
 														}
 													>
 														{member.ens

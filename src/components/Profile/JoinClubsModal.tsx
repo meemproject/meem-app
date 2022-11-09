@@ -201,7 +201,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={32} />
 
 					<Center>
-						<Text className={styles.tPartialTransparent}>
+						<Text className={styles.tFaded}>
 							Changed your mind?
 						</Text>
 					</Center>
@@ -275,11 +275,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 										{!method.enabled && (
 											<div className={styles.row}>
 												<Space w={8} />
-												<Text
-													className={
-														styles.tPartialTransparent
-													}
-												>
+												<Text className={styles.tFaded}>
 													Coming soon
 												</Text>
 											</div>
@@ -376,7 +372,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													{!method.enabled && (
 														<Text
 															className={
-																styles.tPartialTransparent
+																styles.tFaded
 															}
 															style={{
 																fontSize: 14

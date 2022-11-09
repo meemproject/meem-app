@@ -206,7 +206,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h={32} />
 
-				<Text className={styles.tBoldTransparent}>Price</Text>
+				<Text className={styles.tBoldFaded}>Price</Text>
 				<Space h={12} />
 
 				<Text className={styles.tMembershipSetting}>
@@ -237,7 +237,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={styles.tBoldTransparent}>Capacity</Text>
+				<Text className={styles.tBoldFaded}>Capacity</Text>
 				<Text className={styles.tMembershipSetting}>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
@@ -251,7 +251,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={styles.tBoldTransparent}>Timing</Text>
+				<Text className={styles.tBoldFaded}>Timing</Text>
 
 				<Text className={styles.tMembershipSetting}>
 					Memberships are available starting{' '}
@@ -302,7 +302,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={styles.tSubtitleTransparentBold}>
+					<Text className={styles.tSubtitleFadedBold}>
 						Enter cost to join
 					</Text>
 					<TextInput
@@ -334,7 +334,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={styles.tSubtitleTransparentBold}>
+					<Text className={styles.tSubtitleFadedBold}>
 						Send funds to this address
 					</Text>
 					<TextInput
@@ -422,7 +422,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={styles.tSubtitleTransparentBold}>
+							<Text className={styles.tSubtitleFadedBold}>
 								Enter total memberships
 							</Text>
 

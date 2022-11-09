@@ -2,7 +2,6 @@
 import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -57,228 +56,8 @@ import { useCustomApollo } from '../../providers/ApolloProvider'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { hostnameToChainId } from '../App'
 import { ClubMemberCard } from '../Profile/Tabs/Identity/ClubMemberCard'
+import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { JoinLeaveClubModal } from './JoinLeaveClubModal'
-
-const useStyles = createStyles(theme => ({
-	row: { display: 'flex' },
-	rowCentered: { display: 'flex', alignItems: 'center' },
-	rowCenteredClickable: {
-		display: 'flex',
-		alignItems: 'center',
-		cursor: 'pointer'
-	},
-
-	header: {
-		backgroundColor: 'rgba(160, 160, 160, 0.05)',
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 32,
-		paddingBottom: 32,
-		paddingRight: 32,
-		paddingLeft: 32,
-		position: 'relative',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingLeft: 8,
-			paddingRight: 8,
-			paddingTop: 24,
-			paddingBottom: 24
-		}
-	},
-	headerClubDescription: {
-		fontSize: 16,
-		wordBreak: 'break-word',
-		marginTop: 4,
-		marginRight: 16,
-		fontWeight: 500,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		wordBreak: 'break-word',
-		marginTop: -8
-	},
-	headerLinks: {
-		position: 'absolute',
-		top: '24px',
-		right: '64px',
-		display: 'flex',
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		},
-		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
-			display: 'flex'
-		}
-	},
-	mobileHeaderLinks: {
-		marginTop: 16,
-		display: 'flex',
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'flex'
-		},
-		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	headerLink: {
-		display: 'flex',
-		cursor: 'pointer',
-		color: 'black',
-		textDecoration: 'none'
-	},
-	headerButtons: {
-		marginTop: 12,
-		marginBottom: 0,
-		marginLeft: 0,
-		marginRight: 16
-	},
-	headerSlotsLeft: {
-		fontSize: 14,
-		marginTop: 8,
-		marginLeft: 16,
-		fontWeight: 500
-	},
-	outlineButton: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	outlineHeaderButton: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-		// [`@media (max-width: ${theme.breakpoints.md}px)`]: {
-		// 	fontSize: 0,
-		// 	marginLeft: 0,
-		// 	marginRight: 0,
-		// 	backgroundColor: 'transparent',
-		// 	borderColor: 'transparent'
-		// }
-	},
-
-	clubDetailSectionTitle: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginTop: 40,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-
-	buttonJoinClub: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-
-		marginRight: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 20,
-			marginRight: 20
-		}
-	},
-	requirementsContainer: {
-		border: '1px solid rgba(0, 0, 0, 0.5)',
-		paddingTop: 24,
-		paddingBottom: 16,
-		paddingLeft: 16,
-		paddingRight: 16,
-		borderRadius: 16
-	},
-	requirementItem: {
-		display: 'flex',
-		marginBottom: 8
-	},
-	requirementIcon: {
-		minWidth: 32
-	},
-	requirementLink: {
-		color: 'rgba(255, 102, 81, 1)'
-	},
-	memberItem: {
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		fontWeight: 600,
-		borderRadius: 16,
-		paddingTop: 16,
-		paddingLeft: 16,
-		paddingBottom: 16,
-		cursor: 'pointer',
-		display: 'flex',
-		alignItems: 'center'
-	},
-	memberItemName: {
-		marginLeft: 6
-	},
-	memberAdminIndicator: {
-		marginLeft: 6
-	},
-	memberDisplayName: {
-		fontWeight: 600
-	},
-	memberEns: { opacity: '0.6' },
-	memberContactLabel: { fontWeight: 600 },
-	memberContactItemText: { opacity: '0.6' },
-	enabledClubIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	clubIntegrationItemHeader: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	clubContractAddress: {
-		wordBreak: 'break-word',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	contractAddressContainer: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	copy: {
-		marginLeft: 4,
-		padding: 2,
-		cursor: 'pointer'
-	},
-	applicationInstructions: {
-		a: {
-			color: 'rgba(255, 102, 81, 1)'
-		}
-	},
-	integrationDetailText: {
-		fontWeight: 400
-	},
-	appsEmptyStateTitle: {
-		fontSize: 16,
-		fontWeight: 600
-	},
-	appsEmptyStateText: {
-		fontSize: 16
-	}
-}))
 
 interface IProps {
 	slug: string
@@ -291,7 +70,7 @@ interface RequirementString {
 }
 
 export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
-	const { classes } = useStyles()
+	const { classes: styles } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { anonClient, mutualMembersClient } = useCustomApollo()
@@ -688,9 +467,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															radius="lg"
 														>
 															<Text
-																className={
-																	classes.applicationInstructions
-																}
+																style={{
+																	color: 'rgba(255, 102, 81, 1)'
+																}}
 															>
 																<Space h={4} />
 																<Linkify
@@ -724,9 +503,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												Members must hold{' '}
 												{req.tokenMinQuantity}{' '}
 												<a
-													className={
-														classes.requirementLink
-													}
+													className={styles.tLink}
 													href={tokenUrl}
 												>
 													{tokenName}
@@ -745,9 +522,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											<Text>
 												Members must also be a member of{' '}
 												<a
-													className={
-														classes.requirementLink
-													}
+													className={styles.tLink}
 													href="/club"
 												>
 													{req.otherClubName}
@@ -859,13 +634,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			setRequirementsParsed(true)
 		},
-		[
-			checkEligibility,
-			classes.applicationInstructions,
-			classes.requirementLink,
-			areRequirementsParsed,
-			wallet
-		]
+		[areRequirementsParsed, checkEligibility, wallet, styles.tLink]
 	)
 
 	useEffect(() => {
@@ -1042,8 +811,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					}
 				}}
 			>
-				<div className={classes.enabledClubIntegrationItem}>
-					<div className={classes.clubIntegrationItemHeader}>
+				<div className={styles.enabledClubIntegrationItem}>
+					<div className={styles.clubIntegrationItemHeader}>
 						<Image
 							src={`/${integration.icon}`}
 							width={16}
@@ -1070,26 +839,18 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					{integration.publicationName &&
 						integration.publicationName.length > 0 && (
 							<>
-								<Text className={classes.integrationDetailText}>
-									{integration.publicationName}
-								</Text>
+								<Text>{integration.publicationName}</Text>
 							</>
 						)}
 					{integration.gatherTownSpacePw &&
 						integration.gatherTownSpacePw.length > 0 && (
 							<>
-								<div className={classes.rowCentered}>
+								<div className={styles.centeredRow}>
 									<Key size={20} />
 									<Space w={4} />
-									<Text
-										className={
-											classes.integrationDetailText
-										}
-									>
-										{integration.gatherTownSpacePw}
-									</Text>
+									<Text>{integration.gatherTownSpacePw}</Text>
 									<Image
-										className={classes.copy}
+										className={styles.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={e => {
@@ -1151,25 +912,37 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			)}
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={classes.header}>
+					<div className={styles.pageHeader}>
 						<Image
 							width={80}
 							height={80}
 							radius={16}
 							fit="cover"
-							className={classes.clubLogoImage}
+							className={styles.imageClubLogo}
 							src={club.image}
 						/>
 						<div>
-							<Text className={classes.headerClubName}>
+							<Text className={styles.tHeaderTitleText}>
 								{club.name}
 							</Text>
-							<Text className={classes.headerClubDescription}>
+							<Text
+								className={styles.tFaded}
+								style={{
+									wordBreak: 'break-word',
+									marginTop: 4,
+									marginRight: 16
+								}}
+							>
 								{club.description}
 							</Text>
 							<Group
 								spacing={'xs'}
-								className={classes.headerButtons}
+								style={{
+									marginTop: 12,
+									marginBottom: 0,
+									marginLeft: 0,
+									marginRight: 16
+								}}
 							>
 								{club.membershipSettings &&
 									club.membershipSettings
@@ -1178,7 +951,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											onClick={() => {
 												setIsEditionsModalOpened(true)
 											}}
-											className={classes.buttonJoinClub}
+											className={styles.buttonBlack}
 										>
 											{' '}
 											{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
@@ -1189,7 +962,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										<Button
 											onClick={leaveClub}
 											loading={isLeavingClub}
-											className={classes.buttonJoinClub}
+											className={styles.buttonBlack}
 										>
 											Leave
 										</Button>
@@ -1200,7 +973,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											disabled={!doesMeetAllRequirements}
 											loading={isJoiningClub}
 											onClick={joinClub}
-											className={classes.buttonJoinClub}
+											className={styles.buttonBlack}
 										>
 											{doesMeetAllRequirements &&
 												((club.membershipSettings
@@ -1226,14 +999,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										onClick={async () => {
 											await wallet.connectWallet()
 										}}
-										className={classes.buttonJoinClub}
+										className={styles.buttonBlack}
 									>
 										Connect wallet to join
 									</Button>
 								)}
 
 								<Button
-									className={classes.buttonJoinClub}
+									className={styles.buttonBlack}
 									onClick={() => {
 										setIsQrModalOpened(true)
 									}}
@@ -1246,9 +1019,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										<>
 											<Button
 												onClick={navigateToSettings}
-												className={
-													classes.outlineHeaderButton
-												}
+												className={styles.buttonWhite}
 											>
 												<Settings />
 											</Button>
@@ -1263,16 +1034,16 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.isCurrentUserClubAdmin) && (
 							<>
 								<Text
-									className={classes.clubDetailSectionTitle}
+									className={styles.tSubtitleFadedBold}
+									style={{
+										marginBottom: 16,
+										marginTop: 40
+									}}
 								>
 									Membership Requirements
 								</Text>
 								{!areRequirementsParsed && (
-									<div
-										className={
-											classes.requirementsContainer
-										}
-									>
+									<div className={styles.borderedBoxRounded}>
 										<Loader color="red" variant="oval" />
 									</div>
 								)}
@@ -1281,33 +1052,31 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									areRequirementsParsed && (
 										<div
 											className={
-												classes.requirementsContainer
+												styles.borderedBoxRounded
 											}
 										>
 											{parsedRequirements.map(
 												requirement => (
 													<div
-														className={
-															classes.requirementItem
-														}
+														className={styles.row}
 														key={
 															requirement.requirementKey
 														}
 													>
 														{requirement.meetsRequirement && (
 															<CircleCheck
-																className={
-																	classes.requirementIcon
-																}
+																style={{
+																	minWidth: 32
+																}}
 																color="green"
 															/>
 														)}
 
 														{!requirement.meetsRequirement && (
 															<CircleX
-																className={
-																	classes.requirementIcon
-																}
+																style={{
+																	minWidth: 32
+																}}
 																color="red"
 															/>
 														)}
@@ -1316,6 +1085,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														{
 															requirement.requirementComponent
 														}
+														<Space h={8} />
 													</div>
 												)
 											)}
@@ -1327,16 +1097,18 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						{club.isCurrentUserClubAdmin && (
 							<>
 								<Text
-									className={classes.clubDetailSectionTitle}
+									className={styles.tSubtitleFadedBold}
+									style={{
+										marginBottom: 16,
+										marginTop: 40
+									}}
 								>
 									Club Contract Address
 								</Text>
-								<div
-									className={classes.contractAddressContainer}
-								>
+								<div className={styles.row}>
 									<Text>{club.address}</Text>
 									<Image
-										className={classes.copy}
+										className={styles.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
@@ -1366,9 +1138,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.publicIntegrations.length > 0 && (
 								<>
 									<Text
-										className={
-											classes.clubDetailSectionTitle
-										}
+										className={styles.tSubtitleFadedBold}
+										style={{
+											marginBottom: 16,
+											marginTop: 40
+										}}
 									>{`Apps (${
 										club.publicIntegrations.length
 									})${
@@ -1392,9 +1166,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.allIntegrations.length > 0 && (
 								<>
 									<Text
-										className={
-											classes.clubDetailSectionTitle
-										}
+										className={styles.tSubtitleFadedBold}
+										style={{
+											marginBottom: 16,
+											marginTop: 40
+										}}
 									>{`Apps (${club.allIntegrations.length})`}</Text>
 									<Grid>
 										{club.allIntegrations.map(integration =>
@@ -1410,9 +1186,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.allIntegrations.length === 0 && (
 								<>
 									<Text
-										className={
-											classes.clubDetailSectionTitle
-										}
+										className={styles.tSubtitleFadedBold}
+										style={{
+											marginBottom: 16,
+											marginTop: 40
+										}}
 									>{`Apps`}</Text>
 									<Alert
 										icon={<AlertCircle />}
@@ -1420,16 +1198,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										radius="lg"
 									>
 										<Text
-											className={
-												classes.appsEmptyStateTitle
-											}
+											className={styles.tBold}
 										>{`Add your first apps`}</Text>
 										<Space h={4} />
-										<Text
-											className={
-												classes.appsEmptyStateText
-											}
-										>{`Your club doesn't have any links or connected apps. That means there's nothing for your members to do when they join, and there's no other information about this club right now. Fix this by adding some apps!`}</Text>
+										<Text>{`Your club doesn't have any links or connected apps. That means there's nothing for your members to do when they join, and there's no other information about this club right now. Fix this by adding some apps!`}</Text>
 										<Space h={8} />
 										<Button
 											onClick={() => {
@@ -1437,7 +1209,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													`/${club.slug}/admin?tab=apps`
 												)
 											}}
-											className={classes.buttonJoinClub}
+											className={styles.buttonBlack}
 										>
 											{' '}
 											{`Add apps`}
@@ -1447,7 +1219,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 
 						<Text
-							className={classes.clubDetailSectionTitle}
+							className={styles.tSubtitleFadedBold}
+							style={{
+								marginBottom: 16,
+								marginTop: 40
+							}}
 						>{`Members (${club.members?.length})`}</Text>
 						{club.members && club.members?.length > 0 && (
 							<Grid>
@@ -1468,7 +1244,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											<HoverCard.Target>
 												<div
 													className={
-														classes.memberItem
+														styles.gridItemCentered
 													}
 												>
 													{member.profilePicture && (
@@ -1483,25 +1259,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													)}
 
 													<Text
-														className={
-															classes.memberItemName
-														}
-														// onClick={() => {
-														// 	navigator.clipboard.writeText(
-														// 		member.ens
-														// 			? member.ens
-														// 			: member.wallet
-														// 	)
-														// 	showNotification({
-														// 		radius: 'lg',
-														// 		title: 'Member address copied',
-														// 		autoClose: 2000,
-														// 		color: 'green',
-														// 		icon: <Check />,
-
-														// 		message: `This member's address was copied to your clipboard.`
-														// 	})
-														// }}
+														styles={{
+															marginLeft: 6
+														}}
 													>
 														{member.displayName
 															? member.displayName
@@ -1519,9 +1279,9 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 														member.wallet
 													) && (
 														<Image
-															className={
-																classes.memberAdminIndicator
-															}
+															style={{
+																marginLeft: 6
+															}}
 															src="/star.png"
 															height={12}
 															width={12}

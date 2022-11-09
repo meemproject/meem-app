@@ -441,7 +441,7 @@ export const ProfileComponent: React.FC = () => {
 										{id.identity.id && (
 											<>
 												<Image
-													className={classes.copy}
+													className={styles.copyIcon}
 													src="/copy.png"
 													height={20}
 													onClick={() => {

@@ -224,7 +224,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 				className={styles.tBold}
 			>{`Does Meem protocol have permission to manage your club’s smart contract?`}</Text>
 			<Space h={4} />
-			<Text className={styles.tPartialTransparent}>
+			<Text className={styles.tFaded}>
 				Please note that a transaction will occur when you save changes
 				to this setting.
 			</Text>

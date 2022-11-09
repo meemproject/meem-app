@@ -35,7 +35,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 					</Text>
 
 					<div className={styles.centeredRow}>
-						<Text className={styles.tPartialTransparent}>
+						<Text className={styles.tFaded}>
 							{member.ens
 								? member.ens
 								: quickTruncate(member.wallet)}
@@ -88,13 +88,13 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							className={styles.centeredRowClickable}
 						>
 							<Image
-								className={styles.tPartialTransparent}
+								className={styles.tFaded}
 								src="/integration-twitter.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={styles.tPartialTransparent}>
+							<Text className={styles.tFaded}>
 								{member.twitterUsername}
 							</Text>
 						</div>
@@ -109,13 +109,13 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							className={styles.centeredRowClickable}
 						>
 							<Image
-								className={styles.tPartialTransparent}
+								className={styles.tFaded}
 								src="/integration-discord.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={styles.tPartialTransparent}>
+							<Text className={styles.tFaded}>
 								{member.discordUsername}
 							</Text>
 						</div>
@@ -128,13 +128,13 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							className={styles.centeredRowClickable}
 						>
 							<Image
-								className={styles.tPartialTransparent}
+								className={styles.tFaded}
 								src="/integration-email.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={styles.tPartialTransparent}>
+							<Text className={styles.tFaded}>
 								{member.emailAddress}
 							</Text>
 						</div>

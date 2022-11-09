@@ -194,7 +194,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 											</Text>
 											<Text
 												className={
-													styles.tExtraSmallTransparent
+													styles.tExtraSmallFaded
 												}
 											>
 												{member.ens

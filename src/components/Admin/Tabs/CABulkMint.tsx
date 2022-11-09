@@ -162,7 +162,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 					They will automatically become a club member.
 				</Text>
 				<Space h={16} />
-				<Text className={styles.tSubtitleTransparent}>
+				<Text className={styles.tSubtitleFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
 				<Space h={16} />

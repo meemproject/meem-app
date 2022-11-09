@@ -72,6 +72,18 @@ export const useGlobalStyles = createStyles(theme => ({
 	fullWidth: {
 		width: '100%'
 	},
+	footerContainer: {
+		position: 'fixed',
+		bottom: 0,
+		left: 0,
+		right: 0
+	},
+	footerBackground: {
+		backgroundColor: 'white',
+		width: '100%',
+		height: 48,
+		paddingTop: 8
+	},
 	gridItem: {
 		marginBottom: 24,
 		fontSize: 16,
@@ -82,7 +94,17 @@ export const useGlobalStyles = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
-	header: {
+	gridItemCentered: {
+		border: '1px solid rgba(0, 0, 0, 0.1)',
+		backgroundColor: '#FAFAFA',
+		fontWeight: 600,
+		borderRadius: 16,
+		padding: 16,
+		cursor: 'pointer',
+		display: 'flex',
+		alignItems: 'center'
+	},
+	pageHeader: {
 		marginBottom: 32,
 		display: 'flex',
 		backgroundColor: '#FAFAFA',
@@ -102,13 +124,13 @@ export const useGlobalStyles = createStyles(theme => ({
 			paddingTop: 16
 		}
 	},
-	headerTitleContainer: {
+	pageHeaderTitleContainer: {
 		marginLeft: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginLeft: 16
 		}
 	},
-	headerExitButton: {
+	pageHeaderExitButton: {
 		marginRight: 48,
 		marginLeft: 'auto',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -131,7 +153,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
-	panelLayoutContainer: {
+	pagePanelLayoutContainer: {
 		display: 'flex',
 		width: '100%',
 		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
@@ -139,7 +161,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		}
 	},
 
-	panelLayoutContent: {
+	pagePanelLayoutContent: {
 		marginLeft: 32,
 		marginRight: 32,
 		width: '100%',
@@ -148,7 +170,7 @@ export const useGlobalStyles = createStyles(theme => ({
 			width: 'auto'
 		}
 	},
-	panelLayoutNavBar: {
+	pagePanelLayoutNavBar: {
 		minWidth: 288,
 		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
 			paddingLeft: 32
@@ -157,7 +179,7 @@ export const useGlobalStyles = createStyles(theme => ({
 			paddingTop: 24
 		}
 	},
-	panelLayoutNavItem: { borderRadius: 8 },
+	pagePanelLayoutNavItem: { borderRadius: 8 },
 
 	row: {
 		display: 'flex'
@@ -185,6 +207,64 @@ export const useGlobalStyles = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between'
+	},
+
+	// Site header bar styles
+	siteHeader: {
+		marginTop: 0,
+		paddingTop: 8,
+		paddingBottom: '-8px'
+	},
+	siteHeaderLeftItems: {
+		marginLeft: 4,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+
+	siteHeaderRightItems: {
+		marginBottom: 4,
+		marginRight: 0,
+		display: 'flex',
+		flexDirection: 'row',
+		alignItems: 'center',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginRight: 20
+		}
+	},
+	siteHeaderMainLogo: {
+		fontSize: 32,
+		marginLeft: 16,
+		marginRight: 8,
+		paddingBottom: 6,
+		cursor: 'pointer'
+	},
+	siteHeaderInner: {
+		height: 56,
+		marginTop: '-4px',
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center'
+	},
+	siteHeaderUser: {
+		marginBottom: '5px',
+		color:
+			theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
+		borderRadius: theme.radius.sm,
+		transition: 'background-color 100ms ease'
+	},
+	siteHeaderUserActive: {
+		backgroundColor:
+			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
+	},
+	siteHeaderMenuEllipse: {
+		[theme.fn.smallerThan('md')]: {
+			marginLeft: 0,
+			marginRight: 0
+		},
+		marginRight: 24,
+		marginLeft: 24
 	},
 
 	// Images
@@ -234,6 +314,11 @@ export const useGlobalStyles = createStyles(theme => ({
 	badge: {
 		paddingLeft: 8,
 		paddingRight: 8
+	},
+	borderedBoxRounded: {
+		border: '1px solid rgba(0, 0, 0, 0.5)',
+		padding: 16,
+		borderRadius: 16
 	},
 	clickable: {
 		cursor: 'pointer'
@@ -336,8 +421,15 @@ export const useGlobalStyles = createStyles(theme => ({
 		fontWeight: 600,
 		color: 'rgba(255, 102, 81, 1)'
 	},
-	tBoldTransparent: {
-		fontWeight: 700
+	tBoldFaded: {
+		fontWeight: 700,
+		opacity: 0.6
+	},
+	tEllipsis: {
+		textOverflow: 'ellipsis',
+		msTextOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden'
 	},
 	tExtraSmall: {
 		fontSize: 14
@@ -346,11 +438,11 @@ export const useGlobalStyles = createStyles(theme => ({
 		fontSize: 14,
 		fontWeight: 700
 	},
-	tExtraSmallTransparent: {
+	tExtraSmallFaded: {
 		fontSize: 14,
 		opacity: 0.6
 	},
-	tExtraSmallBoldTransparent: {
+	tExtraSmallBoldFaded: {
 		fontSize: 14,
 		fontWeight: 700,
 		opacity: 0.6
@@ -393,11 +485,11 @@ export const useGlobalStyles = createStyles(theme => ({
 	tListItemTitle: {
 		fontWeight: 700
 	},
-	tPanelLayoutNavHeader: {
+	tpagePanelLayoutNavHeader: {
 		fontWeight: 600,
 		opacity: 0.5
 	},
-	tPartialTransparent: {
+	tFaded: {
 		opacity: 0.6
 	},
 	tSectionTitleSmall: {
@@ -418,12 +510,12 @@ export const useGlobalStyles = createStyles(theme => ({
 		fontWeight: 600,
 		fontSize: 18
 	},
-	tSubtitleTransparentBold: {
+	tSubtitleFadedBold: {
 		fontSize: 18,
 		fontWeight: 600,
 		color: 'rgba(0, 0, 0, 0.6)'
 	},
-	tSubtitleTransparent: {
+	tSubtitleFaded: {
 		opacity: 0.6,
 		fontSize: 18
 	},
