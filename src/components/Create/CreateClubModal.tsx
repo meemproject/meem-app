@@ -41,7 +41,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const { userClient } = useCustomApollo()
 
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
@@ -450,27 +450,27 @@ export const CreateClubModal: React.FC<IProps> = ({
 				opened={isOpened}
 				onClose={() => closeModal()}
 			>
-				<div className={styles.modalHeader}>
+				<div className={design.modalHeader}>
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
-						className={styles.tModalTitle}
+						className={design.tModalTitle}
 					>{`We're creating your club!`}</Text>
 					<Space h={32} />
 					<Image
 						height={120}
 						width={120}
 						fit={'cover'}
-						className={styles.imageClubLogo}
+						className={design.imageClubLogo}
 						src={Cookies.get(CookieKeys.clubImage)}
 					/>
-					<Text className={styles.tHeaderTitleText}>
+					<Text className={design.tHeaderTitleText}>
 						{Cookies.get(CookieKeys.clubName)}
 					</Text>
 					<Space h={24} />
 
 					<Text
-						className={styles.tExtraSmallBold}
+						className={design.tExtraSmallBold}
 						style={{ textAlign: 'center' }}
 					>
 						This could take a few minutes.
@@ -478,7 +478,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					<Space h={16} />
 
 					<Text
-						className={styles.tExtraSmallBold}
+						className={design.tExtraSmallBold}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>

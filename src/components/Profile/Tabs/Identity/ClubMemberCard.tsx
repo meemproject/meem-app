@@ -11,11 +11,11 @@ interface IProps {
 }
 
 export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	return (
 		<HoverCard.Dropdown>
-			<div className={styles.row}>
+			<div className={design.row}>
 				{member.profilePicture && (
 					<>
 						<Image
@@ -28,21 +28,21 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 					</>
 				)}
 				<div>
-					<Text className={styles.tBold}>
+					<Text className={design.tBold}>
 						{member.displayName && member.displayName.length > 0
 							? member.displayName
 							: 'Club Member'}
 					</Text>
 
-					<div className={styles.centeredRow}>
-						<Text className={styles.tFaded}>
+					<div className={design.centeredRow}>
+						<Text className={design.tFaded}>
 							{member.ens
 								? member.ens
 								: quickTruncate(member.wallet)}
 						</Text>
 						<Space h={4} />
 						<Image
-							className={styles.copyIcon}
+							className={design.copyIcon}
 							src="/copy.png"
 							height={18}
 							width={18}
@@ -69,8 +69,8 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 				member.discordUsername) && (
 				<>
 					<Space h={24} />
-					<div className={styles.centeredRow}>
-						<Text className={styles.tBold}>Contact</Text>
+					<div className={design.centeredRow}>
+						<Text className={design.tBold}>Contact</Text>
 						<Space w={4} />
 						<Image
 							src="/icon-verified.png"
@@ -85,16 +85,16 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 									`https://twitter.com/${member.twitterUsername}`
 								)
 							}}
-							className={styles.centeredRowClickable}
+							className={design.centeredRowClickable}
 						>
 							<Image
-								className={styles.tFaded}
+								className={design.tFaded}
 								src="/integration-twitter.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={styles.tFaded}>
+							<Text className={design.tFaded}>
 								{member.twitterUsername}
 							</Text>
 						</div>
@@ -106,16 +106,16 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 									`https://discordapp.com/users/${member.discordUserId}`
 								)
 							}}
-							className={styles.centeredRowClickable}
+							className={design.centeredRowClickable}
 						>
 							<Image
-								className={styles.tFaded}
+								className={design.tFaded}
 								src="/integration-discord.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={styles.tFaded}>
+							<Text className={design.tFaded}>
 								{member.discordUsername}
 							</Text>
 						</div>
@@ -125,16 +125,16 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							onClick={() => {
 								window.open(`mailto:${member.emailAddress}`)
 							}}
-							className={styles.centeredRowClickable}
+							className={design.centeredRowClickable}
 						>
 							<Image
-								className={styles.tFaded}
+								className={design.tFaded}
 								src="/integration-email.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={styles.tFaded}>
+							<Text className={design.tFaded}>
 								{member.emailAddress}
 							</Text>
 						</div>
@@ -144,10 +144,10 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 			{member.roles && member.roles.length > 0 && (
 				<>
 					<Space h={24} />
-					<Text className={styles.tBold}>{'Roles'}</Text>
+					<Text className={design.tBold}>{'Roles'}</Text>
 					<Space h={4} />
 					{member.roles.map(role => (
-						<div className={styles.row} key={role.id}>
+						<div className={design.row} key={role.id}>
 							<Badge
 								variant="gradient"
 								gradient={{
@@ -156,8 +156,8 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 									deg: 35
 								}}
 								classNames={{
-									inner: styles.tBadge,
-									root: styles.badge
+									inner: design.tBadge,
+									root: design.badge
 								}}
 							>
 								{role.name}

@@ -43,7 +43,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 	onModalClosed,
 	onSpaceSaved
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const wallet = useWallet()
 
@@ -150,7 +150,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={styles.tModalTitle}>Gather Town</Text>}
+				title={<Text className={design.tModalTitle}>Gather Town</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -163,7 +163,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 					<>
 						<>
 							<div>
-								<Text className={styles.tExtraSmall}>
+								<Text className={design.tExtraSmall}>
 									{`Let's create a Gather Town space for your club. Click the link below and follow the instructions.`}
 								</Text>
 
@@ -175,22 +175,22 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 											'https://app.gather.town/get-started'
 										)
 									}}
-									className={styles.buttonBlack}
+									className={design.buttonBlack}
 								>
 									Create Space
 								</a>
 								<Space h={32} />
-								<Text className={styles.tExtraSmall}>
+								<Text className={design.tExtraSmall}>
 									{`When you have created a space (or already have one), continue below.`}
 								</Text>
 								<Space h={8} />
 
-								<div className={styles.row}>
+								<div className={design.row}>
 									<a
 										onClick={() => {
 											setStep(Step.AddGatherSpaceDetails)
 										}}
-										className={styles.buttonBlack}
+										className={design.buttonBlack}
 									>
 										Next
 									</a>
@@ -203,7 +203,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 					<>
 						<>
 							<div>
-								<Text className={styles.tExtraSmall}>
+								<Text className={design.tExtraSmall}>
 									{`Add your club's new Gather Town Space details below. If you are using a Space password, add it here.`}
 								</Text>
 								<Space h={16} />
@@ -280,7 +280,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 											onClick={() => {
 												saveIntegration()
 											}}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											Save
 										</a>

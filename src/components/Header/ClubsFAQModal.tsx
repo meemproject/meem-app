@@ -12,7 +12,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	return (
 		<>
@@ -23,20 +23,20 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 				size={'60%'}
 				padding={'lg'}
 				opened={isOpened}
-				title={<Text className={styles.tModalTitle}>FAQ</Text>}
+				title={<Text className={design.tModalTitle}>FAQ</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
 			>
 				<Divider />
 				<Space h={24} />
-				<Text className={styles.tSectionTitle}>{`What's a club?`}</Text>
+				<Text className={design.tSectionTitle}>{`What's a club?`}</Text>
 				<Space h={12} />
 
 				<Text>{`A club is your community’s Web3 home base. Set membership criteria and seamlessly issue tokens to authorized participants, then sync your favorite tools and apps to create a living dashboard for your members. Clubs empowers you to manage your community and its activities without dependence on centralized platforms.`}</Text>
 				<Space h={24} />
 
-				<Text className={styles.tSectionTitle}>
+				<Text className={design.tSectionTitle}>
 					What can I do with my club?
 				</Text>
 				<Space h={12} />
@@ -50,7 +50,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 				</Text>
 				<Space h={24} />
 
-				<Text className={styles.tSectionTitle}>
+				<Text className={design.tSectionTitle}>
 					{`What's next for Clubs?`}
 				</Text>
 				<Space h={12} />
@@ -58,7 +58,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 				<Text>{`We’ll be building more functionality for communities and group leaders, and we’ll be integrating with other Web2 and Web3 tools to allow your club to do even more.`}</Text>
 
 				<Space h={24} />
-				<Text className={styles.tSectionTitle}>
+				<Text className={design.tSectionTitle}>
 					Have an idea or suggestion?
 				</Text>
 				<Space h={12} />
@@ -67,7 +67,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 					onClick={() => {
 						window.open('https://airtable.com/shrM296vRoDWmK8Rm')
 					}}
-					className={styles.tLink}
+					className={design.tLink}
 				>
 					Send us your feedback.
 				</Text>

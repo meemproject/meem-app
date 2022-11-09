@@ -33,7 +33,7 @@ interface IProps {
 }
 
 export const CAClubApps: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const wallet = useWallet()
 
 	// Fetch a list of available integrations.
@@ -339,13 +339,13 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={styles.tSectionTitle}>Club Apps</Text>
+				<Text className={design.tSectionTitle}>Club Apps</Text>
 				<Space h={32} />
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>
 						<Text
-							className={styles.tSubtitle}
+							className={design.tSubtitle}
 						>{`Added apps (${existingIntegrations?.length})`}</Text>
 						<Space h={8} />
 						<Grid>
@@ -360,17 +360,17 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								>
 									<div
 										className={
-											styles.enabledClubIntegrationItem
+											design.enabledClubIntegrationItem
 										}
 									>
 										<div
 											className={
-												styles.enabledClubIntegrationItemHeaderBackground
+												design.enabledClubIntegrationItemHeaderBackground
 											}
 										/>
 										<div
 											className={
-												styles.clubIntegrationItemHeader
+												design.clubIntegrationItemHeader
 											}
 										>
 											<Image
@@ -408,7 +408,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											<Divider />
 										</div>
 										<div
-											className={styles.row}
+											className={design.row}
 											style={{ height: 46 }}
 										>
 											<a
@@ -435,7 +435,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												}}
 											>
 												<div
-													className={styles.row}
+													className={design.row}
 													style={{
 														cursor: 'pointer',
 														padding: 12
@@ -445,7 +445,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 													<Space w={4} />
 													<Text
 														className={
-															styles.tExtraSmall
+															design.tExtraSmall
 														}
 													>
 														Launch App
@@ -462,7 +462,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												}}
 											>
 												<div
-													className={styles.row}
+													className={design.row}
 													style={{
 														cursor: 'pointer',
 														padding: 12
@@ -472,7 +472,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 													<Space w={4} />
 													<Text
 														className={
-															styles.tExtraSmall
+															design.tExtraSmall
 														}
 													>
 														Settings
@@ -491,7 +491,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				{!loading && inteData && (
 					<>
 						<Text
-							className={styles.tSubtitle}
+							className={design.tSubtitle}
 						>{`Available apps (${searchedIntegrations?.length})`}</Text>
 						<Space h={8} />
 
@@ -528,12 +528,12 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 									>
 										<div
 											className={
-												styles.clubIntegrationItem
+												design.clubIntegrationItem
 											}
 										>
 											<div
 												className={
-													styles.clubIntegrationItemHeader
+													design.clubIntegrationItemHeader
 												}
 											>
 												<Image
@@ -546,7 +546,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												<Text>{`${integration.name}`}</Text>
 											</div>
 											<Text
-												className={styles.tExtraSmall}
+												className={design.tExtraSmall}
 												style={{ marginTop: 4 }}
 											>
 												{integration.description}
@@ -632,7 +632,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					opened={isIntegrationModalOpened}
 					title={
 						<Text
-							className={styles.tModalTitle}
+							className={design.tModalTitle}
 						>{`Add ${integrationBeingEdited?.name}`}</Text>
 					}
 					onClose={() => {
@@ -657,7 +657,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											<Space h={4} />
 											<a
 												target="_blank"
-												className={styles.tLink}
+												className={design.tLink}
 												href={
 													integrationBeingEdited.guideUrl
 												}
@@ -671,7 +671,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								)}
 
 							<Text
-								className={styles.tBold}
+								className={design.tBold}
 							>{`Enter your club's ${
 								integrationBeingEdited.name
 							}${
@@ -725,14 +725,14 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					)}
 
 					{integrationBeingEdited && (
-						<div className={styles.rowEndAlign}>
+						<div className={design.rowEndAlign}>
 							<Button
 								loading={isSavingChanges}
 								disabled={isSavingChanges}
 								onClick={async () => {
 									saveSimpleIntegrationChanges()
 								}}
-								className={styles.buttonBlack}
+								className={design.buttonBlack}
 							>
 								Save
 							</Button>

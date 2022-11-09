@@ -1,13 +1,5 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Space,
-	Modal,
-	Divider,
-	Radio,
-	Button
-} from '@mantine/core'
+import { Text, Space, Modal, Divider, Radio, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
@@ -15,74 +7,7 @@ import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { IdentityIntegration } from '../../../../model/identity/identity'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	modalText: {
-		fontSize: 16
-	},
-	modalQuestion: {
-		fontSize: 14,
-		fontWeight: 600
-	}
-}))
-
+import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 interface IProps {
 	integration?: IdentityIntegration
 	isOpened: boolean
@@ -94,7 +19,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 	const wallet = useWallet()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -157,17 +82,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				title={
 					<>
 						{integration?.name === 'Twitter' && (
-							<Text className={classes.modalTitle}>
+							<Text className={design.tModalTitle}>
 								Twitter Settings
 							</Text>
 						)}
 						{integration?.name === 'Discord' && (
-							<Text className={classes.modalTitle}>
+							<Text className={design.tModalTitle}>
 								Discord Settings
 							</Text>
 						)}
 						{integration?.name === 'Email' && (
-							<Text className={classes.modalTitle}>
+							<Text className={design.tModalTitle}>
 								Email Address Settings
 							</Text>
 						)}
@@ -181,31 +106,31 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
+				<div className={design.modalStepsContainer}>
 					{integration?.name === 'Twitter' && (
-						<Text className={classes.modalText}>
+						<Text>
 							{`You've successfully verified @${integration.metadata?.twitterUsername} as your Twitter username.`}
 						</Text>
 					)}
 					{integration?.name === 'Discord' && (
-						<Text className={classes.modalText}>
+						<Text>
 							{`You've successfully verified ${integration.metadata?.discordUsername} as your Discord username.`}
 						</Text>
 					)}
 					{integration?.name === 'Email' && (
-						<Text className={classes.modalText}>
+						<Text>
 							{`You've successfully verified ${integration.metadata?.emailAddress} as your email address.`}
 						</Text>
 					)}
 					<Space h={24} />
 					{(integration?.name === 'Twitter' ||
 						integration?.name === 'Discord') && (
-						<Text className={classes.modalQuestion}>
+						<Text className={design.tExtraSmallBold}>
 							{`Who can view this username?`}
 						</Text>
 					)}
 					{integration?.name === 'Email' && (
-						<Text className={classes.modalQuestion}>
+						<Text className={design.tExtraSmallBold}>
 							{`who can view this email address?`}
 						</Text>
 					)}
@@ -230,7 +155,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					<Space h={24} />
 
 					<Button
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
 							saveChanges()

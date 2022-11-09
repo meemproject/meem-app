@@ -27,7 +27,7 @@ interface IProps {
 }
 
 export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const router = useRouter()
 
@@ -201,19 +201,19 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={styles.tSectionTitle}>
+				<Text className={design.tSectionTitle}>
 					Membership Settings
 				</Text>
 				<Space h={32} />
 
-				<Text className={styles.tBoldFaded}>Price</Text>
+				<Text className={design.tBoldFaded}>Price</Text>
 				<Space h={12} />
 
-				<Text className={styles.tMembershipSetting}>
+				<Text className={design.tMembershipSetting}>
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{isNaN(costToJoin) || costToJoin === 0
 								? 'free'
 								: costToJoin}
@@ -227,7 +227,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						<>
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
-								<span className={styles.fOrangeSelectableSpan}>
+								<span className={design.fOrangeSelectableSpan}>
 									{quickTruncate(membershipFundsAddress)}
 								</span>
 							</a>
@@ -237,11 +237,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={styles.tBoldFaded}>Capacity</Text>
-				<Text className={styles.tMembershipSetting}>
+				<Text className={design.tBoldFaded}>Capacity</Text>
+				<Text className={design.tMembershipSetting}>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipQuantity === 0 ||
 							isNaN(membershipQuantity)
 								? 'unlimited'
@@ -251,12 +251,12 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={styles.tBoldFaded}>Timing</Text>
+				<Text className={design.tBoldFaded}>Timing</Text>
 
-				<Text className={styles.tMembershipSetting}>
+				<Text className={design.tMembershipSetting}>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipStartDate === undefined
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
@@ -268,7 +268,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>{' '}
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipEndDate === undefined
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
@@ -284,7 +284,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
-					className={styles.buttonBlack}
+					className={design.buttonBlack}
 					onClick={saveChanges}
 				>
 					{'Save Changes'}
@@ -302,7 +302,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={styles.tSubtitleFadedBold}>
+					<Text className={design.tSubtitleFadedBold}>
 						Enter cost to join
 					</Text>
 					<TextInput
@@ -334,7 +334,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={styles.tSubtitleFadedBold}>
+					<Text className={design.tSubtitleFadedBold}>
 						Send funds to this address
 					</Text>
 					<TextInput
@@ -377,7 +377,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipCostModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -394,7 +394,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -422,7 +422,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={styles.tSubtitleFadedBold}>
+							<Text className={design.tSubtitleFadedBold}>
 								Enter total memberships
 							</Text>
 
@@ -465,7 +465,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipQuantityModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -482,7 +482,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -562,7 +562,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingStartModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -579,7 +579,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -659,7 +659,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingEndModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>

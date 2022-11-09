@@ -33,7 +33,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 }) => {
 	const wallet = useWallet()
 
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const { mutualMembersClient } = useCustomApollo()
 
@@ -362,16 +362,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={styles.modalHeader}>
+				<div className={design.modalHeader}>
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
-						className={styles.tModalTitle}
+						className={design.tModalTitle}
 					>{`Saving changes...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={styles.tBold}
+						className={design.tBold}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>

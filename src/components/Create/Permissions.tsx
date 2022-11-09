@@ -9,7 +9,7 @@ import { useGlobalStyles } from '../Styles/GlobalStyles'
 import { ClubCreationMembershipSettings } from './ClubCreationMembershipSettings'
 
 export const CreatePermissionsComponent: React.FC = () => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [clubName, setClubName] = useState('')
 	const router = useRouter()
@@ -42,10 +42,10 @@ export const CreatePermissionsComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={styles.pageHeader}>
+			<div className={design.pageHeader}>
 				<div>
-					<Text className={styles.tBoldFaded}>Create a club</Text>
-					<Text className={styles.tHeaderTitleText}>{clubName}</Text>
+					<Text className={design.tBoldFaded}>Create a club</Text>
+					<Text className={design.tHeaderTitleText}>{clubName}</Text>
 				</div>
 			</div>
 

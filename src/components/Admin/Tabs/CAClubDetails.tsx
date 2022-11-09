@@ -10,7 +10,7 @@ interface IProps {
 }
 
 export const CAClubDetails: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
@@ -81,14 +81,14 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 	}
 
 	return (
-		<div className={styles.fullWidth}>
+		<div className={design.fullWidth}>
 			<Space h={12} />
 
-			<Text className={styles.tSectionTitle}>Club Profile</Text>
+			<Text className={design.tSectionTitle}>Club Profile</Text>
 			<Space h={32} />
 
 			<Text
-				className={styles.tSubtitle}
+				className={design.tSubtitle}
 			>{`What's your club called?`}</Text>
 			<Space h={16} />
 			<TextInput
@@ -99,7 +99,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 				onChange={event => setClubName(event.currentTarget.value)}
 			/>
 			<Space h={'xl'} />
-			<Text className={styles.tSubtitle}>
+			<Text className={design.tSubtitle}>
 				In a sentence, describe what your members do together.
 			</Text>
 			<Space h={16} />
@@ -118,7 +118,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 
 			<Space h={32} />
 			<Button
-				className={styles.buttonBlack}
+				className={design.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>

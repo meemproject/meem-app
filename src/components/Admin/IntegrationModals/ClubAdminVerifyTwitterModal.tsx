@@ -40,7 +40,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 	onModalClosed,
 	onSuccessfulVerification
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const wallet = useWallet()
 
 	const [step, setStep] = useState<Step>(Step.Start)
@@ -108,7 +108,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={styles.tModalTitle}>
+					<Text className={design.tModalTitle}>
 						Verify with Twitter
 					</Text>
 				}
@@ -132,7 +132,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 									)
 								}}
 							>
-								<span className={styles.tBold}>
+								<span className={design.tBold}>
 									{integration.verifiedTwitterUser}
 								</span>
 							</a>{' '}
@@ -149,7 +149,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={styles.modalStepsContainer}>
+				<div className={design.modalStepsContainer}>
 					<MantineProvider
 						theme={{
 							colors: {
@@ -191,7 +191,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															styles.tExtraSmall
+															design.tExtraSmall
 														}
 													>
 														You’ll need access to
@@ -230,7 +230,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 															setStep(Step.Share)
 														}}
 														className={
-															styles.buttonBlack
+															design.buttonBlack
 														}
 													>
 														Confirm
@@ -245,7 +245,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 								label="Share a public post"
 								description={
 									step !== Step.Share ? (
-										<Text className={styles.tExtraSmall}>
+										<Text className={design.tExtraSmall}>
 											Make a post to verify your identity
 										</Text>
 									) : (
@@ -253,7 +253,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 											<div>
 												<Text
 													className={
-														styles.tExtraSmall
+														design.tExtraSmall
 													}
 												>
 													Make a post to verify your
@@ -287,7 +287,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 														setStep(Step.Verify)
 													}}
 													className={
-														styles.buttonBlack
+														design.buttonBlack
 													}
 												>
 													Post on Twitter
@@ -303,7 +303,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 								description={
 									step !== Step.Verify &&
 									step != Step.Verifying ? (
-										<Text className={styles.tExtraSmall}>
+										<Text className={design.tExtraSmall}>
 											Complete your verification.
 										</Text>
 									) : (
@@ -312,7 +312,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 												<>
 													<Text
 														className={
-															styles.tExtraSmall
+															design.tExtraSmall
 														}
 													>
 														Please wait...
@@ -324,7 +324,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 													<div>
 														<Text
 															className={
-																styles.tExtraSmall
+																design.tExtraSmall
 															}
 														>
 															Complete your
@@ -337,7 +337,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 																verifyTweet
 															}
 															className={
-																styles.buttonBlack
+																design.buttonBlack
 															}
 														>
 															Verify Tweet

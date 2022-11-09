@@ -12,7 +12,7 @@ export const RoleDiscordLaunchingModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const closeModal = useCallback(() => {
 		onModalClosed()
@@ -33,15 +33,15 @@ export const RoleDiscordLaunchingModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={styles.modalHeader}>
+				<div className={design.modalHeader}>
 					<Space h={128} />
 					<Text
-						className={styles.tTitle}
+						className={design.tTitle}
 					>{`Launching Discord...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={styles.tSubtitle}
+						className={design.tSubtitle}
 						styles={{ textAlign: 'center' }}
 					>{`Please wait`}</Text>
 				</div>

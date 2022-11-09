@@ -46,7 +46,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 }) => {
 	const wallet = useWallet()
 
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
@@ -163,7 +163,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={styles.tModalTitle}>
+					<Text className={design.tModalTitle}>
 						{integration && integration.publicationSlug
 							? 'Edit Paragraph settings'
 							: 'Create a Paragraph Publication'}
@@ -184,7 +184,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={styles.modalStepsContainer}>
+				<div className={design.modalStepsContainer}>
 					{integration && integration.publicationSlug && (
 						<>
 							<>
@@ -215,7 +215,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										// Close our modal
 										onModalClosed()
 									}}
-									className={styles.buttonBlack}
+									className={design.buttonBlack}
 								>
 									Save
 								</Button>
@@ -227,10 +227,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Start && (
 								<>
 									<Text
-										className={styles.tSubtitle}
+										className={design.tSubtitle}
 									>{`What's your Publication called?`}</Text>
 									<Space h={2} />
-									<Text className={styles.tExtraSmall}>
+									<Text className={design.tExtraSmall}>
 										Catchy names are the best.
 									</Text>
 									<Space h={16} />
@@ -248,11 +248,11 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={24} />
 
 									<Text
-										className={styles.tSubtitle}
+										className={design.tSubtitle}
 									>{`Your visitors can find your publication at this URL.`}</Text>
 									<Space h={2} />
 
-									<Text className={styles.tExtraSmall}>
+									<Text className={design.tExtraSmall}>
 										Your visitors can find your publication
 										at this URL.
 									</Text>
@@ -287,12 +287,12 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={24} />
 
 									<Text
-										className={styles.tSubtitle}
+										className={design.tSubtitle}
 									>{`Who can read your publication?`}</Text>
 									<Space h={2} />
 
 									<Radio.Group
-										classNames={{ label: styles.fRadio }}
+										classNames={{ label: design.fRadio }}
 										orientation="vertical"
 										spacing={10}
 										size="md"
@@ -332,7 +332,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										onClick={async () => {
 											setStep(Step.OpenGnosis)
 										}}
-										className={styles.buttonBlack}
+										className={design.buttonBlack}
 									>
 										Create
 									</Button>
@@ -342,7 +342,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 								<>
 									<Space h={16} />
 
-									<Text className={styles.tSubtitle}>
+									<Text className={design.tSubtitle}>
 										{`Let's connect your club's treasury.`}
 									</Text>
 									<Space h={12} />
@@ -367,7 +367,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 												)
 												window.focus()
 											}}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											Open Treasury
 										</Button>
@@ -378,7 +378,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 												setStep(Step.Transaction)
 												showParagraphPopup()
 											}}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											Continue
 										</Button>
@@ -389,7 +389,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Transaction && (
 								<>
 									<Space h={16} />
-									<Text className={styles.tSubtitle}>
+									<Text className={design.tSubtitle}>
 										{`Connect to club treasury and sign`}
 									</Text>
 									<Space h={12} />
@@ -429,13 +429,13 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Center>
 									<Space h={16} />
 									<Center>
-										<Text className={styles.tSuccess}>
+										<Text className={design.tSuccess}>
 											Success!
 										</Text>
 									</Center>
 									<Space h={16} />
 
-									<Text className={styles.centered}>
+									<Text className={design.centered}>
 										{`Your club's Paragraph publication has been
 								created.`}
 									</Text>
@@ -448,7 +448,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 													'https://paragraph.xyz'
 												)
 											}}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											Launch Paragraph
 										</Button>

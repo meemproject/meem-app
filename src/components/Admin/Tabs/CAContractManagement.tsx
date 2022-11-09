@@ -21,7 +21,7 @@ interface IProps {
 }
 
 export const CAContractAddress: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const wallet = useWallet()
 
 	const [smartContractPermission, setSmartContractPermission] =
@@ -179,13 +179,13 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	return (
 		<div>
 			<Space h={12} />
-			<Text className={styles.tSectionTitle}>Contract Management</Text>
+			<Text className={design.tSectionTitle}>Contract Management</Text>
 			<Space h={32} />
 
-			<Text className={styles.tSectionTitleSmall}>CONTRACT ADDRESS</Text>
+			<Text className={design.tSectionTitleSmall}>CONTRACT ADDRESS</Text>
 			<Space h={12} />
 
-			<div className={styles.row}>
+			<div className={design.row}>
 				<Text style={{ wordBreak: 'break-word' }}>{club.address}</Text>
 				<Image
 					style={{
@@ -217,14 +217,14 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			<Space h={32} />
 
-			<Text className={styles.tSectionTitleSmall}>MEEM PROTOCOL</Text>
+			<Text className={design.tSectionTitleSmall}>MEEM PROTOCOL</Text>
 			<Space h={12} />
 
 			<Text
-				className={styles.tBold}
+				className={design.tBold}
 			>{`Does Meem protocol have permission to manage your club’s smart contract?`}</Text>
 			<Space h={4} />
-			<Text className={styles.tFaded}>
+			<Text className={design.tFaded}>
 				Please note that a transaction will occur when you save changes
 				to this setting.
 			</Text>
@@ -252,7 +252,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Space h={16} />
 
 			<Button
-				className={styles.buttonBlack}
+				className={design.buttonBlack}
 				onClick={async () => {
 					try {
 						const meemContract = new Contract(
@@ -303,11 +303,11 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Space h={32} />
 					<Divider />
 					<Space h={32} />
-					<Text className={styles.tSectionTitleSmall}>
+					<Text className={design.tSectionTitleSmall}>
 						UPGRADE CLUB CONTRACT
 					</Text>
 					<Space h={12} />
-					<div className={styles.row}>
+					<div className={design.row}>
 						<div>
 							<Text>
 								A new version of Clubs is available! Upgrade to
@@ -319,7 +319,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Button
 						loading={isUpgradingClub}
 						disabled={isUpgradingClub}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 						onClick={async () => {
 							try {
 								if (!club?.id) {
@@ -358,13 +358,13 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Space h={32} />
 			<Divider />
 			<Space h={32} />
-			<Text className={styles.tSectionTitleSmall}>
+			<Text className={design.tSectionTitleSmall}>
 				CLUB TREASURY ADDRESS
 			</Text>
 			<Space h={12} />
 			{club.gnosisSafeAddress && (
 				<>
-					<div className={styles.row}>
+					<div className={design.row}>
 						<Text style={{ wordBreak: 'break-word' }}>
 							{club.gnosisSafeAddress}
 						</Text>
@@ -399,7 +399,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Space h={'xs'} />
 
 					<Button
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 						onClick={() => {
 							window.open(
 								`https://gnosis-safe.io/app/${chainIdToGnosisUrlPrefix()}:${
@@ -415,7 +415,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			{!club.gnosisSafeAddress && wallet.chainId !== 420 && (
 				<Button
-					className={styles.buttonBlack}
+					className={design.buttonBlack}
 					disabled={isCreatingSafe}
 					loading={isCreatingSafe}
 					onClick={async () => {

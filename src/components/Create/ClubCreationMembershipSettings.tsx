@@ -36,7 +36,7 @@ interface IProps {
 }
 
 export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const router = useRouter()
 
@@ -428,11 +428,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h="lg" />
 
-				<Text className={styles.tSectionTitle}>Club Admins</Text>
+				<Text className={design.tSectionTitle}>Club Admins</Text>
 
 				<div>
 					<Space h={36} />
-					<Text className={styles.tSubtitle}>
+					<Text className={design.tSubtitle}>
 						{club
 							? `Who can manage this club’s profile and membership
 						settings?`
@@ -440,7 +440,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						settings?`}
 					</Text>
 					<Space h={16} />
-					<Text className={styles.tSubtitleFaded}>
+					<Text className={design.tSubtitleFaded}>
 						{club
 							? `Add a line break between each address. Note that at
 						least one club admin is required at all times.`
@@ -463,16 +463,16 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Divider />
 				<Space h={64} />
 
-				<Text className={styles.tSectionTitle}>Membership</Text>
-				<Text className={styles.tBoldFaded}>Requirements</Text>
-				<Text className={styles.tMembershipSetting}>
+				<Text className={design.tSectionTitle}>Membership</Text>
+				<Text className={design.tBoldFaded}>Requirements</Text>
+				<Text className={design.tMembershipSetting}>
 					This club is open for{' '}
 					<a
 						onClick={() => {
 							openMembershipReqModal(0)
 						}}
 					>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipTypeStringForFirstReq(
 								membershipRequirements[0]
 							)}
@@ -491,7 +491,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 									}}
 								>
 									<span
-										className={styles.fOrangeSelectableSpan}
+										className={design.fOrangeSelectableSpan}
 									>
 										{
 											membershipRequirements[0]
@@ -511,7 +511,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 									openMembershipReqModal(0)
 								}}
 							>
-								<span className={styles.fOrangeSelectableSpan}>
+								<span className={design.fOrangeSelectableSpan}>
 									{membershipRequirements[0].tokenMinQuantity}{' '}
 									{membershipRequirements[0].tokenName}
 								</span>
@@ -523,7 +523,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				{membershipRequirements.length > 1 && (
 					<Text
 						className={
-							styles.tMembershipSettingAdditionalRequirement
+							design.tMembershipSettingAdditionalRequirement
 						}
 					>
 						<CircleMinus
@@ -539,7 +539,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}}
 						/>
 						{/* <a onClick={openSecondReqTypeModal}>
-							<span className={styles.fOrangeSelectableSpan}>
+							<span className={design.fOrangeSelectableSpan}>
 								{membershipRequirements[1].andor === MembershipReqAndor.And
 									? 'In addition'
 									: 'Alternatively'}
@@ -555,7 +555,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								openMembershipReqModal(1)
 							}}
 						>
-							<span className={styles.fOrangeSelectableSpan}>
+							<span className={design.fOrangeSelectableSpan}>
 								{membershipTypeStringForSecondReq(
 									membershipRequirements[1]
 								)}
@@ -570,7 +570,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							onClick={() => {
 								addMembershipRequirement()
 							}}
-							className={styles.buttonWhite}
+							className={design.buttonWhite}
 							style={{ marginBottom: 8 }}
 							size={'md'}
 							leftIcon={<Plus size={14} />}
@@ -581,13 +581,13 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 
 				<Space h="lg" />
 
-				<Text className={styles.tBoldFaded}>Price</Text>
+				<Text className={design.tBoldFaded}>Price</Text>
 
-				<Text className={styles.tMembershipSetting}>
+				<Text className={design.tMembershipSetting}>
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{isNaN(costToJoin) || costToJoin === 0
 								? 'free'
 								: costToJoin}
@@ -601,7 +601,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						<>
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
-								<span className={styles.fOrangeSelectableSpan}>
+								<span className={design.fOrangeSelectableSpan}>
 									{quickTruncate(membershipFundsAddress)}
 								</span>
 							</a>
@@ -611,11 +611,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={styles.tBoldFaded}>Capacity</Text>
-				<Text className={styles.tMembershipSetting}>
+				<Text className={design.tBoldFaded}>Capacity</Text>
+				<Text className={design.tMembershipSetting}>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipQuantity === 0 ||
 							isNaN(membershipQuantity)
 								? 'unlimited'
@@ -625,12 +625,12 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={styles.tBoldFaded}>Timing</Text>
+				<Text className={design.tBoldFaded}>Timing</Text>
 
-				<Text className={styles.tMembershipSetting}>
+				<Text className={design.tMembershipSetting}>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipStartDate === undefined
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
@@ -642,7 +642,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>{' '}
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
-						<span className={styles.fOrangeSelectableSpan}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipEndDate === undefined
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
@@ -658,7 +658,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
-					className={styles.buttonBlack}
+					className={design.buttonBlack}
 					onClick={saveChanges}
 				>
 					{'Launch Club'}
@@ -676,7 +676,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipReqModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -759,15 +759,15 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						className={
 							reqCurrentlyEditing.type ==
 							MembershipReqType.ApprovedApplicants
-								? styles.visibleContainer
-								: styles.invisibleContainer
+								? design.visibleContainer
+								: design.invisibleContainer
 						}
 					>
 						<Space h={8} />
-						<Text className={styles.tSubtitleFadedBold}>
+						<Text className={design.tSubtitleFadedBold}>
 							How to apply
 						</Text>
-						<Text className={styles.tExtraSmallFaded}>
+						<Text className={design.tExtraSmallFaded}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
@@ -784,10 +784,10 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={styles.tSubtitleFadedBold}>
+						<Text className={design.tSubtitleFadedBold}>
 							Approved Addresses
 						</Text>
-						<Text className={styles.tExtraSmallFaded}>
+						<Text className={design.tExtraSmallFaded}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
@@ -816,11 +816,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						className={
 							reqCurrentlyEditing.type ==
 							MembershipReqType.TokenHolders
-								? styles.visibleContainer
-								: styles.invisibleContainer
+								? design.visibleContainer
+								: design.invisibleContainer
 						}
 					>
-						{/* <Text className={styles.tSubtitleFadedBold}>Chain</Text>
+						{/* <Text className={design.tSubtitleFadedBold}>Chain</Text>
 						<Select
 							data={[
 								{
@@ -837,7 +837,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing.tokenChain}
 						/> */}
-						<Text className={styles.tSubtitleFadedBold}>
+						<Text className={design.tSubtitleFadedBold}>
 							Token Address
 						</Text>
 						<TextInput
@@ -850,7 +850,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={styles.tSubtitleFadedBold}>
+						<Text className={design.tSubtitleFadedBold}>
 							Minimum Quantity
 						</Text>
 						<TextInput
@@ -870,11 +870,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						className={
 							reqCurrentlyEditing.type ==
 							MembershipReqType.OtherClubMember
-								? styles.visibleContainer
-								: styles.invisibleContainer
+								? design.visibleContainer
+								: design.invisibleContainer
 						}
 					>
-						<Text className={styles.tSubtitleFadedBold}>
+						<Text className={design.tSubtitleFadedBold}>
 							Club Name
 						</Text>
 
@@ -982,7 +982,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 
 							setMembershipReqModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -996,7 +996,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 									membershipRequirements
 								)
 							}}
-							className={styles.buttonGrey}
+							className={design.buttonGrey}
 						>
 							Cancel
 						</Button>
@@ -1014,7 +1014,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setSecondReqTypeModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1052,7 +1052,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						onClick={() => {
 							setSecondReqTypeModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -1068,7 +1068,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={styles.tSubtitleFadedBold}>
+					<Text className={design.tSubtitleFadedBold}>
 						Enter cost to join
 					</Text>
 					<TextInput
@@ -1100,7 +1100,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={styles.tSubtitleFadedBold}>
+					<Text className={design.tSubtitleFadedBold}>
 						Send funds to this address
 					</Text>
 					<TextInput
@@ -1143,7 +1143,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipCostModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -1160,7 +1160,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1188,7 +1188,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={styles.tSubtitleFadedBold}>
+							<Text className={design.tSubtitleFadedBold}>
 								Enter total memberships
 							</Text>
 
@@ -1231,7 +1231,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipQuantityModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -1248,7 +1248,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1328,7 +1328,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingStartModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -1345,7 +1345,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: styles.fRadio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1425,7 +1425,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingEndModalOpened(false)
 						}}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>

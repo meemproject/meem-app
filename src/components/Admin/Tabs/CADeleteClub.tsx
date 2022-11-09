@@ -11,20 +11,20 @@ interface IProps {
 }
 
 export const CADeleteClub: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [isDeleteClubModalOpened, setIsDeleteClubModalOpened] =
 		useState(false)
 
 	return (
-		<div className={styles.fullWidth}>
+		<div className={design.fullWidth}>
 			<Space h={12} />
 
-			<Text className={styles.tTitle}>Delete Club</Text>
+			<Text className={design.tTitle}>Delete Club</Text>
 			<Space h={24} />
 
 			<Text
-				className={styles.tBold}
+				className={design.tBold}
 			>{`Once deleted, your club will be removed from the Clubs database and will no longer be discoverable for new or existing members. This action cannot be undone.`}</Text>
 			<Space h={16} />
 
@@ -32,7 +32,7 @@ export const CADeleteClub: React.FC<IProps> = ({ club }) => {
 			<Space h={24} />
 
 			<Button
-				className={styles.buttonRed}
+				className={design.buttonRed}
 				onClick={() => {
 					setIsDeleteClubModalOpened(true)
 				}}

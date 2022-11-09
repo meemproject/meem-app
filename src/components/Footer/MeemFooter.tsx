@@ -4,20 +4,20 @@ import React from 'react'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 export const MeemFooter: React.FC = () => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	return (
 		<div>
 			<Space h={128} />
-			<div className={styles.footerContainer}>
+			<div className={design.footerContainer}>
 				<Divider />
-				<div className={styles.footerBackground}>
+				<div className={design.footerBackground}>
 					<Center>
-						<div className={styles.row}>
+						<div className={design.row}>
 							<Text>Powered by</Text>
 							<Space w={4} />
 							<a
-								className={styles.tLink}
+								className={design.tLink}
 								href="https://build.meem.wtf"
 							>
 								Meem

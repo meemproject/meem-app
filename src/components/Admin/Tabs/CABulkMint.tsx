@@ -14,7 +14,7 @@ interface IProps {
 }
 
 export const CABulkMint: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
@@ -154,15 +154,15 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={styles.tSectionTitle}>Airdrops</Text>
+				<Text className={design.tSectionTitle}>Airdrops</Text>
 				<Space h={68} />
 
-				<Text className={styles.tSubtitle}>
+				<Text className={design.tSubtitle}>
 					Invite others to your club by airdropping them a club token.
 					They will automatically become a club member.
 				</Text>
 				<Space h={16} />
-				<Text className={styles.tSubtitleFaded}>
+				<Text className={design.tSubtitleFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
 				<Space h={16} />
@@ -179,7 +179,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			</div>
 			<Space h={32} />
 			<Button
-				className={styles.buttonBlack}
+				className={design.buttonBlack}
 				loading={isSavingChanges}
 				onClick={sendAirdrops}
 			>

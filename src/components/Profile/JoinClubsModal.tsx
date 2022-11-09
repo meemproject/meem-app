@@ -34,7 +34,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 	onModalClosed,
 	isLoginForced
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	// Email state controls
 	const [isEmailState, setIsEmailState] = useState(false)
@@ -175,7 +175,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 				<div>
 					<Space h={24} />
 					<Center>
-						<Text className={styles.tBold}>Email Address</Text>
+						<Text className={design.tBold}>Email Address</Text>
 					</Center>
 
 					<Space h={16} />
@@ -190,7 +190,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={40} />
 					<Center>
 						<Button
-							className={styles.buttonBlack}
+							className={design.buttonBlack}
 							onClick={() => {
 								sendEmailVerificationLink()
 							}}
@@ -201,13 +201,13 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={32} />
 
 					<Center>
-						<Text className={styles.tFaded}>
+						<Text className={design.tFaded}>
 							Changed your mind?
 						</Text>
 					</Center>
 					<Center>
 						<Text
-							className={styles.tLink}
+							className={design.tLink}
 							onClick={() => {
 								setIsEmailState(false)
 								setEmail('')
@@ -234,7 +234,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					closeOnClickOutside={!isLoginForced}
 					opened={isOpened}
 					title={
-						<Text className={styles.tModalTitle}>
+						<Text className={design.tModalTitle}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -254,7 +254,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											position: 'relative'
 										}}
 										className={
-											styles.connectMethodButtonSmall
+											design.connectMethodButtonSmall
 										}
 										key={method.id}
 										onClick={() => {
@@ -269,13 +269,13 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											height={50}
 										/>
 										<Space w={16} />
-										<Text className={styles.tBold}>
+										<Text className={design.tBold}>
 											{method.name}
 										</Text>
 										{!method.enabled && (
-											<div className={styles.row}>
+											<div className={design.row}>
 												<Space w={8} />
-												<Text className={styles.tFaded}>
+												<Text className={design.tFaded}>
 													Coming soon
 												</Text>
 											</div>
@@ -315,7 +315,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					size={isEmailState ? '' : '47%'}
 					opened={isOpened}
 					title={
-						<Text className={styles.tModalTitle}>
+						<Text className={design.tModalTitle}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -341,7 +341,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 									>
 										<div
 											className={
-												styles.connectMethodButton
+												design.connectMethodButton
 											}
 											style={{
 												position: 'relative'
@@ -355,7 +355,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											<Center>
 												<div
 													className={
-														styles.connectMethodButtonContent
+														design.connectMethodButtonContent
 													}
 												>
 													<Image
@@ -365,14 +365,14 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													/>
 													<Space h={16} />
 													<Text
-														className={styles.tBold}
+														className={design.tBold}
 													>
 														{method.name}
 													</Text>
 													{!method.enabled && (
 														<Text
 															className={
-																styles.tFaded
+																design.tFaded
 															}
 															style={{
 																fontSize: 14

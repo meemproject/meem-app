@@ -24,7 +24,7 @@ import { hostnameToChainId } from '../App'
 import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 export const BrowseComponent: React.FC = () => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const { chainId } = useWallet()
 	const limit = 20
@@ -83,18 +83,18 @@ export const BrowseComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={styles.pageHeader}>
-				<div className={styles.centeredRow}>
+			<div className={design.pageHeader}>
+				<div className={design.centeredRow}>
 					<a onClick={navigateHome}>
-						<ArrowLeft className={styles.backArrow} size={32} />
+						<ArrowLeft className={design.backArrow} size={32} />
 					</a>
-					<Text className={styles.tHeaderTitleText}>
+					<Text className={design.tHeaderTitleText}>
 						Browse all clubs
 					</Text>
 				</div>
 				<Button
 					onClick={navigateToCreate}
-					className={styles.buttonBlack}
+					className={design.buttonBlack}
 				>
 					Create a Club
 				</Button>
@@ -140,14 +140,14 @@ export const BrowseComponent: React.FC = () => {
 								>
 									<div
 										key={club.address}
-										className={styles.gridItem}
+										className={design.gridItem}
 										style={{ marginBottom: 24 }}
 										onClick={() => {
 											navigateToClub(club.slug ?? '')
 										}}
 									>
 										<Image
-											className={styles.imageClubLogo}
+											className={design.imageClubLogo}
 											src={club.image ?? ''}
 											width={40}
 											radius={8}
@@ -164,7 +164,7 @@ export const BrowseComponent: React.FC = () => {
 											}}
 										>
 											<Text
-												className={styles.tBold}
+												className={design.tBold}
 												style={{
 													textOverflow: 'ellipsis',
 													msTextOverflow: 'ellipsis',
@@ -176,7 +176,7 @@ export const BrowseComponent: React.FC = () => {
 											</Text>
 											<Space h={4} />
 											<Text
-												className={styles.tExtraSmall}
+												className={design.tExtraSmall}
 												style={{
 													marginRight: 8,
 													lineHeight: 1.3,
@@ -212,7 +212,7 @@ export const BrowseComponent: React.FC = () => {
 						<Space h={24} />
 
 						<Button
-							className={styles.buttonBlack}
+							className={design.buttonBlack}
 							loading={loading}
 							onClick={() => {
 								setPage(page + 1)

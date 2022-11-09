@@ -36,7 +36,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 	onModalClosed,
 	onServerChosen
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [availableDiscordServers, setAvailableDiscordServers] =
 		useState<MeemAPI.IDiscordServer[]>()
@@ -167,7 +167,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={styles.tModalTitle}>
+					<Text className={design.tModalTitle}>
 						{isSavingChanges
 							? ``
 							: `Which Discord server would you like to connect?`}
@@ -209,7 +209,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={styles.buttonGrey}
+								className={design.buttonGrey}
 							>
 								Close
 							</Button>
@@ -230,8 +230,8 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 										marginBottom: 16
 									}}
 								>
-									<div className={styles.spacedRowCentered}>
-										<div className={styles.centeredRow}>
+									<div className={design.spacedRowCentered}>
+										<div className={design.centeredRow}>
 											<Image
 												radius={24}
 												height={48}
@@ -246,7 +246,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											/>
 											<Space w={16} />
 											<div>
-												<Text className={styles.tBold}>
+												<Text className={design.tBold}>
 													{server.name}
 												</Text>
 
@@ -266,7 +266,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											onClick={() => {
 												connectServer(server)
 											}}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											{server.guildData.connectedGuildId
 												? 'Connected to another Guild'
@@ -286,7 +286,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 										onClick={() => {
 											onModalClosed()
 										}}
-										className={styles.buttonGrey}
+										className={design.buttonGrey}
 									>
 										Cancel
 									</Button>

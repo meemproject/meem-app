@@ -58,7 +58,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 )
 
 export function HomeComponent() {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 
@@ -202,7 +202,7 @@ export function HomeComponent() {
 			<div style={{ backgroundColor: 'rgba(255, 102, 81, 0.1)' }}>
 				<Container
 					size={900}
-					className={styles.rowResponsive}
+					className={design.rowResponsive}
 					style={{
 						paddingTop: 32,
 						paddingBottom: 32
@@ -241,7 +241,7 @@ export function HomeComponent() {
 							onClick={() => {
 								setIsClubsFAQModalOpen(true)
 							}}
-							className={styles.tLink}
+							className={design.tLink}
 							style={{
 								fontSize: 18
 							}}
@@ -261,7 +261,7 @@ export function HomeComponent() {
 					marginTop: 70
 				}}
 			>
-				<Text className={styles.tSectionTitleSmall}>CREATE A CLUB</Text>
+				<Text className={design.tSectionTitleSmall}>CREATE A CLUB</Text>
 				<Space h={16} />
 				<Text
 					style={{
@@ -301,7 +301,7 @@ export function HomeComponent() {
 						  clubclub.isMember ? (
 							<Button
 								style={{ marginRight: 64 }}
-								className={styles.buttonBlack}
+								className={design.buttonBlack}
 								onClick={goToCreate}
 							>
 								Create
@@ -310,7 +310,7 @@ export function HomeComponent() {
 					}
 				/>
 				{!clubclub.isMember && (
-					<Text className={styles.tLink} style={{ marginTop: 16 }}>
+					<Text className={design.tLink} style={{ marginTop: 16 }}>
 						<a
 							onClick={() => {
 								router.push({ pathname: '/club-club' })
@@ -321,7 +321,7 @@ export function HomeComponent() {
 					</Text>
 				)}
 				<Space h={64} />
-				<Text className={styles.tSectionTitleSmall}>JOIN A CLUB</Text>
+				<Text className={design.tSectionTitleSmall}>JOIN A CLUB</Text>
 				<Space h={16} />
 				<Text
 					style={{
@@ -334,7 +334,7 @@ export function HomeComponent() {
 					{`Find your community on Clubs`}
 				</Text>
 				<Space h={16} />
-				<Button className={styles.buttonBlack} onClick={goToBrowse}>
+				<Button className={design.buttonBlack} onClick={goToBrowse}>
 					Browse all clubs
 				</Button>
 				<Space h={64} />

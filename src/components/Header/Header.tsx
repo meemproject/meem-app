@@ -30,7 +30,7 @@ import { ClubsFAQModal } from './ClubsFAQModal'
 
 export function HeaderMenu() {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
-	const { classes: styles, cx } = useGlobalStyles()
+	const { classes: design, cx } = useGlobalStyles()
 	const router = useRouter()
 
 	const id = useContext(IdentityContext)
@@ -77,15 +77,15 @@ export function HeaderMenu() {
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
 	return (
-		<Header className={styles.siteHeader} height={56}>
-			<div className={styles.siteHeaderInner}>
-				<div className={styles.siteHeaderLeftItems}>
+		<Header className={design.siteHeader} height={56}>
+			<div className={design.siteHeaderInner}>
+				<div className={design.siteHeaderLeftItems}>
 					<a onClick={navigateHome}>
-						<Text className={styles.siteHeaderMainLogo}>♣</Text>
+						<Text className={design.siteHeaderMainLogo}>♣</Text>
 					</a>
 				</div>
 
-				<div className={styles.siteHeaderRightItems}>
+				<div className={design.siteHeaderRightItems}>
 					{wallet.isConnected && (
 						<Menu
 							radius={8}
@@ -96,8 +96,8 @@ export function HeaderMenu() {
 						>
 							<Menu.Target>
 								<UnstyledButton
-									className={cx(styles.siteHeaderUser, {
-										[styles.siteHeaderUserActive]:
+									className={cx(design.siteHeaderUser, {
+										[design.siteHeaderUserActive]:
 											isUserMenuOpened
 									})}
 								>
@@ -147,20 +147,20 @@ export function HeaderMenu() {
 							<Menu.Dropdown>
 								<Menu.Item
 									onClick={navigateToMyAccount}
-									className={styles.tBold}
+									className={design.tBold}
 								>
 									My Account
 								</Menu.Item>
 								{clubclub.isMember && (
 									<Menu.Item
 										onClick={navigateToMyClubs}
-										className={styles.tBold}
+										className={design.tBold}
 									>
 										My Clubs
 									</Menu.Item>
 								)}
 								<Menu.Item
-									className={styles.tBold}
+									className={design.tBold}
 									onClick={async () => {
 										await wallet.disconnectWallet()
 									}}
@@ -176,7 +176,7 @@ export function HeaderMenu() {
 					)}
 					{!wallet.isConnected && (
 						<Text
-							className={styles.tBold}
+							className={design.tBold}
 							style={{
 								marginBottom: 4,
 								marginRight: 16,
@@ -198,14 +198,14 @@ export function HeaderMenu() {
 						<Menu.Target>
 							<UnstyledButton>
 								<Dots
-									className={styles.siteHeaderMenuEllipse}
+									className={design.siteHeaderMenuEllipse}
 								/>
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
 							<Menu.Item
 								onClick={handlePoweredByMeem}
-								className={styles.tBold}
+								className={design.tBold}
 							>
 								Powered by{' '}
 								<span style={{ textDecoration: 'underline' }}>
@@ -215,7 +215,7 @@ export function HeaderMenu() {
 							{wallet.isConnected && !clubclub.isMember && (
 								<Menu.Item
 									onClick={handleJoinClubClub}
-									className={styles.tBold}
+									className={design.tBold}
 								>
 									Join Club Club
 								</Menu.Item>
@@ -229,7 +229,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={styles.tBold}
+								className={design.tBold}
 								icon={
 									<QuestionMarkCircle
 										height={20}
@@ -249,7 +249,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={styles.tBold}
+								className={design.tBold}
 								icon={<BrandTwitter size={20} />}
 							>
 								Twitter
@@ -260,7 +260,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={styles.tBold}
+								className={design.tBold}
 								icon={<BrandDiscord size={20} />}
 							>
 								Discord
@@ -271,14 +271,14 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={styles.tBold}
+								className={design.tBold}
 								icon={<Mail size={20} />}
 							>
 								Contact Us
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleShareFeedback}
-								className={styles.tBold}
+								className={design.tBold}
 								style={{
 									color: 'rgba(255, 102, 81, 1)',
 									marginBottom: '-2px',

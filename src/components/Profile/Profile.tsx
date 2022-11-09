@@ -33,7 +33,7 @@ enum Tab {
 
 export const ProfileComponent: React.FC = () => {
 	// General properties / tab management
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 	const id = useContext(IdentityContext)
@@ -246,8 +246,8 @@ export const ProfileComponent: React.FC = () => {
 				!isSigningIn &&
 				id.identity && (
 					<>
-						<div className={styles.pageHeader}>
-							<div className={styles.tHeaderTitleText}>
+						<div className={design.pageHeader}>
+							<div className={design.tHeaderTitleText}>
 								{id.identity.profilePic && (
 									<>
 										<Image
@@ -255,7 +255,7 @@ export const ProfileComponent: React.FC = () => {
 											height={64}
 											width={64}
 											fit={'cover'}
-											className={styles.imageClubLogo}
+											className={design.imageClubLogo}
 											src={id.identity.profilePic ?? ''}
 										/>
 									</>
@@ -263,17 +263,17 @@ export const ProfileComponent: React.FC = () => {
 
 								{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 								<div
-									className={styles.pageHeaderTitleContainer}
+									className={design.pageHeaderTitleContainer}
 								>
-									<Text className={styles.spacedRowCentered}>
+									<Text className={design.spacedRowCentered}>
 										{id.identity.displayName ??
 											'My Profile'}
 									</Text>
 									<Space h={8} />
-									<div className={styles.row}>
+									<div className={design.row}>
 										<Text
 											className={
-												styles.tExtraSmallBoldFaded
+												design.tExtraSmallBoldFaded
 											}
 										>
 											{id.identity.ensAddress
@@ -288,7 +288,7 @@ export const ProfileComponent: React.FC = () => {
 										{id.identity.id && (
 											<>
 												<Image
-													className={styles.copyIcon}
+													className={design.copyIcon}
 													src="/copy.png"
 													height={20}
 													onClick={() => {
@@ -318,7 +318,7 @@ export const ProfileComponent: React.FC = () => {
 							</div>
 						</div>
 						<Space h={8} />
-						<div className={styles.tExtraSmallBold}>
+						<div className={design.tExtraSmallBold}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -334,7 +334,7 @@ export const ProfileComponent: React.FC = () => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={styles.pagePanelLayoutNavBar}
+								className={design.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -342,11 +342,11 @@ export const ProfileComponent: React.FC = () => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={styles.tBoldFaded}>
+								<Text className={design.tBoldFaded}>
 									SETTINGS
 								</Text>
 								<NavLink
-									className={styles.pagePanelLayoutNavItem}
+									className={design.pagePanelLayoutNavItem}
 									active={currentTab === Tab.Profile}
 									label={'Manage Identity'}
 									onClick={() => {
@@ -355,7 +355,7 @@ export const ProfileComponent: React.FC = () => {
 									}}
 								/>
 								<NavLink
-									className={styles.pagePanelLayoutNavItem}
+									className={design.pagePanelLayoutNavItem}
 									active={currentTab === Tab.MyClubs}
 									label={'My Clubs'}
 									onClick={() => {
@@ -365,7 +365,7 @@ export const ProfileComponent: React.FC = () => {
 								/>
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={styles.pagePanelLayoutContent}>
+								<div className={design.pagePanelLayoutContent}>
 									{currentTab === Tab.Profile && (
 										<ManageIdentityComponent />
 									)}

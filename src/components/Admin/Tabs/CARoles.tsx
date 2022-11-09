@@ -13,7 +13,7 @@ interface IProps {
 }
 
 export const CARoles: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 
 	const createRole = () => {
@@ -34,7 +34,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={styles.tSectionTitle}>Roles</Text>
+				<Text className={design.tSectionTitle}>Roles</Text>
 
 				<Space h={32} />
 			</div>
@@ -59,7 +59,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 						>
 							<Space h={4} />
 							<div
-								className={styles.centeredRow}
+								className={design.centeredRow}
 								onClick={() => {
 									router.push({
 										pathname: `/${club.slug}/roles`,
@@ -81,8 +81,8 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										deg: 35
 									}}
 									classNames={{
-										inner: styles.tBadge,
-										root: styles.badge
+										inner: design.tBadge,
+										root: design.badge
 									}}
 									leftSection={
 										<>
@@ -121,7 +121,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 													}
 												})
 											}}
-											className={styles.tBold}
+											className={design.tBold}
 										>
 											Manage Role
 										</Menu.Item>
@@ -138,7 +138,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 														marginBottom: '-2px',
 														marginTop: '-2px'
 													}}
-													className={styles.tBoldRed}
+													className={design.tBoldRed}
 												>
 													Delete Role
 												</Menu.Item>
@@ -153,7 +153,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			)}
 
 			<Space h={32} />
-			<Button className={styles.buttonBlack} onClick={createRole}>
+			<Button className={design.buttonBlack} onClick={createRole}>
 				+ Create Role
 			</Button>
 			<Space h={64} />

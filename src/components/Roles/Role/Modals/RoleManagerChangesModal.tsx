@@ -32,7 +32,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 
 	const router = useRouter()
 
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -219,18 +219,18 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={styles.modalHeader}>
+				<div className={design.modalHeader}>
 					<Space h={128} />
 
 					<Loader color="red" variant="oval" />
 					<Space h={24} />
 					<Text
-						className={styles.tTitle}
+						className={design.tTitle}
 					>{`There's magic happening on the blockchain.`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={styles.tSubtitle}
+						className={design.tSubtitle}
 						styles={{ textAlign: 'center' }}
 					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
 				</div>

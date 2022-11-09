@@ -70,7 +70,7 @@ interface RequirementString {
 }
 
 export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { anonClient, mutualMembersClient } = useCustomApollo()
@@ -503,7 +503,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 												Members must hold{' '}
 												{req.tokenMinQuantity}{' '}
 												<a
-													className={styles.tLink}
+													className={design.tLink}
 													href={tokenUrl}
 												>
 													{tokenName}
@@ -522,7 +522,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											<Text>
 												Members must also be a member of{' '}
 												<a
-													className={styles.tLink}
+													className={design.tLink}
 													href="/club"
 												>
 													{req.otherClubName}
@@ -634,7 +634,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 
 			setRequirementsParsed(true)
 		},
-		[areRequirementsParsed, checkEligibility, wallet, styles.tLink]
+		[areRequirementsParsed, checkEligibility, wallet, design.tLink]
 	)
 
 	useEffect(() => {
@@ -811,8 +811,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					}
 				}}
 			>
-				<div className={styles.enabledClubIntegrationItem}>
-					<div className={styles.clubIntegrationItemHeader}>
+				<div className={design.enabledClubIntegrationItem}>
+					<div className={design.clubIntegrationItemHeader}>
 						<Image
 							src={`/${integration.icon}`}
 							width={16}
@@ -845,12 +845,12 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					{integration.gatherTownSpacePw &&
 						integration.gatherTownSpacePw.length > 0 && (
 							<>
-								<div className={styles.centeredRow}>
+								<div className={design.centeredRow}>
 									<Key size={20} />
 									<Space w={4} />
 									<Text>{integration.gatherTownSpacePw}</Text>
 									<Image
-										className={styles.copyIcon}
+										className={design.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={e => {
@@ -912,21 +912,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			)}
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={styles.pageHeader}>
+					<div className={design.pageHeader}>
 						<Image
 							width={80}
 							height={80}
 							radius={16}
 							fit="cover"
-							className={styles.imageClubLogo}
+							className={design.imageClubLogo}
 							src={club.image}
 						/>
 						<div>
-							<Text className={styles.tHeaderTitleText}>
+							<Text className={design.tHeaderTitleText}>
 								{club.name}
 							</Text>
 							<Text
-								className={styles.tFaded}
+								className={design.tFaded}
 								style={{
 									wordBreak: 'break-word',
 									marginTop: 4,
@@ -951,7 +951,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											onClick={() => {
 												setIsEditionsModalOpened(true)
 											}}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											{' '}
 											{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
@@ -962,7 +962,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										<Button
 											onClick={leaveClub}
 											loading={isLeavingClub}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											Leave
 										</Button>
@@ -973,7 +973,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											disabled={!doesMeetAllRequirements}
 											loading={isJoiningClub}
 											onClick={joinClub}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											{doesMeetAllRequirements &&
 												((club.membershipSettings
@@ -999,14 +999,14 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										onClick={async () => {
 											await wallet.connectWallet()
 										}}
-										className={styles.buttonBlack}
+										className={design.buttonBlack}
 									>
 										Connect wallet to join
 									</Button>
 								)}
 
 								<Button
-									className={styles.buttonBlack}
+									className={design.buttonBlack}
 									onClick={() => {
 										setIsQrModalOpened(true)
 									}}
@@ -1019,7 +1019,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										<>
 											<Button
 												onClick={navigateToSettings}
-												className={styles.buttonWhite}
+												className={design.buttonWhite}
 											>
 												<Settings />
 											</Button>
@@ -1034,7 +1034,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.isCurrentUserClubAdmin) && (
 							<>
 								<Text
-									className={styles.tSubtitleFadedBold}
+									className={design.tSubtitleFadedBold}
 									style={{
 										marginBottom: 16,
 										marginTop: 40
@@ -1043,7 +1043,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									Membership Requirements
 								</Text>
 								{!areRequirementsParsed && (
-									<div className={styles.borderedBoxRounded}>
+									<div className={design.borderedBoxRounded}>
 										<Loader color="red" variant="oval" />
 									</div>
 								)}
@@ -1052,13 +1052,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									areRequirementsParsed && (
 										<div
 											className={
-												styles.borderedBoxRounded
+												design.borderedBoxRounded
 											}
 										>
 											{parsedRequirements.map(
 												requirement => (
 													<div
-														className={styles.row}
+														className={design.row}
 														key={
 															requirement.requirementKey
 														}
@@ -1097,7 +1097,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 						{club.isCurrentUserClubAdmin && (
 							<>
 								<Text
-									className={styles.tSubtitleFadedBold}
+									className={design.tSubtitleFadedBold}
 									style={{
 										marginBottom: 16,
 										marginTop: 40
@@ -1105,10 +1105,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								>
 									Club Contract Address
 								</Text>
-								<div className={styles.row}>
+								<div className={design.row}>
 									<Text>{club.address}</Text>
 									<Image
-										className={styles.copyIcon}
+										className={design.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
@@ -1138,7 +1138,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.publicIntegrations.length > 0 && (
 								<>
 									<Text
-										className={styles.tSubtitleFadedBold}
+										className={design.tSubtitleFadedBold}
 										style={{
 											marginBottom: 16,
 											marginTop: 40
@@ -1166,7 +1166,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.allIntegrations.length > 0 && (
 								<>
 									<Text
-										className={styles.tSubtitleFadedBold}
+										className={design.tSubtitleFadedBold}
 										style={{
 											marginBottom: 16,
 											marginTop: 40
@@ -1186,7 +1186,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							club.allIntegrations.length === 0 && (
 								<>
 									<Text
-										className={styles.tSubtitleFadedBold}
+										className={design.tSubtitleFadedBold}
 										style={{
 											marginBottom: 16,
 											marginTop: 40
@@ -1198,7 +1198,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										radius="lg"
 									>
 										<Text
-											className={styles.tBold}
+											className={design.tBold}
 										>{`Add your first apps`}</Text>
 										<Space h={4} />
 										<Text>{`Your club doesn't have any links or connected apps. That means there's nothing for your members to do when they join, and there's no other information about this club right now. Fix this by adding some apps!`}</Text>
@@ -1209,7 +1209,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													`/${club.slug}/admin?tab=apps`
 												)
 											}}
-											className={styles.buttonBlack}
+											className={design.buttonBlack}
 										>
 											{' '}
 											{`Add apps`}
@@ -1219,7 +1219,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 
 						<Text
-							className={styles.tSubtitleFadedBold}
+							className={design.tSubtitleFadedBold}
 							style={{
 								marginBottom: 16,
 								marginTop: 40
@@ -1244,7 +1244,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											<HoverCard.Target>
 												<div
 													className={
-														styles.gridItemCentered
+														design.gridItemCentered
 													}
 												>
 													{member.profilePicture && (

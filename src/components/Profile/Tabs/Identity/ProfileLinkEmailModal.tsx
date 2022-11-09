@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
@@ -16,72 +15,7 @@ import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { Identity } from '../../../../model/identity/identity'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	newEmailLink: {
-		fontSize: 14,
-		textDecoration: 'underline',
-		cursor: 'pointer'
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	}
-}))
-
+import { useGlobalStyles } from '../../../Styles/GlobalStyles'
 interface IProps {
 	identity: Identity
 	isOpened: boolean
@@ -99,7 +33,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 	onModalClosed,
 	integrationId
 }) => {
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
@@ -158,7 +92,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
+					<Text className={design.tModalTitle}>
 						Connect your Email Address
 					</Text>
 				}
@@ -171,7 +105,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
+				<div className={design.modalStepsContainer}>
 					<MantineProvider
 						theme={{
 							colors: {
@@ -214,7 +148,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															classes.stepDescription
+															design.tExtraSmall
 														}
 													>
 														{`We'll send you a
@@ -258,7 +192,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 															sendVerificationLink()
 														}}
 														className={
-															styles.buttonBlack
+															design.buttonBlack
 														}
 													>
 														Confirm
@@ -273,9 +207,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 								label="Tap the link in the verification email we just sent."
 								description={
 									step !== Step.SendEmail ? (
-										<Text
-											className={classes.stepDescription}
-										>
+										<Text className={design.tExtraSmall}>
 											A verification email should be
 											arriving in your inbox within five
 											minutes. Please check your spam and
@@ -286,7 +218,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 											<div>
 												<Text
 													className={
-														classes.stepDescription
+														design.tExtraSmall
 													}
 												>
 													A verification email should
@@ -302,7 +234,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 														// TODO: Launch email app
 													}}
 													className={
-														styles.buttonBlack
+														design.buttonBlack
 													}
 												>
 													Launch Email App
@@ -313,9 +245,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 													onClick={() => {
 														sendVerificationLink()
 													}}
-													className={
-														classes.newEmailLink
-													}
+													className={design.tLink}
 												>
 													{`Didn't receive an email? Send a new link`}
 												</Text>

@@ -16,7 +16,7 @@ import { hostnameToChainId } from '../../App'
 import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
 export const MyClubsComponent: React.FC = () => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
@@ -86,13 +86,13 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length === 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={styles.tSectionTitle}>My Clubs</Text>
+					<Text className={design.tSectionTitle}>My Clubs</Text>
 					<Space h={32} />
-					<Text className={styles.tSubtitle}>
+					<Text className={design.tSubtitle}>
 						{`You haven't joined any clubs!`}
 					</Text>
 					<Space h={16} />
-					<Text className={styles.tLink}>
+					<Text className={design.tLink}>
 						<a onClick={navigateToCreate}>Start a new one?</a>
 					</Text>
 				</>
@@ -100,7 +100,7 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length > 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={styles.tSectionTitle}>My Clubs</Text>
+					<Text className={design.tSectionTitle}>My Clubs</Text>
 					<Space h={32} />
 
 					<Grid>
@@ -115,14 +115,14 @@ export const MyClubsComponent: React.FC = () => {
 							>
 								<div
 									key={club.address}
-									className={styles.gridItem}
+									className={design.gridItem}
 									onClick={() => {
 										navigateToClub(club.slug ?? '')
 									}}
 								>
-									<div className={styles.row}>
+									<div className={design.row}>
 										<Image
-											className={styles.imageClubLogo}
+											className={design.imageClubLogo}
 											src={club.image ?? ''}
 											width={40}
 											height={40}
@@ -131,12 +131,12 @@ export const MyClubsComponent: React.FC = () => {
 										/>
 										<Space w="xs" />
 
-										<div className={styles.tEllipsis}>
-											<Text className={styles.tEllipsis}>
+										<div className={design.tEllipsis}>
+											<Text className={design.tEllipsis}>
 												{club.name}
 											</Text>
 											<Space h={4} />
-											<div className={styles.row}>
+											<div className={design.row}>
 												<Badge
 													variant="gradient"
 													gradient={{
@@ -145,8 +145,8 @@ export const MyClubsComponent: React.FC = () => {
 														deg: 35
 													}}
 													classNames={{
-														inner: styles.tBadge,
-														root: styles.badge
+														inner: design.tBadge,
+														root: design.badge
 													}}
 													leftSection={
 														<>

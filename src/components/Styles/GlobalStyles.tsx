@@ -278,6 +278,17 @@ export const useGlobalStyles = createStyles(theme => ({
 		fontSize: 24,
 		zIndex: -1000
 	},
+	emojiCanvasCover: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		width: 256,
+		height: 256,
+		marginTop: -12,
+		marginBottom: -12,
+		backgroundColor: 'white',
+		zIndex: -1
+	},
 	imageClubLogo: {
 		imageRendering: 'pixelated',
 		width: 80,

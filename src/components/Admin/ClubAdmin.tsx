@@ -59,7 +59,7 @@ interface IProps {
 
 export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
@@ -194,26 +194,26 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={styles.pageHeader}>
-						<div className={styles.spacedRowCentered}>
+					<div className={design.pageHeader}>
+						<div className={design.spacedRowCentered}>
 							<Image
 								width={56}
 								height={56}
-								className={styles.imageClubLogo}
+								className={design.imageClubLogo}
 								src={club.image}
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<div className={styles.pageHeaderTitleContainer}>
-								<Text className={styles.tHeaderTitleText}>
+							<div className={design.pageHeaderTitleContainer}>
+								<Text className={design.tHeaderTitleText}>
 									{club.name}
 								</Text>
 								<Space h={8} />
-								<div className={styles.row}>
+								<div className={design.row}>
 									<Text
-										className={styles.tExtraSmallBoldFaded}
+										className={design.tExtraSmallBoldFaded}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
-										className={styles.copyIcon}
+										className={design.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
@@ -236,7 +236,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</div>
 						</div>
 						<a
-							className={styles.pageHeaderExitButton}
+							className={design.pageHeaderExitButton}
 							onClick={navigateToClubDetail}
 						>
 							<Image src="/delete.png" width={24} height={24} />
@@ -255,7 +255,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</Container>
 					)}
 					{club?.isCurrentUserClubAdmin && (
-						<div className={styles.pagePanelLayoutContainer}>
+						<div className={design.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -271,7 +271,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={styles.pagePanelLayoutNavBar}
+								className={design.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -279,11 +279,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={styles.tBoldFaded}>
+								<Text className={design.tBoldFaded}>
 									MANAGE CLUB
 								</Text>
 								<NavLink
-									className={styles.pagePanelLayoutNavItem}
+									className={design.pagePanelLayoutNavItem}
 									active={
 										currentTab === Tab.ContractManagement
 									}
@@ -299,7 +299,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<div>
 										<NavLink
 											className={
-												styles.pagePanelLayoutNavItem
+												design.pagePanelLayoutNavItem
 											}
 											active={
 												currentTab ===
@@ -315,7 +315,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										/>
 										<NavLink
 											className={
-												styles.pagePanelLayoutNavItem
+												design.pagePanelLayoutNavItem
 											}
 											active={
 												currentTab ===
@@ -336,7 +336,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<>
 										<NavLink
 											className={
-												styles.pagePanelLayoutNavItem
+												design.pagePanelLayoutNavItem
 											}
 											active={currentTab === Tab.Roles}
 											label={'Roles'}
@@ -350,7 +350,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 								{/* {club.isCurrentUserClubOwner && (
 									<NavLink
-										className={styles.pagePanelLayoutNavItem}
+										className={design.pagePanelLayoutNavItem}
 										active={currentTab === Tab.DeleteClub}
 										label={'Delete Club'}
 										onClick={() => {
@@ -364,7 +364,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<>
 										<NavLink
 											className={
-												styles.pagePanelLayoutNavItem
+												design.pagePanelLayoutNavItem
 											}
 											active={currentTab === Tab.Apps}
 											label={'Club Apps'}
@@ -377,7 +377,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 
 								<NavLink
-									className={styles.pagePanelLayoutNavItem}
+									className={design.pagePanelLayoutNavItem}
 									active={currentTab === Tab.Airdrops}
 									label={'Airdrops'}
 									onClick={() => {
@@ -389,12 +389,12 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								{userHasPermissionEditProfile(club) && (
 									<div>
 										<Space h={32} />
-										<Text className={styles.tBoldFaded}>
+										<Text className={design.tBoldFaded}>
 											EDIT PROFILE
 										</Text>
 										<NavLink
 											className={
-												styles.pagePanelLayoutNavItem
+												design.pagePanelLayoutNavItem
 											}
 											active={
 												currentTab === Tab.ClubDetails
@@ -407,7 +407,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 										/>
 										<NavLink
 											className={
-												styles.pagePanelLayoutNavItem
+												design.pagePanelLayoutNavItem
 											}
 											active={currentTab === Tab.ClubIcon}
 											label={'Club Icon'}
@@ -420,7 +420,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={styles.pagePanelLayoutContent}>
+								<div className={design.pagePanelLayoutContent}>
 									{currentTab === Tab.ContractManagement && (
 										<CAContractManagement club={club} />
 									)}

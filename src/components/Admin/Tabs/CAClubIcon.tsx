@@ -21,7 +21,7 @@ interface IProps {
 }
 
 export const CAClubIcon: React.FC<IProps> = ({ club }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -162,13 +162,13 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={styles.tSectionTitle}>Club Icon</Text>
+			<Text className={design.tSectionTitle}>Club Icon</Text>
 			<Space h={32} />
-			<Text className={styles.tSubtitle}>
+			<Text className={design.tSubtitle}>
 				Upload an icon for your club.
 			</Text>
 			<Text
-				className={styles.tExtraSmall}
+				className={design.tExtraSmall}
 				style={{
 					maxWidth: 650,
 					color: 'rgba(45, 28, 28, 0.6)'
@@ -181,10 +181,10 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 
 			<Space h={16} />
 			{smallClubLogo.length === 0 && !isLoadingImage && (
-				<div className={styles.row}>
+				<div className={design.row}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={styles.buttonWhite}
+						className={design.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -192,7 +192,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={styles.buttonWhite}
+						className={design.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
@@ -201,9 +201,9 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 			)}
 			{isLoadingImage && <Loader color="red" variant="oval" />}
 			{!isLoadingImage && smallClubLogo.length > 0 && (
-				<div className={styles.imageClubLogoContainer}>
+				<div className={design.imageClubLogoContainer}>
 					<Image
-						className={styles.imageClubLogo}
+						className={design.imageClubLogo}
 						src={smallClubLogo}
 						width={200}
 						height={200}
@@ -211,7 +211,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					/>
 					<a onClick={deleteImage}>
 						<Image
-							className={styles.imageClubLogoDeleteButton}
+							className={design.imageClubLogoDeleteButton}
 							src="/delete.png"
 							width={24}
 							height={24}
@@ -221,7 +221,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 			)}
 			<Space h={smallClubLogo.length > 0 ? 148 : 32} />
 			<Button
-				className={styles.buttonBlack}
+				className={design.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>
@@ -236,7 +236,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					setSaveChangesModalOpened(false)
 				}}
 			/>
-			<div id="emojiCanvas" className={styles.emojiCanvas}>
+			<div id="emojiCanvas" className={design.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
 			<Modal
