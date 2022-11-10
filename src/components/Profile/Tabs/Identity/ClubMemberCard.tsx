@@ -160,7 +160,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 									deg: 35
 								}}
 								classNames={{
-									inner: design.tBadgeText,
+									inner: design.tBadgeTextWhite,
 									root: design.badge
 								}}
 								style={{ marginBottom: 4 }}

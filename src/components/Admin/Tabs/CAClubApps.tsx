@@ -24,7 +24,11 @@ import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetIntegrationsQuery } from '../../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../../graphql/clubs'
 import { Club, Integration } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import {
+	colorGrey,
+	colorWhite,
+	useGlobalStyles
+} from '../../Styles/GlobalStyles'
 import { ClubAdminGatherTownModal } from '../IntegrationModals/ClubAdminGatherTownModal'
 import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
 import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'
@@ -405,11 +409,13 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											}}
 										>
 											<Space h={16} />
-											<Divider />
+											<Divider color={colorGrey} />
 										</div>
 										<div
 											className={design.row}
-											style={{ height: 46 }}
+											style={{
+												height: 46
+											}}
 										>
 											<a
 												onClick={() => {
@@ -484,8 +490,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								</Grid.Col>
 							))}
 						</Grid>
-
-						<Space h="xl" />
+						<Space h={32} />
 					</>
 				)}
 				{!loading && inteData && (

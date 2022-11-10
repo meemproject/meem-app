@@ -190,12 +190,12 @@ export const useGlobalStyles = createStyles(theme => ({
 		position: 'relative'
 	},
 	integrationGridItemEnabledHeaderBackground: {
-		backgroundColor: colorLightestGrey,
+		backgroundColor: colorWhite,
 		position: 'absolute',
 		top: 0,
 		left: 0,
 		right: 0,
-		height: 53,
+		height: 48,
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16
 	},
@@ -256,6 +256,7 @@ export const useGlobalStyles = createStyles(theme => ({
 	// Page Footer
 	pageFooterContainer: {
 		position: 'fixed',
+		zIndex: 5,
 		bottom: 0,
 		left: 0,
 		right: 0
@@ -499,6 +500,7 @@ export const useGlobalStyles = createStyles(theme => ({
 
 	// Text variants
 	tBadgeText: { fontWeight: 600, fontSize: '12px', color: colorBlack },
+	tBadgeTextWhite: { fontWeight: 600, fontSize: '12px', color: colorWhite },
 
 	tLink: {
 		textDecoration: 'underline',
