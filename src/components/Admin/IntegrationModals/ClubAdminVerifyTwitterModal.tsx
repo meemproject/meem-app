@@ -108,7 +108,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tModalTitle}>
+					<Text className={design.tMediumBold}>
 						Verify with Twitter
 					</Text>
 				}
@@ -132,7 +132,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 									)
 								}}
 							>
-								<span className={design.tBold}>
+								<span className={design.tSmallBold}>
 									{integration.verifiedTwitterUser}
 								</span>
 							</a>{' '}

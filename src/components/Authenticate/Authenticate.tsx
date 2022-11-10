@@ -125,7 +125,7 @@ const MAuthenticate: React.FC = () => {
 				<div className={design.centered}>
 					<Space h={80} />
 					<Text
-						className={design.tTitle}
+						className={design.tLargeBold}
 					>{`Let's make sure it's really you.`}</Text>
 					<Space h={16} />
 

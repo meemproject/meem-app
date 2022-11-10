@@ -154,15 +154,15 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tSectionTitle}>Airdrops</Text>
+				<Text className={design.tMediumBold}>Airdrops</Text>
 				<Space h={68} />
 
-				<Text className={design.tSubtitle}>
+				<Text className={design.tMediumBold}>
 					Invite others to your club by airdropping them a club token.
 					They will automatically become a club member.
 				</Text>
 				<Space h={16} />
-				<Text className={design.tSubtitleFaded}>
+				<Text className={design.tMediumFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
 				<Space h={16} />

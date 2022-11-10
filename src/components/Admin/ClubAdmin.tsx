@@ -204,7 +204,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
 							<div className={design.pageHeaderTitleContainer}>
-								<Text className={design.tHeaderTitleText}>
+								<Text className={design.tLargeBold}>
 									{club.name}
 								</Text>
 								<Space h={8} />
@@ -279,7 +279,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={design.tBoldFaded}>
+								<Text className={design.tSmallBoldFaded}>
 									MANAGE CLUB
 								</Text>
 								<NavLink
@@ -389,7 +389,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								{userHasPermissionEditProfile(club) && (
 									<div>
 										<Space h={32} />
-										<Text className={design.tBoldFaded}>
+										<Text
+											className={design.tSmallBoldFaded}
+										>
 											EDIT PROFILE
 										</Text>
 										<NavLink

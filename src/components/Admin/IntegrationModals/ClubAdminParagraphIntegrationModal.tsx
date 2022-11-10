@@ -20,7 +20,7 @@ import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { Club, Integration } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorGreen, useGlobalStyles } from '../../Styles/GlobalStyles'
 interface IProps {
 	club: Club
 	integration?: Integration
@@ -163,7 +163,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tModalTitle}>
+					<Text className={design.tMediumBold}>
 						{integration && integration.publicationSlug
 							? 'Edit Paragraph settings'
 							: 'Create a Paragraph Publication'}
@@ -227,7 +227,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Start && (
 								<>
 									<Text
-										className={design.tSubtitle}
+										className={design.tMediumBold}
 									>{`What's your Publication called?`}</Text>
 									<Space h={2} />
 									<Text className={design.tExtraSmall}>
@@ -248,7 +248,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={24} />
 
 									<Text
-										className={design.tSubtitle}
+										className={design.tMediumBold}
 									>{`Your visitors can find your publication at this URL.`}</Text>
 									<Space h={2} />
 
@@ -287,7 +287,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={24} />
 
 									<Text
-										className={design.tSubtitle}
+										className={design.tMediumBold}
 									>{`Who can read your publication?`}</Text>
 									<Space h={2} />
 
@@ -342,7 +342,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 								<>
 									<Space h={16} />
 
-									<Text className={design.tSubtitle}>
+									<Text className={design.tMediumBold}>
 										{`Let's connect your club's treasury.`}
 									</Text>
 									<Space h={12} />
@@ -389,7 +389,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Transaction && (
 								<>
 									<Space h={16} />
-									<Text className={design.tSubtitle}>
+									<Text className={design.tMediumBold}>
 										{`Connect to club treasury and sign`}
 									</Text>
 									<Space h={12} />
@@ -429,7 +429,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Center>
 									<Space h={16} />
 									<Center>
-										<Text className={design.tSuccess}>
+										<Text
+											className={design.tLargeBold}
+											style={{ color: colorGreen }}
+										>
 											Success!
 										</Text>
 									</Center>

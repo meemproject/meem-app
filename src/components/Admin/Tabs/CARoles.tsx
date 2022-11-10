@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../model/club/club'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorPink, useGlobalStyles } from '../../Styles/GlobalStyles'
 
 interface IProps {
 	club: Club
@@ -34,7 +34,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tSectionTitle}>Roles</Text>
+				<Text className={design.tMediumBold}>Roles</Text>
 
 				<Space h={32} />
 			</div>
@@ -81,7 +81,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										deg: 35
 									}}
 									classNames={{
-										inner: design.tBadge,
+										inner: design.tExtraSmallBold,
 										root: design.badge
 									}}
 									leftSection={
@@ -121,7 +121,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 													}
 												})
 											}}
-											className={design.tBold}
+											className={design.tSmallBold}
 										>
 											Manage Role
 										</Menu.Item>
@@ -136,9 +136,12 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 													}}
 													style={{
 														marginBottom: '-2px',
-														marginTop: '-2px'
+														marginTop: '-2px',
+														color: colorPink
 													}}
-													className={design.tBoldRed}
+													className={
+														design.tSmallBold
+													}
 												>
 													Delete Role
 												</Menu.Item>

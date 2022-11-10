@@ -150,7 +150,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={design.tModalTitle}>Gather Town</Text>}
+				title={<Text className={design.tMediumBold}>Gather Town</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}

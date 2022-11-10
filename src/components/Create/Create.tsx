@@ -229,13 +229,15 @@ export const CreateComponent: React.FC = () => {
 					/>
 				</a>
 				<div>
-					<Text className={design.tBoldFaded}>Create a club</Text>
-					<Text className={design.tHeaderTitleText}>{clubName}</Text>
+					<Text className={design.tSmallBoldFaded}>
+						Create a club
+					</Text>
+					<Text className={design.tLargeBold}>{clubName}</Text>
 				</div>
 			</div>
 
 			<Container>
-				{/* <Text className={design.tSubtitle}>
+				{/* <Text className={design.tMediumBold}>
 					{`Set your club's URL.`}
 				</Text>
 				<Text size="sm" className={classes.clubNamespaceHint}>
@@ -259,7 +261,7 @@ export const CreateComponent: React.FC = () => {
 				</div>
 
 				<Space h={'md'} /> */}
-				<Text className={design.tSubtitle}>
+				<Text className={design.tMediumBold}>
 					In a sentence, describe what your members do together.
 				</Text>
 				<Space h={24} />
@@ -277,7 +279,7 @@ export const CreateComponent: React.FC = () => {
 				/>
 
 				<Space h={16} />
-				<Text className={design.tSubtitle}>
+				<Text className={design.tMediumBold}>
 					Upload an icon for your club.
 				</Text>
 				<Space h={8} />

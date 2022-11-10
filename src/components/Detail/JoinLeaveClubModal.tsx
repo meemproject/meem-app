@@ -38,12 +38,12 @@ export const JoinLeaveClubModal: React.FC<IProps> = ({
 					<Loader color="red" variant="oval" />
 					<Space h={24} />
 					<Text
-						className={design.tTitle}
+						className={design.tLargeBold}
 					>{`There's magic happening on the blockchain.`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tSubtitle}
+						className={design.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
 				</div>

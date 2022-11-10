@@ -195,7 +195,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						className={design.spacedRow}
 						style={{ marginBottom: 32 }}
 					>
-						<Text className={design.tSectionTitle}>
+						<Text className={design.tMediumBold}>
 							{role && role.name.length > 0
 								? role.name
 								: 'Add Role'}
@@ -211,9 +211,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					</div>
 
 					<div className={design.row}>
-						<Text className={design.tSectionTitleSmall}>
-							ROLE NAME
-						</Text>
+						<Text className={design.tSmallLabel}>ROLE NAME</Text>
 						<Space w={2} />
 						<Text color={'red'}>*</Text>
 					</div>
@@ -248,7 +246,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						<div>
 							{role?.tokenAddress && (
 								<div>
-									<Text className={design.tSectionTitleSmall}>
+									<Text className={design.tSmallLabel}>
 										CONTRACT ADDRESS
 									</Text>
 
@@ -288,7 +286,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 									<Space h={40} />
 
-									<Text className={design.tSectionTitleSmall}>
+									<Text className={design.tSmallLabel}>
 										TOKEN SETTINGS
 									</Text>
 									<Space h={24} />
@@ -320,7 +318,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									{!role?.isDefaultRole && (
 										<div>
 											<Text
-												className={design.tBold}
+												className={design.tSmallBold}
 											>{`Can members with this role transfer their token to another wallet?`}</Text>
 											<Space h={4} />
 

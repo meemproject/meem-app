@@ -268,9 +268,9 @@ export const ManageIdentityComponent: React.FC = () => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={design.tSectionTitle}>Manage Identity</Text>
+			<Text className={design.tMediumBold}>Manage Identity</Text>
 			<Space h={32} />
-			<Text className={design.tSubtitle}>Profile Picture</Text>
+			<Text className={design.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
 				<div className={design.row}>
 					<Button
@@ -324,7 +324,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				</div>
 			)}
 			<Space h={profilePicture.length > 0 ? 148 : 32} />
-			<Text className={design.tSubtitle}>Display Name</Text>
+			<Text className={design.tMediumBold}>Display Name</Text>
 			<Space h={16} />
 			<TextInput
 				radius="lg"
@@ -339,7 +339,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space h={48} />
 					<Divider />
 					<Space h={'xl'} />
-					<Text className={design.tSubtitle}>Verify Accounts</Text>
+					<Text className={design.tMediumBold}>Verify Accounts</Text>
 					<Space h={16} />
 
 					<Text>
@@ -369,7 +369,7 @@ export const ManageIdentityComponent: React.FC = () => {
 										style={{
 											color: 'rgba(62, 162, 255, 1)'
 										}}
-										className={design.tSubtitle}
+										className={design.tMediumBold}
 									>
 										Verified
 									</Text>
@@ -398,12 +398,12 @@ export const ManageIdentityComponent: React.FC = () => {
 												>
 													<div
 														className={
-															design.clubIntegrationItem
+															design.integrationGridItem
 														}
 													>
 														<div
 															className={
-																design.clubIntegrationItemHeader
+																design.integrationGridItemHeader
 															}
 														>
 															<Image
@@ -445,7 +445,7 @@ export const ManageIdentityComponent: React.FC = () => {
 							</>
 						)}
 
-					<Text className={design.tSubtitle}>Verify Accounts</Text>
+					<Text className={design.tMediumBold}>Verify Accounts</Text>
 					<Space h={16} />
 					{availableIntegrations.length === 0 && (
 						<Loader variant="oval" color="red" />
@@ -471,12 +471,12 @@ export const ManageIdentityComponent: React.FC = () => {
 										>
 											<div
 												className={
-													design.clubIntegrationItem
+													design.integrationGridItem
 												}
 											>
 												<div
 													className={
-														design.clubIntegrationItemHeader
+														design.integrationGridItemHeader
 													}
 												>
 													<Image

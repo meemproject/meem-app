@@ -187,7 +187,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								src={club.image}
 							/>
 							<div className={design.pageHeaderTitleContainer}>
-								<Text className={design.tHeaderTitleText}>
+								<Text className={design.tLargeBold}>
 									{club.name}
 								</Text>
 								<div
@@ -195,7 +195,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 									style={{ marginTop: 8 }}
 								>
 									<Text
-										className={design.tSmallSubtitle}
+										className={design.tExtraSmallFaded}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
 										className={design.copyIcon}
@@ -275,7 +275,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 										}}
 									/>
 									<Space w={8} />
-									<Text className={design.tSectionTitle}>
+									<Text className={design.tMediumBold}>
 										Manage Roles
 									</Text>
 								</div>
@@ -283,7 +283,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 									className={design.spacedRowCentered}
 									style={{ marginLeft: 20 }}
 								>
-									<Text className={design.tBoldFaded}>
+									<Text className={design.tSmallBoldFaded}>
 										ROLES
 									</Text>
 									<Plus

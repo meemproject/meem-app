@@ -111,7 +111,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tModalTitle}>
+					<Text className={design.tMediumBold}>
 						Sync Existing Discord Role
 					</Text>
 				}

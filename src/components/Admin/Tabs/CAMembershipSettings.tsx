@@ -201,15 +201,16 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tSectionTitle}>
-					Membership Settings
-				</Text>
+				<Text className={design.tMediumBold}>Membership Settings</Text>
 				<Space h={32} />
 
-				<Text className={design.tBoldFaded}>Price</Text>
+				<Text className={design.tSmallBoldFaded}>Price</Text>
 				<Space h={12} />
 
-				<Text className={design.tMembershipSetting}>
+				<Text
+					className={design.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
@@ -237,8 +238,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={design.tBoldFaded}>Capacity</Text>
-				<Text className={design.tMembershipSetting}>
+				<Text className={design.tSmallBoldFaded}>Capacity</Text>
+				<Text
+					className={design.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
 						<span className={design.fOrangeSelectableSpan}>
@@ -251,9 +255,12 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={design.tBoldFaded}>Timing</Text>
+				<Text className={design.tSmallBoldFaded}>Timing</Text>
 
-				<Text className={design.tMembershipSetting}>
+				<Text
+					className={design.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
 						<span className={design.fOrangeSelectableSpan}>
@@ -302,7 +309,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={design.tSubtitleFadedBold}>
+					<Text className={design.tMediumBoldFaded}>
 						Enter cost to join
 					</Text>
 					<TextInput
@@ -334,7 +341,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={design.tSubtitleFadedBold}>
+					<Text className={design.tMediumBoldFaded}>
 						Send funds to this address
 					</Text>
 					<TextInput
@@ -422,7 +429,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={design.tSubtitleFadedBold}>
+							<Text className={design.tMediumBoldFaded}>
 								Enter total memberships
 							</Text>
 

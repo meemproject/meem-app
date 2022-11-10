@@ -35,11 +35,13 @@ export const DiscordRoleRedirectModal: React.FC<IProps> = ({
 			>
 				<div className={design.modalHeader}>
 					<Space h={128} />
-					<Text className={design.tTitle}>{`Redirecting...`}</Text>
+					<Text
+						className={design.tLargeBold}
+					>{`Redirecting...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tSubtitle}
+						className={design.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Just a moment.`}</Text>
 				</div>

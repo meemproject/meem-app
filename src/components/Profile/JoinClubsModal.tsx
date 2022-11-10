@@ -175,7 +175,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 				<div>
 					<Space h={24} />
 					<Center>
-						<Text className={design.tBold}>Email Address</Text>
+						<Text className={design.tSmallBold}>Email Address</Text>
 					</Center>
 
 					<Space h={16} />
@@ -201,7 +201,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={32} />
 
 					<Center>
-						<Text className={design.tFaded}>
+						<Text className={design.tSmallFaded}>
 							Changed your mind?
 						</Text>
 					</Center>
@@ -234,7 +234,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					closeOnClickOutside={!isLoginForced}
 					opened={isOpened}
 					title={
-						<Text className={design.tModalTitle}>
+						<Text className={design.tMediumBold}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -254,7 +254,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											position: 'relative'
 										}}
 										className={
-											design.connectMethodButtonSmall
+											design.connectMethodGridItemMobile
 										}
 										key={method.id}
 										onClick={() => {
@@ -269,13 +269,17 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											height={50}
 										/>
 										<Space w={16} />
-										<Text className={design.tBold}>
+										<Text className={design.tSmallBold}>
 											{method.name}
 										</Text>
 										{!method.enabled && (
 											<div className={design.row}>
 												<Space w={8} />
-												<Text className={design.tFaded}>
+												<Text
+													className={
+														design.tSmallFaded
+													}
+												>
 													Coming soon
 												</Text>
 											</div>
@@ -315,7 +319,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					size={isEmailState ? '' : '47%'}
 					opened={isOpened}
 					title={
-						<Text className={design.tModalTitle}>
+						<Text className={design.tMediumBold}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -341,7 +345,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 									>
 										<div
 											className={
-												design.connectMethodButton
+												design.connectMethodGridItem
 											}
 											style={{
 												position: 'relative'
@@ -355,7 +359,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											<Center>
 												<div
 													className={
-														design.connectMethodButtonContent
+														design.connectMethodGridItemContent
 													}
 												>
 													<Image
@@ -365,14 +369,16 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													/>
 													<Space h={16} />
 													<Text
-														className={design.tBold}
+														className={
+															design.tSmallBold
+														}
 													>
 														{method.name}
 													</Text>
 													{!method.enabled && (
 														<Text
 															className={
-																design.tFaded
+																design.tSmallFaded
 															}
 															style={{
 																fontSize: 14

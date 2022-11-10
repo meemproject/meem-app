@@ -85,7 +85,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 			>
 				<Space h={24} />
 				<Text
-					className={design.tSectionTitle}
+					className={design.tMediumBold}
 				>{`Are you sure you want to delete this club?`}</Text>
 				<Space h={8} />
 				<Text>This action is permanent and cannot be undone.</Text>

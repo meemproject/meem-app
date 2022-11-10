@@ -127,7 +127,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tModalTitle}>
+					<Text className={design.tMediumBold}>
 						Create New Discord Role
 					</Text>
 				}
@@ -174,7 +174,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 						<>
 							<Space h={8} />
 							<div className={design.row}>
-								<Text className={design.tSectionTitleSmall}>
+								<Text className={design.tSmallLabel}>
 									DISCORD ROLE NAME
 								</Text>
 							</div>
@@ -238,7 +238,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tModalTitle}>
+					<Text className={design.tMediumBold}>
 						Create New Discord Role
 					</Text>
 				}
@@ -285,7 +285,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 						<>
 							<Space h={8} />
 							<div className={design.row}>
-								<Text className={design.tSectionTitleSmall}>
+								<Text className={design.tSmallLabel}>
 									DISCORD ROLE NAME
 								</Text>
 								<Space w={2} />
@@ -308,7 +308,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 							/>
 							<Space h={32} />
 
-							<Text className={design.tBold}>
+							<Text className={design.tSmallBold}>
 								Channels to Gate
 							</Text>
 							<Space h={8} />

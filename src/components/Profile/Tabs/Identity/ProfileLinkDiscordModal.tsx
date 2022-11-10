@@ -82,7 +82,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tModalTitle}>
+					<Text className={design.tMediumBold}>
 						Connect your Discord account
 					</Text>
 				}

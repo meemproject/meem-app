@@ -366,12 +366,12 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
-						className={design.tModalTitle}
+						className={design.tMediumBold}
 					>{`Saving changes...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tBold}
+						className={design.tSmallBold}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>

@@ -326,7 +326,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tSectionTitle}>
+				<Text className={design.tMediumBold}>
 					Membership Requirements
 				</Text>
 
@@ -558,7 +558,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						}
 					>
 						<Space h={24} />
-						<Text className={design.tSubtitleFadedBold}>
+						<Text className={design.tMediumBoldFaded}>
 							How to apply
 						</Text>
 						<Space h={4} />
@@ -584,7 +584,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={design.tSubtitleFadedBold}>
+						<Text className={design.tMediumBoldFaded}>
 							Approved Addresses
 						</Text>
 						<Text className={design.tExtraSmallFaded}>
@@ -623,7 +623,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								: design.invisibleContainer
 						}
 					>
-						{/* <Text className={design.tSubtitleFadedBold}>Chain</Text>
+						{/* <Text className={design.tMediumBoldFaded}>Chain</Text>
 						<Select
 							data={[
 								{
@@ -640,7 +640,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing?.tokenChain}
 						/> */}
-						<Text className={design.tSubtitleFadedBold}>
+						<Text className={design.tMediumBoldFaded}>
 							Token Address
 						</Text>
 						<TextInput
@@ -657,7 +657,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={design.tSubtitleFadedBold}>
+						<Text className={design.tMediumBoldFaded}>
 							Minimum Quantity
 						</Text>
 						<TextInput
@@ -684,7 +684,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								: design.invisibleContainer
 						}
 					>
-						<Text className={design.tSubtitleFadedBold}>
+						<Text className={design.tMediumBoldFaded}>
 							Club Name
 						</Text>
 

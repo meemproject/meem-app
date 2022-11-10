@@ -1,11 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import { createStyles } from '@mantine/core'
+import { color } from 'html2canvas/dist/types/css/types/color'
+
+export const colorBlack = '#000000'
+export const colorDarkGrey = '#444444'
+export const colorGrey = '#E1E1E1'
+export const colorLightGrey = '#F2F2F2'
+export const colorLightestGrey = '#FAFAFA'
+export const colorWhite = '#FFFFFF'
+export const colorPink = '#FF6651'
+export const colorLightPink = '#FFF0EE'
+export const colorGreen = '#1DAD4E'
 
 export const useGlobalStyles = createStyles(theme => ({
 	// Buttons
 	buttonBlack: {
-		backgroundColor: 'black',
+		backgroundColor: colorBlack,
 		'&:hover': {
 			backgroundColor: theme.colors.gray[8]
 		},
@@ -13,49 +24,51 @@ export const useGlobalStyles = createStyles(theme => ({
 	},
 	buttonGrey: {
 		marginLeft: 8,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
+		backgroundColor: colorGrey,
 		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
+			backgroundColor: colorLightGrey
 		},
 		borderRadius: 24
 	},
 	buttonRed: {
-		color: 'white',
+		color: colorWhite,
 		marginLeft: 8,
-		backgroundColor: 'rgba(217, 92, 75, 1)',
+		backgroundColor: colorPink,
 		'&:hover': {
-			backgroundColor: theme.colors.red[8]
+			backgroundColor: colorLightPink
 		},
 		borderRadius: 24
 	},
 	buttonWhite: {
 		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
+		color: colorBlack,
+		borderColor: colorBlack,
+		backgroundColor: colorWhite,
 		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
+			backgroundColor: colorLightestGrey
 		}
 	},
 
 	// Form Fields
 	fRadio: { fontWeight: 600, fontFamily: 'Inter' },
 	fTextField: {
-		backgroundColor: '#FAFAFA',
+		backgroundColor: colorLightestGrey,
 		border: '0px',
 		height: 60
 	},
-	fTextFieldRoot: {},
 	fOrangeSelectableSpan: {
 		padding: 4,
 		borderRadius: 8,
 		fontWeight: 'bold',
-		backgroundColor: 'rgba(255, 102, 81, 0.1)',
-		color: 'rgba(255, 102, 81, 1)',
+		backgroundColor: colorLightPink,
+		color: colorPink,
 		cursor: 'pointer'
 	},
 
 	// Layout
+	clickable: {
+		cursor: 'pointer'
+	},
 	centered: {
 		alignItems: 'center',
 		textAlign: 'center'
@@ -72,31 +85,55 @@ export const useGlobalStyles = createStyles(theme => ({
 	fullWidth: {
 		width: '100%'
 	},
-	footerContainer: {
-		position: 'fixed',
-		bottom: 0,
-		left: 0,
-		right: 0
+	row: {
+		display: 'flex'
 	},
-	footerBackground: {
-		backgroundColor: 'white',
-		width: '100%',
-		height: 48,
-		paddingTop: 8
+	rowEndAlign: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'end'
+	},
+	// A row which turns into a column when display is narrow enough
+	rowResponsive: {
+		display: 'flex',
+		flexDirection: 'row',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			flexDirection: 'column'
+		}
+	},
+	spacedRowCentered: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center'
+	},
+	spacedRow: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	invisibleContainer: { display: 'none' },
+	visibleContainer: { display: 'block' },
+
+	// Grids and items
+	boxBorderedRounded: {
+		border: colorGrey,
+		padding: 16,
+		borderRadius: 16
 	},
 	gridItem: {
 		marginBottom: 24,
 		fontSize: 16,
 		fontWeight: 600,
 		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
+		border: colorLightGrey,
+		backgroundColor: colorLightestGrey,
 		borderRadius: 16,
 		padding: 16
 	},
 	gridItemCentered: {
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
+		border: colorLightGrey,
+		backgroundColor: colorLightestGrey,
 		fontWeight: 600,
 		borderRadius: 16,
 		padding: 16,
@@ -104,15 +141,92 @@ export const useGlobalStyles = createStyles(theme => ({
 		display: 'flex',
 		alignItems: 'center'
 	},
+	connectMethodGridItem: {
+		backgroundColor: colorLightestGrey,
+		width: 200,
+		height: 200,
+		borderRadius: 20,
+		border: colorGrey,
+		cursor: 'pointer',
+		position: 'relative'
+	},
+	connectMethodGridItemMobile: {
+		backgroundColor: colorLightestGrey,
+		display: 'flex',
+		flexDirection: 'row',
+		borderRadius: 32,
+		padding: 8,
+		border: colorGrey,
+		cursor: 'pointer',
+		alignItems: 'center'
+	},
+	connectMethodGridItemContent: {
+		marginTop: 55,
+		alignItems: 'center',
+		textAlign: 'center'
+	},
+	integrationGridItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'start',
+		fontWeight: 600,
+		minHeight: 110,
+		marginBottom: 12,
+		cursor: 'pointer',
+		border: colorGrey,
+		backgroundColor: colorLightestGrey,
+		borderRadius: 16,
+		padding: 16
+	},
+	integrationGridItemEnabled: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		marginBottom: 12,
+		border: colorGrey,
+		backgroundColor: colorLightestGrey,
+		borderRadius: 16,
+		paddingTop: 16,
+		position: 'relative'
+	},
+	integrationGridItemEnabledHeaderBackground: {
+		backgroundColor: colorLightestGrey,
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		height: 53,
+		borderTopLeftRadius: 16,
+		borderTopRightRadius: 16
+	},
+	integrationGridItemActions: {
+		display: 'flex',
+		flexDirection: 'row',
+		height: 46
+	},
+	integrationGridItemAction: {
+		cursor: 'pointer',
+		display: 'flex',
+		flexDirection: 'row',
+		padding: 12
+	},
+	integrationGridItemHeader: {
+		fontWeight: 600,
+		display: 'flex',
+		alignItems: 'center',
+		zIndex: 1
+	},
+
+	// Page Header
 	pageHeader: {
 		marginBottom: 32,
 		display: 'flex',
-		backgroundColor: '#FAFAFA',
+		backgroundColor: colorLightestGrey,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
+		borderBottomColor: colorLightGrey,
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
@@ -138,6 +252,22 @@ export const useGlobalStyles = createStyles(theme => ({
 		},
 		cursor: 'pointer'
 	},
+
+	// Page Footer
+	pageFooterContainer: {
+		position: 'fixed',
+		bottom: 0,
+		left: 0,
+		right: 0
+	},
+	pageFooterBackground: {
+		backgroundColor: colorWhite,
+		width: '100%',
+		height: 48,
+		paddingTop: 8
+	},
+
+	// Modal
 	modalHeader: {
 		display: 'flex',
 		alignItems: 'center',
@@ -149,10 +279,12 @@ export const useGlobalStyles = createStyles(theme => ({
 		position: 'relative'
 	},
 	modalStepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
+		border: `1px solid ${colorLightGrey}`,
 		borderRadius: 16,
 		padding: 16
 	},
+
+	// Page Panel Layout
 	pagePanelLayoutContainer: {
 		display: 'flex',
 		width: '100%',
@@ -181,35 +313,7 @@ export const useGlobalStyles = createStyles(theme => ({
 	},
 	pagePanelLayoutNavItem: { borderRadius: 8 },
 
-	row: {
-		display: 'flex'
-	},
-	rowEndAlign: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'end'
-	},
-	// A row which turns into a column when display is narrow enough
-	rowResponsive: {
-		display: 'flex',
-		flexDirection: 'row',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			flexDirection: 'column'
-		}
-	},
-	spacedRowCentered: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		alignItems: 'center'
-	},
-	spacedRow: {
-		display: 'flex',
-		flexDirection: 'row',
-		justifyContent: 'space-between'
-	},
-
-	// Site header bar styles
+	// Site header bar
 	siteHeader: {
 		marginTop: 0,
 		paddingTop: 8,
@@ -248,15 +352,14 @@ export const useGlobalStyles = createStyles(theme => ({
 	},
 	siteHeaderUser: {
 		marginBottom: '5px',
-		color:
-			theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+		color: theme.colorScheme === 'dark' ? colorDarkGrey : colorBlack,
 		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
 		borderRadius: theme.radius.sm,
 		transition: 'background-color 100ms ease'
 	},
 	siteHeaderUserActive: {
 		backgroundColor:
-			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorWhite
 	},
 	siteHeaderMenuEllipse: {
 		[theme.fn.smallerThan('md')]: {
@@ -268,6 +371,11 @@ export const useGlobalStyles = createStyles(theme => ({
 	},
 
 	// Images
+	copyIcon: {
+		marginLeft: 4,
+		padding: 2,
+		cursor: 'pointer'
+	},
 	emojiCanvas: {
 		position: 'absolute',
 		top: 40,
@@ -286,7 +394,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		height: 256,
 		marginTop: -12,
 		marginBottom: -12,
-		backgroundColor: 'white',
+		backgroundColor: colorWhite,
 		zIndex: -1
 	},
 	imageClubLogo: {
@@ -326,214 +434,72 @@ export const useGlobalStyles = createStyles(theme => ({
 		paddingLeft: 8,
 		paddingRight: 8
 	},
-	borderedBoxRounded: {
-		border: '1px solid rgba(0, 0, 0, 0.5)',
-		padding: 16,
-		borderRadius: 16
-	},
-	clickable: {
-		cursor: 'pointer'
-	},
-	connectMethodButton: {
-		backgroundColor: '#FAFAFA',
-		width: 200,
-		height: 200,
-		borderRadius: 20,
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		cursor: 'pointer',
-		position: 'relative'
-	},
-	connectMethodButtonSmall: {
-		backgroundColor: '#FAFAFA',
-		display: 'flex',
-		flexDirection: 'row',
-		borderRadius: 32,
-		padding: 8,
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		cursor: 'pointer',
-		alignItems: 'center'
-	},
-	connectMethodButtonContent: {
-		marginTop: 55,
-		alignItems: 'center',
-		textAlign: 'center'
-	},
 
-	copyIcon: {
-		marginLeft: 4,
-		padding: 2,
-		cursor: 'pointer'
-	},
-	clubIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'start',
+	// Text styles
+	tExtraExtraLarge: { fontWeight: 600, fontSize: '32px', lineHeight: '120%' },
+	tExtraLarge: { fontWeight: 600, fontSize: '28px', lineHeight: '120%' },
+	tLargeBold: { fontWeight: 600, fontSize: '24px', lineHeight: '120%' },
+	tLarge: { fontSize: '24px', lineHeight: '120%' },
+	tMediumBold: { fontWeight: 600, fontSize: '18px', lineHeight: '120%' },
+	tMediumBoldFaded: {
+		fontSize: 18,
 		fontWeight: 600,
-		minHeight: 110,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-
-	enabledClubIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center',
-		marginBottom: 12,
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: 'white',
-		borderRadius: 16,
-		paddingTop: 16,
-		position: 'relative'
-	},
-	enabledClubIntegrationItemHeaderBackground: {
-		backgroundColor: '#FAFAFA',
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		right: 0,
-		height: 53,
-		borderTopLeftRadius: 16,
-		borderTopRightRadius: 16
-	},
-	integrationActions: {
-		display: 'flex',
-		flexDirection: 'row',
-		height: 46
-	},
-	integrationAction: {
-		cursor: 'pointer',
-		display: 'flex',
-		flexDirection: 'row',
-		padding: 12
-	},
-	clubIntegrationItemHeader: {
-		fontWeight: 600,
-		display: 'flex',
-		alignItems: 'center',
-		zIndex: 1
-	},
-
-	invisibleContainer: { display: 'none' },
-	visibleContainer: { display: 'block' },
-
-	// Text
-	tBadge: {
-		color: '#FF6651'
-	},
-
-	tBold: {
-		fontWeight: 700
-	},
-	tBoldRed: {
-		fontWeight: 600,
-		color: 'rgba(255, 102, 81, 1)'
-	},
-	tBoldFaded: {
-		fontWeight: 700,
+		lineHeight: '120%',
 		opacity: 0.6
+	},
+	tMediumButton: { fontWeight: 500, fontSize: '18px', lineHeight: '120%' },
+	tMediumFaded: { fontWeight: 400, fontSize: '18px', lineHeight: '120%' },
+	tMedium: { fontWeight: 400, fontSize: '18px', lineHeight: '120%' },
+	tSmallBold: { fontWeight: 600, fontSize: '16px', lineHeight: '120%' },
+	tSmallBoldFaded: {
+		fontWeight: 600,
+		fontSize: '16px',
+		lineHeight: '120%',
+		opacity: 0.6
+	},
+	tSmallFaded: {
+		fontSize: '16px',
+		opacity: 0.6
+	},
+	tSmall: { fontWeight: 500, fontSize: '16px', lineHeight: '130%' },
+	tSmallLabel: {
+		fontWeight: 600,
+		fontSize: '16px',
+		lineHeight: '120%',
+		letterSpacing: '0.05em',
+		textTransform: 'uppercase'
+	},
+	tExtraSmallBold: {
+		fontSize: '14px',
+		lineHeight: '120%',
+		fontWeight: 600
+	},
+	tExtraSmallBoldFaded: {
+		fontSize: '140px',
+		lineHeight: '120%',
+		fontWeight: 600,
+		opacity: 0.6
+	},
+	tExtraSmallFaded: {
+		fontWeight: 500,
+		fontSize: '14px',
+		lineHeight: '120%',
+		opacity: 0.6
+	},
+	tExtraSmall: { fontWeight: 500, fontSize: '14px', lineHeight: '120%' },
+	tExtraExtraSmall: { fontWeight: 500, fontSize: '12px', lineHeight: '120%' },
+
+	// Text variants
+	tLink: {
+		textDecoration: 'underline',
+		cursor: 'pointer',
+		color: colorPink,
+		fontWeight: 600
 	},
 	tEllipsis: {
 		textOverflow: 'ellipsis',
 		msTextOverflow: 'ellipsis',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden'
-	},
-	tExtraSmall: {
-		fontSize: 14
-	},
-	tExtraSmallBold: {
-		fontSize: 14,
-		fontWeight: 700
-	},
-	tExtraSmallFaded: {
-		fontSize: 14,
-		opacity: 0.6
-	},
-	tExtraSmallBoldFaded: {
-		fontSize: 14,
-		fontWeight: 700,
-		opacity: 0.6
-	},
-	tHeaderTitleText: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	tLink: {
-		textDecoration: 'underline',
-		cursor: 'pointer',
-		color: 'rgba(255, 102, 81, 1)',
-		fontWeight: 700
-	},
-	tMembershipSetting: {
-		fontSize: 20,
-		marginBottom: 8,
-		lineHeight: 2,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	tMembershipSettingAdditionalRequirement: {
-		fontSize: 20,
-		marginBottom: 16,
-		marginTop: 16,
-		lineHeight: 2,
-		position: 'relative',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	tModalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	tListItemTitle: {
-		fontWeight: 700
-	},
-	tFaded: {
-		opacity: 0.6
-	},
-	tSectionTitleSmall: {
-		fontSize: 14,
-		opacity: 0.58,
-		fontWeight: 600,
-		letterSpacing: 1.05
-	},
-	tSectionTitle: {
-		fontWeight: 600,
-		fontSize: 20
-	},
-	tTitle: {
-		fontWeight: 600,
-		fontSize: 24
-	},
-	tSubtitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	tSubtitleFadedBold: {
-		fontSize: 18,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	tSubtitleFaded: {
-		opacity: 0.6,
-		fontSize: 18
-	},
-	tSuccess: {
-		fontWeight: 600,
-		fontSize: 22,
-		color: 'rgba(29, 173, 78, 1)'
-	},
-	tSmallSubtitle: {
-		opacity: 0.6,
-		fontWeight: 500,
-		fontSize: 14
 	}
 }))

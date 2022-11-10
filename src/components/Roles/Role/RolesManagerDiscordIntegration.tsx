@@ -125,7 +125,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 	return (
 		<>
 			<div>
-				<Text className={design.tSectionTitleSmall}>DISCORD ROLE</Text>
+				<Text className={design.tSmallLabel}>DISCORD ROLE</Text>
 				{role?.id === 'addRole' && (
 					<div>
 						<Space h={8} />
@@ -215,7 +215,11 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 											/>
 											<Space w={16} />
 											<div>
-												<Text className={design.tTitle}>
+												<Text
+													className={
+														design.tLargeBold
+													}
+												>
 													{
 														guildPlatform.platformGuildName
 													}
@@ -240,18 +244,18 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 										<Space h={24} />
 										<div
 											className={
-												design.enabledClubIntegrationItem
+												design.integrationGridItemEnabled
 											}
 											style={{ width: 400 }}
 										>
 											<div
 												className={
-													design.enabledClubIntegrationItemHeaderBackground
+													design.integrationGridItemEnabledHeaderBackground
 												}
 											/>
 											<div
 												className={
-													design.clubIntegrationItemHeader
+													design.integrationGridItemHeader
 												}
 											>
 												<Image
@@ -273,7 +277,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 											</div>
 											<div
 												className={
-													design.integrationActions
+													design.integrationGridItemActions
 												}
 											>
 												<a
@@ -285,7 +289,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												>
 													<div
 														className={
-															design.integrationAction
+															design.integrationGridItemAction
 														}
 													>
 														<ExternalLink
@@ -316,7 +320,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												>
 													<div
 														className={
-															design.integrationAction
+															design.integrationGridItemAction
 														}
 													>
 														<Settings size={20} />

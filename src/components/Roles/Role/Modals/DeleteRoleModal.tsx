@@ -86,7 +86,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				padding={'lg'}
 				withCloseButton={!isDeletingRole}
 				opened={isOpened}
-				title={<Text className={design.tModalTitle}>Delete Role</Text>}
+				title={<Text className={design.tMediumBold}>Delete Role</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -94,7 +94,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				<Divider />
 				<Space h={24} />
 				<Text
-					className={design.tSectionTitle}
+					className={design.tMediumBold}
 				>{`Are you sure you want to delete this role?`}</Text>
 				<Space h={32} />
 				<div className={design.row}>

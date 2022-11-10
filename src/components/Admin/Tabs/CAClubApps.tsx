@@ -339,13 +339,13 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tSectionTitle}>Club Apps</Text>
+				<Text className={design.tMediumBold}>Club Apps</Text>
 				<Space h={32} />
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
 					<>
 						<Text
-							className={design.tSubtitle}
+							className={design.tMediumBold}
 						>{`Added apps (${existingIntegrations?.length})`}</Text>
 						<Space h={8} />
 						<Grid>
@@ -360,17 +360,17 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								>
 									<div
 										className={
-											design.enabledClubIntegrationItem
+											design.integrationGridItemEnabled
 										}
 									>
 										<div
 											className={
-												design.enabledClubIntegrationItemHeaderBackground
+												design.integrationGridItemEnabledHeaderBackground
 											}
 										/>
 										<div
 											className={
-												design.clubIntegrationItemHeader
+												design.integrationGridItemHeader
 											}
 										>
 											<Image
@@ -491,7 +491,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				{!loading && inteData && (
 					<>
 						<Text
-							className={design.tSubtitle}
+							className={design.tMediumBold}
 						>{`Available apps (${searchedIntegrations?.length})`}</Text>
 						<Space h={8} />
 
@@ -528,12 +528,12 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 									>
 										<div
 											className={
-												design.clubIntegrationItem
+												design.integrationGridItem
 											}
 										>
 											<div
 												className={
-													design.clubIntegrationItemHeader
+													design.integrationGridItemHeader
 												}
 											>
 												<Image
@@ -632,7 +632,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					opened={isIntegrationModalOpened}
 					title={
 						<Text
-							className={design.tModalTitle}
+							className={design.tMediumBold}
 						>{`Add ${integrationBeingEdited?.name}`}</Text>
 					}
 					onClose={() => {
@@ -671,7 +671,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 								)}
 
 							<Text
-								className={design.tBold}
+								className={design.tSmallBold}
 							>{`Enter your club's ${
 								integrationBeingEdited.name
 							}${

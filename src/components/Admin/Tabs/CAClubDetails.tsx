@@ -84,11 +84,11 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 		<div className={design.fullWidth}>
 			<Space h={12} />
 
-			<Text className={design.tSectionTitle}>Club Profile</Text>
+			<Text className={design.tMediumBold}>Club Profile</Text>
 			<Space h={32} />
 
 			<Text
-				className={design.tSubtitle}
+				className={design.tMediumBold}
 			>{`What's your club called?`}</Text>
 			<Space h={16} />
 			<TextInput
@@ -99,7 +99,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 				onChange={event => setClubName(event.currentTarget.value)}
 			/>
 			<Space h={'xl'} />
-			<Text className={design.tSubtitle}>
+			<Text className={design.tMediumBold}>
 				In a sentence, describe what your members do together.
 			</Text>
 			<Space h={16} />

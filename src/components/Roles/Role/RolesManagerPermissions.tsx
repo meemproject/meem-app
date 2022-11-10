@@ -75,9 +75,9 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h={14} />
-				<Text className={design.tSectionTitle}>{`Permissions`}</Text>
+				<Text className={design.tMediumBold}>{`Permissions`}</Text>
 				<Space h={32} />
-				<Text className={design.tSectionTitleSmall}>
+				<Text className={design.tSmallLabel}>
 					{`Contract Permissions (Admin Only)`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -91,7 +91,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				<Text className={design.tSectionTitleSmall}>
+				<Text className={design.tSmallLabel}>
 					{`Club Permissions`.toUpperCase()}
 				</Text>
 				<Space h={8} />

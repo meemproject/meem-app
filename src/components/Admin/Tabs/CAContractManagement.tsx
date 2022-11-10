@@ -179,10 +179,10 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	return (
 		<div>
 			<Space h={12} />
-			<Text className={design.tSectionTitle}>Contract Management</Text>
+			<Text className={design.tMediumBold}>Contract Management</Text>
 			<Space h={32} />
 
-			<Text className={design.tSectionTitleSmall}>CONTRACT ADDRESS</Text>
+			<Text className={design.tSmallLabel}>CONTRACT ADDRESS</Text>
 			<Space h={12} />
 
 			<div className={design.row}>
@@ -217,14 +217,14 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			<Space h={32} />
 
-			<Text className={design.tSectionTitleSmall}>MEEM PROTOCOL</Text>
+			<Text className={design.tSmallLabel}>MEEM PROTOCOL</Text>
 			<Space h={12} />
 
 			<Text
-				className={design.tBold}
+				className={design.tSmallBold}
 			>{`Does Meem protocol have permission to manage your club’s smart contract?`}</Text>
 			<Space h={4} />
-			<Text className={design.tFaded}>
+			<Text className={design.tSmallFaded}>
 				Please note that a transaction will occur when you save changes
 				to this setting.
 			</Text>
@@ -303,7 +303,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Space h={32} />
 					<Divider />
 					<Space h={32} />
-					<Text className={design.tSectionTitleSmall}>
+					<Text className={design.tSmallLabel}>
 						UPGRADE CLUB CONTRACT
 					</Text>
 					<Space h={12} />
@@ -358,9 +358,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Space h={32} />
 			<Divider />
 			<Space h={32} />
-			<Text className={design.tSectionTitleSmall}>
-				CLUB TREASURY ADDRESS
-			</Text>
+			<Text className={design.tSmallLabel}>CLUB TREASURY ADDRESS</Text>
 			<Space h={12} />
 			{club.gnosisSafeAddress && (
 				<>

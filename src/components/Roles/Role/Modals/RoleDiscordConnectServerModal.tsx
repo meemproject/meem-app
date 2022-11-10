@@ -167,7 +167,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tModalTitle}>
+					<Text className={design.tMediumBold}>
 						{isSavingChanges
 							? ``
 							: `Which Discord server would you like to connect?`}
@@ -246,7 +246,11 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											/>
 											<Space w={16} />
 											<div>
-												<Text className={design.tBold}>
+												<Text
+													className={
+														design.tSmallBold
+													}
+												>
 													{server.name}
 												</Text>
 

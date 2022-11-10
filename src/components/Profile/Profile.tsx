@@ -247,7 +247,7 @@ export const ProfileComponent: React.FC = () => {
 				id.identity && (
 					<>
 						<div className={design.pageHeader}>
-							<div className={design.tHeaderTitleText}>
+							<div className={design.tLargeBold}>
 								{id.identity.profilePic && (
 									<>
 										<Image
@@ -342,7 +342,7 @@ export const ProfileComponent: React.FC = () => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={design.tBoldFaded}>
+								<Text className={design.tSmallBoldFaded}>
 									SETTINGS
 								</Text>
 								<NavLink

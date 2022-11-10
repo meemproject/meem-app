@@ -162,9 +162,9 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={design.tSectionTitle}>Club Icon</Text>
+			<Text className={design.tMediumBold}>Club Icon</Text>
 			<Space h={32} />
-			<Text className={design.tSubtitle}>
+			<Text className={design.tMediumBold}>
 				Upload an icon for your club.
 			</Text>
 			<Text

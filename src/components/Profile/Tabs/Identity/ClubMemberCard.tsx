@@ -28,14 +28,14 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 					</>
 				)}
 				<div>
-					<Text className={design.tBold}>
+					<Text className={design.tSmallBold}>
 						{member.displayName && member.displayName.length > 0
 							? member.displayName
 							: 'Club Member'}
 					</Text>
 
 					<div className={design.centeredRow}>
-						<Text className={design.tFaded}>
+						<Text className={design.tSmallFaded}>
 							{member.ens
 								? member.ens
 								: quickTruncate(member.wallet)}
@@ -70,7 +70,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 				<>
 					<Space h={24} />
 					<div className={design.centeredRow}>
-						<Text className={design.tBold}>Contact</Text>
+						<Text className={design.tSmallBold}>Contact</Text>
 						<Space w={4} />
 						<Image
 							src="/icon-verified.png"
@@ -88,13 +88,13 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							className={design.centeredRowClickable}
 						>
 							<Image
-								className={design.tFaded}
+								className={design.tSmallFaded}
 								src="/integration-twitter.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={design.tFaded}>
+							<Text className={design.tSmallFaded}>
 								{member.twitterUsername}
 							</Text>
 						</div>
@@ -109,13 +109,13 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							className={design.centeredRowClickable}
 						>
 							<Image
-								className={design.tFaded}
+								className={design.tSmallFaded}
 								src="/integration-discord.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={design.tFaded}>
+							<Text className={design.tSmallFaded}>
 								{member.discordUsername}
 							</Text>
 						</div>
@@ -128,13 +128,13 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							className={design.centeredRowClickable}
 						>
 							<Image
-								className={design.tFaded}
+								className={design.tSmallFaded}
 								src="/integration-email.png"
 								width={12}
 								height={12}
 							/>
 							<Space w={4} />
-							<Text className={design.tFaded}>
+							<Text className={design.tSmallFaded}>
 								{member.emailAddress}
 							</Text>
 						</div>
@@ -144,7 +144,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 			{member.roles && member.roles.length > 0 && (
 				<>
 					<Space h={24} />
-					<Text className={design.tBold}>{'Roles'}</Text>
+					<Text className={design.tSmallBold}>{'Roles'}</Text>
 					<Space h={4} />
 					{member.roles.map(role => (
 						<div className={design.row} key={role.id}>
@@ -156,7 +156,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 									deg: 35
 								}}
 								classNames={{
-									inner: design.tBadge,
+									inner: design.tExtraSmallBold,
 									root: design.badge
 								}}
 							>

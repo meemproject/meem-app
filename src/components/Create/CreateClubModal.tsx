@@ -454,7 +454,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
-						className={design.tModalTitle}
+						className={design.tMediumBold}
 					>{`We're creating your club!`}</Text>
 					<Space h={32} />
 					<Image
@@ -464,7 +464,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 						className={design.imageClubLogo}
 						src={Cookies.get(CookieKeys.clubImage)}
 					/>
-					<Text className={design.tHeaderTitleText}>
+					<Text className={design.tLargeBold}>
 						{Cookies.get(CookieKeys.clubName)}
 					</Text>
 					<Space h={24} />

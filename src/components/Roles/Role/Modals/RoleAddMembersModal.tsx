@@ -116,7 +116,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				size={'50%'}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={design.tModalTitle}>Add Members</Text>}
+				title={<Text className={design.tMediumBold}>Add Members</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -147,7 +147,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						{filteredMembers.map(member => (
 							<div key={member.wallet}>
 								<Space h={16} />
-								<div className={design.tListItemTitle}>
+								<div>
 									<div className={design.centeredRow}>
 										<Checkbox
 											checked={member.chosen}
@@ -184,11 +184,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 										/>
 										<Space w={16} />
 										<div>
-											<Text
-												className={
-													design.tListItemTitle
-												}
-											>
+											<Text className={design.tLargeBold}>
 												{member.displayName ??
 													'Club Member'}
 											</Text>

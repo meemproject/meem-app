@@ -9,9 +9,9 @@ export const MeemFooter: React.FC = () => {
 	return (
 		<div>
 			<Space h={128} />
-			<div className={design.footerContainer}>
+			<div className={design.pageFooterContainer}>
 				<Divider />
-				<div className={design.footerBackground}>
+				<div className={design.pageFooterBackground}>
 					<Center>
 						<div className={design.row}>
 							<Text>Powered by</Text>

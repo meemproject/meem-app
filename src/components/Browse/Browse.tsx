@@ -88,9 +88,7 @@ export const BrowseComponent: React.FC = () => {
 					<a onClick={navigateHome}>
 						<ArrowLeft className={design.backArrow} size={32} />
 					</a>
-					<Text className={design.tHeaderTitleText}>
-						Browse all clubs
-					</Text>
+					<Text className={design.tLargeBold}>Browse all clubs</Text>
 				</div>
 				<Button
 					onClick={navigateToCreate}
@@ -164,7 +162,7 @@ export const BrowseComponent: React.FC = () => {
 											}}
 										>
 											<Text
-												className={design.tBold}
+												className={design.tSmallBold}
 												style={{
 													textOverflow: 'ellipsis',
 													msTextOverflow: 'ellipsis',

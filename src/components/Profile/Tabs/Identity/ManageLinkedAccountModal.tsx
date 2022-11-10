@@ -82,17 +82,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				title={
 					<>
 						{integration?.name === 'Twitter' && (
-							<Text className={design.tModalTitle}>
+							<Text className={design.tMediumBold}>
 								Twitter Settings
 							</Text>
 						)}
 						{integration?.name === 'Discord' && (
-							<Text className={design.tModalTitle}>
+							<Text className={design.tMediumBold}>
 								Discord Settings
 							</Text>
 						)}
 						{integration?.name === 'Email' && (
-							<Text className={design.tModalTitle}>
+							<Text className={design.tMediumBold}>
 								Email Address Settings
 							</Text>
 						)}

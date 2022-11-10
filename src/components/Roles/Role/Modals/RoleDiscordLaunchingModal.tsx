@@ -36,12 +36,12 @@ export const RoleDiscordLaunchingModal: React.FC<IProps> = ({
 				<div className={design.modalHeader}>
 					<Space h={128} />
 					<Text
-						className={design.tTitle}
+						className={design.tLargeBold}
 					>{`Launching Discord...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tSubtitle}
+						className={design.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Please wait`}</Text>
 				</div>

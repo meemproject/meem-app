@@ -20,11 +20,11 @@ export const CADeleteClub: React.FC<IProps> = ({ club }) => {
 		<div className={design.fullWidth}>
 			<Space h={12} />
 
-			<Text className={design.tTitle}>Delete Club</Text>
+			<Text className={design.tLargeBold}>Delete Club</Text>
 			<Space h={24} />
 
 			<Text
-				className={design.tBold}
+				className={design.tSmallBold}
 			>{`Once deleted, your club will be removed from the Clubs database and will no longer be discoverable for new or existing members. This action cannot be undone.`}</Text>
 			<Space h={16} />
 

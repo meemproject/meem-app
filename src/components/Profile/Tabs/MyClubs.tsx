@@ -86,9 +86,9 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length === 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={design.tSectionTitle}>My Clubs</Text>
+					<Text className={design.tMediumBold}>My Clubs</Text>
 					<Space h={32} />
-					<Text className={design.tSubtitle}>
+					<Text className={design.tMediumBold}>
 						{`You haven't joined any clubs!`}
 					</Text>
 					<Space h={16} />
@@ -100,7 +100,7 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length > 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={design.tSectionTitle}>My Clubs</Text>
+					<Text className={design.tMediumBold}>My Clubs</Text>
 					<Space h={32} />
 
 					<Grid>
@@ -145,7 +145,7 @@ export const MyClubsComponent: React.FC = () => {
 														deg: 35
 													}}
 													classNames={{
-														inner: design.tBadge,
+														inner: design.tExtraSmallBold,
 														root: design.badge
 													}}
 													leftSection={
