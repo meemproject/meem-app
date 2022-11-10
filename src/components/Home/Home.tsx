@@ -261,7 +261,7 @@ export function HomeComponent() {
 					marginTop: 70
 				}}
 			>
-				<Text className={design.tSmallLabel}>CREATE A CLUB</Text>
+				<Text className={design.tExtraSmallLabel}>CREATE A CLUB</Text>
 				<Space h={16} />
 				<Text
 					style={{
@@ -321,7 +321,7 @@ export function HomeComponent() {
 					</Text>
 				)}
 				<Space h={64} />
-				<Text className={design.tSmallLabel}>JOIN A CLUB</Text>
+				<Text className={design.tExtraSmallLabel}>JOIN A CLUB</Text>
 				<Space h={16} />
 				<Text
 					style={{

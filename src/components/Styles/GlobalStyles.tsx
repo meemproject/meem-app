@@ -474,8 +474,8 @@ export const useGlobalStyles = createStyles(theme => ({
 		lineHeight: '120%',
 		fontWeight: 600
 	},
-	tExtraSmallBoldFaded: {
-		fontSize: '140px',
+	tExtraSmallLabel: {
+		fontSize: '14px',
 		lineHeight: '120%',
 		fontWeight: 600,
 		opacity: 0.6

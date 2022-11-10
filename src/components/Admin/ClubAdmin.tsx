@@ -210,7 +210,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								<Space h={8} />
 								<div className={design.row}>
 									<Text
-										className={design.tExtraSmallBoldFaded}
+										className={design.tExtraSmallLabel}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
 										className={design.copyIcon}

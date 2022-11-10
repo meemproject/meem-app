@@ -272,9 +272,7 @@ export const ProfileComponent: React.FC = () => {
 									<Space h={8} />
 									<div className={design.row}>
 										<Text
-											className={
-												design.tExtraSmallBoldFaded
-											}
+											className={design.tExtraSmallLabel}
 										>
 											{id.identity.ensAddress
 												? id.identity.ensAddress
