@@ -178,21 +178,17 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div>
-			<Space h={16} />
-			<Text className={design.tMediumBold}>Contract Management</Text>
+			<Space h={12} />
+			<Text className={design.tLargeBold}>Contract Management</Text>
 			<Space h={32} />
 
-			<Text className={design.tSmallLabel}>CONTRACT ADDRESS</Text>
+			<Text className={design.tExtraSmallLabel}>CONTRACT ADDRESS</Text>
 			<Space h={16} />
 
-			<div className={design.row}>
+			<div className={design.centeredRow}>
 				<Text style={{ wordBreak: 'break-word' }}>{club.address}</Text>
 				<Image
-					style={{
-						marginLeft: 4,
-						padding: 2,
-						cursor: 'pointer'
-					}}
+					className={design.copyIcon}
 					src="/copy.png"
 					height={20}
 					onClick={() => {
@@ -217,17 +213,19 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			<Space h={32} />
 
-			<Text className={design.tSmallLabel}>MEEM PROTOCOL</Text>
+			<Text className={design.tExtraSmallLabel}>MEEM PROTOCOL</Text>
 			<Space h={16} />
 
 			<Text
 				className={design.tSmallBold}
 			>{`Does Meem protocol have permission to manage your club’s smart contract?`}</Text>
-			<Space h={4} />
+			<Space h={8} />
 			<Text className={design.tSmallFaded}>
 				Please note that a transaction will occur when you save changes
 				to this setting.
 			</Text>
+			<Space h={12} />
+
 			<Radio.Group
 				orientation="vertical"
 				spacing={10}
@@ -249,7 +247,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 				/>
 			</Radio.Group>
 
-			<Space h={16} />
+			<Space h={24} />
 
 			<Button
 				className={design.buttonBlack}
@@ -303,7 +301,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Space h={32} />
 					<Divider />
 					<Space h={32} />
-					<Text className={design.tSmallLabel}>
+					<Text className={design.tExtraSmallLabel}>
 						UPGRADE CLUB CONTRACT
 					</Text>
 					<Space h={16} />
@@ -358,8 +356,10 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Space h={32} />
 			<Divider />
 			<Space h={32} />
-			<Text className={design.tSmallLabel}>CLUB TREASURY ADDRESS</Text>
-			<Space h={16} />
+			<Text className={design.tExtraSmallLabel}>
+				CLUB TREASURY ADDRESS
+			</Text>
+			<Space h={20} />
 			{club.gnosisSafeAddress && (
 				<>
 					<div className={design.row}>
@@ -367,11 +367,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 							{club.gnosisSafeAddress}
 						</Text>
 						<Image
-							style={{
-								marginLeft: 4,
-								padding: 2,
-								cursor: 'pointer'
-							}}
+							className={design.copyIcon}
 							src="/copy.png"
 							height={20}
 							onClick={() => {
@@ -391,10 +387,12 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 							width={20}
 						/>
 					</div>
-					<Space h={8} />
+					<Space h={12} />
 
-					<Text>{`Your club's treasury was set up when the club was created. You can manage your treasury (including signing transactions and adding members) using the button below.`}</Text>
-					<Space h={'xs'} />
+					<Text
+						className={design.tSmall}
+					>{`Your club's treasury was set up when the club was created. You can manage your treasury (including signing transactions and adding members) using the button below.`}</Text>
+					<Space h={24} />
 
 					<Button
 						className={design.buttonBlack}
