@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import { useAuth0 } from '@auth0/auth0-react'
 import log from '@kengoldfarb/log'
 import {
 	createStyles,
@@ -234,6 +235,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 export const ManageIdentityComponent: React.FC = () => {
 	const { classes } = useStyles()
 
+	const { loginWithRedirect, loginWithPopup } = useAuth0()
+
 	const wallet = useWallet()
 	const id = useContext(IdentityContext)
 
@@ -453,6 +456,20 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
+	const filteredAvilableIntegrations = availableIntegrations.filter(ai => {
+		const connectedIntegration = id.identity.integrations?.find(
+			i => i.id === ai.id
+		)
+
+		if (connectedIntegration) {
+			return false
+		}
+
+		return true
+	})
+
+	console.log({ filteredAvilableIntegrations, availableIntegrations })
+
 	return (
 		<>
 			<Space h={12} />
@@ -560,7 +577,7 @@ export const ManageIdentityComponent: React.FC = () => {
 												md={4}
 												lg={4}
 												xl={4}
-												key={integration.name}
+												key={`verified-integration-${integration.name}`}
 											>
 												<a
 													onClick={() => {
@@ -589,27 +606,13 @@ export const ManageIdentityComponent: React.FC = () => {
 																fit={'contain'}
 															/>
 															<Space w={8} />
-															{integration
-																.metadata
-																.twitterUsername && (
-																<Text>
-																	{`@${integration.metadata.twitterUsername}`}
-																</Text>
-															)}
-															{integration
-																.metadata
-																.discordUsername && (
-																<Text>
-																	{`${integration.metadata.discordUsername}`}
-																</Text>
-															)}
-															{integration
-																.metadata
-																.email && (
-																<Text>
-																	{`${integration.metadata.email}`}
-																</Text>
-															)}
+															<Text>
+																{integration
+																	.metadata
+																	.username
+																	? `@${integration.metadata.username}`
+																	: integration.name}
+															</Text>
 														</div>
 													</div>
 												</a>
@@ -627,50 +630,63 @@ export const ManageIdentityComponent: React.FC = () => {
 					{availableIntegrations.length === 0 && (
 						<Loader variant="oval" color="red" />
 					)}
-					{availableIntegrations.length > 0 && (
+					{filteredAvilableIntegrations.length > 0 && (
 						<>
 							<Grid>
-								{availableIntegrations.map(integration => (
-									<Grid.Col
-										xs={6}
-										sm={4}
-										md={4}
-										lg={4}
-										xl={4}
-										key={integration.name}
-									>
-										<a
-											onClick={() => {
-												openIntegrationModal(
-													integration
-												)
-											}}
+								{filteredAvilableIntegrations.map(
+									integration => (
+										<Grid.Col
+											xs={6}
+											sm={4}
+											md={4}
+											lg={4}
+											xl={4}
+											key={integration.name}
 										>
-											<div
-												className={
-													classes.profileIntegrationItem
-												}
+											<a
+												onClick={() => {
+													// loginWithPopup({
+													loginWithRedirect({
+														display: 'popup',
+														screen_hint: 'signup',
+														redirectUri:
+															window.location.toString(),
+														connection:
+															integration.connectionName &&
+															integration
+																.connectionName
+																.length > 0
+																? integration.connectionName
+																: undefined
+													})
+												}}
 											>
 												<div
 													className={
-														classes.intItemHeader
+														classes.profileIntegrationItem
 													}
 												>
-													<Image
-														src={`${integration.icon}`}
-														width={16}
-														height={16}
-														fit={'contain'}
-													/>
-													<Space w={8} />
-													<Text>
-														{integration.name}
-													</Text>
+													<div
+														className={
+															classes.intItemHeader
+														}
+													>
+														<Image
+															src={`${integration.icon}`}
+															width={16}
+															height={16}
+															fit={'contain'}
+														/>
+														<Space w={8} />
+														<Text>
+															{integration.name}
+														</Text>
+													</div>
 												</div>
-											</div>
-										</a>
-									</Grid.Col>
-								))}
+											</a>
+										</Grid.Col>
+									)
+								)}
 							</Grid>
 						</>
 					)}
@@ -685,7 +701,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				Save Changes
 			</Button>
 			<Space h={'xl'} />
-			<ProfileLinkTwitterModal
+			{/* <ProfileLinkTwitterModal
 				integration={integrationCurrentlyEditing}
 				isOpened={isTwitterModalOpen}
 				onModalClosed={() => {
@@ -707,7 +723,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				onModalClosed={() => {
 					setIsDiscordModalOpen(false)
 				}}
-			/>
+			/> */}
 			<ManageLinkedAccountModal
 				integration={integrationCurrentlyEditing}
 				isOpened={isLinkedAccountModalOpen}

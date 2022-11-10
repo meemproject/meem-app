@@ -41,6 +41,8 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 
 	const { userClient } = useCustomApollo()
 
+	console.log({ wallet })
+
 	// Fetch profile info
 	const {
 		loading,
@@ -64,6 +66,7 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 
 	useEffect(() => {
 		async function getIdentity() {
+			console.log('GET IDENTITY', { identityData })
 			if (identityData) {
 				const id = await identityFromApi(
 					wallet.accounts[0],
@@ -80,6 +83,8 @@ export const IdentityProvider: FC<IIdentityProviderProps> = ({ ...props }) => {
 						hasIdentityChanged = false
 					}
 				}
+
+				console.log('!!!!! set identity', { id })
 
 				if (hasIdentityChanged) {
 					setIdentity(id)

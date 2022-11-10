@@ -52,6 +52,8 @@ export const JoinClubsModal: React.FC<IProps> = ({
 	const [email, setEmail] = useState('')
 
 	const { connectWallet, setJwt } = useWallet()
+	const wallet = useWallet()
+	console.log(wallet)
 
 	const methods: ConnectionMethod[] = [
 		{
@@ -243,6 +245,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		const fetchToken = async () => {
+			console.log({ isAuthenticated, hasTriedLogin })
 			if (isAuthenticated && !hasTriedLogin) {
 				setHasTriedLogin(true)
 				try {

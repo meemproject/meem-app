@@ -8,6 +8,7 @@ export interface AvailableIdentityIntegration {
 	id?: string
 	name?: string
 	icon?: string
+	connectionName?: string
 }
 
 export interface IdentityIntegration {
@@ -30,16 +31,20 @@ export interface Identity {
 export function identityIntegrationFromApi(
 	inteData: GetIdentityIntegrationsQuery | undefined
 ): AvailableIdentityIntegration[] {
+	console.log({ inteData })
+
 	if (inteData && inteData.IdentityIntegrations.length > 0) {
 		const integrations: AvailableIdentityIntegration[] = []
 		inteData.IdentityIntegrations.forEach(inte => {
 			const integration: AvailableIdentityIntegration = {
 				id: inte.id,
 				name: inte.name,
-				icon: inte.icon
+				icon: inte.icon,
+				connectionName: inte.connectionName
 			}
 			integrations.push(integration)
 		})
+		console.log({ integrations })
 		return integrations
 	} else {
 		return []
@@ -55,12 +60,12 @@ export async function identityFromApi(
 	address: string,
 	identityData: MeemIdSubscriptionSubscription | undefined
 ): Promise<Identity> {
-	const id = identityData?.MeemIdentities[0]
+	const id = identityData?.Users[0]
 	if (id) {
 		// Integrations
 		const integrations: IdentityIntegration[] = []
-		if (id.MeemIdentityIntegrations.length > 0) {
-			id.MeemIdentityIntegrations.forEach(inte => {
+		if (id.UserIdentities.length > 0) {
+			id.UserIdentities.forEach(inte => {
 				const integration: IdentityIntegration = {
 					id: inte.IdentityIntegrationId,
 					name: inte.IdentityIntegration?.name,

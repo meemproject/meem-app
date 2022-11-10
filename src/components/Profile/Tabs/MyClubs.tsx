@@ -147,7 +147,7 @@ export const MyClubsComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (
-			error &&
+			error?.graphQLErrors &&
 			error.graphQLErrors.length > 0 &&
 			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
 		) {
