@@ -811,7 +811,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					}
 				}}
 			>
-				<div className={design.integrationGridItemEnabled}>
+				<div className={design.gridItem}>
 					<div className={design.integrationGridItemHeader}>
 						<Image
 							src={`/${integration.icon}`}

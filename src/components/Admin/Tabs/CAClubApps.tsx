@@ -337,9 +337,9 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={16} />
+				<Space h={12} />
 
-				<Text className={design.tMediumBold}>Club Apps</Text>
+				<Text className={design.tLargeBold}>Club Apps</Text>
 				<Space h={32} />
 
 				{existingIntegrations && existingIntegrations.length > 0 && (
