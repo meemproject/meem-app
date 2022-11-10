@@ -482,7 +482,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

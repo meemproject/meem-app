@@ -1284,7 +1284,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															}}
 															src="/star.png"
 															height={12}
-															width={12}
+															width={16}
 														/>
 													)}
 												</div>

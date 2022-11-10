@@ -161,7 +161,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<>
-			<Space h={12} />
+			<Space h={16} />
 			<Text className={design.tMediumBold}>Club Icon</Text>
 			<Space h={32} />
 			<Text className={design.tMediumBold}>

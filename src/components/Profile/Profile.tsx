@@ -247,7 +247,7 @@ export const ProfileComponent: React.FC = () => {
 				id.identity && (
 					<>
 						<div className={design.pageHeader}>
-							<div className={design.tLargeBold}>
+							<div className={design.spacedRowCentered}>
 								{id.identity.profilePic && (
 									<>
 										<Image
@@ -265,7 +265,7 @@ export const ProfileComponent: React.FC = () => {
 								<div
 									className={design.pageHeaderTitleContainer}
 								>
-									<Text className={design.spacedRowCentered}>
+									<Text className={design.tLargeBold}>
 										{id.identity.displayName ??
 											'My Profile'}
 									</Text>
@@ -315,8 +315,7 @@ export const ProfileComponent: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<Space h={8} />
-						<div className={design.tExtraSmallBold}>
+						<div className={design.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -340,7 +339,10 @@ export const ProfileComponent: React.FC = () => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={design.tSmallBoldFaded}>
+								<Text
+									className={design.tExtraSmallLabel}
+									style={{ marginLeft: 20, marginBottom: 8 }}
+								>
 									SETTINGS
 								</Text>
 								<NavLink

@@ -342,7 +342,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 														>
 															Verify Tweet
 														</a>
-														<Space h={12} />
+														<Space h={16} />
 													</div>
 												</>
 											)}

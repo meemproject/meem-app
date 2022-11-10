@@ -178,12 +178,12 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div>
-			<Space h={12} />
+			<Space h={16} />
 			<Text className={design.tMediumBold}>Contract Management</Text>
 			<Space h={32} />
 
 			<Text className={design.tSmallLabel}>CONTRACT ADDRESS</Text>
-			<Space h={12} />
+			<Space h={16} />
 
 			<div className={design.row}>
 				<Text style={{ wordBreak: 'break-word' }}>{club.address}</Text>
@@ -218,7 +218,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Space h={32} />
 
 			<Text className={design.tSmallLabel}>MEEM PROTOCOL</Text>
-			<Space h={12} />
+			<Space h={16} />
 
 			<Text
 				className={design.tSmallBold}
@@ -306,7 +306,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Text className={design.tSmallLabel}>
 						UPGRADE CLUB CONTRACT
 					</Text>
-					<Space h={12} />
+					<Space h={16} />
 					<div className={design.row}>
 						<div>
 							<Text>
@@ -359,7 +359,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Divider />
 			<Space h={32} />
 			<Text className={design.tSmallLabel}>CLUB TREASURY ADDRESS</Text>
-			<Space h={12} />
+			<Space h={16} />
 			{club.gnosisSafeAddress && (
 				<>
 					<div className={design.row}>

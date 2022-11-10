@@ -47,7 +47,7 @@ export const JoinLeaveClubModal: React.FC<IProps> = ({
 						styles={{ textAlign: 'center' }}
 					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

@@ -90,7 +90,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							<Image
 								className={design.tSmallFaded}
 								src="/integration-twitter.png"
-								width={12}
+								width={16}
 								height={12}
 							/>
 							<Space w={4} />
@@ -111,7 +111,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							<Image
 								className={design.tSmallFaded}
 								src="/integration-discord.png"
-								width={12}
+								width={16}
 								height={12}
 							/>
 							<Space w={4} />
@@ -130,7 +130,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							<Image
 								className={design.tSmallFaded}
 								src="/integration-email.png"
-								width={12}
+								width={16}
 								height={12}
 							/>
 							<Space w={4} />

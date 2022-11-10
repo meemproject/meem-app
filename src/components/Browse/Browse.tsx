@@ -176,7 +176,7 @@ export const BrowseComponent: React.FC = () => {
 												className={design.tExtraSmall}
 												style={{
 													marginRight: 8,
-													lineHeight: 1.3,
+													lineHeight: 1.4,
 													textOverflow: 'ellipsis',
 													msTextOverflow: 'ellipsis',
 													whiteSpace: 'nowrap',

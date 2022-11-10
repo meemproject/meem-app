@@ -199,13 +199,13 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={12} />
+				<Space h={16} />
 
 				<Text className={design.tMediumBold}>Membership Settings</Text>
 				<Space h={32} />
 
 				<Text className={design.tSmallBoldFaded}>Price</Text>
-				<Space h={12} />
+				<Space h={16} />
 
 				<Text
 					className={design.tMedium}

@@ -178,7 +178,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 									DISCORD ROLE NAME
 								</Text>
 							</div>
-							<Space h={12} />
+							<Space h={16} />
 							<TextInput
 								size={'lg'}
 								radius={20}
@@ -291,7 +291,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 								<Space w={2} />
 								<Text color={'red'}>*</Text>
 							</div>
-							<Space h={12} />
+							<Space h={16} />
 							<TextInput
 								size={'lg'}
 								radius={20}

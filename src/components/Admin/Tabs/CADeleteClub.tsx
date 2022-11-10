@@ -18,7 +18,7 @@ export const CADeleteClub: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div className={design.fullWidth}>
-			<Space h={12} />
+			<Space h={16} />
 
 			<Text className={design.tLargeBold}>Delete Club</Text>
 			<Space h={24} />

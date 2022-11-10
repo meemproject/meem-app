@@ -45,7 +45,7 @@ export const DiscordRoleRedirectModal: React.FC<IProps> = ({
 						styles={{ textAlign: 'center' }}
 					>{`Just a moment.`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

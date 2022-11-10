@@ -272,7 +272,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 													width: '100%'
 												}}
 											>
-												<Space h={12} />
+												<Space h={16} />
 												<Divider />
 											</div>
 											<div

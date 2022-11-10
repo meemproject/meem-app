@@ -268,7 +268,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={design.tMediumBold}>Manage Identity</Text>
+			<Text className={design.tLargeBold}>Manage Identity</Text>
 			<Space h={32} />
 			<Text className={design.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
@@ -357,7 +357,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					{id.identity.integrations &&
 						id.identity.integrations.length > 0 && (
 							<>
-								<div className={design.row}>
+								<div className={design.centeredRow}>
 									<Image
 										src="/icon-verified.png"
 										width={18}
@@ -375,7 +375,7 @@ export const ManageIdentityComponent: React.FC = () => {
 									</Text>
 								</div>
 								<Space h={16} />
-								<Grid>
+								<Grid style={{ maxWidth: 800 }}>
 									{id.identity.integrations.map(
 										integration => (
 											<Grid.Col
@@ -398,7 +398,7 @@ export const ManageIdentityComponent: React.FC = () => {
 												>
 													<div
 														className={
-															design.integrationGridItem
+															design.gridItem
 														}
 													>
 														<div
@@ -452,7 +452,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					)}
 					{availableIntegrations.length > 0 && (
 						<>
-							<Grid>
+							<Grid style={{ maxWidth: 800 }}>
 								{availableIntegrations.map(integration => (
 									<Grid.Col
 										xs={6}
@@ -469,11 +469,7 @@ export const ManageIdentityComponent: React.FC = () => {
 												)
 											}}
 										>
-											<div
-												className={
-													design.integrationGridItem
-												}
-											>
+											<div className={design.gridItem}>
 												<div
 													className={
 														design.integrationGridItemHeader

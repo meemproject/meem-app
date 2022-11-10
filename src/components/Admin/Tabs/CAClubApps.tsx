@@ -337,7 +337,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={12} />
+				<Space h={16} />
 
 				<Text className={design.tMediumBold}>Club Apps</Text>
 				<Space h={32} />
@@ -404,7 +404,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												width: '100%'
 											}}
 										>
-											<Space h={12} />
+											<Space h={16} />
 											<Divider />
 										</div>
 										<div

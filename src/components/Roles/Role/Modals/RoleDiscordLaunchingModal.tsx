@@ -45,7 +45,7 @@ export const RoleDiscordLaunchingModal: React.FC<IProps> = ({
 						styles={{ textAlign: 'center' }}
 					>{`Please wait`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

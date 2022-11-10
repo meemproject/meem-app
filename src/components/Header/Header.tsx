@@ -25,7 +25,7 @@ import {
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { colorPink, useGlobalStyles } from '../Styles/GlobalStyles'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 export function HeaderMenu() {
@@ -280,7 +280,7 @@ export function HeaderMenu() {
 								onClick={handleShareFeedback}
 								className={design.tSmallBold}
 								style={{
-									color: 'rgba(255, 102, 81, 1)',
+									color: colorPink,
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}

@@ -230,7 +230,7 @@ export function HomeComponent() {
 							style={{
 								fontSize: 22,
 								fontWeight: 800,
-								lineHeight: 1.3
+								lineHeight: 1.4
 							}}
 						>
 							Effortless access management and collaborative

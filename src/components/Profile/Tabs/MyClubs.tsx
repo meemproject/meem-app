@@ -79,13 +79,13 @@ export const MyClubsComponent: React.FC = () => {
 		<>
 			{loading && (
 				<>
-					<Space h={12} />
+					<Space h={16} />
 					<Loader variant="oval" color="red" />
 				</>
 			)}
 			{clubs.length === 0 && !loading && (
 				<>
-					<Space h={12} />
+					<Space h={16} />
 					<Text className={design.tMediumBold}>My Clubs</Text>
 					<Space h={32} />
 					<Text className={design.tMediumBold}>
@@ -100,10 +100,10 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length > 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={design.tMediumBold}>My Clubs</Text>
+					<Text className={design.tLargeBold}>My Clubs</Text>
 					<Space h={32} />
 
-					<Grid>
+					<Grid style={{ maxWidth: 1000 }}>
 						{clubs.map(club => (
 							<Grid.Col
 								xs={6}
@@ -135,7 +135,7 @@ export const MyClubsComponent: React.FC = () => {
 											<Text className={design.tEllipsis}>
 												{club.name}
 											</Text>
-											<Space h={4} />
+											<Space h={8} />
 											<div className={design.row}>
 												<Badge
 													variant="gradient"

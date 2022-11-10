@@ -152,7 +152,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={12} />
+				<Space h={16} />
 
 				<Text className={design.tMediumBold}>Airdrops</Text>
 				<Space h={68} />

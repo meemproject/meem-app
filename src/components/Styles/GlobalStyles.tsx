@@ -225,7 +225,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		paddingTop: 32,
-		borderBottomColor: colorLightGrey,
+		borderBottomColor: colorGrey,
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
@@ -296,6 +296,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		marginLeft: 32,
 		marginRight: 32,
 		width: '100%',
+		maxWidth: 1000,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8,
 			width: 'auto'
@@ -316,7 +317,8 @@ export const useGlobalStyles = createStyles(theme => ({
 	siteHeader: {
 		marginTop: 0,
 		paddingTop: 8,
-		paddingBottom: '-8px'
+		paddingBottom: '-8px',
+		borderBottom: `1px solid ${colorGrey}`
 	},
 	siteHeaderLeftItems: {
 		marginLeft: 4,
@@ -436,58 +438,59 @@ export const useGlobalStyles = createStyles(theme => ({
 	},
 
 	// Text styles
-	tExtraExtraLarge: { fontWeight: 600, fontSize: '32px', lineHeight: '120%' },
-	tExtraLarge: { fontWeight: 600, fontSize: '28px', lineHeight: '120%' },
-	tLargeBold: { fontWeight: 600, fontSize: '24px', lineHeight: '120%' },
-	tLarge: { fontSize: '24px', lineHeight: '120%' },
-	tMediumBold: { fontWeight: 600, fontSize: '18px', lineHeight: '120%' },
+	tExtraExtraLarge: { fontWeight: 600, fontSize: '32px', lineHeight: 1.4 },
+	tExtraLarge: { fontWeight: 600, fontSize: '28px', lineHeight: 1.4 },
+	tLargeBold: { fontWeight: 600, fontSize: '24px', lineHeight: 1.4 },
+	tLarge: { fontSize: '24px', lineHeight: 1.4 },
+	tMediumBold: { fontWeight: 600, fontSize: '18px', lineHeight: 1.4 },
 	tMediumBoldFaded: {
 		fontSize: 18,
 		fontWeight: 600,
-		lineHeight: '120%',
+		lineHeight: 1.4,
 		opacity: 0.6
 	},
-	tMediumButton: { fontWeight: 500, fontSize: '18px', lineHeight: '120%' },
-	tMediumFaded: { fontWeight: 400, fontSize: '18px', lineHeight: '120%' },
-	tMedium: { fontWeight: 400, fontSize: '18px', lineHeight: '120%' },
-	tSmallBold: { fontWeight: 600, fontSize: '16px', lineHeight: '120%' },
+	tMediumButton: { fontWeight: 500, fontSize: '18px', lineHeight: 1.4 },
+	tMediumFaded: { fontWeight: 400, fontSize: '18px', lineHeight: 1.4 },
+	tMedium: { fontWeight: 400, fontSize: '18px', lineHeight: 1.4 },
+	tSmallBold: { fontWeight: 600, fontSize: '16px', lineHeight: 1.4 },
 	tSmallBoldFaded: {
 		fontWeight: 600,
 		fontSize: '16px',
-		lineHeight: '120%',
+		lineHeight: 1.4,
 		opacity: 0.6
 	},
 	tSmallFaded: {
 		fontSize: '16px',
 		opacity: 0.6
 	},
-	tSmall: { fontWeight: 500, fontSize: '16px', lineHeight: '130%' },
+	tSmall: { fontWeight: 500, fontSize: '16px', lineHeight: 1.4 },
 	tSmallLabel: {
 		fontWeight: 600,
 		fontSize: '16px',
-		lineHeight: '120%',
+		lineHeight: 1.4,
 		letterSpacing: '0.05em',
 		textTransform: 'uppercase'
 	},
 	tExtraSmallBold: {
 		fontSize: '14px',
-		lineHeight: '120%',
-		fontWeight: 600
+		lineHeight: 1.4,
+		fontWeight: 600,
+		color: colorBlack
 	},
 	tExtraSmallLabel: {
 		fontSize: '14px',
-		lineHeight: '120%',
+		lineHeight: 1.4,
 		fontWeight: 600,
 		opacity: 0.6
 	},
 	tExtraSmallFaded: {
 		fontWeight: 500,
 		fontSize: '14px',
-		lineHeight: '120%',
+		lineHeight: 1.4,
 		opacity: 0.6
 	},
-	tExtraSmall: { fontWeight: 500, fontSize: '14px', lineHeight: '120%' },
-	tExtraExtraSmall: { fontWeight: 500, fontSize: '12px', lineHeight: '120%' },
+	tExtraSmall: { fontWeight: 500, fontSize: '14px', lineHeight: 1.4 },
+	tExtraExtraSmall: { fontWeight: 500, fontSize: '12px', lineHeight: 1.4 },
 
 	// Text variants
 	tLink: {

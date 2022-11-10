@@ -82,7 +82,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div className={design.fullWidth}>
-			<Space h={12} />
+			<Space h={16} />
 
 			<Text className={design.tMediumBold}>Club Profile</Text>
 			<Space h={32} />

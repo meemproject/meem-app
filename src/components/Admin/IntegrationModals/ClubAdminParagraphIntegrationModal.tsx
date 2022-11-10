@@ -345,7 +345,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Text className={design.tMediumBold}>
 										{`Let's connect your club's treasury.`}
 									</Text>
-									<Space h={12} />
+									<Space h={16} />
 									<Text>
 										{`You'll need to sign a transaction on behalf of your club's treasury in the next step. Leave the tab open for now - we'll come back in a moment.`}
 									</Text>
@@ -392,11 +392,11 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Text className={design.tMediumBold}>
 										{`Connect to club treasury and sign`}
 									</Text>
-									<Space h={12} />
+									<Space h={16} />
 									<Text>
 										{`Your Paragraph publication belongs to your club. In the window we just opened for you, click 'Connect wallet', scroll down and choose 'WalletConnect', then click 'copy to clipboard'. In the Gnosis Safe tab, paste into the field 'QR Code or connection link'.`}
 									</Text>
-									<Space h={12} />
+									<Space h={16} />
 									<Text>
 										{`Next, sign the transaction that appears in your Gnosis Safe, then return to the Clubs tab to continue.`}
 									</Text>
