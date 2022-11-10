@@ -24,11 +24,7 @@ import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetIntegrationsQuery } from '../../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../../graphql/clubs'
 import { Club, Integration } from '../../../model/club/club'
-import {
-	colorGrey,
-	colorWhite,
-	useGlobalStyles
-} from '../../Styles/GlobalStyles'
+import { colorGrey, useGlobalStyles } from '../../Styles/GlobalStyles'
 import { ClubAdminGatherTownModal } from '../IntegrationModals/ClubAdminGatherTownModal'
 import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
 import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'

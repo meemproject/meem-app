@@ -152,10 +152,10 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={16} />
+				<Space h={12} />
 
-				<Text className={design.tMediumBold}>Airdrops</Text>
-				<Space h={68} />
+				<Text className={design.tLargeBold}>Airdrops</Text>
+				<Space h={32} />
 
 				<Text className={design.tMediumBold}>
 					Invite others to your club by airdropping them a club token.
@@ -165,7 +165,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				<Text className={design.tMediumFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
-				<Space h={16} />
+				<Space h={24} />
 				<Textarea
 					radius="lg"
 					size="sm"
@@ -177,7 +177,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 					}
 				/>
 			</div>
-			<Space h={32} />
+			<Space h={40} />
 			<Button
 				className={design.buttonBlack}
 				loading={isSavingChanges}

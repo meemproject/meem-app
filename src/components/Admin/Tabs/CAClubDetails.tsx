@@ -82,15 +82,15 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div className={design.fullWidth}>
-			<Space h={16} />
+			<Space h={12} />
 
-			<Text className={design.tMediumBold}>Club Profile</Text>
+			<Text className={design.tLargeBold}>Club Profile</Text>
 			<Space h={32} />
 
 			<Text
 				className={design.tMediumBold}
 			>{`What's your club called?`}</Text>
-			<Space h={16} />
+			<Space h={12} />
 			<TextInput
 				radius="lg"
 				size="md"
@@ -102,7 +102,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 			<Text className={design.tMediumBold}>
 				In a sentence, describe what your members do together.
 			</Text>
-			<Space h={16} />
+			<Space h={12} />
 			<Textarea
 				radius="lg"
 				size="md"
@@ -116,7 +116,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 				}
 			/>
 
-			<Space h={32} />
+			<Space h={40} />
 			<Button
 				className={design.buttonBlack}
 				loading={isSavingChanges}
