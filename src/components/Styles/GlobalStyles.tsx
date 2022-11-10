@@ -18,7 +18,7 @@ export const useGlobalStyles = createStyles(theme => ({
 	buttonBlack: {
 		backgroundColor: colorBlack,
 		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
+			backgroundColor: colorDarkGrey
 		},
 		borderRadius: 24
 	},
@@ -28,6 +28,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorLightGrey
 		},
+		color: colorBlack,
 		borderRadius: 24
 	},
 	buttonRed: {
@@ -497,7 +498,7 @@ export const useGlobalStyles = createStyles(theme => ({
 	tExtraExtraSmall: { fontWeight: 500, fontSize: '12px', lineHeight: 1.4 },
 
 	// Text variants
-	tBadgeText: { fontWeight: 600, fontSize: '12px' },
+	tBadgeText: { fontWeight: 600, fontSize: '12px', color: colorBlack },
 
 	tLink: {
 		textDecoration: 'underline',

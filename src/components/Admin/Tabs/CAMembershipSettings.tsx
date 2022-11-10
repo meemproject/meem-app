@@ -199,9 +199,9 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={16} />
+				<Space h={12} />
 
-				<Text className={design.tMediumBold}>Membership Settings</Text>
+				<Text className={design.tLargeBold}>Membership Settings</Text>
 				<Space h={32} />
 
 				<Text className={design.tSmallBoldFaded}>Price</Text>
@@ -287,7 +287,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>
 					.
 				</Text>
-
+				<Space h={24} />
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}

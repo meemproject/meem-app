@@ -32,9 +32,9 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={16} />
+				<Space h={12} />
 
-				<Text className={design.tMediumBold}>Roles</Text>
+				<Text className={design.tLargeBold}>Roles</Text>
 
 				<Space h={32} />
 			</div>
@@ -42,22 +42,14 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 				<>
 					{club.roles.map(role => (
 						<div
+							className={design.gridItem}
 							style={{
 								display: 'flex',
-								flexDirection: 'row',
-								alignItems: 'start',
 								justifyContent: 'space-between',
-								fontWeight: 600,
-								marginBottom: 12,
-								cursor: 'pointer',
-								border: '1px solid rgba(0, 0, 0, 0.1)',
-								backgroundColor: '#FAFAFA',
-								borderRadius: 16,
-								padding: 16
+								marginBottom: 16
 							}}
 							key={role.id}
 						>
-							<Space h={4} />
 							<div
 								className={design.centeredRow}
 								onClick={() => {
@@ -81,7 +73,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										deg: 35
 									}}
 									classNames={{
-										inner: design.tExtraSmallBold,
+										inner: design.tBadgeText,
 										root: design.badge
 									}}
 									leftSection={

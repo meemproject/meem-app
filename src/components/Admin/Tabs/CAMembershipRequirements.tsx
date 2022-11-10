@@ -324,13 +324,13 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={16} />
+				<Space h={12} />
 
-				<Text className={design.tMediumBold}>
+				<Text className={design.tLargeBold}>
 					Membership Requirements
 				</Text>
 
-				<Space h={32} />
+				<Space h={24} />
 
 				<Radio.Group
 					classNames={{ label: design.fRadio }}
@@ -369,6 +369,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									style={{
 										width: 200,
 										height: 150,
+										justifyContent: 'center',
 										border: '1px solid rgba(0, 0, 0, 1)',
 										borderRadius: 16
 									}}
@@ -408,7 +409,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									style={{
 										width: 200,
 										height: 80,
-
+										justifyContent: 'center',
 										marginTop: 8,
 										marginBottom: 8
 									}}
@@ -416,6 +417,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									<div
 										className={design.centeredRow}
 										style={{
+											position: 'absolute',
+											justifyContent: 'center',
 											width: 30,
 											height: 80
 										}}
@@ -455,7 +458,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 					</>
 				)}
 
-				<Space h="xs" />
+				<Space h={40} />
 
 				<Button
 					disabled={isSavingChanges}
@@ -549,6 +552,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								disabled
 							/> */}
 					</Radio.Group>
+					<Space h={24} />
 					<div
 						className={
 							currentRequirement?.type ==
@@ -557,12 +561,9 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								: design.invisibleContainer
 						}
 					>
-						<Space h={24} />
-						<Text className={design.tMediumBoldFaded}>
-							How to apply
-						</Text>
+						<Text className={design.tMediumBold}>How to apply</Text>
 						<Space h={4} />
-						<Text className={design.tExtraSmallFaded}>
+						<Text className={design.tExtraSmall}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
@@ -584,10 +585,13 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={design.tMediumBoldFaded}>
+						<Space h={16} />
+						<Text className={design.tMediumBold}>
 							Approved Addresses
 						</Text>
-						<Text className={design.tExtraSmallFaded}>
+						<Space h={4} />
+
+						<Text className={design.tExtraSmall}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
@@ -640,9 +644,10 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing?.tokenChain}
 						/> */}
-						<Text className={design.tMediumBoldFaded}>
+						<Text className={design.tSmallBoldFaded}>
 							Token Address
 						</Text>
+						<Space h={4} />
 						<TextInput
 							radius="lg"
 							size="sm"
@@ -657,9 +662,13 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								}
 							}}
 						/>
-						<Text className={design.tMediumBoldFaded}>
+						<Space h={16} />
+
+						<Text className={design.tSmallBoldFaded}>
 							Minimum Quantity
 						</Text>
+						<Space h={4} />
+
 						<TextInput
 							radius="lg"
 							size="sm"
@@ -704,7 +713,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							}}
 						/>
 					</div>
-					<Space h={'md'} />
+					<Space h={32} />
 					<Button
 						disabled={isCheckingRequirement}
 						loading={isCheckingRequirement}
