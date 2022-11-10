@@ -484,10 +484,11 @@ export const useGlobalStyles = createStyles(theme => ({
 		fontSize: '14px',
 		lineHeight: 1.4,
 		fontWeight: 600,
+		letterSpacing: 1.2,
 		opacity: 0.6
 	},
 	tExtraSmallFaded: {
-		fontWeight: 500,
+		fontWeight: 600,
 		fontSize: '14px',
 		lineHeight: 1.4,
 		opacity: 0.6

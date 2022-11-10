@@ -199,6 +199,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							<Image
 								width={56}
 								height={56}
+								radius={8}
 								className={design.imageClubLogo}
 								src={club.image}
 							/>
@@ -210,7 +211,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								<Space h={8} />
 								<div className={design.row}>
 									<Text
-										className={design.tExtraSmallLabel}
+										className={design.tExtraSmallFaded}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
 										className={design.copyIcon}
@@ -279,7 +280,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={design.tSmallBoldFaded}>
+								<Text
+									className={design.tExtraSmallLabel}
+									style={{ marginLeft: 20, marginBottom: 8 }}
+								>
 									MANAGE CLUB
 								</Text>
 								<NavLink
@@ -390,7 +394,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<div>
 										<Space h={32} />
 										<Text
-											className={design.tSmallBoldFaded}
+											style={{
+												marginLeft: 20,
+												marginBottom: 8
+											}}
+											className={design.tExtraSmallLabel}
 										>
 											EDIT PROFILE
 										</Text>

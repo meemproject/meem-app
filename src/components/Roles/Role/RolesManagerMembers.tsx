@@ -160,7 +160,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															design.tListItemTitle
+															design.tSmallBold
 														}
 													>
 														{member.displayName
