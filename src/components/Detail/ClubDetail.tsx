@@ -913,119 +913,134 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			{!isLoadingClub && club?.name && (
 				<>
 					<div className={design.pageHeader}>
-						<Image
-							width={80}
-							height={80}
-							radius={16}
-							fit="cover"
-							className={design.imageClubLogo}
-							src={club.image}
-						/>
-						<div>
-							<Text className={design.tLargeBold}>
-								{club.name}
-							</Text>
-							<Text
-								className={design.tSmallFaded}
-								style={{
-									wordBreak: 'break-word',
-									marginTop: 4,
-									marginRight: 16
-								}}
-							>
-								{club.description}
-							</Text>
-							<Group
-								spacing={'xs'}
-								style={{
-									marginTop: 12,
-									marginBottom: 0,
-									marginLeft: 0,
-									marginRight: 16
-								}}
-							>
-								{club.membershipSettings &&
-									club.membershipSettings
-										?.membershipQuantity > 0 && (
+						<div className={design.row}>
+							<Image
+								width={80}
+								height={80}
+								radius={16}
+								fit="cover"
+								className={design.imageClubLogo}
+								src={club.image}
+							/>
+							<Space w={24} />
+							<div>
+								<Text
+									className={design.tLargeBold}
+									style={{ marginTop: -4 }}
+								>
+									{club.name}
+								</Text>
+								<Space h={4} />
+								<Text
+									className={design.tSmallFaded}
+									style={{
+										wordBreak: 'break-word',
+										marginTop: 4,
+										marginRight: 16
+									}}
+								>
+									{club.description}
+								</Text>
+								<Space h={4} />
+
+								<Group
+									spacing={'xs'}
+									style={{
+										marginTop: 12,
+										marginBottom: 0,
+										marginLeft: 0,
+										marginRight: 16
+									}}
+								>
+									{club.membershipSettings &&
+										club.membershipSettings
+											?.membershipQuantity > 0 && (
+											<Button
+												onClick={() => {
+													setIsEditionsModalOpened(
+														true
+													)
+												}}
+												className={design.buttonBlack}
+											>
+												{' '}
+												{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
+											</Button>
+										)}
+									{club.isCurrentUserClubMember &&
+										wallet.isConnected && (
+											<Button
+												onClick={leaveClub}
+												loading={isLeavingClub}
+												className={design.buttonBlack}
+											>
+												Leave
+											</Button>
+										)}
+									{!club.isCurrentUserClubMember &&
+										wallet.isConnected && (
+											<Button
+												disabled={
+													!doesMeetAllRequirements
+												}
+												loading={isJoiningClub}
+												onClick={joinClub}
+												className={design.buttonBlack}
+											>
+												{doesMeetAllRequirements &&
+													((club.membershipSettings
+														?.costToJoin ?? 0) > 0
+														? `Join - ${
+																club
+																	.membershipSettings
+																	?.costToJoin ??
+																0
+														  } MATIC`
+														: wallet.isConnected
+														? `Join`
+														: '')}
+												{!doesMeetAllRequirements &&
+													wallet.isConnected &&
+													'Requirements not met'}
+												{!wallet.isConnected &&
+													'Connect wallet to join'}
+											</Button>
+										)}
+									{!wallet.isConnected && (
 										<Button
-											onClick={() => {
-												setIsEditionsModalOpened(true)
+											onClick={async () => {
+												await wallet.connectWallet()
 											}}
 											className={design.buttonBlack}
 										>
-											{' '}
-											{`${club.members?.length} of ${club.membershipSettings?.membershipQuantity}`}
+											Connect wallet to join
 										</Button>
 									)}
-								{club.isCurrentUserClubMember &&
-									wallet.isConnected && (
-										<Button
-											onClick={leaveClub}
-											loading={isLeavingClub}
-											className={design.buttonBlack}
-										>
-											Leave
-										</Button>
-									)}
-								{!club.isCurrentUserClubMember &&
-									wallet.isConnected && (
-										<Button
-											disabled={!doesMeetAllRequirements}
-											loading={isJoiningClub}
-											onClick={joinClub}
-											className={design.buttonBlack}
-										>
-											{doesMeetAllRequirements &&
-												((club.membershipSettings
-													?.costToJoin ?? 0) > 0
-													? `Join - ${
-															club
-																.membershipSettings
-																?.costToJoin ??
-															0
-													  } MATIC`
-													: wallet.isConnected
-													? `Join`
-													: '')}
-											{!doesMeetAllRequirements &&
-												wallet.isConnected &&
-												'Requirements not met'}
-											{!wallet.isConnected &&
-												'Connect wallet to join'}
-										</Button>
-									)}
-								{!wallet.isConnected && (
+
 									<Button
-										onClick={async () => {
-											await wallet.connectWallet()
-										}}
 										className={design.buttonBlack}
+										onClick={() => {
+											setIsQrModalOpened(true)
+										}}
 									>
-										Connect wallet to join
+										<QrCode />
 									</Button>
-								)}
 
-								<Button
-									className={design.buttonBlack}
-									onClick={() => {
-										setIsQrModalOpened(true)
-									}}
-								>
-									<QrCode />
-								</Button>
-
-								{club.isCurrentUserClubAdmin &&
-									wallet.isConnected && (
-										<>
-											<Button
-												onClick={navigateToSettings}
-												className={design.buttonWhite}
-											>
-												<Settings />
-											</Button>
-										</>
-									)}
-							</Group>
+									{club.isCurrentUserClubAdmin &&
+										wallet.isConnected && (
+											<>
+												<Button
+													onClick={navigateToSettings}
+													className={
+														design.buttonWhite
+													}
+												>
+													<Settings />
+												</Button>
+											</>
+										)}
+								</Group>
+							</div>
 						</div>
 					</div>
 
@@ -1058,7 +1073,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 											{parsedRequirements.map(
 												requirement => (
 													<div
-														className={design.row}
+														className={
+															design.centeredRow
+														}
+														style={{
+															marginBottom: 8,
+															marginTop: 8
+														}}
 														key={
 															requirement.requirementKey
 														}
@@ -1105,8 +1126,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								>
 									Club Contract Address
 								</Text>
-								<div className={design.row}>
-									<Text>{club.address}</Text>
+								<div className={design.centeredRow}>
+									<Text className={design.tEllipsis}>
+										{club.address}
+									</Text>
 									<Image
 										className={design.copyIcon}
 										src="/copy.png"
@@ -1200,9 +1223,11 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 										<Text
 											className={design.tSmallBold}
 										>{`Add your first apps`}</Text>
-										<Space h={4} />
-										<Text>{`Your club doesn't have any links or connected apps. That means there's nothing for your members to do when they join, and there's no other information about this club right now. Fix this by adding some apps!`}</Text>
 										<Space h={8} />
+										<Text
+											className={design.tSmall}
+										>{`Your club doesn't have any links or connected apps. That means there's nothing for your members to do when they join, and there's no other information about this club right now. Fix this by adding some apps!`}</Text>
+										<Space h={12} />
 										<Button
 											onClick={() => {
 												window.open(
@@ -1246,9 +1271,13 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 													className={
 														design.gridItemCentered
 													}
+													style={{ minHeight: 70 }}
 												>
 													{member.profilePicture && (
 														<Image
+															style={{
+																marginRight: 10
+															}}
 															src={
 																member.profilePicture
 															}
@@ -1282,6 +1311,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 															style={{
 																marginLeft: 6
 															}}
+															fit={'contain'}
 															src="/star.png"
 															height={12}
 															width={16}

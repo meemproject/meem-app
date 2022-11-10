@@ -14,7 +14,7 @@ import {
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { colorLightestGrey, useGlobalStyles } from '../Styles/GlobalStyles'
 
 interface IProps {
 	isOpened: boolean
@@ -381,7 +381,8 @@ export const JoinClubsModal: React.FC<IProps> = ({
 																design.tSmallFaded
 															}
 															style={{
-																fontSize: 14
+																fontSize: 14,
+																marginTop: 4
 															}}
 														>
 															Coming soon
@@ -398,7 +399,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 																width: '100%',
 																height: '100%',
 																backgroundColor:
-																	'white',
+																	colorLightestGrey,
 																opacity: '0.7'
 															}}
 														/>

@@ -131,7 +131,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		padding: 16
 	},
 	gridItemCentered: {
-		border: colorLightGrey,
+		border: `1px solid ${colorGrey}`,
 		backgroundColor: colorLightestGrey,
 		fontWeight: 600,
 		borderRadius: 16,
@@ -233,7 +233,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginBottom: 32,
 			paddingBottom: 16,
-			paddingLeft: 8,
+			paddingLeft: 16,
 			paddingTop: 16
 		}
 	},
@@ -374,7 +374,6 @@ export const useGlobalStyles = createStyles(theme => ({
 	// Images
 	copyIcon: {
 		marginLeft: 4,
-		padding: 2,
 		cursor: 'pointer'
 	},
 	emojiCanvas: {
@@ -406,9 +405,7 @@ export const useGlobalStyles = createStyles(theme => ({
 			width: 40,
 			height: 40,
 			minHeight: 40,
-			minWidth: 40,
-			marginLeft: 16,
-			marginRight: 16
+			minWidth: 40
 		}
 	},
 	imageClubLogoContainer: {
@@ -440,8 +437,8 @@ export const useGlobalStyles = createStyles(theme => ({
 	// Text styles
 	tExtraExtraLarge: { fontWeight: 600, fontSize: '32px', lineHeight: 1.4 },
 	tExtraLarge: { fontWeight: 600, fontSize: '28px', lineHeight: 1.4 },
-	tLargeBold: { fontWeight: 600, fontSize: '24px', lineHeight: 1.4 },
-	tLarge: { fontSize: '24px', lineHeight: 1.4 },
+	tLargeBold: { fontWeight: 600, fontSize: '22px', lineHeight: 1.4 },
+	tLarge: { fontSize: '22px', lineHeight: 1.4 },
 	tMediumBold: { fontWeight: 600, fontSize: '18px', lineHeight: 1.4 },
 	tMediumBoldFaded: {
 		fontSize: 18,
@@ -474,6 +471,12 @@ export const useGlobalStyles = createStyles(theme => ({
 	tExtraSmallBold: {
 		fontSize: '14px',
 		lineHeight: 1.4,
+		fontWeight: 600
+	},
+	// Special case for badges
+	tExtraSmallBoldBlack: {
+		fontSize: '14px',
+		lineHeight: 1.4,
 		fontWeight: 600,
 		color: colorBlack
 	},
@@ -493,12 +496,15 @@ export const useGlobalStyles = createStyles(theme => ({
 	tExtraExtraSmall: { fontWeight: 500, fontSize: '12px', lineHeight: 1.4 },
 
 	// Text variants
+	tBadgeText: { fontWeight: 600, fontSize: '12px' },
+
 	tLink: {
 		textDecoration: 'underline',
 		cursor: 'pointer',
 		color: colorPink,
 		fontWeight: 600
 	},
+
 	tEllipsis: {
 		textOverflow: 'ellipsis',
 		msTextOverflow: 'ellipsis',

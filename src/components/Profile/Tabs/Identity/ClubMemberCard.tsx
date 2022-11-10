@@ -4,7 +4,7 @@ import React from 'react'
 import { Check } from 'tabler-icons-react'
 import { ClubMember } from '../../../../model/club/club'
 import { quickTruncate } from '../../../../utils/truncated_wallet'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useGlobalStyles } from '../../../Styles/GlobalStyles'
 
 interface IProps {
 	member: ClubMember
@@ -15,7 +15,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 
 	return (
 		<HoverCard.Dropdown>
-			<div className={design.row}>
+			<div className={design.centeredRow}>
 				{member.profilePicture && (
 					<>
 						<Image
@@ -33,6 +33,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							? member.displayName
 							: 'Club Member'}
 					</Text>
+					<Space h={4} />
 
 					<div className={design.centeredRow}>
 						<Text className={design.tSmallFaded}>
@@ -40,7 +41,6 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								? member.ens
 								: quickTruncate(member.wallet)}
 						</Text>
-						<Space h={4} />
 						<Image
 							className={design.copyIcon}
 							src="/copy.png"
@@ -71,13 +71,14 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 					<Space h={24} />
 					<div className={design.centeredRow}>
 						<Text className={design.tSmallBold}>Contact</Text>
-						<Space w={4} />
+						<Space w={6} />
 						<Image
 							src="/icon-verified.png"
 							width={16}
 							height={16}
 						/>
 					</div>
+					<Space h={4} />
 					{member.twitterUsername && (
 						<div
 							onClick={() => {
@@ -86,6 +87,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								)
 							}}
 							className={design.centeredRowClickable}
+							style={{ paddingBottom: 4 }}
 						>
 							<Image
 								className={design.tSmallFaded}
@@ -93,7 +95,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								width={16}
 								height={12}
 							/>
-							<Space w={4} />
+							<Space w={6} />
 							<Text className={design.tSmallFaded}>
 								{member.twitterUsername}
 							</Text>
@@ -107,6 +109,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								)
 							}}
 							className={design.centeredRowClickable}
+							style={{ paddingBottom: 4 }}
 						>
 							<Image
 								className={design.tSmallFaded}
@@ -114,7 +117,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								width={16}
 								height={12}
 							/>
-							<Space w={4} />
+							<Space w={6} />
 							<Text className={design.tSmallFaded}>
 								{member.discordUsername}
 							</Text>
@@ -126,6 +129,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								window.open(`mailto:${member.emailAddress}`)
 							}}
 							className={design.centeredRowClickable}
+							style={{ paddingBottom: 4 }}
 						>
 							<Image
 								className={design.tSmallFaded}
@@ -133,7 +137,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								width={16}
 								height={12}
 							/>
-							<Space w={4} />
+							<Space w={6} />
 							<Text className={design.tSmallFaded}>
 								{member.emailAddress}
 							</Text>
@@ -151,14 +155,15 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							<Badge
 								variant="gradient"
 								gradient={{
-									from: 'rgba(255, 102, 81, 0.1)',
-									to: 'rgba(255, 102, 81, 0.1)',
+									from: colorPink,
+									to: colorPink,
 									deg: 35
 								}}
 								classNames={{
-									inner: design.tExtraSmallBold,
+									inner: design.tBadgeText,
 									root: design.badge
 								}}
+								style={{ marginBottom: 4 }}
 							>
 								{role.name}
 							</Badge>

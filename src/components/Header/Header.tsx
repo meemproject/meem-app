@@ -147,20 +147,20 @@ export function HeaderMenu() {
 							<Menu.Dropdown>
 								<Menu.Item
 									onClick={navigateToMyAccount}
-									className={design.tSmallBold}
+									className={design.tExtraSmallBold}
 								>
 									My Account
 								</Menu.Item>
 								{clubclub.isMember && (
 									<Menu.Item
 										onClick={navigateToMyClubs}
-										className={design.tSmallBold}
+										className={design.tExtraSmallBold}
 									>
 										My Clubs
 									</Menu.Item>
 								)}
 								<Menu.Item
-									className={design.tSmallBold}
+									className={design.tExtraSmallBold}
 									onClick={async () => {
 										await wallet.disconnectWallet()
 									}}
@@ -176,7 +176,7 @@ export function HeaderMenu() {
 					)}
 					{!wallet.isConnected && (
 						<Text
-							className={design.tSmallBold}
+							className={design.tExtraSmallBold}
 							style={{
 								marginBottom: 4,
 								marginRight: 16,
@@ -205,7 +205,7 @@ export function HeaderMenu() {
 						<Menu.Dropdown>
 							<Menu.Item
 								onClick={handlePoweredByMeem}
-								className={design.tSmallBold}
+								className={design.tExtraSmallBold}
 							>
 								Powered by{' '}
 								<span style={{ textDecoration: 'underline' }}>
@@ -215,7 +215,7 @@ export function HeaderMenu() {
 							{wallet.isConnected && !clubclub.isMember && (
 								<Menu.Item
 									onClick={handleJoinClubClub}
-									className={design.tSmallBold}
+									className={design.tExtraSmallBold}
 								>
 									Join Club Club
 								</Menu.Item>
@@ -229,7 +229,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tSmallBold}
+								className={design.tExtraSmallBold}
 								icon={
 									<QuestionMarkCircle
 										height={20}
@@ -249,7 +249,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tSmallBold}
+								className={design.tExtraSmallBold}
 								icon={<BrandTwitter size={20} />}
 							>
 								Twitter
@@ -260,7 +260,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tSmallBold}
+								className={design.tExtraSmallBold}
 								icon={<BrandDiscord size={20} />}
 							>
 								Discord
@@ -271,14 +271,14 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tSmallBold}
+								className={design.tExtraSmallBold}
 								icon={<Mail size={20} />}
 							>
 								Contact Us
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleShareFeedback}
-								className={design.tSmallBold}
+								className={design.tExtraSmallBold}
 								style={{
 									color: colorPink,
 									marginBottom: '-2px',

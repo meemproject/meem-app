@@ -145,7 +145,7 @@ export const MyClubsComponent: React.FC = () => {
 														deg: 35
 													}}
 													classNames={{
-														inner: design.tExtraSmallBold,
+														inner: design.tExtraSmallBoldBlack,
 														root: design.badge
 													}}
 													leftSection={
