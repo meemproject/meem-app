@@ -88,9 +88,11 @@ export const BrowseComponent: React.FC = () => {
 					<a onClick={navigateHome}>
 						<ArrowLeft className={design.backArrow} size={32} />
 					</a>
+					<Space w={16} />
 					<Text className={design.tLargeBold}>Browse all clubs</Text>
 				</div>
 				<Button
+					style={{ marginRight: 32 }}
 					onClick={navigateToCreate}
 					className={design.buttonBlack}
 				>
@@ -124,6 +126,8 @@ export const BrowseComponent: React.FC = () => {
 					</Container>
 				)}
 
+				<Space h={32} />
+
 				{!isLoadingClubs && (
 					<>
 						<Grid>
@@ -139,7 +143,9 @@ export const BrowseComponent: React.FC = () => {
 									<div
 										key={club.address}
 										className={design.gridItem}
-										style={{ marginBottom: 24 }}
+										style={{
+											display: 'flex'
+										}}
 										onClick={() => {
 											navigateToClub(club.slug ?? '')
 										}}
@@ -153,14 +159,7 @@ export const BrowseComponent: React.FC = () => {
 											fit={'cover'}
 										/>
 										<Space w="xs" />
-										<div
-											style={{
-												textOverflow: 'ellipsis',
-												msTextOverflow: 'ellipsis',
-												whiteSpace: 'nowrap',
-												overflow: 'hidden'
-											}}
-										>
+										<div className={design.tEllipsis}>
 											<Text
 												className={design.tSmallBold}
 												style={{
@@ -186,7 +185,7 @@ export const BrowseComponent: React.FC = () => {
 											>
 												{club.description}{' '}
 											</Text>
-											<Space h={6} />
+											<Space h={8} />
 											<Badge
 												color="gray"
 												variant={'filled'}

@@ -117,16 +117,15 @@ export const useGlobalStyles = createStyles(theme => ({
 
 	// Grids and items
 	boxBorderedRounded: {
-		border: colorGrey,
+		border: `1px solid ${colorGrey}`,
 		padding: 16,
 		borderRadius: 16
 	},
 	gridItem: {
-		marginBottom: 24,
 		fontSize: 16,
 		fontWeight: 600,
 		cursor: 'pointer',
-		border: colorLightGrey,
+		border: `1px solid ${colorGrey}`,
 		backgroundColor: colorLightestGrey,
 		borderRadius: 16,
 		padding: 16
@@ -146,7 +145,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		width: 200,
 		height: 200,
 		borderRadius: 20,
-		border: colorGrey,
+		border: `1px solid ${colorGrey}`,
 		cursor: 'pointer',
 		position: 'relative'
 	},
@@ -156,7 +155,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		flexDirection: 'row',
 		borderRadius: 32,
 		padding: 8,
-		border: colorGrey,
+		border: `1px solid ${colorGrey}`,
 		cursor: 'pointer',
 		alignItems: 'center'
 	},
@@ -173,7 +172,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		minHeight: 110,
 		marginBottom: 12,
 		cursor: 'pointer',
-		border: colorGrey,
+		border: `1px solid ${colorGrey}`,
 		backgroundColor: colorLightestGrey,
 		borderRadius: 16,
 		padding: 16
@@ -183,7 +182,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		flexDirection: 'column',
 		alignItems: 'center',
 		marginBottom: 12,
-		border: colorGrey,
+		border: `1px solid ${colorGrey}`,
 		backgroundColor: colorLightestGrey,
 		borderRadius: 16,
 		paddingTop: 16,
@@ -426,6 +425,7 @@ export const useGlobalStyles = createStyles(theme => ({
 	// Misc
 	backArrow: {
 		cursor: 'pointer',
+		paddingTop: 4,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
 		}
