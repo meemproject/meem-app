@@ -245,7 +245,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		}
 	},
 	pageHeaderExitButton: {
-		marginRight: 48,
+		marginRight: 32,
 		marginLeft: 'auto',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
@@ -301,7 +301,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		maxWidth: 1000,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8,
-			width: 'auto'
+			width: '85%'
 		}
 	},
 	pagePanelLayoutNavBar: {

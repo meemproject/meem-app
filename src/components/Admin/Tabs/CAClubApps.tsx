@@ -548,7 +548,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											</div>
 											<Text
 												className={design.tExtraSmall}
-												style={{ marginTop: 4 }}
+												style={{ marginTop: 6 }}
 											>
 												{integration.description}
 											</Text>

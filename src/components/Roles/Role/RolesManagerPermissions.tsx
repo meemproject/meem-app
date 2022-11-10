@@ -21,7 +21,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<div key={permission.id}>
-			<Space h={16} />
+			<Space h={22} />
 			<div className={design.spacedRow}>
 				<Text>{permission.name}</Text>
 				<div className={design.centeredRow}>
@@ -74,10 +74,8 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	return (
 		<>
 			<div>
-				<Space h={14} />
-				<Text className={design.tMediumBold}>{`Permissions`}</Text>
-				<Space h={32} />
-				<Text className={design.tSmallLabel}>
+				<Space h={24} />
+				<Text className={design.tExtraSmallLabel}>
 					{`Contract Permissions (Admin Only)`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -91,7 +89,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				<Text className={design.tSmallLabel}>
+				<Text className={design.tExtraSmallLabel}>
 					{`Club Permissions`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -105,7 +103,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 							.map(permission => permissionItem(permission))}
 					</>
 				)}
-				<Space h={32} />
+				<Space h={40} />
 
 				<Button className={design.buttonBlack} onClick={onSaveChanges}>
 					Save Changes

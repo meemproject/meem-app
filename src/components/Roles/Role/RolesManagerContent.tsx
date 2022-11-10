@@ -190,12 +190,12 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 			{!isLoadingPermissions && (
 				<div>
-					<Space h={14} />
+					<Space h={16} />
 					<div
 						className={design.spacedRow}
 						style={{ marginBottom: 32 }}
 					>
-						<Text className={design.tMediumBold}>
+						<Text className={design.tLargeBold}>
 							{role && role.name.length > 0
 								? role.name
 								: 'Add Role'}
@@ -211,7 +211,9 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					</div>
 
 					<div className={design.row}>
-						<Text className={design.tSmallLabel}>ROLE NAME</Text>
+						<Text className={design.tExtraSmallLabel}>
+							ROLE NAME
+						</Text>
 						<Space w={2} />
 						<Text color={'red'}>*</Text>
 					</div>
@@ -246,7 +248,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						<div>
 							{role?.tokenAddress && (
 								<div>
-									<Text className={design.tSmallLabel}>
+									<Text className={design.tExtraSmallLabel}>
 										CONTRACT ADDRESS
 									</Text>
 
@@ -286,7 +288,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 									<Space h={40} />
 
-									<Text className={design.tSmallLabel}>
+									<Text className={design.tExtraSmallLabel}>
 										TOKEN SETTINGS
 									</Text>
 									<Space h={24} />

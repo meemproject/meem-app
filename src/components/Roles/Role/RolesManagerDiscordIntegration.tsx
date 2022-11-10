@@ -125,7 +125,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 	return (
 		<>
 			<div>
-				<Text className={design.tSmallLabel}>DISCORD ROLE</Text>
+				<Text className={design.tExtraSmallLabel}>DISCORD ROLE</Text>
 				{role?.id === 'addRole' && (
 					<div>
 						<Space h={8} />
