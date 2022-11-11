@@ -347,7 +347,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 						<Text
 							className={design.tMediumBold}
 						>{`Added apps (${existingIntegrations?.length})`}</Text>
-						<Space h={8} />
+						<Space h={12} />
 						<Grid>
 							{existingIntegrations.map(integration => (
 								<Grid.Col

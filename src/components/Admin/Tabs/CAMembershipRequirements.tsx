@@ -371,7 +371,8 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 										height: 150,
 										justifyContent: 'center',
 										border: '1px solid rgba(0, 0, 0, 1)',
-										borderRadius: 16
+										borderRadius: 16,
+										position: 'relative'
 									}}
 								>
 									<a

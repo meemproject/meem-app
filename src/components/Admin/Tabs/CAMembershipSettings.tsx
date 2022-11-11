@@ -309,9 +309,12 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={design.tMediumBoldFaded}>
+					<Space h={16} />
+
+					<Text className={design.tMediumBold}>
 						Enter cost to join
 					</Text>
+					<Space h={4} />
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -341,9 +344,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={design.tMediumBoldFaded}>
+					<Text className={design.tMediumBold}>
 						Send funds to this address
 					</Text>
+					<Space h={4} />
+
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -352,7 +357,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							setMembershipFundsAddress(event.target.value)
 						}}
 					/>
-					<Space h={'md'} />
+					<Space h={24} />
 					<Button
 						loading={isCheckingRequirement}
 						disabled={isCheckingRequirement}
@@ -388,6 +393,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -429,10 +435,12 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={design.tMediumBoldFaded}>
+							<Space h={24} />
+
+							<Text className={design.tMediumBold}>
 								Enter total memberships
 							</Text>
-
+							<Space h={4} />
 							<TextInput
 								radius="lg"
 								size="sm"
@@ -449,7 +457,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							/>
 						</>
 					)}
-					<Space h={'md'} />
+					<Space h={24} />
 					<Button
 						onClick={() => {
 							if (membershipQuantity > 10000000) {
@@ -476,6 +484,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -573,6 +582,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
