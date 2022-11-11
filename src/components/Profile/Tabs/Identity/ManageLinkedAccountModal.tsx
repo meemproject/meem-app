@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { IdentityIntegration } from '../../../../model/identity/identity'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
 	integration?: IdentityIntegration
 	isOpened: boolean
@@ -19,7 +19,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -53,7 +53,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Oops!',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Unable to save changes to this account.`
 			})
@@ -82,17 +82,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				title={
 					<>
 						{integration?.name === 'Twitter' && (
-							<Text className={design.tMediumBold}>
+							<Text className={clubsTheme.tMediumBold}>
 								Twitter Settings
 							</Text>
 						)}
 						{integration?.name === 'Discord' && (
-							<Text className={design.tMediumBold}>
+							<Text className={clubsTheme.tMediumBold}>
 								Discord Settings
 							</Text>
 						)}
 						{integration?.name === 'Email' && (
-							<Text className={design.tMediumBold}>
+							<Text className={clubsTheme.tMediumBold}>
 								Email Address Settings
 							</Text>
 						)}
@@ -106,7 +106,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={design.modalStepsContainer}>
+				<div className={clubsTheme.modalStepsContainer}>
 					{integration?.name === 'Twitter' && (
 						<Text>
 							{`You've successfully verified @${integration.metadata?.twitterUsername} as your Twitter username.`}
@@ -125,12 +125,12 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					<Space h={24} />
 					{(integration?.name === 'Twitter' ||
 						integration?.name === 'Discord') && (
-						<Text className={design.tExtraSmallBold}>
+						<Text className={clubsTheme.tExtraSmallBold}>
 							{`Who can view this username?`}
 						</Text>
 					)}
 					{integration?.name === 'Email' && (
-						<Text className={design.tExtraSmallBold}>
+						<Text className={clubsTheme.tExtraSmallBold}>
 							{`who can view this email address?`}
 						</Text>
 					)}
@@ -155,7 +155,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					<Space h={24} />
 
 					<Button
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
 							saveChanges()

@@ -32,7 +32,7 @@ import {
 	identityIntegrationFromApi
 } from '../../../../model/identity/identity'
 import { useCustomApollo } from '../../../../providers/ApolloProvider'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
@@ -44,7 +44,7 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 })
 
 export const ManageIdentityComponent: React.FC = () => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const wallet = useWallet()
 	const id = useContext(IdentityContext)
@@ -268,14 +268,14 @@ export const ManageIdentityComponent: React.FC = () => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={design.tLargeBold}>Manage Identity</Text>
+			<Text className={clubsTheme.tLargeBold}>Manage Identity</Text>
 			<Space h={32} />
-			<Text className={design.tMediumBold}>Profile Picture</Text>
+			<Text className={clubsTheme.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
-				<div className={design.row}>
+				<div className={clubsTheme.row}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={design.buttonWhite}
+						className={clubsTheme.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -283,7 +283,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={design.buttonWhite}
+						className={clubsTheme.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
@@ -324,7 +324,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				</div>
 			)}
 			<Space h={profilePicture.length > 0 ? 148 : 32} />
-			<Text className={design.tMediumBold}>Display Name</Text>
+			<Text className={clubsTheme.tMediumBold}>Display Name</Text>
 			<Space h={16} />
 			<TextInput
 				radius="lg"
@@ -339,7 +339,9 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space h={48} />
 					<Divider />
 					<Space h={'xl'} />
-					<Text className={design.tMediumBold}>Verify Accounts</Text>
+					<Text className={clubsTheme.tMediumBold}>
+						Verify Accounts
+					</Text>
 					<Space h={16} />
 
 					<Text>
@@ -357,7 +359,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					{id.identity.integrations &&
 						id.identity.integrations.length > 0 && (
 							<>
-								<div className={design.centeredRow}>
+								<div className={clubsTheme.centeredRow}>
 									<Image
 										src="/icon-verified.png"
 										width={18}
@@ -367,9 +369,9 @@ export const ManageIdentityComponent: React.FC = () => {
 
 									<Text
 										style={{
-											color: 'rgba(62, 162, 255, 1)'
+											color: colorVerified
 										}}
-										className={design.tMediumBold}
+										className={clubsTheme.tMediumBold}
 									>
 										Verified
 									</Text>
@@ -398,12 +400,12 @@ export const ManageIdentityComponent: React.FC = () => {
 												>
 													<div
 														className={
-															design.gridItem
+															clubsTheme.gridItem
 														}
 													>
 														<div
 															className={
-																design.integrationGridItemHeader
+																clubsTheme.integrationGridItemHeader
 															}
 														>
 															<Image
@@ -445,7 +447,9 @@ export const ManageIdentityComponent: React.FC = () => {
 							</>
 						)}
 
-					<Text className={design.tMediumBold}>Verify Accounts</Text>
+					<Text className={clubsTheme.tMediumBold}>
+						Verify Accounts
+					</Text>
 					<Space h={16} />
 					{availableIntegrations.length === 0 && (
 						<Loader variant="oval" color="red" />
@@ -469,10 +473,12 @@ export const ManageIdentityComponent: React.FC = () => {
 												)
 											}}
 										>
-											<div className={design.gridItem}>
+											<div
+												className={clubsTheme.gridItem}
+											>
 												<div
 													className={
-														design.integrationGridItemHeader
+														clubsTheme.integrationGridItemHeader
 													}
 												>
 													<Image
@@ -497,7 +503,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			)}
 			<Space h={'xl'} />
 			<Button
-				className={design.buttonBlack}
+				className={clubsTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>
@@ -534,10 +540,10 @@ export const ManageIdentityComponent: React.FC = () => {
 					setIsLinkedAccountModalOpen(false)
 				}}
 			/>
-			<div id="emojiCanvas" className={design.emojiCanvas}>
+			<div id="emojiCanvas" className={clubsTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
-			<div className={design.emojiCanvasCover} />
+			<div className={clubsTheme.emojiCanvasCover} />
 			<Modal
 				withCloseButton={false}
 				padding={8}

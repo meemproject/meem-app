@@ -25,12 +25,12 @@ import {
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
-import { colorPink, useGlobalStyles } from '../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 export function HeaderMenu() {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
-	const { classes: design, cx } = useGlobalStyles()
+	const { classes: clubsTheme, cx } = useClubsTheme()
 	const router = useRouter()
 
 	const id = useContext(IdentityContext)
@@ -77,15 +77,15 @@ export function HeaderMenu() {
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
 	return (
-		<Header className={design.siteHeader} height={56}>
-			<div className={design.siteHeaderInner}>
-				<div className={design.siteHeaderLeftItems}>
+		<Header className={clubsTheme.siteHeader} height={56}>
+			<div className={clubsTheme.siteHeaderInner}>
+				<div className={clubsTheme.siteHeaderLeftItems}>
 					<a onClick={navigateHome}>
-						<Text className={design.siteHeaderMainLogo}>♣</Text>
+						<Text className={clubsTheme.siteHeaderMainLogo}>♣</Text>
 					</a>
 				</div>
 
-				<div className={design.siteHeaderRightItems}>
+				<div className={clubsTheme.siteHeaderRightItems}>
 					{wallet.isConnected && (
 						<Menu
 							radius={8}
@@ -96,8 +96,8 @@ export function HeaderMenu() {
 						>
 							<Menu.Target>
 								<UnstyledButton
-									className={cx(design.siteHeaderUser, {
-										[design.siteHeaderUserActive]:
+									className={cx(clubsTheme.siteHeaderUser, {
+										[clubsTheme.siteHeaderUserActive]:
 											isUserMenuOpened
 									})}
 								>
@@ -147,20 +147,20 @@ export function HeaderMenu() {
 							<Menu.Dropdown>
 								<Menu.Item
 									onClick={navigateToMyAccount}
-									className={design.tExtraSmallBold}
+									className={clubsTheme.tExtraSmallBold}
 								>
 									My Account
 								</Menu.Item>
 								{clubclub.isMember && (
 									<Menu.Item
 										onClick={navigateToMyClubs}
-										className={design.tExtraSmallBold}
+										className={clubsTheme.tExtraSmallBold}
 									>
 										My Clubs
 									</Menu.Item>
 								)}
 								<Menu.Item
-									className={design.tExtraSmallBold}
+									className={clubsTheme.tExtraSmallBold}
 									onClick={async () => {
 										await wallet.disconnectWallet()
 									}}
@@ -176,11 +176,11 @@ export function HeaderMenu() {
 					)}
 					{!wallet.isConnected && (
 						<Text
-							className={design.tExtraSmallBold}
+							className={clubsTheme.tExtraSmallBold}
 							style={{
 								marginBottom: 4,
 								marginRight: 16,
-								color: 'rgba(255, 102, 81, 1)',
+								color: colorPink,
 								cursor: 'pointer'
 							}}
 						>
@@ -198,14 +198,14 @@ export function HeaderMenu() {
 						<Menu.Target>
 							<UnstyledButton>
 								<Dots
-									className={design.siteHeaderMenuEllipse}
+									className={clubsTheme.siteHeaderMenuEllipse}
 								/>
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
 							<Menu.Item
 								onClick={handlePoweredByMeem}
-								className={design.tExtraSmallBold}
+								className={clubsTheme.tExtraSmallBold}
 							>
 								Powered by{' '}
 								<span style={{ textDecoration: 'underline' }}>
@@ -215,7 +215,7 @@ export function HeaderMenu() {
 							{wallet.isConnected && !clubclub.isMember && (
 								<Menu.Item
 									onClick={handleJoinClubClub}
-									className={design.tExtraSmallBold}
+									className={clubsTheme.tExtraSmallBold}
 								>
 									Join Club Club
 								</Menu.Item>
@@ -229,7 +229,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tExtraSmallBold}
+								className={clubsTheme.tExtraSmallBold}
 								icon={
 									<QuestionMarkCircle
 										height={20}
@@ -249,7 +249,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tExtraSmallBold}
+								className={clubsTheme.tExtraSmallBold}
 								icon={<BrandTwitter size={20} />}
 							>
 								Twitter
@@ -260,7 +260,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tExtraSmallBold}
+								className={clubsTheme.tExtraSmallBold}
 								icon={<BrandDiscord size={20} />}
 							>
 								Discord
@@ -271,14 +271,14 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={design.tExtraSmallBold}
+								className={clubsTheme.tExtraSmallBold}
 								icon={<Mail size={20} />}
 							>
 								Contact Us
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleShareFeedback}
-								className={design.tExtraSmallBold}
+								className={clubsTheme.tExtraSmallBold}
 								style={{
 									color: colorPink,
 									marginBottom: '-2px',

@@ -3,7 +3,7 @@
 import { Text, Space, Radio, Button } from '@mantine/core'
 import React, { useState } from 'react'
 import { Club } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { DeleteClubModal } from '../Modals/DeleteClubModal'
 
 interface IProps {
@@ -11,20 +11,20 @@ interface IProps {
 }
 
 export const CADeleteClub: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isDeleteClubModalOpened, setIsDeleteClubModalOpened] =
 		useState(false)
 
 	return (
-		<div className={design.fullWidth}>
+		<div className={clubsTheme.fullWidth}>
 			<Space h={16} />
 
-			<Text className={design.tLargeBold}>Delete Club</Text>
+			<Text className={clubsTheme.tLargeBold}>Delete Club</Text>
 			<Space h={24} />
 
 			<Text
-				className={design.tSmallBold}
+				className={clubsTheme.tSmallBold}
 			>{`Once deleted, your club will be removed from the Clubs database and will no longer be discoverable for new or existing members. This action cannot be undone.`}</Text>
 			<Space h={16} />
 
@@ -32,7 +32,7 @@ export const CADeleteClub: React.FC<IProps> = ({ club }) => {
 			<Space h={24} />
 
 			<Button
-				className={design.buttonRed}
+				className={clubsTheme.buttonRed}
 				onClick={() => {
 					setIsDeleteClubModalOpened(true)
 				}}

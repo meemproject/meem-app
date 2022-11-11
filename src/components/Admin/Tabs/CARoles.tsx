@@ -6,14 +6,14 @@ import React, { useState } from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../model/club/club'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
-import { colorPink, useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
 }
 
 export const CARoles: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 
 	const createRole = () => {
@@ -34,7 +34,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tLargeBold}>Roles</Text>
+				<Text className={clubsTheme.tLargeBold}>Roles</Text>
 
 				<Space h={32} />
 			</div>
@@ -42,7 +42,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 				<>
 					{club.roles.map(role => (
 						<div
-							className={design.gridItem}
+							className={clubsTheme.gridItem}
 							style={{
 								display: 'flex',
 								justifyContent: 'space-between',
@@ -51,7 +51,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 							key={role.id}
 						>
 							<div
-								className={design.centeredRow}
+								className={clubsTheme.centeredRow}
 								onClick={() => {
 									router.push({
 										pathname: `/${club.slug}/roles`,
@@ -73,8 +73,8 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										deg: 35
 									}}
 									classNames={{
-										inner: design.tBadgeText,
-										root: design.badge
+										inner: clubsTheme.tBadgeText,
+										root: clubsTheme.badge
 									}}
 									leftSection={
 										<>
@@ -113,7 +113,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 													}
 												})
 											}}
-											className={design.tSmallBold}
+											className={clubsTheme.tSmallBold}
 										>
 											Manage Role
 										</Menu.Item>
@@ -132,7 +132,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 														color: colorPink
 													}}
 													className={
-														design.tSmallBold
+														clubsTheme.tSmallBold
 													}
 												>
 													Delete Role
@@ -148,7 +148,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 			)}
 
 			<Space h={32} />
-			<Button className={design.buttonBlack} onClick={createRole}>
+			<Button className={clubsTheme.buttonBlack} onClick={createRole}>
 				+ Create Role
 			</Button>
 			<Space h={64} />

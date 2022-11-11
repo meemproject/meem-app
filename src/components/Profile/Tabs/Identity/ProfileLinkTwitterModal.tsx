@@ -17,7 +17,7 @@ import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
 import { AvailableIdentityIntegration } from '../../../../model/identity/identity'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
 	integration?: AvailableIdentityIntegration
 	isOpened: boolean
@@ -36,7 +36,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 	integration,
 	onModalClosed
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
 	const [step, setStep] = useState<Step>(Step.Start)
@@ -78,7 +78,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Verification failed',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Please make sure your tweet was public and try again.`
 			})
@@ -99,7 +99,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tMediumBold}>
+					<Text className={clubsTheme.tMediumBold}>
 						Connect your Twitter account
 					</Text>
 				}
@@ -112,7 +112,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={design.modalStepsContainer}>
+				<div className={clubsTheme.modalStepsContainer}>
 					<MantineProvider
 						theme={{
 							colors: {
@@ -154,7 +154,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															design.tExtraSmall
+															clubsTheme.tExtraSmall
 														}
 													>
 														You’ll need access to
@@ -195,7 +195,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 															setStep(Step.Share)
 														}}
 														className={
-															design.buttonBlack
+															clubsTheme.buttonBlack
 														}
 													>
 														Confirm
@@ -210,7 +210,9 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 								label="Share a public post"
 								description={
 									step !== Step.Share ? (
-										<Text className={design.tExtraSmall}>
+										<Text
+											className={clubsTheme.tExtraSmall}
+										>
 											Make a post to verify your identity
 										</Text>
 									) : (
@@ -218,7 +220,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 											<div>
 												<Text
 													className={
-														design.tExtraSmall
+														clubsTheme.tExtraSmall
 													}
 												>
 													Make a post to verify your
@@ -242,7 +244,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 														setStep(Step.Verify)
 													}}
 													className={
-														design.buttonBlack
+														clubsTheme.buttonBlack
 													}
 												>
 													Post on Twitter
@@ -258,7 +260,9 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 								description={
 									step !== Step.Verify &&
 									step != Step.Verifying ? (
-										<Text className={design.tExtraSmall}>
+										<Text
+											className={clubsTheme.tExtraSmall}
+										>
 											Complete your verification.
 										</Text>
 									) : (
@@ -267,7 +271,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 												<>
 													<Text
 														className={
-															design.tExtraSmall
+															clubsTheme.tExtraSmall
 														}
 													>
 														Please wait...
@@ -279,7 +283,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 													<div>
 														<Text
 															className={
-																design.tExtraSmall
+																clubsTheme.tExtraSmall
 															}
 														>
 															Complete your
@@ -292,7 +296,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 																verifyTweet
 															}
 															className={
-																design.buttonBlack
+																clubsTheme.buttonBlack
 															}
 														>
 															Verify Tweet

@@ -25,7 +25,7 @@ import {
 	ClubRolePermission
 } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
 import { RolesManagerMembers } from './RolesManagerMembers'
@@ -41,7 +41,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	club,
 	onRoleUpdated
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [role, setRole] = useState<ClubRole>()
 	const [roleMembers, setRoleMembers] = useState<ClubMember[]>([])
@@ -192,10 +192,10 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				<div>
 					<Space h={16} />
 					<div
-						className={design.spacedRow}
+						className={clubsTheme.spacedRow}
 						style={{ marginBottom: 32 }}
 					>
-						<Text className={design.tLargeBold}>
+						<Text className={clubsTheme.tLargeBold}>
 							{role && role.name.length > 0
 								? role.name
 								: 'Add Role'}
@@ -204,14 +204,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							onClick={() => {
 								saveChanges()
 							}}
-							className={design.buttonBlack}
+							className={clubsTheme.buttonBlack}
 						>
 							Save Changes
 						</Button>
 					</div>
 
-					<div className={design.row}>
-						<Text className={design.tExtraSmallLabel}>
+					<div className={clubsTheme.row}>
+						<Text className={clubsTheme.tExtraSmallLabel}>
 							ROLE NAME
 						</Text>
 						<Space w={2} />
@@ -223,7 +223,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						radius={20}
 						disabled={role?.isDefaultRole}
 						classNames={{
-							input: design.fTextField
+							input: clubsTheme.fTextField
 						}}
 						value={roleName}
 						onChange={event => {
@@ -248,13 +248,15 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						<div>
 							{role?.tokenAddress && (
 								<div>
-									<Text className={design.tExtraSmallLabel}>
+									<Text
+										className={clubsTheme.tExtraSmallLabel}
+									>
 										CONTRACT ADDRESS
 									</Text>
 
 									<Space h={24} />
 
-									<div className={design.row}>
+									<div className={clubsTheme.row}>
 										<Text
 											style={{ wordBreak: 'break-word' }}
 										>
@@ -288,7 +290,9 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 									<Space h={40} />
 
-									<Text className={design.tExtraSmallLabel}>
+									<Text
+										className={clubsTheme.tExtraSmallLabel}
+									>
 										TOKEN SETTINGS
 									</Text>
 									<Space h={24} />
@@ -320,7 +324,9 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									{!role?.isDefaultRole && (
 										<div>
 											<Text
-												className={design.tSmallBold}
+												className={
+													clubsTheme.tSmallBold
+												}
 											>{`Can members with this role transfer their token to another wallet?`}</Text>
 											<Space h={4} />
 

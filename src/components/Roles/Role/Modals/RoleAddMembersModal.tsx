@@ -14,7 +14,7 @@ import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Club, ClubMember } from '../../../../model/club/club'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -31,7 +31,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 	onMembersSaved,
 	onModalClosed
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [members, setMembers] = useState<ClubMember[]>([])
 
@@ -116,7 +116,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				size={'50%'}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={design.tMediumBold}>Add Members</Text>}
+				title={
+					<Text className={clubsTheme.tMediumBold}>Add Members</Text>
+				}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -124,11 +126,11 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				<TextInput
 					radius={20}
 					classNames={{
-						input: design.fTextField
+						input: clubsTheme.fTextField
 					}}
 					icon={<Search />}
 					placeholder={'Search Members'}
-					className={design.fullWidth}
+					className={clubsTheme.fullWidth}
 					size={'lg'}
 					onChange={event => {
 						if (event.target.value) {
@@ -148,7 +150,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 							<div key={member.wallet}>
 								<Space h={16} />
 								<div>
-									<div className={design.centeredRow}>
+									<div className={clubsTheme.centeredRow}>
 										<Checkbox
 											checked={member.chosen}
 											onChange={event => {
@@ -192,13 +194,17 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 										)}
 
 										<div>
-											<Text className={design.tSmallBold}>
+											<Text
+												className={
+													clubsTheme.tSmallBold
+												}
+											>
 												{member.displayName ??
 													'Club Member'}
 											</Text>
 											<Text
 												className={
-													design.tExtraSmallFaded
+													clubsTheme.tExtraSmallFaded
 												}
 											>
 												{member.ens
@@ -239,9 +245,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					)}
 				<Space h={24} />
 
-				<div className={design.row}>
+				<div className={clubsTheme.row}>
 					<Button
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 						onClick={async () => {
 							const chosenMembers = members.filter(
 								member => member.chosen
@@ -265,7 +271,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						onClick={() => {
 							onModalClosed()
 						}}
-						className={design.buttonGrey}
+						className={clubsTheme.buttonGrey}
 					>
 						Cancel
 					</Button>

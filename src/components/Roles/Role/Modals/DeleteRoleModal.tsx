@@ -7,7 +7,7 @@ import router from 'next/router'
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -22,7 +22,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 	role,
 	club
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isDeletingRole, setIsDeletingRole] = useState(false)
 
@@ -66,7 +66,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Error',
 					autoClose: 5000,
-					color: 'red',
+					color: colorPink,
 					icon: <AlertCircle />,
 					message: `Unable to delete this role. Please let us know!`
 				})
@@ -86,7 +86,9 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				padding={'lg'}
 				withCloseButton={!isDeletingRole}
 				opened={isOpened}
-				title={<Text className={design.tMediumBold}>Delete Role</Text>}
+				title={
+					<Text className={clubsTheme.tMediumBold}>Delete Role</Text>
+				}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -94,13 +96,13 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				<Divider />
 				<Space h={24} />
 				<Text
-					className={design.tMediumBold}
+					className={clubsTheme.tMediumBold}
 				>{`Are you sure you want to delete this role?`}</Text>
 				<Space h={32} />
-				<div className={design.row}>
+				<div className={clubsTheme.row}>
 					<Button
 						loading={isDeletingRole}
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 						onClick={async () => {
 							deleteRole()
 						}}
@@ -114,7 +116,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={design.buttonGrey}
+								className={clubsTheme.buttonGrey}
 							>
 								Cancel
 							</Button>

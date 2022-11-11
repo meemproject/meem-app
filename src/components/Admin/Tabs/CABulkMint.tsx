@@ -7,14 +7,14 @@ import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
 }
 
 export const CABulkMint: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
@@ -41,7 +41,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message: 'You must add at least one address.',
-				color: 'red'
+				color: colorPink
 			})
 			setIsSavingChanges(false)
 			return
@@ -52,7 +52,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message: 'You can only airdrop to up to 15 addresses at once.',
-				color: 'red'
+				color: colorPink
 			})
 			setIsSavingChanges(false)
 			return
@@ -86,7 +86,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				title: 'Oops!',
 				message:
 					'One or more addresses are not valid. Double check what you entered and try again.',
-				color: 'red'
+				color: colorPink
 			})
 			setIsSavingChanges(false)
 			return
@@ -128,7 +128,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			showNotification({
 				title: 'Success!',
 				autoClose: 5000,
-				color: 'green',
+				color: colorGreen,
 				icon: <Check color="green" />,
 				message: `Airdrops sent! The wallets you provided should have access to this club in a few minutes.`
 			})
@@ -140,7 +140,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			showNotification({
 				title: 'Airdrop send failed.',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Please try again or get in touch!`
 			})
@@ -154,15 +154,15 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tLargeBold}>Airdrops</Text>
+				<Text className={clubsTheme.tLargeBold}>Airdrops</Text>
 				<Space h={32} />
 
-				<Text className={design.tMediumBold}>
+				<Text className={clubsTheme.tMediumBold}>
 					Invite others to your club by airdropping them a club token.
 					They will automatically become a club member.
 				</Text>
 				<Space h={16} />
-				<Text className={design.tMediumFaded}>
+				<Text className={clubsTheme.tMediumFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
 				<Space h={24} />
@@ -179,7 +179,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			</div>
 			<Space h={40} />
 			<Button
-				className={design.buttonBlack}
+				className={clubsTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={sendAirdrops}
 			>

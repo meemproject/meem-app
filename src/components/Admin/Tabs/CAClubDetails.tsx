@@ -3,14 +3,14 @@ import { Text, Button, Textarea, Space, TextInput } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Club } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 interface IProps {
 	club: Club
 }
 
 export const CAClubDetails: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
@@ -81,14 +81,14 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 	}
 
 	return (
-		<div className={design.fullWidth}>
+		<div className={clubsTheme.fullWidth}>
 			<Space h={12} />
 
-			<Text className={design.tLargeBold}>Club Profile</Text>
+			<Text className={clubsTheme.tLargeBold}>Club Profile</Text>
 			<Space h={32} />
 
 			<Text
-				className={design.tMediumBold}
+				className={clubsTheme.tMediumBold}
 			>{`What's your club called?`}</Text>
 			<Space h={12} />
 			<TextInput
@@ -99,7 +99,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 				onChange={event => setClubName(event.currentTarget.value)}
 			/>
 			<Space h={'xl'} />
-			<Text className={design.tMediumBold}>
+			<Text className={clubsTheme.tMediumBold}>
 				In a sentence, describe what your members do together.
 			</Text>
 			<Space h={12} />
@@ -118,7 +118,7 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 
 			<Space h={40} />
 			<Button
-				className={design.buttonBlack}
+				className={clubsTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>

@@ -17,7 +17,11 @@ import Cookies from 'js-cookie'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import {
+	colorLightestGrey,
+	colorPink,
+	useClubsTheme
+} from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -36,7 +40,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 	onModalClosed,
 	onServerChosen
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [availableDiscordServers, setAvailableDiscordServers] =
 		useState<MeemAPI.IDiscordServer[]>()
@@ -85,7 +89,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Error',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Unable to fetch Discord servers. Please try again later.`
 			})
@@ -166,7 +170,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tMediumBold}>
+					<Text className={clubsTheme.tMediumBold}>
 						{isSavingChanges
 							? ``
 							: `Which Discord server would you like to connect?`}
@@ -208,7 +212,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={design.buttonGrey}
+								className={clubsTheme.buttonGrey}
 							>
 								Close
 							</Button>
@@ -223,14 +227,16 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 								<div
 									key={server.id}
 									style={{
-										backgroundColor: '#FAFAFA',
+										backgroundColor: colorLightestGrey,
 										borderRadius: 16,
 										padding: 16,
 										marginBottom: 16
 									}}
 								>
-									<div className={design.spacedRowCentered}>
-										<div className={design.centeredRow}>
+									<div
+										className={clubsTheme.spacedRowCentered}
+									>
+										<div className={clubsTheme.centeredRow}>
 											<Image
 												radius={24}
 												height={48}
@@ -247,7 +253,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											<div>
 												<Text
 													className={
-														design.tSmallBold
+														clubsTheme.tSmallBold
 													}
 												>
 													{server.name}
@@ -269,7 +275,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 											onClick={() => {
 												connectServer(server)
 											}}
-											className={design.buttonBlack}
+											className={clubsTheme.buttonBlack}
 										>
 											{server.guildData.connectedGuildId
 												? 'Connected to another Guild'
@@ -289,7 +295,7 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 										onClick={() => {
 											onModalClosed()
 										}}
-										className={design.buttonGrey}
+										className={clubsTheme.buttonGrey}
 									>
 										Cancel
 									</Button>

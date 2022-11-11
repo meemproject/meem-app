@@ -14,7 +14,11 @@ import {
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
-import { colorLightestGrey, useGlobalStyles } from '../Styles/GlobalStyles'
+import {
+	colorLightestGrey,
+	colorWhite,
+	useClubsTheme
+} from '../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -34,7 +38,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 	onModalClosed,
 	isLoginForced
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	// Email state controls
 	const [isEmailState, setIsEmailState] = useState(false)
@@ -121,7 +125,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 		// 	showNotification({
 		// 		title: 'Verification failed',
 		// 		autoClose: 5000,
-		// 		color: 'red',
+		// 		color: colorPink,
 		// 		icon: <AlertCircle />,
 		// 		message: `Please make sure your email address exists and try again.`
 		// 	})
@@ -175,7 +179,9 @@ export const JoinClubsModal: React.FC<IProps> = ({
 				<div>
 					<Space h={24} />
 					<Center>
-						<Text className={design.tSmallBold}>Email Address</Text>
+						<Text className={clubsTheme.tSmallBold}>
+							Email Address
+						</Text>
 					</Center>
 
 					<Space h={16} />
@@ -190,7 +196,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={40} />
 					<Center>
 						<Button
-							className={design.buttonBlack}
+							className={clubsTheme.buttonBlack}
 							onClick={() => {
 								sendEmailVerificationLink()
 							}}
@@ -201,13 +207,13 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={32} />
 
 					<Center>
-						<Text className={design.tSmallFaded}>
+						<Text className={clubsTheme.tSmallFaded}>
 							Changed your mind?
 						</Text>
 					</Center>
 					<Center>
 						<Text
-							className={design.tLink}
+							className={clubsTheme.tLink}
 							onClick={() => {
 								setIsEmailState(false)
 								setEmail('')
@@ -234,7 +240,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					closeOnClickOutside={!isLoginForced}
 					opened={isOpened}
 					title={
-						<Text className={design.tMediumBold}>
+						<Text className={clubsTheme.tMediumBold}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -254,7 +260,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											position: 'relative'
 										}}
 										className={
-											design.connectMethodGridItemMobile
+											clubsTheme.connectMethodGridItemMobile
 										}
 										key={method.id}
 										onClick={() => {
@@ -269,15 +275,15 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											height={50}
 										/>
 										<Space w={16} />
-										<Text className={design.tSmallBold}>
+										<Text className={clubsTheme.tSmallBold}>
 											{method.name}
 										</Text>
 										{!method.enabled && (
-											<div className={design.row}>
+											<div className={clubsTheme.row}>
 												<Space w={8} />
 												<Text
 													className={
-														design.tSmallFaded
+														clubsTheme.tSmallFaded
 													}
 												>
 													Coming soon
@@ -293,7 +299,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													borderRadius: 32,
 													width: '100%',
 													height: '100%',
-													backgroundColor: 'white',
+													backgroundColor: colorWhite,
 													opacity: '0.7'
 												}}
 											/>
@@ -319,7 +325,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					size={isEmailState ? '' : '47%'}
 					opened={isOpened}
 					title={
-						<Text className={design.tMediumBold}>
+						<Text className={clubsTheme.tMediumBold}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -345,7 +351,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 									>
 										<div
 											className={
-												design.connectMethodGridItem
+												clubsTheme.connectMethodGridItem
 											}
 											style={{
 												position: 'relative'
@@ -359,7 +365,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											<Center>
 												<div
 													className={
-														design.connectMethodGridItemContent
+														clubsTheme.connectMethodGridItemContent
 													}
 												>
 													<Image
@@ -370,7 +376,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													<Space h={16} />
 													<Text
 														className={
-															design.tSmallBold
+															clubsTheme.tSmallBold
 														}
 													>
 														{method.name}
@@ -378,7 +384,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													{!method.enabled && (
 														<Text
 															className={
-																design.tSmallFaded
+																clubsTheme.tSmallFaded
 															}
 															style={{
 																fontSize: 14,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import React, { useCallback } from 'react'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -12,7 +12,7 @@ export const JoinLeaveClubModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const closeModal = useCallback(() => {
 		onModalClosed()
@@ -32,18 +32,18 @@ export const JoinLeaveClubModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={design.modalHeader}>
+				<div className={clubsTheme.modalHeader}>
 					<Space h={128} />
 
 					<Loader color="red" variant="oval" />
 					<Space h={24} />
 					<Text
-						className={design.tLargeBold}
+						className={clubsTheme.tLargeBold}
 					>{`There's magic happening on the blockchain.`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tMediumBold}
+						className={clubsTheme.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
 				</div>
