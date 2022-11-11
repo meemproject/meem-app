@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -22,105 +21,10 @@ import { GET_ALL_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerLeftItems: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	headerArrow: {
-		marginRight: 32,
-		marginTop: 6,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 16,
-			marginLeft: 16
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 20
-		}
-	},
-	buttonCreate: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		marginRight: 32
-	},
-	createClubLink: {
-		marginTop: 24,
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	clubItem: {
-		display: 'flex',
-		alignItems: 'start',
-		marginBottom: 24,
-		fontSize: 16,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	clubInfo: {
-		textOverflow: 'ellipsis',
-		msTextOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden'
-	},
-	clubDescription: {
-		fontSize: 14,
-		marginRight: 8,
-		lineHeight: 1.3,
-		textOverflow: 'ellipsis',
-		msTextOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden'
-	},
-	clubLogoImage: {
-		marginTop: 4,
-		imageRendering: 'pixelated'
-	},
-	clubNameEllipsis: {
-		fontWeight: 600,
-		textOverflow: 'ellipsis',
-		msTextOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden'
-	},
-	myClubsPrompt: { fontSize: 18, marginBottom: 16 }
-}))
+import { useClubsTheme } from '../Styles/ClubsTheme'
 
 export const BrowseComponent: React.FC = () => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const { chainId } = useWallet()
 	const limit = 20
@@ -179,18 +83,20 @@ export const BrowseComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={classes.header}>
-				<div className={classes.headerLeftItems}>
+			<div className={clubsTheme.pageHeader}>
+				<div className={clubsTheme.centeredRow}>
 					<a onClick={navigateHome}>
-						<ArrowLeft className={classes.headerArrow} size={32} />
+						<ArrowLeft className={clubsTheme.backArrow} size={32} />
 					</a>
-					<Text className={classes.headerClubName}>
+					<Space w={16} />
+					<Text className={clubsTheme.tLargeBold}>
 						Browse all clubs
 					</Text>
 				</div>
 				<Button
+					style={{ marginRight: 32 }}
 					onClick={navigateToCreate}
-					className={classes.buttonCreate}
+					className={clubsTheme.buttonBlack}
 				>
 					Create a Club
 				</Button>
@@ -222,6 +128,8 @@ export const BrowseComponent: React.FC = () => {
 					</Container>
 				)}
 
+				<Space h={32} />
+
 				{!isLoadingClubs && (
 					<>
 						<Grid>
@@ -236,13 +144,16 @@ export const BrowseComponent: React.FC = () => {
 								>
 									<div
 										key={club.address}
-										className={classes.clubItem}
+										className={clubsTheme.gridItem}
+										style={{
+											display: 'flex'
+										}}
 										onClick={() => {
 											navigateToClub(club.slug ?? '')
 										}}
 									>
 										<Image
-											className={classes.clubLogoImage}
+											className={clubsTheme.imageClubLogo}
 											src={club.image ?? ''}
 											width={40}
 											radius={8}
@@ -250,23 +161,37 @@ export const BrowseComponent: React.FC = () => {
 											fit={'cover'}
 										/>
 										<Space w="xs" />
-										<div className={classes.clubInfo}>
+										<div className={clubsTheme.tEllipsis}>
 											<Text
 												className={
-													classes.clubNameEllipsis
+													clubsTheme.tSmallBold
 												}
+												style={{
+													textOverflow: 'ellipsis',
+													msTextOverflow: 'ellipsis',
+													whiteSpace: 'nowrap',
+													overflow: 'hidden'
+												}}
 											>
 												{club.name}
 											</Text>
 											<Space h={4} />
 											<Text
 												className={
-													classes.clubDescription
+													clubsTheme.tExtraSmall
 												}
+												style={{
+													marginRight: 8,
+													lineHeight: 1.4,
+													textOverflow: 'ellipsis',
+													msTextOverflow: 'ellipsis',
+													whiteSpace: 'nowrap',
+													overflow: 'hidden'
+												}}
 											>
 												{club.description}{' '}
 											</Text>
-											<Space h={6} />
+											<Space h={8} />
 											<Badge
 												color="gray"
 												variant={'filled'}
@@ -290,7 +215,7 @@ export const BrowseComponent: React.FC = () => {
 						<Space h={24} />
 
 						<Button
-							className={classes.buttonCreate}
+							className={clubsTheme.buttonBlack}
 							loading={loading}
 							onClick={() => {
 								setPage(page + 1)

@@ -1,68 +1,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
-import { createStyles, Text, Button, Textarea, Space } from '@mantine/core'
+import { Text, Button, Textarea, Space } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-
-const useStyles = createStyles(theme => ({
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	buttonSaveChangesInHeader: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	textField: {
-		maxWidth: 800
-	}
-}))
+import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
 }
 
 export const CABulkMint: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
@@ -89,7 +41,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message: 'You must add at least one address.',
-				color: 'red'
+				color: colorPink
 			})
 			setIsSavingChanges(false)
 			return
@@ -100,7 +52,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message: 'You can only airdrop to up to 15 addresses at once.',
-				color: 'red'
+				color: colorPink
 			})
 			setIsSavingChanges(false)
 			return
@@ -134,7 +86,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				title: 'Oops!',
 				message:
 					'One or more addresses are not valid. Double check what you entered and try again.',
-				color: 'red'
+				color: colorPink
 			})
 			setIsSavingChanges(false)
 			return
@@ -176,7 +128,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			showNotification({
 				title: 'Success!',
 				autoClose: 5000,
-				color: 'green',
+				color: colorGreen,
 				icon: <Check color="green" />,
 				message: `Airdrops sent! The wallets you provided should have access to this club in a few minutes.`
 			})
@@ -188,7 +140,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			showNotification({
 				title: 'Airdrop send failed.',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Please try again or get in touch!`
 			})
@@ -202,19 +154,22 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={classes.manageClubHeader}>Airdrops</Text>
+				<Text className={clubsTheme.tLargeBold}>Airdrops</Text>
+				<Space h={32} />
 
-				<Text className={classes.clubAdminsPrompt}>
+				<Text className={clubsTheme.tMediumBold}>
 					Invite others to your club by airdropping them a club token.
 					They will automatically become a club member.
 				</Text>
-				<Text className={classes.clubAdminsInstructions}>
+				<Space h={16} />
+				<Text className={clubsTheme.tMediumFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
+				<Space h={24} />
 				<Textarea
 					radius="lg"
 					size="sm"
-					className={classes.textField}
+					style={{ maxWidth: 800 }}
 					value={airdropAddressesString}
 					minRows={10}
 					onChange={event =>
@@ -222,9 +177,9 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 					}
 				/>
 			</div>
-			<Space h={32} />
+			<Space h={40} />
 			<Button
-				className={classes.buttonSaveChanges}
+				className={clubsTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={sendAirdrops}
 			>

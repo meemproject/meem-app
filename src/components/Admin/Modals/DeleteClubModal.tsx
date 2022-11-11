@@ -9,7 +9,7 @@ import router from 'next/router'
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -22,7 +22,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 	onModalClosed,
 	club
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isDeletingClub, setIsDeletingClub] = useState(false)
 
@@ -59,7 +59,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Error',
 					autoClose: 5000,
-					color: 'red',
+					color: colorPink,
 					icon: <AlertCircle />,
 					message: `Unable to delete this club. Please let us know!`
 				})
@@ -85,14 +85,14 @@ export const DeleteClubModal: React.FC<IProps> = ({
 			>
 				<Space h={24} />
 				<Text
-					className={styles.tSectionTitle}
+					className={clubsTheme.tMediumBold}
 				>{`Are you sure you want to delete this club?`}</Text>
 				<Space h={8} />
 				<Text>This action is permanent and cannot be undone.</Text>
 				<Space h={32} />
 				<Button
 					loading={isDeletingClub}
-					className={styles.buttonRed}
+					className={clubsTheme.buttonRed}
 					onClick={async () => {
 						deleteClub()
 					}}
@@ -106,7 +106,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 							onClick={() => {
 								onModalClosed()
 							}}
-							className={styles.buttonGrey}
+							className={clubsTheme.buttonGrey}
 						>
 							Cancel
 						</Button>

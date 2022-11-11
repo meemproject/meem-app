@@ -4,18 +4,18 @@ import React from 'react'
 import { Check } from 'tabler-icons-react'
 import { ClubMember } from '../../../../model/club/club'
 import { quickTruncate } from '../../../../utils/truncated_wallet'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	member: ClubMember
 }
 
 export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	return (
 		<HoverCard.Dropdown>
-			<div className={styles.row}>
+			<div className={clubsTheme.centeredRow}>
 				{member.profilePicture && (
 					<>
 						<Image
@@ -28,21 +28,21 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 					</>
 				)}
 				<div>
-					<Text className={styles.tBold}>
+					<Text className={clubsTheme.tSmallBold}>
 						{member.displayName && member.displayName.length > 0
 							? member.displayName
 							: 'Club Member'}
 					</Text>
+					<Space h={4} />
 
-					<div className={styles.centeredRow}>
-						<Text className={styles.tPartialTransparent}>
+					<div className={clubsTheme.centeredRow}>
+						<Text className={clubsTheme.tSmallFaded}>
 							{member.ens
 								? member.ens
 								: quickTruncate(member.wallet)}
 						</Text>
-						<Space h={4} />
 						<Image
-							className={styles.copyIcon}
+							className={clubsTheme.copyIcon}
 							src="/copy.png"
 							height={18}
 							width={18}
@@ -69,15 +69,16 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 				member.discordUsername) && (
 				<>
 					<Space h={24} />
-					<div className={styles.centeredRow}>
-						<Text className={styles.tBold}>Contact</Text>
-						<Space w={4} />
+					<div className={clubsTheme.centeredRow}>
+						<Text className={clubsTheme.tSmallBold}>Contact</Text>
+						<Space w={6} />
 						<Image
 							src="/icon-verified.png"
 							width={16}
 							height={16}
 						/>
 					</div>
+					<Space h={4} />
 					{member.twitterUsername && (
 						<div
 							onClick={() => {
@@ -85,16 +86,17 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 									`https://twitter.com/${member.twitterUsername}`
 								)
 							}}
-							className={styles.centeredRowClickable}
+							className={clubsTheme.centeredRowClickable}
+							style={{ paddingBottom: 4 }}
 						>
 							<Image
-								className={styles.tPartialTransparent}
+								className={clubsTheme.tSmallFaded}
 								src="/integration-twitter.png"
-								width={12}
+								width={16}
 								height={12}
 							/>
-							<Space w={4} />
-							<Text className={styles.tPartialTransparent}>
+							<Space w={6} />
+							<Text className={clubsTheme.tSmallFaded}>
 								{member.twitterUsername}
 							</Text>
 						</div>
@@ -106,16 +108,17 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 									`https://discordapp.com/users/${member.discordUserId}`
 								)
 							}}
-							className={styles.centeredRowClickable}
+							className={clubsTheme.centeredRowClickable}
+							style={{ paddingBottom: 4 }}
 						>
 							<Image
-								className={styles.tPartialTransparent}
+								className={clubsTheme.tSmallFaded}
 								src="/integration-discord.png"
-								width={12}
+								width={16}
 								height={12}
 							/>
-							<Space w={4} />
-							<Text className={styles.tPartialTransparent}>
+							<Space w={6} />
+							<Text className={clubsTheme.tSmallFaded}>
 								{member.discordUsername}
 							</Text>
 						</div>
@@ -125,16 +128,17 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							onClick={() => {
 								window.open(`mailto:${member.emailAddress}`)
 							}}
-							className={styles.centeredRowClickable}
+							className={clubsTheme.centeredRowClickable}
+							style={{ paddingBottom: 4 }}
 						>
 							<Image
-								className={styles.tPartialTransparent}
+								className={clubsTheme.tSmallFaded}
 								src="/integration-email.png"
-								width={12}
+								width={16}
 								height={12}
 							/>
-							<Space w={4} />
-							<Text className={styles.tPartialTransparent}>
+							<Space w={6} />
+							<Text className={clubsTheme.tSmallFaded}>
 								{member.emailAddress}
 							</Text>
 						</div>
@@ -144,21 +148,22 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 			{member.roles && member.roles.length > 0 && (
 				<>
 					<Space h={24} />
-					<Text className={styles.tBold}>{'Roles'}</Text>
+					<Text className={clubsTheme.tSmallBold}>{'Roles'}</Text>
 					<Space h={4} />
 					{member.roles.map(role => (
-						<div className={styles.row} key={role.id}>
+						<div className={clubsTheme.row} key={role.id}>
 							<Badge
 								variant="gradient"
 								gradient={{
-									from: 'rgba(255, 102, 81, 0.1)',
-									to: 'rgba(255, 102, 81, 0.1)',
+									from: colorPink,
+									to: colorPink,
 									deg: 35
 								}}
 								classNames={{
-									inner: styles.tBadge,
-									root: styles.badge
+									inner: clubsTheme.tBadgeTextWhite,
+									root: clubsTheme.badge
 								}}
+								style={{ marginBottom: 4 }}
 							>
 								{role.name}
 							</Badge>

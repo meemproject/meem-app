@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -32,6 +31,7 @@ import {
 } from '../../model/identity/permissions'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
+import { colorGreen, useClubsTheme } from '../Styles/ClubsTheme'
 import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
@@ -40,183 +40,6 @@ import { CAContractAddress as CAContractManagement } from './Tabs/CAContractMana
 import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
 import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
 import { CARoles } from './Tabs/CARoles'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		marginBottom: 32,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		backgroundColor: '#FAFAFA',
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 48,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 16,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 24,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubNameContainer: {
-		marginLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	clubUrlContainer: {
-		marginTop: 8,
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	clubUrl: {
-		fontSize: 14,
-		opacity: 0.6,
-		fontWeight: 500
-	},
-
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 80,
-		height: 80,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 40,
-			height: 40,
-			minHeight: 40,
-			minWidth: 40,
-			marginLeft: 16,
-			marginRight: 16
-		}
-	},
-	clubSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
-		}
-	},
-	buttonEditProfile: {
-		borderRadius: 24,
-		marginRight: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 0,
-			marginLeft: 16,
-			marginRight: 0,
-			borderColor: 'transparent'
-		}
-	},
-	buttonCreate: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	tabs: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	visibleTab: {
-		display: 'block'
-	},
-	invisibleTab: {
-		display: 'none'
-	},
-	clubIntegrationsSectionTitle: {
-		fontSize: 20,
-		marginBottom: 16,
-		fontWeight: 600
-	},
-	clubContractAddress: {
-		wordBreak: 'break-word',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	contractAddressContainer: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	copy: {
-		marginLeft: 4,
-		padding: 2,
-		cursor: 'pointer'
-	},
-	adminContainer: {
-		display: 'flex',
-		width: '90%',
-		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-			flexDirection: 'column'
-		}
-	},
-	adminNavHeader: {
-		fontWeight: 600,
-		opacity: 0.5,
-		marginLeft: 20,
-		marginBottom: 4
-	},
-	adminNavItem: {
-		borderRadius: 8
-	},
-	adminMobileBurger: {
-		marginLeft: 24
-	},
-	adminNavBar: {
-		minWidth: 288,
-		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
-			paddingLeft: 32
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 24
-		}
-	},
-	adminContent: {
-		marginLeft: 32,
-		marginRight: 32,
-		width: '90%',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 8,
-			width: 'auto'
-		}
-	},
-	exitButton: {
-		marginRight: 48,
-		marginLeft: 'auto',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		},
-		cursor: 'pointer'
-	}
-}))
 
 enum Tab {
 	ContractManagement,
@@ -236,7 +59,7 @@ interface IProps {
 
 export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
@@ -371,25 +194,29 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={classes.header}>
-						<div className={classes.headerTitle}>
+					<div className={clubsTheme.pageHeader}>
+						<div className={clubsTheme.spacedRowCentered}>
 							<Image
 								width={56}
 								height={56}
-								className={classes.clubLogoImage}
+								radius={8}
+								className={clubsTheme.imageClubLogo}
 								src={club.image}
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<div className={classes.headerClubNameContainer}>
-								<Text className={classes.headerClubName}>
+							<div
+								className={clubsTheme.pageHeaderTitleContainer}
+							>
+								<Text className={clubsTheme.tLargeBold}>
 									{club.name}
 								</Text>
-								<div className={classes.clubUrlContainer}>
+								<Space h={8} />
+								<div className={clubsTheme.row}>
 									<Text
-										className={classes.clubUrl}
+										className={clubsTheme.tExtraSmallFaded}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
-										className={classes.copy}
+										className={clubsTheme.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
@@ -400,7 +227,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 												radius: 'lg',
 												title: 'Club URL copied',
 												autoClose: 2000,
-												color: 'green',
+												color: colorGreen,
 												icon: <Check />,
 
 												message: `This club's URL was copied to your clipboard.`
@@ -412,7 +239,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 							</div>
 						</div>
 						<a
-							className={classes.exitButton}
+							className={clubsTheme.pageHeaderExitButton}
 							onClick={navigateToClubDetail}
 						>
 							<Image src="/delete.png" width={24} height={24} />
@@ -431,13 +258,13 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 						</Container>
 					)}
 					{club?.isCurrentUserClubAdmin && (
-						<div className={classes.adminContainer}>
+						<div className={clubsTheme.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
 							>
 								<Burger
-									className={classes.adminMobileBurger}
+									style={{ marginLeft: 24 }}
 									opened={mobileNavBarVisible}
 									onClick={() =>
 										setMobileNavBarVisible(o => !o)
@@ -447,7 +274,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={classes.adminNavBar}
+								className={clubsTheme.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -455,11 +282,16 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={classes.adminNavHeader}>
+								<Text
+									className={clubsTheme.tExtraSmallLabel}
+									style={{ marginLeft: 20, marginBottom: 8 }}
+								>
 									MANAGE CLUB
 								</Text>
 								<NavLink
-									className={classes.adminNavItem}
+									className={
+										clubsTheme.pagePanelLayoutNavItem
+									}
 									active={
 										currentTab === Tab.ContractManagement
 									}
@@ -474,7 +306,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								) && (
 									<div>
 										<NavLink
-											className={classes.adminNavItem}
+											className={
+												clubsTheme.pagePanelLayoutNavItem
+											}
 											active={
 												currentTab ===
 												Tab.MembershipSettings
@@ -488,7 +322,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 											}}
 										/>
 										<NavLink
-											className={classes.adminNavItem}
+											className={
+												clubsTheme.pagePanelLayoutNavItem
+											}
 											active={
 												currentTab ===
 												Tab.MembershipRequirements
@@ -507,7 +343,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								{userHasPermissionManageRoles(club) && (
 									<>
 										<NavLink
-											className={classes.adminNavItem}
+											className={
+												clubsTheme.pagePanelLayoutNavItem
+											}
 											active={currentTab === Tab.Roles}
 											label={'Roles'}
 											onClick={() => {
@@ -520,7 +358,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 								{/* {club.isCurrentUserClubOwner && (
 									<NavLink
-										className={classes.adminNavItem}
+										className={clubsTheme.pagePanelLayoutNavItem}
 										active={currentTab === Tab.DeleteClub}
 										label={'Delete Club'}
 										onClick={() => {
@@ -533,7 +371,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								{userHasPermissionManageApps(club) && (
 									<>
 										<NavLink
-											className={classes.adminNavItem}
+											className={
+												clubsTheme.pagePanelLayoutNavItem
+											}
 											active={currentTab === Tab.Apps}
 											label={'Club Apps'}
 											onClick={() => {
@@ -545,7 +385,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 
 								<NavLink
-									className={classes.adminNavItem}
+									className={
+										clubsTheme.pagePanelLayoutNavItem
+									}
 									active={currentTab === Tab.Airdrops}
 									label={'Airdrops'}
 									onClick={() => {
@@ -558,12 +400,20 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 									<div>
 										<Space h={32} />
 										<Text
-											className={classes.adminNavHeader}
+											style={{
+												marginLeft: 20,
+												marginBottom: 8
+											}}
+											className={
+												clubsTheme.tExtraSmallLabel
+											}
 										>
 											EDIT PROFILE
 										</Text>
 										<NavLink
-											className={classes.adminNavItem}
+											className={
+												clubsTheme.pagePanelLayoutNavItem
+											}
 											active={
 												currentTab === Tab.ClubDetails
 											}
@@ -574,7 +424,9 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 											}}
 										/>
 										<NavLink
-											className={classes.adminNavItem}
+											className={
+												clubsTheme.pagePanelLayoutNavItem
+											}
 											active={currentTab === Tab.ClubIcon}
 											label={'Club Icon'}
 											onClick={() => {
@@ -586,7 +438,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 								)}
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={classes.adminContent}>
+								<div
+									className={
+										clubsTheme.pagePanelLayoutContent
+									}
+								>
 									{currentTab === Tab.ContractManagement && (
 										<CAContractManagement club={club} />
 									)}

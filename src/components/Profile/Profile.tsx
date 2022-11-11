@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -21,164 +20,11 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
+import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import IdentityContext from './IdentityProvider'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyClubsComponent } from './Tabs/MyClubs'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		marginBottom: 32,
-		display: 'flex',
-		backgroundColor: '#FAFAFA',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 24,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerProfileNameContainer: {
-		marginLeft: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
-		}
-	},
-	headerProfileName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	profileUrlContainer: {
-		marginTop: 8,
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	profileUrl: {
-		fontSize: 14,
-		opacity: 0.6,
-		fontWeight: 500
-	},
-
-	profileLogoImage: {
-		imageRendering: 'pixelated',
-		width: 80,
-		height: 80,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 40,
-			height: 40,
-			minHeight: 40,
-			minWidth: 40,
-			marginLeft: 16
-		}
-	},
-	profileSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
-		}
-	},
-	profileContainer: {
-		display: 'flex',
-		width: '90%',
-		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-			flexDirection: 'column'
-		}
-	},
-	profileNavHeader: {
-		fontWeight: 600,
-		opacity: 0.5,
-		marginLeft: 20,
-		marginBottom: 4
-	},
-	profileNavItem: {
-		borderRadius: 8
-	},
-	profileMobileBurger: {
-		marginLeft: 24
-	},
-	profileNavBar: {
-		minWidth: 288,
-		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
-			paddingLeft: 32
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 24
-		}
-	},
-	profileContent: {
-		marginLeft: 32,
-		marginRight: 32,
-		width: '90%',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 8
-		}
-	},
-	buttonEditProfile: {
-		borderRadius: 24,
-		marginRight: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 0,
-			marginLeft: 16,
-			marginRight: 0,
-			borderColor: 'transparent'
-		}
-	},
-	tabs: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	profileIntegrationsSectionTitle: {
-		fontSize: 20,
-		marginBottom: 16,
-		fontWeight: 600
-	},
-	profileContractAddress: {
-		wordBreak: 'break-word',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	contractAddressContainer: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	copy: {
-		marginLeft: 4,
-		padding: 2,
-		cursor: 'pointer'
-	}
-}))
 
 enum Tab {
 	Profile,
@@ -187,7 +33,7 @@ enum Tab {
 
 export const ProfileComponent: React.FC = () => {
 	// General properties / tab management
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 	const id = useContext(IdentityContext)
@@ -313,7 +159,7 @@ export const ProfileComponent: React.FC = () => {
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: 'red',
+						color: colorPink,
 						icon: <AlertCircle />,
 						message: `Unable to authenticate with Discord. Please try again later.`
 					})
@@ -326,7 +172,7 @@ export const ProfileComponent: React.FC = () => {
 				showNotification({
 					title: 'Error',
 					autoClose: 5000,
-					color: 'red',
+					color: colorPink,
 					icon: <AlertCircle />,
 					message: `Unable to authenticate with Discord. Please try again later.`
 				})
@@ -400,8 +246,8 @@ export const ProfileComponent: React.FC = () => {
 				!isSigningIn &&
 				id.identity && (
 					<>
-						<div className={classes.header}>
-							<div className={classes.headerTitle}>
+						<div className={clubsTheme.pageHeader}>
+							<div className={clubsTheme.spacedRowCentered}>
 								{id.identity.profilePic && (
 									<>
 										<Image
@@ -409,7 +255,7 @@ export const ProfileComponent: React.FC = () => {
 											height={64}
 											width={64}
 											fit={'cover'}
-											className={classes.profileLogoImage}
+											className={clubsTheme.imageClubLogo}
 											src={id.identity.profilePic ?? ''}
 										/>
 									</>
@@ -418,17 +264,20 @@ export const ProfileComponent: React.FC = () => {
 								{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 								<div
 									className={
-										classes.headerProfileNameContainer
+										clubsTheme.pageHeaderTitleContainer
 									}
 								>
-									<Text className={classes.headerProfileName}>
+									<Text className={clubsTheme.tLargeBold}>
 										{id.identity.displayName ??
 											'My Profile'}
 									</Text>
-									<div
-										className={classes.profileUrlContainer}
-									>
-										<Text className={classes.profileUrl}>
+									<Space h={8} />
+									<div className={clubsTheme.row}>
+										<Text
+											className={
+												clubsTheme.tExtraSmallFaded
+											}
+										>
 											{id.identity.ensAddress
 												? id.identity.ensAddress
 												: id.identity.walletAddress
@@ -441,7 +290,9 @@ export const ProfileComponent: React.FC = () => {
 										{id.identity.id && (
 											<>
 												<Image
-													className={classes.copy}
+													className={
+														clubsTheme.copyIcon
+													}
 													src="/copy.png"
 													height={20}
 													onClick={() => {
@@ -470,14 +321,13 @@ export const ProfileComponent: React.FC = () => {
 								</div>
 							</div>
 						</div>
-
-						<div className={classes.profileContainer}>
+						<div className={clubsTheme.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
 							>
 								<Burger
-									className={classes.profileMobileBurger}
+									style={{ marginLeft: 24 }}
 									opened={mobileNavBarVisible}
 									onClick={() =>
 										setMobileNavBarVisible(o => !o)
@@ -487,7 +337,7 @@ export const ProfileComponent: React.FC = () => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={classes.profileNavBar}
+								className={clubsTheme.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -495,11 +345,16 @@ export const ProfileComponent: React.FC = () => {
 								withBorder={false}
 								p="xs"
 							>
-								<Text className={classes.profileNavHeader}>
+								<Text
+									className={clubsTheme.tExtraSmallLabel}
+									style={{ marginLeft: 20, marginBottom: 8 }}
+								>
 									SETTINGS
 								</Text>
 								<NavLink
-									className={classes.profileNavItem}
+									className={
+										clubsTheme.pagePanelLayoutNavItem
+									}
 									active={currentTab === Tab.Profile}
 									label={'Manage Identity'}
 									onClick={() => {
@@ -508,7 +363,9 @@ export const ProfileComponent: React.FC = () => {
 									}}
 								/>
 								<NavLink
-									className={classes.profileNavItem}
+									className={
+										clubsTheme.pagePanelLayoutNavItem
+									}
 									active={currentTab === Tab.MyClubs}
 									label={'My Clubs'}
 									onClick={() => {
@@ -518,7 +375,11 @@ export const ProfileComponent: React.FC = () => {
 								/>
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={classes.profileContent}>
+								<div
+									className={
+										clubsTheme.pagePanelLayoutContent
+									}
+								>
 									{currentTab === Tab.Profile && (
 										<ManageIdentityComponent />
 									)}

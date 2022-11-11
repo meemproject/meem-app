@@ -25,7 +25,7 @@ import { useRouter } from 'next/router'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -42,7 +42,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const router = useRouter()
 
@@ -102,7 +102,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Error',
 					autoClose: 5000,
-					color: 'red',
+					color: colorPink,
 					icon: <AlertCircle />,
 					message: `Unable to create this role on Discord. Please let us know!`
 				})
@@ -127,7 +127,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={styles.tModalTitle}>
+					<Text className={clubsTheme.tMediumBold}>
 						Create New Discord Role
 					</Text>
 				}
@@ -161,7 +161,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 									onClick={() => {
 										onModalClosed()
 									}}
-									className={styles.buttonGrey}
+									className={clubsTheme.buttonGrey}
 								>
 									Close
 								</Button>
@@ -173,18 +173,18 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 					server.guildData.channels.length > 0 && (
 						<>
 							<Space h={8} />
-							<div className={styles.row}>
-								<Text className={styles.tSectionTitleSmall}>
+							<div className={clubsTheme.row}>
+								<Text className={clubsTheme.tExtraSmallLabel}>
 									DISCORD ROLE NAME
 								</Text>
 							</div>
-							<Space h={12} />
+							<Space h={8} />
 							<TextInput
 								size={'lg'}
 								radius={20}
 								disabled
 								classNames={{
-									input: styles.fTextField
+									input: clubsTheme.fTextField
 								}}
 								value={role.name}
 								onChange={event => {
@@ -196,11 +196,11 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 
 							<Space h={32} />
 
-							<div className={styles.row}>
+							<div className={clubsTheme.row}>
 								<Button
 									disabled={isSavingChanges}
 									loading={isSavingChanges}
-									className={styles.buttonBlack}
+									className={clubsTheme.buttonBlack}
 									onClick={async () => {
 										saveChanges()
 									}}
@@ -216,7 +216,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 											setDiscordRoleName('')
 											onModalClosed()
 										}}
-										className={styles.buttonGrey}
+										className={clubsTheme.buttonGrey}
 									>
 										Cancel
 									</Button>
@@ -238,7 +238,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={styles.tModalTitle}>
+					<Text className={clubsTheme.tMediumBold}>
 						Create New Discord Role
 					</Text>
 				}
@@ -272,7 +272,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 									onClick={() => {
 										onModalClosed()
 									}}
-									className={styles.buttonGrey}
+									className={clubsTheme.buttonGrey}
 								>
 									Close
 								</Button>
@@ -284,20 +284,20 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 					server.guildData.channels.length > 0 && (
 						<>
 							<Space h={8} />
-							<div className={styles.row}>
-								<Text className={styles.tSectionTitleSmall}>
+							<div className={clubsTheme.row}>
+								<Text className={clubsTheme.tSmallLabel}>
 									DISCORD ROLE NAME
 								</Text>
 								<Space w={2} />
 								<Text color={'red'}>*</Text>
 							</div>
-							<Space h={12} />
+							<Space h={16} />
 							<TextInput
 								size={'lg'}
 								radius={20}
 								disabled
 								classNames={{
-									input: styles.fTextField
+									input: clubsTheme.fTextField
 								}}
 								value={role.name}
 								onChange={event => {
@@ -308,7 +308,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 							/>
 							<Space h={32} />
 
-							<Text className={styles.tBold}>
+							<Text className={clubsTheme.tSmallBold}>
 								Channels to Gate
 							</Text>
 							<Space h={8} />
@@ -375,11 +375,11 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 
 							<Space h={32} />
 
-							<div className={styles.row}>
+							<div className={clubsTheme.row}>
 								<Button
 									disabled={isSavingChanges}
 									loading={isSavingChanges}
-									className={styles.buttonBlack}
+									className={clubsTheme.buttonBlack}
 									onClick={async () => {
 										saveChanges()
 									}}
@@ -395,7 +395,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 											setDiscordRoleName('')
 											onModalClosed()
 										}}
-										className={styles.buttonGrey}
+										className={clubsTheme.buttonGrey}
 									>
 										Cancel
 									</Button>

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Button,
 	Space,
@@ -29,145 +28,15 @@ import {
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
+import { colorWhite, useClubsTheme } from '../Styles/ClubsTheme'
 import { CreateClubModal } from './CreateClubModal'
-
-const useStyles = createStyles(theme => ({
-	buttonSaveChanges: {
-		marginTop: 48,
-		marginBottom: 48,
-
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-
-	// Membership tab
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-	membershipText: {
-		fontSize: 20,
-		marginBottom: 8,
-		lineHeight: 2,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	membershipTextAdditionalReq: {
-		fontSize: 20,
-		marginBottom: 16,
-		marginTop: 16,
-		lineHeight: 2,
-		position: 'relative',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-
-	membershipSelector: {
-		padding: 4,
-		borderRadius: 8,
-		fontWeight: 'bold',
-		backgroundColor: 'rgba(255, 102, 81, 0.1)',
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer'
-	},
-	addRequirementButton: {
-		backgroundColor: 'white',
-		color: 'rgba(255, 102, 81, 1)',
-		border: '1px dashed rgba(255, 102, 81, 1)',
-		borderRadius: 24,
-		'&:hover': {
-			backgroundColor: 'rgba(255, 102, 81, 0.05)'
-		},
-		marginBottom: 8
-	},
-	membershipSettingHeader: {
-		fontSize: 16,
-		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: 600,
-		marginBottom: 12
-	},
-	removeAdditionalReq: {
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer',
-		marginRight: 8,
-		marginBottom: -4
-	},
-	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	visible: {
-		display: 'block'
-	},
-	invisible: {
-		display: 'none'
-	},
-	buttonModalSave: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonModalCancel: {
-		marginLeft: 8,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	modalHeaderText: {
-		fontSize: 18,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)',
-		marginBottom: 4,
-		marginTop: 16
-	},
-	modalInfoText: {
-		fontSize: 14,
-		opacity: 0.6
-	},
-	// Admins
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	adminsTextAreaContainer: {
-		position: 'relative'
-	},
-	adminsTextArea: {
-		paddingTop: 48,
-		paddingLeft: 32
-	},
-	primaryAdminChip: {
-		position: 'absolute',
-		pointerEvents: 'none',
-		top: 12,
-		left: 12
-	},
-	primaryAdminChipContents: {
-		display: 'flex',
-		alignItems: 'center'
-	}
-}))
 
 interface IProps {
 	club?: Club
 }
 
 export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const router = useRouter()
 
@@ -180,8 +49,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
 
 	// Membership
-	const [membershipSettings, setMembershipSettings] =
-		useState<MembershipSettings>()
+	const [membershipSettings, setMediums] = useState<MembershipSettings>()
 
 	const [membershipRequirements, setMembershipRequirements] = useState<
 		MembershipRequirement[]
@@ -535,7 +403,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 			clubAdminsAtClubCreation: clubAdminAddresses
 		}
 
-		setMembershipSettings(settings)
+		setMediums(settings)
 
 		openClubCreationModal()
 	}
@@ -557,25 +425,28 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h="lg" />
+				<Space h={48} />
 
-				<Text className={classes.manageClubHeader}>Club Admins</Text>
+				<Text className={clubsTheme.tLargeBold}>Club Admins</Text>
 
 				<div>
-					<Text className={classes.clubAdminsPrompt}>
+					<Space h={32} />
+					<Text className={clubsTheme.tMediumBold}>
 						{club
 							? `Who can manage this club’s profile and membership
 						settings?`
 							: `Who can manage this club’s profile, treasury and membership
 						settings?`}
 					</Text>
-					<Text className={classes.clubAdminsInstructions}>
+					<Space h={16} />
+					<Text className={clubsTheme.tMediumFaded}>
 						{club
 							? `Add a line break between each address. Note that at
 						least one club admin is required at all times.`
 							: `Add a line break between each address. Note that at
 						least one club admin is required at all times, and you can update treasury addresses via your club's settings page.`}
 					</Text>
+					<Space h={16} />
 					<Textarea
 						radius="lg"
 						size="sm"
@@ -591,18 +462,21 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Divider />
 				<Space h={64} />
 
-				<Text className={classes.manageClubHeader}>Membership</Text>
-				<Text className={classes.membershipSettingHeader}>
-					Requirements
-				</Text>
-				<Text className={classes.membershipText}>
+				<Text className={clubsTheme.tLargeBold}>Membership</Text>
+				<Space h={32} />
+
+				<Text className={clubsTheme.tSmallBoldFaded}>Requirements</Text>
+				<Text
+					className={clubsTheme.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					This club is open for{' '}
 					<a
 						onClick={() => {
 							openMembershipReqModal(0)
 						}}
 					>
-						<span className={classes.membershipSelector}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{membershipTypeStringForFirstReq(
 								membershipRequirements[0]
 							)}
@@ -621,7 +495,9 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 									}}
 								>
 									<span
-										className={classes.membershipSelector}
+										className={
+											clubsTheme.fOrangeSelectableSpan
+										}
 									>
 										{
 											membershipRequirements[0]
@@ -641,7 +517,9 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 									openMembershipReqModal(0)
 								}}
 							>
-								<span className={classes.membershipSelector}>
+								<span
+									className={clubsTheme.fOrangeSelectableSpan}
+								>
 									{membershipRequirements[0].tokenMinQuantity}{' '}
 									{membershipRequirements[0].tokenName}
 								</span>
@@ -651,16 +529,28 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					)}
 				</Text>
 				{membershipRequirements.length > 1 && (
-					<Text className={classes.membershipTextAdditionalReq}>
+					<Text
+						className={clubsTheme.tMedium}
+						style={{
+							marginBottom: 16,
+							marginTop: 16,
+							lineHeight: 2
+						}}
+					>
 						<CircleMinus
 							onClick={() => {
 								// Hardcoded for now as there's only one additional req in v1
 								removeMembershipRequirement(1)
 							}}
-							className={classes.removeAdditionalReq}
+							style={{
+								color: colorWhite,
+								cursor: 'pointer',
+								marginRight: 8,
+								marginBottom: -4
+							}}
 						/>
 						{/* <a onClick={openSecondReqTypeModal}>
-							<span className={classes.membershipSelector}>
+							<span className={clubsTheme.fOrangeSelectableSpan}>
 								{membershipRequirements[1].andor === MembershipReqAndor.And
 									? 'In addition'
 									: 'Alternatively'}
@@ -676,7 +566,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								openMembershipReqModal(1)
 							}}
 						>
-							<span className={classes.membershipSelector}>
+							<span className={clubsTheme.fOrangeSelectableSpan}>
 								{membershipTypeStringForSecondReq(
 									membershipRequirements[1]
 								)}
@@ -691,7 +581,8 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							onClick={() => {
 								addMembershipRequirement()
 							}}
-							className={classes.addRequirementButton}
+							className={clubsTheme.buttonWhite}
+							style={{ marginBottom: 8 }}
 							size={'md'}
 							leftIcon={<Plus size={14} />}
 						>
@@ -701,13 +592,16 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 
 				<Space h="lg" />
 
-				<Text className={classes.membershipSettingHeader}>Price</Text>
+				<Text className={clubsTheme.tSmallBoldFaded}>Price</Text>
 
-				<Text className={classes.membershipText}>
+				<Text
+					className={clubsTheme.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={classes.membershipSelector}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{isNaN(costToJoin) || costToJoin === 0
 								? 'free'
 								: costToJoin}
@@ -721,7 +615,9 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						<>
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
-								<span className={classes.membershipSelector}>
+								<span
+									className={clubsTheme.fOrangeSelectableSpan}
+								>
 									{quickTruncate(membershipFundsAddress)}
 								</span>
 							</a>
@@ -731,13 +627,14 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={classes.membershipSettingHeader}>
-					Capacity
-				</Text>
-				<Text className={classes.membershipText}>
+				<Text className={clubsTheme.tSmallBoldFaded}>Capacity</Text>
+				<Text
+					className={clubsTheme.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={classes.membershipSelector}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{membershipQuantity === 0 ||
 							isNaN(membershipQuantity)
 								? 'unlimited'
@@ -747,12 +644,15 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={classes.membershipSettingHeader}>Timing</Text>
+				<Text className={clubsTheme.tSmallBoldFaded}>Timing</Text>
 
-				<Text className={classes.membershipText}>
+				<Text
+					className={clubsTheme.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={classes.membershipSelector}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{membershipStartDate === undefined
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
@@ -764,7 +664,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>{' '}
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
-						<span className={classes.membershipSelector}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{membershipEndDate === undefined
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
@@ -776,11 +676,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>
 					.
 				</Text>
-
+				<Space h={32} />
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
-					className={classes.buttonSaveChanges}
+					className={clubsTheme.buttonBlack}
 					onClick={saveChanges}
 				>
 					{'Launch Club'}
@@ -798,7 +698,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipReqModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -881,19 +781,19 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						className={
 							reqCurrentlyEditing.type ==
 							MembershipReqType.ApprovedApplicants
-								? classes.visible
-								: classes.invisible
+								? clubsTheme.visibleContainer
+								: clubsTheme.invisibleContainer
 						}
 					>
-						<Space h={8} />
-						<Text className={classes.modalHeaderText}>
+						<Space h={24} />
+						<Text className={clubsTheme.tMediumBold}>
 							How to apply
 						</Text>
-						<Text className={classes.modalInfoText}>
+						<Text className={clubsTheme.tExtraSmall}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
-						<Space h={'xs'} />
+						<Space h={12} />
 
 						<Textarea
 							radius="lg"
@@ -906,10 +806,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={classes.modalHeaderText}>
+						<Space h={24} />
+						<Text className={clubsTheme.tMediumBold}>
 							Approved Addresses
 						</Text>
-						<Text className={classes.modalInfoText}>
+						<Text className={clubsTheme.tExtraSmall}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
@@ -938,11 +839,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						className={
 							reqCurrentlyEditing.type ==
 							MembershipReqType.TokenHolders
-								? classes.visible
-								: classes.invisible
+								? clubsTheme.visibleContainer
+								: clubsTheme.invisibleContainer
 						}
 					>
-						{/* <Text className={classes.modalHeaderText}>Chain</Text>
+						{/* <Text className={clubsTheme.tMediumBoldFaded}>Chain</Text>
 						<Select
 							data={[
 								{
@@ -959,9 +860,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing.tokenChain}
 						/> */}
-						<Text className={classes.modalHeaderText}>
+						<Space h={24} />
+						<Text className={clubsTheme.tMediumBold}>
 							Token Address
 						</Text>
+						<Space h={4} />
 						<TextInput
 							radius="lg"
 							size="sm"
@@ -972,9 +875,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={classes.modalHeaderText}>
+						<Space h={16} />
+						<Text className={clubsTheme.tMediumBold}>
 							Minimum Quantity
 						</Text>
+						<Space h={4} />
 						<TextInput
 							radius="lg"
 							size="sm"
@@ -992,11 +897,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						className={
 							reqCurrentlyEditing.type ==
 							MembershipReqType.OtherClubMember
-								? classes.visible
-								: classes.invisible
+								? clubsTheme.visibleContainer
+								: clubsTheme.invisibleContainer
 						}
 					>
-						<Text className={classes.modalHeaderText}>
+						<Text className={clubsTheme.tMediumBoldFaded}>
 							Club Name
 						</Text>
 
@@ -1104,7 +1009,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 
 							setMembershipReqModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
@@ -1118,7 +1023,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 									membershipRequirements
 								)
 							}}
-							className={classes.buttonModalCancel}
+							className={clubsTheme.buttonGrey}
 						>
 							Cancel
 						</Button>
@@ -1136,7 +1041,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setSecondReqTypeModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1174,7 +1079,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						onClick={() => {
 							setSecondReqTypeModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
@@ -1190,9 +1095,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={classes.modalHeaderText}>
+					<Space h={16} />
+					<Text className={clubsTheme.tMediumBold}>
 						Enter cost to join
 					</Text>
+					<Space h={4} />
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -1222,9 +1129,10 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={classes.modalHeaderText}>
+					<Text className={clubsTheme.tMediumBold}>
 						Send funds to this address
 					</Text>
+					<Space h={4} />
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -1265,10 +1173,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipCostModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -1282,7 +1191,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1310,9 +1219,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={classes.modalHeaderText}>
+							<Space h={24} />
+							<Text className={clubsTheme.tMediumBold}>
 								Enter total memberships
 							</Text>
+							<Space h={4} />
 
 							<TextInput
 								radius="lg"
@@ -1353,10 +1264,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipQuantityModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -1370,7 +1282,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1450,10 +1362,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingStartModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -1467,7 +1380,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -1547,7 +1460,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingEndModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>

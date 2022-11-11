@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club, ClubMember, ClubRole } from '../../../../model/club/club'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club?: Club
@@ -32,7 +32,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 
 	const router = useRouter()
 
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -139,7 +139,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: 'red',
+						color: colorPink,
 						icon: <AlertCircle />,
 						message: `Unable to save role. Please let us know!`
 					})
@@ -177,7 +177,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: 'red',
+						color: colorPink,
 						icon: <AlertCircle />,
 						message: `Unable to save role. Please let us know!`
 					})
@@ -219,22 +219,22 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={styles.modalHeader}>
+				<div className={clubsTheme.modalHeader}>
 					<Space h={128} />
 
 					<Loader color="red" variant="oval" />
 					<Space h={24} />
 					<Text
-						className={styles.tTitle}
+						className={clubsTheme.tLargeBold}
 					>{`There's magic happening on the blockchain.`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={styles.tSubtitle}
+						className={clubsTheme.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

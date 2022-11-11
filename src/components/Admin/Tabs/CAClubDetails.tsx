@@ -1,129 +1,16 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Button,
-	Textarea,
-	Space,
-	TextInput
-} from '@mantine/core'
+import { Text, Button, Textarea, Space, TextInput } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Club } from '../../../model/club/club'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 24,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerPrompt: {
-		fontSize: 16,
-		marginBottom: 8,
-		fontWeight: 500,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		marginLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginLeft: 16
-		}
-	},
-	clubNamePrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-
-	clubDescriptionPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	buttonSaveChangesInHeader: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	container: {
-		width: '100%'
-	},
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-	textField: {
-		maxWidth: 800
-	}
-}))
-
 interface IProps {
 	club: Club
 }
 
 export const CAClubDetails: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [clubName, setClubName] = useState('')
 	const [clubDescription, setClubDescription] = useState('')
@@ -194,41 +81,44 @@ export const CAClubDetails: React.FC<IProps> = ({ club }) => {
 	}
 
 	return (
-		<div className={classes.container}>
+		<div className={clubsTheme.fullWidth}>
 			<Space h={12} />
 
-			<Text className={classes.manageClubHeader}>Club Profile</Text>
+			<Text className={clubsTheme.tLargeBold}>Club Profile</Text>
+			<Space h={32} />
 
 			<Text
-				className={classes.clubNamePrompt}
+				className={clubsTheme.tMediumBold}
 			>{`What's your club called?`}</Text>
+			<Space h={12} />
 			<TextInput
 				radius="lg"
 				size="md"
 				value={clubName}
-				className={classes.textField}
+				style={{ maxWidth: 800 }}
 				onChange={event => setClubName(event.currentTarget.value)}
 			/>
 			<Space h={'xl'} />
-			<Text className={classes.clubDescriptionPrompt}>
+			<Text className={clubsTheme.tMediumBold}>
 				In a sentence, describe what your members do together.
 			</Text>
+			<Space h={12} />
 			<Textarea
 				radius="lg"
 				size="md"
 				minRows={2}
 				maxRows={4}
 				maxLength={140}
-				className={classes.textField}
+				style={{ maxWidth: 800 }}
 				value={clubDescription}
 				onChange={event =>
 					setClubDescription(event.currentTarget.value)
 				}
 			/>
 
-			<Space h={32} />
+			<Space h={40} />
 			<Button
-				className={classes.buttonSaveChanges}
+				className={clubsTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>

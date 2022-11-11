@@ -30,7 +30,12 @@ import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import {
+	colorBlack,
+	colorLightPink,
+	colorPink,
+	useClubsTheme
+} from '../Styles/ClubsTheme'
 
 interface ItemProps extends SelectItemProps {
 	color: MantineColor
@@ -58,7 +63,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 )
 
 export function HomeComponent() {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 
@@ -184,7 +189,7 @@ export function HomeComponent() {
 					radius: 'lg',
 					title: 'Oops!',
 					message: `That club name is too long or short. Choose something else.`,
-					color: 'red'
+					color: colorPink
 				})
 			} else {
 				router.push({
@@ -199,10 +204,10 @@ export function HomeComponent() {
 
 	return (
 		<div>
-			<div style={{ backgroundColor: 'rgba(255, 102, 81, 0.1)' }}>
+			<div style={{ backgroundColor: colorLightPink }}>
 				<Container
 					size={900}
-					className={styles.rowResponsive}
+					className={clubsTheme.rowResponsive}
 					style={{
 						paddingTop: 32,
 						paddingBottom: 32
@@ -221,7 +226,7 @@ export function HomeComponent() {
 
 					<div
 						style={{
-							color: 'rgba(255, 102, 81, 1)',
+							color: colorPink,
 							fontWeight: 600,
 							marginTop: 6
 						}}
@@ -230,7 +235,7 @@ export function HomeComponent() {
 							style={{
 								fontSize: 22,
 								fontWeight: 800,
-								lineHeight: 1.3
+								lineHeight: 1.4
 							}}
 						>
 							Effortless access management and collaborative
@@ -241,7 +246,7 @@ export function HomeComponent() {
 							onClick={() => {
 								setIsClubsFAQModalOpen(true)
 							}}
-							className={styles.tLink}
+							className={clubsTheme.tLink}
 							style={{
 								fontSize: 18
 							}}
@@ -261,13 +266,15 @@ export function HomeComponent() {
 					marginTop: 70
 				}}
 			>
-				<Text className={styles.tSectionTitleSmall}>CREATE A CLUB</Text>
+				<Text className={clubsTheme.tExtraSmallLabel}>
+					CREATE A CLUB
+				</Text>
 				<Space h={16} />
 				<Text
 					style={{
 						fontSize: 20,
 						fontWeight: 'bold',
-						color: 'black'
+						color: colorBlack
 					}}
 					color="dimmed"
 				>
@@ -301,7 +308,7 @@ export function HomeComponent() {
 						  clubclub.isMember ? (
 							<Button
 								style={{ marginRight: 64 }}
-								className={styles.buttonBlack}
+								className={clubsTheme.buttonBlack}
 								onClick={goToCreate}
 							>
 								Create
@@ -310,7 +317,10 @@ export function HomeComponent() {
 					}
 				/>
 				{!clubclub.isMember && (
-					<Text className={styles.tLink} style={{ marginTop: 16 }}>
+					<Text
+						className={clubsTheme.tLink}
+						style={{ marginTop: 16 }}
+					>
 						<a
 							onClick={() => {
 								router.push({ pathname: '/club-club' })
@@ -321,20 +331,20 @@ export function HomeComponent() {
 					</Text>
 				)}
 				<Space h={64} />
-				<Text className={styles.tSectionTitleSmall}>JOIN A CLUB</Text>
+				<Text className={clubsTheme.tExtraSmallLabel}>JOIN A CLUB</Text>
 				<Space h={16} />
 				<Text
 					style={{
 						fontSize: 20,
 						fontWeight: 'bold',
-						color: 'black'
+						color: colorBlack
 					}}
 					color="dimmed"
 				>
 					{`Find your community on Clubs`}
 				</Text>
 				<Space h={16} />
-				<Button className={styles.buttonBlack} onClick={goToBrowse}>
+				<Button className={clubsTheme.buttonBlack} onClick={goToBrowse}>
 					Browse all clubs
 				</Button>
 				<Space h={64} />

@@ -1,13 +1,13 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
 	Divider,
 	Stepper,
 	MantineProvider,
-	TextInput
+	TextInput,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -16,72 +16,7 @@ import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { Identity } from '../../../../model/identity/identity'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	newEmailLink: {
-		fontSize: 14,
-		textDecoration: 'underline',
-		cursor: 'pointer'
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	}
-}))
-
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
 	identity: Identity
 	isOpened: boolean
@@ -99,7 +34,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 	onModalClosed,
 	integrationId
 }) => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
@@ -134,7 +69,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Verification failed',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Please make sure your email address exists and try again.`
 			})
@@ -158,7 +93,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
+					<Text className={clubsTheme.tMediumBold}>
 						Connect your Email Address
 					</Text>
 				}
@@ -171,7 +106,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
+				<div className={clubsTheme.modalStepsContainer}>
 					<MantineProvider
 						theme={{
 							colors: {
@@ -214,7 +149,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															classes.stepDescription
+															clubsTheme.tExtraSmall
 														}
 													>
 														{`We'll send you a
@@ -225,6 +160,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 
 													<TextInput
 														value={emailAddress}
+														radius={16}
 														onChange={event => {
 															setEmailAddress(
 																event.target
@@ -234,7 +170,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 													/>
 													<Space h={24} />
 
-													<a
+													<Button
 														onClick={() => {
 															if (
 																emailAddress.length ===
@@ -258,11 +194,11 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 															sendVerificationLink()
 														}}
 														className={
-															classes.buttonConfirm
+															clubsTheme.buttonBlack
 														}
 													>
 														Confirm
-													</a>
+													</Button>
 												</div>
 											)}
 										</>
@@ -274,7 +210,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 								description={
 									step !== Step.SendEmail ? (
 										<Text
-											className={classes.stepDescription}
+											className={clubsTheme.tExtraSmall}
 										>
 											A verification email should be
 											arriving in your inbox within five
@@ -286,7 +222,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 											<div>
 												<Text
 													className={
-														classes.stepDescription
+														clubsTheme.tExtraSmall
 													}
 												>
 													A verification email should
@@ -302,7 +238,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 														// TODO: Launch email app
 													}}
 													className={
-														classes.buttonConfirm
+														clubsTheme.buttonBlack
 													}
 												>
 													Launch Email App
@@ -313,9 +249,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 													onClick={() => {
 														sendVerificationLink()
 													}}
-													className={
-														classes.newEmailLink
-													}
+													className={clubsTheme.tLink}
 												>
 													{`Didn't receive an email? Send a new link`}
 												</Text>

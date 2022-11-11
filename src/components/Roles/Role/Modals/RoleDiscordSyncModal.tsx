@@ -18,7 +18,7 @@ import {
 } from '@mantine/core'
 import React, { forwardRef, useEffect, useState } from 'react'
 import { Club, ClubRole } from '../../../../model/club/club'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -39,7 +39,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [discordRoles, setDiscordRoles] = useState<DiscordRole[]>()
 
@@ -90,7 +90,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 	const SelectItem = forwardRef<HTMLDivElement, DiscordRole>(
 		({ label, value, memberCount, ...others }: DiscordRole, ref) => (
 			<div ref={ref} {...others} key={value}>
-				<div className={styles.spacedRow}>
+				<div className={clubsTheme.spacedRow}>
 					<Text>{label}</Text>
 					<Text>{`${memberCount} members`}</Text>
 				</div>
@@ -111,7 +111,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={styles.tModalTitle}>
+					<Text className={clubsTheme.tMediumBold}>
 						Sync Existing Discord Role
 					</Text>
 				}
@@ -138,7 +138,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={styles.buttonGrey}
+								className={clubsTheme.buttonGrey}
 							>
 								Close
 							</Button>
@@ -168,7 +168,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 						</Text>
 						<Space h={8} />
 						<Radio.Group
-							classNames={{ label: styles.fRadio }}
+							classNames={{ label: clubsTheme.fRadio }}
 							orientation="vertical"
 							spacing={10}
 							size="md"
@@ -194,9 +194,9 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 						</Radio.Group>
 						<Space h={32} />
 
-						<div className={styles.row}>
+						<div className={clubsTheme.row}>
 							<Button
-								className={styles.buttonBlack}
+								className={clubsTheme.buttonBlack}
 								onClick={async () => {
 									saveChanges()
 								}}
@@ -208,7 +208,7 @@ export const RoleDiscordSyncModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={styles.buttonGrey}
+								className={clubsTheme.buttonGrey}
 							>
 								Cancel
 							</Button>

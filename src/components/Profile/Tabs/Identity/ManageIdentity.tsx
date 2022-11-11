@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Button,
 	Space,
@@ -33,206 +32,19 @@ import {
 	identityIntegrationFromApi
 } from '../../../../model/identity/identity'
 import { useCustomApollo } from '../../../../providers/ApolloProvider'
+import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
 import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
 import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
 
-const useStyles = createStyles(theme => ({
-	row: { display: 'flex', alignItems: 'center' },
-	header: {
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerLeftItems: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	headerArrow: {
-		marginRight: 32,
-		marginTop: 6,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 16,
-			marginLeft: 16
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 20
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		marginRight: 32
-	},
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	createClubLink: {
-		marginTop: 24,
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	profileItem: {
-		display: 'flex',
-		alignItems: 'center',
-		marginBottom: 24,
-		fontSize: 16,
-		fontWeight: 600,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	profileIntegrationsHeader: {
-		fontSize: 16,
-		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: 600,
-		marginTop: 32,
-		marginBottom: 12,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			fontWeight: 400
-		}
-	},
-	profileIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 24
-	},
-	enabledClubIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	profilePictureImage: {
-		imageRendering: 'pixelated'
-	},
-	profilePictureImageContainer: {
-		marginTop: 24,
-		width: 108,
-		height: 100,
-		position: 'relative'
-	},
-	profilePictureDeleteButton: {
-		position: 'absolute',
-		top: '0px',
-		right: '-100px',
-		cursor: 'pointer'
-	},
-	uploadOptions: { display: 'flex' },
-	emojiCanvas: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		marginTop: -12,
-		marginBottom: -12,
-		lineHeight: 1,
-		fontSize: 160,
-		zIndex: -1000
-	},
-	emojiCanvasCover: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		width: 256,
-		height: 256,
-		marginTop: -12,
-		marginBottom: -12,
-		backgroundColor: 'white',
-		zIndex: -1
-	},
-	intItemHeader: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	profileNameEllipsis: {
-		textOverflow: 'ellipsis',
-		msTextOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden'
-	},
-	verifiedSectionTitle: {
-		fontSize: 18,
-		fontWeight: 600,
-		color: 'rgba(62, 162, 255, 1)',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	identitySectionTitle: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-	myClubsPrompt: { fontSize: 18, marginBottom: 16 },
-	profileHeaderText: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-	textField: {
-		maxWidth: 800
-	}
-}))
-
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
 })
 
 export const ManageIdentityComponent: React.FC = () => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const wallet = useWallet()
 	const id = useContext(IdentityContext)
@@ -456,17 +268,14 @@ export const ManageIdentityComponent: React.FC = () => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={classes.profileHeaderText}>
-				Manage Identity
-			</Text>{' '}
-			<Text className={classes.identitySectionTitle}>
-				Profile Picture
-			</Text>
+			<Text className={clubsTheme.tLargeBold}>Manage Identity</Text>
+			<Space h={32} />
+			<Text className={clubsTheme.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
-				<div className={classes.uploadOptions}>
+				<div className={clubsTheme.row}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={classes.buttonUpload}
+						className={clubsTheme.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -474,7 +283,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={classes.buttonUpload}
+						className={clubsTheme.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
@@ -483,9 +292,16 @@ export const ManageIdentityComponent: React.FC = () => {
 			)}
 			{isLoadingImage && <Loader color="red" variant="oval" />}
 			{!isLoadingImage && profilePicture.length > 0 && (
-				<div className={classes.profilePictureImageContainer}>
+				<div
+					style={{
+						marginTop: 24,
+						width: 108,
+						height: 100,
+						position: 'relative'
+					}}
+				>
 					<Image
-						className={classes.profilePictureImage}
+						style={{ imageRendering: 'pixelated' }}
 						src={profilePicture}
 						width={200}
 						height={200}
@@ -494,7 +310,12 @@ export const ManageIdentityComponent: React.FC = () => {
 					/>
 					<a onClick={deleteImage}>
 						<Image
-							className={classes.profilePictureDeleteButton}
+							style={{
+								position: 'absolute',
+								top: '0px',
+								right: '-100px',
+								cursor: 'pointer'
+							}}
 							src="/delete.png"
 							width={24}
 							height={24}
@@ -503,11 +324,12 @@ export const ManageIdentityComponent: React.FC = () => {
 				</div>
 			)}
 			<Space h={profilePicture.length > 0 ? 148 : 32} />
-			<Text className={classes.identitySectionTitle}>Display Name</Text>
+			<Text className={clubsTheme.tMediumBold}>Display Name</Text>
+			<Space h={16} />
 			<TextInput
 				radius="lg"
 				size="lg"
-				className={classes.textField}
+				style={{ maxWidth: 800 }}
 				value={displayName}
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
@@ -517,9 +339,10 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space h={48} />
 					<Divider />
 					<Space h={'xl'} />
-					<Text className={classes.identitySectionTitle}>
+					<Text className={clubsTheme.tMediumBold}>
 						Verify Accounts
 					</Text>
+					<Space h={16} />
 
 					<Text>
 						Choose a Display Name or Profile Picture and save
@@ -536,7 +359,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					{id.identity.integrations &&
 						id.identity.integrations.length > 0 && (
 							<>
-								<div className={classes.row}>
+								<div className={clubsTheme.centeredRow}>
 									<Image
 										src="/icon-verified.png"
 										width={18}
@@ -545,13 +368,16 @@ export const ManageIdentityComponent: React.FC = () => {
 									<Space w={8} />
 
 									<Text
-										className={classes.verifiedSectionTitle}
+										style={{
+											color: colorVerified
+										}}
+										className={clubsTheme.tMediumBold}
 									>
 										Verified
 									</Text>
 								</div>
 								<Space h={16} />
-								<Grid>
+								<Grid style={{ maxWidth: 800 }}>
 									{id.identity.integrations.map(
 										integration => (
 											<Grid.Col
@@ -574,12 +400,12 @@ export const ManageIdentityComponent: React.FC = () => {
 												>
 													<div
 														className={
-															classes.profileIntegrationItem
+															clubsTheme.gridItem
 														}
 													>
 														<div
 															className={
-																classes.intItemHeader
+																clubsTheme.integrationGridItemHeader
 															}
 														>
 															<Image
@@ -621,15 +447,16 @@ export const ManageIdentityComponent: React.FC = () => {
 							</>
 						)}
 
-					<Text className={classes.identitySectionTitle}>
+					<Text className={clubsTheme.tMediumBold}>
 						Verify Accounts
 					</Text>
+					<Space h={16} />
 					{availableIntegrations.length === 0 && (
 						<Loader variant="oval" color="red" />
 					)}
 					{availableIntegrations.length > 0 && (
 						<>
-							<Grid>
+							<Grid style={{ maxWidth: 800 }}>
 								{availableIntegrations.map(integration => (
 									<Grid.Col
 										xs={6}
@@ -647,13 +474,11 @@ export const ManageIdentityComponent: React.FC = () => {
 											}}
 										>
 											<div
-												className={
-													classes.profileIntegrationItem
-												}
+												className={clubsTheme.gridItem}
 											>
 												<div
 													className={
-														classes.intItemHeader
+														clubsTheme.integrationGridItemHeader
 													}
 												>
 													<Image
@@ -678,7 +503,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			)}
 			<Space h={'xl'} />
 			<Button
-				className={classes.buttonSaveChanges}
+				className={clubsTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>
@@ -715,10 +540,10 @@ export const ManageIdentityComponent: React.FC = () => {
 					setIsLinkedAccountModalOpen(false)
 				}}
 			/>
-			<div id="emojiCanvas" className={classes.emojiCanvas}>
+			<div id="emojiCanvas" className={clubsTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
-			<div className={classes.emojiCanvasCover} />
+			<div className={clubsTheme.emojiCanvasCover} />
 			<Modal
 				withCloseButton={false}
 				padding={8}

@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
@@ -8,7 +7,8 @@ import {
 	TextInput,
 	Loader,
 	Switch,
-	Alert
+	Alert,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -17,70 +17,7 @@ import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { Club, Integration } from '../../../model/club/club'
-
-const useStyles = createStyles(theme => ({
-	row: {
-		display: 'flex'
-	},
-	fullWidth: { width: '100%' },
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	}
-}))
+import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -107,7 +44,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 	onModalClosed,
 	onSpaceSaved
 }) => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const wallet = useWallet()
 
@@ -195,7 +132,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Something went wrong',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Please check that all fields are complete and try again.`
 			})
@@ -214,7 +151,9 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 				overlayBlur={8}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={classes.modalTitle}>Gather Town</Text>}
+				title={
+					<Text className={clubsTheme.tMediumBold}>Gather Town</Text>
+				}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -227,37 +166,37 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 					<>
 						<>
 							<div>
-								<Text className={classes.stepDescription}>
+								<Text className={clubsTheme.tExtraSmall}>
 									{`Let's create a Gather Town space for your club. Click the link below and follow the instructions.`}
 								</Text>
 
-								<Space h={16} />
+								<Space h={8} />
 
-								<a
+								<Button
 									onClick={() => {
 										window.open(
 											'https://app.gather.town/get-started'
 										)
 									}}
-									className={classes.buttonConfirm}
+									className={clubsTheme.buttonBlack}
 								>
 									Create Space
-								</a>
+								</Button>
 								<Space h={32} />
-								<Text className={classes.stepDescription}>
+								<Text className={clubsTheme.tExtraSmall}>
 									{`When you have created a space (or already have one), continue below.`}
 								</Text>
 								<Space h={8} />
 
-								<div className={classes.row}>
-									<a
+								<div className={clubsTheme.row}>
+									<Button
 										onClick={() => {
 											setStep(Step.AddGatherSpaceDetails)
 										}}
-										className={classes.buttonConfirm}
+										className={clubsTheme.buttonBlack}
 									>
 										Next
-									</a>
+									</Button>
 								</div>
 							</div>
 						</>
@@ -267,12 +206,14 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 					<>
 						<>
 							<div>
-								<Text className={classes.stepDescription}>
+								<Text className={clubsTheme.tExtraSmall}>
 									{`Add your club's new Gather Town Space details below. If you are using a Space password, add it here.`}
 								</Text>
 								<Space h={16} />
 
-								<Text>Space URL</Text>
+								<Text className={clubsTheme.tSmallBold}>
+									Space URL
+								</Text>
 								<Space h={4} />
 								<TextInput
 									radius={16}
@@ -283,7 +224,9 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 									}}
 								/>
 								<Space h={24} />
-								<Text>{`(Optional) Space Password`}</Text>
+								<Text
+									className={clubsTheme.tSmallBold}
+								>{`(Optional) Space Password`}</Text>
 
 								<Space h={4} />
 								<TextInput
@@ -340,14 +283,14 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 								)}
 								{!isSavingChanges && (
 									<>
-										<a
+										<Button
 											onClick={() => {
 												saveIntegration()
 											}}
-											className={classes.buttonConfirm}
+											className={clubsTheme.buttonBlack}
 										>
 											Save
-										</a>
+										</Button>
 									</>
 								)}
 							</div>

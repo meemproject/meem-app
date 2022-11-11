@@ -1,13 +1,13 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
 	Divider,
 	Stepper,
 	MantineProvider,
-	TextInput
+	TextInput,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -17,67 +17,7 @@ import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
 import { AvailableIdentityIntegration } from '../../../../model/identity/identity'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	}
-}))
-
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
 	integration?: AvailableIdentityIntegration
 	isOpened: boolean
@@ -96,7 +36,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 	integration,
 	onModalClosed
 }) => {
-	const { classes } = useStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
 	const [step, setStep] = useState<Step>(Step.Start)
@@ -138,7 +78,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Verification failed',
 				autoClose: 5000,
-				color: 'red',
+				color: colorPink,
 				icon: <AlertCircle />,
 				message: `Please make sure your tweet was public and try again.`
 			})
@@ -159,7 +99,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
+					<Text className={clubsTheme.tMediumBold}>
 						Connect your Twitter account
 					</Text>
 				}
@@ -172,7 +112,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
+				<div className={clubsTheme.modalStepsContainer}>
 					<MantineProvider
 						theme={{
 							colors: {
@@ -214,7 +154,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															classes.stepDescription
+															clubsTheme.tExtraSmall
 														}
 													>
 														You’ll need access to
@@ -224,6 +164,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 													<Space h={4} />
 
 													<TextInput
+														radius={16}
 														value={twitterUsername}
 														onChange={event => {
 															setTwitterUsername(
@@ -232,9 +173,9 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 															)
 														}}
 													/>
-													<Space h={24} />
+													<Space h={16} />
 
-													<a
+													<Button
 														onClick={() => {
 															if (
 																twitterUsername.length ===
@@ -254,11 +195,11 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 															setStep(Step.Share)
 														}}
 														className={
-															classes.buttonConfirm
+															clubsTheme.buttonBlack
 														}
 													>
 														Confirm
-													</a>
+													</Button>
 												</div>
 											)}
 										</>
@@ -270,7 +211,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 								description={
 									step !== Step.Share ? (
 										<Text
-											className={classes.stepDescription}
+											className={clubsTheme.tExtraSmall}
 										>
 											Make a post to verify your identity
 										</Text>
@@ -279,15 +220,15 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 											<div>
 												<Text
 													className={
-														classes.stepDescription
+														clubsTheme.tExtraSmall
 													}
 												>
 													Make a post to verify your
 													identity
 												</Text>
-												<Space h={24} />
+												<Space h={16} />
 
-												<a
+												<Button
 													onClick={() => {
 														// Generate intent
 														const href =
@@ -303,11 +244,11 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 														setStep(Step.Verify)
 													}}
 													className={
-														classes.buttonConfirm
+														clubsTheme.buttonBlack
 													}
 												>
 													Post on Twitter
-												</a>
+												</Button>
 											</div>
 										</>
 									)
@@ -320,7 +261,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 									step !== Step.Verify &&
 									step != Step.Verifying ? (
 										<Text
-											className={classes.stepDescription}
+											className={clubsTheme.tExtraSmall}
 										>
 											Complete your verification.
 										</Text>
@@ -330,7 +271,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 												<>
 													<Text
 														className={
-															classes.stepDescription
+															clubsTheme.tExtraSmall
 														}
 													>
 														Please wait...
@@ -342,25 +283,25 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 													<div>
 														<Text
 															className={
-																classes.stepDescription
+																clubsTheme.tExtraSmall
 															}
 														>
 															Complete your
 															verification.
 														</Text>
-														<Space h={24} />
+														<Space h={16} />
 
-														<a
+														<Button
 															onClick={
 																verifyTweet
 															}
 															className={
-																classes.buttonConfirm
+																clubsTheme.buttonBlack
 															}
 														>
 															Verify Tweet
-														</a>
-														<Space h={12} />
+														</Button>
+														<Space h={16} />
 													</div>
 												</>
 											)}

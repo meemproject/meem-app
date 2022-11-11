@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react'
 import { CircleMinus, Lock, Search } from 'tabler-icons-react'
 import { Club, ClubMember, ClubRole } from '../../../model/club/club'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
 interface IProps {
@@ -30,7 +30,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 	onSaveChanges,
 	onMembersUpdated
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 
@@ -91,15 +91,15 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h={14} />
-				<div className={styles.centeredRow}>
+				<div className={clubsTheme.centeredRow}>
 					<TextInput
 						radius={20}
 						classNames={{
-							input: styles.fTextField
+							input: clubsTheme.fTextField
 						}}
 						icon={<Search />}
 						placeholder={'Search Members'}
-						className={styles.fullWidth}
+						className={clubsTheme.fullWidth}
 						size={'lg'}
 						onChange={event => {
 							if (event.target.value) {
@@ -113,11 +113,11 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 					/>
 
 					{!role?.isDefaultRole && role?.name !== 'Club Member' && (
-						<div className={styles.row}>
+						<div className={clubsTheme.row}>
 							<Space w={16} />
 
 							<Button
-								className={styles.buttonWhite}
+								className={clubsTheme.buttonWhite}
 								onClick={() => {
 									setIsMembersModalOpen(true)
 								}}
@@ -134,14 +134,18 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						{filteredMembers.map(member => (
 							<div key={member.wallet}>
 								<Space h={16} />
-								<div className={styles.spacedRowCentered}>
+								<div className={clubsTheme.spacedRowCentered}>
 									<HoverCard
 										width={280}
 										shadow="md"
 										radius={16}
 									>
 										<HoverCard.Target>
-											<div className={styles.centeredRow}>
+											<div
+												className={
+													clubsTheme.centeredRow
+												}
+											>
 												{member.profilePicture && (
 													<>
 														<Image
@@ -160,7 +164,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															styles.tListItemTitle
+															clubsTheme.tSmallBold
 														}
 													>
 														{member.displayName
@@ -173,7 +177,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 													</Text>
 													<Text
 														className={
-															styles.tListItemSubtitle
+															clubsTheme.tExtraSmallFaded
 														}
 													>
 														{member.ens
@@ -191,7 +195,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 											!member.isClubOwner)) && (
 										<>
 											<CircleMinus
-												className={styles.clickable}
+												className={clubsTheme.clickable}
 												onClick={() => {
 													removeMember(member)
 												}}
@@ -240,7 +244,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 
 				<Space h={24} />
 				<Button
-					className={styles.buttonBlack}
+					className={clubsTheme.buttonBlack}
 					onClick={() => {
 						onSaveChanges()
 					}}

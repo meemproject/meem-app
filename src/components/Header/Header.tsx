@@ -1,5 +1,4 @@
 import {
-	createStyles,
 	Header,
 	Text,
 	Menu,
@@ -26,140 +25,12 @@ import {
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
+import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		marginTop: 0,
-		paddingTop: 8,
-		paddingBottom: '-8px'
-	},
-	headerLeftItems: {
-		marginLeft: 4,
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center'
-	},
-
-	headerRightItems: {
-		marginBottom: 4,
-		marginRight: 0,
-		display: 'flex',
-		flexDirection: 'row',
-		alignItems: 'center',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 20
-		}
-	},
-
-	mainLogo: {
-		fontSize: 32,
-		marginLeft: 16,
-		marginRight: 8,
-		paddingBottom: 6,
-		cursor: 'pointer'
-	},
-
-	inner: {
-		height: 56,
-		marginTop: '-4px',
-		display: 'flex',
-		justifyContent: 'space-between',
-		alignItems: 'center'
-	},
-
-	links: {
-		[theme.fn.smallerThan('sm')]: {
-			display: 'none'
-		}
-	},
-
-	burger: {
-		[theme.fn.largerThan('sm')]: {
-			display: 'none'
-		}
-	},
-
-	link: {
-		display: 'block',
-		lineHeight: 1,
-		padding: '8px 12px',
-		borderRadius: theme.radius.sm,
-		textDecoration: 'none',
-		color:
-			theme.colorScheme === 'dark'
-				? theme.colors.dark[0]
-				: theme.colors.gray[7],
-		fontSize: theme.fontSizes.sm,
-		fontWeight: 500,
-
-		'&:hover': {
-			backgroundColor:
-				theme.colorScheme === 'dark'
-					? theme.colors.dark[6]
-					: theme.colors.gray[0]
-		}
-	},
-
-	linkLabel: {
-		marginRight: 5
-	},
-
-	ellipse: {
-		[theme.fn.smallerThan('md')]: {
-			marginLeft: 0,
-			marginRight: 0
-		},
-		marginRight: 24,
-		marginLeft: 24
-	},
-
-	connectWallet: {
-		marginBottom: 4,
-		marginRight: 16,
-		fontWeight: 'bold',
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer'
-	},
-
-	userMenu: {
-		marginBottom: 6
-	},
-
-	user: {
-		marginBottom: '5px',
-		color:
-			theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
-		borderRadius: theme.radius.sm,
-		transition: 'background-color 100ms ease'
-	},
-
-	userActive: {
-		backgroundColor:
-			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
-	},
-
-	menuItem: {
-		fontWeight: 600
-	},
-	menuItemWithIcon: {
-		fontWeight: 600,
-		marginBottom: '-2px',
-		marginTop: '-2px'
-	},
-
-	redMenuItem: {
-		fontWeight: 600,
-		color: 'rgba(255, 102, 81, 1)',
-		marginBottom: '-2px',
-		marginTop: '-2px'
-	}
-}))
 
 export function HeaderMenu() {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
-	const { classes, cx } = useStyles()
+	const { classes: clubsTheme, cx } = useClubsTheme()
 	const router = useRouter()
 
 	const id = useContext(IdentityContext)
@@ -206,15 +77,15 @@ export function HeaderMenu() {
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
 	return (
-		<Header className={classes.header} height={56}>
-			<div className={classes.inner}>
-				<div className={classes.headerLeftItems}>
+		<Header className={clubsTheme.siteHeader} height={56}>
+			<div className={clubsTheme.siteHeaderInner}>
+				<div className={clubsTheme.siteHeaderLeftItems}>
 					<a onClick={navigateHome}>
-						<Text className={classes.mainLogo}>♣</Text>
+						<Text className={clubsTheme.siteHeaderMainLogo}>♣</Text>
 					</a>
 				</div>
 
-				<div className={classes.headerRightItems}>
+				<div className={clubsTheme.siteHeaderRightItems}>
 					{wallet.isConnected && (
 						<Menu
 							radius={8}
@@ -225,8 +96,9 @@ export function HeaderMenu() {
 						>
 							<Menu.Target>
 								<UnstyledButton
-									className={cx(classes.user, {
-										[classes.userActive]: isUserMenuOpened
+									className={cx(clubsTheme.siteHeaderUser, {
+										[clubsTheme.siteHeaderUserActive]:
+											isUserMenuOpened
 									})}
 								>
 									{id.isLoadingIdentity && (
@@ -275,20 +147,20 @@ export function HeaderMenu() {
 							<Menu.Dropdown>
 								<Menu.Item
 									onClick={navigateToMyAccount}
-									className={classes.menuItem}
+									className={clubsTheme.tExtraSmallBold}
 								>
 									My Account
 								</Menu.Item>
 								{clubclub.isMember && (
 									<Menu.Item
 										onClick={navigateToMyClubs}
-										className={classes.menuItem}
+										className={clubsTheme.tExtraSmallBold}
 									>
 										My Clubs
 									</Menu.Item>
 								)}
 								<Menu.Item
-									className={classes.menuItem}
+									className={clubsTheme.tExtraSmallBold}
 									onClick={async () => {
 										await wallet.disconnectWallet()
 									}}
@@ -303,7 +175,15 @@ export function HeaderMenu() {
 						</Menu>
 					)}
 					{!wallet.isConnected && (
-						<Text className={classes.connectWallet}>
+						<Text
+							className={clubsTheme.tExtraSmallBold}
+							style={{
+								marginBottom: 4,
+								marginRight: 16,
+								color: colorPink,
+								cursor: 'pointer'
+							}}
+						>
 							<a
 								onClick={() => {
 									id.login(false)
@@ -317,13 +197,15 @@ export function HeaderMenu() {
 					<Menu offset={15} radius={8} shadow={'lg'}>
 						<Menu.Target>
 							<UnstyledButton>
-								<Dots className={classes.ellipse} />
+								<Dots
+									className={clubsTheme.siteHeaderMenuEllipse}
+								/>
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
 							<Menu.Item
 								onClick={handlePoweredByMeem}
-								className={classes.menuItem}
+								className={clubsTheme.tExtraSmallBold}
 							>
 								Powered by{' '}
 								<span style={{ textDecoration: 'underline' }}>
@@ -333,7 +215,7 @@ export function HeaderMenu() {
 							{wallet.isConnected && !clubclub.isMember && (
 								<Menu.Item
 									onClick={handleJoinClubClub}
-									className={classes.menuItem}
+									className={clubsTheme.tExtraSmallBold}
 								>
 									Join Club Club
 								</Menu.Item>
@@ -343,7 +225,11 @@ export function HeaderMenu() {
 								onClick={() => {
 									setIsClubsFAQModalOpen(true)
 								}}
-								className={classes.menuItemWithIcon}
+								style={{
+									marginBottom: '-2px',
+									marginTop: '-2px'
+								}}
+								className={clubsTheme.tExtraSmallBold}
 								icon={
 									<QuestionMarkCircle
 										height={20}
@@ -359,28 +245,45 @@ export function HeaderMenu() {
 
 							<Menu.Item
 								onClick={handleTwitter}
-								className={classes.menuItemWithIcon}
+								style={{
+									marginBottom: '-2px',
+									marginTop: '-2px'
+								}}
+								className={clubsTheme.tExtraSmallBold}
 								icon={<BrandTwitter size={20} />}
 							>
 								Twitter
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleDiscord}
-								className={classes.menuItemWithIcon}
+								style={{
+									marginBottom: '-2px',
+									marginTop: '-2px'
+								}}
+								className={clubsTheme.tExtraSmallBold}
 								icon={<BrandDiscord size={20} />}
 							>
 								Discord
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleContactUs}
-								className={classes.menuItemWithIcon}
+								style={{
+									marginBottom: '-2px',
+									marginTop: '-2px'
+								}}
+								className={clubsTheme.tExtraSmallBold}
 								icon={<Mail size={20} />}
 							>
 								Contact Us
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleShareFeedback}
-								className={classes.redMenuItem}
+								className={clubsTheme.tExtraSmallBold}
+								style={{
+									color: colorPink,
+									marginBottom: '-2px',
+									marginTop: '-2px'
+								}}
 								icon={<MessageCircle size={20} />}
 							>
 								Share Feedback

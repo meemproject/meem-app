@@ -14,7 +14,7 @@ import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Club, ClubMember } from '../../../../model/club/club'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -31,7 +31,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 	onMembersSaved,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [members, setMembers] = useState<ClubMember[]>([])
 
@@ -116,7 +116,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				size={'50%'}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={styles.tModalTitle}>Add Members</Text>}
+				title={
+					<Text className={clubsTheme.tMediumBold}>Add Members</Text>
+				}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -124,11 +126,11 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				<TextInput
 					radius={20}
 					classNames={{
-						input: styles.fTextField
+						input: clubsTheme.fTextField
 					}}
 					icon={<Search />}
 					placeholder={'Search Members'}
-					className={styles.fullWidth}
+					className={clubsTheme.fullWidth}
 					size={'lg'}
 					onChange={event => {
 						if (event.target.value) {
@@ -147,8 +149,8 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						{filteredMembers.map(member => (
 							<div key={member.wallet}>
 								<Space h={16} />
-								<div className={styles.tListItemTitle}>
-									<div className={styles.centeredRow}>
+								<div>
+									<div className={clubsTheme.centeredRow}>
 										<Checkbox
 											checked={member.chosen}
 											onChange={event => {
@@ -176,17 +178,25 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 											}}
 										/>
 										<Space w={16} />
-										<Image
-											height={40}
-											width={40}
-											radius={20}
-											src={member.profilePicture ?? ''}
-										/>
-										<Space w={16} />
+										{member.profilePicture && (
+											<>
+												<Image
+													height={40}
+													width={40}
+													radius={20}
+													src={
+														member.profilePicture ??
+														''
+													}
+												/>
+												<Space w={16} />
+											</>
+										)}
+
 										<div>
 											<Text
 												className={
-													styles.tListItemTitle
+													clubsTheme.tSmallBold
 												}
 											>
 												{member.displayName ??
@@ -194,7 +204,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 											</Text>
 											<Text
 												className={
-													styles.tListItemSubtitle
+													clubsTheme.tExtraSmallFaded
 												}
 											>
 												{member.ens
@@ -235,9 +245,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					)}
 				<Space h={24} />
 
-				<div className={styles.row}>
+				<div className={clubsTheme.row}>
 					<Button
-						className={styles.buttonBlack}
+						className={clubsTheme.buttonBlack}
 						onClick={async () => {
 							const chosenMembers = members.filter(
 								member => member.chosen
@@ -261,7 +271,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						onClick={() => {
 							onModalClosed()
 						}}
-						className={styles.buttonGrey}
+						className={clubsTheme.buttonGrey}
 					>
 						Cancel
 					</Button>

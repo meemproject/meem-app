@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Text, Space, Modal } from '@mantine/core'
 import React, { useCallback } from 'react'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -12,7 +12,7 @@ export const DiscordRoleRedirectModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const closeModal = useCallback(() => {
 		onModalClosed()
@@ -33,17 +33,19 @@ export const DiscordRoleRedirectModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={styles.modalHeader}>
+				<div className={clubsTheme.modalHeader}>
 					<Space h={128} />
-					<Text className={styles.tTitle}>{`Redirecting...`}</Text>
+					<Text
+						className={clubsTheme.tLargeBold}
+					>{`Redirecting...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={styles.tSubtitle}
+						className={clubsTheme.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Just a moment.`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

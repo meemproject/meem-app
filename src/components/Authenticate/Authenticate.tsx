@@ -6,14 +6,14 @@ import { useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useWallet()
 	const router = useRouter()
 
 	const [isLoading, setIsLoading] = useState(false)
-	const { classes: styles } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const getNonceFetcher = makeFetcher<
 		MeemAPI.v1.GetNonce.IQueryParams,
@@ -122,10 +122,10 @@ const MAuthenticate: React.FC = () => {
 	return (
 		<Center>
 			<Container>
-				<div className={styles.centered}>
+				<div className={clubsTheme.centered}>
 					<Space h={80} />
 					<Text
-						className={styles.tTitle}
+						className={clubsTheme.tLargeBold}
 					>{`Let's make sure it's really you.`}</Text>
 					<Space h={16} />
 
@@ -143,7 +143,7 @@ const MAuthenticate: React.FC = () => {
 					<div>
 						{!isLoading && !wallet.isConnected && (
 							<Button
-								className={styles.buttonBlack}
+								className={clubsTheme.buttonBlack}
 								onClick={connectWallet}
 							>
 								Connect Wallet
@@ -151,7 +151,7 @@ const MAuthenticate: React.FC = () => {
 						)}
 						{!isLoading && wallet.isConnected && (
 							<Button
-								className={styles.buttonBlack}
+								className={clubsTheme.buttonBlack}
 								onClick={sign}
 							>
 								Sign Message
