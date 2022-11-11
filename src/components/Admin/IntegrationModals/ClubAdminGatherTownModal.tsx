@@ -7,7 +7,8 @@ import {
 	TextInput,
 	Loader,
 	Switch,
-	Alert
+	Alert,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -167,9 +168,9 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 									{`Let's create a Gather Town space for your club. Click the link below and follow the instructions.`}
 								</Text>
 
-								<Space h={16} />
+								<Space h={8} />
 
-								<a
+								<Button
 									onClick={() => {
 										window.open(
 											'https://app.gather.town/get-started'
@@ -178,7 +179,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 									className={design.buttonBlack}
 								>
 									Create Space
-								</a>
+								</Button>
 								<Space h={32} />
 								<Text className={design.tExtraSmall}>
 									{`When you have created a space (or already have one), continue below.`}
@@ -186,14 +187,14 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 								<Space h={8} />
 
 								<div className={design.row}>
-									<a
+									<Button
 										onClick={() => {
 											setStep(Step.AddGatherSpaceDetails)
 										}}
 										className={design.buttonBlack}
 									>
 										Next
-									</a>
+									</Button>
 								</div>
 							</div>
 						</>
@@ -208,7 +209,9 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 								</Text>
 								<Space h={16} />
 
-								<Text>Space URL</Text>
+								<Text className={design.tSmallBold}>
+									Space URL
+								</Text>
 								<Space h={4} />
 								<TextInput
 									radius={16}
@@ -219,7 +222,9 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 									}}
 								/>
 								<Space h={24} />
-								<Text>{`(Optional) Space Password`}</Text>
+								<Text
+									className={design.tSmallBold}
+								>{`(Optional) Space Password`}</Text>
 
 								<Space h={4} />
 								<TextInput
@@ -276,14 +281,14 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 								)}
 								{!isSavingChanges && (
 									<>
-										<a
+										<Button
 											onClick={() => {
 												saveIntegration()
 											}}
 											className={design.buttonBlack}
 										>
 											Save
-										</a>
+										</Button>
 									</>
 								)}
 							</div>

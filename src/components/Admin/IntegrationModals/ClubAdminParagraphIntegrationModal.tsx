@@ -259,27 +259,31 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={16} />
 
 									<div style={{ position: 'relative' }}>
-										<TextInput
-											style={{
-												paddingLeft: 153,
-												paddingBottom: 3
-											}}
-											radius="lg"
-											size="md"
-											value={publicationUrl}
-											onChange={event => {
-												setPublicationUrl(
-													event.target.value
-														.replaceAll(' ', '-')
-														.toLowerCase()
-												)
-											}}
-										/>
+										<div>
+											<TextInput
+												classNames={{
+													input: design.paragraphIntTextInput
+												}}
+												radius="lg"
+												size="md"
+												value={publicationUrl}
+												onChange={event => {
+													setPublicationUrl(
+														event.target.value
+															.replaceAll(
+																' ',
+																'-'
+															)
+															.toLowerCase()
+													)
+												}}
+											/>
+										</div>
 										<Text
 											style={{
 												position: 'absolute',
-												top: 8,
-												left: 24,
+												top: 12,
+												left: 12,
 												color: 'rgba(0, 0, 0, 0.5)'
 											}}
 										>{`paragraph.xyz/@`}</Text>
@@ -346,10 +350,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										{`Let's connect your club's treasury.`}
 									</Text>
 									<Space h={16} />
-									<Text>
+									<Text className={design.tSmall}>
 										{`You'll need to sign a transaction on behalf of your club's treasury in the next step. Leave the tab open for now - we'll come back in a moment.`}
 									</Text>
-									<Space h={16} />
+									<Space h={24} />
 									{!hasOpenedClubTreasury && (
 										<Button
 											onClick={() => {
@@ -393,11 +397,11 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										{`Connect to club treasury and sign`}
 									</Text>
 									<Space h={16} />
-									<Text>
+									<Text className={design.tSmall}>
 										{`Your Paragraph publication belongs to your club. In the window we just opened for you, click 'Connect wallet', scroll down and choose 'WalletConnect', then click 'copy to clipboard'. In the Gnosis Safe tab, paste into the field 'QR Code or connection link'.`}
 									</Text>
 									<Space h={16} />
-									<Text>
+									<Text className={design.tSmall}>
 										{`Next, sign the transaction that appears in your Gnosis Safe, then return to the Clubs tab to continue.`}
 									</Text>
 									<Space h={24} />
@@ -438,7 +442,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Center>
 									<Space h={16} />
 
-									<Text className={design.centered}>
+									<Text
+										className={design.centered}
+										style={{ lineHeight: 1.4 }}
+									>
 										{`Your club's Paragraph publication has been
 								created.`}
 									</Text>

@@ -435,6 +435,9 @@ export const useGlobalStyles = createStyles(theme => ({
 		paddingLeft: 8,
 		paddingRight: 8
 	},
+	paragraphIntTextInput: {
+		paddingLeft: 142
+	},
 
 	// Text styles
 	tExtraExtraLarge: { fontWeight: 600, fontSize: '32px', lineHeight: 1.4 },
