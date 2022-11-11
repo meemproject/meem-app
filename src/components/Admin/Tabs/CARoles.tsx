@@ -99,7 +99,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 							>
 								<Menu radius={8} shadow={'lg'}>
 									<Menu.Target>
-										<div>
+										<div style={{ paddingBottom: 4 }}>
 											<Dots />
 										</div>
 									</Menu.Target>

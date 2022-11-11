@@ -6,7 +6,8 @@ import {
 	Divider,
 	Stepper,
 	MantineProvider,
-	TextInput
+	TextInput,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -159,6 +160,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 
 													<TextInput
 														value={emailAddress}
+														radius={16}
 														onChange={event => {
 															setEmailAddress(
 																event.target
@@ -168,7 +170,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 													/>
 													<Space h={24} />
 
-													<a
+													<Button
 														onClick={() => {
 															if (
 																emailAddress.length ===
@@ -196,7 +198,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 														}
 													>
 														Confirm
-													</a>
+													</Button>
 												</div>
 											)}
 										</>

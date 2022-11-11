@@ -313,7 +313,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 							</Text>
 						</div>
 					</div>
-					<Space h={'xs'} />
+					<Space h={24} />
 					<Button
 						loading={isUpgradingClub}
 						disabled={isUpgradingClub}

@@ -6,7 +6,8 @@ import {
 	Divider,
 	Stepper,
 	MantineProvider,
-	TextInput
+	TextInput,
+	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -163,6 +164,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 													<Space h={4} />
 
 													<TextInput
+														radius={16}
 														value={twitterUsername}
 														onChange={event => {
 															setTwitterUsername(
@@ -171,9 +173,9 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 															)
 														}}
 													/>
-													<Space h={24} />
+													<Space h={16} />
 
-													<a
+													<Button
 														onClick={() => {
 															if (
 																twitterUsername.length ===
@@ -197,7 +199,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 														}
 													>
 														Confirm
-													</a>
+													</Button>
 												</div>
 											)}
 										</>
@@ -222,9 +224,9 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 													Make a post to verify your
 													identity
 												</Text>
-												<Space h={24} />
+												<Space h={16} />
 
-												<a
+												<Button
 													onClick={() => {
 														// Generate intent
 														const href =
@@ -244,7 +246,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 													}
 												>
 													Post on Twitter
-												</a>
+												</Button>
 											</div>
 										</>
 									)
@@ -283,9 +285,9 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 															Complete your
 															verification.
 														</Text>
-														<Space h={24} />
+														<Space h={16} />
 
-														<a
+														<Button
 															onClick={
 																verifyTweet
 															}
@@ -294,7 +296,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 															}
 														>
 															Verify Tweet
-														</a>
+														</Button>
 														<Space h={16} />
 													</div>
 												</>

@@ -76,6 +76,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 				>
 					Send us your feedback.
 				</Text>
+				<Space h={16} />
 			</Modal>
 		</>
 	)

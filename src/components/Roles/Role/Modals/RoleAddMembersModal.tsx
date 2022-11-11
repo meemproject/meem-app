@@ -176,15 +176,23 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 											}}
 										/>
 										<Space w={16} />
-										<Image
-											height={40}
-											width={40}
-											radius={20}
-											src={member.profilePicture ?? ''}
-										/>
-										<Space w={16} />
+										{member.profilePicture && (
+											<>
+												<Image
+													height={40}
+													width={40}
+													radius={20}
+													src={
+														member.profilePicture ??
+														''
+													}
+												/>
+												<Space w={16} />
+											</>
+										)}
+
 										<div>
-											<Text className={design.tLargeBold}>
+											<Text className={design.tSmallBold}>
 												{member.displayName ??
 													'Club Member'}
 											</Text>

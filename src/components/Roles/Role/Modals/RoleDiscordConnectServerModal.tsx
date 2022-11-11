@@ -108,13 +108,12 @@ export const RoleDiscordConnectServerModal: React.FC<IProps> = ({
 
 		if (isOpened && existingServerId && availableDiscordServers) {
 			// This club already has a discord role, so we'll use this discord server info instead of offering a selection
-
-			availableDiscordServers.forEach(server => {
-				if (server.id === existingServerId) {
-					onServerChosen(server)
-					onModalClosed()
-				}
-			})
+			// availableDiscordServers.forEach(server => {
+			// 	if (server.id === existingServerId) {
+			// 		onServerChosen(server)
+			// 		onModalClosed()
+			// 	}
+			// })
 		}
 	}, [
 		availableDiscordServers,

@@ -97,7 +97,9 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 
 				<div className={design.modalStepsContainer}>
 					<Space h={8} />
-					<Text>Saving Discord information to your profile...</Text>
+					<Text className={design.tMedium}>
+						Saving Discord information to your profile...
+					</Text>
 					<Space h={8} />
 
 					<Loader variant="oval" color="red" />
