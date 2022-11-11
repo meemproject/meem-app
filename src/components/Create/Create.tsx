@@ -222,17 +222,19 @@ export const CreateComponent: React.FC = () => {
 	return (
 		<>
 			<div className={design.pageHeader}>
-				<a onClick={navigateHome}>
-					<ArrowLeft
-						className={design.pageHeaderExitButton}
-						size={32}
-					/>
-				</a>
-				<div>
-					<Text className={design.tSmallBoldFaded}>
-						Create a club
-					</Text>
-					<Text className={design.tLargeBold}>{clubName}</Text>
+				<div className={design.centeredRow}>
+					<a onClick={navigateHome}>
+						<ArrowLeft
+							className={design.pageHeaderExitButton}
+							size={32}
+						/>
+					</a>
+					<div>
+						<Text className={design.tSmallBoldFaded}>
+							Create a club
+						</Text>
+						<Text className={design.tLargeBold}>{clubName}</Text>
+					</div>
 				</div>
 			</div>
 
@@ -261,10 +263,11 @@ export const CreateComponent: React.FC = () => {
 				</div>
 
 				<Space h={'md'} /> */}
+				<Space h={32} />
 				<Text className={design.tMediumBold}>
 					In a sentence, describe what your members do together.
 				</Text>
-				<Space h={24} />
+				<Space h={16} />
 
 				<Textarea
 					radius="lg"
@@ -278,7 +281,7 @@ export const CreateComponent: React.FC = () => {
 					}
 				/>
 
-				<Space h={16} />
+				<Space h={40} />
 				<Text className={design.tMediumBold}>
 					Upload an icon for your club.
 				</Text>
@@ -331,6 +334,7 @@ export const CreateComponent: React.FC = () => {
 						</a>
 					</div>
 				)}
+				<Space h={smallClubLogo.length > 0 ? 148 : 40} />
 				<Button
 					onClick={() => {
 						createClub()

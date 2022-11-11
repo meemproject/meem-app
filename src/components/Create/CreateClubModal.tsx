@@ -454,7 +454,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
-						className={design.tMediumBold}
+						className={design.tLargeBold}
 					>{`We're creating your club!`}</Text>
 					<Space h={32} />
 					<Image
@@ -464,13 +464,14 @@ export const CreateClubModal: React.FC<IProps> = ({
 						className={design.imageClubLogo}
 						src={Cookies.get(CookieKeys.clubImage)}
 					/>
+					<Space h={16} />
 					<Text className={design.tLargeBold}>
 						{Cookies.get(CookieKeys.clubName)}
 					</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tExtraSmallBold}
+						className={design.tExtraSmall}
 						style={{ textAlign: 'center' }}
 					>
 						This could take a few minutes.
@@ -478,11 +479,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 					<Space h={16} />
 
 					<Text
-						className={design.tExtraSmallBold}
+						className={design.tExtraSmall}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>
-				<Space h={16} />
+				<Space h={8} />
 			</Modal>
 		</>
 	)

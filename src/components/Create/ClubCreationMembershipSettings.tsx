@@ -425,12 +425,12 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h="lg" />
+				<Space h={48} />
 
-				<Text className={design.tMediumBold}>Club Admins</Text>
+				<Text className={design.tLargeBold}>Club Admins</Text>
 
 				<div>
-					<Space h={36} />
+					<Space h={32} />
 					<Text className={design.tMediumBold}>
 						{club
 							? `Who can manage this club’s profile and membership
@@ -462,7 +462,9 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Divider />
 				<Space h={64} />
 
-				<Text className={design.tMediumBold}>Membership</Text>
+				<Text className={design.tLargeBold}>Membership</Text>
+				<Space h={32} />
+
 				<Text className={design.tSmallBoldFaded}>Requirements</Text>
 				<Text
 					className={design.tMedium}
@@ -668,7 +670,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>
 					.
 				</Text>
-
+				<Space h={32} />
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
@@ -777,15 +779,13 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								: design.invisibleContainer
 						}
 					>
-						<Space h={8} />
-						<Text className={design.tMediumBoldFaded}>
-							How to apply
-						</Text>
-						<Text className={design.tExtraSmallFaded}>
+						<Space h={24} />
+						<Text className={design.tMediumBold}>How to apply</Text>
+						<Text className={design.tExtraSmall}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
-						<Space h={'xs'} />
+						<Space h={12} />
 
 						<Textarea
 							radius="lg"
@@ -798,10 +798,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={design.tMediumBoldFaded}>
+						<Space h={24} />
+						<Text className={design.tMediumBold}>
 							Approved Addresses
 						</Text>
-						<Text className={design.tExtraSmallFaded}>
+						<Text className={design.tExtraSmall}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
@@ -851,9 +852,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing.tokenChain}
 						/> */}
-						<Text className={design.tMediumBoldFaded}>
+						<Space h={24} />
+						<Text className={design.tMediumBold}>
 							Token Address
 						</Text>
+						<Space h={4} />
 						<TextInput
 							radius="lg"
 							size="sm"
@@ -864,9 +867,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								updateMembershipRequirement(reqCurrentlyEditing)
 							}}
 						/>
-						<Text className={design.tMediumBoldFaded}>
+						<Space h={16} />
+						<Text className={design.tMediumBold}>
 							Minimum Quantity
 						</Text>
+						<Space h={4} />
 						<TextInput
 							radius="lg"
 							size="sm"
@@ -1082,9 +1087,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={design.tMediumBoldFaded}>
+					<Space h={16} />
+					<Text className={design.tMediumBold}>
 						Enter cost to join
 					</Text>
+					<Space h={4} />
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -1114,9 +1121,10 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={design.tMediumBoldFaded}>
+					<Text className={design.tMediumBold}>
 						Send funds to this address
 					</Text>
+					<Space h={4} />
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -1161,6 +1169,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -1202,9 +1211,11 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={design.tMediumBoldFaded}>
+							<Space h={24} />
+							<Text className={design.tMediumBold}>
 								Enter total memberships
 							</Text>
+							<Space h={4} />
 
 							<TextInput
 								radius="lg"
@@ -1249,6 +1260,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -1346,6 +1358,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
