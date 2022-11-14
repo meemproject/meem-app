@@ -289,6 +289,34 @@ export const useClubsTheme = createStyles(theme => ({
 		padding: 16
 	},
 
+	// Clubs Home Columns Layout
+	pageResponsiveContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		marginTop: 64,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			flexDirection: 'column',
+			marginTop: 32,
+			paddingRight: 0
+		}
+	},
+	pageLeftColumn: {
+		width: 350,
+		paddingRight: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: '100%',
+			paddinRight: 0,
+			paddingBottom: 32
+		}
+	},
+	pageRightColumn: {
+		width: 650,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: '100%',
+			paddingRight: 32
+		}
+	},
+
 	// Page Panel Layout
 	pagePanelLayoutContainer: {
 		display: 'flex',

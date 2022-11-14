@@ -23,7 +23,7 @@ import {
 	Mail
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import ClubClubContext from '../ClubHome/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
 import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'

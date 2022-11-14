@@ -28,7 +28,7 @@ import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
 import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import ClubClubContext from '../ClubHome/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
 import {
 	colorBlack,
