@@ -1,14 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
-import {
-	createStyles,
-	Text,
-	Image,
-	Space,
-	Loader,
-	Grid,
-	Badge
-} from '@mantine/core'
+import { Text, Image, Space, Loader, Grid, Badge } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
@@ -21,107 +13,10 @@ import { SUB_MY_CLUBS } from '../../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { hostnameToChainId } from '../../App'
-
-const useStyles = createStyles(theme => ({
-	row: {
-		display: 'flex'
-	},
-	header: {
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerLeftItems: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	headerArrow: {
-		marginRight: 32,
-		marginTop: 6,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 16,
-			marginLeft: 16
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 20
-		}
-	},
-	buttonCreate: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		marginRight: 32
-	},
-	createClubLink: {
-		marginTop: 24,
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	clubItem: {
-		marginBottom: 24,
-		fontSize: 16,
-		fontWeight: 600,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	clubItemRow: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated'
-	},
-	clubNameEllipsis: {
-		textOverflow: 'ellipsis',
-		msTextOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden'
-	},
-
-	myClubsPrompt: { fontSize: 18, marginBottom: 16 },
-	badgeText: {
-		color: '#000'
-	},
-	badge: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	profileHeaderText: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	}
-}))
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
 export const MyClubsComponent: React.FC = () => {
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
@@ -184,19 +79,20 @@ export const MyClubsComponent: React.FC = () => {
 		<>
 			{loading && (
 				<>
-					<Space h={12} />
+					<Space h={16} />
 					<Loader variant="oval" color="red" />
 				</>
 			)}
 			{clubs.length === 0 && !loading && (
 				<>
-					<Space h={12} />
-					<Text className={classes.profileHeaderText}>My Clubs</Text>
-
-					<Text className={classes.myClubsPrompt}>
+					<Space h={16} />
+					<Text className={design.tMediumBold}>My Clubs</Text>
+					<Space h={32} />
+					<Text className={design.tMediumBold}>
 						{`You haven't joined any clubs!`}
 					</Text>
-					<Text className={classes.createClubLink}>
+					<Space h={16} />
+					<Text className={design.tLink}>
 						<a onClick={navigateToCreate}>Start a new one?</a>
 					</Text>
 				</>
@@ -204,8 +100,10 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length > 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={classes.profileHeaderText}>My Clubs</Text>
-					<Grid>
+					<Text className={design.tLargeBold}>My Clubs</Text>
+					<Space h={32} />
+
+					<Grid style={{ maxWidth: 1000 }}>
 						{clubs.map(club => (
 							<Grid.Col
 								xs={6}
@@ -217,14 +115,14 @@ export const MyClubsComponent: React.FC = () => {
 							>
 								<div
 									key={club.address}
-									className={classes.clubItem}
+									className={design.gridItem}
 									onClick={() => {
 										navigateToClub(club.slug ?? '')
 									}}
 								>
-									<div className={classes.clubItemRow}>
+									<div className={design.row}>
 										<Image
-											className={classes.clubLogoImage}
+											className={design.imageClubLogo}
 											src={club.image ?? ''}
 											width={40}
 											height={40}
@@ -233,18 +131,12 @@ export const MyClubsComponent: React.FC = () => {
 										/>
 										<Space w="xs" />
 
-										<div
-											className={classes.clubNameEllipsis}
-										>
-											<Text
-												className={
-													classes.clubNameEllipsis
-												}
-											>
+										<div className={design.tEllipsis}>
+											<Text className={design.tEllipsis}>
 												{club.name}
 											</Text>
-											<Space h={4} />
-											<div className={classes.row}>
+											<Space h={8} />
+											<div className={design.row}>
 												<Badge
 													variant="gradient"
 													gradient={{
@@ -253,8 +145,8 @@ export const MyClubsComponent: React.FC = () => {
 														deg: 35
 													}}
 													classNames={{
-														inner: classes.badgeText,
-														root: classes.badge
+														inner: design.tExtraSmallBoldBlack,
+														root: design.badge
 													}}
 													leftSection={
 														<>
@@ -269,21 +161,6 @@ export const MyClubsComponent: React.FC = () => {
 												>
 													{club.memberCount}
 												</Badge>
-												{/* <Space w={4} />
-												<Badge
-													variant="gradient"
-													gradient={{
-														from: '#DCDCDC',
-														to: '#DCDCDC',
-														deg: 35
-													}}
-													classNames={{
-														inner: classes.badgeText,
-														root: classes.badge
-													}}
-												>
-													<Text>{'3 Roles'}</Text>
-												</Badge> */}
 											</div>
 										</div>
 									</div>

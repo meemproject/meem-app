@@ -17,7 +17,7 @@ import { makeRequest, MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useEffect, useState } from 'react'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { colorLightestGrey, useGlobalStyles } from '../Styles/GlobalStyles'
 
 interface IProps {
 	isOpened: boolean
@@ -37,7 +37,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 	onModalClosed,
 	isLoginForced
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const { loginWithRedirect, isAuthenticated, getAccessTokenSilently } =
 		useAuth0()
@@ -197,7 +197,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 				<div>
 					<Space h={24} />
 					<Center>
-						<Text className={styles.tBold}>Email Address</Text>
+						<Text className={design.tSmallBold}>Email Address</Text>
 					</Center>
 
 					<Space h={16} />
@@ -212,7 +212,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={40} />
 					<Center>
 						<Button
-							className={styles.buttonBlack}
+							className={design.buttonBlack}
 							onClick={() => {
 								sendEmailVerificationLink()
 							}}
@@ -223,13 +223,13 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					<Space h={32} />
 
 					<Center>
-						<Text className={styles.tPartialTransparent}>
+						<Text className={design.tSmallFaded}>
 							Changed your mind?
 						</Text>
 					</Center>
 					<Center>
 						<Text
-							className={styles.tLink}
+							className={design.tLink}
 							onClick={() => {
 								setIsEmailState(false)
 								setEmail('')
@@ -292,7 +292,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					closeOnClickOutside={!isLoginForced}
 					opened={isOpened}
 					title={
-						<Text className={styles.tModalTitle}>
+						<Text className={design.tMediumBold}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -312,7 +312,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											position: 'relative'
 										}}
 										className={
-											styles.connectMethodButtonSmall
+											design.connectMethodGridItemMobile
 										}
 										key={method.id}
 										onClick={() => {
@@ -327,15 +327,15 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											height={50}
 										/>
 										<Space w={16} />
-										<Text className={styles.tBold}>
+										<Text className={design.tSmallBold}>
 											{method.name}
 										</Text>
 										{!method.enabled && (
-											<div className={styles.row}>
+											<div className={design.row}>
 												<Space w={8} />
 												<Text
 													className={
-														styles.tPartialTransparent
+														design.tSmallFaded
 													}
 												>
 													Coming soon
@@ -377,7 +377,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					size={isEmailState ? '' : '47%'}
 					opened={isOpened}
 					title={
-						<Text className={styles.tModalTitle}>
+						<Text className={design.tMediumBold}>
 							{isEmailState
 								? 'Sign In with Email'
 								: 'Connect to Clubs'}
@@ -403,7 +403,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 									>
 										<div
 											className={
-												styles.connectMethodButton
+												design.connectMethodGridItem
 											}
 											style={{
 												position: 'relative'
@@ -417,7 +417,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 											<Center>
 												<div
 													className={
-														styles.connectMethodButtonContent
+														design.connectMethodGridItemContent
 													}
 												>
 													<Image
@@ -427,17 +427,20 @@ export const JoinClubsModal: React.FC<IProps> = ({
 													/>
 													<Space h={16} />
 													<Text
-														className={styles.tBold}
+														className={
+															design.tSmallBold
+														}
 													>
 														{method.name}
 													</Text>
 													{!method.enabled && (
 														<Text
 															className={
-																styles.tPartialTransparent
+																design.tSmallFaded
 															}
 															style={{
-																fontSize: 14
+																fontSize: 14,
+																marginTop: 4
 															}}
 														>
 															Coming soon
@@ -454,7 +457,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 																width: '100%',
 																height: '100%',
 																backgroundColor:
-																	'white',
+																	colorLightestGrey,
 																opacity: '0.7'
 															}}
 														/>

@@ -1,68 +1,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
-import { createStyles, Text, Button, Textarea, Space } from '@mantine/core'
+import { Text, Button, Textarea, Space } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-
-const useStyles = createStyles(theme => ({
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	buttonSaveChangesInHeader: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	textField: {
-		maxWidth: 800
-	}
-}))
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 
 interface IProps {
 	club: Club
 }
 
 export const CABulkMint: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
@@ -200,21 +152,24 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div>
-				<Space h={12} />
+				<Space h={16} />
 
-				<Text className={classes.manageClubHeader}>Airdrops</Text>
+				<Text className={design.tMediumBold}>Airdrops</Text>
+				<Space h={68} />
 
-				<Text className={classes.clubAdminsPrompt}>
+				<Text className={design.tMediumBold}>
 					Invite others to your club by airdropping them a club token.
 					They will automatically become a club member.
 				</Text>
-				<Text className={classes.clubAdminsInstructions}>
+				<Space h={16} />
+				<Text className={design.tMediumFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
+				<Space h={16} />
 				<Textarea
 					radius="lg"
 					size="sm"
-					className={classes.textField}
+					style={{ maxWidth: 800 }}
 					value={airdropAddressesString}
 					minRows={10}
 					onChange={event =>
@@ -224,7 +179,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			</div>
 			<Space h={32} />
 			<Button
-				className={classes.buttonSaveChanges}
+				className={design.buttonBlack}
 				loading={isSavingChanges}
 				onClick={sendAirdrops}
 			>

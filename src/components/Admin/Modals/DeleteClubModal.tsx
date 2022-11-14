@@ -22,7 +22,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 	onModalClosed,
 	club
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [isDeletingClub, setIsDeletingClub] = useState(false)
 
@@ -85,14 +85,14 @@ export const DeleteClubModal: React.FC<IProps> = ({
 			>
 				<Space h={24} />
 				<Text
-					className={styles.tSectionTitle}
+					className={design.tMediumBold}
 				>{`Are you sure you want to delete this club?`}</Text>
 				<Space h={8} />
 				<Text>This action is permanent and cannot be undone.</Text>
 				<Space h={32} />
 				<Button
 					loading={isDeletingClub}
-					className={styles.buttonRed}
+					className={design.buttonRed}
 					onClick={async () => {
 						deleteClub()
 					}}
@@ -106,7 +106,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 							onClick={() => {
 								onModalClosed()
 							}}
-							className={styles.buttonGrey}
+							className={design.buttonGrey}
 						>
 							Cancel
 						</Button>

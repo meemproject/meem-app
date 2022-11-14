@@ -1,47 +1,23 @@
-import { createStyles, Text, Center, Space, Divider } from '@mantine/core'
+import { Text, Center, Space, Divider } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-
-const useStyles = createStyles(() => ({
-	row: { display: 'flex' },
-	normalText: {
-		fontWeight: 600
-	},
-	link: {
-		fontWeight: 600,
-		color: '#000'
-	},
-	footerContainer: {
-		position: 'fixed',
-		bottom: 0,
-		left: 0,
-		right: 0
-	},
-	footerBackground: {
-		backgroundColor: 'white',
-		width: '100%',
-		height: 48,
-		paddingTop: 8
-	}
-}))
+import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 export const MeemFooter: React.FC = () => {
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 
 	return (
 		<div>
 			<Space h={128} />
-			<div className={classes.footerContainer}>
+			<div className={design.pageFooterContainer}>
 				<Divider />
-				<div className={classes.footerBackground}>
+				<div className={design.pageFooterBackground}>
 					<Center>
-						<div className={classes.row}>
-							<Text className={classes.normalText}>
-								Powered by
-							</Text>
+						<div className={design.row}>
+							<Text>Powered by</Text>
 							<Space w={4} />
 							<a
-								className={classes.link}
+								className={design.tLink}
 								href="https://build.meem.wtf"
 							>
 								Meem

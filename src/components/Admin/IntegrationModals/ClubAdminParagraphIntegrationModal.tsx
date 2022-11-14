@@ -1,15 +1,9 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Space,
 	Modal,
 	Divider,
-	Stepper,
-	MantineProvider,
 	TextInput,
 	Radio,
 	Button,
@@ -22,101 +16,11 @@ import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/no-extraneous-dependencies
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import request from 'superagent'
-import { AlertCircle, Check } from 'tabler-icons-react'
-import twitterIntent from 'twitter-intent'
+import { AlertCircle } from 'tabler-icons-react'
 import { Club, Integration } from '../../../model/club/club'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	title: { fontWeight: 600, fontSize: 18 },
-	description: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	namespaceTextInputContainer: {
-		position: 'relative'
-	},
-	namespaceTextInput: {
-		paddingLeft: 153,
-		paddingBottom: 3
-	},
-	namespaceTextInputUrlPrefix: {
-		position: 'absolute',
-		top: 8,
-		left: 24,
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	clubNamespaceHint: {
-		paddingLeft: 0,
-		paddingBottom: 16,
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	successText: {
-		fontWeight: 600,
-		fontSize: 22,
-		color: 'rgba(29, 173, 78, 1)'
-	},
-	successInfo: { textAlign: 'center' },
-	paragraphFrame: { width: '100%', height: 200 }
-}))
-
+import { colorGreen, useGlobalStyles } from '../../Styles/GlobalStyles'
 interface IProps {
 	club: Club
 	integration?: Integration
@@ -140,24 +44,15 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	onModalClosed,
 	onComplete
 }) => {
-	const router = useRouter()
-
 	const wallet = useWallet()
 
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
 	const [publicationName, setPublicationName] = useState('')
 	const [publicationUrl, setPublicationUrl] = useState('')
 	const [isClubMembersOnly, setIsClubMembersOnly] = useState(false)
-
-	// The url with appropriate encoded params to send to paragraph
-	const [paragraphIframeUrl, setParagraphIframeUrl] = useState('')
-	const [hasAddedWindowListener, setHasAddedWindowListener] = useState(false)
-
-	// Data received back from paragraph
-	const [createdPublicationSlug, setCreatedPublicationSlug] = useState('')
 
 	// Is this integration enabled?
 	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(true)
@@ -240,7 +135,6 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 					window.removeEventListener('message', listener)
 					popup.close()
 					setStep(Step.SavingIntegration)
-					setCreatedPublicationSlug(`@${publicationUrl}`)
 					saveIntegration(!isClubMembersOnly)
 				}
 			}
@@ -251,10 +145,9 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	useEffect(() => {
 		// Used when we want to show integration settings after being saved
 		if (integration && integration.publicationSlug) {
-			setCreatedPublicationSlug(integration.publicationSlug)
 			setIsIntegrationEnabled(integration.isEnabled ?? false)
 		}
-	}, [hasAddedWindowListener, integration, isClubMembersOnly])
+	}, [integration, isClubMembersOnly])
 
 	return (
 		<>
@@ -270,7 +163,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
+					<Text className={design.tMediumBold}>
 						{integration && integration.publicationSlug
 							? 'Edit Paragraph settings'
 							: 'Create a Paragraph Publication'}
@@ -291,7 +184,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
+				<div className={design.modalStepsContainer}>
 					{integration && integration.publicationSlug && (
 						<>
 							<>
@@ -322,7 +215,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										// Close our modal
 										onModalClosed()
 									}}
-									className={classes.buttonConfirm}
+									className={design.buttonBlack}
 								>
 									Save
 								</Button>
@@ -334,10 +227,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Start && (
 								<>
 									<Text
-										className={classes.title}
+										className={design.tMediumBold}
 									>{`What's your Publication called?`}</Text>
 									<Space h={2} />
-									<Text className={classes.description}>
+									<Text className={design.tExtraSmall}>
 										Catchy names are the best.
 									</Text>
 									<Space h={16} />
@@ -355,24 +248,21 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={24} />
 
 									<Text
-										className={classes.title}
+										className={design.tMediumBold}
 									>{`Your visitors can find your publication at this URL.`}</Text>
 									<Space h={2} />
 
-									<Text className={classes.description}>
+									<Text className={design.tExtraSmall}>
 										Your visitors can find your publication
 										at this URL.
 									</Text>
 									<Space h={16} />
 
-									<div
-										className={
-											classes.namespaceTextInputContainer
-										}
-									>
+									<div style={{ position: 'relative' }}>
 										<TextInput
-											classNames={{
-												input: classes.namespaceTextInput
+											style={{
+												paddingLeft: 153,
+												paddingBottom: 3
 											}}
 											radius="lg"
 											size="md"
@@ -386,20 +276,23 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 											}}
 										/>
 										<Text
-											className={
-												classes.namespaceTextInputUrlPrefix
-											}
+											style={{
+												position: 'absolute',
+												top: 8,
+												left: 24,
+												color: 'rgba(0, 0, 0, 0.5)'
+											}}
 										>{`paragraph.xyz/@`}</Text>
 									</div>
 									<Space h={24} />
 
 									<Text
-										className={classes.title}
+										className={design.tMediumBold}
 									>{`Who can read your publication?`}</Text>
 									<Space h={2} />
 
 									<Radio.Group
-										classNames={{ label: classes.radio }}
+										classNames={{ label: design.fRadio }}
 										orientation="vertical"
 										spacing={10}
 										size="md"
@@ -439,7 +332,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 										onClick={async () => {
 											setStep(Step.OpenGnosis)
 										}}
-										className={classes.buttonConfirm}
+										className={design.buttonBlack}
 									>
 										Create
 									</Button>
@@ -449,10 +342,10 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 								<>
 									<Space h={16} />
 
-									<Text className={classes.title}>
+									<Text className={design.tMediumBold}>
 										{`Let's connect your club's treasury.`}
 									</Text>
-									<Space h={12} />
+									<Space h={16} />
 									<Text>
 										{`You'll need to sign a transaction on behalf of your club's treasury in the next step. Leave the tab open for now - we'll come back in a moment.`}
 									</Text>
@@ -474,7 +367,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 												)
 												window.focus()
 											}}
-											className={classes.buttonConfirm}
+											className={design.buttonBlack}
 										>
 											Open Treasury
 										</Button>
@@ -485,7 +378,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 												setStep(Step.Transaction)
 												showParagraphPopup()
 											}}
-											className={classes.buttonConfirm}
+											className={design.buttonBlack}
 										>
 											Continue
 										</Button>
@@ -496,14 +389,14 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							{step === Step.Transaction && (
 								<>
 									<Space h={16} />
-									<Text className={classes.title}>
+									<Text className={design.tMediumBold}>
 										{`Connect to club treasury and sign`}
 									</Text>
-									<Space h={12} />
+									<Space h={16} />
 									<Text>
 										{`Your Paragraph publication belongs to your club. In the window we just opened for you, click 'Connect wallet', scroll down and choose 'WalletConnect', then click 'copy to clipboard'. In the Gnosis Safe tab, paste into the field 'QR Code or connection link'.`}
 									</Text>
-									<Space h={12} />
+									<Space h={16} />
 									<Text>
 										{`Next, sign the transaction that appears in your Gnosis Safe, then return to the Clubs tab to continue.`}
 									</Text>
@@ -536,13 +429,16 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									</Center>
 									<Space h={16} />
 									<Center>
-										<Text className={classes.successText}>
+										<Text
+											className={design.tLargeBold}
+											style={{ color: colorGreen }}
+										>
 											Success!
 										</Text>
 									</Center>
 									<Space h={16} />
 
-									<Text className={classes.successInfo}>
+									<Text className={design.centered}>
 										{`Your club's Paragraph publication has been
 								created.`}
 									</Text>
@@ -555,7 +451,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 													'https://paragraph.xyz'
 												)
 											}}
-											className={classes.buttonConfirm}
+											className={design.buttonBlack}
 										>
 											Launch Paragraph
 										</Button>

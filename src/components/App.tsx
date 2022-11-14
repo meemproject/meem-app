@@ -45,7 +45,7 @@ export function hostnameToChainId(hostname: string): number {
 
 export const App: React.FC<IProps> = ({ children }) => {
 	const { chainId, setChain } = useWallet()
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	let expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID
 		? +process.env.NEXT_PUBLIC_CHAIN_ID
@@ -79,7 +79,7 @@ export const App: React.FC<IProps> = ({ children }) => {
 						<h3>{`You're currently connected to the wrong network.`}</h3>
 						<Space h={8} />
 						<Button
-							className={styles.buttonBlack}
+							className={design.buttonBlack}
 							onClick={() => {
 								setChain(expectedChainId)
 							}}

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { createStyles, Text, Space, Modal, Loader } from '@mantine/core'
+import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI, makeFetcher } from '@meemproject/api'
 import { useSockets, useWallet } from '@meemproject/react'
@@ -18,32 +18,7 @@ import {
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
-
-const useStyles = createStyles(() => ({
-	header: {
-		display: 'flex',
-		alignItems: 'center',
-		flexDirection: 'column',
-		paddingTop: 8,
-		paddingBottom: 8,
-		paddingLeft: 16,
-		paddingRight: 16,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	title: {
-		fontWeight: 600,
-		fontSize: 20
-	},
-	info: {
-		fontWeight: 600,
-		textAlign: 'center',
-		fontSize: 15
-	}
-}))
+import { useGlobalStyles } from '../Styles/GlobalStyles'
 
 interface IProps {
 	club?: Club
@@ -58,7 +33,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 }) => {
 	const wallet = useWallet()
 
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const { mutualMembersClient } = useCustomApollo()
 
@@ -387,17 +362,20 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={classes.header}>
+				<div className={design.modalHeader}>
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
-					<Text className={classes.title}>{`Saving changes...`}</Text>
+					<Text
+						className={design.tMediumBold}
+					>{`Saving changes...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={classes.info}
+						className={design.tSmallBold}
+						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

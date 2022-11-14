@@ -31,7 +31,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 	onMembersSaved,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [members, setMembers] = useState<ClubMember[]>([])
 
@@ -116,7 +116,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				size={'50%'}
 				padding={'sm'}
 				opened={isOpened}
-				title={<Text className={styles.tModalTitle}>Add Members</Text>}
+				title={<Text className={design.tMediumBold}>Add Members</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -124,11 +124,11 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				<TextInput
 					radius={20}
 					classNames={{
-						input: styles.fTextField
+						input: design.fTextField
 					}}
 					icon={<Search />}
 					placeholder={'Search Members'}
-					className={styles.fullWidth}
+					className={design.fullWidth}
 					size={'lg'}
 					onChange={event => {
 						if (event.target.value) {
@@ -147,8 +147,8 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						{filteredMembers.map(member => (
 							<div key={member.wallet}>
 								<Space h={16} />
-								<div className={styles.tListItemTitle}>
-									<div className={styles.centeredRow}>
+								<div>
+									<div className={design.centeredRow}>
 										<Checkbox
 											checked={member.chosen}
 											onChange={event => {
@@ -184,17 +184,13 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 										/>
 										<Space w={16} />
 										<div>
-											<Text
-												className={
-													styles.tListItemTitle
-												}
-											>
+											<Text className={design.tLargeBold}>
 												{member.displayName ??
 													'Club Member'}
 											</Text>
 											<Text
 												className={
-													styles.tListItemSubtitle
+													design.tExtraSmallFaded
 												}
 											>
 												{member.ens
@@ -235,9 +231,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					)}
 				<Space h={24} />
 
-				<div className={styles.row}>
+				<div className={design.row}>
 					<Button
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 						onClick={async () => {
 							const chosenMembers = members.filter(
 								member => member.chosen
@@ -261,7 +257,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						onClick={() => {
 							onModalClosed()
 						}}
-						className={styles.buttonGrey}
+						className={design.buttonGrey}
 					>
 						Cancel
 					</Button>

@@ -22,7 +22,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 	role,
 	club
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const [isDeletingRole, setIsDeletingRole] = useState(false)
 
@@ -86,7 +86,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				padding={'lg'}
 				withCloseButton={!isDeletingRole}
 				opened={isOpened}
-				title={<Text className={styles.tModalTitle}>Delete Role</Text>}
+				title={<Text className={design.tMediumBold}>Delete Role</Text>}
 				onClose={() => {
 					onModalClosed()
 				}}
@@ -94,13 +94,13 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				<Divider />
 				<Space h={24} />
 				<Text
-					className={styles.tSectionTitle}
+					className={design.tMediumBold}
 				>{`Are you sure you want to delete this role?`}</Text>
 				<Space h={32} />
-				<div className={styles.row}>
+				<div className={design.row}>
 					<Button
 						loading={isDeletingRole}
-						className={styles.buttonBlack}
+						className={design.buttonBlack}
 						onClick={async () => {
 							deleteRole()
 						}}
@@ -114,7 +114,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={styles.buttonGrey}
+								className={design.buttonGrey}
 							>
 								Cancel
 							</Button>

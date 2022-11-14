@@ -17,14 +17,14 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	onSaveChanges,
 	onRoleUpdated
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<div key={permission.id}>
 			<Space h={16} />
-			<div className={styles.spacedRow}>
+			<div className={design.spacedRow}>
 				<Text>{permission.name}</Text>
-				<div className={styles.centeredRow}>
+				<div className={design.centeredRow}>
 					{permission.locked && <Lock />}
 					<Space w={4} />
 					<Switch
@@ -75,9 +75,9 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h={14} />
-				<Text className={styles.tSectionTitle}>{`Permissions`}</Text>
+				<Text className={design.tMediumBold}>{`Permissions`}</Text>
 				<Space h={32} />
-				<Text className={styles.tSectionTitleSmall}>
+				<Text className={design.tSmallLabel}>
 					{`Contract Permissions (Admin Only)`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -91,7 +91,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				<Text className={styles.tSectionTitleSmall}>
+				<Text className={design.tSmallLabel}>
 					{`Club Permissions`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -107,7 +107,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				)}
 				<Space h={32} />
 
-				<Button className={styles.buttonBlack} onClick={onSaveChanges}>
+				<Button className={design.buttonBlack} onClick={onSaveChanges}>
 					Save Changes
 				</Button>
 			</div>

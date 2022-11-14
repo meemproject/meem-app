@@ -12,7 +12,7 @@ export const DiscordRoleRedirectModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const closeModal = useCallback(() => {
 		onModalClosed()
@@ -33,17 +33,19 @@ export const DiscordRoleRedirectModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={styles.modalHeader}>
+				<div className={design.modalHeader}>
 					<Space h={128} />
-					<Text className={styles.tTitle}>{`Redirecting...`}</Text>
+					<Text
+						className={design.tLargeBold}
+					>{`Redirecting...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={styles.tSubtitle}
+						className={design.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Just a moment.`}</Text>
 				</div>
-				<Space h={12} />
+				<Space h={16} />
 			</Modal>
 		</>
 	)

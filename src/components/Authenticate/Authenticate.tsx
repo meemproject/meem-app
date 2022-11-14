@@ -13,7 +13,7 @@ const MAuthenticate: React.FC = () => {
 	const router = useRouter()
 
 	const [isLoading, setIsLoading] = useState(false)
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const getNonceFetcher = makeFetcher<
 		MeemAPI.v1.GetNonce.IQueryParams,
@@ -122,10 +122,10 @@ const MAuthenticate: React.FC = () => {
 	return (
 		<Center>
 			<Container>
-				<div className={styles.centered}>
+				<div className={design.centered}>
 					<Space h={80} />
 					<Text
-						className={styles.tTitle}
+						className={design.tLargeBold}
 					>{`Let's make sure it's really you.`}</Text>
 					<Space h={16} />
 
@@ -143,7 +143,7 @@ const MAuthenticate: React.FC = () => {
 					<div>
 						{!isLoading && !wallet.isConnected && (
 							<Button
-								className={styles.buttonBlack}
+								className={design.buttonBlack}
 								onClick={connectWallet}
 							>
 								Connect Wallet
@@ -151,7 +151,7 @@ const MAuthenticate: React.FC = () => {
 						)}
 						{!isLoading && wallet.isConnected && (
 							<Button
-								className={styles.buttonBlack}
+								className={design.buttonBlack}
 								onClick={sign}
 							>
 								Sign Message

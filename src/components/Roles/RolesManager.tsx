@@ -43,7 +43,7 @@ interface Tab {
 
 export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
-	const { classes: styles } = useGlobalStyles()
+	const { classes: design } = useGlobalStyles()
 	const router = useRouter()
 	const wallet = useWallet()
 
@@ -178,27 +178,27 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={styles.header}>
-						<div className={styles.spacedRowCentered}>
+					<div className={design.pageHeader}>
+						<div className={design.spacedRowCentered}>
 							<Image
 								width={56}
 								height={56}
-								className={styles.imageClubLogo}
+								className={design.imageClubLogo}
 								src={club.image}
 							/>
-							<div className={styles.headerTitleContainer}>
-								<Text className={styles.tHeaderTitleText}>
+							<div className={design.pageHeaderTitleContainer}>
+								<Text className={design.tLargeBold}>
 									{club.name}
 								</Text>
 								<div
-									className={styles.row}
+									className={design.row}
 									style={{ marginTop: 8 }}
 								>
 									<Text
-										className={styles.tSmallSubtitle}
+										className={design.tExtraSmallFaded}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
-										className={styles.copyIcon}
+										className={design.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
@@ -221,7 +221,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 							</div>
 						</div>
 						<a
-							className={styles.headerExitButton}
+							className={design.pageHeaderExitButton}
 							onClick={navigateToClubAdmin}
 						>
 							<Image src="/delete.png" width={24} height={24} />
@@ -240,7 +240,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 						</Container>
 					)}
 					{club?.isCurrentUserClubAdmin && (
-						<div className={styles.panelLayoutContainer}>
+						<div className={design.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -256,7 +256,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={styles.panelLayoutNavBar}
+								className={design.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -265,31 +265,29 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								p="xs"
 							>
 								<div
-									className={styles.centeredRow}
+									className={design.centeredRow}
 									style={{ marginLeft: 18, marginBottom: 24 }}
 								>
 									<ArrowLeft
-										className={styles.clickable}
+										className={design.clickable}
 										onClick={() => {
 											navigateToClubAdmin()
 										}}
 									/>
 									<Space w={8} />
-									<Text className={styles.tSectionTitle}>
+									<Text className={design.tMediumBold}>
 										Manage Roles
 									</Text>
 								</div>
 								<div
-									className={styles.spacedRowCentered}
+									className={design.spacedRowCentered}
 									style={{ marginLeft: 20 }}
 								>
-									<Text
-										className={styles.tPanelLayoutNavHeader}
-									>
+									<Text className={design.tSmallBoldFaded}>
 										ROLES
 									</Text>
 									<Plus
-										className={styles.clickable}
+										className={design.clickable}
 										onClick={() => {
 											addRole()
 										}}
@@ -301,7 +299,9 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 									<NavLink
 										key={tab.name}
 										style={{ marginLeft: 8 }}
-										className={styles.panelLayoutNavItem}
+										className={
+											design.pagePanelLayoutNavItem
+										}
 										active={
 											currentTab &&
 											currentTab.name === tab.name
@@ -315,15 +315,15 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								))}
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={styles.panelLayoutContent}>
+								<div className={design.pagePanelLayoutContent}>
 									{tabs.map(tab => (
 										<div key={tab.name}>
 											<div
 												className={
 													currentTab &&
 													currentTab.name === tab.name
-														? styles.visibleContainer
-														: styles.invisibleContainer
+														? design.visibleContainer
+														: design.invisibleContainer
 												}
 											>
 												<RolesManagerContent

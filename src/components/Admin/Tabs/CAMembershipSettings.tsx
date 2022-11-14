@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Button,
 	Space,
@@ -20,145 +19,15 @@ import { Clock } from 'tabler-icons-react'
 import { MembershipSettings, Club } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import ClubClubContext from '../../Detail/ClubClubProvider'
+import { useGlobalStyles } from '../../Styles/GlobalStyles'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
-
-const useStyles = createStyles(theme => ({
-	buttonSaveChanges: {
-		marginTop: 48,
-		marginBottom: 48,
-
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-
-	// Membership tab
-	manageClubHeader: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-	membershipText: {
-		fontSize: 20,
-		marginBottom: 8,
-		lineHeight: 2,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	membershipTextAdditionalReq: {
-		fontSize: 20,
-		marginBottom: 16,
-		marginTop: 16,
-		lineHeight: 2,
-		position: 'relative',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-
-	membershipSelector: {
-		padding: 4,
-		borderRadius: 8,
-		fontWeight: 'bold',
-		backgroundColor: 'rgba(255, 102, 81, 0.1)',
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer'
-	},
-	addRequirementButton: {
-		backgroundColor: 'white',
-		color: 'rgba(255, 102, 81, 1)',
-		border: '1px dashed rgba(255, 102, 81, 1)',
-		borderRadius: 24,
-		'&:hover': {
-			backgroundColor: 'rgba(255, 102, 81, 0.05)'
-		},
-		marginBottom: 8
-	},
-	membershipSettingHeader: {
-		fontSize: 16,
-		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: 600,
-		marginBottom: 12
-	},
-	removeAdditionalReq: {
-		color: 'rgba(255, 102, 81, 1)',
-		cursor: 'pointer',
-		marginRight: 8,
-		marginBottom: -4
-	},
-	radio: { fontWeight: 600, fontFamily: 'Inter' },
-	visible: {
-		display: 'block'
-	},
-	invisible: {
-		display: 'none'
-	},
-	buttonModalSave: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	buttonModalCancel: {
-		marginLeft: 8,
-		backgroundColor: 'rgba(0, 0, 0, 0.3)',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	modalHeaderText: {
-		fontSize: 18,
-		fontWeight: 600,
-		color: 'rgba(0, 0, 0, 0.6)',
-		marginBottom: 4,
-		marginTop: 16
-	},
-	modalInfoText: {
-		fontSize: 14,
-		opacity: 0.6
-	},
-	// Admins
-	clubAdminsPrompt: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		marginTop: 36
-	},
-	clubAdminsInstructions: {
-		fontSize: 18,
-		marginBottom: 16,
-		color: 'rgba(0, 0, 0, 0.6)'
-	},
-	adminsTextAreaContainer: {
-		position: 'relative'
-	},
-	adminsTextArea: {
-		paddingTop: 48,
-		paddingLeft: 32
-	},
-	primaryAdminChip: {
-		position: 'absolute',
-		pointerEvents: 'none',
-		top: 12,
-		left: 12
-	},
-	primaryAdminChipContents: {
-		display: 'flex',
-		alignItems: 'center'
-	}
-}))
 
 interface IProps {
 	club?: Club
 }
 
 export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
-	const { classes } = useStyles()
+	const { classes: design } = useGlobalStyles()
 
 	const router = useRouter()
 
@@ -332,17 +201,20 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={classes.manageClubHeader}>
-					Membership Settings
-				</Text>
+				<Text className={design.tLargeBold}>Membership Settings</Text>
+				<Space h={32} />
 
-				<Text className={classes.membershipSettingHeader}>Price</Text>
+				<Text className={design.tSmallBoldFaded}>Price</Text>
+				<Space h={16} />
 
-				<Text className={classes.membershipText}>
+				<Text
+					className={design.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={classes.membershipSelector}>
+						<span className={design.fOrangeSelectableSpan}>
 							{isNaN(costToJoin) || costToJoin === 0
 								? 'free'
 								: costToJoin}
@@ -356,7 +228,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						<>
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
-								<span className={classes.membershipSelector}>
+								<span className={design.fOrangeSelectableSpan}>
 									{quickTruncate(membershipFundsAddress)}
 								</span>
 							</a>
@@ -366,13 +238,14 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={classes.membershipSettingHeader}>
-					Capacity
-				</Text>
-				<Text className={classes.membershipText}>
+				<Text className={design.tSmallBoldFaded}>Capacity</Text>
+				<Text
+					className={design.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={classes.membershipSelector}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipQuantity === 0 ||
 							isNaN(membershipQuantity)
 								? 'unlimited'
@@ -382,12 +255,15 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={classes.membershipSettingHeader}>Timing</Text>
+				<Text className={design.tSmallBoldFaded}>Timing</Text>
 
-				<Text className={classes.membershipText}>
+				<Text
+					className={design.tMedium}
+					style={{ marginBottom: 8, lineHeight: 2 }}
+				>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={classes.membershipSelector}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipStartDate === undefined
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
@@ -399,7 +275,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>{' '}
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
-						<span className={classes.membershipSelector}>
+						<span className={design.fOrangeSelectableSpan}>
 							{membershipEndDate === undefined
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
@@ -411,11 +287,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>
 					.
 				</Text>
-
+				<Space h={24} />
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
-					className={classes.buttonSaveChanges}
+					className={design.buttonBlack}
 					onClick={saveChanges}
 				>
 					{'Save Changes'}
@@ -433,7 +309,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={classes.modalHeaderText}>
+					<Text className={design.tMediumBoldFaded}>
 						Enter cost to join
 					</Text>
 					<TextInput
@@ -465,7 +341,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={classes.modalHeaderText}>
+					<Text className={design.tMediumBoldFaded}>
 						Send funds to this address
 					</Text>
 					<TextInput
@@ -508,7 +384,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipCostModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -525,7 +401,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -553,7 +429,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={classes.modalHeaderText}>
+							<Text className={design.tMediumBoldFaded}>
 								Enter total memberships
 							</Text>
 
@@ -596,7 +472,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipQuantityModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -613,7 +489,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -693,7 +569,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingStartModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
@@ -710,7 +586,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: classes.radio }}
+						classNames={{ label: design.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -790,7 +666,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingEndModalOpened(false)
 						}}
-						className={classes.buttonModalSave}
+						className={design.buttonBlack}
 					>
 						Done
 					</Button>
