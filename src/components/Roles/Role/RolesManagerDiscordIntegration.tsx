@@ -7,7 +7,7 @@ import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'
 import { ExternalLink } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleDiscordConnectServerModal } from './Modals/RoleDiscordConnectServerModal'
 import { RoleDiscordLaunchingModal } from './Modals/RoleDiscordLaunchingModal'
 import { RoleDiscordNewRoleModal } from './Modals/RoleDiscordNewRoleModal'
@@ -22,7 +22,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 	role,
 	club
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isFetchingGuildInfo, setIsFetchingGuildInfo] = useState(true)
 
@@ -125,7 +125,9 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 	return (
 		<>
 			<div>
-				<Text className={design.tSmallLabel}>DISCORD ROLE</Text>
+				<Text className={clubsTheme.tExtraSmallLabel}>
+					DISCORD ROLE
+				</Text>
 				{role?.id === 'addRole' && (
 					<div>
 						<Space h={8} />
@@ -152,7 +154,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 								{!guildPlatform && discordAccessToken && (
 									<div>
 										<Button
-											className={design.buttonWhite}
+											className={clubsTheme.buttonWhite}
 											leftIcon={<Discord />}
 											onClick={() => {
 												if (
@@ -179,7 +181,9 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 									discordAccessToken && (
 										<div>
 											<Button
-												className={design.buttonWhite}
+												className={
+													clubsTheme.buttonWhite
+												}
 												leftIcon={<Discord />}
 												onClick={() => {
 													setIsRoleDiscordConnectModalOpened(
@@ -195,7 +199,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 
 								{guildPlatform && role?.guildDiscordServerId && (
 									<div>
-										<div className={design.centeredRow}>
+										<div className={clubsTheme.centeredRow}>
 											<Image
 												src={
 													guildPlatform
@@ -217,7 +221,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 											<div>
 												<Text
 													className={
-														design.tLargeBold
+														clubsTheme.tLargeBold
 													}
 												>
 													{
@@ -225,7 +229,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 													}
 												</Text>
 												{/* <Text
-													className={design.tLink}
+													className={clubsTheme.tLink}
 													onClick={() => {
 														if (
 															chosenDiscordServer
@@ -244,18 +248,18 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 										<Space h={24} />
 										<div
 											className={
-												design.integrationGridItemEnabled
+												clubsTheme.integrationGridItemEnabled
 											}
 											style={{ width: 400 }}
 										>
 											<div
 												className={
-													design.integrationGridItemEnabledHeaderBackground
+													clubsTheme.integrationGridItemEnabledHeaderBackground
 												}
 											/>
 											<div
 												className={
-													design.integrationGridItemHeader
+													clubsTheme.integrationGridItemHeader
 												}
 											>
 												<Image
@@ -277,7 +281,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 											</div>
 											<div
 												className={
-													design.integrationGridItemActions
+													clubsTheme.integrationGridItemActions
 												}
 											>
 												<a
@@ -289,7 +293,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												>
 													<div
 														className={
-															design.integrationGridItemAction
+															clubsTheme.integrationGridItemAction
 														}
 													>
 														<ExternalLink
@@ -298,7 +302,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 														<Space w={4} />
 														<Text
 															className={
-																design.tExtraSmall
+																clubsTheme.tExtraSmall
 															}
 														>
 															Launch Discord
@@ -320,14 +324,14 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												>
 													<div
 														className={
-															design.integrationGridItemAction
+															clubsTheme.integrationGridItemAction
 														}
 													>
 														<Settings size={20} />
 														<Space w={4} />
 														<Text
 															className={
-																design.tExtraSmall
+																clubsTheme.tExtraSmall
 															}
 														>
 															Settings
@@ -344,7 +348,9 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 									!role?.guildDiscordServerId && (
 										<div>
 											<Button
-												className={design.buttonWhite}
+												className={
+													clubsTheme.buttonWhite
+												}
 												leftIcon={<Discord />}
 												onClick={() => {
 													startDiscordAuth()

@@ -23,7 +23,7 @@ import clubFromMeemContract, {
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { colorGreen, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 interface IProps {
 	membershipSettings?: MembershipSettings
 	isOpened: boolean
@@ -41,7 +41,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 	const { userClient } = useCustomApollo()
 
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
@@ -106,7 +106,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				radius: 'lg',
 				title: 'Success!',
 				autoClose: 5000,
-				color: 'green',
+				color: colorGreen,
 				icon: <Check color="green" />,
 
 				message: `Your club has been published.`
@@ -169,7 +169,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					radius: 'lg',
 					title: 'Error Creating Club',
 					message: 'Please connect your wallet first.',
-					color: 'red'
+					color: colorPink
 				})
 				closeModal()
 				setHasStartedCreating(false)
@@ -183,7 +183,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					title: 'Error Creating Club',
 					message:
 						'An error occurred while creating the club. Please try again.',
-					color: 'red'
+					color: colorPink
 				})
 
 				closeModal()
@@ -257,7 +257,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 						radius: 'lg',
 						title: 'Oops!',
 						message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
-						color: 'red'
+						color: colorPink
 					})
 					closeModal()
 					setHasStartedCreating(false)
@@ -319,7 +319,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					title: 'Error Creating Club',
 					message:
 						'An error occurred while creating the club. Please try again.',
-					color: 'red'
+					color: colorPink
 				})
 
 				closeModal()
@@ -341,7 +341,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 							title: 'Club Creation Failed',
 							message:
 								'An error occurred while creating the club. Please try again.',
-							color: 'red'
+							color: colorPink
 						})
 
 						closeModal()
@@ -356,7 +356,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 							title: 'Transaction limit exceeded',
 							message:
 								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
-							color: 'red'
+							color: colorPink
 						})
 					} else {
 						// Handle a generic socket error too
@@ -365,7 +365,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 							title: 'Club Creation Failed',
 							message:
 								'An error occurred while creating the club. Please try again.',
-							color: 'red'
+							color: colorPink
 						})
 
 						closeModal()
@@ -450,27 +450,28 @@ export const CreateClubModal: React.FC<IProps> = ({
 				opened={isOpened}
 				onClose={() => closeModal()}
 			>
-				<div className={design.modalHeader}>
+				<div className={clubsTheme.modalHeader}>
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
-						className={design.tMediumBold}
+						className={clubsTheme.tLargeBold}
 					>{`We're creating your club!`}</Text>
 					<Space h={32} />
 					<Image
 						height={120}
 						width={120}
 						fit={'cover'}
-						className={design.imageClubLogo}
+						className={clubsTheme.imageClubLogo}
 						src={Cookies.get(CookieKeys.clubImage)}
 					/>
-					<Text className={design.tLargeBold}>
+					<Space h={16} />
+					<Text className={clubsTheme.tLargeBold}>
 						{Cookies.get(CookieKeys.clubName)}
 					</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tExtraSmallBold}
+						className={clubsTheme.tExtraSmall}
 						style={{ textAlign: 'center' }}
 					>
 						This could take a few minutes.
@@ -478,11 +479,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 					<Space h={16} />
 
 					<Text
-						className={design.tExtraSmallBold}
+						className={clubsTheme.tExtraSmall}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>
-				<Space h={16} />
+				<Space h={8} />
 			</Modal>
 		</>
 	)

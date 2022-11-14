@@ -18,7 +18,7 @@ import {
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { colorGreen, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 
 interface IProps {
 	club?: Club
@@ -33,7 +33,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 }) => {
 	const wallet = useWallet()
 
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const { mutualMembersClient } = useCustomApollo()
 
@@ -161,7 +161,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						radius: 'lg',
 						title: 'Error saving club settings',
 						message: `Please get in touch!`,
-						color: 'red'
+						color: colorPink
 					})
 					closeModal()
 					return
@@ -172,7 +172,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						radius: 'lg',
 						title: 'Oops!',
 						message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
-						color: 'red'
+						color: colorPink
 					})
 					closeModal()
 					return
@@ -261,7 +261,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						radius: 'lg',
 						title: 'Success!',
 						autoClose: 5000,
-						color: 'green',
+						color: colorGreen,
 						icon: <Check color="green" />,
 
 						message: `${clubData.MeemContracts[0].name} has been updated.`
@@ -308,7 +308,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							title: 'Transaction limit exceeded',
 							message:
 								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
-							color: 'red'
+							color: colorPink
 						})
 					} else {
 						showNotification({
@@ -316,7 +316,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							title: 'Error saving changes',
 							message:
 								'An error occurred while saving changes. Please try again.',
-							color: 'red'
+							color: colorPink
 						})
 					}
 
@@ -362,16 +362,16 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={design.modalHeader}>
+				<div className={clubsTheme.modalHeader}>
 					<Loader color="red" variant="oval" />
 					<Space h={16} />
 					<Text
-						className={design.tMediumBold}
+						className={clubsTheme.tMediumBold}
 					>{`Saving changes...`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={design.tSmallBold}
+						className={clubsTheme.tSmallBold}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>

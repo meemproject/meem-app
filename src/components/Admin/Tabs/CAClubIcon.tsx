@@ -9,7 +9,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Club } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorDarkGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -21,7 +21,7 @@ interface IProps {
 }
 
 export const CAClubIcon: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [hasLoadedClubData, setHasLoadedClubData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -161,17 +161,17 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<>
-			<Space h={16} />
-			<Text className={design.tMediumBold}>Club Icon</Text>
-			<Space h={32} />
-			<Text className={design.tMediumBold}>
+			<Space h={12} />
+			<Text className={clubsTheme.tLargeBold}>Club Icon</Text>
+			<Space h={24} />
+			<Text className={clubsTheme.tMediumBold}>
 				Upload an icon for your club.
 			</Text>
 			<Text
-				className={design.tExtraSmall}
+				className={clubsTheme.tExtraSmall}
 				style={{
 					maxWidth: 650,
-					color: 'rgba(45, 28, 28, 0.6)'
+					color: colorDarkGrey
 				}}
 			>
 				This will be your club’s membership token. You can change it
@@ -181,10 +181,10 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 
 			<Space h={16} />
 			{smallClubLogo.length === 0 && !isLoadingImage && (
-				<div className={design.row}>
+				<div className={clubsTheme.row}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={design.buttonWhite}
+						className={clubsTheme.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -192,7 +192,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={design.buttonWhite}
+						className={clubsTheme.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
@@ -201,9 +201,9 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 			)}
 			{isLoadingImage && <Loader color="red" variant="oval" />}
 			{!isLoadingImage && smallClubLogo.length > 0 && (
-				<div className={design.imageClubLogoContainer}>
+				<div className={clubsTheme.imageClubLogoContainer}>
 					<Image
-						className={design.imageClubLogo}
+						className={clubsTheme.imageClubLogo}
 						src={smallClubLogo}
 						width={200}
 						height={200}
@@ -211,7 +211,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					/>
 					<a onClick={deleteImage}>
 						<Image
-							className={design.imageClubLogoDeleteButton}
+							className={clubsTheme.imageClubLogoDeleteButton}
 							src="/delete.png"
 							width={24}
 							height={24}
@@ -219,9 +219,9 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					</a>
 				</div>
 			)}
-			<Space h={smallClubLogo.length > 0 ? 148 : 32} />
+			<Space h={smallClubLogo.length > 0 ? 148 : 40} />
 			<Button
-				className={design.buttonBlack}
+				className={clubsTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>
@@ -236,7 +236,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					setSaveChangesModalOpened(false)
 				}}
 			/>
-			<div id="emojiCanvas" className={design.emojiCanvas}>
+			<div id="emojiCanvas" className={clubsTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
 			<Modal

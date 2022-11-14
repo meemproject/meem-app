@@ -20,7 +20,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import IdentityContext from './IdentityProvider'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
@@ -33,7 +33,7 @@ enum Tab {
 
 export const ProfileComponent: React.FC = () => {
 	// General properties / tab management
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 	const id = useContext(IdentityContext)
@@ -159,7 +159,7 @@ export const ProfileComponent: React.FC = () => {
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: 'red',
+						color: colorPink,
 						icon: <AlertCircle />,
 						message: `Unable to authenticate with Discord. Please try again later.`
 					})
@@ -172,7 +172,7 @@ export const ProfileComponent: React.FC = () => {
 				showNotification({
 					title: 'Error',
 					autoClose: 5000,
-					color: 'red',
+					color: colorPink,
 					icon: <AlertCircle />,
 					message: `Unable to authenticate with Discord. Please try again later.`
 				})
@@ -246,8 +246,8 @@ export const ProfileComponent: React.FC = () => {
 				!isSigningIn &&
 				id.identity && (
 					<>
-						<div className={design.pageHeader}>
-							<div className={design.spacedRowCentered}>
+						<div className={clubsTheme.pageHeader}>
+							<div className={clubsTheme.spacedRowCentered}>
 								{id.identity.profilePic && (
 									<>
 										<Image
@@ -255,7 +255,7 @@ export const ProfileComponent: React.FC = () => {
 											height={64}
 											width={64}
 											fit={'cover'}
-											className={design.imageClubLogo}
+											className={clubsTheme.imageClubLogo}
 											src={id.identity.profilePic ?? ''}
 										/>
 									</>
@@ -263,16 +263,20 @@ export const ProfileComponent: React.FC = () => {
 
 								{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 								<div
-									className={design.pageHeaderTitleContainer}
+									className={
+										clubsTheme.pageHeaderTitleContainer
+									}
 								>
-									<Text className={design.tLargeBold}>
+									<Text className={clubsTheme.tLargeBold}>
 										{id.identity.displayName ??
 											'My Profile'}
 									</Text>
 									<Space h={8} />
-									<div className={design.row}>
+									<div className={clubsTheme.row}>
 										<Text
-											className={design.tExtraSmallFaded}
+											className={
+												clubsTheme.tExtraSmallFaded
+											}
 										>
 											{id.identity.ensAddress
 												? id.identity.ensAddress
@@ -286,7 +290,9 @@ export const ProfileComponent: React.FC = () => {
 										{id.identity.id && (
 											<>
 												<Image
-													className={design.copyIcon}
+													className={
+														clubsTheme.copyIcon
+													}
 													src="/copy.png"
 													height={20}
 													onClick={() => {
@@ -315,7 +321,7 @@ export const ProfileComponent: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<div className={design.pagePanelLayoutContainer}>
+						<div className={clubsTheme.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -331,7 +337,7 @@ export const ProfileComponent: React.FC = () => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={design.pagePanelLayoutNavBar}
+								className={clubsTheme.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -340,13 +346,15 @@ export const ProfileComponent: React.FC = () => {
 								p="xs"
 							>
 								<Text
-									className={design.tExtraSmallLabel}
+									className={clubsTheme.tExtraSmallLabel}
 									style={{ marginLeft: 20, marginBottom: 8 }}
 								>
 									SETTINGS
 								</Text>
 								<NavLink
-									className={design.pagePanelLayoutNavItem}
+									className={
+										clubsTheme.pagePanelLayoutNavItem
+									}
 									active={currentTab === Tab.Profile}
 									label={'Manage Identity'}
 									onClick={() => {
@@ -355,7 +363,9 @@ export const ProfileComponent: React.FC = () => {
 									}}
 								/>
 								<NavLink
-									className={design.pagePanelLayoutNavItem}
+									className={
+										clubsTheme.pagePanelLayoutNavItem
+									}
 									active={currentTab === Tab.MyClubs}
 									label={'My Clubs'}
 									onClick={() => {
@@ -365,7 +375,11 @@ export const ProfileComponent: React.FC = () => {
 								/>
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={design.pagePanelLayoutContent}>
+								<div
+									className={
+										clubsTheme.pagePanelLayoutContent
+									}
+								>
 									{currentTab === Tab.Profile && (
 										<ManageIdentityComponent />
 									)}

@@ -13,10 +13,10 @@ import { SUB_MY_CLUBS } from '../../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { hostnameToChainId } from '../../App'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 export const MyClubsComponent: React.FC = () => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
@@ -86,13 +86,13 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length === 0 && !loading && (
 				<>
 					<Space h={16} />
-					<Text className={design.tMediumBold}>My Clubs</Text>
+					<Text className={clubsTheme.tMediumBold}>My Clubs</Text>
 					<Space h={32} />
-					<Text className={design.tMediumBold}>
+					<Text className={clubsTheme.tMediumBold}>
 						{`You haven't joined any clubs!`}
 					</Text>
 					<Space h={16} />
-					<Text className={design.tLink}>
+					<Text className={clubsTheme.tLink}>
 						<a onClick={navigateToCreate}>Start a new one?</a>
 					</Text>
 				</>
@@ -100,7 +100,7 @@ export const MyClubsComponent: React.FC = () => {
 			{clubs.length > 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={design.tLargeBold}>My Clubs</Text>
+					<Text className={clubsTheme.tLargeBold}>My Clubs</Text>
 					<Space h={32} />
 
 					<Grid style={{ maxWidth: 1000 }}>
@@ -115,14 +115,14 @@ export const MyClubsComponent: React.FC = () => {
 							>
 								<div
 									key={club.address}
-									className={design.gridItem}
+									className={clubsTheme.gridItem}
 									onClick={() => {
 										navigateToClub(club.slug ?? '')
 									}}
 								>
-									<div className={design.row}>
+									<div className={clubsTheme.row}>
 										<Image
-											className={design.imageClubLogo}
+											className={clubsTheme.imageClubLogo}
 											src={club.image ?? ''}
 											width={40}
 											height={40}
@@ -131,12 +131,14 @@ export const MyClubsComponent: React.FC = () => {
 										/>
 										<Space w="xs" />
 
-										<div className={design.tEllipsis}>
-											<Text className={design.tEllipsis}>
+										<div className={clubsTheme.tEllipsis}>
+											<Text
+												className={clubsTheme.tEllipsis}
+											>
 												{club.name}
 											</Text>
 											<Space h={8} />
-											<div className={design.row}>
+											<div className={clubsTheme.row}>
 												<Badge
 													variant="gradient"
 													gradient={{
@@ -145,8 +147,8 @@ export const MyClubsComponent: React.FC = () => {
 														deg: 35
 													}}
 													classNames={{
-														inner: design.tExtraSmallBoldBlack,
-														root: design.badge
+														inner: clubsTheme.tExtraSmallBoldBlack,
+														root: clubsTheme.badge
 													}}
 													leftSection={
 														<>

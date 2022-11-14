@@ -30,7 +30,7 @@ import clubFromMeemContract, {
 } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface IProps {
 	slug: string
@@ -43,7 +43,7 @@ interface Tab {
 
 export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	// General properties / tab management
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 
@@ -178,27 +178,38 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 
 			{!isLoadingClub && club?.name && (
 				<>
-					<div className={design.pageHeader}>
-						<div className={design.spacedRowCentered}>
+					<div className={clubsTheme.pageHeader}>
+						<div className={clubsTheme.spacedRowCentered}>
 							<Image
 								width={56}
 								height={56}
-								className={design.imageClubLogo}
+								className={clubsTheme.imageClubLogo}
 								src={club.image}
 							/>
-							<div className={design.pageHeaderTitleContainer}>
-								<Text className={design.tLargeBold}>
+							<div
+								className={clubsTheme.pageHeaderTitleContainer}
+							>
+								<Text className={clubsTheme.tLargeBold}>
 									{club.name}
 								</Text>
 								<div
-									className={design.row}
-									style={{ marginTop: 8 }}
+									className={clubsTheme.row}
+									style={{
+										marginTop: 8
+									}}
 								>
 									<Text
-										className={design.tExtraSmallFaded}
+										className={clubsTheme.tExtraSmallFaded}
+										style={{
+											maxWidth: 220,
+											textOverflow: 'ellipsis',
+											msTextOverflow: 'ellipsis',
+											whiteSpace: 'nowrap',
+											overflow: 'hidden'
+										}}
 									>{`${window.location.origin}/${club.slug}`}</Text>
 									<Image
-										className={design.copyIcon}
+										className={clubsTheme.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
@@ -221,7 +232,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 							</div>
 						</div>
 						<a
-							className={design.pageHeaderExitButton}
+							className={clubsTheme.pageHeaderExitButton}
 							onClick={navigateToClubAdmin}
 						>
 							<Image src="/delete.png" width={24} height={24} />
@@ -240,7 +251,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 						</Container>
 					)}
 					{club?.isCurrentUserClubAdmin && (
-						<div className={design.pagePanelLayoutContainer}>
+						<div className={clubsTheme.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -256,7 +267,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={design.pagePanelLayoutNavBar}
+								className={clubsTheme.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -265,29 +276,34 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								p="xs"
 							>
 								<div
-									className={design.centeredRow}
+									className={clubsTheme.centeredRow}
 									style={{ marginLeft: 18, marginBottom: 24 }}
 								>
 									<ArrowLeft
-										className={design.clickable}
+										className={clubsTheme.clickable}
 										onClick={() => {
 											navigateToClubAdmin()
 										}}
 									/>
 									<Space w={8} />
-									<Text className={design.tMediumBold}>
+									<Text className={clubsTheme.tLargeBold}>
 										Manage Roles
 									</Text>
 								</div>
 								<div
-									className={design.spacedRowCentered}
+									className={clubsTheme.spacedRowCentered}
 									style={{ marginLeft: 20 }}
 								>
-									<Text className={design.tSmallBoldFaded}>
+									<Text
+										className={clubsTheme.tExtraSmallLabel}
+										style={{
+											marginLeft: 10
+										}}
+									>
 										ROLES
 									</Text>
 									<Plus
-										className={design.clickable}
+										className={clubsTheme.clickable}
 										onClick={() => {
 											addRole()
 										}}
@@ -300,7 +316,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 										key={tab.name}
 										style={{ marginLeft: 8 }}
 										className={
-											design.pagePanelLayoutNavItem
+											clubsTheme.pagePanelLayoutNavItem
 										}
 										active={
 											currentTab &&
@@ -315,15 +331,19 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 								))}
 							</Navbar>
 							{!mobileNavBarVisible && (
-								<div className={design.pagePanelLayoutContent}>
+								<div
+									className={
+										clubsTheme.pagePanelLayoutContent
+									}
+								>
 									{tabs.map(tab => (
 										<div key={tab.name}>
 											<div
 												className={
 													currentTab &&
 													currentTab.name === tab.name
-														? design.visibleContainer
-														: design.invisibleContainer
+														? clubsTheme.visibleContainer
+														: clubsTheme.invisibleContainer
 												}
 											>
 												<RolesManagerContent

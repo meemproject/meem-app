@@ -3,7 +3,7 @@ import { Text, Space, Switch, Divider, Button } from '@mantine/core'
 import React from 'react'
 import { Lock } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	role?: ClubRole
@@ -17,14 +17,14 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	onSaveChanges,
 	onRoleUpdated
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const permissionItem = (permission: ClubRolePermission) => (
 		<div key={permission.id}>
-			<Space h={16} />
-			<div className={design.spacedRow}>
+			<Space h={22} />
+			<div className={clubsTheme.spacedRow}>
 				<Text>{permission.name}</Text>
-				<div className={design.centeredRow}>
+				<div className={clubsTheme.centeredRow}>
 					{permission.locked && <Lock />}
 					<Space w={4} />
 					<Switch
@@ -74,10 +74,8 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	return (
 		<>
 			<div>
-				<Space h={14} />
-				<Text className={design.tMediumBold}>{`Permissions`}</Text>
-				<Space h={32} />
-				<Text className={design.tSmallLabel}>
+				<Space h={24} />
+				<Text className={clubsTheme.tExtraSmallLabel}>
 					{`Contract Permissions (Admin Only)`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -91,7 +89,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				<Text className={design.tSmallLabel}>
+				<Text className={clubsTheme.tExtraSmallLabel}>
 					{`Club Permissions`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -105,9 +103,12 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 							.map(permission => permissionItem(permission))}
 					</>
 				)}
-				<Space h={32} />
+				<Space h={40} />
 
-				<Button className={design.buttonBlack} onClick={onSaveChanges}>
+				<Button
+					className={clubsTheme.buttonBlack}
+					onClick={onSaveChanges}
+				>
 					Save Changes
 				</Button>
 			</div>

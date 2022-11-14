@@ -5,11 +5,11 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubCreationMembershipSettings } from './ClubCreationMembershipSettings'
 
 export const CreatePermissionsComponent: React.FC = () => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const [clubName, setClubName] = useState('')
 	const router = useRouter()
@@ -42,12 +42,12 @@ export const CreatePermissionsComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={design.pageHeader}>
+			<div className={clubsTheme.pageHeader}>
 				<div>
-					<Text className={design.tSmallBoldFaded}>
+					<Text className={clubsTheme.tSmallBoldFaded}>
 						Create a club
 					</Text>
-					<Text className={design.tLargeBold}>{clubName}</Text>
+					<Text className={clubsTheme.tLargeBold}>{clubName}</Text>
 				</div>
 			</div>
 

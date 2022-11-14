@@ -3,6 +3,7 @@
 import { createStyles } from '@mantine/core'
 import { color } from 'html2canvas/dist/types/css/types/color'
 
+// Primary Palette
 export const colorBlack = '#000000'
 export const colorDarkGrey = '#444444'
 export const colorGrey = '#E1E1E1'
@@ -11,9 +12,12 @@ export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
 export const colorPink = '#FF6651'
 export const colorLightPink = '#FFF0EE'
-export const colorGreen = '#1DAD4E'
 
-export const useGlobalStyles = createStyles(theme => ({
+// Utility colors
+export const colorGreen = '#1DAD4E'
+export const colorVerified = 'rgba(62, 162, 255, 1)'
+
+export const useClubsTheme = createStyles(theme => ({
 	// Buttons
 	buttonBlack: {
 		backgroundColor: colorBlack,
@@ -190,12 +194,12 @@ export const useGlobalStyles = createStyles(theme => ({
 		position: 'relative'
 	},
 	integrationGridItemEnabledHeaderBackground: {
-		backgroundColor: colorLightestGrey,
+		backgroundColor: colorWhite,
 		position: 'absolute',
 		top: 0,
 		left: 0,
 		right: 0,
-		height: 53,
+		height: 48,
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16
 	},
@@ -245,7 +249,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		}
 	},
 	pageHeaderExitButton: {
-		marginRight: 48,
+		marginRight: 32,
 		marginLeft: 'auto',
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
@@ -256,6 +260,7 @@ export const useGlobalStyles = createStyles(theme => ({
 	// Page Footer
 	pageFooterContainer: {
 		position: 'fixed',
+		zIndex: 5,
 		bottom: 0,
 		left: 0,
 		right: 0
@@ -300,7 +305,7 @@ export const useGlobalStyles = createStyles(theme => ({
 		maxWidth: 1000,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8,
-			width: 'auto'
+			width: '85%'
 		}
 	},
 	pagePanelLayoutNavBar: {
@@ -434,6 +439,9 @@ export const useGlobalStyles = createStyles(theme => ({
 		paddingLeft: 8,
 		paddingRight: 8
 	},
+	paragraphIntTextInput: {
+		paddingLeft: 142
+	},
 
 	// Text styles
 	tExtraExtraLarge: { fontWeight: 600, fontSize: '32px', lineHeight: 1.4 },
@@ -499,6 +507,7 @@ export const useGlobalStyles = createStyles(theme => ({
 
 	// Text variants
 	tBadgeText: { fontWeight: 600, fontSize: '12px', color: colorBlack },
+	tBadgeTextWhite: { fontWeight: 600, fontSize: '12px', color: colorWhite },
 
 	tLink: {
 		textDecoration: 'underline',

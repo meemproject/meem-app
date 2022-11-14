@@ -19,7 +19,7 @@ import { Clock } from 'tabler-icons-react'
 import { MembershipSettings, Club } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import ClubClubContext from '../../Detail/ClubClubProvider'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 
 interface IProps {
@@ -27,7 +27,7 @@ interface IProps {
 }
 
 export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const router = useRouter()
 
@@ -201,20 +201,22 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tLargeBold}>Membership Settings</Text>
+				<Text className={clubsTheme.tLargeBold}>
+					Membership Settings
+				</Text>
 				<Space h={32} />
 
-				<Text className={design.tSmallBoldFaded}>Price</Text>
+				<Text className={clubsTheme.tSmallBoldFaded}>Price</Text>
 				<Space h={16} />
 
 				<Text
-					className={design.tMedium}
+					className={clubsTheme.tMedium}
 					style={{ marginBottom: 8, lineHeight: 2 }}
 				>
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={design.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{isNaN(costToJoin) || costToJoin === 0
 								? 'free'
 								: costToJoin}
@@ -228,7 +230,9 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						<>
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
-								<span className={design.fOrangeSelectableSpan}>
+								<span
+									className={clubsTheme.fOrangeSelectableSpan}
+								>
 									{quickTruncate(membershipFundsAddress)}
 								</span>
 							</a>
@@ -238,14 +242,14 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</Text>
 				<Space h="lg" />
 
-				<Text className={design.tSmallBoldFaded}>Capacity</Text>
+				<Text className={clubsTheme.tSmallBoldFaded}>Capacity</Text>
 				<Text
-					className={design.tMedium}
+					className={clubsTheme.tMedium}
 					style={{ marginBottom: 8, lineHeight: 2 }}
 				>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={design.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{membershipQuantity === 0 ||
 							isNaN(membershipQuantity)
 								? 'unlimited'
@@ -255,15 +259,15 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					memberships available in total.
 				</Text>
 				<Space h="lg" />
-				<Text className={design.tSmallBoldFaded}>Timing</Text>
+				<Text className={clubsTheme.tSmallBoldFaded}>Timing</Text>
 
 				<Text
-					className={design.tMedium}
+					className={clubsTheme.tMedium}
 					style={{ marginBottom: 8, lineHeight: 2 }}
 				>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={design.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{membershipStartDate === undefined
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
@@ -275,7 +279,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>{' '}
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
-						<span className={design.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fOrangeSelectableSpan}>
 							{membershipEndDate === undefined
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
@@ -291,7 +295,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
-					className={design.buttonBlack}
+					className={clubsTheme.buttonBlack}
 					onClick={saveChanges}
 				>
 					{'Save Changes'}
@@ -309,9 +313,12 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					opened={isMembershipCostModalOpened}
 					onClose={() => setMembershipCostModalOpened(false)}
 				>
-					<Text className={design.tMediumBoldFaded}>
+					<Space h={16} />
+
+					<Text className={clubsTheme.tMediumBold}>
 						Enter cost to join
 					</Text>
+					<Space h={4} />
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -341,9 +348,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 						}}
 					/>
 					<Space h={'md'} />
-					<Text className={design.tMediumBoldFaded}>
+					<Text className={clubsTheme.tMediumBold}>
 						Send funds to this address
 					</Text>
+					<Space h={4} />
+
 					<TextInput
 						radius="lg"
 						size="sm"
@@ -352,7 +361,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							setMembershipFundsAddress(event.target.value)
 						}}
 					/>
-					<Space h={'md'} />
+					<Space h={24} />
 					<Button
 						loading={isCheckingRequirement}
 						disabled={isCheckingRequirement}
@@ -384,10 +393,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipCostModalOpened(false)
 						}}
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -401,7 +411,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipQuantityModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: design.fRadio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -429,10 +439,12 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</Radio.Group>
 					{(membershipQuantity > 0 || isNaN(membershipQuantity)) && (
 						<>
-							<Text className={design.tMediumBoldFaded}>
+							<Space h={24} />
+
+							<Text className={clubsTheme.tMediumBold}>
 								Enter total memberships
 							</Text>
-
+							<Space h={4} />
 							<TextInput
 								radius="lg"
 								size="sm"
@@ -449,7 +461,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							/>
 						</>
 					)}
-					<Space h={'md'} />
+					<Space h={24} />
 					<Button
 						onClick={() => {
 							if (membershipQuantity > 10000000) {
@@ -472,10 +484,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipQuantityModalOpened(false)
 						}}
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -489,7 +502,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingStartModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: design.fRadio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -569,10 +582,11 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingStartModalOpened(false)
 						}}
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
+					<Space h={16} />
 				</Modal>
 				<Modal
 					withCloseButton={false}
@@ -586,7 +600,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipTimingEndModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: design.fRadio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -666,7 +680,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}
 							setMembershipTimingEndModalOpened(false)
 						}}
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>

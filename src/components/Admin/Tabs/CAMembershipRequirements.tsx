@@ -24,7 +24,7 @@ import {
 } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
 import ClubClubContext from '../../Detail/ClubClubProvider'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorPink, colorWhite, useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 
 interface IProps {
@@ -32,7 +32,7 @@ interface IProps {
 }
 
 export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const router = useRouter()
 
@@ -326,14 +326,14 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={design.tLargeBold}>
+				<Text className={clubsTheme.tLargeBold}>
 					Membership Requirements
 				</Text>
 
 				<Space h={24} />
 
 				<Radio.Group
-					classNames={{ label: design.fRadio }}
+					classNames={{ label: clubsTheme.fRadio }}
 					orientation="vertical"
 					spacing={16}
 					size="md"
@@ -365,13 +365,14 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						{membershipRequirements.map(requirement => (
 							<div key={requirement.index}>
 								<div
-									className={design.centeredRow}
+									className={clubsTheme.centeredRow}
 									style={{
 										width: 200,
 										height: 150,
 										justifyContent: 'center',
 										border: '1px solid rgba(0, 0, 0, 1)',
-										borderRadius: 16
+										borderRadius: 16,
+										position: 'relative'
 									}}
 								>
 									<a
@@ -381,7 +382,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									>
 										<span
 											className={
-												design.fOrangeSelectableSpan
+												clubsTheme.fOrangeSelectableSpan
 											}
 										>
 											{membershipTypeString(requirement)}
@@ -400,12 +401,12 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 											width: 18,
 											height: 18,
 											cursor: 'pointer',
-											color: 'rgba(255, 102, 81, 1)'
+											color: colorPink
 										}}
 									/>
 								</div>
 								<div
-									className={design.centeredRow}
+									className={clubsTheme.centeredRow}
 									style={{
 										width: 200,
 										height: 80,
@@ -415,7 +416,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									}}
 								>
 									<div
-										className={design.centeredRow}
+										className={clubsTheme.centeredRow}
 										style={{
 											position: 'absolute',
 											justifyContent: 'center',
@@ -432,7 +433,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 										/>
 										<div
 											style={{
-												backgroundColor: 'white',
+												backgroundColor: colorWhite,
 												padding: 4,
 												position: 'absolute',
 												top: 25
@@ -444,12 +445,12 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 								</div>
 							</div>
 						))}
-						<div className={design.row}>
+						<div className={clubsTheme.row}>
 							<Space
 								w={membershipRequirements.length === 0 ? 0 : 14}
 							/>
 							<Button
-								className={design.buttonWhite}
+								className={clubsTheme.buttonWhite}
 								onClick={addMembershipRequirement}
 							>
 								{'+ Add Requirement'}
@@ -463,7 +464,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 				<Button
 					disabled={isSavingChanges}
 					loading={isSavingChanges}
-					className={design.buttonBlack}
+					className={clubsTheme.buttonBlack}
 					onClick={saveChanges}
 				>
 					{'Save Changes'}
@@ -481,7 +482,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 					onClose={() => setMembershipReqModalOpened(false)}
 				>
 					<Radio.Group
-						classNames={{ label: design.fRadio }}
+						classNames={{ label: clubsTheme.fRadio }}
 						orientation="vertical"
 						spacing={10}
 						size="md"
@@ -557,13 +558,15 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						className={
 							currentRequirement?.type ==
 							MembershipReqType.ApprovedApplicants
-								? design.visibleContainer
-								: design.invisibleContainer
+								? clubsTheme.visibleContainer
+								: clubsTheme.invisibleContainer
 						}
 					>
-						<Text className={design.tMediumBold}>How to apply</Text>
+						<Text className={clubsTheme.tMediumBold}>
+							How to apply
+						</Text>
 						<Space h={4} />
-						<Text className={design.tExtraSmall}>
+						<Text className={clubsTheme.tExtraSmall}>
 							Leave blank if you do not have an application
 							process.
 						</Text>
@@ -586,12 +589,12 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							}}
 						/>
 						<Space h={16} />
-						<Text className={design.tMediumBold}>
+						<Text className={clubsTheme.tMediumBold}>
 							Approved Addresses
 						</Text>
 						<Space h={4} />
 
-						<Text className={design.tExtraSmall}>
+						<Text className={clubsTheme.tExtraSmall}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
 							added separately in the Club Admins panel. New
@@ -623,11 +626,11 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						className={
 							currentRequirement?.type ==
 							MembershipReqType.TokenHolders
-								? design.visibleContainer
-								: design.invisibleContainer
+								? clubsTheme.visibleContainer
+								: clubsTheme.invisibleContainer
 						}
 					>
-						{/* <Text className={design.tMediumBoldFaded}>Chain</Text>
+						{/* <Text className={clubsTheme.tMediumBoldFaded}>Chain</Text>
 						<Select
 							data={[
 								{
@@ -644,7 +647,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 							}}
 							value={reqCurrentlyEditing?.tokenChain}
 						/> */}
-						<Text className={design.tSmallBoldFaded}>
+						<Text className={clubsTheme.tSmallBoldFaded}>
 							Token Address
 						</Text>
 						<Space h={4} />
@@ -664,7 +667,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						/>
 						<Space h={16} />
 
-						<Text className={design.tSmallBoldFaded}>
+						<Text className={clubsTheme.tSmallBoldFaded}>
 							Minimum Quantity
 						</Text>
 						<Space h={4} />
@@ -689,11 +692,11 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						className={
 							currentRequirement?.type ==
 							MembershipReqType.OtherClubMember
-								? design.visibleContainer
-								: design.invisibleContainer
+								? clubsTheme.visibleContainer
+								: clubsTheme.invisibleContainer
 						}
 					>
-						<Text className={design.tMediumBoldFaded}>
+						<Text className={clubsTheme.tMediumBoldFaded}>
 							Club Name
 						</Text>
 
@@ -812,7 +815,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 
 							setMembershipReqModalOpened(false)
 						}}
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 					>
 						Done
 					</Button>
@@ -820,7 +823,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 						onClick={() => {
 							setMembershipReqModalOpened(false)
 						}}
-						className={design.buttonGrey}
+						className={clubsTheme.buttonGrey}
 					>
 						Cancel
 					</Button>

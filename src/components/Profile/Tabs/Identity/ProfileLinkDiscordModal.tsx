@@ -6,7 +6,7 @@ import { useWallet } from '@meemproject/react'
 import React, { useEffect } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
-import { useGlobalStyles } from '../../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	integrationId?: string
@@ -21,7 +21,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
 	useEffect(() => {
@@ -56,7 +56,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Verification failed',
 					autoClose: 5000,
-					color: 'red',
+					color: colorPink,
 					icon: <AlertCircle />,
 					message: `Please try again or get in touch!`
 				})
@@ -82,7 +82,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={design.tMediumBold}>
+					<Text className={clubsTheme.tMediumBold}>
 						Connect your Discord account
 					</Text>
 				}
@@ -95,9 +95,11 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={design.modalStepsContainer}>
+				<div className={clubsTheme.modalStepsContainer}>
 					<Space h={8} />
-					<Text>Saving Discord information to your profile...</Text>
+					<Text className={clubsTheme.tMedium}>
+						Saving Discord information to your profile...
+					</Text>
 					<Space h={8} />
 
 					<Loader variant="oval" color="red" />

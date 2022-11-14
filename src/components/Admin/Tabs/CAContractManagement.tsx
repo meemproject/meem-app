@@ -14,14 +14,14 @@ import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club, ClubAdminRole } from '../../../model/club/club'
 import { hostnameToChainId } from '../../App'
-import { useGlobalStyles } from '../../Styles/GlobalStyles'
+import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
 }
 
 export const CAContractAddress: React.FC<IProps> = ({ club }) => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
 	const [smartContractPermission, setSmartContractPermission] =
@@ -179,16 +179,18 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	return (
 		<div>
 			<Space h={12} />
-			<Text className={design.tLargeBold}>Contract Management</Text>
+			<Text className={clubsTheme.tLargeBold}>Contract Management</Text>
 			<Space h={32} />
 
-			<Text className={design.tExtraSmallLabel}>CONTRACT ADDRESS</Text>
+			<Text className={clubsTheme.tExtraSmallLabel}>
+				CONTRACT ADDRESS
+			</Text>
 			<Space h={16} />
 
-			<div className={design.centeredRow}>
+			<div className={clubsTheme.centeredRow}>
 				<Text style={{ wordBreak: 'break-word' }}>{club.address}</Text>
 				<Image
-					className={design.copyIcon}
+					className={clubsTheme.copyIcon}
 					src="/copy.png"
 					height={20}
 					onClick={() => {
@@ -213,14 +215,14 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			<Space h={32} />
 
-			<Text className={design.tExtraSmallLabel}>MEEM PROTOCOL</Text>
+			<Text className={clubsTheme.tExtraSmallLabel}>MEEM PROTOCOL</Text>
 			<Space h={16} />
 
 			<Text
-				className={design.tSmallBold}
+				className={clubsTheme.tSmallBold}
 			>{`Does Meem protocol have permission to manage your club’s smart contract?`}</Text>
 			<Space h={8} />
-			<Text className={design.tSmallFaded}>
+			<Text className={clubsTheme.tSmallFaded}>
 				Please note that a transaction will occur when you save changes
 				to this setting.
 			</Text>
@@ -250,7 +252,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Space h={24} />
 
 			<Button
-				className={design.buttonBlack}
+				className={clubsTheme.buttonBlack}
 				onClick={async () => {
 					try {
 						const meemContract = new Contract(
@@ -284,7 +286,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						} else {
 							showNotification({
 								title: 'Oops!',
-								color: 'red',
+								color: colorPink,
 								message: `There are no changes to save.`
 							})
 						}
@@ -301,11 +303,11 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Space h={32} />
 					<Divider />
 					<Space h={32} />
-					<Text className={design.tExtraSmallLabel}>
+					<Text className={clubsTheme.tExtraSmallLabel}>
 						UPGRADE CLUB CONTRACT
 					</Text>
 					<Space h={16} />
-					<div className={design.row}>
+					<div className={clubsTheme.row}>
 						<div>
 							<Text>
 								A new version of Clubs is available! Upgrade to
@@ -313,11 +315,11 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 							</Text>
 						</div>
 					</div>
-					<Space h={'xs'} />
+					<Space h={24} />
 					<Button
 						loading={isUpgradingClub}
 						disabled={isUpgradingClub}
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 						onClick={async () => {
 							try {
 								if (!club?.id) {
@@ -341,7 +343,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 								log.crit(e)
 								showNotification({
 									title: 'Error Upgrading Club',
-									color: 'red',
+									color: colorPink,
 									message: `Something went wrong during the upgrade.`
 								})
 								setIsUpgradingClub(false)
@@ -356,18 +358,18 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			<Space h={32} />
 			<Divider />
 			<Space h={32} />
-			<Text className={design.tExtraSmallLabel}>
+			<Text className={clubsTheme.tExtraSmallLabel}>
 				CLUB TREASURY ADDRESS
 			</Text>
 			<Space h={20} />
 			{club.gnosisSafeAddress && (
 				<>
-					<div className={design.row}>
+					<div className={clubsTheme.row}>
 						<Text style={{ wordBreak: 'break-word' }}>
 							{club.gnosisSafeAddress}
 						</Text>
 						<Image
-							className={design.copyIcon}
+							className={clubsTheme.copyIcon}
 							src="/copy.png"
 							height={20}
 							onClick={() => {
@@ -390,12 +392,12 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 					<Space h={12} />
 
 					<Text
-						className={design.tSmall}
+						className={clubsTheme.tSmall}
 					>{`Your club's treasury was set up when the club was created. You can manage your treasury (including signing transactions and adding members) using the button below.`}</Text>
 					<Space h={24} />
 
 					<Button
-						className={design.buttonBlack}
+						className={clubsTheme.buttonBlack}
 						onClick={() => {
 							window.open(
 								`https://gnosis-safe.io/app/${chainIdToGnosisUrlPrefix()}:${
@@ -411,7 +413,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			{!club.gnosisSafeAddress && wallet.chainId !== 420 && (
 				<Button
-					className={design.buttonBlack}
+					className={clubsTheme.buttonBlack}
 					disabled={isCreatingSafe}
 					loading={isCreatingSafe}
 					onClick={async () => {
@@ -461,7 +463,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 								title: 'Wallet creation failed.',
 								message:
 									'We were unable to create treasury for your club. Please refresh the page and try again.',
-								color: 'red'
+								color: colorPink
 							})
 						}
 					}}

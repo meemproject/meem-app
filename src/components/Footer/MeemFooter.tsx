@@ -1,23 +1,23 @@
 import { Text, Center, Space, Divider } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 
 export const MeemFooter: React.FC = () => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	return (
 		<div>
 			<Space h={128} />
-			<div className={design.pageFooterContainer}>
+			<div className={clubsTheme.pageFooterContainer}>
 				<Divider />
-				<div className={design.pageFooterBackground}>
+				<div className={clubsTheme.pageFooterBackground}>
 					<Center>
-						<div className={design.row}>
+						<div className={clubsTheme.row}>
 							<Text>Powered by</Text>
 							<Space w={4} />
 							<a
-								className={design.tLink}
+								className={clubsTheme.tLink}
 								href="https://build.meem.wtf"
 							>
 								Meem

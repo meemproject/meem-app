@@ -21,10 +21,10 @@ import { GET_ALL_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 
 export const BrowseComponent: React.FC = () => {
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const { chainId } = useWallet()
 	const limit = 20
@@ -83,18 +83,20 @@ export const BrowseComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={design.pageHeader}>
-				<div className={design.centeredRow}>
+			<div className={clubsTheme.pageHeader}>
+				<div className={clubsTheme.centeredRow}>
 					<a onClick={navigateHome}>
-						<ArrowLeft className={design.backArrow} size={32} />
+						<ArrowLeft className={clubsTheme.backArrow} size={32} />
 					</a>
 					<Space w={16} />
-					<Text className={design.tLargeBold}>Browse all clubs</Text>
+					<Text className={clubsTheme.tLargeBold}>
+						Browse all clubs
+					</Text>
 				</div>
 				<Button
 					style={{ marginRight: 32 }}
 					onClick={navigateToCreate}
-					className={design.buttonBlack}
+					className={clubsTheme.buttonBlack}
 				>
 					Create a Club
 				</Button>
@@ -142,7 +144,7 @@ export const BrowseComponent: React.FC = () => {
 								>
 									<div
 										key={club.address}
-										className={design.gridItem}
+										className={clubsTheme.gridItem}
 										style={{
 											display: 'flex'
 										}}
@@ -151,7 +153,7 @@ export const BrowseComponent: React.FC = () => {
 										}}
 									>
 										<Image
-											className={design.imageClubLogo}
+											className={clubsTheme.imageClubLogo}
 											src={club.image ?? ''}
 											width={40}
 											radius={8}
@@ -159,9 +161,11 @@ export const BrowseComponent: React.FC = () => {
 											fit={'cover'}
 										/>
 										<Space w="xs" />
-										<div className={design.tEllipsis}>
+										<div className={clubsTheme.tEllipsis}>
 											<Text
-												className={design.tSmallBold}
+												className={
+													clubsTheme.tSmallBold
+												}
 												style={{
 													textOverflow: 'ellipsis',
 													msTextOverflow: 'ellipsis',
@@ -173,7 +177,9 @@ export const BrowseComponent: React.FC = () => {
 											</Text>
 											<Space h={4} />
 											<Text
-												className={design.tExtraSmall}
+												className={
+													clubsTheme.tExtraSmall
+												}
 												style={{
 													marginRight: 8,
 													lineHeight: 1.4,
@@ -209,7 +215,7 @@ export const BrowseComponent: React.FC = () => {
 						<Space h={24} />
 
 						<Button
-							className={design.buttonBlack}
+							className={clubsTheme.buttonBlack}
 							loading={loading}
 							onClick={() => {
 								setPage(page + 1)

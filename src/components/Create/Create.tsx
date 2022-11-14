@@ -22,7 +22,7 @@ import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
 import ClubClubContext from '../Detail/ClubClubProvider'
-import { useGlobalStyles } from '../Styles/GlobalStyles'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -30,7 +30,7 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export const CreateComponent: React.FC = () => {
 	const router = useRouter()
-	const { classes: design } = useGlobalStyles()
+	const { classes: clubsTheme } = useClubsTheme()
 
 	const clubclub = useContext(ClubClubContext)
 
@@ -221,23 +221,27 @@ export const CreateComponent: React.FC = () => {
 
 	return (
 		<>
-			<div className={design.pageHeader}>
-				<a onClick={navigateHome}>
-					<ArrowLeft
-						className={design.pageHeaderExitButton}
-						size={32}
-					/>
-				</a>
-				<div>
-					<Text className={design.tSmallBoldFaded}>
-						Create a club
-					</Text>
-					<Text className={design.tLargeBold}>{clubName}</Text>
+			<div className={clubsTheme.pageHeader}>
+				<div className={clubsTheme.centeredRow}>
+					<a onClick={navigateHome}>
+						<ArrowLeft
+							className={clubsTheme.pageHeaderExitButton}
+							size={32}
+						/>
+					</a>
+					<div>
+						<Text className={clubsTheme.tSmallBoldFaded}>
+							Create a club
+						</Text>
+						<Text className={clubsTheme.tLargeBold}>
+							{clubName}
+						</Text>
+					</div>
 				</div>
 			</div>
 
 			<Container>
-				{/* <Text className={design.tMediumBold}>
+				{/* <Text className={clubsTheme.tMediumBold}>
 					{`Set your club's URL.`}
 				</Text>
 				<Text size="sm" className={classes.clubNamespaceHint}>
@@ -261,10 +265,11 @@ export const CreateComponent: React.FC = () => {
 				</div>
 
 				<Space h={'md'} /> */}
-				<Text className={design.tMediumBold}>
+				<Space h={32} />
+				<Text className={clubsTheme.tMediumBold}>
 					In a sentence, describe what your members do together.
 				</Text>
-				<Space h={24} />
+				<Space h={16} />
 
 				<Textarea
 					radius="lg"
@@ -278,13 +283,13 @@ export const CreateComponent: React.FC = () => {
 					}
 				/>
 
-				<Space h={16} />
-				<Text className={design.tMediumBold}>
+				<Space h={40} />
+				<Text className={clubsTheme.tMediumBold}>
 					Upload an icon for your club.
 				</Text>
 				<Space h={8} />
 				<Text
-					className={design.tExtraSmallFaded}
+					className={clubsTheme.tExtraSmallFaded}
 					style={{ maxWidth: 650 }}
 				>
 					This will be your club’s membership token. You can change it
@@ -293,10 +298,10 @@ export const CreateComponent: React.FC = () => {
 				</Text>
 				<Space h={16} />
 				{smallClubLogo.length === 0 && !isLoadingImage && (
-					<div className={design.row}>
+					<div className={clubsTheme.row}>
 						<Button
 							leftIcon={<Upload size={14} />}
-							className={design.buttonWhite}
+							className={clubsTheme.buttonWhite}
 							onClick={() => openFileSelector()}
 						>
 							Upload
@@ -304,7 +309,7 @@ export const CreateComponent: React.FC = () => {
 						<Space w={'xs'} />
 						<Button
 							leftIcon={<Text>😈</Text>}
-							className={design.buttonWhite}
+							className={clubsTheme.buttonWhite}
 							onClick={() => openEmojiPicker()}
 						>
 							Choose emoji
@@ -313,9 +318,9 @@ export const CreateComponent: React.FC = () => {
 				)}
 				{isLoadingImage && <Loader color="red" variant="oval" />}
 				{!isLoadingImage && smallClubLogo.length > 0 && (
-					<div className={design.imageClubLogoContainer}>
+					<div className={clubsTheme.imageClubLogoContainer}>
 						<Image
-							className={design.imageClubLogo}
+							className={clubsTheme.imageClubLogo}
 							src={smallClubLogo}
 							width={200}
 							height={200}
@@ -323,7 +328,7 @@ export const CreateComponent: React.FC = () => {
 						/>
 						<a onClick={deleteImage}>
 							<Image
-								className={design.imageClubLogoDeleteButton}
+								className={clubsTheme.imageClubLogoDeleteButton}
 								src="delete.png"
 								width={24}
 								height={24}
@@ -331,6 +336,7 @@ export const CreateComponent: React.FC = () => {
 						</a>
 					</div>
 				)}
+				<Space h={smallClubLogo.length > 0 ? 148 : 40} />
 				<Button
 					onClick={() => {
 						createClub()
@@ -339,12 +345,12 @@ export const CreateComponent: React.FC = () => {
 						clubDescription.length === 0 ||
 						smallClubLogo.length === 0
 					}
-					className={design.buttonBlack}
+					className={clubsTheme.buttonBlack}
 				>
 					Continue
 				</Button>
 			</Container>
-			<div id="emojiCanvas" className={design.emojiCanvas}>
+			<div id="emojiCanvas" className={clubsTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
 
