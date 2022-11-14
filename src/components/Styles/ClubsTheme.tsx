@@ -145,6 +145,11 @@ export const useClubsTheme = createStyles(theme => ({
 		display: 'flex',
 		alignItems: 'center'
 	},
+	greyContentBox: {
+		backgroundColor: colorLightGrey,
+		borderRadius: 16,
+		padding: 16
+	},
 	connectMethodGridItem: {
 		backgroundColor: colorLightestGrey,
 		width: 200,
@@ -296,8 +301,7 @@ export const useClubsTheme = createStyles(theme => ({
 		marginTop: 64,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			flexDirection: 'column',
-			marginTop: 32,
-			paddingRight: 0
+			marginTop: 32
 		}
 	},
 	pageLeftColumn: {
@@ -305,15 +309,13 @@ export const useClubsTheme = createStyles(theme => ({
 		paddingRight: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%',
-			paddinRight: 0,
-			paddingBottom: 32
+			paddingRight: 0
 		}
 	},
 	pageRightColumn: {
 		width: 650,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: '100%',
-			paddingRight: 32
+			width: '100%'
 		}
 	},
 
@@ -405,6 +407,24 @@ export const useClubsTheme = createStyles(theme => ({
 		marginLeft: 24
 	},
 
+	// Widgets
+	widgetDark: {
+		backgroundColor: colorBlack,
+		color: 'white',
+		padding: 24,
+		width: '100%',
+		borderRadius: 16,
+		boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.1)',
+		marginBottom: 32
+	},
+	widgetLight: {
+		boxShadow: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 16,
+		width: '100%',
+		padding: 24,
+		marginBottom: 32
+	},
+
 	// Images
 	copyIcon: {
 		marginLeft: 4,
@@ -453,6 +473,9 @@ export const useClubsTheme = createStyles(theme => ({
 		top: '-12px',
 		right: '-105px',
 		cursor: 'pointer'
+	},
+	imagePixelated: {
+		imageRendering: 'pixelated'
 	},
 
 	// Misc

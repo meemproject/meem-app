@@ -1,15 +1,25 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Button, Textarea, Space, TextInput } from '@mantine/core'
+import {
+	Text,
+	Button,
+	Textarea,
+	Space,
+	Image,
+	TextInput,
+	Center
+} from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { LoginState, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { Check } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club } from '../../../model/club/club'
+import { quickTruncate } from '../../../utils/truncated_wallet'
 import { hostnameToChainId } from '../../App'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
@@ -272,5 +282,92 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club }) => {
 		router.push({ pathname: `/${slug}/admin` })
 	}
 
-	return <div>Club Info</div>
+	return (
+		<>
+			<div className={clubsTheme.widgetDark}>
+				<Center>
+					<Image
+						className={clubsTheme.imagePixelated}
+						height={150}
+						width={150}
+						src={club.image}
+					/>
+				</Center>
+				<Space h={16} />
+				<Center>
+					<Text className={clubsTheme.tLargeBold}>{club.name}</Text>
+				</Center>
+				<Space h={16} />
+				<Center>
+					<Text className={clubsTheme.tSmall}>
+						{club.description}
+					</Text>
+				</Center>
+				<Space h={16} />
+				<Center>
+					{club.isCurrentUserClubMember && (
+						<Button
+							className={clubsTheme.buttonWhite}
+							disabled={isLeavingClub}
+							loading={isLeavingClub}
+							onClick={() => {
+								leaveClub()
+							}}
+						>
+							Leave Club
+						</Button>
+					)}
+					{!club.isCurrentUserClubMember && (
+						<Button
+							className={clubsTheme.buttonWhite}
+							disabled={isJoiningClub}
+							loading={isJoiningClub}
+							onClick={() => {
+								joinClub()
+							}}
+						>
+							Join Club
+						</Button>
+					)}
+				</Center>
+				<Space h={32} />
+				<Center>
+					<div className={clubsTheme.row}></div>
+				</Center>
+				<Space h={32} />
+				<Center>
+					<Text className={clubsTheme.tExtraSmallLabel}>
+						Contract Address
+					</Text>
+				</Center>
+				<Space h={8} />
+				<Center>
+					<div className={clubsTheme.row}>
+						<Text>{quickTruncate(club.address ?? '')}</Text>
+						<Space w={4} />
+						<Image
+							className={clubsTheme.copyIcon}
+							src="/copy.png"
+							height={20}
+							onClick={() => {
+								navigator.clipboard.writeText(
+									`${window.location.origin}/${club.slug}`
+								)
+								showNotification({
+									radius: 'lg',
+									title: 'Club contract address copied!',
+									autoClose: 2000,
+									color: colorGreen,
+									icon: <Check />,
+
+									message: `This club's contract address was copied to your clipboard.`
+								})
+							}}
+							width={20}
+						/>
+					</div>
+				</Center>
+			</div>
+		</>
+	)
 }

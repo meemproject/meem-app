@@ -24,6 +24,8 @@ import {
 	colorPink,
 	useClubsTheme
 } from '../Styles/ClubsTheme'
+import { ClubForumWidget } from './Widgets/ClubForumWidget'
+import { ClubInfoWidget } from './Widgets/ClubInfoWidget'
 
 interface IProps {
 	slug: string
@@ -216,32 +218,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					<Container size={1000}>
 						<div className={clubsTheme.pageResponsiveContainer}>
 							<div className={clubsTheme.pageLeftColumn}>
-								<div
-									style={{
-										backgroundColor: colorBlack,
-										color: 'white',
-										padding: 24,
-										width: '100%',
-										borderRadius: 16,
-										boxShadow:
-											'0px 4px 30px rgba(0, 0, 0, 0.1)'
-									}}
-								>
-									Club Info
-								</div>
+								<ClubInfoWidget club={club} />
 							</div>
 							<div className={clubsTheme.pageRightColumn}>
-								<div
-									style={{
-										boxShadow:
-											'5px 5px 30px rgba(0, 0, 0, 0.1)',
-										borderRadius: 16,
-										width: '100%',
-										padding: 24
-									}}
-								>
-									Club Widget
-								</div>
+								<ClubForumWidget club={club} />
 							</div>
 						</div>
 					</Container>
