@@ -23,7 +23,7 @@
 		"release": "semantic-release",
 		"sls": "components-v1",
 		"test": "echo \"TODO: Implement tests\"",
-		"localPackageLink": "yarn link @meemproject/api @meemproject/react @meemproject/utils react react-dom @meemproject/meem-contracts",
+		"localPackageLink": "yarn link @meemproject/sdk @meemproject/react @meemproject/utils react react-dom @meemproject/meem-contracts",
 		"apollo": "apollo",
 		"codegen": "graphql-codegen -r dotenv/config --config codegen.js"
 	},
@@ -45,7 +45,7 @@
 		"@mantine/hooks": "5.1.0",
 		"@mantine/next": "5.1.0",
 		"@mantine/notifications": "5.1.0",
-		"@meemproject/api": "^0.9.9",
+		"@meemproject/sdk": "0.8.12-pre-b97209a.0",
 		"@meemproject/meem-contracts": "^0.9.9",
 		"@meemproject/react": "^0.9.9",
 		"@next/bundle-analyzer": "^12.1.4",

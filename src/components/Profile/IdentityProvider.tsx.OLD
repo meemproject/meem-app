@@ -18,7 +18,6 @@ import {
 	identityFromApi
 } from '../../model/identity/identity'
 import { useCustomApollo } from '../../providers/ApolloProvider'
-import { JoinClubsModal } from './JoinClubsModal'
 
 const defaultState = {
 	identity: getDefaultIdentity(''),

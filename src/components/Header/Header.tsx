@@ -1,4 +1,3 @@
-import { useAuth0 } from '@auth0/auth0-react'
 import {
 	Header,
 	Text,
@@ -10,7 +9,12 @@ import {
 	Space,
 	Loader
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import {
+	LoginModal,
+	LoginState,
+	useAuth,
+	useMeemUser
+} from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useContext, useState } from 'react'
@@ -25,8 +29,6 @@ import {
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../Detail/ClubClubProvider'
-import IdentityContext from '../Profile/IdentityProvider'
-import { JoinClubsModal } from '../Profile/JoinClubsModal'
 import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
@@ -35,12 +37,13 @@ export function HeaderMenu() {
 	const [isJoinClubsModalOpen, setIsJoinClubsModalOpen] = useState(false)
 	const { classes: clubsTheme, cx } = useClubsTheme()
 	const router = useRouter()
-	const { loginWithRedirect, isAuthenticated } = useAuth0()
-
-	const id = useContext(IdentityContext)
 
 	const clubclub = useContext(ClubClubContext)
-	const wallet = useWallet()
+	const { loginState, disconnectWallet, isConnected, isMeLoading } = useAuth()
+
+	const { user } = useMeemUser()
+
+	console.log(user)
 
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
@@ -80,7 +83,14 @@ export function HeaderMenu() {
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
-	console.log({ isAuthenticated })
+	let displayName = user?.displayName
+
+	if (!displayName || displayName.length === 0) {
+		displayName =
+			user?.DefaultWallet?.ens ??
+			quickTruncate(user?.DefaultWallet?.address) ??
+			'0x...'
+	}
 
 	return (
 		<Header className={clubsTheme.siteHeader} height={56}>
@@ -92,7 +102,7 @@ export function HeaderMenu() {
 				</div>
 
 				<div className={clubsTheme.siteHeaderRightItems}>
-					{wallet.isConnected && (
+					{loginState === LoginState.LoggedIn && (
 						<Menu
 							radius={8}
 							offset={4}
@@ -107,7 +117,7 @@ export function HeaderMenu() {
 											isUserMenuOpened
 									})}
 								>
-									{id.isLoadingIdentity && (
+									{isMeLoading && (
 										<Loader
 											style={{ marginTop: 4 }}
 											variant="oval"
@@ -115,12 +125,10 @@ export function HeaderMenu() {
 											size={20}
 										/>
 									)}
-									{!id.isLoadingIdentity && (
+									{!isMeLoading && (
 										<Group spacing={7}>
 											<Avatar
-												src={
-													id.identity.profilePic ?? ''
-												}
+												src={user?.profilePicUrl ?? ''}
 												alt={'Profile photo'}
 												radius="xl"
 												size={24}
@@ -131,19 +139,7 @@ export function HeaderMenu() {
 												sx={{ lineHeight: 1 }}
 												mr={3}
 											>
-												{id.identity.displayName &&
-												id.identity.displayName
-													?.length > 0
-													? id.identity.displayName
-													: id.identity.ensAddress &&
-													  id.identity.ensAddress
-															?.length > 0
-													? id.identity.ensAddress
-													: quickTruncate(
-															id.identity
-																.walletAddress ??
-																''
-													  )}
+												{displayName}
 											</Text>
 											<ChevronDown size={12} />
 										</Group>
@@ -168,19 +164,17 @@ export function HeaderMenu() {
 								<Menu.Item
 									className={clubsTheme.tExtraSmallBold}
 									onClick={async () => {
-										await wallet.disconnectWallet()
+										await disconnectWallet()
 									}}
 									color="red"
 									icon={<Logout size={14} />}
 								>
-									{wallet.isConnected
-										? 'Disconnect'
-										: 'Sign Out'}
+									{isConnected ? 'Disconnect' : 'Sign Out'}
 								</Menu.Item>
 							</Menu.Dropdown>
 						</Menu>
 					)}
-					{!wallet.isConnected && (
+					{loginState === LoginState.NotLoggedIn && (
 						<Text
 							className={clubsTheme.tExtraSmallBold}
 							style={{
@@ -220,14 +214,15 @@ export function HeaderMenu() {
 									Meem
 								</span>
 							</Menu.Item>
-							{wallet.isConnected && !clubclub.isMember && (
-								<Menu.Item
-									onClick={handleJoinClubClub}
-									className={clubsTheme.tExtraSmallBold}
-								>
-									Join Club Club
-								</Menu.Item>
-							)}
+							{loginState === LoginState.LoggedIn &&
+								!clubclub.isMember && (
+									<Menu.Item
+										onClick={handleJoinClubClub}
+										className={clubsTheme.tExtraSmallBold}
+									>
+										Join Club Club
+									</Menu.Item>
+								)}
 
 							<Menu.Item
 								onClick={() => {
@@ -306,9 +301,9 @@ export function HeaderMenu() {
 				}}
 				isOpened={isClubsFAQModalOpen}
 			/>
-			<JoinClubsModal
-				isOpened={isJoinClubsModalOpen}
-				onModalClosed={() => setIsJoinClubsModalOpen(false)}
+			<LoginModal
+				isOpen={isJoinClubsModalOpen}
+				onRequestClose={() => setIsJoinClubsModalOpen(false)}
 			/>
 		</Header>
 	)

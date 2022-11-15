@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
 import { Text, Space, Divider, Button, Image, Loader } from '@mantine/core'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { Discord } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import React, { useEffect, useState } from 'react'

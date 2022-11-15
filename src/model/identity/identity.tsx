@@ -1,4 +1,4 @@
-import { normalizeImageUrl } from '@meemproject/api'
+import { MeemAPI, normalizeImageUrl } from '@meemproject/sdk'
 import {
 	GetIdentityIntegrationsQuery,
 	MeemIdSubscriptionSubscription
@@ -9,6 +9,7 @@ export interface AvailableIdentityIntegration {
 	name?: string
 	icon?: string
 	connectionName?: string
+	connectionId?: string
 }
 
 export interface IdentityIntegration {
@@ -16,7 +17,9 @@ export interface IdentityIntegration {
 	name?: string
 	icon?: string
 	metadata?: any
-	visibility?: string
+	visibility?: MeemAPI.IntegrationVisibility
+	connectionName?: string
+	connectionId?: string
 }
 
 export interface Identity {
@@ -31,8 +34,6 @@ export interface Identity {
 export function identityIntegrationFromApi(
 	inteData: GetIdentityIntegrationsQuery | undefined
 ): AvailableIdentityIntegration[] {
-	console.log({ inteData })
-
 	if (inteData && inteData.IdentityIntegrations.length > 0) {
 		const integrations: AvailableIdentityIntegration[] = []
 		inteData.IdentityIntegrations.forEach(inte => {
@@ -40,11 +41,11 @@ export function identityIntegrationFromApi(
 				id: inte.id,
 				name: inte.name,
 				icon: inte.icon,
-				connectionName: inte.connectionName
+				connectionName: inte.connectionName,
+				connectionId: inte.connectionId
 			}
 			integrations.push(integration)
 		})
-		console.log({ integrations })
 		return integrations
 	} else {
 		return []
@@ -61,6 +62,7 @@ export async function identityFromApi(
 	identityData: MeemIdSubscriptionSubscription | undefined
 ): Promise<Identity> {
 	const id = identityData?.Users[0]
+
 	if (id) {
 		// Integrations
 		const integrations: IdentityIntegration[] = []
@@ -70,17 +72,14 @@ export async function identityFromApi(
 					id: inte.IdentityIntegrationId,
 					name: inte.IdentityIntegration?.name,
 					icon: inte.IdentityIntegration?.icon,
-					visibility: inte.visibility,
+					connectionName: inte.IdentityIntegration?.connectionName,
+					connectionId: inte.IdentityIntegration?.connectionId,
+					visibility:
+						inte.visibility as MeemAPI.IntegrationVisibility,
 					metadata: inte.metadata
 				}
 
-				if (integration.name !== 'Email') {
-					integrations.push(integration)
-				} else {
-					if (integration.metadata.isVerified) {
-						integrations.push(integration)
-					}
-				}
+				integrations.push(integration)
 			})
 		}
 

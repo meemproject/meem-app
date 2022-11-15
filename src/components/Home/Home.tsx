@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { useAuth0 } from '@auth0/auth0-react'
 import log from '@kengoldfarb/log'
 import {
 	Container,
@@ -20,9 +21,16 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
+import { login } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { forwardRef, useContext, useRef, useState } from 'react'
+import React, {
+	forwardRef,
+	useContext,
+	useRef,
+	useState,
+	useEffect
+} from 'react'
 // eslint-disable-next-line import/namespace
 import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
 import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
@@ -66,6 +74,7 @@ export function HomeComponent() {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { getAccessTokenSilently, isAuthenticated } = useAuth0()
 
 	const autocompleteClient = new ApolloClient({
 		cache: new InMemoryCache(),
@@ -83,6 +92,8 @@ export function HomeComponent() {
 	const [isFetchingData, setIsFetchingData] = useState(false)
 	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
 	const [isShowingCreateButton, setShowCreateButton] = useState(false)
+	const [hasConnectedIntegration, setHasConnectedIntegration] =
+		useState(false)
 
 	const handleChange = async (val: string) => {
 		window.clearTimeout(timeoutRef.current)
@@ -201,6 +212,29 @@ export function HomeComponent() {
 	}
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+
+	// useEffect(() => {
+	// 	const doLogin = async () => {
+	// 		const accessToken = await getAccessTokenSilently()
+	// 		login({
+	// 			accessToken
+	// 		})
+
+	// 		router.push({
+	// 			pathname: window.location.pathname
+	// 		})
+	// 	}
+	// 	if (isAuthenticated && !hasConnectedIntegration) {
+	// 		setHasConnectedIntegration(true)
+	// 		doLogin()
+	// 	}
+	// }, [
+	// 	router,
+	// 	isAuthenticated,
+	// 	hasConnectedIntegration,
+	// 	setHasConnectedIntegration,
+	// 	getAccessTokenSilently
+	// ])
 
 	return (
 		<div>

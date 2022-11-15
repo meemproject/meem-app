@@ -2,7 +2,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Button, Textarea, Space } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'

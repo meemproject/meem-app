@@ -841,8 +841,6 @@ export enum ChainNonces_Constraint {
   ChainNoncesChainIdKey = 'ChainNonces_chainId_key',
   /** unique or primary key constraint on columns "chainId" */
   ChainNoncesChainIdKey1 = 'ChainNonces_chainId_key1',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey2 = 'ChainNonces_chainId_key2',
   /** unique or primary key constraint on columns "id" */
   ChainNoncesPkey = 'ChainNonces_pkey'
 }
@@ -2596,9 +2594,9 @@ export type IdentityIntegrations = {
   UserIdentities: Array<UserIdentities>;
   /** An aggregate relationship */
   UserIdentities_aggregate: UserIdentities_Aggregate;
+  connectionId: Scalars['String'];
   connectionName: Scalars['String'];
   createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description: Scalars['String'];
   icon: Scalars['String'];
   id: Scalars['uuid'];
@@ -2655,9 +2653,9 @@ export type IdentityIntegrations_Bool_Exp = {
   _and?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
   _not?: InputMaybe<IdentityIntegrations_Bool_Exp>;
   _or?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
+  connectionId?: InputMaybe<String_Comparison_Exp>;
   connectionName?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   icon?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -2674,9 +2672,9 @@ export enum IdentityIntegrations_Constraint {
 /** input type for inserting data into table "IdentityIntegrations" */
 export type IdentityIntegrations_Insert_Input = {
   UserIdentities?: InputMaybe<UserIdentities_Arr_Rel_Insert_Input>;
+  connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -2687,9 +2685,9 @@ export type IdentityIntegrations_Insert_Input = {
 /** aggregate max on columns */
 export type IdentityIntegrations_Max_Fields = {
   __typename?: 'IdentityIntegrations_max_fields';
+  connectionId?: Maybe<Scalars['String']>;
   connectionName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
@@ -2700,9 +2698,9 @@ export type IdentityIntegrations_Max_Fields = {
 /** aggregate min on columns */
 export type IdentityIntegrations_Min_Fields = {
   __typename?: 'IdentityIntegrations_min_fields';
+  connectionId?: Maybe<Scalars['String']>;
   connectionName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
@@ -2736,9 +2734,9 @@ export type IdentityIntegrations_On_Conflict = {
 /** Ordering options when selecting data from "IdentityIntegrations". */
 export type IdentityIntegrations_Order_By = {
   UserIdentities_aggregate?: InputMaybe<UserIdentities_Aggregate_Order_By>;
+  connectionId?: InputMaybe<Order_By>;
   connectionName?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   icon?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -2754,11 +2752,11 @@ export type IdentityIntegrations_Pk_Columns_Input = {
 /** select columns of table "IdentityIntegrations" */
 export enum IdentityIntegrations_Select_Column {
   /** column name */
+  ConnectionId = 'connectionId',
+  /** column name */
   ConnectionName = 'connectionName',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -2773,9 +2771,9 @@ export enum IdentityIntegrations_Select_Column {
 
 /** input type for updating data in table "IdentityIntegrations" */
 export type IdentityIntegrations_Set_Input = {
+  connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -2793,9 +2791,9 @@ export type IdentityIntegrations_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type IdentityIntegrations_Stream_Cursor_Value_Input = {
+  connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -2806,11 +2804,11 @@ export type IdentityIntegrations_Stream_Cursor_Value_Input = {
 /** update columns of table "IdentityIntegrations" */
 export enum IdentityIntegrations_Update_Column {
   /** column name */
+  ConnectionId = 'connectionId',
+  /** column name */
   ConnectionName = 'connectionName',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -3792,6 +3790,8 @@ export type MeemContractRolePermissions = {
   /** An object relationship */
   MeemContractRole?: Maybe<MeemContractRoles>;
   MeemContractRoleId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  RolePermission?: Maybe<RolePermissions>;
   RolePermissionId?: Maybe<Scalars['String']>;
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
@@ -3849,6 +3849,7 @@ export type MeemContractRolePermissions_Arr_Rel_Insert_Input = {
 export type MeemContractRolePermissions_Bool_Exp = {
   MeemContractRole?: InputMaybe<MeemContractRoles_Bool_Exp>;
   MeemContractRoleId?: InputMaybe<Uuid_Comparison_Exp>;
+  RolePermission?: InputMaybe<RolePermissions_Bool_Exp>;
   RolePermissionId?: InputMaybe<String_Comparison_Exp>;
   _and?: InputMaybe<Array<MeemContractRolePermissions_Bool_Exp>>;
   _not?: InputMaybe<MeemContractRolePermissions_Bool_Exp>;
@@ -3870,6 +3871,7 @@ export enum MeemContractRolePermissions_Constraint {
 export type MeemContractRolePermissions_Insert_Input = {
   MeemContractRole?: InputMaybe<MeemContractRoles_Obj_Rel_Insert_Input>;
   MeemContractRoleId?: InputMaybe<Scalars['uuid']>;
+  RolePermission?: InputMaybe<RolePermissions_Obj_Rel_Insert_Input>;
   RolePermissionId?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -3934,6 +3936,7 @@ export type MeemContractRolePermissions_On_Conflict = {
 export type MeemContractRolePermissions_Order_By = {
   MeemContractRole?: InputMaybe<MeemContractRoles_Order_By>;
   MeemContractRoleId?: InputMaybe<Order_By>;
+  RolePermission?: InputMaybe<RolePermissions_Order_By>;
   RolePermissionId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4030,7 +4033,7 @@ export type MeemContractRoles = {
   isAdminRole: Scalars['Boolean'];
   isDefaultRole: Scalars['Boolean'];
   name: Scalars['String'];
-  tokenAddress?: Maybe<Scalars['String']>;
+  tokenAddress: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
 };
 
@@ -6454,12 +6457,36 @@ export type Reactions_Updates = {
 /** columns and relationships of "RolePermissions" */
 export type RolePermissions = {
   __typename?: 'RolePermissions';
+  /** An array relationship */
+  MeemContractRolePermissions: Array<MeemContractRolePermissions>;
+  /** An aggregate relationship */
+  MeemContractRolePermissions_aggregate: MeemContractRolePermissions_Aggregate;
   createdAt: Scalars['timestamptz'];
   deletedAt?: Maybe<Scalars['timestamptz']>;
   description: Scalars['String'];
   id: Scalars['String'];
   name: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "RolePermissions" */
+export type RolePermissionsMeemContractRolePermissionsArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractRolePermissions_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractRolePermissions_Order_By>>;
+  where?: InputMaybe<MeemContractRolePermissions_Bool_Exp>;
+};
+
+
+/** columns and relationships of "RolePermissions" */
+export type RolePermissionsMeemContractRolePermissions_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<MeemContractRolePermissions_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<MeemContractRolePermissions_Order_By>>;
+  where?: InputMaybe<MeemContractRolePermissions_Bool_Exp>;
 };
 
 /** aggregated selection of "RolePermissions" */
@@ -6486,6 +6513,8 @@ export type RolePermissions_Aggregate_FieldsCountArgs = {
 
 /** Boolean expression to filter rows from the table "RolePermissions". All fields are combined with a logical 'AND'. */
 export type RolePermissions_Bool_Exp = {
+  MeemContractRolePermissions?: InputMaybe<MeemContractRolePermissions_Bool_Exp>;
+  MeemContractRolePermissions_aggregate?: InputMaybe<MeemContractRolePermissions_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<RolePermissions_Bool_Exp>>;
   _not?: InputMaybe<RolePermissions_Bool_Exp>;
   _or?: InputMaybe<Array<RolePermissions_Bool_Exp>>;
@@ -6505,6 +6534,7 @@ export enum RolePermissions_Constraint {
 
 /** input type for inserting data into table "RolePermissions" */
 export type RolePermissions_Insert_Input = {
+  MeemContractRolePermissions?: InputMaybe<MeemContractRolePermissions_Arr_Rel_Insert_Input>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
@@ -6544,6 +6574,13 @@ export type RolePermissions_Mutation_Response = {
   returning: Array<RolePermissions>;
 };
 
+/** input type for inserting object relation for remote table "RolePermissions" */
+export type RolePermissions_Obj_Rel_Insert_Input = {
+  data: RolePermissions_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<RolePermissions_On_Conflict>;
+};
+
 /** on_conflict condition type for table "RolePermissions" */
 export type RolePermissions_On_Conflict = {
   constraint: RolePermissions_Constraint;
@@ -6553,6 +6590,7 @@ export type RolePermissions_On_Conflict = {
 
 /** Ordering options when selecting data from "RolePermissions". */
 export type RolePermissions_Order_By = {
+  MeemContractRolePermissions_aggregate?: InputMaybe<MeemContractRolePermissions_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
@@ -8242,6 +8280,8 @@ export type UserIdentities_Bool_Exp = {
 export enum UserIdentities_Constraint {
   /** unique or primary key constraint on columns "externalId" */
   UserIdentitiesExternalIdKey = 'UserIdentities_externalId_key',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey1 = 'UserIdentities_externalId_key1',
   /** unique or primary key constraint on columns "id" */
   UserIdentitiesPkey = 'UserIdentities_pkey'
 }
@@ -8592,7 +8632,7 @@ export type Users_Bool_Exp = {
 /** unique or primary key constraints on table "Users" */
 export enum Users_Constraint {
   /** unique or primary key constraint on columns "id" */
-  MeemIdentitiesPkey = 'MeemIdentities_pkey'
+  UsersPkey = 'Users_pkey'
 }
 
 /** input type for inserting data into table "Users" */
@@ -9065,6 +9105,7 @@ export type Wallets = {
   ensFetchedAt?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
   nonce?: Maybe<Scalars['String']>;
+  pkpTokenId?: Maybe<Scalars['String']>;
   updatedAt: Scalars['timestamptz'];
 };
 
@@ -9333,6 +9374,7 @@ export type Wallets_Bool_Exp = {
   ensFetchedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   nonce?: InputMaybe<String_Comparison_Exp>;
+  pkpTokenId?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -9367,6 +9409,7 @@ export type Wallets_Insert_Input = {
   ensFetchedAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   nonce?: InputMaybe<Scalars['String']>;
+  pkpTokenId?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -9382,6 +9425,7 @@ export type Wallets_Max_Fields = {
   ensFetchedAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   nonce?: Maybe<Scalars['String']>;
+  pkpTokenId?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -9396,6 +9440,7 @@ export type Wallets_Max_Order_By = {
   ensFetchedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   nonce?: InputMaybe<Order_By>;
+  pkpTokenId?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -9411,6 +9456,7 @@ export type Wallets_Min_Fields = {
   ensFetchedAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   nonce?: Maybe<Scalars['String']>;
+  pkpTokenId?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -9425,6 +9471,7 @@ export type Wallets_Min_Order_By = {
   ensFetchedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   nonce?: InputMaybe<Order_By>;
+  pkpTokenId?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -9471,6 +9518,7 @@ export type Wallets_Order_By = {
   ensFetchedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   nonce?: InputMaybe<Order_By>;
+  pkpTokenId?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -9500,6 +9548,8 @@ export enum Wallets_Select_Column {
   /** column name */
   Nonce = 'nonce',
   /** column name */
+  PkpTokenId = 'pkpTokenId',
+  /** column name */
   UpdatedAt = 'updatedAt'
 }
 
@@ -9514,6 +9564,7 @@ export type Wallets_Set_Input = {
   ensFetchedAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   nonce?: InputMaybe<Scalars['String']>;
+  pkpTokenId?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -9569,6 +9620,7 @@ export type Wallets_Stream_Cursor_Value_Input = {
   ensFetchedAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   nonce?: InputMaybe<Scalars['String']>;
+  pkpTokenId?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -9603,6 +9655,8 @@ export enum Wallets_Update_Column {
   Id = 'id',
   /** column name */
   Nonce = 'nonce',
+  /** column name */
+  PkpTokenId = 'pkpTokenId',
   /** column name */
   UpdatedAt = 'updatedAt'
 }
@@ -13597,7 +13651,7 @@ export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, tokenAddress?: string | null, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> }> };
+export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', MeemContracts: Array<{ __typename?: 'MeemContracts', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, Meems: Array<{ __typename?: 'Meems', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Owner?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null, MeemContract?: { __typename?: 'MeemContracts', MeemContractWallets: Array<{ __typename?: 'MeemContractWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, isAdminRole: boolean, isDefaultRole: boolean, name: string, tokenAddress: string, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> } | null }>, MeemContractIntegrations: Array<{ __typename?: 'MeemContractIntegrations', IntegrationId?: any | null, id: any, isEnabled: boolean, metadata: any, isPublic: boolean, Integration?: { __typename?: 'Integrations', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, MeemContractRoles: Array<{ __typename?: 'MeemContractRoles', id: any, name: string, isAdminRole: boolean, isDefaultRole: boolean, tokenAddress: string, integrationsMetadata: any, MeemContractRolePermissions: Array<{ __typename?: 'MeemContractRolePermissions', RolePermissionId?: string | null }>, RoleMeemContract?: { __typename?: 'MeemContracts', isTransferrable: boolean } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -13655,12 +13709,12 @@ export type MeemIdSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string } | null }> }> };
+export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, deletedAt?: any | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string } | null }> }> };
 
 export type GetIdentityIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetIdentityIntegrationsQuery = { __typename?: 'query_root', IdentityIntegrations: Array<{ __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string }> };
+export type GetIdentityIntegrationsQuery = { __typename?: 'query_root', IdentityIntegrations: Array<{ __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
 
 export const MeemPartsFragmentDoc = gql`
     fragment MeemParts on Meems {
@@ -14575,7 +14629,7 @@ export type GetBundleByIdLazyQueryHookResult = ReturnType<typeof useGetBundleByI
 export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, GetBundleByIdQueryVariables>;
 export const MeemIdSubscriptionDocument = gql`
     subscription MeemIdSubscription($walletAddress: String) {
-  Users(where: {DefaultWallet: {address: {_ilike: $walletAddress}}}) {
+  Users(where: {Wallets: {address: {_ilike: $walletAddress}}}) {
     updatedAt
     profilePicUrl
     id
@@ -14595,6 +14649,8 @@ export const MeemIdSubscriptionDocument = gql`
         icon
         id
         name
+        connectionName
+        connectionId
       }
     }
   }
@@ -14630,6 +14686,8 @@ export const GetIdentityIntegrationsDocument = gql`
     icon
     id
     name
+    connectionName
+    connectionId
   }
 }
     `;

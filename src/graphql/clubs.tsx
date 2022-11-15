@@ -396,7 +396,6 @@ export const GET_INTEGRATIONS = gql`
 	query GetIntegrations {
 		Integrations {
 			createdAt
-			deletedAt
 			description
 			guideUrl
 			icon

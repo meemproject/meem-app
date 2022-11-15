@@ -1,15 +1,13 @@
-import { Auth0Provider } from '@auth0/auth0-react'
 import log, { LogLevel } from '@kengoldfarb/log'
 import { MantineProvider } from '@mantine/core'
 import { NotificationsProvider } from '@mantine/notifications'
-import { WalletProvider, SocketProvider } from '@meemproject/react'
+import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React, { useEffect } from 'react'
 import { App } from '../components/App'
 import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
 import '@fontsource/inter'
-import { IdentityProvider } from '../components/Profile/IdentityProvider'
-import { CustomApolloProvider } from '../providers/ApolloProvider'
+// import { CustomApolloProvider } from '../providers/ApolloProvider'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
@@ -69,7 +67,7 @@ function MyApp(props: AppProps) {
 				primaryColor: 'brand'
 			}}
 		>
-			<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL ?? ''}>
+			{/* <SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL ?? ''}>
 				<Auth0Provider
 					domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN ?? ''}
 					clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID ?? ''}
@@ -78,22 +76,20 @@ function MyApp(props: AppProps) {
 							? window.location.origin
 							: ''
 					}
-				>
-					<WalletProvider rpcs={rpcs}>
-						<CustomApolloProvider>
-							<NotificationsProvider>
-								<ClubClubProvider>
-									<IdentityProvider>
-										<App>
-											<Component {...pageProps} />
-										</App>
-									</IdentityProvider>
-								</ClubClubProvider>
-							</NotificationsProvider>
-						</CustomApolloProvider>
-					</WalletProvider>
-				</Auth0Provider>
-			</SocketProvider>
+				> */}
+			<MeemProvider>
+				{/* <CustomApolloProvider> */}
+				<NotificationsProvider>
+					<ClubClubProvider>
+						<App>
+							<Component {...pageProps} />
+						</App>
+					</ClubClubProvider>
+				</NotificationsProvider>
+				{/* </CustomApolloProvider> */}
+			</MeemProvider>
+			{/* </Auth0Provider>
+			</SocketProvider> */}
 		</MantineProvider>
 	)
 }

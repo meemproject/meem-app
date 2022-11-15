@@ -7,7 +7,6 @@ export const MEEM_ID_SUBSCRIPTION = gql`
 			profilePicUrl
 			id
 			displayName
-			deletedAt
 			createdAt
 			DefaultWallet {
 				address
@@ -22,6 +21,8 @@ export const MEEM_ID_SUBSCRIPTION = gql`
 					icon
 					id
 					name
+					connectionName
+					connectionId
 				}
 			}
 		}
@@ -36,6 +37,7 @@ export const IDENTITY_INTEGRATIONS_QUERY = gql`
 			id
 			name
 			connectionName
+			connectionId
 		}
 	}
 `

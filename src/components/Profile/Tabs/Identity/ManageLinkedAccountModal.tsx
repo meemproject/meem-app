@@ -1,29 +1,32 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Radio, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
+import type { UserIdentity } from '@meemproject/react'
+import {
+	MeemAPI,
+	updateUserIdentity,
+	detachUserIdentity
+} from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
-import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
-import { IdentityIntegration } from '../../../../model/identity/identity'
 import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
-	integration?: IdentityIntegration
+	userIdentity?: UserIdentity
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const ManageLinkedAccountModal: React.FC<IProps> = ({
-	integration,
+	userIdentity,
 	isOpened,
 	onModalClosed
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
-	const wallet = useWallet()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [integrationVisibility, setIntegrationVisibility] = useState('')
+	const [integrationVisibility, setIntegrationVisibility] =
+		useState<MeemAPI.IntegrationVisibility>()
+	const integration = userIdentity?.IdentityIntegration
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
@@ -32,18 +35,24 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 		// Save the change to the db
 		try {
-			await request
-				.post(
-					`${
-						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
-						integrationId: integration?.id ?? ''
-					})}`
-				)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send({
+			// await request
+			// 	.post(
+			// 		`${
+			// 			process.env.NEXT_PUBLIC_API_URL
+			// 		}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
+			// 			integrationId: integration?.id ?? ''
+			// 		})}`
+			// 	)
+			// 	.set('Authorization', `JWT ${wallet.jwt}`)
+			// 	.send({
+			// 		visibility: integrationVisibility
+			// 	})
+			if (integration?.id) {
+				await updateUserIdentity({
+					identityIntegrationId: integration.id,
 					visibility: integrationVisibility
 				})
+			}
 			setIsSavingChanges(false)
 			onModalClosed()
 		} catch (e) {
@@ -63,9 +72,12 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isOpened) {
-			setIntegrationVisibility(integration?.visibility ?? 'anyone')
+			setIntegrationVisibility(
+				(userIdentity?.visibility as MeemAPI.IntegrationVisibility) ??
+					MeemAPI.IntegrationVisibility.Anyone
+			)
 		}
-	}, [integration?.visibility, isOpened])
+	}, [userIdentity, isOpened])
 
 	return (
 		<>
@@ -109,17 +121,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				<div className={clubsTheme.modalStepsContainer}>
 					{integration?.name === 'Twitter' && (
 						<Text>
-							{`You've successfully verified @${integration.metadata?.twitterUsername} as your Twitter username.`}
+							{`You've successfully verified @${userIdentity?.metadata?.twitterUsername} as your Twitter username.`}
 						</Text>
 					)}
 					{integration?.name === 'Discord' && (
 						<Text>
-							{`You've successfully verified ${integration.metadata?.discordUsername} as your Discord username.`}
+							{`You've successfully verified ${userIdentity?.metadata?.discordUsername} as your Discord username.`}
 						</Text>
 					)}
 					{integration?.name === 'Email' && (
 						<Text>
-							{`You've successfully verified ${integration.metadata?.emailAddress} as your email address.`}
+							{`You've successfully verified ${userIdentity?.metadata?.emailAddress} as your email address.`}
 						</Text>
 					)}
 					<Space h={24} />
@@ -162,6 +174,22 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						}}
 					>
 						Save Preferences
+					</Button>
+					<Space h={24} />
+					<Button
+						className={clubsTheme.buttonBlack}
+						loading={isSavingChanges}
+						onClick={() => {
+							if (userIdentity?.IdentityIntegrationId) {
+								detachUserIdentity({
+									identityIntegrationId:
+										userIdentity?.IdentityIntegrationId
+								})
+								onModalClosed()
+							}
+						}}
+					>
+						Detach Integration
 					</Button>
 				</div>
 			</Modal>

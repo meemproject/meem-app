@@ -3,7 +3,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import router from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
