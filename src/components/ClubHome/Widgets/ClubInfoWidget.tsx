@@ -22,6 +22,7 @@ import { Club } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { hostnameToChainId } from '../../App'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
+import { JoinLeaveClubModal } from '../JoinLeaveClubModal'
 interface IProps {
 	club: Club
 	meetsReqs: boolean
@@ -370,6 +371,10 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 					</div>
 				</Center>
 			</div>
+			<JoinLeaveClubModal
+				isOpened={isJoiningClub || isLeavingClub}
+				onModalClosed={() => {}}
+			/>
 		</>
 	)
 }
