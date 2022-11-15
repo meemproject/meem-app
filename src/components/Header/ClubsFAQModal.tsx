@@ -1,7 +1,7 @@
 import { Text, Space, Modal, Divider } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { useClubsTheme } from '../Styles/ClubsTheme'
+import { colorLightGrey, useClubsTheme } from '../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -28,7 +28,7 @@ export const ClubsFAQModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider />
+				<Divider color={colorLightGrey} />
 				<Space h={24} />
 				<Text
 					className={clubsTheme.tMediumBold}

@@ -211,7 +211,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			<Space h={32} />
 
-			<Divider />
+			<Divider color={colorLightGrey} />
 
 			<Space h={32} />
 
@@ -301,7 +301,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			{shouldShowUpgrade && (
 				<>
 					<Space h={32} />
-					<Divider />
+					<Divider color={colorLightGrey} />
 					<Space h={32} />
 					<Text className={clubsTheme.tExtraSmallLabel}>
 						UPGRADE CLUB CONTRACT
@@ -356,7 +356,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			)}
 
 			<Space h={32} />
-			<Divider />
+			<Divider color={colorLightGrey} />
 			<Space h={32} />
 			<Text className={clubsTheme.tExtraSmallLabel}>
 				CLUB TREASURY ADDRESS

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
 import { PERMISSION_MANAGE_APPS } from '../../../model/identity/permissions'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 }
@@ -16,8 +16,6 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div>
-			<Space h={24} />
-
 			{club.isCurrentUserClubAdmin &&
 				club.currentUserClubPermissions?.includes(
 					PERMISSION_MANAGE_APPS
@@ -40,7 +38,7 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 					</>
 				)}
 
-			<Divider />
+			<Divider color={colorLightGrey} />
 			<Space h={32} />
 		</div>
 	)

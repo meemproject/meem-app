@@ -25,7 +25,7 @@ import {
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../ClubHome/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
-import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
+import { colorLightGrey, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 export function HeaderMenu() {
@@ -240,7 +240,7 @@ export function HeaderMenu() {
 								{`What's a club?`}
 							</Menu.Item>
 							<Space h={4} />
-							<Divider />
+							<Divider color={colorLightGrey} />
 							<Space h={4} />
 
 							<Menu.Item

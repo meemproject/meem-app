@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react'
 import { CircleMinus, Lock, Search } from 'tabler-icons-react'
 import { Club, ClubMember, ClubRole } from '../../../model/club/club'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
 interface IProps {
@@ -146,20 +146,20 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 													clubsTheme.centeredRow
 												}
 											>
-												{member.profilePicture && (
-													<>
-														<Image
-															height={36}
-															width={36}
-															radius={18}
-															src={
-																member.profilePicture ??
-																''
-															}
-														/>
-														<Space w={16} />
-													</>
-												)}
+												<Image
+													height={36}
+													width={36}
+													radius={18}
+													fit={'cover'}
+													src={
+														member.profilePicture &&
+														member.profilePicture
+															.length > 0
+															? member.profilePicture
+															: '/member-placeholder.png'
+													}
+												/>
+												<Space w={16} />
 
 												<div>
 													<Text
@@ -211,7 +211,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 									)}
 								</div>
 								<Space h={16} />
-								<Divider />
+								<Divider color={colorLightGrey} />
 							</div>
 						))}
 					</>

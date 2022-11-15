@@ -102,7 +102,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider />
+				<Divider color={colorLightGrey} />
 
 				<Space h={24} />
 

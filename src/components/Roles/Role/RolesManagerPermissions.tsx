@@ -67,7 +67,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				</div>
 			</div>
 			<Space h={16} />
-			<Divider />
+			<Divider color={colorLightGrey} />
 		</div>
 	)
 

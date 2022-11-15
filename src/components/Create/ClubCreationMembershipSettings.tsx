@@ -459,7 +459,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</div>
 				<Space h={64} />
 
-				<Divider />
+				<Divider color={colorLightGrey} />
 				<Space h={64} />
 
 				<Text className={clubsTheme.tLargeBold}>Membership</Text>

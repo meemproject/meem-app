@@ -416,14 +416,14 @@ export const useClubsTheme = createStyles(theme => ({
 		width: '100%',
 		borderRadius: 16,
 		boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.1)',
-		marginBottom: 32
+		marginBottom: 48
 	},
 	widgetLight: {
 		boxShadow: '5px 5px 30px rgba(0, 0, 0, 0.1)',
 		borderRadius: 16,
 		width: '100%',
 		padding: 24,
-		marginBottom: 32
+		marginBottom: 48
 	},
 
 	// Images

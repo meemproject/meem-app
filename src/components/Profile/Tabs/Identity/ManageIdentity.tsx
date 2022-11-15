@@ -337,7 +337,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			{!id.identity && (
 				<>
 					<Space h={48} />
-					<Divider />
+					<Divider color={colorLightGrey} />
 					<Space h={'xl'} />
 					<Text className={clubsTheme.tMediumBold}>
 						Verify Accounts
@@ -354,7 +354,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			{id.identity.id && (
 				<>
 					<Space h={48} />
-					<Divider />
+					<Divider color={colorLightGrey} />
 					<Space h={'xl'} />
 					{id.identity.integrations &&
 						id.identity.integrations.length > 0 && (

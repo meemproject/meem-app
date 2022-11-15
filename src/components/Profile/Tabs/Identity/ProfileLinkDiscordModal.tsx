@@ -91,7 +91,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider />
+				<Divider color={colorLightGrey} />
 
 				<Space h={24} />
 

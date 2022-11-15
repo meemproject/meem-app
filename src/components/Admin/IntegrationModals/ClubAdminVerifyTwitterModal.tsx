@@ -118,7 +118,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 					setStep(Step.Start)
 				}}
 			>
-				<Divider />
+				<Divider color={colorLightGrey} />
 
 				{integration && integration.isVerified && (
 					<div style={{ paddingLeft: 8, paddingRight: 8 }}>

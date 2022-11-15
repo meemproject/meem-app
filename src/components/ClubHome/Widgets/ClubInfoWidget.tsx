@@ -24,9 +24,10 @@ import { hostnameToChainId } from '../../App'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
+	meetsReqs: boolean
 }
 
-export const ClubInfoWidget: React.FC<IProps> = ({ club }) => {
+export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 	// General Imports
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
@@ -285,6 +286,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club }) => {
 	return (
 		<>
 			<div className={clubsTheme.widgetDark}>
+				<Space h={8} />
 				<Center>
 					<Image
 						className={clubsTheme.imagePixelated}
@@ -320,13 +322,13 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club }) => {
 					{!club.isCurrentUserClubMember && (
 						<Button
 							className={clubsTheme.buttonWhite}
-							disabled={isJoiningClub}
+							disabled={isJoiningClub || !meetsReqs}
 							loading={isJoiningClub}
 							onClick={() => {
 								joinClub()
 							}}
 						>
-							Join Club
+							{meetsReqs ? 'Join Club' : 'Requirements Not Met'}
 						</Button>
 					)}
 				</Center>

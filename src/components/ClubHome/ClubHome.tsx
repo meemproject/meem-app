@@ -18,15 +18,11 @@ import {
 import clubFromMeemContract, { Club } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
-import {
-	colorBlack,
-	colorLightPink,
-	colorPink,
-	useClubsTheme
-} from '../Styles/ClubsTheme'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubAddAppsWidget } from './Widgets/ClubAddAppsWidget'
 import { ClubForumWidget } from './Widgets/ClubForumWidget'
 import { ClubInfoWidget } from './Widgets/ClubInfoWidget'
+import { ClubMembersWidget } from './Widgets/ClubMembersWidget'
 import { ClubRequirementsWidget } from './Widgets/ClubRequirementsWidget'
 
 interface IProps {
@@ -44,6 +40,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const [club, setClub] = useState<Club | undefined>()
 	const [previousClubDataString, setPreviousClubDataString] = useState('')
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
+	const [doesMeetAllRequirements, setDoesMeetAllRequirements] =
+		useState(false)
 
 	// Subscriptions
 	const { data: isCurrentUserClubMemberData, error: userClubMemberError } =
@@ -220,12 +218,21 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 					<Container size={1000}>
 						<div className={clubsTheme.pageResponsiveContainer}>
 							<div className={clubsTheme.pageLeftColumn}>
-								<ClubInfoWidget club={club} />
+								<ClubInfoWidget
+									club={club}
+									meetsReqs={doesMeetAllRequirements}
+								/>
 							</div>
 							<div className={clubsTheme.pageRightColumn}>
 								<ClubForumWidget club={club} />
 								<ClubAddAppsWidget club={club} />
-								<ClubRequirementsWidget club={club} />
+								<ClubRequirementsWidget
+									club={club}
+									onMeetsAllReqsChanged={meetsReqs => {
+										setDoesMeetAllRequirements(meetsReqs)
+									}}
+								/>
+								<ClubMembersWidget club={club} />
 							</div>
 						</div>
 					</Container>

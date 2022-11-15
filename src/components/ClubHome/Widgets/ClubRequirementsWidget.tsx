@@ -3,12 +3,13 @@ import { Text, Space, Alert, Loader } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
-import { CircleCheck, CircleMinus, CircleX } from 'tabler-icons-react'
+import { CircleCheck, CircleX } from 'tabler-icons-react'
 import { Club, MembershipReqType } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
 import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
+	onMeetsAllReqsChanged: (changed: boolean) => void
 }
 
 interface RequirementString {
@@ -17,7 +18,10 @@ interface RequirementString {
 	meetsRequirement: boolean
 }
 
-export const ClubRequirementsWidget: React.FC<IProps> = ({ club }) => {
+export const ClubRequirementsWidget: React.FC<IProps> = ({
+	club,
+	onMeetsAllReqsChanged
+}) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
@@ -25,7 +29,6 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({ club }) => {
 		RequirementString[]
 	>([])
 	const [areRequirementsParsed, setRequirementsParsed] = useState(false)
-	const [doesMeetAllRequirements, setMeetsAllRequirements] = useState(false)
 
 	const checkEligibility = useCallback(
 		(
@@ -34,7 +37,7 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({ club }) => {
 			slotsLeft: number
 		) => {
 			if (reqs.length === 0 || isCurrentUserClubAdmin) {
-				setMeetsAllRequirements(true)
+				onMeetsAllReqsChanged(true)
 			} else {
 				let reqsMet = 0
 				reqs.forEach(req => {
@@ -49,11 +52,11 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({ club }) => {
 					reqsMet === reqs.length &&
 					(slotsLeft === -1 || slotsLeft > 0)
 				) {
-					setMeetsAllRequirements(true)
+					onMeetsAllReqsChanged(true)
 				}
 			}
 		},
-		[]
+		[onMeetsAllReqsChanged]
 	)
 
 	const parseRequirements = useCallback(

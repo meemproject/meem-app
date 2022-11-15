@@ -93,7 +93,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider />
+				<Divider color={colorLightGrey} />
 				<Space h={24} />
 				<Text
 					className={clubsTheme.tMediumBold}

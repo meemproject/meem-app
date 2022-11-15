@@ -102,7 +102,7 @@ export const ProfileLinkEmailModal: React.FC<IProps> = ({
 					setStep(Step.Start)
 				}}
 			>
-				<Divider />
+				<Divider color={colorLightGrey} />
 
 				<Space h={24} />
 

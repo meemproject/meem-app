@@ -400,7 +400,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 								role={role}
 							/>
 
-							<Divider />
+							<Divider color={colorLightGrey} />
 
 							<Space h={40} />
 						</div>

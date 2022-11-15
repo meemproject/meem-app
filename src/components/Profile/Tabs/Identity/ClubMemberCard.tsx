@@ -16,21 +16,27 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 	return (
 		<HoverCard.Dropdown>
 			<div className={clubsTheme.centeredRow}>
-				{member.profilePicture && (
-					<>
-						<Image
-							src={member.profilePicture}
-							radius={24}
-							height={48}
-							width={48}
-						/>
-						<Space w={16} />
-					</>
-				)}
+				<Image
+					height={36}
+					width={36}
+					radius={18}
+					fit={'cover'}
+					src={
+						member.profilePicture &&
+						member.profilePicture.length > 0
+							? member.profilePicture
+							: '/member-placeholder.png'
+					}
+				/>
+				<Space w={16} />
 				<div>
 					<Text className={clubsTheme.tSmallBold}>
-						{member.displayName && member.displayName.length > 0
+						{member.displayName
 							? member.displayName
+							: member.isClubOwner
+							? 'Club Owner'
+							: member.isClubAdmin
+							? 'Club Admin'
 							: 'Club Member'}
 					</Text>
 					<Space h={4} />
