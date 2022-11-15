@@ -17,7 +17,11 @@ import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
 import { AvailableIdentityIntegration } from '../../../../model/identity/identity'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	colorLightGrey,
+	colorPink,
+	useClubsTheme
+} from '../../../Styles/ClubsTheme'
 interface IProps {
 	integration?: AvailableIdentityIntegration
 	isOpened: boolean

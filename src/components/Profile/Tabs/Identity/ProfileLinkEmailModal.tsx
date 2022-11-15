@@ -16,7 +16,11 @@ import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { Identity } from '../../../../model/identity/identity'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	colorLightGrey,
+	colorPink,
+	useClubsTheme
+} from '../../../Styles/ClubsTheme'
 interface IProps {
 	identity: Identity
 	isOpened: boolean

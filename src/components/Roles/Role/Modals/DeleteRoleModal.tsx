@@ -7,7 +7,11 @@ import router from 'next/router'
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	colorLightGrey,
+	colorPink,
+	useClubsTheme
+} from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean

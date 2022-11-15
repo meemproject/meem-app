@@ -3,7 +3,7 @@ import { Text, Space, Switch, Divider, Button } from '@mantine/core'
 import React from 'react'
 import { Lock } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	role?: ClubRole

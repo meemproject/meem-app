@@ -14,7 +14,11 @@ import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club, ClubAdminRole } from '../../../model/club/club'
 import { hostnameToChainId } from '../../App'
-import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import {
+	colorLightGrey,
+	colorPink,
+	useClubsTheme
+} from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club

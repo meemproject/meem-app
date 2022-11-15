@@ -23,6 +23,7 @@ import { Club, Integration } from '../../../model/club/club'
 import {
 	colorGreen,
 	colorGrey,
+	colorLightGrey,
 	colorPink,
 	useClubsTheme
 } from '../../Styles/ClubsTheme'

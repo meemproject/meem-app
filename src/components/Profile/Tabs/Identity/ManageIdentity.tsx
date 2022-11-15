@@ -32,7 +32,11 @@ import {
 	identityIntegrationFromApi
 } from '../../../../model/identity/identity'
 import { useCustomApollo } from '../../../../providers/ApolloProvider'
-import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	colorLightGrey,
+	colorVerified,
+	useClubsTheme
+} from '../../../Styles/ClubsTheme'
 import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'

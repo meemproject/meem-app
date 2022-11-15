@@ -25,7 +25,7 @@ import {
 	ClubRolePermission
 } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
 import { RolesManagerMembers } from './RolesManagerMembers'
