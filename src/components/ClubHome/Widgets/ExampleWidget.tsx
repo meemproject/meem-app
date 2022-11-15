@@ -10,5 +10,5 @@ export const ExampleWidget: React.FC<IProps> = ({ club }) => {
 
 	useEffect(() => {}, [club])
 
-	return <div className={clubsTheme.fullWidth}>Club Requirements</div>
+	return <div className={clubsTheme.widgetLight}>Club Requirements</div>
 }

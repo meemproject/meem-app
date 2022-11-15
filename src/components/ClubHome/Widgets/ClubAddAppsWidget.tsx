@@ -1,18 +1,47 @@
-import log from '@kengoldfarb/log'
-import { Text, Button, Textarea, Space, TextInput } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import React, { useEffect, useState } from 'react'
+import { Button, Center, Divider, Space } from '@mantine/core'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
+import { PERMISSION_MANAGE_APPS } from '../../../model/identity/permissions'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
-import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 interface IProps {
 	club: Club
 }
 
 export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+	const router = useRouter()
 
 	useEffect(() => {}, [club])
 
-	return <div>Add Apps</div>
+	return (
+		<div>
+			<Space h={24} />
+
+			{club.isCurrentUserClubAdmin &&
+				club.currentUserClubPermissions?.includes(
+					PERMISSION_MANAGE_APPS
+				) && (
+					<>
+						<Center>
+							<Button
+								className={clubsTheme.buttonGrey}
+								onClick={() => {
+									router.push({
+										pathname: `${club.slug}/admin`,
+										query: { tab: 'apps' }
+									})
+								}}
+							>
+								+ Add more apps
+							</Button>
+						</Center>
+						<Space h={32} />
+					</>
+				)}
+
+			<Divider />
+			<Space h={32} />
+		</div>
+	)
 }

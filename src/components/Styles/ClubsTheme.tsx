@@ -12,6 +12,7 @@ export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
 export const colorPink = '#FF6651'
 export const colorLightPink = '#FFF0EE'
+export const colorDarkPink = '#DC5745'
 
 // Utility colors
 export const colorGreen = '#1DAD4E'
@@ -40,7 +41,7 @@ export const useClubsTheme = createStyles(theme => ({
 		marginLeft: 8,
 		backgroundColor: colorPink,
 		'&:hover': {
-			backgroundColor: colorLightPink
+			backgroundColor: colorDarkPink
 		},
 		borderRadius: 24
 	},

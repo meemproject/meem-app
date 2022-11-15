@@ -1,11 +1,12 @@
 import log from '@kengoldfarb/log'
-import { Text, Space, Alert } from '@mantine/core'
+import { Text, Space, Alert, Loader } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import { CircleCheck, CircleMinus, CircleX } from 'tabler-icons-react'
 import { Club, MembershipReqType } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
-import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 }
@@ -299,5 +300,52 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({ club }) => {
 		}
 	}, [club, parseRequirements])
 
-	return <div>Club Requirements</div>
+	return (
+		<>
+			<div className={clubsTheme.widgetLight}>
+				<Text className={clubsTheme.tLargeBold}>
+					Membership Requirements
+				</Text>
+				<Space h={16} />
+				{parsedRequirements.length === 0 && (
+					<Loader variant="oval" color={colorPink} />
+				)}
+				{parsedRequirements.length > 0 && (
+					<>
+						{parsedRequirements.map(requirement => (
+							<div
+								key={requirement.requirementComponent?.toString()}
+							>
+								<div
+									className={clubsTheme.centeredRow}
+									style={{ marginTop: 8 }}
+								>
+									{requirement.meetsRequirement && (
+										<CircleCheck
+											width={24}
+											color={colorGreen}
+										/>
+									)}
+									{!requirement.meetsRequirement && (
+										<CircleX
+											style={{ width: 24 }}
+											color={colorPink}
+										/>
+									)}
+									<Space w={12} />
+									<Text
+										className={clubsTheme.tSmall}
+										style={{ width: '100%' }}
+									>
+										{requirement.requirementComponent}
+									</Text>
+								</div>
+								<Space h={8} />
+							</div>
+						))}
+					</>
+				)}
+			</div>
+		</>
+	)
 }

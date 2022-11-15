@@ -14,5 +14,24 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 
 	useEffect(() => {}, [club])
 
-	return <div>Club Requirements</div>
+	return (
+		<>
+			<div className={clubsTheme.widgetLight}>
+				<div className={clubsTheme.spacedRowCentered}>
+					<div className={clubsTheme.centeredRow}>
+						<Text className={clubsTheme.tLargeBold}>Members</Text>
+						<Space w={8} />
+						<Text
+							className={clubsTheme.tLarge}
+							style={{ color: colorDarkGrey }}
+						>{`(${club.memberCount})`}</Text>
+					</div>
+					<Button className={clubsTheme.buttonRed}>View All</Button>
+				</div>
+				<Space h={24} />
+				{postWidget()}
+				{postWidget()}
+			</div>
+		</>
+	)
 }
