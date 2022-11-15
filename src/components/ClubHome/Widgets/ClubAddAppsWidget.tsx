@@ -39,7 +39,7 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 				)}
 
 			<Divider color={colorLightGrey} />
-			<Space h={32} />
+			<Space h={40} />
 		</div>
 	)
 }
