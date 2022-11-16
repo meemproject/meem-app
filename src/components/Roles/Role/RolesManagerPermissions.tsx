@@ -3,7 +3,7 @@ import { Text, Space, Switch, Divider, Button } from '@mantine/core'
 import React from 'react'
 import { Lock } from 'tabler-icons-react'
 import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
-import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	role?: ClubRole
@@ -67,7 +67,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				</div>
 			</div>
 			<Space h={16} />
-			<Divider color={colorLightGrey} />
+			<Divider />
 		</div>
 	)
 

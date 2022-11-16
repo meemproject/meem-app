@@ -2,7 +2,7 @@ import { Text, Button, Space, Image, Center } from '@mantine/core'
 import React, { useEffect } from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-import { colorDarkGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 }
@@ -66,11 +66,7 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 								className={clubsTheme.centeredRow}
 								style={{ cursor: 'pointer' }}
 							>
-								<Message
-									width={20}
-									height={20}
-									color={colorDarkGrey}
-								/>
+								<Message width={20} height={20} />
 								<Space w={4} />
 								<Text className={clubsTheme.tExtraSmall}>
 									14 Comments
@@ -81,11 +77,7 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 								className={clubsTheme.centeredRow}
 								style={{ cursor: 'pointer' }}
 							>
-								<Share
-									width={20}
-									height={20}
-									color={colorDarkGrey}
-								/>
+								<Share width={20} height={20} />
 								<Space w={4} />
 								<Text className={clubsTheme.tExtraSmall}>
 									Share
@@ -108,10 +100,7 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 							Discussions
 						</Text>
 						<Space w={8} />
-						<Text
-							className={clubsTheme.tLarge}
-							style={{ color: colorDarkGrey }}
-						>{`(153)`}</Text>
+						<Text className={clubsTheme.tLarge}>{`(153)`}</Text>
 					</div>
 					<Button className={clubsTheme.buttonRed}>View All</Button>
 				</div>

@@ -16,7 +16,6 @@ import { useWallet } from '@meemproject/react'
 import React, { useState } from 'react'
 import {
 	colorLightestGrey,
-	colorLightGrey,
 	colorWhite,
 	useClubsTheme
 } from '../Styles/ClubsTheme'
@@ -339,7 +338,7 @@ export const JoinClubsModal: React.FC<IProps> = ({
 					{isEmailState && emailState()}
 					{!isEmailState && (
 						<div>
-							<Divider color={colorLightGrey} />
+							<Divider />
 							<Space h={24} />
 
 							<Grid>

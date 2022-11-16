@@ -12,7 +12,8 @@ import {
 	Loader,
 	Button,
 	Switch,
-	Alert
+	Alert,
+	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { MeemAPI } from '@meemproject/api'
@@ -24,11 +25,7 @@ import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetIntegrationsQuery } from '../../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../../graphql/clubs'
 import { Club, Integration } from '../../../model/club/club'
-import {
-	colorGrey,
-	colorLightGrey,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+import { colorGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminGatherTownModal } from '../IntegrationModals/ClubAdminGatherTownModal'
 import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
 import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'
@@ -338,6 +335,9 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		}
 	}
 
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
+
 	return (
 		<>
 			<div>
@@ -378,7 +378,14 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											}
 										>
 											<Image
-												src={`/${integration.icon}`}
+												src={`/${
+													isDarkTheme
+														? `${integration.icon?.replace(
+																'.png',
+																'-white.png'
+														  )}`
+														: integration.icon
+												}`}
 												width={16}
 												height={16}
 												fit={'contain'}
@@ -542,7 +549,14 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												}
 											>
 												<Image
-													src={`/${integration.icon}`}
+													src={`/${
+														isDarkTheme
+															? `${integration.icon?.replace(
+																	'.png',
+																	'-white.png'
+															  )}`
+															: integration.icon
+													}`}
 													width={16}
 													height={16}
 													fit={'contain'}
@@ -646,7 +660,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 						setIntegrationModalOpened(false)
 					}}
 				>
-					<Divider color={colorLightGrey} />
+					<Divider />
 					<Space h={24} />
 					{integrationBeingEdited && (
 						<>

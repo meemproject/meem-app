@@ -9,7 +9,8 @@ import {
 	Center,
 	Loader,
 	Grid,
-	Badge
+	Badge,
+	useMantineColorScheme
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { Group } from 'iconoir-react'
@@ -21,7 +22,12 @@ import { GET_ALL_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
 import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
-import { useClubsTheme } from '../Styles/ClubsTheme'
+import {
+	colorBlack,
+	colorDarkerGrey,
+	colorWhite,
+	useClubsTheme
+} from '../Styles/ClubsTheme'
 
 export const BrowseComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
@@ -80,6 +86,9 @@ export const BrowseComponent: React.FC = () => {
 	})
 
 	const isLoadingClubs = clubs.length === 0
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	return (
 		<>
@@ -193,12 +202,26 @@ export const BrowseComponent: React.FC = () => {
 											</Text>
 											<Space h={8} />
 											<Badge
-												color="gray"
-												variant={'filled'}
+												gradient={{
+													from: isDarkTheme
+														? colorDarkerGrey
+														: '#DCDCDC',
+													to: isDarkTheme
+														? colorDarkerGrey
+														: '#DCDCDC',
+													deg: 35
+												}}
+												classNames={{
+													inner: clubsTheme.tBadgeText
+												}}
+												variant={'gradient'}
 												leftSection={
 													<>
 														<Group
 															style={{
+																color: isDarkTheme
+																	? colorWhite
+																	: colorBlack,
 																marginTop: 5
 															}}
 														/>

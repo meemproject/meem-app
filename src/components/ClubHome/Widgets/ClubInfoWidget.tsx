@@ -1,21 +1,13 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import {
-	Text,
-	Button,
-	Textarea,
-	Space,
-	Image,
-	TextInput,
-	Center
-} from '@mantine/core'
+import { Text, Button, Space, Image, Center } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { LoginState, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
+import { Check, Settings } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club } from '../../../model/club/club'
@@ -281,7 +273,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 	const [isQrModalOpened, setIsQrModalOpened] = useState(false)
 
 	const navigateToAdmin = () => {
-		router.push({ pathname: `/${slug}/admin` })
+		router.push({ pathname: `/${club.slug}/admin` })
 	}
 
 	return (
@@ -370,7 +362,22 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 						/>
 					</div>
 				</Center>
+				<div
+					style={{
+						position: 'absolute',
+						top: 16,
+						right: 16,
+						cursor: 'pointer'
+					}}
+				>
+					<Settings
+						onClick={() => {
+							navigateToAdmin()
+						}}
+					/>
+				</div>
 			</div>
+
 			<JoinLeaveClubModal
 				isOpened={isJoiningClub || isLeavingClub}
 				onModalClosed={() => {}}

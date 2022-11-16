@@ -7,7 +7,9 @@ import {
 	Avatar,
 	Divider,
 	Space,
-	Loader
+	Loader,
+	useMantineColorScheme,
+	ActionIcon
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
@@ -20,12 +22,14 @@ import {
 	BrandDiscord,
 	BrandTwitter,
 	MessageCircle,
-	Mail
+	Mail,
+	Sun,
+	MoonStars
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../ClubHome/ClubClubProvider'
 import IdentityContext from '../Profile/IdentityProvider'
-import { colorLightGrey, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
+import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 export function HeaderMenu() {
@@ -75,6 +79,9 @@ export function HeaderMenu() {
 	}
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+
+	const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	return (
 		<Header className={clubsTheme.siteHeader} height={56}>
@@ -194,6 +201,21 @@ export function HeaderMenu() {
 						</Text>
 					)}
 
+					<ActionIcon
+						style={{ marginTop: -4 }}
+						radius={16}
+						variant="outline"
+						color={'black'}
+						onClick={() => toggleColorScheme()}
+						title="Toggle color scheme"
+					>
+						{isDarkTheme ? (
+							<Sun size={18} />
+						) : (
+							<MoonStars size={18} />
+						)}
+					</ActionIcon>
+
 					<Menu offset={15} radius={8} shadow={'lg'}>
 						<Menu.Target>
 							<UnstyledButton>
@@ -240,7 +262,7 @@ export function HeaderMenu() {
 								{`What's a club?`}
 							</Menu.Item>
 							<Space h={4} />
-							<Divider color={colorLightGrey} />
+							<Divider />
 							<Space h={4} />
 
 							<Menu.Item

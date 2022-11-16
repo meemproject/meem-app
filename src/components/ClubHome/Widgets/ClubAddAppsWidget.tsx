@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
 import { PERMISSION_MANAGE_APPS } from '../../../model/identity/permissions'
-import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 }
@@ -38,7 +38,7 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 					</>
 				)}
 
-			<Divider color={colorLightGrey} />
+			<Divider />
 			<Space h={40} />
 		</div>
 	)

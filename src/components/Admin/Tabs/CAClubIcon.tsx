@@ -9,7 +9,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Club } from '../../../model/club/club'
-import { colorDarkGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -170,8 +170,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 			<Text
 				className={clubsTheme.tExtraSmall}
 				style={{
-					maxWidth: 650,
-					color: colorDarkGrey
+					maxWidth: 650
 				}}
 			>
 				This will be your club’s membership token. You can change it

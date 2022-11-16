@@ -17,11 +17,7 @@ import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
 import { AvailableIdentityIntegration } from '../../../../model/identity/identity'
-import {
-	colorLightGrey,
-	colorPink,
-	useClubsTheme
-} from '../../../Styles/ClubsTheme'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
 	integration?: AvailableIdentityIntegration
 	isOpened: boolean
@@ -112,7 +108,7 @@ export const ProfileLinkTwitterModal: React.FC<IProps> = ({
 					setStep(Step.Start)
 				}}
 			>
-				<Divider color={colorLightGrey} />
+				<Divider />
 
 				<Space h={24} />
 

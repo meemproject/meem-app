@@ -8,13 +8,14 @@ import {
 	Image,
 	TextInput,
 	Center,
-	HoverCard
+	HoverCard,
+	useMantineColorScheme
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { CircleMinus, Lock, Search } from 'tabler-icons-react'
 import { Club, ClubMember, ClubRole } from '../../../model/club/club'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
-import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
 interface IProps {
@@ -31,6 +32,9 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 	onMembersUpdated
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 
@@ -156,6 +160,8 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 														member.profilePicture
 															.length > 0
 															? member.profilePicture
+															: isDarkTheme
+															? '/member-placeholder-white.png'
 															: '/member-placeholder.png'
 													}
 												/>
@@ -211,7 +217,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 									)}
 								</div>
 								<Space h={16} />
-								<Divider color={colorLightGrey} />
+								<Divider />
 							</div>
 						))}
 					</>

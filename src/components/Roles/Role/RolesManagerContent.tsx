@@ -25,7 +25,7 @@ import {
 	ClubRolePermission
 } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
-import { colorLightGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
 import { RolesManagerMembers } from './RolesManagerMembers'
@@ -400,7 +400,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 								role={role}
 							/>
 
-							<Divider color={colorLightGrey} />
+							<Divider />
 
 							<Space h={40} />
 						</div>

@@ -14,7 +14,7 @@ import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Club, ClubMember } from '../../../../model/club/club'
-import { colorLightGrey, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -187,6 +187,8 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 												member.profilePicture &&
 												member.profilePicture.length > 0
 													? member.profilePicture
+													: isDarkTheme
+													? '/member-placeholder-white.png'
 													: '/member-placeholder.png'
 											}
 										/>
@@ -214,7 +216,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 									</div>
 								</div>
 								<Space h={16} />
-								<Divider color={colorLightGrey} />
+								<Divider />
 							</div>
 						))}
 					</>

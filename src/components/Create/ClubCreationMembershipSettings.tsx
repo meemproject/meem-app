@@ -28,7 +28,7 @@ import {
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../ClubHome/ClubClubProvider'
-import { colorLightGrey, colorWhite, useClubsTheme } from '../Styles/ClubsTheme'
+import { colorWhite, useClubsTheme } from '../Styles/ClubsTheme'
 import { CreateClubModal } from './CreateClubModal'
 
 interface IProps {
@@ -459,7 +459,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				</div>
 				<Space h={64} />
 
-				<Divider color={colorLightGrey} />
+				<Divider />
 				<Space h={64} />
 
 				<Text className={clubsTheme.tLargeBold}>Membership</Text>

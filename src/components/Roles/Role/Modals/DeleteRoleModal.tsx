@@ -7,11 +7,7 @@ import router from 'next/router'
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../../model/club/club'
-import {
-	colorLightGrey,
-	colorPink,
-	useClubsTheme
-} from '../../../Styles/ClubsTheme'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -97,7 +93,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider color={colorLightGrey} />
+				<Divider />
 				<Space h={24} />
 				<Text
 					className={clubsTheme.tMediumBold}

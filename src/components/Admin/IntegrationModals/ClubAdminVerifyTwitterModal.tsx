@@ -17,12 +17,7 @@ import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
 import { Club, Integration } from '../../../model/club/club'
-import {
-	colorGreen,
-	colorLightGrey,
-	colorPink,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -123,7 +118,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 					setStep(Step.Start)
 				}}
 			>
-				<Divider color={colorLightGrey} />
+				<Divider />
 
 				{integration && integration.isVerified && (
 					<div style={{ paddingLeft: 8, paddingRight: 8 }}>

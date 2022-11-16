@@ -1,4 +1,11 @@
-import { Badge, HoverCard, Image, Space, Text } from '@mantine/core'
+import {
+	Badge,
+	HoverCard,
+	Image,
+	Space,
+	Text,
+	useMantineColorScheme
+} from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React from 'react'
 import { Check } from 'tabler-icons-react'
@@ -13,6 +20,9 @@ interface IProps {
 export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
+
 	return (
 		<HoverCard.Dropdown>
 			<div className={clubsTheme.centeredRow}>
@@ -25,6 +35,8 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 						member.profilePicture &&
 						member.profilePicture.length > 0
 							? member.profilePicture
+							: isDarkTheme
+							? '/member-placeholder-white.png'
 							: '/member-placeholder.png'
 					}
 				/>
@@ -97,7 +109,11 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 						>
 							<Image
 								className={clubsTheme.tSmallFaded}
-								src="/integration-twitter.png"
+								src={
+									isDarkTheme
+										? '/integration-twitter-white.png'
+										: '/integration-twitter.png'
+								}
 								width={16}
 								height={12}
 							/>
@@ -119,7 +135,11 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 						>
 							<Image
 								className={clubsTheme.tSmallFaded}
-								src="/integration-discord.png"
+								src={
+									isDarkTheme
+										? '/integration-discord-white.png'
+										: '/integration-discord.png'
+								}
 								width={16}
 								height={12}
 							/>

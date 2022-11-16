@@ -32,11 +32,7 @@ import {
 	identityIntegrationFromApi
 } from '../../../../model/identity/identity'
 import { useCustomApollo } from '../../../../providers/ApolloProvider'
-import {
-	colorLightGrey,
-	colorVerified,
-	useClubsTheme
-} from '../../../Styles/ClubsTheme'
+import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
@@ -341,7 +337,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			{!id.identity && (
 				<>
 					<Space h={48} />
-					<Divider color={colorLightGrey} />
+					<Divider />
 					<Space h={'xl'} />
 					<Text className={clubsTheme.tMediumBold}>
 						Verify Accounts
@@ -358,7 +354,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			{id.identity.id && (
 				<>
 					<Space h={48} />
-					<Divider color={colorLightGrey} />
+					<Divider />
 					<Space h={'xl'} />
 					{id.identity.integrations &&
 						id.identity.integrations.length > 0 && (

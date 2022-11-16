@@ -7,23 +7,23 @@ import {
 	TextInput,
 	HoverCard,
 	Divider,
-	Center
+	Center,
+	useMantineColorScheme
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Club, ClubMember } from '../../../model/club/club'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
-import {
-	colorDarkGrey,
-	colorLightGrey,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 }
 
 export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const [members, setMembers] = useState<ClubMember[]>([])
 
@@ -69,10 +69,9 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 					<div className={clubsTheme.centeredRow}>
 						<Text className={clubsTheme.tLargeBold}>Members</Text>
 						<Space w={8} />
-						<Text
-							className={clubsTheme.tLarge}
-							style={{ color: colorDarkGrey }}
-						>{`(${club.members?.length ?? 0})`}</Text>
+						<Text className={clubsTheme.tLarge}>{`(${
+							club.members?.length ?? 0
+						})`}</Text>
 					</div>
 					<Button className={clubsTheme.buttonRed}>View All</Button>
 				</div>
@@ -125,6 +124,8 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 														member.profilePicture
 															.length > 0
 															? member.profilePicture
+															: isDarkTheme
+															? '/member-placeholder-white.png'
 															: '/member-placeholder.png'
 													}
 												/>
@@ -160,7 +161,7 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 									</HoverCard>
 								</div>
 								<Space h={16} />
-								<Divider color={colorLightGrey} />
+								<Divider />
 							</div>
 						))}
 					</>

@@ -5,6 +5,7 @@ import { color } from 'html2canvas/dist/types/css/types/color'
 
 // Primary Palette
 export const colorBlack = '#000000'
+export const colorDarkerGrey = '#222222'
 export const colorDarkGrey = '#444444'
 export const colorGrey = '#E1E1E1'
 export const colorLightGrey = '#F2F2F2'
@@ -17,11 +18,13 @@ export const colorDarkPink = '#DC5745'
 // Utility colors
 export const colorGreen = '#1DAD4E'
 export const colorVerified = 'rgba(62, 162, 255, 1)'
+export const colorSiteDarkModeBg = '#1A1C1E'
 
 export const useClubsTheme = createStyles(theme => ({
 	// Buttons
 	buttonBlack: {
-		backgroundColor: colorBlack,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorBlack,
 		'&:hover': {
 			backgroundColor: colorDarkGrey
 		},
@@ -29,11 +32,12 @@ export const useClubsTheme = createStyles(theme => ({
 	},
 	buttonGrey: {
 		marginLeft: 8,
-		backgroundColor: colorGrey,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey,
 		'&:hover': {
 			backgroundColor: colorLightGrey
 		},
-		color: colorBlack,
+		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
 		borderRadius: 24
 	},
 	buttonRed: {
@@ -58,7 +62,10 @@ export const useClubsTheme = createStyles(theme => ({
 	// Form Fields
 	fRadio: { fontWeight: 600, fontFamily: 'Inter' },
 	fTextField: {
-		backgroundColor: colorLightestGrey,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
+		color:
+			theme.colorScheme === 'dark' ? colorLightestGrey : colorLightGrey,
 		border: '0px',
 		height: 60
 	},
@@ -66,7 +73,10 @@ export const useClubsTheme = createStyles(theme => ({
 		padding: 4,
 		borderRadius: 8,
 		fontWeight: 'bold',
-		backgroundColor: colorLightPink,
+		backgroundColor:
+			theme.colorScheme === 'dark'
+				? 'rgba(255, 102, 81, 0.3)'
+				: colorLightPink,
 		color: colorPink,
 		cursor: 'pointer'
 	},
@@ -131,14 +141,20 @@ export const useClubsTheme = createStyles(theme => ({
 		fontSize: 16,
 		fontWeight: 600,
 		cursor: 'pointer',
-		border: `1px solid ${colorGrey}`,
-		backgroundColor: colorLightestGrey,
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
 		borderRadius: 16,
 		padding: 16
 	},
 	gridItemCentered: {
-		border: `1px solid ${colorGrey}`,
-		backgroundColor: colorLightestGrey,
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
 		fontWeight: 600,
 		borderRadius: 16,
 		padding: 16,
@@ -147,26 +163,33 @@ export const useClubsTheme = createStyles(theme => ({
 		alignItems: 'center'
 	},
 	greyContentBox: {
-		backgroundColor: colorLightGrey,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey,
 		borderRadius: 16,
 		padding: 16
 	},
 	connectMethodGridItem: {
-		backgroundColor: colorLightestGrey,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
 		width: 200,
 		height: 200,
 		borderRadius: 20,
-		border: `1px solid ${colorGrey}`,
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
 		cursor: 'pointer',
 		position: 'relative'
 	},
 	connectMethodGridItemMobile: {
-		backgroundColor: colorLightestGrey,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
 		display: 'flex',
 		flexDirection: 'row',
 		borderRadius: 32,
 		padding: 8,
-		border: `1px solid ${colorGrey}`,
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
 		cursor: 'pointer',
 		alignItems: 'center'
 	},
@@ -183,8 +206,11 @@ export const useClubsTheme = createStyles(theme => ({
 		minHeight: 110,
 		marginBottom: 12,
 		cursor: 'pointer',
-		border: `1px solid ${colorGrey}`,
-		backgroundColor: colorLightestGrey,
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
 		borderRadius: 16,
 		padding: 16
 	},
@@ -193,14 +219,18 @@ export const useClubsTheme = createStyles(theme => ({
 		flexDirection: 'column',
 		alignItems: 'center',
 		marginBottom: 12,
-		border: `1px solid ${colorGrey}`,
-		backgroundColor: colorLightestGrey,
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
 		borderRadius: 16,
 		paddingTop: 16,
 		position: 'relative'
 	},
 	integrationGridItemEnabledHeaderBackground: {
-		backgroundColor: colorWhite,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorWhite,
 		position: 'absolute',
 		top: 0,
 		left: 0,
@@ -231,12 +261,14 @@ export const useClubsTheme = createStyles(theme => ({
 	pageHeader: {
 		marginBottom: 32,
 		display: 'flex',
-		backgroundColor: colorLightestGrey,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorBlack : colorLightestGrey,
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		paddingTop: 32,
-		borderBottomColor: colorGrey,
+		borderBottomColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey,
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
@@ -272,7 +304,7 @@ export const useClubsTheme = createStyles(theme => ({
 		right: 0
 	},
 	pageFooterBackground: {
-		backgroundColor: colorWhite,
+		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		width: '100%',
 		height: 48,
 		paddingTop: 8
@@ -290,7 +322,9 @@ export const useClubsTheme = createStyles(theme => ({
 		position: 'relative'
 	},
 	modalStepsContainer: {
-		border: `1px solid ${colorLightGrey}`,
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey
+		}`,
 		borderRadius: 16,
 		padding: 16
 	},
@@ -355,7 +389,10 @@ export const useClubsTheme = createStyles(theme => ({
 		marginTop: 0,
 		paddingTop: 8,
 		paddingBottom: '-8px',
-		borderBottom: `1px solid ${colorGrey}`
+		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
+		borderBottom: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`
 	},
 	siteHeaderLeftItems: {
 		marginLeft: 4,
@@ -379,6 +416,7 @@ export const useClubsTheme = createStyles(theme => ({
 		marginLeft: 16,
 		marginRight: 8,
 		paddingBottom: 6,
+		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
 		cursor: 'pointer'
 	},
 	siteHeaderInner: {
@@ -390,7 +428,7 @@ export const useClubsTheme = createStyles(theme => ({
 	},
 	siteHeaderUser: {
 		marginBottom: '5px',
-		color: theme.colorScheme === 'dark' ? colorDarkGrey : colorBlack,
+		color: theme.colorScheme === 'dark' ? colorLightGrey : colorBlack,
 		padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
 		borderRadius: theme.radius.sm,
 		transition: 'background-color 100ms ease'
@@ -412,16 +450,24 @@ export const useClubsTheme = createStyles(theme => ({
 	widgetDark: {
 		backgroundColor: colorBlack,
 		color: 'white',
+		position: 'relative',
 		padding: 24,
 		width: '100%',
 		borderRadius: 16,
-		boxShadow: '0px 4px 30px rgba(0, 0, 0, 0.1)',
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '0px 4px 30px rgba(0, 0, 0, 0.1)',
 		marginBottom: 48
 	},
 	widgetLight: {
-		boxShadow: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
 		borderRadius: 16,
 		width: '100%',
+		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		padding: 24,
 		marginBottom: 48
 	},
@@ -449,7 +495,8 @@ export const useClubsTheme = createStyles(theme => ({
 		height: 256,
 		marginTop: -12,
 		marginBottom: -12,
-		backgroundColor: colorWhite,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorSiteDarkModeBg : colorWhite,
 		zIndex: -1
 	},
 	imageClubLogo: {
@@ -558,7 +605,11 @@ export const useClubsTheme = createStyles(theme => ({
 	tExtraExtraSmall: { fontWeight: 500, fontSize: '12px', lineHeight: 1.4 },
 
 	// Text variants
-	tBadgeText: { fontWeight: 600, fontSize: '12px', color: colorBlack },
+	tBadgeText: {
+		fontWeight: 600,
+		fontSize: '12px',
+		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack
+	},
 	tBadgeTextWhite: { fontWeight: 600, fontSize: '12px', color: colorWhite },
 
 	tLink: {

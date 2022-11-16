@@ -23,7 +23,6 @@ import { Club, Integration } from '../../../model/club/club'
 import {
 	colorGreen,
 	colorGrey,
-	colorLightGrey,
 	colorPink,
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
@@ -186,7 +185,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider color={colorLightGrey} />
+				<Divider />
 
 				<Space h={24} />
 

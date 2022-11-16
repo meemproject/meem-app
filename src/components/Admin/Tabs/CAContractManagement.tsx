@@ -14,11 +14,7 @@ import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club, ClubAdminRole } from '../../../model/club/club'
 import { hostnameToChainId } from '../../App'
-import {
-	colorLightGrey,
-	colorPink,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -215,7 +211,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 			<Space h={32} />
 
-			<Divider color={colorLightGrey} />
+			<Divider />
 
 			<Space h={32} />
 
@@ -305,7 +301,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			{shouldShowUpgrade && (
 				<>
 					<Space h={32} />
-					<Divider color={colorLightGrey} />
+					<Divider />
 					<Space h={32} />
 					<Text className={clubsTheme.tExtraSmallLabel}>
 						UPGRADE CLUB CONTRACT
@@ -360,7 +356,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 			)}
 
 			<Space h={32} />
-			<Divider color={colorLightGrey} />
+			<Divider />
 			<Space h={32} />
 			<Text className={clubsTheme.tExtraSmallLabel}>
 				CLUB TREASURY ADDRESS

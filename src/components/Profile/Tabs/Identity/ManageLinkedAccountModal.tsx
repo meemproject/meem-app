@@ -7,11 +7,7 @@ import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
 import { IdentityIntegration } from '../../../../model/identity/identity'
-import {
-	colorLightGrey,
-	colorPink,
-	useClubsTheme
-} from '../../../Styles/ClubsTheme'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
 	integration?: IdentityIntegration
 	isOpened: boolean
@@ -106,7 +102,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider color={colorLightGrey} />
+				<Divider />
 
 				<Space h={24} />
 

@@ -6,11 +6,7 @@ import { useWallet } from '@meemproject/react'
 import React, { useEffect } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
-import {
-	colorLightGrey,
-	colorPink,
-	useClubsTheme
-} from '../../../Styles/ClubsTheme'
+import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	integrationId?: string
@@ -95,7 +91,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					onModalClosed()
 				}}
 			>
-				<Divider color={colorLightGrey} />
+				<Divider />
 
 				<Space h={24} />
 
