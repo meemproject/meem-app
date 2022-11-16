@@ -27,7 +27,7 @@ import {
 } from '../../model/club/club'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import ClubClubContext from '../ClubHome/ClubClubProvider'
 import { colorWhite, useClubsTheme } from '../Styles/ClubsTheme'
 import { CreateClubModal } from './CreateClubModal'
 

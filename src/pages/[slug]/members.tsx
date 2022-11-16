@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { hostnameToChainId } from '../../components/App'
-import { ClubDetailComponent } from '../../components/ClubHome/ClubHome'
+import { ClubMembersComponent } from '../../components/ClubHome/Members/ClubMembers'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { GET_CLUB_INFO } from '../../graphql/clubs'
@@ -22,7 +22,7 @@ interface IProps {
 	club: ClubPropViewModel
 }
 
-const ClubDetailPage: NextPage<IProps> = ({ club }) => {
+const ClubMembersPage: NextPage<IProps> = ({ club }) => {
 	const router = useRouter()
 
 	const clubSlug =
@@ -33,14 +33,14 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 				<title>
 					{club === undefined || club.isError
 						? 'Not found'
-						: `${club.responseBody.MeemContracts[0].name} | Clubs`}
+						: `${club.responseBody.MeemContracts[0].name} | Members | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.MeemContracts[0].name} | Clubs`
+							: `${club.responseBody.MeemContracts[0].name} | Members | Clubs`
 					}
 				/>
 				<meta name="description" content={club.description} />
@@ -51,7 +51,7 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.MeemContracts[0].name} | Clubs`
+							: `${club.responseBody.MeemContracts[0].name} | Members | Clubs`
 					}
 				/>
 				<meta property="og:description" content={club.description} />
@@ -62,7 +62,7 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.MeemContracts[0].name} | Clubs`
+							: `${club.responseBody.MeemContracts[0].name} | Members | Clubs`
 					}
 				/>
 				<meta
@@ -90,7 +90,7 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ClubDetailComponent slug={clubSlug} />
+			<ClubMembersComponent slug={clubSlug} />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -153,4 +153,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ClubDetailPage
+export default ClubMembersPage

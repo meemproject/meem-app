@@ -1,12 +1,25 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Text, Button, Space, Badge, Menu } from '@mantine/core'
+import {
+	Text,
+	Button,
+	Space,
+	Badge,
+	Menu,
+	useMantineColorScheme
+} from '@mantine/core'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
 import { Club, ClubRole } from '../../../model/club/club'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
-import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import {
+	colorBlack,
+	colorDarkerGrey,
+	colorPink,
+	colorWhite,
+	useClubsTheme
+} from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -28,6 +41,9 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 	const [isDeleteRoleModalOpen, setIsDeleteRoleModalOpened] = useState(false)
 
 	const [roleToDelete, setRoleToDelete] = useState<ClubRole>()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	return (
 		<>
@@ -66,20 +82,27 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 								<Text>{role.name}</Text>
 								<Space w={8} />
 								<Badge
-									variant="gradient"
 									gradient={{
-										from: '#DCDCDC',
-										to: '#DCDCDC',
+										from: isDarkTheme
+											? colorDarkerGrey
+											: '#DCDCDC',
+										to: isDarkTheme
+											? colorDarkerGrey
+											: '#DCDCDC',
 										deg: 35
 									}}
 									classNames={{
-										inner: clubsTheme.tBadgeText,
-										root: clubsTheme.badge
+										inner: clubsTheme.tBadgeText
 									}}
+									variant={'gradient'}
 									leftSection={
 										<>
 											<Group
-												color="#000"
+												color={
+													isDarkTheme
+														? colorWhite
+														: colorBlack
+												}
 												style={{
 													marginTop: 5
 												}}

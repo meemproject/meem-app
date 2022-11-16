@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
-import { Text, Image, Space, Loader, Grid, Badge } from '@mantine/core'
+import {
+	Text,
+	Image,
+	Space,
+	Loader,
+	Grid,
+	Badge,
+	useMantineColorScheme
+} from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
@@ -13,13 +21,21 @@ import { SUB_MY_CLUBS } from '../../../graphql/clubs'
 import { Club, clubSummaryFromMeemContract } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { hostnameToChainId } from '../../App'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import {
+	colorBlack,
+	colorDarkerGrey,
+	colorWhite,
+	useClubsTheme
+} from '../../Styles/ClubsTheme'
 
 export const MyClubsComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 	const { mutualMembersClient } = useCustomApollo()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const {
 		loading,
@@ -140,21 +156,26 @@ export const MyClubsComponent: React.FC = () => {
 											<Space h={8} />
 											<div className={clubsTheme.row}>
 												<Badge
-													variant="gradient"
 													gradient={{
-														from: '#DCDCDC',
-														to: '#DCDCDC',
+														from: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
+														to: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
 														deg: 35
 													}}
 													classNames={{
-														inner: clubsTheme.tExtraSmallBoldBlack,
-														root: clubsTheme.badge
+														inner: clubsTheme.tBadgeText
 													}}
+													variant={'gradient'}
 													leftSection={
 														<>
 															<Group
-																color="#000"
 																style={{
+																	color: isDarkTheme
+																		? colorWhite
+																		: colorBlack,
 																	marginTop: 5
 																}}
 															/>

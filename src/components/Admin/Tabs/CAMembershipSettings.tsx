@@ -18,7 +18,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Clock } from 'tabler-icons-react'
 import { MembershipSettings, Club } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import ClubClubContext from '../../Detail/ClubClubProvider'
+import ClubClubContext from '../../ClubHome/ClubClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 

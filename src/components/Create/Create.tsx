@@ -21,7 +21,7 @@ import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import ClubClubContext from '../ClubHome/ClubClubProvider'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
