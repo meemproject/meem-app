@@ -365,7 +365,21 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 									}}
 									className={clubsTheme.buttonWhite}
 									onClick={() => {
-										setIsQrModalOpened(true)
+										if (
+											integration.name === 'Phone Number'
+										) {
+											window.open(
+												`tel:${integration.url}`
+											)
+										} else if (
+											integration.name === 'Email Address'
+										) {
+											window.open(
+												`mailto:${integration.url}`
+											)
+										} else {
+											window.open(integration.url)
+										}
 									}}
 								>
 									<Image
