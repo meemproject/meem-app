@@ -43,8 +43,6 @@ export function HeaderMenu() {
 
 	const { user } = useMeemUser()
 
-	console.log(user)
-
 	const navigateHome = () => {
 		router.push({ pathname: '/' })
 	}
@@ -83,9 +81,9 @@ export function HeaderMenu() {
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
-	let displayName = user?.displayName
+	let displayName = user?.displayName ?? '0x...'
 
-	if (!displayName || displayName.length === 0) {
+	if (!user?.displayName || user?.displayName.length === 0) {
 		displayName =
 			user?.DefaultWallet?.ens ??
 			quickTruncate(user?.DefaultWallet?.address) ??
@@ -117,7 +115,7 @@ export function HeaderMenu() {
 											isUserMenuOpened
 									})}
 								>
-									{isMeLoading && (
+									{!user && isMeLoading && (
 										<Loader
 											style={{ marginTop: 4 }}
 											variant="oval"
@@ -125,7 +123,7 @@ export function HeaderMenu() {
 											size={20}
 										/>
 									)}
-									{!isMeLoading && (
+									{(user || !isMeLoading) && (
 										<Group spacing={7}>
 											<Avatar
 												src={user?.profilePicUrl ?? ''}
