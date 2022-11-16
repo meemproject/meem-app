@@ -1,12 +1,22 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Button, Space, Image, Center } from '@mantine/core'
+import {
+	Text,
+	Button,
+	Space,
+	Image,
+	Center,
+	Modal,
+	Divider
+} from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { LoginState, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
+import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import QRCode from 'react-qr-code'
 import { Check, Settings } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
@@ -302,7 +312,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 				<Center>
 					{club.isCurrentUserClubMember && (
 						<Button
-							className={clubsTheme.buttonWhite}
+							className={clubsTheme.buttonDarkGrey}
 							disabled={isLeavingClub}
 							loading={isLeavingClub}
 							onClick={() => {
@@ -327,7 +337,46 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 				</Center>
 				<Space h={32} />
 				<Center>
-					<div className={clubsTheme.row}></div>
+					<div
+						className={clubsTheme.row}
+						style={{ flexWrap: 'wrap' }}
+					>
+						<Button
+							style={{
+								margin:
+									club.allIntegrations &&
+									club.allIntegrations?.length > 0
+										? 3
+										: 0
+							}}
+							className={clubsTheme.buttonWhite}
+							onClick={() => {
+								setIsQrModalOpened(true)
+							}}
+						>
+							<QrCode />
+						</Button>
+
+						{club.allIntegrations?.map(integration => (
+							<>
+								<Button
+									style={{
+										margin: 3
+									}}
+									className={clubsTheme.buttonWhite}
+									onClick={() => {
+										setIsQrModalOpened(true)
+									}}
+								>
+									<Image
+										width={20}
+										height={20}
+										src={integration.icon}
+									/>
+								</Button>
+							</>
+						))}
+					</div>
 				</Center>
 				<Space h={32} />
 				<Center>
@@ -382,6 +431,22 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 				isOpened={isJoiningClub || isLeavingClub}
 				onModalClosed={() => {}}
 			/>
+			<Modal
+				centered
+				overlayBlur={8}
+				radius={16}
+				size={300}
+				padding={'sm'}
+				title={'Club QR Code'}
+				opened={isQrModalOpened}
+				onClose={() => setIsQrModalOpened(false)}
+			>
+				<Divider />
+				<Space h={24} />
+				<QRCode
+					value={club ? `${window.location.origin}/${club.slug}` : ''}
+				/>
+			</Modal>
 		</>
 	)
 }

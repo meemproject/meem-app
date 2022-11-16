@@ -31,7 +31,6 @@ export const useClubsTheme = createStyles(theme => ({
 		borderRadius: 24
 	},
 	buttonGrey: {
-		marginLeft: 8,
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey,
 		'&:hover': {
@@ -40,9 +39,16 @@ export const useClubsTheme = createStyles(theme => ({
 		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
 		borderRadius: 24
 	},
+	buttonDarkGrey: {
+		backgroundColor: colorDarkGrey,
+		'&:hover': {
+			backgroundColor: colorDarkerGrey
+		},
+		color: colorWhite,
+		borderRadius: 24
+	},
 	buttonRed: {
 		color: colorWhite,
-		marginLeft: 8,
 		backgroundColor: colorPink,
 		'&:hover': {
 			backgroundColor: colorDarkPink
@@ -55,7 +61,7 @@ export const useClubsTheme = createStyles(theme => ({
 		borderColor: colorBlack,
 		backgroundColor: colorWhite,
 		'&:hover': {
-			backgroundColor: colorLightestGrey
+			backgroundColor: colorLightGrey
 		}
 	},
 
@@ -64,8 +70,6 @@ export const useClubsTheme = createStyles(theme => ({
 	fTextField: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
-		color:
-			theme.colorScheme === 'dark' ? colorLightestGrey : colorLightGrey,
 		border: '0px',
 		height: 60
 	},
@@ -537,6 +541,12 @@ export const useClubsTheme = createStyles(theme => ({
 	badge: {
 		paddingLeft: 8,
 		paddingRight: 8
+	},
+	iconDarkThemeToggle: {
+		marginTop: -4,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginRight: 20
+		}
 	},
 	paragraphIntTextInput: {
 		paddingLeft: 142

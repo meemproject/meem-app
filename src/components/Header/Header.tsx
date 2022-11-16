@@ -202,7 +202,7 @@ export function HeaderMenu() {
 					)}
 
 					<ActionIcon
-						style={{ marginTop: -4 }}
+						className={clubsTheme.iconDarkThemeToggle}
 						radius={16}
 						variant="outline"
 						color={'black'}
