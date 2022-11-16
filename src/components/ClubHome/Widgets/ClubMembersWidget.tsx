@@ -10,6 +10,7 @@ import {
 	Center,
 	useMantineColorScheme
 } from '@mantine/core'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Club, ClubMember } from '../../../model/club/club'
@@ -21,6 +22,7 @@ interface IProps {
 
 export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+	const router = useRouter()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -73,7 +75,14 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 							club.members?.length ?? 0
 						})`}</Text>
 					</div>
-					<Button className={clubsTheme.buttonRed}>View All</Button>
+					<Button
+						onClick={() => {
+							router.push({ pathname: `/${club.slug}/members` })
+						}}
+						className={clubsTheme.buttonRed}
+					>
+						View All
+					</Button>
 				</div>
 				<Space h={24} />
 

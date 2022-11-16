@@ -68,8 +68,6 @@ export const useClubsTheme = createStyles(theme => ({
 	// Form Fields
 	fRadio: { fontWeight: 600, fontFamily: 'Inter' },
 	fTextField: {
-		backgroundColor:
-			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
 		border: '0px',
 		height: 60
 	},
