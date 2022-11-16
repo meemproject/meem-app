@@ -277,9 +277,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												}}
 											>
 												<Space h={16} />
-												<Divider
-													color={colorLightGrey}
-												/>
+												<Divider />
 											</div>
 											<div
 												className={

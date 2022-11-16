@@ -8,7 +8,8 @@ import {
 	Button,
 	TextInput,
 	Checkbox,
-	Center
+	Center,
+	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
@@ -32,6 +33,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 	onModalClosed
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const [members, setMembers] = useState<ClubMember[]>([])
 
