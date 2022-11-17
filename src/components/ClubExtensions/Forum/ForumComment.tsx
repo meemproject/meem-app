@@ -102,7 +102,13 @@ export const ForumCommentComponent: React.FC<IProps> = ({ comment }) => {
 							{comment.votes}
 						</Text>
 						<Space w={20} />
-						<Image src={'/reply.svg'} width={16} height={16} />
+						<Image
+							src={
+								isDarkTheme ? '/reply-white.png' : '/reply.png'
+							}
+							width={16}
+							height={16}
+						/>
 						<Space w={8} />
 
 						<Text
