@@ -28,6 +28,7 @@ import {
 	colorLightestGrey,
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
+import { ForumCommentComponent } from './ForumComment'
 interface IProps {
 	postId: string
 }
@@ -45,6 +46,40 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 		content: 'This is just a small test post.',
 		clubSlug: '',
 		votes: 16,
+		comments: [
+			{
+				id: '1',
+				content: 'Test comment',
+				votes: 1,
+				replies: [
+					{
+						id: '1',
+						content: 'Test comment',
+						votes: 1,
+						user: {
+							displayName: 'James',
+							profilePicture: '/exampleclub.png',
+							wallet: ''
+						}
+					},
+					{
+						id: '2',
+						content: 'Test comment',
+						votes: 1,
+						user: {
+							displayName: 'James',
+							profilePicture: '/exampleclub.png',
+							wallet: ''
+						}
+					}
+				],
+				user: {
+					displayName: 'James',
+					profilePicture: '/exampleclub.png',
+					wallet: ''
+				}
+			}
+		],
 		user: {
 			displayName: 'James',
 			profilePicture: '/exampleclub.png',
@@ -222,7 +257,7 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 								root: clubsTheme.fRichTextEditorToolbar
 							}}
 						>
-							<RichTextEditor.Toolbar sticky stickyOffset={60}>
+							<RichTextEditor.Toolbar>
 								<RichTextEditor.ControlsGroup>
 									<RichTextEditor.Bold />
 									<RichTextEditor.Italic />
@@ -247,6 +282,10 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 						</div>
 					</div>
 				)}
+				<Space h={24} />
+				{post.comments?.map(comment => (
+					<ForumCommentComponent key={comment.id} comment={comment} />
+				))}
 			</Container>
 		</div>
 	)

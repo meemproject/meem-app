@@ -5,5 +5,5 @@ export interface ForumComment {
 	content: string
 	user: ClubMember
 	votes?: number
-	replies?: ForumComment
+	replies?: ForumComment[]
 }
