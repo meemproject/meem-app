@@ -8,5 +8,6 @@ export interface ForumPost {
 	content: string
 	attachment?: string
 	comments?: ForumComment[]
+	votes?: number
 	user: ClubMember
 }

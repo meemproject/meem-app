@@ -69,7 +69,8 @@ export const useClubsTheme = createStyles(theme => ({
 	fRadio: { fontWeight: 600, fontFamily: 'Inter' },
 	fTextField: {
 		border: '0px',
-		height: 60
+		height: 60,
+		backgroundColor: theme.colorScheme === 'dark' ? '' : colorLightestGrey
 	},
 	fOrangeSelectableSpan: {
 		padding: 4,
@@ -616,6 +617,11 @@ export const useClubsTheme = createStyles(theme => ({
 	tBadgeText: {
 		fontWeight: 600,
 		fontSize: '12px',
+		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack
+	},
+	tBadgeTextSmall: {
+		fontWeight: 600,
+		fontSize: '10px',
 		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack
 	},
 	tBadgeTextWhite: { fontWeight: 600, fontSize: '12px', color: colorWhite },

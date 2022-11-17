@@ -1,14 +1,24 @@
-import { Center, Space, Text, Image } from '@mantine/core'
+import {
+	Center,
+	Space,
+	Text,
+	Image,
+	Badge,
+	useMantineColorScheme
+} from '@mantine/core'
 import React from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { ForumPost } from '../../../model/club/forum/forumPost'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorDarkerGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	post: ForumPost
 }
 
 export const ForumPostPreview: React.FC<IProps> = ({ post }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	return (
 		<div className={clubsTheme.greyContentBox} style={{ marginBottom: 16 }}>
@@ -19,19 +29,64 @@ export const ForumPostPreview: React.FC<IProps> = ({ post }) => {
 					</Center>
 
 					<Space h={16} />
-					<Center>{`16`}</Center>
+					<Center>{post.votes ?? 0}</Center>
 					<Space h={16} />
 					<Center>
 						<ChevronDown />
 					</Center>
 				</div>
 				<Space w={16} />
-				<div>
-					<Text className={clubsTheme.tSmallBold}>{post.title}</Text>
-					<Space h={8} />
-					<Text className={clubsTheme.tExtraSmall}>
-						{post.content}
-					</Text>
+				<div style={{ width: '100%' }}>
+					<div className={clubsTheme.row}>
+						{post.attachment && (
+							<>
+								<Image
+									src={post.attachment}
+									height={80}
+									width={80}
+									radius={4}
+								/>
+								<Space w={12} />
+							</>
+						)}
+						<div>
+							<Text className={clubsTheme.tSmallBold}>
+								{post.title}
+							</Text>
+							<Space h={8} />
+							<Text className={clubsTheme.tExtraSmall}>
+								{post.content}
+							</Text>
+							<Space h={12} />
+							{post.tags && (
+								<>
+									{post.tags.map(tag => (
+										<Badge
+											style={{ marginRight: 4 }}
+											key={tag}
+											size={'xs'}
+											gradient={{
+												from: isDarkTheme
+													? colorDarkerGrey
+													: '#DCDCDC',
+												to: isDarkTheme
+													? colorDarkerGrey
+													: '#DCDCDC',
+												deg: 35
+											}}
+											classNames={{
+												inner: clubsTheme.tBadgeTextSmall
+											}}
+											variant={'gradient'}
+										>
+											{tag}
+										</Badge>
+									))}
+								</>
+							)}
+						</div>
+					</div>
+
 					<Space h={20} />
 					<div className={clubsTheme.spacedRowCentered}>
 						<div className={clubsTheme.centeredRow}>
