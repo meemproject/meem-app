@@ -23,7 +23,7 @@ import {
 	Club
 } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
-import ClubClubContext from '../../Detail/ClubClubProvider'
+import ClubClubContext from '../../ClubHome/ClubClubProvider'
 import { colorPink, colorWhite, useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 

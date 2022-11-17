@@ -1,4 +1,11 @@
-import { Badge, HoverCard, Image, Space, Text } from '@mantine/core'
+import {
+	Badge,
+	HoverCard,
+	Image,
+	Space,
+	Text,
+	useMantineColorScheme
+} from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React from 'react'
 import { Check } from 'tabler-icons-react'
@@ -13,24 +20,35 @@ interface IProps {
 export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
+
 	return (
 		<HoverCard.Dropdown>
 			<div className={clubsTheme.centeredRow}>
-				{member.profilePicture && (
-					<>
-						<Image
-							src={member.profilePicture}
-							radius={24}
-							height={48}
-							width={48}
-						/>
-						<Space w={16} />
-					</>
-				)}
+				<Image
+					height={36}
+					width={36}
+					radius={18}
+					fit={'cover'}
+					src={
+						member.profilePicture &&
+						member.profilePicture.length > 0
+							? member.profilePicture
+							: isDarkTheme
+							? '/member-placeholder-white.png'
+							: '/member-placeholder.png'
+					}
+				/>
+				<Space w={16} />
 				<div>
 					<Text className={clubsTheme.tSmallBold}>
-						{member.displayName && member.displayName.length > 0
+						{member.displayName
 							? member.displayName
+							: member.isClubOwner
+							? 'Club Owner'
+							: member.isClubAdmin
+							? 'Club Admin'
 							: 'Club Member'}
 					</Text>
 					<Space h={4} />
@@ -91,7 +109,11 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 						>
 							<Image
 								className={clubsTheme.tSmallFaded}
-								src="/integration-twitter.png"
+								src={
+									isDarkTheme
+										? '/integration-twitter-white.png'
+										: '/integration-twitter.png'
+								}
 								width={16}
 								height={12}
 							/>
@@ -113,7 +135,11 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 						>
 							<Image
 								className={clubsTheme.tSmallFaded}
-								src="/integration-discord.png"
+								src={
+									isDarkTheme
+										? '/integration-discord-white.png'
+										: '/integration-discord.png'
+								}
 								width={16}
 								height={12}
 							/>

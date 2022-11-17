@@ -7,7 +7,9 @@ import {
 	Avatar,
 	Divider,
 	Space,
-	Loader
+	Loader,
+	useMantineColorScheme,
+	ActionIcon
 } from '@mantine/core'
 import {
 	LoginModal,
@@ -25,10 +27,12 @@ import {
 	BrandDiscord,
 	BrandTwitter,
 	MessageCircle,
-	Mail
+	Mail,
+	Sun,
+	MoonStars
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import ClubClubContext from '../ClubHome/ClubClubProvider'
 import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
@@ -89,6 +93,8 @@ export function HeaderMenu() {
 			quickTruncate(user?.DefaultWallet?.address) ??
 			'0x...'
 	}
+	const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	return (
 		<Header className={clubsTheme.siteHeader} height={56}>
@@ -193,6 +199,21 @@ export function HeaderMenu() {
 							</a>
 						</Text>
 					)}
+
+					<ActionIcon
+						className={clubsTheme.iconDarkThemeToggle}
+						radius={16}
+						variant="outline"
+						color={'black'}
+						onClick={() => toggleColorScheme()}
+						title="Toggle color scheme"
+					>
+						{isDarkTheme ? (
+							<Sun size={18} />
+						) : (
+							<MoonStars size={18} />
+						)}
+					</ActionIcon>
 
 					<Menu offset={15} radius={8} shadow={'lg'}>
 						<Menu.Target>

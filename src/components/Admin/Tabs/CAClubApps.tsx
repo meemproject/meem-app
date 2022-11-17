@@ -12,7 +12,8 @@ import {
 	Loader,
 	Button,
 	Switch,
-	Alert
+	Alert,
+	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
@@ -334,6 +335,9 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 		}
 	}
 
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
+
 	return (
 		<>
 			<div>
@@ -374,7 +378,14 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											}
 										>
 											<Image
-												src={`/${integration.icon}`}
+												src={`/${
+													isDarkTheme
+														? `${integration.icon?.replace(
+																'.png',
+																'-white.png'
+														  )}`
+														: integration.icon
+												}`}
 												width={16}
 												height={16}
 												fit={'contain'}
@@ -538,7 +549,14 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												}
 											>
 												<Image
-													src={`/${integration.icon}`}
+													src={`/${
+														isDarkTheme
+															? `${integration.icon?.replace(
+																	'.png',
+																	'-white.png'
+															  )}`
+															: integration.icon
+													}`}
 													width={16}
 													height={16}
 													fit={'contain'}

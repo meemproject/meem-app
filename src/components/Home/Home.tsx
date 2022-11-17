@@ -16,7 +16,8 @@ import {
 	// eslint-disable-next-line import/named
 	MantineColor,
 	// eslint-disable-next-line import/named
-	AutocompleteItem
+	AutocompleteItem,
+	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
@@ -28,10 +29,10 @@ import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
 import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import ClubClubContext from '../ClubHome/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
 import {
-	colorBlack,
+	colorDarkGrey,
 	colorLightPink,
 	colorPink,
 	useClubsTheme
@@ -202,32 +203,18 @@ export function HomeComponent() {
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
-	// useEffect(() => {
-	// 	const doLogin = async () => {
-	// 		const accessToken = await getAccessTokenSilently()
-	// 		login({
-	// 			accessToken
-	// 		})
-
-	// 		router.push({
-	// 			pathname: window.location.pathname
-	// 		})
-	// 	}
-	// 	if (isAuthenticated && !hasConnectedIntegration) {
-	// 		setHasConnectedIntegration(true)
-	// 		doLogin()
-	// 	}
-	// }, [
-	// 	router,
-	// 	isAuthenticated,
-	// 	hasConnectedIntegration,
-	// 	setHasConnectedIntegration,
-	// 	getAccessTokenSilently
-	// ])
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	return (
 		<div>
-			<div style={{ backgroundColor: colorLightPink }}>
+			<div
+				style={{
+					backgroundColor: isDarkTheme
+						? colorDarkGrey
+						: colorLightPink
+				}}
+			>
 				<Container
 					size={900}
 					className={clubsTheme.rowResponsive}
@@ -296,8 +283,7 @@ export function HomeComponent() {
 				<Text
 					style={{
 						fontSize: 20,
-						fontWeight: 'bold',
-						color: colorBlack
+						fontWeight: 'bold'
 					}}
 					color="dimmed"
 				>
@@ -359,8 +345,7 @@ export function HomeComponent() {
 				<Text
 					style={{
 						fontSize: 20,
-						fontWeight: 'bold',
-						color: colorBlack
+						fontWeight: 'bold'
 					}}
 					color="dimmed"
 				>

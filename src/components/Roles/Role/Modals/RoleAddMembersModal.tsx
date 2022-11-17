@@ -8,7 +8,8 @@ import {
 	Button,
 	TextInput,
 	Checkbox,
-	Center
+	Center,
+	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
@@ -32,6 +33,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 	onModalClosed
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const [members, setMembers] = useState<ClubMember[]>([])
 
@@ -178,20 +182,21 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 											}}
 										/>
 										<Space w={16} />
-										{member.profilePicture && (
-											<>
-												<Image
-													height={40}
-													width={40}
-													radius={20}
-													src={
-														member.profilePicture ??
-														''
-													}
-												/>
-												<Space w={16} />
-											</>
-										)}
+										<Image
+											height={36}
+											width={36}
+											radius={18}
+											fit={'cover'}
+											src={
+												member.profilePicture &&
+												member.profilePicture.length > 0
+													? member.profilePicture
+													: isDarkTheme
+													? '/member-placeholder-white.png'
+													: '/member-placeholder.png'
+											}
+										/>
+										<Space w={16} />
 
 										<div>
 											<Text
