@@ -83,6 +83,16 @@ export const useClubsTheme = createStyles(theme => ({
 		color: colorPink,
 		cursor: 'pointer'
 	},
+	fRichTextEditorContainer: {
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		borderRadius: 16
+	},
+	fRichTextEditorToolbar: {
+		border: 'none',
+		borderRadius: 24
+	},
 
 	// Layout
 	clickable: {

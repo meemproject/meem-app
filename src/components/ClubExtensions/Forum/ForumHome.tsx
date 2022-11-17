@@ -190,6 +190,7 @@ export const ForumHome: React.FC<IProps> = ({ slug }) => {
 			id: '1',
 			title: 'Test post one',
 			tags: ['funny', 'crazy'],
+			clubSlug: club?.slug ?? '',
 			content: 'This is just a small test post.',
 			user: club && club.members ? club.members[0] : { wallet: '' }
 		},
@@ -197,6 +198,7 @@ export const ForumHome: React.FC<IProps> = ({ slug }) => {
 			id: '2',
 			title: 'Test post two',
 			tags: ['funny', 'crazy'],
+			clubSlug: club?.slug ?? '',
 			content: 'And another test post',
 			user: club && club.members ? club.members[0] : { wallet: '' }
 		}

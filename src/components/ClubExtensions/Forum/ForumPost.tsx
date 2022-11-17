@@ -7,7 +7,8 @@ import {
 	Badge,
 	useMantineColorScheme,
 	Container,
-	Divider
+	Divider,
+	Button
 } from '@mantine/core'
 import { RichTextEditor } from '@mantine/tiptap'
 import Highlight from '@tiptap/extension-highlight'
@@ -42,6 +43,7 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 		title: 'Test post one',
 		tags: ['funny', 'crazy'],
 		content: 'This is just a small test post.',
+		clubSlug: '',
 		votes: 16,
 		user: {
 			displayName: 'James',
@@ -167,10 +169,7 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 										className={clubsTheme.row}
 										style={{ marginTop: 16 }}
 									>
-										<div
-											className={clubsTheme.centeredRow}
-											style={{ cursor: 'pointer' }}
-										>
+										<div className={clubsTheme.centeredRow}>
 											<Message width={20} height={20} />
 											<Space w={4} />
 											<Text
@@ -211,12 +210,18 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 				size={8}
 				color={isDarkTheme ? colorBlack : colorLightestGrey}
 			/>
-			<Space h={24} />
+			<Space h={48} />
 
 			<Container>
 				{editor && (
-					<>
-						<RichTextEditor editor={editor}>
+					<div className={clubsTheme.fRichTextEditorContainer}>
+						<RichTextEditor
+							editor={editor}
+							classNames={{
+								toolbar: clubsTheme.fRichTextEditorToolbar,
+								root: clubsTheme.fRichTextEditorToolbar
+							}}
+						>
 							<RichTextEditor.Toolbar sticky stickyOffset={60}>
 								<RichTextEditor.ControlsGroup>
 									<RichTextEditor.Bold />
@@ -224,41 +229,23 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 									<RichTextEditor.Underline />
 									<RichTextEditor.Strikethrough />
 									<RichTextEditor.ClearFormatting />
-									<RichTextEditor.Highlight />
-									<RichTextEditor.Code />
-								</RichTextEditor.ControlsGroup>
-
-								<RichTextEditor.ControlsGroup>
-									<RichTextEditor.H1 />
-									<RichTextEditor.H2 />
-									<RichTextEditor.H3 />
-									<RichTextEditor.H4 />
-								</RichTextEditor.ControlsGroup>
-
-								<RichTextEditor.ControlsGroup>
-									<RichTextEditor.Blockquote />
-									<RichTextEditor.Hr />
 									<RichTextEditor.BulletList />
 									<RichTextEditor.OrderedList />
-									<RichTextEditor.Subscript />
-									<RichTextEditor.Superscript />
-								</RichTextEditor.ControlsGroup>
-
-								<RichTextEditor.ControlsGroup>
-									<RichTextEditor.Link />
-									<RichTextEditor.Unlink />
-								</RichTextEditor.ControlsGroup>
-
-								<RichTextEditor.ControlsGroup>
-									<RichTextEditor.AlignLeft />
-									<RichTextEditor.AlignCenter />
-									<RichTextEditor.AlignJustify />
-									<RichTextEditor.AlignRight />
 								</RichTextEditor.ControlsGroup>
 							</RichTextEditor.Toolbar>
+							<Divider />
 							<RichTextEditor.Content />
 						</RichTextEditor>
-					</>
+						<Space h={16} />
+						<div className={clubsTheme.rowEndAlign}>
+							<Button
+								className={clubsTheme.buttonBlack}
+								style={{ marginBottom: 16, marginRight: 16 }}
+							>
+								Comment
+							</Button>
+						</div>
+					</div>
 				)}
 			</Container>
 		</div>

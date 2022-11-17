@@ -20,6 +20,7 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 		{
 			id: '1',
 			title: 'Test post one',
+			clubSlug: club.slug ?? '',
 			tags: ['funny', 'crazy'],
 			content: 'This is just a small test post.',
 			user: club.members ? club.members[0] : { wallet: '' }
@@ -27,6 +28,8 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 		{
 			id: '2',
 			title: 'Test post two',
+			clubSlug: club.slug ?? '',
+
 			tags: ['funny', 'crazy'],
 			content: 'And another test post',
 			user: club.members ? club.members[0] : { wallet: '' }

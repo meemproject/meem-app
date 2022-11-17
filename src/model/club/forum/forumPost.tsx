@@ -10,4 +10,5 @@ export interface ForumPost {
 	comments?: ForumComment[]
 	votes?: number
 	user: ClubMember
+	clubSlug: string
 }

@@ -6,6 +6,7 @@ import {
 	Badge,
 	useMantineColorScheme
 } from '@mantine/core'
+import Link from 'next/link'
 import React from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { ForumPost } from '../../../model/club/forum/forumPost'
@@ -110,16 +111,18 @@ export const ForumPostPreview: React.FC<IProps> = ({ post }) => {
 							className={clubsTheme.row}
 							style={{ marginTop: 16 }}
 						>
-							<div
-								className={clubsTheme.centeredRow}
-								style={{ cursor: 'pointer' }}
-							>
-								<Message width={20} height={20} />
-								<Space w={4} />
-								<Text className={clubsTheme.tExtraSmall}>
-									14 Comments
-								</Text>
-							</div>
+							<Link href={`/${post.clubSlug}/forum/post1`}>
+								<div
+									className={clubsTheme.centeredRow}
+									style={{ cursor: 'pointer' }}
+								>
+									<Message width={20} height={20} />
+									<Space w={4} />
+									<Text className={clubsTheme.tExtraSmall}>
+										14 Comments
+									</Text>
+								</div>
+							</Link>
 							<Space w={16} />
 							<div
 								className={clubsTheme.centeredRow}
