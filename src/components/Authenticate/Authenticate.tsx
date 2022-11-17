@@ -1,7 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
+import { useAuth } from '@meemproject/react'
 import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
@@ -9,7 +9,7 @@ import React, { useCallback, useState } from 'react'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 
 const MAuthenticate: React.FC = () => {
-	const wallet = useWallet()
+	const wallet = useAuth()
 	const router = useRouter()
 
 	const [isLoading, setIsLoading] = useState(false)
