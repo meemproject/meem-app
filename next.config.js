@@ -71,9 +71,6 @@ const config = {
       config.resolve.alias['luxon'] = path.resolve(__dirname, '.', 'node_modules', 'luxon');
       config.resolve.alias['@meemproject/react'] = path.resolve(__dirname, '.', 'node_modules', '@meemproject/react');
       config.resolve.alias['@meemproject/sdk'] = path.resolve(__dirname, '.', 'node_modules', '@meemproject/sdk');
-      // config.resolve.alias['@mantine/styles'] = path.resolve(__dirname, '.', 'node_modules', '@mantine/styles');
-      // config.resolve.alias['@mantine/core'] = path.resolve(__dirname, '.', 'node_modules', '@mantine/core');
-      // config.resolve.alias['@emotion/react'] = path.resolve(__dirname, '.', 'node_modules', '@emotion/react');
     }
 
     // When all the Sentry configuration env variables are available/configured
