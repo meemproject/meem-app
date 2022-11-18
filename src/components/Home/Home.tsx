@@ -21,7 +21,7 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useAuth, useWallet } from '@meemproject/react'
+import { LoginState, useAuth } from '@meemproject/react'
 import { login } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
