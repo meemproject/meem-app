@@ -10,8 +10,8 @@ import {
 	Divider
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
 import { LoginState, useWallet } from '@meemproject/react'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'

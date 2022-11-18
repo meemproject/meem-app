@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import log from '@kengoldfarb/log'
+import { useAuth0 } from '@auth0/auth0-react'
 import {
 	Container,
 	Text,
@@ -12,16 +11,14 @@ import {
 	Navbar,
 	NavLink
 } from '@mantine/core'
-import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { MeemAPI, makeRequest, makeFetcher } from '@meemproject/api'
-import { LoginState, useWallet } from '@meemproject/react'
-import Cookies from 'js-cookie'
+import { showNotification } from '@mantine/notifications'
+import { LoginState, useAuth, useMeemUser } from '@meemproject/react'
+import { login } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { AlertCircle, Check } from 'tabler-icons-react'
+import React, { useEffect, useState } from 'react'
+import { Check } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
-import IdentityContext from './IdentityProvider'
+import { useClubsTheme } from '../Styles/ClubsTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyClubsComponent } from './Tabs/MyClubs'
@@ -35,13 +32,16 @@ export const ProfileComponent: React.FC = () => {
 	// General properties / tab management
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
-	const wallet = useWallet()
-	const id = useContext(IdentityContext)
+	const wallet = useAuth()
+	const { isMeLoading, isGetMeError } = useAuth()
+	const { user } = useMeemUser()
+
+	const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
-	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
-
-	const [isSigningIn, setIsSigningIn] = useState(false)
+	const [isMobileNavBarVisible, setIsMobileNavBarVisible] = useState(false)
+	const [hasConnectedIntegration, setHasConnectedIntegration] =
+		useState(false)
 
 	const [
 		isDiscordRoleRedirectModalOpened,
@@ -67,151 +67,36 @@ export const ProfileComponent: React.FC = () => {
 		}
 	}, [router.query.tab])
 
-	//
-	const login = useCallback(
-		async (options: { walletSig?: string; accessToken?: string }) => {
-			setIsSigningIn(true)
-			const address = wallet.accounts[0]
-			const { walletSig, accessToken } = options
-			log.info('Logging in to Meem...')
-			log.debug(`address = ${wallet.accounts[0]}`)
-			log.debug(`sig = ${walletSig}`)
-
-			if (accessToken || (address && walletSig)) {
-				log.debug('HERE', accessToken, address)
-				try {
-					// 1. Log in
-					const loginRequest =
-						await makeRequest<MeemAPI.v1.Login.IDefinition>(
-							MeemAPI.v1.Login.path(),
-							{
-								method: MeemAPI.v1.Login.method,
-								body: {
-									...(address && { address }),
-									...(walletSig && { signature: walletSig }),
-									...(accessToken && { accessToken })
-								}
-							}
-						)
-
-					log.debug(`logged in successfully.`)
-
-					wallet.setJwt(loginRequest.jwt)
-					Cookies.remove('redirectPath')
-					setIsSigningIn(false)
-				} catch (e) {
-					setIsSigningIn(false)
-					log.error(e)
-					cleanNotifications()
-					Cookies.remove('redirectPath')
-					showNotification({
-						radius: 'lg',
-						title: 'Login Failed',
-						message: 'Please refresh the page and try again.'
-					})
-				}
-			}
-		},
-		[wallet]
-	)
-
 	useEffect(() => {
-		async function finishDiscordAuth(code: string) {
-			// Fetch cookies
-			const clubSlug = Cookies.get('clubSlug')
-			const roleId = Cookies.get('roleId')
+		const doLogin = async () => {
+			const accessToken = await getAccessTokenSilently()
+			login({
+				accessToken,
+				shouldConnectUser: true
+			})
 
-			if (clubSlug && roleId) {
-				// Send request
-				try {
-					const finishDiscordAuthFetcher = makeFetcher<
-						MeemAPI.v1.AuthenticateWithDiscord.IQueryParams,
-						MeemAPI.v1.AuthenticateWithDiscord.IRequestBody,
-						MeemAPI.v1.AuthenticateWithDiscord.IResponseBody
-					>({
-						method: MeemAPI.v1.AuthenticateWithDiscord.method
-					})
-
-					const authResult = await finishDiscordAuthFetcher(
-						MeemAPI.v1.AuthenticateWithDiscord.path({}),
-						{},
-						{
-							authCode: code,
-							redirectUri: `${window.location.origin}/profile`
-						}
-					)
-
-					// Set the cookie
-					Cookies.set('discordAccessToken', authResult.accessToken)
-
-					// Redirect / cleanup
-					Cookies.remove('authForDiscordRole')
-					Cookies.remove('clubSlug')
-					Cookies.remove('roleId')
-					router.push({
-						pathname: `/${clubSlug}/roles`,
-						query: {
-							role: `/${roleId}`
-						}
-					})
-				} catch (e) {
-					log.debug(e)
-					showNotification({
-						title: 'Error',
-						autoClose: 5000,
-						color: colorPink,
-						icon: <AlertCircle />,
-						message: `Unable to authenticate with Discord. Please try again later.`
-					})
-					setIsDiscordRoleRedirectModalOpened(false)
-					return
-				}
-			} else {
-				setIsDiscordRoleRedirectModalOpened(false)
-				log.error('Failed to redirect due to missing cookies')
-				showNotification({
-					title: 'Error',
-					autoClose: 5000,
-					color: colorPink,
-					icon: <AlertCircle />,
-					message: `Unable to authenticate with Discord. Please try again later.`
-				})
-			}
+			router.push({
+				pathname: window.location.pathname
+			})
 		}
 
-		if (router.query.code && Cookies.get('authForDiscordRole')) {
-			// We have a discord auth code -> turn into access token
-
-			setIsDiscordRoleRedirectModalOpened(true)
-
-			finishDiscordAuth(router.query.code.toString())
+		if (isAuthenticated && !hasConnectedIntegration) {
+			setHasConnectedIntegration(true)
+			doLogin()
 		}
-	}, [router])
+	}, [
+		router,
+		isAuthenticated,
+		hasConnectedIntegration,
+		setHasConnectedIntegration,
+		getAccessTokenSilently
+	])
 
-	useEffect(() => {
-		const hashQueryParams: { [key: string]: string } = {}
-		const possiblePath = Cookies.get('redirectPath')
-		if (possiblePath && possiblePath.includes('access_token')) {
-			const hashPath = possiblePath.split('#')
-
-			if (hashPath.length > 1) {
-				hashPath[1].split('&').forEach(value => {
-					const keyVal = value.split('=')
-					hashQueryParams[keyVal[0]] = keyVal[1]
-				})
-			}
-			log.debug('ACCESS TOKEN', hashQueryParams)
-			if (hashQueryParams.access_token) {
-				login({
-					accessToken: hashQueryParams.access_token
-				})
-			}
-		}
-	}, [login])
+	const isLoggedIn = wallet.loginState === LoginState.LoggedIn
 
 	return (
 		<>
-			{!wallet.isConnected && !id.isLoadingIdentity && !isSigningIn && (
+			{!isLoggedIn && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -219,7 +104,7 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && (id.isLoadingIdentity || isSigningIn) && (
+			{isMeLoading && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -227,170 +112,147 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected &&
-				!id.isLoadingIdentity &&
-				!isSigningIn &&
-				!id.identity && (
-					<Container>
-						<Space h={120} />
-						<Center>
-							<Text>
-								Unable to load your profile. Please try again
-								later.
-							</Text>
-						</Center>
-					</Container>
-				)}
-			{wallet.isConnected &&
-				!id.isLoadingIdentity &&
-				!isSigningIn &&
-				id.identity && (
-					<>
-						<div className={clubsTheme.pageHeader}>
-							<div className={clubsTheme.spacedRowCentered}>
-								{id.identity.profilePic && (
-									<>
-										<Image
-											radius={32}
-											height={64}
-											width={64}
-											fit={'cover'}
-											className={clubsTheme.imageClubLogo}
-											src={id.identity.profilePic ?? ''}
-										/>
-									</>
-								)}
+			{isGetMeError && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Text>
+							Unable to load your profile. Please try again later.
+						</Text>
+					</Center>
+				</Container>
+			)}
+			{isLoggedIn && user && (
+				<>
+					<div className={clubsTheme.pageHeader}>
+						<div className={clubsTheme.spacedRowCentered}>
+							{user.profilePicUrl && (
+								<>
+									<Image
+										radius={32}
+										height={64}
+										width={64}
+										fit={'cover'}
+										className={clubsTheme.imageClubLogo}
+										src={user.profilePicUrl}
+									/>
+								</>
+							)}
 
-								{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
-								<div
-									className={
-										clubsTheme.pageHeaderTitleContainer
-									}
-								>
-									<Text className={clubsTheme.tLargeBold}>
-										{id.identity.displayName ??
-											'My Profile'}
+							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
+							<div
+								className={clubsTheme.pageHeaderTitleContainer}
+							>
+								<Text className={clubsTheme.tLargeBold}>
+									{user.displayName ?? 'My Profile'}
+								</Text>
+								<Space h={8} />
+								<div className={clubsTheme.row}>
+									<Text
+										className={clubsTheme.tExtraSmallFaded}
+									>
+										{user.DefaultWallet?.ens
+											? user.DefaultWallet?.ens
+											: user.DefaultWallet?.address
+											? quickTruncate(
+													user.DefaultWallet?.address
+											  )
+											: 'No wallet address found'}
 									</Text>
-									<Space h={8} />
-									<div className={clubsTheme.row}>
-										<Text
-											className={
-												clubsTheme.tExtraSmallFaded
-											}
-										>
-											{id.identity.ensAddress
-												? id.identity.ensAddress
-												: id.identity.walletAddress
-												? quickTruncate(
-														id.identity
-															.walletAddress
-												  )
-												: 'No wallet address found'}
-										</Text>
-										{id.identity.id && (
-											<>
-												<Image
-													className={
-														clubsTheme.copyIcon
-													}
-													src="/copy.png"
-													height={20}
-													onClick={() => {
-														navigator.clipboard.writeText(
-															`${
-																id.identity
-																	.ensAddress ??
-																id.identity
-																	.walletAddress
-															}`
-														)
-														showNotification({
-															title: 'Wallet info copied',
-															autoClose: 2000,
-															color: 'green',
-															icon: <Check />,
+									{user.id && (
+										<>
+											<Image
+												className={clubsTheme.copyIcon}
+												src="/copy.png"
+												height={20}
+												onClick={() => {
+													navigator.clipboard.writeText(
+														`${
+															user.DefaultWallet
+																?.ens ??
+															user.DefaultWallet
+																?.address
+														}`
+													)
+													showNotification({
+														title: 'Wallet info copied',
+														autoClose: 2000,
+														color: 'green',
+														icon: <Check />,
 
-															message: `Wallet info was copied to your clipboard.`
-														})
-													}}
-													width={20}
-												/>
-											</>
-										)}
-									</div>
+														message: `Wallet info was copied to your clipboard.`
+													})
+												}}
+												width={20}
+											/>
+										</>
+									)}
 								</div>
 							</div>
 						</div>
-						<div className={clubsTheme.pagePanelLayoutContainer}>
-							<MediaQuery
-								largerThan="sm"
-								styles={{ display: 'none' }}
+					</div>
+					<div className={clubsTheme.pagePanelLayoutContainer}>
+						<MediaQuery
+							largerThan="sm"
+							styles={{ display: 'none' }}
+						>
+							<Burger
+								style={{ marginLeft: 24 }}
+								opened={isMobileNavBarVisible}
+								onClick={() =>
+									setIsMobileNavBarVisible(o => !o)
+								}
+								size="sm"
+								mr="xl"
+							/>
+						</MediaQuery>
+						<Navbar
+							className={clubsTheme.pagePanelLayoutNavBar}
+							width={{ base: 288 }}
+							height={400}
+							hidden={!isMobileNavBarVisible}
+							hiddenBreakpoint={'sm'}
+							withBorder={false}
+							p="xs"
+						>
+							<Text
+								className={clubsTheme.tExtraSmallLabel}
+								style={{ marginLeft: 20, marginBottom: 8 }}
 							>
-								<Burger
-									style={{ marginLeft: 24 }}
-									opened={mobileNavBarVisible}
-									onClick={() =>
-										setMobileNavBarVisible(o => !o)
-									}
-									size="sm"
-									mr="xl"
-								/>
-							</MediaQuery>
-							<Navbar
-								className={clubsTheme.pagePanelLayoutNavBar}
-								width={{ base: 288 }}
-								height={400}
-								hidden={!mobileNavBarVisible}
-								hiddenBreakpoint={'sm'}
-								withBorder={false}
-								p="xs"
-							>
-								<Text
-									className={clubsTheme.tExtraSmallLabel}
-									style={{ marginLeft: 20, marginBottom: 8 }}
-								>
-									SETTINGS
-								</Text>
-								<NavLink
-									className={
-										clubsTheme.pagePanelLayoutNavItem
-									}
-									active={currentTab === Tab.Profile}
-									label={'Manage Identity'}
-									onClick={() => {
-										setCurrentTab(Tab.Profile)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-								<NavLink
-									className={
-										clubsTheme.pagePanelLayoutNavItem
-									}
-									active={currentTab === Tab.MyClubs}
-									label={'My Clubs'}
-									onClick={() => {
-										setCurrentTab(Tab.MyClubs)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-							</Navbar>
-							{!mobileNavBarVisible && (
-								<div
-									className={
-										clubsTheme.pagePanelLayoutContent
-									}
-								>
-									{currentTab === Tab.Profile && (
-										<ManageIdentityComponent />
-									)}
-									{currentTab === Tab.MyClubs && (
-										<MyClubsComponent />
-									)}
-								</div>
-							)}
-						</div>
-					</>
-				)}
+								SETTINGS
+							</Text>
+							<NavLink
+								className={clubsTheme.pagePanelLayoutNavItem}
+								active={currentTab === Tab.Profile}
+								label={'Manage Identity'}
+								onClick={() => {
+									setCurrentTab(Tab.Profile)
+									setIsMobileNavBarVisible(false)
+								}}
+							/>
+							<NavLink
+								className={clubsTheme.pagePanelLayoutNavItem}
+								active={currentTab === Tab.MyClubs}
+								label={'My Clubs'}
+								onClick={() => {
+									setCurrentTab(Tab.MyClubs)
+									setIsMobileNavBarVisible(false)
+								}}
+							/>
+						</Navbar>
+						{!isMobileNavBarVisible && (
+							<div className={clubsTheme.pagePanelLayoutContent}>
+								{currentTab === Tab.Profile && (
+									<ManageIdentityComponent />
+								)}
+								{currentTab === Tab.MyClubs && (
+									<MyClubsComponent />
+								)}
+							</div>
+						)}
+					</div>
+				</>
+			)}
 			<DiscordRoleRedirectModal
 				isOpened={isDiscordRoleRedirectModalOpened}
 				onModalClosed={() => {

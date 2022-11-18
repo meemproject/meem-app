@@ -16,8 +16,8 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { QuestionMarkCircle } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'

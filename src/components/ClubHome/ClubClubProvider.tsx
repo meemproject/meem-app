@@ -9,7 +9,6 @@ import React, {
 	useMemo,
 	ReactNode
 } from 'react'
-// eslint-disable-next-line import/namespace
 import { GetIsMemberOfClubSubscriptionSubscription } from '../../../generated/graphql'
 import { SUB_IS_MEMBER_OF_CLUB } from '../../graphql/clubs'
 import { useCustomApollo } from '../../providers/ApolloProvider'

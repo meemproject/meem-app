@@ -36,6 +36,25 @@
     tslib "^2.3.0"
     zen-observable-ts "^1.2.5"
 
+"@apollo/client@^3.7.1":
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.7.1.tgz#86ce47c18a0714e229231148b0306562550c2248"
+  integrity sha512-xu5M/l7p9gT9Fx7nF3AQivp0XukjB7TM7tOd5wifIpI8RskYveL4I+rpTijzWrnqCPZabkbzJKH7WEAKdctt9w==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    "@wry/context" "^0.7.0"
+    "@wry/equality" "^0.5.0"
+    "@wry/trie" "^0.3.0"
+    graphql-tag "^2.12.6"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.16.1"
+    prop-types "^15.7.2"
+    response-iterator "^0.2.6"
+    symbol-observable "^4.0.0"
+    ts-invariant "^0.10.3"
+    tslib "^2.3.0"
+    zen-observable-ts "^1.2.5"
+
 "@apollo/federation@0.27.0":
   version "0.27.0"
   resolved "https://registry.npmjs.org/@apollo/federation/-/federation-0.27.0.tgz"
@@ -76,6 +95,26 @@
   integrity sha512-fDj5rWlTi/czvUS5t7V7I45Ai6bOO3Z7JARYj21Y2xxfbRGtJi6h8FvLX0N/EbzQgo/fiZc/HAhtfwn+OCjD7A==
   dependencies:
     "@apollographql/graphql-language-service-types" "^2.0.0"
+
+"@auth0/auth0-react@^1.12.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@auth0/auth0-react/-/auth0-react-1.12.0.tgz#b55e95ba60df3e5cecf5cf7fbe961ea2e3856ef9"
+  integrity sha512-Cny2RyHvr0GrKKKV8PMh6GU0vkWNSgd6mp/YHYJynnYCs9yFduNo9hdpHPxXbdDX5CB6wc2PqK6aL8leDlnl/A==
+  dependencies:
+    "@auth0/auth0-spa-js" "^1.22.4"
+
+"@auth0/auth0-spa-js@^1.22.4":
+  version "1.22.5"
+  resolved "https://registry.yarnpkg.com/@auth0/auth0-spa-js/-/auth0-spa-js-1.22.5.tgz#e48be3a6abfa6f63ab6e4b869d04788b4f229f23"
+  integrity sha512-6gaQcd+Eb8ZBcdQkrrm9undM7dY/rPvVdQN8s7rxxrviUCs7OopEygsfSkHf67IP4HtlCiE8dSW5/AipRUOw/A==
+  dependencies:
+    abortcontroller-polyfill "^1.7.3"
+    browser-tabs-lock "^1.2.15"
+    core-js "^3.25.1"
+    es-cookie "~1.3.2"
+    fast-text-encoding "^1.0.6"
+    promise-polyfill "^8.2.3"
+    unfetch "^4.2.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.7":
   version "7.16.7"
@@ -1861,7 +1900,7 @@
   resolved "https://registry.npmjs.org/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
-"@mantine/core@^5.8.0":
+"@mantine/core@5.8.0", "@mantine/core@^5.7.2":
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/@mantine/core/-/core-5.8.0.tgz#b1281d3a4d926a3a0e1a1a573855b7d96602b471"
   integrity sha512-GGQJqVXI3cbY5OzFrg3S3bJUypPktJIFeb2hI65qskFJViL6F8dUynRuKZfi8B4GHteG86zqiZCUo0cUVRTiaQ==
@@ -1879,7 +1918,7 @@
   dependencies:
     "@mantine/utils" "5.8.0"
 
-"@mantine/hooks@^5.8.0":
+"@mantine/hooks@5.8.0", "@mantine/hooks@^5.7.2":
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.8.0.tgz#9858cffcea8000e893be0b2bdb84e7f759407294"
   integrity sha512-838TKK0jTvU9sy7OcbDYc2P9fXyyca4HQxKRP2kRJnsnL6ZAHWFlFosGIcN97FiWh+8uQA7jCoD8jyrUjrFDXg==
@@ -2003,13 +2042,56 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/api@^0.9.9":
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/@meemproject/api/-/api-0.9.9.tgz#dce654c2d008782a8da21fac99cad0df32b11c02"
-  integrity sha512-hRXw4T7ldvXYeX3WzhTWIkvbx41XELSczdzAJwzVv0zrySZiVuIhtRLH3zg/23pA94b/8nM0kyy98CyQqvxLsw==
+"@meemproject/meem-contracts@^0.10.0", "@meemproject/meem-contracts@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.10.1.tgz#63c8841edde953e1bfddc0fdb7c915812f1b2f27"
+  integrity sha512-rmnchr9gT0YVPuzqCj6xEOje45ufwVBZTUYP77tDeBVqQQvoX4M7WkMQirBVzi+CTknmJg8er6o93XWXSXFJKA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.9.9"
+    "@openzeppelin/contracts" "^4.7.3"
+    ethers "^5.6.4"
+    keccak256 "^1.0.6"
+    merkletreejs "^0.2.32"
+    superagent "^8.0.0"
+
+"@meemproject/react@^0.10.0":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.10.1.tgz#8735b5e736fc3a45f39ff311776fac173cda33c9"
+  integrity sha512-nYNWbGMz7xxyJNVIyAI4zj9Yr9RQtVIfgMtNWnEAsOwLtpBFIpDUTHVrBNmo9EDEHy1RhwDmxiNGBp5rS2usBA==
+  dependencies:
+    "@apollo/client" "^3.7.1"
+    "@auth0/auth0-react" "^1.12.0"
+    "@emotion/react" "^11.10.0"
+    "@emotion/server" "^11.10.0"
+    "@kengoldfarb/log" "^1.0.5"
+    "@mantine/core" "^5.7.2"
+    "@mantine/hooks" "^5.7.2"
+    "@material-ui/core" "^4.12.4"
+    "@material-ui/lab" "^4.0.0-alpha.61"
+    "@meemproject/meem-contracts" "^0.10.1"
+    "@meemproject/sdk" "^0.10.1"
+    "@meemproject/utils" "^0.10.1"
+    "@mui/material" "^5.6.1"
+    "@walletconnect/web3-provider" "^1.7.7"
+    ethers "^5.6.4"
+    graphql "^16.6.0"
+    graphql-ws "^5.11.2"
+    js-cookie "^3.0.1"
+    jsonwebtoken "^8.5.1"
+    lodash "^4.17.21"
+    lodash-es "^4.17.21"
+    luxon "^3.0.1"
+    superagent "^7.1.2"
+    swr "^1.3.0"
+    web3modal "^1.9.9"
+
+"@meemproject/sdk@^0.10.0", "@meemproject/sdk@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.10.1.tgz#6492589e2e8255d9eb30b1307883253e25c177af"
+  integrity sha512-6U6xmsS7aVn3sfnEMk40ZLn/P9nwWX/Juua2M4ayUvc2S6rPj0Ff3tP75FjHm3HRQ1wciuVAe/rrUAZzpEyO2g==
+  dependencies:
+    "@kengoldfarb/log" "^1.0.5"
+    "@meemproject/meem-contracts" "^0.10.1"
     "@typechain/ethers-v5" "^10.0.0"
     "@types/js-cookie" "^3.0.1"
     "@types/luxon" "^2.3.1"
@@ -2021,48 +2103,13 @@
     tsnd "^1.0.2"
     typechain "^8.0.0"
 
-"@meemproject/meem-contracts@^0.9.9":
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.9.9.tgz#4d82f12ee37ea18bf23cfdc3576a43db120cd2c2"
-  integrity sha512-nPpU+w9TDFxr0yXf41POJXHVll+ZHpE/iFf3AErb4TIW8EvfsdCBYWDmV2NwBtG3zRFGah8CjUR/tfNrGJUgVQ==
+"@meemproject/utils@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.10.1.tgz#8652899b7bcf3c09b905f78edb39bc9acd9ef5d9"
+  integrity sha512-SK63pWunNKpiXp8+UHGidU3KKZC7eHLsLdq9u7xzp9AfKQ7kCXg7nyQOLwtzyVIsSnG5GT7NQKSXlwoWJqKUMQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@openzeppelin/contracts" "^4.7.3"
-    ethers "^5.6.4"
-    keccak256 "^1.0.6"
-    merkletreejs "^0.2.32"
-    superagent "^8.0.0"
-
-"@meemproject/react@^0.9.9":
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.9.9.tgz#1cf80544092bfe36235fbd2782e105710e1a1564"
-  integrity sha512-TfV6I7ZZxDrB4pReEJdq2vaxev2awpMC4j/zny1PJ1pdTuvaa7CnOgm9FL5E55ed7KCjdkn9GTWIhDJRxTy1KA==
-  dependencies:
-    "@kengoldfarb/log" "^1.0.5"
-    "@material-ui/core" "^4.12.4"
-    "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/api" "^0.9.9"
-    "@meemproject/meem-contracts" "^0.9.9"
-    "@meemproject/utils" "^0.9.9"
-    "@mui/material" "^5.6.1"
-    "@walletconnect/web3-provider" "^1.7.7"
-    ethers "^5.6.4"
-    js-cookie "^3.0.1"
-    jsonwebtoken "^8.5.1"
-    lodash "^4.17.21"
-    lodash-es "^4.17.21"
-    luxon "^3.0.1"
-    superagent "^7.1.2"
-    swr "^1.3.0"
-    web3modal "^1.9.6"
-
-"@meemproject/utils@^0.9.9":
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.9.9.tgz#83af08b4e22a415d65733d55d8f171d7961e84f5"
-  integrity sha512-6dxI+HGtRuEx6bwV2rEAOw1LVXb8XHoJqnr624+32Z170xAbpO/u9+3cYMqhAAJsMhSX1VwoDwTrMrrrt7Gqpg==
-  dependencies:
-    "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.9.9"
+    "@meemproject/meem-contracts" "^0.10.1"
     ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@^2.0.0":
@@ -3116,11 +3163,6 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@tabler/icons@^1.112.0":
-  version "1.112.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-1.112.0.tgz#6119c6046085a06d4246b1ffab7f1c1435d736b5"
-  integrity sha512-M1FmEXqeOUG1iZOLue1aLKEl+E3HHU1JaXb/LmZuOjOWuhHHpfQnSv+mgSmupehophq5piwSPhqnytt1Uh6oLw==
-
 "@tiptap/core@^2.0.0-beta.202":
   version "2.0.0-beta.202"
   resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.0.0-beta.202.tgz#be4c6a200e81875c552e1cc15ae9c6cdd86c37c2"
@@ -3908,6 +3950,13 @@
   dependencies:
     tslib "^2.3.0"
 
+"@wry/context@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@wry/context/-/context-0.7.0.tgz#be88e22c0ddf62aeb0ae9f95c3d90932c619a5c8"
+  integrity sha512-LcDAiYWRtwAoSOArfk7cuYvFXytxfVrdX7yxoUmK7pPITLk5jYh2F8knCwS7LjgYL8u1eidPlKKV6Ikqq0ODqQ==
+  dependencies:
+    tslib "^2.3.0"
+
 "@wry/equality@^0.1.2":
   version "0.1.11"
   resolved "https://registry.npmjs.org/@wry/equality/-/equality-0.1.11.tgz"
@@ -3958,6 +4007,11 @@ abort-controller@^3.0.0:
   integrity sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==
   dependencies:
     event-target-shim "^5.0.0"
+
+abortcontroller-polyfill@^1.7.3:
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/abortcontroller-polyfill/-/abortcontroller-polyfill-1.7.5.tgz#6738495f4e901fbb57b6c0611d0c75f76c485bed"
+  integrity sha512-JMJ5soJWP18htbbxJjG7bG6yuI6pRhgJ0scHHTfkUjf6wjP912xZWvM+A4sJK3gqd9E8fcPbDnOefbA9Th/FIQ==
 
 abstract-leveldown@~2.6.0:
   version "2.6.3"
@@ -5011,6 +5065,13 @@ browser-process-hrtime@^1.0.0:
   resolved "https://registry.npmjs.org/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz"
   integrity sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==
 
+browser-tabs-lock@^1.2.15:
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/browser-tabs-lock/-/browser-tabs-lock-1.2.15.tgz#d5012e652e2a0cb4eba471b0a2300c2fa5d92788"
+  integrity sha512-J8K9vdivK0Di+b8SBdE7EZxDr88TnATing7XoLw6+nFkXMQ6sVBh92K3NQvZlZU91AIkFRi0w3sztk5Z+vsswA==
+  dependencies:
+    lodash ">=4.17.21"
+
 browserify-aes@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/browserify-aes/-/browserify-aes-1.2.0.tgz"
@@ -5910,6 +5971,11 @@ core-js@^3.0.1, core-js@^3.21.1:
   resolved "https://registry.npmjs.org/core-js/-/core-js-3.22.8.tgz"
   integrity sha512-UoGQ/cfzGYIuiq6Z7vWL1HfkE9U9IZ4Ub+0XSiJTCzvbZzgPA69oDF2f+lgJ6dFFLEdjW5O6svvoKzXX23xFkA==
 
+core-js@^3.25.1:
+  version "3.26.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.26.1.tgz#7a9816dabd9ee846c1c0fe0e8fcad68f3709134e"
+  integrity sha512-21491RRQVzUn0GGM9Z1Jrpr6PNPxPi+Za8OM9q4tksTSnlbXXGKK1nXNg/QvwFYettXvSX6zWKCtHHfjN4puyA==
+
 core-util-is@1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz"
@@ -6750,6 +6816,11 @@ es-array-method-boxes-properly@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/es-array-method-boxes-properly/-/es-array-method-boxes-properly-1.0.0.tgz"
   integrity sha512-wd6JXUmyHmt8T5a2xreUwKcGPq6f1f+WwIJkijUqiGcJz1qqnZgP6XIK+QyIWU5lT7imeNxUll48bziG+TSYcA==
+
+es-cookie@~1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/es-cookie/-/es-cookie-1.3.2.tgz#80e831597f72a25721701bdcb21d990319acd831"
+  integrity sha512-UTlYYhXGLOy05P/vKVT2Ui7WtC7NiRzGtJyAKKn32g5Gvcjn7KAClLPWlipCtxIus934dFg9o9jXiBL0nP+t9Q==
 
 es-shim-unscopables@^1.0.0:
   version "1.0.0"
@@ -7716,6 +7787,11 @@ fast-safe-stringify@^2.0.6, fast-safe-stringify@^2.1.1:
   resolved "https://registry.npmjs.org/fast-safe-stringify/-/fast-safe-stringify-2.1.1.tgz"
   integrity sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==
 
+fast-text-encoding@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/fast-text-encoding/-/fast-text-encoding-1.0.6.tgz#0aa25f7f638222e3396d72bf936afcf1d42d6867"
+  integrity sha512-VhXlQgj9ioXCqGstD37E/HBeqEGV/qOD/kmbVG8h5xKBYvM1L3lR1Zn4555cQ8GkYbJa8aJSipLPndE1k6zK2w==
+
 fastest-levenshtein@^1.0.12, fastest-levenshtein@^1.0.7:
   version "1.0.12"
   resolved "https://registry.npmjs.org/fastest-levenshtein/-/fastest-levenshtein-1.0.12.tgz"
@@ -8482,12 +8558,17 @@ graphql-tag@2.12.6, graphql-tag@^2.10.1, graphql-tag@^2.11.0, graphql-tag@^2.12.
   dependencies:
     tslib "^2.1.0"
 
+graphql-ws@^5.11.2:
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.11.2.tgz#d5e0acae8b4d4a4cf7be410a24135cfcefd7ddc0"
+  integrity sha512-4EiZ3/UXYcjm+xFGP544/yW1+DVI8ZpKASFbzrV5EDTFWJp0ZvLl4Dy2fSZAzz9imKp5pZMIcjB0x/H69Pv/6w==
+
 graphql-ws@^5.4.1, graphql-ws@^5.8.2:
   version "5.8.2"
   resolved "https://registry.npmjs.org/graphql-ws/-/graphql-ws-5.8.2.tgz"
   integrity sha512-hYo8kTGzxePFJtMGC7Y4cbypwifMphIJJ7n4TDcVUAfviRwQBnmZAbfZlC+XFwWDUaR7raEDQPxWctpccmE0JQ==
 
-"graphql@14.0.2 - 14.2.0 || ^14.3.1 || ^15.0.0", graphql@^15.7.2:
+"graphql@14.0.2 - 14.2.0 || ^14.3.1 || ^15.0.0", graphql@^15.7.2, graphql@^16.6.0:
   version "15.8.0"
   resolved "https://registry.npmjs.org/graphql/-/graphql-15.8.0.tgz"
   integrity sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==
@@ -10712,9 +10793,9 @@ lodash.xorby@^4.7.0:
   resolved "https://registry.npmjs.org/lodash.xorby/-/lodash.xorby-4.7.0.tgz"
   integrity sha512-gYiD6nvuQy0AEkMoUju+t4f4Rn18fjsLB/7x7YZFqtFT9kmegRLrj/uGEQVyVDy7otTmSrIMXNOk2wwuLcfHCQ==
 
-lodash@4.17.x, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.7.0, lodash@~4.17.0, lodash@~4.17.10:
+lodash@4.17.x, lodash@>=4.17.21, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.7.0, lodash@~4.17.0, lodash@~4.17.10:
   version "4.17.21"
-  resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 log-node@^8.0.3:
@@ -12399,6 +12480,11 @@ promise-inflight@^1.0.1:
   resolved "https://registry.npmjs.org/promise-inflight/-/promise-inflight-1.0.1.tgz"
   integrity sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==
 
+promise-polyfill@^8.2.3:
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-8.2.3.tgz#2edc7e4b81aff781c88a0d577e5fe9da822107c6"
+  integrity sha512-Og0+jCRQetV84U8wVjMNccfGCnMQ9mGs9Hv78QFe+pSDD3gWTpz0y+1QCuxy5d/vBFuZ3iwP2eycAkvqIMPmWg==
+
 promise-queue@^2.2.5:
   version "2.2.5"
   resolved "https://registry.npmjs.org/promise-queue/-/promise-queue-2.2.5.tgz"
@@ -13106,6 +13192,11 @@ resolve@^2.0.0-next.3:
   dependencies:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
+
+response-iterator@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/response-iterator/-/response-iterator-0.2.6.tgz#249005fb14d2e4eeb478a3f735a28fd8b4c9f3da"
+  integrity sha512-pVzEEzrsg23Sh053rmDUvLSkGXluZio0qu8VT6ukrYuvtjVfCbDZH9d6PGXb8HZfzdNZt8feXv/jvUzlhRgLnw==
 
 responselike@^1.0.2:
   version "1.0.2"
@@ -14833,6 +14924,11 @@ undici@^5.1.0:
   resolved "https://registry.npmjs.org/undici/-/undici-5.4.0.tgz"
   integrity sha512-A1SRXysDg7J+mVP46jF+9cKANw0kptqSFZ8tGyL+HBiv0K1spjxPX8Z4EGu+Eu6pjClJUBdnUPlxrOafR668/g==
 
+unfetch@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-4.2.0.tgz#7e21b0ef7d363d8d9af0fb929a5555f6ef97a3be"
+  integrity sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==
+
 uni-global@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/uni-global/-/uni-global-1.0.0.tgz"
@@ -15173,10 +15269,10 @@ web3-utils@^1.3.4:
     randombytes "^2.1.0"
     utf8 "3.0.0"
 
-web3modal@^1.9.6:
-  version "1.9.7"
-  resolved "https://registry.npmjs.org/web3modal/-/web3modal-1.9.7.tgz"
-  integrity sha512-z3XfY7cV8GwGvHP3WvrSxPU6/7ocwVyiU77U/Lxoa53AUSsOKl01V8ErZ8CkJSH41C3YgzwBaOETj0rC9uFBKg==
+web3modal@^1.9.9:
+  version "1.9.9"
+  resolved "https://registry.yarnpkg.com/web3modal/-/web3modal-1.9.9.tgz#1a09771e1b9264842ab98d42c620568f470ff96b"
+  integrity sha512-ML1C4xH+JTSHHkKbjxuF+f5B3cDUOCnrdQZ8Mlzippq7zRKHf3NBeuIvDdNjtVclJ2S4zYYVmVqRWrgB11ej8A==
   dependencies:
     detect-browser "^5.1.0"
     prop-types "^15.7.2"

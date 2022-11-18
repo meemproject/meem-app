@@ -1,10 +1,10 @@
 import log from '@kengoldfarb/log'
-import { ERC20 } from '@meemproject/api/build/abis/ERC20'
-import erc20ABI from '@meemproject/api/build/abis/ERC20.json'
 import {
 	getERC165Contract,
 	getERC721Contract
 } from '@meemproject/meem-contracts'
+import { ERC20 } from '@meemproject/sdk/build/abis/ERC20'
+import erc20ABI from '@meemproject/sdk/build/abis/ERC20.json'
 import { BigNumber, ethers } from 'ethers'
 
 // Convenience class for tokens and NFTs

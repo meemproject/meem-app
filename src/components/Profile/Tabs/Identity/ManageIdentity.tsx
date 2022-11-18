@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import { useAuth0 } from '@auth0/auth0-react'
 import log from '@kengoldfarb/log'
 import {
 	Text,
@@ -12,32 +13,25 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { useMeemUser } from '@meemproject/react'
+import type { UserIdentity } from '@meemproject/react'
+import { updateUser } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
-import Cookies from 'js-cookie'
 import dynamic from 'next/dynamic'
-import router from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
-import request from 'superagent'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
 import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
 import {
 	AvailableIdentityIntegration,
-	IdentityIntegration,
 	identityIntegrationFromApi
 } from '../../../../model/identity/identity'
 import { useCustomApollo } from '../../../../providers/ApolloProvider'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
-import IdentityContext from '../../IdentityProvider'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
-import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
-import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
-import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -46,9 +40,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 export const ManageIdentityComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 
-	const wallet = useWallet()
-	const id = useContext(IdentityContext)
-
+	const { loginWithRedirect } = useAuth0()
+	const { user: me } = useMeemUser()
 	const { anonClient } = useCustomApollo()
 
 	// Mutable identity data
@@ -62,8 +55,8 @@ export const ManageIdentityComponent: React.FC = () => {
 		AvailableIdentityIntegration[]
 	>([])
 
-	const [integrationCurrentlyEditing, setIntegrationCurrentlyEditing] =
-		useState<IdentityIntegration>()
+	const [userIdentityCurrentlyEditing, setUserIdentityCurrentlyEditing] =
+		useState<UserIdentity>()
 
 	// Fetch a list of available integrations.
 	const { data: inteData } = useQuery<GetIdentityIntegrationsQuery>(
@@ -72,9 +65,6 @@ export const ManageIdentityComponent: React.FC = () => {
 			client: anonClient
 		}
 	)
-
-	// Discord-specific integration data
-	const [discordAuthCode, setIsDiscordAuthCode] = useState<string>()
 
 	// Club logo
 	const [
@@ -126,11 +116,11 @@ export const ManageIdentityComponent: React.FC = () => {
 	}, [rawProfilePicture])
 
 	useEffect(() => {
-		if (id.hasFetchedIdentity) {
-			setDisplayName(id.identity.displayName ?? '')
-			setProfilePicture(id.identity.profilePic ?? '')
+		if (me?.id) {
+			setDisplayName(me.displayName ?? '')
+			setProfilePicture(me.profilePicUrl ?? '')
 		}
-	}, [id.hasFetchedIdentity, id.identity.displayName, id.identity.profilePic])
+	}, [me])
 
 	useEffect(() => {
 		if (availableIntegrations.length === 0 && inteData) {
@@ -146,10 +136,6 @@ export const ManageIdentityComponent: React.FC = () => {
 	// Modal visibility
 	const [isLinkedAccountModalOpen, setIsLinkedAccountModalOpen] =
 		useState(false)
-
-	const [isDiscordModalOpen, setIsDiscordModalOpen] = useState(false)
-	const [isTwitterModalOpen, setIsTwitterModalOpen] = useState(false)
-	const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 
 	const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 	const openEmojiPicker = () => {
@@ -183,24 +169,24 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	useEffect(() => {
-		if (
-			router.query.code &&
-			availableIntegrations.length > 0 &&
-			!Cookies.get('authForDiscordRole')
-		) {
-			// We have a discord auth code
+	// useEffect(() => {
+	// 	if (
+	// 		router.query.code &&
+	// 		availableIntegrations.length > 0 &&
+	// 		!Cookies.get('authForDiscordRole')
+	// 	) {
+	// 		// We have a discord auth code
 
-			// create or update integration
-			availableIntegrations.forEach(inte => {
-				if (inte.name === 'Discord') {
-					setIntegrationCurrentlyEditing(inte)
-					setIsDiscordAuthCode(router.query.code as string)
-					setIsDiscordModalOpen(true)
-				}
-			})
-		}
-	}, [availableIntegrations])
+	// 		// create or update integration
+	// 		// availableIntegrations.forEach(inte => {
+	// 		// 	if (inte.name === 'Discord') {
+	// 		// 		setIntegrationCurrentlyEditing(inte)
+	// 		// 		setIsDiscordAuthCode(router.query.code as string)
+	// 		// 		setIsDiscordModalOpen(true)
+	// 		// 	}
+	// 		// })
+	// 	}
+	// }, [availableIntegrations])
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -209,21 +195,21 @@ export const ManageIdentityComponent: React.FC = () => {
 
 		// Save the change to the db
 		try {
-			const body = {
+			// log.debug(`saving changes with body = ${JSON.stringify(body)}`)
+
+			await updateUser({
 				displayName,
 				profilePicBase64
-			}
+			})
 
-			log.debug(`saving changes with body = ${JSON.stringify(body)}`)
-
-			await request
-				.post(
-					`${
-						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateMeemId.path()}`
-				)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send(body)
+			// await request
+			// 	.post(
+			// 		`${
+			// 			process.env.NEXT_PUBLIC_API_URL
+			// 		}${MeemAPI.v1.CreateOrUpdateMeemId.path()}`
+			// 	)
+			// 	.set('Authorization', `JWT ${wallet.jwt}`)
+			// 	.send(body)
 			setIsSavingChanges(false)
 		} catch (e) {
 			log.debug(e)
@@ -238,32 +224,17 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	const openIntegrationModal = (
-		integration: AvailableIdentityIntegration
-	) => {
-		setIntegrationCurrentlyEditing(integration)
-		if (integration.name) {
-			switch (integration.name) {
-				case 'Twitter':
-					setIsTwitterModalOpen(true)
-					break
-				case 'Discord':
-					// Discord is a special case due to OAuth
-					// eslint-disable-next-line no-case-declarations
-					const redirectUri = encodeURI(
-						`${window.location.origin}/profile`
-					)
+	const filteredAvilableIntegrations = availableIntegrations.filter(ai => {
+		const connectedIntegration = me?.UserIdentities?.find(
+			i => i.IdentityIntegrationId === ai.id
+		)
 
-					window.location.replace(
-						`https://discord.com/api/oauth2/authorize?response_type=code&client_id=967119580088660039&scope=identify&redirect_uri=${redirectUri}`
-					)
-					break
-				case 'Email':
-					setIsEmailModalOpen(true)
-					break
-			}
+		if (connectedIntegration) {
+			return false
 		}
-	}
+
+		return true
+	})
 
 	return (
 		<>
@@ -334,7 +305,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
 			{/* Only show verified accounts section if the user has an existing identity */}
-			{!id.identity && (
+			{me?.id && (
 				<>
 					<Space h={48} />
 					<Divider />
@@ -351,125 +322,48 @@ export const ManageIdentityComponent: React.FC = () => {
 					</Text>
 				</>
 			)}
-			{id.identity.id && (
+			{me?.id && (
 				<>
 					<Space h={48} />
 					<Divider />
 					<Space h={'xl'} />
-					{id.identity.integrations &&
-						id.identity.integrations.length > 0 && (
-							<>
-								<div className={clubsTheme.centeredRow}>
-									<Image
-										src="/icon-verified.png"
-										width={18}
-										height={18}
-									/>
-									<Space w={8} />
-
-									<Text
-										style={{
-											color: colorVerified
-										}}
-										className={clubsTheme.tMediumBold}
-									>
-										Verified
-									</Text>
-								</div>
-								<Space h={16} />
-								<Grid style={{ maxWidth: 800 }}>
-									{id.identity.integrations.map(
-										integration => (
-											<Grid.Col
-												xs={6}
-												sm={4}
-												md={4}
-												lg={4}
-												xl={4}
-												key={integration.name}
-											>
-												<a
-													onClick={() => {
-														setIntegrationCurrentlyEditing(
-															integration
-														)
-														setIsLinkedAccountModalOpen(
-															true
-														)
-													}}
-												>
-													<div
-														className={
-															clubsTheme.gridItem
-														}
-													>
-														<div
-															className={
-																clubsTheme.integrationGridItemHeader
-															}
-														>
-															<Image
-																src={`${integration.icon}`}
-																width={16}
-																height={16}
-																fit={'contain'}
-															/>
-															<Space w={8} />
-															{integration
-																.metadata
-																.twitterUsername && (
-																<Text>
-																	{`@${integration.metadata.twitterUsername}`}
-																</Text>
-															)}
-															{integration
-																.metadata
-																.discordUsername && (
-																<Text>
-																	{`${integration.metadata.discordUsername}`}
-																</Text>
-															)}
-															{integration
-																.metadata
-																.email && (
-																<Text>
-																	{`${integration.metadata.email}`}
-																</Text>
-															)}
-														</div>
-													</div>
-												</a>
-											</Grid.Col>
-										)
-									)}
-								</Grid>
-								<Space h={'xl'} />
-							</>
-						)}
-
-					<Text className={clubsTheme.tMediumBold}>
-						Verify Accounts
-					</Text>
-					<Space h={16} />
-					{availableIntegrations.length === 0 && (
-						<Loader variant="oval" color="red" />
-					)}
-					{availableIntegrations.length > 0 && (
+					{me?.UserIdentities && me.UserIdentities.length > 0 && (
 						<>
+							<div className={clubsTheme.centeredRow}>
+								<Image
+									src="/icon-verified.png"
+									width={18}
+									height={18}
+								/>
+								<Space w={8} />
+
+								<Text
+									style={{
+										color: colorVerified
+									}}
+									className={clubsTheme.tMediumBold}
+								>
+									Verified
+								</Text>
+							</div>
+							<Space h={16} />
 							<Grid style={{ maxWidth: 800 }}>
-								{availableIntegrations.map(integration => (
+								{me.UserIdentities.map(userIdentity => (
 									<Grid.Col
 										xs={6}
 										sm={4}
 										md={4}
 										lg={4}
 										xl={4}
-										key={integration.name}
+										key={`verified-integration-${userIdentity.IdentityIntegration?.name}`}
 									>
 										<a
 											onClick={() => {
-												openIntegrationModal(
-													integration
+												setUserIdentityCurrentlyEditing(
+													userIdentity
+												)
+												setIsLinkedAccountModalOpen(
+													true
 												)
 											}}
 										>
@@ -482,20 +376,86 @@ export const ManageIdentityComponent: React.FC = () => {
 													}
 												>
 													<Image
-														src={`${integration.icon}`}
+														src={`${userIdentity.IdentityIntegration?.icon}`}
 														width={16}
 														height={16}
 														fit={'contain'}
 													/>
 													<Space w={8} />
 													<Text>
-														{integration.name}
+														{userIdentity?.metadata
+															.username
+															? `@${userIdentity?.metadata.username}`
+															: userIdentity
+																	.IdentityIntegration
+																	?.name}
 													</Text>
 												</div>
 											</div>
 										</a>
 									</Grid.Col>
 								))}
+							</Grid>
+							<Space h={'xl'} />
+						</>
+					)}
+
+					<Text className={clubsTheme.tMediumBold}>
+						Verify Accounts
+					</Text>
+					<Space h={16} />
+					{availableIntegrations.length === 0 && (
+						<Loader variant="oval" color="red" />
+					)}
+					{filteredAvilableIntegrations.length > 0 && (
+						<>
+							<Grid style={{ maxWidth: 800 }}>
+								{filteredAvilableIntegrations.map(
+									integration => (
+										<Grid.Col
+											xs={6}
+											sm={4}
+											md={4}
+											lg={4}
+											xl={4}
+											key={integration.name}
+										>
+											<a
+												onClick={() => {
+													loginWithRedirect({
+														connection:
+															integration.connectionName,
+														redirectUri:
+															window.location.href
+													})
+												}}
+											>
+												<div
+													className={
+														clubsTheme.gridItem
+													}
+												>
+													<div
+														className={
+															clubsTheme.integrationGridItemHeader
+														}
+													>
+														<Image
+															src={`${integration.icon}`}
+															width={16}
+															height={16}
+															fit={'contain'}
+														/>
+														<Space w={8} />
+														<Text>
+															{integration.name}
+														</Text>
+													</div>
+												</div>
+											</a>
+										</Grid.Col>
+									)
+								)}
 							</Grid>
 						</>
 					)}
@@ -510,7 +470,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				Save Changes
 			</Button>
 			<Space h={'xl'} />
-			<ProfileLinkTwitterModal
+			{/* <ProfileLinkTwitterModal
 				integration={integrationCurrentlyEditing}
 				isOpened={isTwitterModalOpen}
 				onModalClosed={() => {
@@ -532,9 +492,9 @@ export const ManageIdentityComponent: React.FC = () => {
 				onModalClosed={() => {
 					setIsDiscordModalOpen(false)
 				}}
-			/>
+			/> */}
 			<ManageLinkedAccountModal
-				integration={integrationCurrentlyEditing}
+				userIdentity={userIdentityCurrentlyEditing}
 				isOpened={isLinkedAccountModalOpen}
 				onModalClosed={() => {
 					setIsLinkedAccountModalOpen(false)

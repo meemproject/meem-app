@@ -7,14 +7,13 @@ import {
 } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
-import { WalletProvider, SocketProvider } from '@meemproject/react'
+import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React, { useEffect } from 'react'
 import { App } from '../components/App'
 import { ClubClubProvider } from '../components/ClubHome/ClubClubProvider'
 import '@fontsource/inter'
-import { IdentityProvider } from '../components/Profile/IdentityProvider'
-import { CustomApolloProvider } from '../providers/ApolloProvider'
+// import { CustomApolloProvider } from '../providers/ApolloProvider'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
@@ -87,21 +86,15 @@ function MyApp(props: AppProps) {
 					primaryColor: 'brand'
 				}}
 			>
-				<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL ?? ''}>
-					<WalletProvider rpcs={rpcs}>
-						<CustomApolloProvider>
-							<NotificationsProvider>
-								<ClubClubProvider>
-									<IdentityProvider>
-										<App>
-											<Component {...pageProps} />
-										</App>
-									</IdentityProvider>
-								</ClubClubProvider>
-							</NotificationsProvider>
-						</CustomApolloProvider>
-					</WalletProvider>
-				</SocketProvider>
+				<MeemProvider>
+					<NotificationsProvider>
+						<ClubClubProvider>
+							<App>
+								<Component {...pageProps} />
+							</App>
+						</ClubClubProvider>
+					</NotificationsProvider>
+				</MeemProvider>
 			</MantineProvider>
 		</ColorSchemeProvider>
 	)
