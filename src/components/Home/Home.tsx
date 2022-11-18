@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { useAuth0 } from '@auth0/auth0-react'
 import log from '@kengoldfarb/log'
 import {
 	Container,
@@ -20,10 +21,18 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { LoginState, useAuth, useWallet } from '@meemproject/react'
+import { login } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { forwardRef, useContext, useRef, useState } from 'react'
+import React, {
+	forwardRef,
+	useContext,
+	useEffect,
+	useRef,
+	useState
+} from 'react'
+import { X } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
 import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
 import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
@@ -66,7 +75,9 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 export function HomeComponent() {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
-	const wallet = useWallet()
+	const { loginState, setJwt, chainId } = useAuth()
+	const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+	const [hasTriedLogin, setHasTriedLogin] = useState(false)
 
 	const autocompleteClient = new ApolloClient({
 		cache: new InMemoryCache(),
@@ -104,7 +115,7 @@ export function HomeComponent() {
 					variables: {
 						query: `%${val.trim()}%`,
 						chainId:
-							wallet.chainId ??
+							chainId ??
 							hostnameToChainId(
 								global.window ? global.window.location.host : ''
 							)
@@ -173,7 +184,7 @@ export function HomeComponent() {
 	}
 
 	const goToCreate = () => {
-		if (wallet.loginState === LoginState.NotLoggedIn) {
+		if (loginState === LoginState.NotLoggedIn) {
 			Cookies.set(CookieKeys.clubName, autocompleteFormValue)
 			router.push({
 				pathname: '/authenticate',
@@ -205,6 +216,45 @@ export function HomeComponent() {
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	useEffect(() => {
+		const doLogin = async () => {
+			try {
+				const accessToken = await getAccessTokenSilently()
+				const { jwt } = await login({
+					accessToken
+				})
+				setJwt(jwt)
+			} catch (e) {
+				log.crit(e)
+
+				showNotification({
+					title: 'Error connecting account',
+					autoClose: 2000,
+					color: 'red',
+					icon: <X />,
+
+					message: `Please try again.`
+				})
+			}
+		}
+
+		if (
+			isAuthenticated &&
+			loginState !== LoginState.LoggedIn &&
+			!hasTriedLogin
+		) {
+			setHasTriedLogin(true)
+			doLogin()
+		}
+	}, [
+		loginState,
+		isAuthenticated,
+		hasTriedLogin,
+		setHasTriedLogin,
+		getAccessTokenSilently,
+		setJwt
+	])
 
 	return (
 		<div>

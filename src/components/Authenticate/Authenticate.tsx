@@ -2,7 +2,7 @@ import log from '@kengoldfarb/log'
 import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useAuth } from '@meemproject/react'
-import { MeemAPI, makeFetcher, makeRequest } from '@meemproject/sdk'
+import { MeemAPI, makeFetcher, makeRequest, getNonce } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
@@ -78,12 +78,9 @@ const MAuthenticate: React.FC = () => {
 		setIsLoading(true)
 
 		try {
-			const { nonce } = await getNonceFetcher(
-				MeemAPI.v1.GetNonce.path(),
-				{
-					address
-				}
-			)
+			const { nonce } = await getNonce({
+				address
+			})
 			log.debug('got nonce')
 			const signature = await wallet.signer?.signMessage(nonce)
 			log.debug({ signature })
@@ -110,7 +107,7 @@ const MAuthenticate: React.FC = () => {
 			setIsLoading(false)
 			log.crit(e)
 		}
-	}, [getNonceFetcher, login, wallet.signer, wallet.accounts])
+	}, [login, wallet.signer, wallet.accounts])
 
 	const connectWallet = useCallback(async () => {
 		setIsLoading(true)
