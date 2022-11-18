@@ -87,6 +87,7 @@ export const useClubsTheme = createStyles(theme => ({
 		border: `1px solid ${
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
 		}`,
+		lineHeight: 1.4,
 		borderRadius: 16
 	},
 	fRichTextEditorToolbar: {

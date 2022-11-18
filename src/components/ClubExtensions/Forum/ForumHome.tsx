@@ -266,7 +266,14 @@ export const ForumHome: React.FC<IProps> = ({ slug }) => {
 						<Space h={24} />
 
 						<Center>
-							<Button className={clubsTheme.buttonBlack}>
+							<Button
+								className={clubsTheme.buttonBlack}
+								onClick={() => {
+									router.push({
+										pathname: `/${club.slug}/forum/submit`
+									})
+								}}
+							>
 								+ Start a discussion
 							</Button>
 						</Center>
