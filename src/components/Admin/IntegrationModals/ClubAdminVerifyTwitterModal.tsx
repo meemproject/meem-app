@@ -10,8 +10,8 @@ import {
 	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
 import { useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'

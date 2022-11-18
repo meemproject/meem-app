@@ -19,7 +19,7 @@ import {
 	Checkbox
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { forwardRef, useEffect, useState } from 'react'

@@ -107,10 +107,10 @@ export const GET_CLUB = gql`
 				Owner {
 					address
 					ens
-					MeemIdentities {
+					User {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations {
+						UserIdentities {
 							metadata
 							visibility
 						}
@@ -159,10 +159,10 @@ export const GET_CLUB_AS_MEMBER = gql`
 				Owner {
 					address
 					ens
-					MeemIdentities {
+					User {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations {
+						UserIdentities {
 							metadata
 							visibility
 						}
@@ -231,10 +231,10 @@ export const SUB_CLUB = gql`
 				Owner {
 					address
 					ens
-					MeemIdentities {
+					User {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations {
+						UserIdentities {
 							metadata
 							visibility
 						}
@@ -285,10 +285,10 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				Owner {
 					address
 					ens
-					MeemIdentities {
+					User {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations {
+						UserIdentities {
 							metadata
 							visibility
 						}
@@ -396,7 +396,6 @@ export const GET_INTEGRATIONS = gql`
 	query GetIntegrations {
 		Integrations {
 			createdAt
-			deletedAt
 			description
 			guideUrl
 			icon
@@ -432,10 +431,10 @@ export const GET_MEMBERS_FOR_ROLE = gql`
 				Owner {
 					address
 					ens
-					MeemIdentities {
+					User {
 						displayName
 						profilePicUrl
-						MeemIdentityIntegrations {
+						UserIdentities {
 							metadata
 							visibility
 						}

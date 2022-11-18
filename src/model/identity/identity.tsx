@@ -1,4 +1,4 @@
-import { normalizeImageUrl } from '@meemproject/api'
+import { MeemAPI, normalizeImageUrl } from '@meemproject/sdk'
 import {
 	GetIdentityIntegrationsQuery,
 	MeemIdSubscriptionSubscription
@@ -8,6 +8,8 @@ export interface AvailableIdentityIntegration {
 	id?: string
 	name?: string
 	icon?: string
+	connectionName?: string
+	connectionId?: string
 }
 
 export interface IdentityIntegration {
@@ -15,7 +17,9 @@ export interface IdentityIntegration {
 	name?: string
 	icon?: string
 	metadata?: any
-	visibility?: string
+	visibility?: MeemAPI.IntegrationVisibility
+	connectionName?: string
+	connectionId?: string
 }
 
 export interface Identity {
@@ -36,7 +40,9 @@ export function identityIntegrationFromApi(
 			const integration: AvailableIdentityIntegration = {
 				id: inte.id,
 				name: inte.name,
-				icon: inte.icon
+				icon: inte.icon,
+				connectionName: inte.connectionName,
+				connectionId: inte.connectionId
 			}
 			integrations.push(integration)
 		})
@@ -55,27 +61,25 @@ export async function identityFromApi(
 	address: string,
 	identityData: MeemIdSubscriptionSubscription | undefined
 ): Promise<Identity> {
-	const id = identityData?.MeemIdentities[0]
+	const id = identityData?.Users[0]
+
 	if (id) {
 		// Integrations
 		const integrations: IdentityIntegration[] = []
-		if (id.MeemIdentityIntegrations.length > 0) {
-			id.MeemIdentityIntegrations.forEach(inte => {
+		if (id.UserIdentities.length > 0) {
+			id.UserIdentities.forEach(inte => {
 				const integration: IdentityIntegration = {
 					id: inte.IdentityIntegrationId,
 					name: inte.IdentityIntegration?.name,
 					icon: inte.IdentityIntegration?.icon,
-					visibility: inte.visibility,
+					connectionName: inte.IdentityIntegration?.connectionName,
+					connectionId: inte.IdentityIntegration?.connectionId,
+					visibility:
+						inte.visibility as MeemAPI.IntegrationVisibility,
 					metadata: inte.metadata
 				}
 
-				if (integration.name !== 'Email') {
-					integrations.push(integration)
-				} else {
-					if (integration.metadata.isVerified) {
-						integrations.push(integration)
-					}
-				}
+				integrations.push(integration)
 			})
 		}
 

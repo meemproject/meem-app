@@ -12,7 +12,7 @@ import {
 	Image
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/api'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'

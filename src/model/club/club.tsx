@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loop-func */
 import log from '@kengoldfarb/log'
-import { MeemAPI, normalizeImageUrl } from '@meemproject/api'
+import { MeemAPI, normalizeImageUrl } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { MeemContractRoles, MeemContracts } from '../../../generated/graphql'

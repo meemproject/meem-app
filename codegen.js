@@ -1,8 +1,8 @@
 module.exports = {
     schema: [
         {
+            // 'https://alpha-gql.meem.wtf/v1/graphql': {
             'https://dev-gql.meem.wtf/v1/graphql': {
-                //'https://alpha-gql.meem.wtf/v1/graphql': {
                 headers: {
                     'x-hasura-admin-secret': process.env.HASURA_SECRET
                 },
