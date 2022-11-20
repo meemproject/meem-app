@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import log from '@kengoldfarb/log'
 import {
 	Container,
 	Text,
@@ -16,7 +17,7 @@ import { LoginState, useAuth, useMeemUser } from '@meemproject/react'
 import { login } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
+import { Check, X } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
@@ -69,15 +70,24 @@ export const ProfileComponent: React.FC = () => {
 
 	useEffect(() => {
 		const doLogin = async () => {
-			const accessToken = await getAccessTokenSilently()
-			login({
-				accessToken,
-				shouldConnectUser: true
-			})
+			try {
+				const accessToken = await getAccessTokenSilently()
+				login({
+					accessToken,
+					shouldConnectUser: true
+				})
+			} catch (e) {
+				log.crit(e)
 
-			router.push({
-				pathname: window.location.pathname
-			})
+				showNotification({
+					title: 'Error connecting account',
+					autoClose: 2000,
+					color: 'red',
+					icon: <X />,
+
+					message: `Please try again.`
+				})
+			}
 		}
 
 		if (isAuthenticated && !hasConnectedIntegration) {
@@ -85,7 +95,6 @@ export const ProfileComponent: React.FC = () => {
 			doLogin()
 		}
 	}, [
-		router,
 		isAuthenticated,
 		hasConnectedIntegration,
 		setHasConnectedIntegration,

@@ -25,10 +25,6 @@ import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
 import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
-import {
-	AvailableIdentityIntegration,
-	identityIntegrationFromApi
-} from '../../../../model/identity/identity'
 import { useCustomApollo } from '../../../../providers/ApolloProvider'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
@@ -50,21 +46,14 @@ export const ManageIdentityComponent: React.FC = () => {
 	const [profilePicBase64, setProfilePicBase64] = useState<string>('')
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
-	// Available integrations
-	const [availableIntegrations, setAvailableIntegrations] = useState<
-		AvailableIdentityIntegration[]
-	>([])
-
 	const [userIdentityCurrentlyEditing, setUserIdentityCurrentlyEditing] =
 		useState<UserIdentity>()
 
 	// Fetch a list of available integrations.
-	const { data: inteData } = useQuery<GetIdentityIntegrationsQuery>(
-		IDENTITY_INTEGRATIONS_QUERY,
-		{
+	const { data: inteData, loading: isLoadingAvailableIntegrations } =
+		useQuery<GetIdentityIntegrationsQuery>(IDENTITY_INTEGRATIONS_QUERY, {
 			client: anonClient
-		}
-	)
+		})
 
 	// Club logo
 	const [
@@ -121,13 +110,6 @@ export const ManageIdentityComponent: React.FC = () => {
 			setProfilePicture(me.profilePicUrl ?? '')
 		}
 	}, [me])
-
-	useEffect(() => {
-		if (availableIntegrations.length === 0 && inteData) {
-			const integrations = identityIntegrationFromApi(inteData)
-			setAvailableIntegrations(integrations)
-		}
-	}, [availableIntegrations.length, inteData])
 
 	const deleteImage = () => {
 		setProfilePicture('')
@@ -224,17 +206,18 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	const filteredAvilableIntegrations = availableIntegrations.filter(ai => {
-		const connectedIntegration = me?.UserIdentities?.find(
-			i => i.IdentityIntegrationId === ai.id
-		)
+	const filteredAvilableIntegrations =
+		inteData?.IdentityIntegrations.filter(ai => {
+			const connectedIntegration = me?.UserIdentities?.find(
+				i => i.IdentityIntegrationId === ai.id
+			)
 
-		if (connectedIntegration) {
-			return false
-		}
+			if (connectedIntegration) {
+				return false
+			}
 
-		return true
-	})
+			return true
+		}) ?? []
 
 	return (
 		<>
@@ -404,7 +387,7 @@ export const ManageIdentityComponent: React.FC = () => {
 						Verify Accounts
 					</Text>
 					<Space h={16} />
-					{availableIntegrations.length === 0 && (
+					{isLoadingAvailableIntegrations && (
 						<Loader variant="oval" color="red" />
 					)}
 					{filteredAvilableIntegrations.length > 0 && (

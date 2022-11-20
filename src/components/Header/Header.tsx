@@ -19,7 +19,7 @@ import {
 } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -43,7 +43,8 @@ export function HeaderMenu() {
 	const router = useRouter()
 
 	const clubclub = useContext(ClubClubContext)
-	const { loginState, disconnectWallet, isConnected, isMeLoading } = useAuth()
+	const { loginState, disconnectWallet, isConnected, isMeLoading, accounts } =
+		useAuth()
 
 	const { user } = useMeemUser()
 
@@ -90,11 +91,21 @@ export function HeaderMenu() {
 	if (!user?.displayName || user?.displayName.length === 0) {
 		displayName =
 			user?.DefaultWallet?.ens ??
-			quickTruncate(user?.DefaultWallet?.address) ??
+			quickTruncate(user?.DefaultWallet?.address ?? accounts[0]) ??
 			'0x...'
 	}
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	useEffect(() => {
+		if (
+			isConnected &&
+			loginState === LoginState.NotLoggedIn &&
+			router.pathname !== '/authenticate'
+		) {
+			router.push('/authenticate')
+		}
+	}, [isConnected, loginState, router])
 
 	return (
 		<Header className={clubsTheme.siteHeader} height={56}>
@@ -106,7 +117,7 @@ export function HeaderMenu() {
 				</div>
 
 				<div className={clubsTheme.siteHeaderRightItems}>
-					{loginState === LoginState.LoggedIn && (
+					{(loginState === LoginState.LoggedIn || isConnected) && (
 						<Menu
 							radius={8}
 							offset={4}
@@ -151,19 +162,27 @@ export function HeaderMenu() {
 								</UnstyledButton>
 							</Menu.Target>
 							<Menu.Dropdown>
-								<Menu.Item
-									onClick={navigateToMyAccount}
-									className={clubsTheme.tExtraSmallBold}
-								>
-									My Account
-								</Menu.Item>
-								{clubclub.isMember && (
-									<Menu.Item
-										onClick={navigateToMyClubs}
-										className={clubsTheme.tExtraSmallBold}
-									>
-										My Clubs
-									</Menu.Item>
+								{loginState === LoginState.LoggedIn && (
+									<>
+										<Menu.Item
+											onClick={navigateToMyAccount}
+											className={
+												clubsTheme.tExtraSmallBold
+											}
+										>
+											My Account
+										</Menu.Item>
+										{clubclub.isMember && (
+											<Menu.Item
+												onClick={navigateToMyClubs}
+												className={
+													clubsTheme.tExtraSmallBold
+												}
+											>
+												My Clubs
+											</Menu.Item>
+										)}
+									</>
 								)}
 								<Menu.Item
 									className={clubsTheme.tExtraSmallBold}
@@ -178,7 +197,7 @@ export function HeaderMenu() {
 							</Menu.Dropdown>
 						</Menu>
 					)}
-					{loginState === LoginState.NotLoggedIn && (
+					{loginState === LoginState.NotLoggedIn && !isConnected && (
 						<Text
 							className={clubsTheme.tExtraSmallBold}
 							style={{
