@@ -107,8 +107,8 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 		try {
 			const postData = `${
 				process.env.NEXT_PUBLIC_API_URL
-			}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-				meemContractId: club.id ?? '',
+			}${MeemAPI.v1.CreateOrUpdateAgreementIntegration.path({
+				agreementId: club.id ?? '',
 				integrationId: integration?.integrationId ?? ''
 			})}`
 			const data = {

@@ -19,17 +19,14 @@ import { Search, Star } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
 	GetIsMemberOfClubSubscriptionSubscription,
-	MeemContracts
+	Agreements
 } from '../../../../generated/graphql'
 import {
 	SUB_CLUB,
 	SUB_CLUB_AS_MEMBER,
 	SUB_IS_MEMBER_OF_CLUB
 } from '../../../graphql/clubs'
-import clubFromMeemContract, {
-	Club,
-	ClubMember
-} from '../../../model/club/club'
+import clubFromAgreement, { Club, ClubMember } from '../../../model/club/club'
 import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { hostnameToChainId } from '../../App'
@@ -83,7 +80,7 @@ export const ClubMembersComponent: React.FC<IProps> = ({ slug }) => {
 		client: anonClient,
 		skip:
 			!isCurrentUserClubMemberData ||
-			isCurrentUserClubMemberData.Meems.length > 0
+			isCurrentUserClubMemberData.AgreementTokens.length > 0
 	})
 
 	const {
@@ -102,7 +99,7 @@ export const ClubMembersComponent: React.FC<IProps> = ({ slug }) => {
 		client: mutualMembersClient,
 		skip:
 			!isCurrentUserClubMemberData ||
-			isCurrentUserClubMemberData.Meems.length === 0
+			isCurrentUserClubMemberData.AgreementTokens.length === 0
 	})
 
 	const [isLoadingClub, setIsLoadingClub] = useState(true)
@@ -125,7 +122,7 @@ export const ClubMembersComponent: React.FC<IProps> = ({ slug }) => {
 				return
 			}
 
-			if (clubData.MeemContracts.length === 0) {
+			if (clubData.Agreements.length === 0) {
 				setIsLoadingClub(false)
 				return
 			}
@@ -137,10 +134,10 @@ export const ClubMembersComponent: React.FC<IProps> = ({ slug }) => {
 					return
 				}
 			}
-			const possibleClub = await clubFromMeemContract(
+			const possibleClub = await clubFromAgreement(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
-				clubData.MeemContracts[0] as MeemContracts
+				clubData.Agreements[0] as Agreements
 			)
 
 			if (possibleClub && possibleClub.name) {

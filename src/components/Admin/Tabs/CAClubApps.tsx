@@ -216,12 +216,10 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					.post(
 						`${
 							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path(
-							{
-								meemContractId: club.id ?? '',
-								integrationId: currentIntegrationId
-							}
-						)}`
+						}${MeemAPI.v1.CreateOrUpdateAgreementIntegration.path({
+							agreementId: club.id ?? '',
+							integrationId: currentIntegrationId
+						})}`
 					)
 					.set('Authorization', `JWT ${wallet.jwt}`)
 					.send({

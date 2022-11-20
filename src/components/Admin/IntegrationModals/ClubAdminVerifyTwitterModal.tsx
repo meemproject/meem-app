@@ -57,8 +57,8 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				.post(
 					`${
 						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-						meemContractId: club.id ?? '',
+					}${MeemAPI.v1.CreateOrUpdateAgreementIntegration.path({
+						agreementId: club.id ?? '',
 						integrationId: integration?.integrationId ?? ''
 					})}`
 				)

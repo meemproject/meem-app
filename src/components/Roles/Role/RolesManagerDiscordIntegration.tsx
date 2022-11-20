@@ -72,16 +72,16 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 				}
 				setIsFetchingGuildInfo(true)
 				const guildInfoFetcher = makeFetcher<
-					MeemAPI.v1.GetMeemContractGuild.IQueryParams,
-					MeemAPI.v1.GetMeemContractGuild.IRequestBody,
-					MeemAPI.v1.GetMeemContractGuild.IResponseBody
+					MeemAPI.v1.GetAgreementGuild.IQueryParams,
+					MeemAPI.v1.GetAgreementGuild.IRequestBody,
+					MeemAPI.v1.GetAgreementGuild.IResponseBody
 				>({
-					method: MeemAPI.v1.GetMeemContractGuild.method
+					method: MeemAPI.v1.GetAgreementGuild.method
 				})
 
 				const data = await guildInfoFetcher(
-					MeemAPI.v1.GetMeemContractGuild.path({
-						meemContractId: club.id
+					MeemAPI.v1.GetAgreementGuild.path({
+						agreementId: club.id
 					})
 				)
 				log.debug(JSON.stringify(data))

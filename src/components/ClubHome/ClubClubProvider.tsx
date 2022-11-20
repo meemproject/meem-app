@@ -56,7 +56,7 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 
 	useEffect(() => {
 		if (!loading && !errorFetchingIsClubClub && clubClubData) {
-			if (clubClubData.Meems.length > 0) {
+			if (clubClubData.AgreementTokens.length > 0) {
 				setIsMember(true)
 			} else {
 				setIsMember(false)

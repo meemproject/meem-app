@@ -11,11 +11,11 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import {
-	MeemContracts,
+	Agreements,
 	MyClubsSubscriptionSubscription
 } from '../../../generated/graphql'
 import { SUB_MY_CLUBS } from '../../graphql/clubs'
-import clubFromMeemContract, {
+import clubFromAgreement, {
 	MembershipSettings,
 	MembershipRequirementToMeemPermission,
 	Club
@@ -140,7 +140,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 				await createSafeFetcher(
 					MeemAPI.v1.CreateClubSafe.path({
-						meemContractId: club.id ?? ''
+						agreementId: club.id ?? ''
 					}),
 					undefined,
 					{
@@ -193,11 +193,11 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 			try {
 				const createContractFetcher = makeFetcher<
-					MeemAPI.v1.CreateMeemContract.IQueryParams,
-					MeemAPI.v1.CreateMeemContract.IRequestBody,
-					MeemAPI.v1.CreateMeemContract.IResponseBody
+					MeemAPI.v1.CreateAgreement.IQueryParams,
+					MeemAPI.v1.CreateAgreement.IRequestBody,
+					MeemAPI.v1.CreateAgreement.IResponseBody
 				>({
-					method: MeemAPI.v1.CreateMeemContract.method
+					method: MeemAPI.v1.CreateAgreement.method
 				})
 
 				log.debug('assemble fetcher')
@@ -267,8 +267,9 @@ export const CreateClubModal: React.FC<IProps> = ({
 				const data = {
 					shouldMintTokens: true,
 					metadata: {
-						meem_contract_type: 'meem-club',
-						meem_metadata_version: 'MeemClub_Contract_20220718',
+						agreement_type: 'meem-club',
+						agreement_metadata_version:
+							'MeemClub_Contract_20220718',
 						name: Cookies.get(CookieKeys.clubName),
 						description: Cookies.get(CookieKeys.clubDescription),
 						image: Cookies.get(CookieKeys.clubImage),
@@ -285,7 +286,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					mintPermissions,
 					splits,
 					tokenMetadata: {
-						meem_metadata_version: 'MeemClub_Token_20220718',
+						agreement_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${Cookies.get(
 							CookieKeys.clubName
 						)}`,
@@ -306,7 +307,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				log.debug(`${JSON.stringify(data, null, 2)}`)
 
 				await createContractFetcher(
-					MeemAPI.v1.CreateMeemContract.path(),
+					MeemAPI.v1.CreateAgreement.path(),
 					undefined,
 					data
 				)
@@ -380,20 +381,17 @@ export const CreateClubModal: React.FC<IProps> = ({
 
 		async function checkClubState() {
 			log.debug('listening for new club...')
-			const newClub = myClubsData?.Meems.find(
-				m => m.MeemContract?.name === Cookies.get(CookieKeys.clubName)
+			const newClub = myClubsData?.AgreementTokens.find(
+				m => m.Agreement?.name === Cookies.get(CookieKeys.clubName)
 			)
 			if (newClub) {
-				if (
-					newClub.MeemContract &&
-					newClub.MeemContract.gnosisSafeAddress
-				) {
+				if (newClub.Agreement && newClub.Agreement.gnosisSafeAddress) {
 					finishClubCreation()
 				} else {
-					const clubModel = await clubFromMeemContract(
+					const clubModel = await clubFromAgreement(
 						wallet,
 						wallet.accounts[0],
-						newClub.MeemContract as MeemContracts
+						newClub.Agreement as Agreements
 					)
 
 					setClubSlug(clubModel.slug ?? '')
@@ -430,7 +428,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 		hasSubscribedToSockets,
 		isOpened,
 		membershipSettings,
-		myClubsData?.Meems,
+		myClubsData?.AgreementTokens,
 		onModalClosed,
 		router,
 		sockets,

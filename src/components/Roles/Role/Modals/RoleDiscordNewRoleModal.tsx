@@ -64,17 +64,17 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 		if (server && accessToken) {
 			try {
 				const createDiscordRoleFetcher = makeFetcher<
-					MeemAPI.v1.UpdateMeemContractRole.IQueryParams,
-					MeemAPI.v1.UpdateMeemContractRole.IRequestBody,
-					MeemAPI.v1.UpdateMeemContractRole.IResponseBody
+					MeemAPI.v1.UpdateAgreementRole.IQueryParams,
+					MeemAPI.v1.UpdateAgreementRole.IRequestBody,
+					MeemAPI.v1.UpdateAgreementRole.IResponseBody
 				>({
-					method: MeemAPI.v1.UpdateMeemContractRole.method
+					method: MeemAPI.v1.UpdateAgreementRole.method
 				})
 
 				await createDiscordRoleFetcher(
-					MeemAPI.v1.UpdateMeemContractRole.path({
-						meemContractId: club.id ?? '',
-						meemContractRoleId: role.id ?? ''
+					MeemAPI.v1.UpdateAgreementRole.path({
+						agreementId: club.id ?? '',
+						agreementRoleId: role.id ?? ''
 					}),
 					undefined,
 					{

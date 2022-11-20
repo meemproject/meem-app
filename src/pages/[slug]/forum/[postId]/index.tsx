@@ -37,14 +37,14 @@ const ForumPostPage: NextPage<IProps> = ({ post }) => {
 				<title>
 					{post === undefined || post.isError
 						? 'Not found'
-						: `${post.responseBody.MeemContracts[0].name} | Forum | Clubs`}
+						: `${post.responseBody.Agreements[0].name} | Forum | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
 						post === undefined || post.isError
 							? 'Not found'
-							: `${post.responseBody.MeemContracts[0].name} | Forum | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
 				{/* <meta name="description" content={post.description} /> */}
@@ -55,7 +55,7 @@ const ForumPostPage: NextPage<IProps> = ({ post }) => {
 					content={
 						post === undefined || post.isError
 							? 'Not found'
-							: `${post.responseBody.MeemContracts[0].name} | Forum | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
 				{/* <meta property="og:description" content={post.description} /> */}
@@ -66,7 +66,7 @@ const ForumPostPage: NextPage<IProps> = ({ post }) => {
 					content={
 						post === undefined || post.isError
 							? 'Not found'
-							: `${post.responseBody.MeemContracts[0].name} | Forum | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
 				<meta
@@ -118,7 +118,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 				}
 			})
 
-			if (data.MeemContracts.length === 0) {
+			if (data.Agreements.length === 0) {
 				club = {
 					isError: true,
 					description: 'This club does not exist. Yet.',
@@ -128,8 +128,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 				club = {
 					isError: false,
 					responseBody: data,
-					description:
-						data.MeemContracts[0].metadata.description ?? ''
+					description: data.Agreements[0].metadata.description ?? ''
 				}
 			}
 			return {

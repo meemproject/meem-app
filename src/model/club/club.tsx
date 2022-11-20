@@ -3,7 +3,7 @@ import log from '@kengoldfarb/log'
 import { MeemAPI, normalizeImageUrl } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
-import { MeemContractRoles, MeemContracts } from '../../../generated/graphql'
+import { AgreementRoles, Agreements } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
 
 export const ClubAdminRole =
@@ -12,9 +12,9 @@ export const ClubMinterRole =
 	'0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6'
 export const ClubUpgraderRole =
 	'0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3'
-export interface Integration {
+export interface Extension {
 	// Convenience for admin screen
-	isExistingIntegration?: boolean
+	isExistingExtension?: boolean
 
 	// DB properties
 	id?: string
@@ -51,7 +51,7 @@ export interface ClubRole {
 	isTransferrable?: boolean
 	tokenAddress?: string
 	permissions: ClubRolePermission[]
-	rolesIntegrationData?: any
+	rolesExtensionData?: any
 	guildRoleId?: string
 	guildRoleName?: string
 	guildDiscordServerName?: string
@@ -66,7 +66,7 @@ export function emptyRole(): ClubRole {
 		isDefaultRole: false,
 		name: '',
 		permissions: [],
-		rolesIntegrationData: '',
+		rolesExtensionData: '',
 		guildRoleId: '',
 		guildRoleName: '',
 		guildDiscordServerId: '',
@@ -113,10 +113,10 @@ export interface Club {
 	isCurrentUserClubOwner?: boolean
 	isClubControlledByMeemApi?: boolean
 	isValid?: boolean
-	rawClub?: MeemContracts
-	allIntegrations?: Integration[]
-	publicIntegrations?: Integration[]
-	privateIntegrations?: Integration[]
+	rawClub?: Agreements
+	allExtensions?: Extension[]
+	publicExtensions?: Extension[]
+	privateExtensions?: Extension[]
 	gnosisSafeAddress?: string | null
 	memberCount?: number
 }
@@ -178,14 +178,14 @@ export function MembershipRequirementToMeemPermission(
 	}
 }
 
-export function meemContractRolesToClubRoles(
-	meemContractRoles: MeemContractRoles[]
+export function agreementRolesToClubRoles(
+	agreementRoles: AgreementRoles[]
 ): ClubRole[] {
 	const roles: ClubRole[] = []
-	meemContractRoles.forEach(rawRole => {
+	agreementRoles.forEach(rawRole => {
 		const permissions: ClubRolePermission[] = []
-		if (rawRole.MeemContractRolePermissions) {
-			rawRole.MeemContractRolePermissions.forEach(rolePermission => {
+		if (rawRole.AgreementRolePermissions) {
+			rawRole.AgreementRolePermissions.forEach(rolePermission => {
 				const rp: ClubRolePermission = {
 					id: rolePermission.RolePermissionId ?? ''
 				}
@@ -222,9 +222,9 @@ export function meemContractRolesToClubRoles(
 			id: rawRole.id,
 			isAdminRole: rawRole.isAdminRole,
 			isDefaultRole: rawRole.isDefaultRole,
-			rolesIntegrationData: metadata,
+			rolesExtensionData: metadata,
 			tokenAddress: rawRole.tokenAddress ?? '',
-			isTransferrable: rawRole.RoleMeemContract?.isTransferrable ?? false,
+			isTransferrable: rawRole.Agreement?.isTransferrable ?? false,
 			name: rawRole.name,
 			guildDiscordServerIcon,
 			guildDiscordServerId,
@@ -269,32 +269,34 @@ export interface MembershipRequirement {
 }
 
 // The club's basic metadata, doesn't require async
-export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
+export function clubSummaryFromAgreement(clubData?: Agreements): Club {
 	// Count members accurately
 	const members: ClubMember[] = []
 
 	// Parse members
 	if (clubData) {
-		if (clubData.Meems) {
-			for (const meem of clubData.Meems) {
+		if (clubData.AgreementTokens) {
+			for (const agreementToken of clubData.AgreementTokens) {
 				if (
-					meem.Owner?.address.toLowerCase() !==
+					agreementToken.Wallet?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
-					meem.Owner?.address.toLowerCase() !==
+					agreementToken.Wallet?.address.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					if (meem.Owner) {
+					if (agreementToken.Wallet) {
 						let hasAlreadyBeenAdded = false
 						members.forEach(member => {
-							if (member.wallet === meem.Owner?.address) {
+							if (
+								member.wallet === agreementToken.Wallet?.address
+							) {
 								hasAlreadyBeenAdded = true
 							}
 						})
 						if (!hasAlreadyBeenAdded) {
 							members.push({
-								wallet: meem.Owner.address,
-								ens: meem.Owner.ens ?? undefined
+								wallet: agreementToken.Wallet.address,
+								ens: agreementToken.Wallet.ens ?? undefined
 							})
 						}
 					}
@@ -330,7 +332,7 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allIntegrations: [],
+			allExtensions: [],
 			memberCount: members.length
 		}
 	} else {
@@ -338,10 +340,10 @@ export function clubSummaryFromMeemContract(clubData?: MeemContracts): Club {
 	}
 }
 
-export default async function clubFromMeemContract(
+export default async function clubFromAgreement(
 	wallet: any,
 	walletAddress: string,
-	clubData: MeemContracts
+	clubData: Agreements
 ): Promise<Club> {
 	if (clubData != null && clubData) {
 		// Parse the contract URI
@@ -371,26 +373,28 @@ export default async function clubFromMeemContract(
 		// Parse roles
 		let clubRoles: ClubRole[] = []
 		const currentUserClubPermissions: string[] = []
-		if (clubData.MeemContractRoles) {
-			clubRoles = meemContractRolesToClubRoles(clubData.MeemContractRoles)
+		if (clubData.AgreementRoles) {
+			clubRoles = agreementRolesToClubRoles(clubData.AgreementRoles)
 		}
 
 		// Parse members
-		if (clubData.Meems) {
-			for (const meem of clubData.Meems) {
+		if (clubData.AgreementTokens) {
+			for (const agreementToken of clubData.AgreementTokens) {
 				if (
 					// Filter out 0xfurnace + zero address
-					meem.Owner?.address.toLowerCase() !==
+					agreementToken.Wallet?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
-					meem.Owner?.address.toLowerCase() !==
+					agreementToken.Wallet?.address.toLowerCase() !==
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
-					if (meem.Owner) {
+					if (agreementToken.Wallet) {
 						// Filter duplicate meem owners
 						let hasAlreadyBeenAdded = false
 						members.forEach(member => {
-							if (member.wallet === meem.Owner?.address) {
+							if (
+								member.wallet === agreementToken.Wallet?.address
+							) {
 								hasAlreadyBeenAdded = true
 							}
 						})
@@ -406,25 +410,29 @@ export default async function clubFromMeemContract(
 							const isCurrentUser =
 								walletAddress &&
 								walletAddress?.toLowerCase() ===
-									meem.Owner?.address.toLowerCase()
+									agreementToken.Wallet?.address.toLowerCase()
 
 							// Does this member have a contract role?
-							const memberMeemContractWallet =
-								meem?.MeemContract?.MeemContractWallets[0]
+							const memberAgreementWallet =
+								agreementToken?.Agreement?.AgreementWallets[0]
 
 							// Logic specific to the current user
 							if (isCurrentUser) {
 								isClubMember = true
-								membershipToken = meem.tokenId
+								membershipToken = agreementToken.tokenId
 
-								log.debug(`meem ownerId ${meem.OwnerId}`)
-								log.debug(`club ownerId ${clubData.OwnerId}`)
-								isClubOwner = meem.OwnerId === clubData.OwnerId
+								log.debug(
+									`meem ownerId ${agreementToken.Wallet.id}`
+								)
+								log.debug(`club ownerId ${clubData.Wallet?.id}`)
+								isClubOwner =
+									agreementToken.Wallet.id ===
+									clubData.Wallet?.id
 
 								// Is the current user an admin?
-								if (memberMeemContractWallet) {
+								if (memberAgreementWallet) {
 									if (
-										memberMeemContractWallet.role.toLowerCase() ===
+										memberAgreementWallet.role.toLowerCase() ===
 										ClubAdminRole.toLowerCase()
 									) {
 										isClubAdmin = true
@@ -437,35 +445,35 @@ export default async function clubFromMeemContract(
 							}
 
 							// Is this member an admin
-							if (memberMeemContractWallet) {
+							if (memberAgreementWallet) {
 								if (
-									memberMeemContractWallet.role.toLowerCase() ===
+									memberAgreementWallet.role.toLowerCase() ===
 									ClubAdminRole.toLowerCase()
 								) {
 									isMemberAnAdmin = true
 									adminRawAddresses.push(
-										meem.Owner.address ?? ''
+										agreementToken.Wallet.address ?? ''
 									)
 								}
 							}
 
 							// Is this member the club owner?
 							isMemberTheClubOwner =
-								meem.OwnerId === clubData.OwnerId
+								agreementToken.Wallet.id === clubData.Wallet?.id
 
 							// Roles + permissions logic
 							let memberRoles: ClubRole[] = []
-							if (meem.MeemContract?.MeemContractRoles) {
+							if (agreementToken.Agreement?.AgreementRoles) {
 								// Convert member roles
-								memberRoles = meemContractRolesToClubRoles(
-									meem.MeemContract?.MeemContractRoles
+								memberRoles = agreementRolesToClubRoles(
+									agreementToken.Agreement?.AgreementRoles
 								)
 
 								// Check to see if the club is controlled by the meem api
 								memberRoles.forEach(role => {
 									if (
 										role.isAdminRole &&
-										meem.Owner?.address.toLowerCase() ===
+										agreementToken.Wallet?.address.toLowerCase() ===
 											process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
 									) {
 										isClubControlledByMeemApi = true
@@ -476,19 +484,19 @@ export default async function clubFromMeemContract(
 								})
 
 								// Set the current user's available permissions, if they exist
-								meem.MeemContract.MeemContractRoles.forEach(
+								agreementToken.Agreement.AgreementRoles.forEach(
 									clubMemberRole => {
 										// Current member logic
 										if (
-											meem.Owner &&
-											meem.Owner.address.toLowerCase() ===
+											agreementToken.Wallet &&
+											agreementToken.Wallet.address.toLowerCase() ===
 												walletAddress.toLowerCase()
 										) {
 											// Set the current user's available permissions
 											if (
-												clubMemberRole.MeemContractRolePermissions
+												clubMemberRole.AgreementRolePermissions
 											) {
-												clubMemberRole.MeemContractRolePermissions.forEach(
+												clubMemberRole.AgreementRolePermissions.forEach(
 													permission => {
 														if (
 															permission.RolePermissionId
@@ -507,9 +515,9 @@ export default async function clubFromMeemContract(
 
 							// Club member metadata + integrations
 							const memberIdentity =
-								meem.Owner.MeemIdentities &&
-								meem.Owner.MeemIdentities.length > 0
-									? meem.Owner.MeemIdentities[0]
+								agreementToken.Wallet.Users &&
+								agreementToken.Wallet.Users.length > 0
+									? agreementToken.Wallet.Users[0]
 									: undefined
 
 							let twitterUsername = ''
@@ -517,7 +525,7 @@ export default async function clubFromMeemContract(
 							let discordUserId = ''
 							let emailAddress = ''
 
-							memberIdentity?.MeemIdentityIntegrations.forEach(
+							memberIdentity?.IdentityIntegrations.forEach(
 								inte => {
 									if (inte.metadata.twitterUsername) {
 										twitterUsername =
@@ -536,8 +544,8 @@ export default async function clubFromMeemContract(
 
 							// Assemble member
 							const memberData = {
-								wallet: meem.Owner.address,
-								ens: meem.Owner.ens ?? undefined,
+								wallet: agreementToken.Wallet.address,
+								ens: agreementToken.Wallet.ens ?? undefined,
 								roles: memberRoles,
 								displayName: memberIdentity?.displayName
 									? memberIdentity?.displayName
@@ -564,7 +572,9 @@ export default async function clubFromMeemContract(
 							}
 
 							// Set club owner if necessary
-							if (meem.OwnerId === clubData.OwnerId) {
+							if (
+								agreementToken.Wallet.id === clubData.Wallet?.id
+							) {
 								clubOwner = memberData
 							}
 						}
@@ -739,26 +749,26 @@ export default async function clubFromMeemContract(
 			totalMemberships = 0
 		}
 
-		// Integrations
-		const allIntegrations: Integration[] = []
-		const publicIntegrations: Integration[] = []
-		const privateIntegrations: Integration[] = []
-		if (clubData.MeemContractIntegrations) {
-			clubData.MeemContractIntegrations.forEach(inte => {
+		// Extensions
+		const allExtensions: Extension[] = []
+		const publicExtensions: Extension[] = []
+		const privateExtensions: Extension[] = []
+		if (clubData.AgreementExtensions) {
+			clubData.AgreementExtensions.forEach(inte => {
 				if (inte.isEnabled) {
-					const integration: Integration = {
+					const integration: Extension = {
 						id: inte.id,
-						integrationId: inte.IntegrationId,
-						name: inte.Integration?.name ?? 'Unknown',
-						description: inte.Integration?.description ?? 'Unknown',
-						icon: inte.Integration?.icon ?? '',
+						integrationId: inte.ExtensionId,
+						name: inte.Extension?.name ?? 'Unknown',
+						description: inte.Extension?.description ?? 'Unknown',
+						icon: inte.Extension?.icon ?? '',
 						isEnabled: inte.isEnabled,
 						isPublic: inte.isPublic,
 						isVerified: inte.metadata.isVerified ?? false,
 
-						guideUrl: inte.Integration?.guideUrl,
+						guideUrl: inte.Extension?.guideUrl,
 						url: inte.metadata.externalUrl ?? '',
-						isExistingIntegration: true,
+						isExistingExtension: true,
 
 						// Per app properties
 						verifiedTwitterUser:
@@ -769,12 +779,12 @@ export default async function clubFromMeemContract(
 					}
 
 					if (inte.isPublic) {
-						publicIntegrations.push(integration)
+						publicExtensions.push(integration)
 					} else {
-						privateIntegrations.push(integration)
+						privateExtensions.push(integration)
 					}
 
-					allIntegrations.push(integration)
+					allExtensions.push(integration)
 				}
 			})
 		}
@@ -821,9 +831,9 @@ export default async function clubFromMeemContract(
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allIntegrations,
-			publicIntegrations,
-			privateIntegrations
+			allExtensions,
+			publicExtensions,
+			privateExtensions
 		}
 	} else {
 		return {}

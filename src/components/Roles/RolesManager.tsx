@@ -20,10 +20,10 @@ import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check, Plus } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
-	MeemContracts
+	Agreements
 } from '../../../generated/graphql'
 import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
-import clubFromMeemContract, {
+import clubFromAgreement, {
 	Club,
 	ClubRole,
 	emptyRole
@@ -132,10 +132,10 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 		}
 
 		async function getClub(data: GetClubSubscriptionSubscription) {
-			const possibleClub = await clubFromMeemContract(
+			const possibleClub = await clubFromAgreement(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
-				data.MeemContracts[0] as MeemContracts
+				data.Agreements[0] as Agreements
 			)
 
 			if (possibleClub && possibleClub.name) {

@@ -99,17 +99,17 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				// Save the updates to the existing role
 				try {
 					const updateRoleFetcher = makeFetcher<
-						MeemAPI.v1.UpdateMeemContractRole.IQueryParams,
-						MeemAPI.v1.UpdateMeemContractRole.IRequestBody,
-						MeemAPI.v1.UpdateMeemContractRole.IResponseBody
+						MeemAPI.v1.UpdateAgreementRole.IQueryParams,
+						MeemAPI.v1.UpdateAgreementRole.IRequestBody,
+						MeemAPI.v1.UpdateAgreementRole.IResponseBody
 					>({
-						method: MeemAPI.v1.UpdateMeemContractRole.method
+						method: MeemAPI.v1.UpdateAgreementRole.method
 					})
 
 					log.debug(
-						`path: ${MeemAPI.v1.UpdateMeemContractRole.path({
-							meemContractId: club.id ?? '',
-							meemContractRoleId: role.id ?? ''
+						`path: ${MeemAPI.v1.UpdateAgreementRole.path({
+							agreementId: club.id ?? '',
+							agreementRoleId: role.id ?? ''
 						})}`
 					)
 
@@ -121,9 +121,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					)
 
 					await updateRoleFetcher(
-						MeemAPI.v1.UpdateMeemContractRole.path({
-							meemContractId: club.id ?? '',
-							meemContractRoleId: role.id ?? ''
+						MeemAPI.v1.UpdateAgreementRole.path({
+							agreementId: club.id ?? '',
+							agreementRoleId: role.id ?? ''
 						}),
 						undefined,
 						{
@@ -150,16 +150,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				// Create a new role
 				try {
 					const saveRoleFetcher = makeFetcher<
-						MeemAPI.v1.CreateMeemContractRole.IQueryParams,
-						MeemAPI.v1.CreateMeemContractRole.IRequestBody,
-						MeemAPI.v1.CreateMeemContractRole.IResponseBody
+						MeemAPI.v1.CreateAgreementRole.IQueryParams,
+						MeemAPI.v1.CreateAgreementRole.IRequestBody,
+						MeemAPI.v1.CreateAgreementRole.IResponseBody
 					>({
-						method: MeemAPI.v1.CreateMeemContractRole.method
+						method: MeemAPI.v1.CreateAgreementRole.method
 					})
 
 					await saveRoleFetcher(
-						MeemAPI.v1.CreateMeemContractRole.path({
-							meemContractId: club.id ?? ''
+						MeemAPI.v1.CreateAgreementRole.path({
+							agreementId: club.id ?? ''
 						}),
 						undefined,
 						{

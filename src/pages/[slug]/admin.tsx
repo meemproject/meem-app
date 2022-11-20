@@ -27,14 +27,14 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 				<title>
 					{club === undefined || club.isError
 						? 'Not found'
-						: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`}
+						: `${club.responseBody.Agreements[0].name} | Admin | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Admin | Clubs`
 					}
 				/>
 				<meta
@@ -42,7 +42,7 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 					content={`Admin page for ${
 						club === undefined || club.isError
 							? 'an unknown club'
-							: club.responseBody.MeemContracts[0].name
+							: club.responseBody.Agreements[0].name
 					}`}
 				/>
 				<meta property="og:type" content="website" />
@@ -52,7 +52,7 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Admin | Clubs`
 					}
 				/>
 				<meta
@@ -60,7 +60,7 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 					content={`Admin page for ${
 						club === undefined || club.isError
 							? 'an unknown club'
-							: club.responseBody.MeemContracts[0].name
+							: club.responseBody.Agreements[0].name
 					}`}
 				/>
 				<meta property="twitter:card" content="summary_large_image" />
@@ -70,7 +70,7 @@ const ClubAdminPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.MeemContracts[0].name} | Admin | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Admin | Clubs`
 					}
 				/>
 				<meta
@@ -121,7 +121,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 				}
 			})
 
-			if (data.MeemContracts.length === 0) {
+			if (data.Agreements.length === 0) {
 				club = {
 					isError: true,
 					description: 'This club does not exist. Yet.',
@@ -131,8 +131,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 				club = {
 					isError: false,
 					responseBody: data,
-					description:
-						data.MeemContracts[0].metadata.description ?? ''
+					description: data.Agreements[0].metadata.description ?? ''
 				}
 			}
 			return {

@@ -149,11 +149,11 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}
 
 				const reInitializeContractFetcher = makeFetcher<
-					MeemAPI.v1.ReInitializeMeemContract.IQueryParams,
-					MeemAPI.v1.ReInitializeMeemContract.IRequestBody,
-					MeemAPI.v1.ReInitializeMeemContract.IResponseBody
+					MeemAPI.v1.ReInitializeAgreement.IQueryParams,
+					MeemAPI.v1.ReInitializeAgreement.IRequestBody,
+					MeemAPI.v1.ReInitializeAgreement.IResponseBody
 				>({
-					method: MeemAPI.v1.ReInitializeMeemContract.method
+					method: MeemAPI.v1.ReInitializeAgreement.method
 				})
 
 				if (!club.id) {
@@ -181,8 +181,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				const data = {
 					shouldMintTokens: true,
 					metadata: {
-						meem_contract_type: 'meem-club',
-						meem_metadata_version: 'MeemClub_Contract_20220718',
+						agreement_type: 'meem-club',
+						agreement_version: 'MeemClub_Contract_20220718',
 						name: club.name,
 						description: club.description,
 						image: club.image,
@@ -216,7 +216,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							  ]
 							: [],
 					tokenMetadata: {
-						meem_metadata_version: 'MeemClub_Token_20220718',
+						agreement_metadata_version: 'MeemClub_Token_20220718',
 						description: `Membership token for ${club.name}`,
 						name: `${club.name} membership token`,
 						image: club.image,
@@ -229,8 +229,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				log.debug(data)
 
 				await reInitializeContractFetcher(
-					MeemAPI.v1.ReInitializeMeemContract.path({
-						meemContractId: club.id
+					MeemAPI.v1.ReInitializeAgreement.path({
+						agreementId: club.id
 					}),
 					undefined,
 					data
@@ -264,7 +264,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						color: colorGreen,
 						icon: <Check color="green" />,
 
-						message: `${clubData.MeemContracts[0].name} has been updated.`
+						message: `${clubData.Agreements[0].name} has been updated.`
 					})
 				}
 			}
@@ -272,7 +272,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 		if (clubData && !loading && !error && isOpened) {
 			if (currentClubDataString.length === 0) {
-				if (clubData.MeemContracts.length > 0) {
+				if (clubData.Agreements.length > 0) {
 					// Set initial club data
 					log.debug('setting initial club data...')
 					setCurrentClubDataString(JSON.stringify(clubData))
