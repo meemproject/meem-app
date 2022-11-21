@@ -194,7 +194,7 @@ export function agreementRolesToClubRoles(
 		}
 
 		// Roles discord extension metadata
-		const metadata = rawRole.extensionsMetadata
+		const metadata = rawRole.metadata
 
 		let guildDiscordServerIcon = ''
 		let guildDiscordServerId = ''
