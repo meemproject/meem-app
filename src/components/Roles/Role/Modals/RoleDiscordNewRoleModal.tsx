@@ -78,7 +78,7 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 					}),
 					undefined,
 					{
-						roleIntegrationsData: [
+						roleExtensionsData: [
 							{
 								discordServerId: server.id,
 								discordGatedChannels: selectedDiscordChannels,

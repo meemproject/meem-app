@@ -111,8 +111,8 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								className={clubsTheme.tSmallFaded}
 								src={
 									isDarkTheme
-										? '/integration-twitter-white.png'
-										: '/integration-twitter.png'
+										? '/extension-twitter-white.png'
+										: '/extension-twitter.png'
 								}
 								width={16}
 								height={12}
@@ -137,8 +137,8 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 								className={clubsTheme.tSmallFaded}
 								src={
 									isDarkTheme
-										? '/integration-discord-white.png'
-										: '/integration-discord.png'
+										? '/extension-discord-white.png'
+										: '/extension-discord.png'
 								}
 								width={16}
 								height={12}
@@ -159,7 +159,7 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 						>
 							<Image
 								className={clubsTheme.tSmallFaded}
-								src="/integration-email.png"
+								src="/extension-email.png"
 								width={16}
 								height={12}
 							/>

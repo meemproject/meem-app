@@ -24,14 +24,14 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [integrationVisibility, setIntegrationVisibility] =
-		useState<MeemAPI.IntegrationVisibility>()
-	const integration = userIdentity?.IdentityIntegration
+	const [extensionVisibility, setExtensionVisibility] =
+		useState<MeemAPI.ExtensionVisibility>()
+	const extension = userIdentity?.IdentityExtension
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
 
-		log.debug(`integration id to edit: ${integration?.id}`)
+		log.debug(`extension id to edit: ${extension?.id}`)
 
 		// Save the change to the db
 		try {
@@ -39,18 +39,18 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			// 	.post(
 			// 		`${
 			// 			process.env.NEXT_PUBLIC_API_URL
-			// 		}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
-			// 			integrationId: integration?.id ?? ''
+			// 		}${MeemAPI.v1.CreateOrUpdateMeemIdExtension.path({
+			// 			extensionId: extension?.id ?? ''
 			// 		})}`
 			// 	)
 			// 	.set('Authorization', `JWT ${wallet.jwt}`)
 			// 	.send({
-			// 		visibility: integrationVisibility
+			// 		visibility: extensionVisibility
 			// 	})
-			if (integration?.id) {
+			if (extension?.id) {
 				await updateUserIdentity({
-					identityIntegrationId: integration.id,
-					visibility: integrationVisibility
+					identityExtensionId: extension.id,
+					visibility: extensionVisibility
 				})
 			}
 			setIsSavingChanges(false)
@@ -72,9 +72,9 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isOpened) {
-			setIntegrationVisibility(
-				(userIdentity?.visibility as MeemAPI.IntegrationVisibility) ??
-					MeemAPI.IntegrationVisibility.Anyone
+			setExtensionVisibility(
+				(userIdentity?.visibility as MeemAPI.ExtensionVisibility) ??
+					MeemAPI.ExtensionVisibility.Anyone
 			)
 		}
 	}, [userIdentity, isOpened])
@@ -93,17 +93,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				opened={isOpened}
 				title={
 					<>
-						{integration?.name === 'Twitter' && (
+						{extension?.name === 'Twitter' && (
 							<Text className={clubsTheme.tMediumBold}>
 								Twitter Settings
 							</Text>
 						)}
-						{integration?.name === 'Discord' && (
+						{extension?.name === 'Discord' && (
 							<Text className={clubsTheme.tMediumBold}>
 								Discord Settings
 							</Text>
 						)}
-						{integration?.name === 'Email' && (
+						{extension?.name === 'Email' && (
 							<Text className={clubsTheme.tMediumBold}>
 								Email Address Settings
 							</Text>
@@ -119,29 +119,29 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				<Space h={24} />
 
 				<div className={clubsTheme.modalStepsContainer}>
-					{integration?.name === 'Twitter' && (
+					{extension?.name === 'Twitter' && (
 						<Text>
 							{`You've successfully verified @${userIdentity?.metadata?.twitterUsername} as your Twitter username.`}
 						</Text>
 					)}
-					{integration?.name === 'Discord' && (
+					{extension?.name === 'Discord' && (
 						<Text>
 							{`You've successfully verified ${userIdentity?.metadata?.discordUsername} as your Discord username.`}
 						</Text>
 					)}
-					{integration?.name === 'Email' && (
+					{extension?.name === 'Email' && (
 						<Text>
 							{`You've successfully verified ${userIdentity?.metadata?.emailAddress} as your email address.`}
 						</Text>
 					)}
 					<Space h={24} />
-					{(integration?.name === 'Twitter' ||
-						integration?.name === 'Discord') && (
+					{(extension?.name === 'Twitter' ||
+						extension?.name === 'Discord') && (
 						<Text className={clubsTheme.tExtraSmallBold}>
 							{`Who can view this username?`}
 						</Text>
 					)}
-					{integration?.name === 'Email' && (
+					{extension?.name === 'Email' && (
 						<Text className={clubsTheme.tExtraSmallBold}>
 							{`who can view this email address?`}
 						</Text>
@@ -151,9 +151,9 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						spacing={10}
 						size="sm"
 						color="dark"
-						value={integrationVisibility}
+						value={extensionVisibility}
 						onChange={(value: any) => {
-							setIntegrationVisibility(value)
+							setExtensionVisibility(value)
 						}}
 						required
 					>
@@ -180,16 +180,16 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						className={clubsTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
-							if (userIdentity?.IdentityIntegrationId) {
+							if (userIdentity?.IdentityExtensionId) {
 								detachUserIdentity({
-									identityIntegrationId:
-										userIdentity?.IdentityIntegrationId
+									identityExtensionId:
+										userIdentity?.IdentityExtensionId
 								})
 								onModalClosed()
 							}
 						}}
 					>
-						Detach Integration
+						Detach Extension
 					</Button>
 				</div>
 			</Modal>

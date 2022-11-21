@@ -212,7 +212,7 @@ export const useClubsTheme = createStyles(theme => ({
 		alignItems: 'center',
 		textAlign: 'center'
 	},
-	integrationGridItem: {
+	extensionGridItem: {
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'start',
@@ -228,7 +228,7 @@ export const useClubsTheme = createStyles(theme => ({
 		borderRadius: 16,
 		padding: 16
 	},
-	integrationGridItemEnabled: {
+	extensionGridItemEnabled: {
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
@@ -242,7 +242,7 @@ export const useClubsTheme = createStyles(theme => ({
 		paddingTop: 16,
 		position: 'relative'
 	},
-	integrationGridItemEnabledHeaderBackground: {
+	extensionGridItemEnabledHeaderBackground: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorWhite,
 		position: 'absolute',
@@ -253,18 +253,18 @@ export const useClubsTheme = createStyles(theme => ({
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16
 	},
-	integrationGridItemActions: {
+	extensionGridItemActions: {
 		display: 'flex',
 		flexDirection: 'row',
 		height: 46
 	},
-	integrationGridItemAction: {
+	extensionGridItemAction: {
 		cursor: 'pointer',
 		display: 'flex',
 		flexDirection: 'row',
 		padding: 12
 	},
-	integrationGridItemHeader: {
+	extensionGridItemHeader: {
 		fontWeight: 600,
 		display: 'flex',
 		alignItems: 'center',

@@ -345,8 +345,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 						<Button
 							style={{
 								margin:
-									club.allIntegrations &&
-									club.allIntegrations?.length > 0
+									club.allExtensions &&
+									club.allExtensions?.length > 0
 										? 3
 										: 0
 							}}
@@ -358,7 +358,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 							<QrCode />
 						</Button>
 
-						{club.allIntegrations?.map(integration => (
+						{club.allExtensions?.map(extension => (
 							<>
 								<Button
 									style={{
@@ -366,27 +366,23 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 									}}
 									className={clubsTheme.buttonWhite}
 									onClick={() => {
-										if (
-											integration.name === 'Phone Number'
-										) {
-											window.open(
-												`tel:${integration.url}`
-											)
+										if (extension.name === 'Phone Number') {
+											window.open(`tel:${extension.url}`)
 										} else if (
-											integration.name === 'Email Address'
+											extension.name === 'Email Address'
 										) {
 											window.open(
-												`mailto:${integration.url}`
+												`mailto:${extension.url}`
 											)
 										} else {
-											window.open(integration.url)
+											window.open(extension.url)
 										}
 									}}
 								>
 									<Image
 										width={20}
 										height={20}
-										src={integration.icon}
+										src={extension.icon}
 									/>
 								</Button>
 							</>

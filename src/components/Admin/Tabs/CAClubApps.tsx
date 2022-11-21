@@ -22,13 +22,13 @@ import { QuestionMarkCircle } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { ExternalLink, Settings } from 'tabler-icons-react'
-import { GetIntegrationsQuery } from '../../../../generated/graphql'
+import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../../graphql/clubs'
-import { Club, Integration } from '../../../model/club/club'
+import { Club, Extension } from '../../../model/club/club'
 import { colorGrey, useClubsTheme } from '../../Styles/ClubsTheme'
-import { ClubAdminGatherTownModal } from '../IntegrationModals/ClubAdminGatherTownModal'
-import { ClubAdminParagraphIntegrationModal } from '../IntegrationModals/ClubAdminParagraphIntegrationModal'
-import { ClubAdminVerifyTwitterModal } from '../IntegrationModals/ClubAdminVerifyTwitterModal'
+import { ClubAdminGatherTownModal } from '../ExtensionModals/ClubAdminGatherTownModal'
+import { ClubAdminParagraphExtensionModal } from '../ExtensionModals/ClubAdminParagraphExtensionModal'
+import { ClubAdminVerifyTwitterModal } from '../ExtensionModals/ClubAdminVerifyTwitterModal'
 interface IProps {
 	club: Club
 }
@@ -37,88 +37,86 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
-	// Fetch a list of available integrations.
+	// Fetch a list of available extensions.
 	const {
 		loading,
 		error,
 		data: inteData
-	} = useQuery<GetIntegrationsQuery>(GET_INTEGRATIONS)
+	} = useQuery<GetExtensionsQuery>(GET_INTEGRATIONS)
 
-	// Lists of integrations
-	const [existingIntegrations, setExistingIntegrations] = useState<
-		Integration[]
-	>([])
-	const [availableIntegrations, setAvailableIntegrations] = useState<
-		Integration[]
-	>([])
-	const [allIntegrations, setAllIntegrations] = useState<Integration[]>([])
-	const [searchedIntegrations, setSearchedIntegrations] = useState<
-		Integration[]
-	>([])
+	// Lists of extensions
+	const [existingExtensions, setExistingExtensions] = useState<Extension[]>(
+		[]
+	)
+	const [availableExtensions, setAvailableExtensions] = useState<Extension[]>(
+		[]
+	)
+	const [allExtensions, setAllExtensions] = useState<Extension[]>([])
+	const [searchedExtensions, setSearchedExtensions] = useState<Extension[]>(
+		[]
+	)
 
 	// Current search term
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 
-	const [hasSetupEnabledIntegrations, setHasSetUpIntegrations] =
-		useState(false)
+	const [hasSetupEnabledExtensions, setHasSetUpExtensions] = useState(false)
 
-	// Used to populate existing integrations when changes are made
-	const [integrationBeingEdited, setIntegrationBeingEdited] =
-		useState<Integration>()
+	// Used to populate existing extensions when changes are made
+	const [extensionBeingEdited, setExtensionBeingEdited] =
+		useState<Extension>()
 
 	// Properties that can be edited by the user
-	const [currentIntegrationUrl, setCurrentIntegrationUrl] = useState('')
-	const [isCurrentIntegrationEnabled, setCurrentIntegrationEnabled] =
+	const [currentExtensionUrl, setCurrentExtensionUrl] = useState('')
+	const [isCurrentExtensionEnabled, setCurrentExtensionEnabled] =
 		useState(true)
-	const [isCurrentIntegrationPublic, setCurrentIntegrationPublic] =
+	const [isCurrentExtensionPublic, setCurrentExtensionPublic] =
 		useState(false)
 
-	// Other properties of the integration being currently edited
-	const [currentIntegrationId, setCurrentIntegrationId] = useState('')
+	// Other properties of the extension being currently edited
+	const [currentExtensionId, setCurrentExtensionId] = useState('')
 
-	// Properties tied to simple, url-based integrations
+	// Properties tied to simple, url-based extensions
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [isIntegrationModalOpened, setIntegrationModalOpened] =
-		useState(false)
+	const [isExtensionModalOpened, setExtensionModalOpened] = useState(false)
 
-	// Modals for deeper integrations
+	// Modals for deeper extensions
 	const [isVerifyTwitterModalOpened, setVerifyTwitterModalOpened] =
 		useState(false)
 	const [isParagraphModalOpened, setParagraphModalOpened] = useState(false)
 	const [isGatherTownModalOpened, setGatherTownModalOpened] = useState(false)
 
-	const filterIntegrations = (available: Integration[]) => {
+	const filterExtensions = (available: Extension[]) => {
 		const search = currentSearchTerm
-		const filteredIntegrations: Integration[] = []
+		const filteredExtensions: Extension[] = []
 
 		if (currentSearchTerm.length > 0) {
 			available.forEach(inte => {
 				if (inte.name.toLowerCase().includes(search)) {
-					filteredIntegrations.push(inte)
+					filteredExtensions.push(inte)
 				}
 			})
-			setSearchedIntegrations(filteredIntegrations)
+			setSearchedExtensions(filteredExtensions)
 		} else {
-			setSearchedIntegrations(available)
+			setSearchedExtensions(available)
 		}
 	}
 
-	// Update the integration locally so that changes are reflected immediately.
-	const updateIntegrationLocally = (extraData: any) => {
-		const updatedInte = integrationBeingEdited
+	// Update the extension locally so that changes are reflected immediately.
+	const updateExtensionLocally = (extraData: any) => {
+		const updatedInte = extensionBeingEdited
 
-		if (updatedInte && integrationBeingEdited) {
-			updatedInte.url = currentIntegrationUrl
-			updatedInte.isEnabled = isCurrentIntegrationEnabled
-			updatedInte.isPublic = isCurrentIntegrationPublic
+		if (updatedInte && extensionBeingEdited) {
+			updatedInte.url = currentExtensionUrl
+			updatedInte.isEnabled = isCurrentExtensionEnabled
+			updatedInte.isPublic = isCurrentExtensionPublic
 
-			// If there was extra integration metadata, update it on the integration here.
+			// If there was extra extension metadata, update it on the extension here.
 			if (extraData) {
 				updatedInte.isEnabled =
-					extraData.isEnabled ?? isCurrentIntegrationEnabled
+					extraData.isEnabled ?? isCurrentExtensionEnabled
 				updatedInte.isVerified = extraData.isVerified ?? false
 				updatedInte.isPublic =
-					extraData.isPublic ?? isCurrentIntegrationPublic
+					extraData.isPublic ?? isCurrentExtensionPublic
 
 				// Twitter
 				updatedInte.verifiedTwitterUser =
@@ -140,66 +138,61 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				updatedInte.gatherTownSpacePw =
 					extraData.gatherTownSpacePw ?? ''
 			}
-			setIntegrationBeingEdited(updatedInte)
+			setExtensionBeingEdited(updatedInte)
 
-			// Check to see if this integration is an existing integration
+			// Check to see if this extension is an existing extension
 
-			if (!integrationBeingEdited.isExistingIntegration) {
-				// If not an existing integration, push this into existing integrations
-				const newExisting = existingIntegrations
-				integrationBeingEdited.isExistingIntegration = true
-				newExisting.push(integrationBeingEdited)
-				setExistingIntegrations(newExisting)
+			if (!extensionBeingEdited.isExistingExtension) {
+				// If not an existing extension, push this into existing extensions
+				const newExisting = existingExtensions
+				extensionBeingEdited.isExistingExtension = true
+				newExisting.push(extensionBeingEdited)
+				setExistingExtensions(newExisting)
 
-				availableIntegrations.forEach(inte => {
-					if (inte.integrationId === currentIntegrationId) {
-						const newAvailable = availableIntegrations.filter(
-							integ =>
-								integ.integrationId !== currentIntegrationId
+				availableExtensions.forEach(inte => {
+					if (inte.extensionId === currentExtensionId) {
+						const newAvailable = availableExtensions.filter(
+							integ => integ.extensionId !== currentExtensionId
 						)
-						setAvailableIntegrations(newAvailable)
-						filterIntegrations(newAvailable)
+						setAvailableExtensions(newAvailable)
+						filterExtensions(newAvailable)
 						return
 					}
 				})
 			} else {
-				// If already enabled, modify the existing integration
-				const newIntegrations = [...existingIntegrations]
+				// If already enabled, modify the existing extension
+				const newExtensions = [...existingExtensions]
 				// TODO: Is there a better way of updating an array item in typescript than a C loop?
-				for (let i = 0; i < newIntegrations.length; i++) {
-					if (
-						newIntegrations[i].integrationId ===
-						currentIntegrationId
-					) {
-						newIntegrations[i] = integrationBeingEdited
+				for (let i = 0; i < newExtensions.length; i++) {
+					if (newExtensions[i].extensionId === currentExtensionId) {
+						newExtensions[i] = extensionBeingEdited
 						break
 					}
 				}
 
-				setExistingIntegrations(newIntegrations)
+				setExistingExtensions(newExtensions)
 			}
 		}
 	}
 
-	// Used by simple integrations, i.e. ones that just require a URL.
-	const saveSimpleIntegrationChanges = async () => {
-		if (integrationBeingEdited) {
+	// Used by simple extensions, i.e. ones that just require a URL.
+	const saveSimpleExtensionChanges = async () => {
+		if (extensionBeingEdited) {
 			// Validate URL
 
 			if (
-				integrationBeingEdited.name === 'Phone Number' ||
-				integrationBeingEdited.name === 'Email Address'
+				extensionBeingEdited.name === 'Phone Number' ||
+				extensionBeingEdited.name === 'Email Address'
 			) {
 				// Ignore / skip validation (we may want to add custom validation here in future)
 			} else {
 				try {
-					new URL(currentIntegrationUrl)
+					new URL(currentExtensionUrl)
 				} catch (_) {
 					showNotification({
 						radius: 'lg',
 						title: 'Oops!',
-						message:
-							'Please enter a valid URL for this integration.'
+						message: 'Please enter a valid URL for this extension.'
 					})
 					return
 				}
@@ -208,7 +201,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			// Mark as saving changes
 			setIsSavingChanges(true)
 
-			log.debug(`public: ${isCurrentIntegrationPublic}`)
+			log.debug(`public: ${isCurrentExtensionPublic}`)
 
 			// Save the change to the db
 			try {
@@ -216,22 +209,22 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					.post(
 						`${
 							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.CreateOrUpdateAgreementIntegration.path({
+						}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
 							agreementId: club.id ?? '',
-							integrationId: currentIntegrationId
+							extensionId: currentExtensionId
 						})}`
 					)
 					.set('Authorization', `JWT ${wallet.jwt}`)
 					.send({
-						isEnabled: isCurrentIntegrationEnabled,
-						isPublic: isCurrentIntegrationPublic,
+						isEnabled: isCurrentExtensionEnabled,
+						isPublic: isCurrentExtensionPublic,
 						metadata: {
-							externalUrl: currentIntegrationUrl
+							externalUrl: currentExtensionUrl
 						}
 					})
 				log.debug(body)
 
-				updateIntegrationLocally(false)
+				updateExtensionLocally(false)
 			} catch (e) {
 				log.debug(e)
 				setIsSavingChanges(false)
@@ -239,97 +232,97 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					radius: 'lg',
 					title: 'Oops!',
 					message:
-						'Unable to save this integration. Please get in touch!'
+						'Unable to save this extension. Please get in touch!'
 				})
 				return
 			}
 		}
 		setIsSavingChanges(false)
-		setIntegrationModalOpened(false)
+		setExtensionModalOpened(false)
 	}
 
-	// Setup available integrations
+	// Setup available extensions
 	useEffect(() => {
-		if (!loading && inteData && availableIntegrations.length === 0) {
-			// Set up available integrations
-			const available: Integration[] = []
-			inteData.Integrations.forEach(inte => {
-				const integration: Integration = {
-					isExistingIntegration: false,
-					integrationId: inte.id,
+		if (!loading && inteData && availableExtensions.length === 0) {
+			// Set up available extensions
+			const available: Extension[] = []
+			inteData.Extensions.forEach(inte => {
+				const extension: Extension = {
+					isExistingExtension: false,
+					extensionId: inte.id,
 					name: inte.name,
 					description: inte.description,
 					guideUrl: inte.guideUrl,
 					icon: inte.icon
 				}
-				available.push(integration)
+				available.push(extension)
 			})
-			setAllIntegrations(available)
+			setAllExtensions(available)
 		}
 
 		if (
-			allIntegrations.length > 0 &&
-			availableIntegrations.length === 0 &&
-			hasSetupEnabledIntegrations
+			allExtensions.length > 0 &&
+			availableExtensions.length === 0 &&
+			hasSetupEnabledExtensions
 		) {
-			// Filter out available integrations based on enabled...
-			const finalIntegrations: Integration[] = []
+			// Filter out available extensions based on enabled...
+			const finalExtensions: Extension[] = []
 
-			allIntegrations.forEach(inte => {
+			allExtensions.forEach(inte => {
 				let doesAlreadyExist = false
-				existingIntegrations.forEach(existing => {
+				existingExtensions.forEach(existing => {
 					if (inte.name === existing.name) {
 						doesAlreadyExist = true
 						return
 					}
 				})
 				if (!doesAlreadyExist) {
-					finalIntegrations.push(inte)
+					finalExtensions.push(inte)
 				}
 			})
-			setSearchedIntegrations(finalIntegrations)
-			setAvailableIntegrations(finalIntegrations)
+			setSearchedExtensions(finalExtensions)
+			setAvailableExtensions(finalExtensions)
 		}
 	}, [
-		availableIntegrations,
-		allIntegrations,
-		hasSetupEnabledIntegrations,
+		availableExtensions,
+		allExtensions,
+		hasSetupEnabledExtensions,
 		inteData,
 		loading,
-		existingIntegrations
+		existingExtensions
 	])
 
-	// Setup enabled integrations
+	// Setup enabled extensions
 	useEffect(() => {
-		if (!hasSetupEnabledIntegrations) {
-			// Set up enabled integrations
-			setExistingIntegrations(club.allIntegrations ?? [])
-			setHasSetUpIntegrations(true)
+		if (!hasSetupEnabledExtensions) {
+			// Set up enabled extensions
+			setExistingExtensions(club.allExtensions ?? [])
+			setHasSetUpExtensions(true)
 		}
-	}, [club.allIntegrations, hasSetupEnabledIntegrations])
+	}, [club.allExtensions, hasSetupEnabledExtensions])
 
-	const editIntegration = (integration: Integration) => {
-		log.debug(integration.name)
+	const editExtension = (extension: Extension) => {
+		log.debug(extension.name)
 
-		setIntegrationBeingEdited(integration)
-		setCurrentIntegrationUrl(integration.url ?? '')
-		setCurrentIntegrationEnabled(integration.isEnabled ?? true)
-		setCurrentIntegrationId(integration.integrationId ?? '')
-		setCurrentIntegrationPublic(
-			integration.isPublic ?? integration.name === 'Discord'
+		setExtensionBeingEdited(extension)
+		setCurrentExtensionUrl(extension.url ?? '')
+		setCurrentExtensionEnabled(extension.isEnabled ?? true)
+		setCurrentExtensionId(extension.extensionId ?? '')
+		setCurrentExtensionPublic(
+			extension.isPublic ?? extension.name === 'Discord'
 		)
 
-		if (integration.name === 'Twitter') {
-			// Open twitter integration modal
+		if (extension.name === 'Twitter') {
+			// Open twitter extension modal
 			setVerifyTwitterModalOpened(true)
-		} else if (integration.name === 'Paragraph') {
-			// Open paragraph integration modal
+		} else if (extension.name === 'Paragraph') {
+			// Open paragraph extension modal
 			setParagraphModalOpened(true)
-		} else if (integration.name === 'Gather Town') {
-			// Open paragraph integration modal
+		} else if (extension.name === 'Gather Town') {
+			// Open paragraph extension modal
 			setGatherTownModalOpened(true)
 		} else {
-			setIntegrationModalOpened(true)
+			setExtensionModalOpened(true)
 		}
 	}
 
@@ -344,53 +337,53 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				<Text className={clubsTheme.tLargeBold}>Club Apps</Text>
 				<Space h={32} />
 
-				{existingIntegrations && existingIntegrations.length > 0 && (
+				{existingExtensions && existingExtensions.length > 0 && (
 					<>
 						<Text
 							className={clubsTheme.tMediumBold}
-						>{`Added apps (${existingIntegrations?.length})`}</Text>
+						>{`Added apps (${existingExtensions?.length})`}</Text>
 						<Space h={12} />
 						<Grid>
-							{existingIntegrations.map(integration => (
+							{existingExtensions.map(extension => (
 								<Grid.Col
 									xs={8}
 									sm={8}
 									md={4}
 									lg={4}
 									xl={4}
-									key={integration.name}
+									key={extension.name}
 								>
 									<div
 										className={
-											clubsTheme.integrationGridItemEnabled
+											clubsTheme.extensionGridItemEnabled
 										}
 									>
 										<div
 											className={
-												clubsTheme.integrationGridItemEnabledHeaderBackground
+												clubsTheme.extensionGridItemEnabledHeaderBackground
 											}
 										/>
 										<div
 											className={
-												clubsTheme.integrationGridItemHeader
+												clubsTheme.extensionGridItemHeader
 											}
 										>
 											<Image
 												src={`/${
 													isDarkTheme
-														? `${integration.icon?.replace(
+														? `${extension.icon?.replace(
 																'.png',
 																'-white.png'
 														  )}`
-														: integration.icon
+														: extension.icon
 												}`}
 												width={16}
 												height={16}
 												fit={'contain'}
 											/>
 											<Space w={8} />
-											<Text>{`${integration.name}`}</Text>
-											{integration.isVerified && (
+											<Text>{`${extension.name}`}</Text>
+											{extension.isVerified && (
 												<>
 													<Space w={12} />
 													<Image
@@ -425,22 +418,22 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											<a
 												onClick={() => {
 													if (
-														integration.name ===
+														extension.name ===
 														'Phone Number'
 													) {
 														window.open(
-															`tel:${integration.url}`
+															`tel:${extension.url}`
 														)
 													} else if (
-														integration.name ===
+														extension.name ===
 														'Email Address'
 													) {
 														window.open(
-															`mailto:${integration.url}`
+															`mailto:${extension.url}`
 														)
 													} else {
 														window.open(
-															integration.url
+															extension.url
 														)
 													}
 												}}
@@ -469,7 +462,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 
 											<a
 												onClick={() => {
-													editIntegration(integration)
+													editExtension(extension)
 												}}
 											>
 												<div
@@ -502,7 +495,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					<>
 						<Text
 							className={clubsTheme.tMediumBold}
-						>{`Available apps (${searchedIntegrations?.length})`}</Text>
+						>{`Available apps (${searchedExtensions?.length})`}</Text>
 						<Space h={8} />
 
 						<TextInput
@@ -511,56 +504,54 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 							onChange={event => {
 								if (event.target.value) {
 									setCurrentSearchTerm(event.target.value)
-									filterIntegrations(availableIntegrations)
+									filterExtensions(availableExtensions)
 								} else {
-									setSearchedIntegrations(
-										availableIntegrations
-									)
+									setSearchedExtensions(availableExtensions)
 								}
 							}}
 							placeholder="Search Apps"
 						/>
 						<Space h={24} />
 						<Grid>
-							{searchedIntegrations.map(integration => (
+							{searchedExtensions.map(extension => (
 								<Grid.Col
 									xs={8}
 									sm={8}
 									md={4}
 									lg={4}
 									xl={4}
-									key={integration.name}
+									key={extension.name}
 								>
 									<a
 										onClick={() => {
-											editIntegration(integration)
+											editExtension(extension)
 										}}
 									>
 										<div
 											className={
-												clubsTheme.integrationGridItem
+												clubsTheme.extensionGridItem
 											}
 										>
 											<div
 												className={
-													clubsTheme.integrationGridItemHeader
+													clubsTheme.extensionGridItemHeader
 												}
 											>
 												<Image
 													src={`/${
 														isDarkTheme
-															? `${integration.icon?.replace(
+															? `${extension.icon?.replace(
 																	'.png',
 																	'-white.png'
 															  )}`
-															: integration.icon
+															: extension.icon
 													}`}
 													width={16}
 													height={16}
 													fit={'contain'}
 												/>
 												<Space w={8} />
-												<Text>{`${integration.name}`}</Text>
+												<Text>{`${extension.name}`}</Text>
 											</div>
 											<Text
 												className={
@@ -568,7 +559,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 												}
 												style={{ marginTop: 6 }}
 											>
-												{integration.description}
+												{extension.description}
 											</Text>
 										</div>
 									</a>
@@ -591,10 +582,10 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				<Space h="xl" />
 				<ClubAdminVerifyTwitterModal
 					club={club}
-					integration={integrationBeingEdited}
+					extension={extensionBeingEdited}
 					isOpened={isVerifyTwitterModalOpened}
 					onSuccessfulVerification={twitterUsername => {
-						updateIntegrationLocally({
+						updateExtensionLocally({
 							isVerified: true,
 							twitterUsername
 						})
@@ -603,12 +594,12 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 						setVerifyTwitterModalOpened(false)
 					}}
 				/>
-				<ClubAdminParagraphIntegrationModal
+				<ClubAdminParagraphExtensionModal
 					club={club}
-					integration={integrationBeingEdited}
+					extension={extensionBeingEdited}
 					isOpened={isParagraphModalOpened}
 					onComplete={(slug, name, isEnabled) => {
-						updateIntegrationLocally({
+						updateExtensionLocally({
 							publicationSlug: slug,
 							publicationName: name,
 							isEnabled
@@ -620,7 +611,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 				/>
 				<ClubAdminGatherTownModal
 					club={club}
-					integration={integrationBeingEdited}
+					extension={extensionBeingEdited}
 					isOpened={isGatherTownModalOpened}
 					onSpaceSaved={(
 						spaceName,
@@ -629,7 +620,7 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 						spacePassword
 					) => {
 						setGatherTownModalOpened(false)
-						updateIntegrationLocally({
+						updateExtensionLocally({
 							spaceName,
 							isEnabled,
 							isPublic,
@@ -648,22 +639,22 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 					radius={16}
 					size={'lg'}
 					padding={'sm'}
-					opened={isIntegrationModalOpened}
+					opened={isExtensionModalOpened}
 					title={
 						<Text
 							className={clubsTheme.tMediumBold}
-						>{`Add ${integrationBeingEdited?.name}`}</Text>
+						>{`Add ${extensionBeingEdited?.name}`}</Text>
 					}
 					onClose={() => {
-						setIntegrationModalOpened(false)
+						setExtensionModalOpened(false)
 					}}
 				>
 					<Divider />
 					<Space h={24} />
-					{integrationBeingEdited && (
+					{extensionBeingEdited && (
 						<>
-							{integrationBeingEdited.guideUrl &&
-								!integrationBeingEdited.isExistingIntegration && (
+							{extensionBeingEdited.guideUrl &&
+								!extensionBeingEdited.isExistingExtension && (
 									<>
 										<Alert
 											icon={<QuestionMarkCircle />}
@@ -672,17 +663,17 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 											color="red"
 											variant="light"
 										>
-											<Text>{`We've written a handy short guide in case you're not familiar with ${integrationBeingEdited.name}.`}</Text>
+											<Text>{`We've written a handy short guide in case you're not familiar with ${extensionBeingEdited.name}.`}</Text>
 											<Space h={4} />
 											<a
 												target="_blank"
 												className={clubsTheme.tLink}
 												href={
-													integrationBeingEdited.guideUrl
+													extensionBeingEdited.guideUrl
 												}
 												rel="noreferrer"
 											>
-												{`${integrationBeingEdited.name} setup instructions`}
+												{`${extensionBeingEdited.name} setup instructions`}
 											</a>
 										</Alert>
 										<Space h={24} />
@@ -691,12 +682,9 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 
 							<Text
 								className={clubsTheme.tSmallBold}
-							>{`Enter your club's ${
-								integrationBeingEdited.name
-							}${
-								integrationBeingEdited.name ===
-									'Phone Number' ||
-								integrationBeingEdited.name === 'Email Address'
+							>{`Enter your club's ${extensionBeingEdited.name}${
+								extensionBeingEdited.name === 'Phone Number' ||
+								extensionBeingEdited.name === 'Email Address'
 									? ''
 									: ' URL'
 							} here:`}</Text>
@@ -704,34 +692,34 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 							<TextInput
 								radius="lg"
 								size="md"
-								value={currentIntegrationUrl}
+								value={currentExtensionUrl}
 								onChange={event => {
-									setCurrentIntegrationUrl(event.target.value)
+									setCurrentExtensionUrl(event.target.value)
 								}}
 							/>
 							<Space h={24} />
 						</>
 					)}
 
-					{integrationBeingEdited && (
+					{extensionBeingEdited && (
 						<>
 							<Switch
-								checked={isCurrentIntegrationPublic}
+								checked={isCurrentExtensionPublic}
 								onChange={event =>
-									setCurrentIntegrationPublic(
+									setCurrentExtensionPublic(
 										event.currentTarget.checked
 									)
 								}
 								label="Visible to non-members"
 							/>
 
-							{integrationBeingEdited?.isExistingIntegration && (
+							{extensionBeingEdited?.isExistingExtension && (
 								<>
 									<Space h={16} />
 									<Switch
-										checked={isCurrentIntegrationEnabled}
+										checked={isCurrentExtensionEnabled}
 										onChange={event =>
-											setCurrentIntegrationEnabled(
+											setCurrentExtensionEnabled(
 												event.currentTarget.checked
 											)
 										}
@@ -743,13 +731,13 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 						</>
 					)}
 
-					{integrationBeingEdited && (
+					{extensionBeingEdited && (
 						<div className={clubsTheme.rowEndAlign}>
 							<Button
 								loading={isSavingChanges}
 								disabled={isSavingChanges}
 								onClick={async () => {
-									saveSimpleIntegrationChanges()
+									saveSimpleExtensionChanges()
 								}}
 								className={clubsTheme.buttonBlack}
 							>

@@ -27,7 +27,7 @@ import {
 import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
-import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
+import { RolesManagerDiscordExtension } from './RolesManagerDiscordExtension'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
 interface IProps {
@@ -357,8 +357,8 @@ export const RolesManagerContent: React.FC<IProps> = ({
 															role?.isAdminRole,
 														isDefaultRole:
 															role?.isDefaultRole,
-														rolesIntegrationData:
-															role?.rolesIntegrationData,
+														rolesExtensionData:
+															role?.rolesExtensionData,
 														guildDiscordServerId:
 															role?.guildDiscordServerId ??
 															'',
@@ -395,7 +395,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 								</div>
 							)}
 
-							<RolesManagerDiscordIntegration
+							<RolesManagerDiscordExtension
 								club={club}
 								role={role}
 							/>

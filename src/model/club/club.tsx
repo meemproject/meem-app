@@ -18,7 +18,7 @@ export interface Extension {
 
 	// DB properties
 	id?: string
-	integrationId: string
+	extensionId: string
 	name: string
 	isEnabled?: boolean
 	isPublic?: boolean
@@ -193,8 +193,8 @@ export function agreementRolesToClubRoles(
 			})
 		}
 
-		// Roles discord integration metadata
-		const metadata = rawRole.integrationsMetadata
+		// Roles discord extension metadata
+		const metadata = rawRole.extensionsMetadata
 
 		let guildDiscordServerIcon = ''
 		let guildDiscordServerId = ''
@@ -513,7 +513,7 @@ export default async function clubFromAgreement(
 								)
 							}
 
-							// Club member metadata + integrations
+							// Club member metadata + extensions
 							const memberIdentity =
 								agreementToken.Wallet.Users &&
 								agreementToken.Wallet.Users.length > 0
@@ -756,9 +756,9 @@ export default async function clubFromAgreement(
 		if (clubData.AgreementExtensions) {
 			clubData.AgreementExtensions.forEach(inte => {
 				if (inte.isEnabled) {
-					const integration: Extension = {
+					const extension: Extension = {
 						id: inte.id,
-						integrationId: inte.ExtensionId,
+						extensionId: inte.ExtensionId,
 						name: inte.Extension?.name ?? 'Unknown',
 						description: inte.Extension?.description ?? 'Unknown',
 						icon: inte.Extension?.icon ?? '',
@@ -779,12 +779,12 @@ export default async function clubFromAgreement(
 					}
 
 					if (inte.isPublic) {
-						publicExtensions.push(integration)
+						publicExtensions.push(extension)
 					} else {
-						privateExtensions.push(integration)
+						privateExtensions.push(extension)
 					}
 
-					allExtensions.push(integration)
+					allExtensions.push(extension)
 				}
 			})
 		}

@@ -9,14 +9,14 @@ import { AlertCircle, Check } from 'tabler-icons-react'
 import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
-	integrationId?: string
+	extensionId?: string
 	discordAuthCode?: string
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const ProfileLinkDiscordModal: React.FC<IProps> = ({
-	integrationId,
+	extensionId,
 	discordAuthCode,
 	isOpened,
 	onModalClosed
@@ -31,8 +31,8 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					.post(
 						`${
 							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
-							integrationId: integrationId ?? ''
+						}${MeemAPI.v1.CreateOrUpdateMeemIdExtension.path({
+							extensionId: extensionId ?? ''
 						})}`
 					)
 					.set('Authorization', `JWT ${wallet.jwt}`)
@@ -65,10 +65,10 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 			}
 		}
 
-		if (isOpened && discordAuthCode && integrationId) {
+		if (isOpened && discordAuthCode && extensionId) {
 			authenticateWithDiscord()
 		}
-	}, [discordAuthCode, integrationId, isOpened, onModalClosed, wallet])
+	}, [discordAuthCode, extensionId, isOpened, onModalClosed, wallet])
 
 	return (
 		<>

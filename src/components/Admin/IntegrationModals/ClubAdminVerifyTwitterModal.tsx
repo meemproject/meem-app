@@ -16,12 +16,12 @@ import React, { useState } from 'react'
 import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
-import { Club, Integration } from '../../../model/club/club'
+import { Club, Extension } from '../../../model/club/club'
 import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
-	integration?: Integration
+	extension?: Extension
 	isOpened: boolean
 	onModalClosed: () => void
 	onSuccessfulVerification: (username: string) => void
@@ -36,7 +36,7 @@ enum Step {
 
 export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 	club,
-	integration,
+	extension,
 	isOpened,
 	onModalClosed,
 	onSuccessfulVerification
@@ -57,9 +57,9 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 				.post(
 					`${
 						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateAgreementIntegration.path({
+					}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
 						agreementId: club.id ?? '',
-						integrationId: integration?.integrationId ?? ''
+						integrationId: extension?.extensionId ?? ''
 					})}`
 				)
 				.set('Authorization', `JWT ${wallet.jwt}`)
@@ -67,7 +67,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 					isEnabled: true,
 					isPublic: true,
 					metadata: {
-						externalUrl: integration?.integrationId,
+						externalUrl: extension?.extensionId,
 						twitterUsername
 					}
 				})
@@ -120,7 +120,7 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 			>
 				<Divider />
 
-				{integration && integration.isVerified && (
+				{extension && extension.isVerified && (
 					<div style={{ paddingLeft: 8, paddingRight: 8 }}>
 						<Space h={24} />
 
@@ -129,12 +129,12 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 							<a
 								onClick={() => {
 									window.open(
-										`https://twitter.com/${integration.verifiedTwitterUser}`
+										`https://twitter.com/${extension.verifiedTwitterUser}`
 									)
 								}}
 							>
 								<span className={clubsTheme.tSmallBold}>
-									{integration.verifiedTwitterUser}
+									{extension.verifiedTwitterUser}
 								</span>
 							</a>{' '}
 							on Twitter.

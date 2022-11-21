@@ -19,7 +19,7 @@ import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
-import { Club, Integration } from '../../../model/club/club'
+import { Club, Extension } from '../../../model/club/club'
 import {
 	colorGreen,
 	colorGrey,
@@ -28,7 +28,7 @@ import {
 } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
-	integration?: Integration
+	extension?: Extension
 	isOpened: boolean
 	onModalClosed: () => void
 	onComplete: (slug: string, name: string, isEnabled: boolean) => void
@@ -38,13 +38,13 @@ enum Step {
 	Start,
 	OpenGnosis,
 	Transaction,
-	SavingIntegration,
+	SavingExtension,
 	Success
 }
 
-export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
+export const ClubAdminParagraphExtensionModal: React.FC<IProps> = ({
 	club,
-	integration,
+	extension,
 	isOpened,
 	onModalClosed,
 	onComplete
@@ -59,22 +59,22 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	const [publicationUrl, setPublicationUrl] = useState('')
 	const [isClubMembersOnly, setIsClubMembersOnly] = useState(false)
 
-	// Is this integration enabled?
-	const [isIntegrationEnabled, setIsIntegrationEnabled] = useState(true)
+	// Is this extension enabled?
+	const [isExtensionEnabled, setIsExtensionEnabled] = useState(true)
 
 	const [hasOpenedClubTreasury, setHasOpenedClubTreasury] = useState(false)
 
-	const saveIntegration = async (isPublic: boolean) => {
-		log.debug('saving integration')
+	const saveExtension = async (isPublic: boolean) => {
+		log.debug('saving extension')
 		try {
 			const postData = `${
 				process.env.NEXT_PUBLIC_API_URL
-			}${MeemAPI.v1.CreateOrUpdateAgreementIntegration.path({
+			}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
 				agreementId: club.id ?? '',
-				integrationId: integration?.integrationId ?? ''
+				integrationId: extension?.extensionId ?? ''
 			})}`
 			const data = {
-				isEnabled: isIntegrationEnabled,
+				isEnabled: isExtensionEnabled,
 				isPublic,
 				metadata: {
 					externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
@@ -139,8 +139,8 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				} else if (e.data === 'updated') {
 					window.removeEventListener('message', listener)
 					popup.close()
-					setStep(Step.SavingIntegration)
-					saveIntegration(!isClubMembersOnly)
+					setStep(Step.SavingExtension)
+					saveExtension(!isClubMembersOnly)
 				}
 			}
 			window.addEventListener('message', listener)
@@ -148,11 +148,11 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 	}
 
 	useEffect(() => {
-		// Used when we want to show integration settings after being saved
-		if (integration && integration.publicationSlug) {
-			setIsIntegrationEnabled(integration.isEnabled ?? false)
+		// Used when we want to show extension settings after being saved
+		if (extension && extension.publicationSlug) {
+			setIsExtensionEnabled(extension.isEnabled ?? false)
 		}
-	}, [integration, isClubMembersOnly])
+	}, [extension, isClubMembersOnly])
 
 	return (
 		<>
@@ -161,7 +161,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				withCloseButton={
-					step !== Step.Transaction && step != Step.SavingIntegration
+					step !== Step.Transaction && step != Step.SavingExtension
 				}
 				radius={16}
 				size={'50%'}
@@ -169,7 +169,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				opened={isOpened}
 				title={
 					<Text className={clubsTheme.tMediumBold}>
-						{integration && integration.publicationSlug
+						{extension && extension.publicationSlug
 							? 'Edit Paragraph settings'
 							: 'Create a Paragraph Publication'}
 					</Text>
@@ -179,7 +179,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 						onComplete(
 							publicationUrl,
 							publicationName,
-							isIntegrationEnabled
+							isExtensionEnabled
 						)
 					}
 					onModalClosed()
@@ -190,14 +190,14 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 				<Space h={24} />
 
 				<div className={clubsTheme.modalStepsContainer}>
-					{integration && integration.publicationSlug && (
+					{extension && extension.publicationSlug && (
 						<>
 							<>
 								<Space h={16} />
 								<Switch
-									checked={isIntegrationEnabled}
+									checked={isExtensionEnabled}
 									onChange={event =>
-										setIsIntegrationEnabled(
+										setIsExtensionEnabled(
 											event.currentTarget.checked
 										)
 									}
@@ -207,15 +207,15 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 								<Button
 									onClick={async () => {
-										// Save the integration
-										saveIntegration(
-											integration.isPublic ?? true
+										// Save the extension
+										saveExtension(
+											extension.isPublic ?? true
 										)
-										// Update the local integration
+										// Update the local extension
 										onComplete(
 											publicationUrl,
 											publicationName,
-											isIntegrationEnabled
+											isExtensionEnabled
 										)
 										// Close our modal
 										onModalClosed()
@@ -227,7 +227,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 							</>
 						</>
 					)}
-					{integration && !integration.publicationSlug && (
+					{extension && !extension.publicationSlug && (
 						<>
 							{step === Step.Start && (
 								<>
@@ -418,7 +418,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 									<Space h={16} />
 								</>
 							)}
-							{step === Step.SavingIntegration && (
+							{step === Step.SavingExtension && (
 								<>
 									<Space h={16} />
 									<Center>
@@ -433,7 +433,7 @@ export const ClubAdminParagraphIntegrationModal: React.FC<IProps> = ({
 
 									<Center>
 										<Image
-											src="/integration-paragraph.png"
+											src="/extension-paragraph.png"
 											height={40}
 											width={40}
 										/>
