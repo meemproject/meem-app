@@ -47,7 +47,6 @@ export interface ClubRole {
 	id: string
 	name: string
 	isAdminRole?: boolean
-	isDefaultRole?: boolean
 	isTransferrable?: boolean
 	tokenAddress?: string
 	permissions: ClubRolePermission[]
@@ -221,9 +220,8 @@ export function agreementRolesToClubRoles(
 		const clubRole: ClubRole = {
 			id: rawRole.id,
 			isAdminRole: rawRole.isAdminRole,
-			isDefaultRole: rawRole.isDefaultRole,
 			rolesExtensionData: metadata,
-			tokenAddress: rawRole.tokenAddress ?? '',
+			tokenAddress: rawRole.address ?? '',
 			isTransferrable: rawRole.Agreement?.isTransferrable ?? false,
 			name: rawRole.name,
 			guildDiscordServerIcon,

@@ -308,7 +308,6 @@ export const SUB_CLUB_AS_MEMBER = gql`
 					AgreementRoles {
 						id
 						isAdminRole
-						#isDefaultRole
 						name
 						# AgreementRolePermissions {
 						# 	RolePermissionId
@@ -344,7 +343,6 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				id
 				name
 				isAdminRole
-				#isDefaultRole
 				# AgreementRolePermissions {
 				# 	RolePermissionId
 				# }
@@ -447,7 +445,6 @@ export const GET_ALL_CLUBS = gql`
 	query AllClubs($chainId: Int, $limit: Int, $offset: Int) {
 		Agreements(
 			where: { chainId: { _eq: $chainId } }
-			# where: { chainId: { _eq: $chainId }, type: { _eq: "meem-club" } }
 			order_by: { AgreementTokens_aggregate: { count: desc } }
 			limit: $limit
 			offset: $offset
@@ -493,10 +490,7 @@ export const SUB_MY_CLUBS = gql`
 			where: {
 				AgreementId: { _is_null: false }
 				Wallet: { address: { _ilike: $walletAddress } }
-				Agreement: {
-					chainId: { _eq: $chainId }
-					# type: { _eq: "meem-club" }
-				}
+				Agreement: { chainId: { _eq: $chainId } }
 			}
 			order_by: {
 				Agreement: { AgreementTokens_aggregate: { count: desc } }
