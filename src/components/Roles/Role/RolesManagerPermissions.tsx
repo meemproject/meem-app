@@ -48,7 +48,6 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 									permissions: newPermissions,
 									isTransferrable: role.isTransferrable,
 									isAdminRole: role.isAdminRole,
-									isDefaultRole: role.isDefaultRole,
 									rolesExtensionData: role.rolesExtensionData,
 									guildDiscordServerId:
 										role.guildDiscordServerId ?? '',

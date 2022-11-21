@@ -27,7 +27,7 @@ import { GET_INTEGRATIONS } from '../../../graphql/clubs'
 import { Club, Extension } from '../../../model/club/club'
 import { colorGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminGatherTownModal } from '../ExtensionModals/ClubAdminGatherTownModal'
-import { ClubAdminParagraphExtensionModal } from '../ExtensionModals/ClubAdminParagraphExtensionModal'
+import { ClubAdminParagraphExtensionModal } from '../ExtensionModals/ClubAdminParagraphIntegrationModal'
 import { ClubAdminVerifyTwitterModal } from '../ExtensionModals/ClubAdminVerifyTwitterModal'
 interface IProps {
 	club: Club
