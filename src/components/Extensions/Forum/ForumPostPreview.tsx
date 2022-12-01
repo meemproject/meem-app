@@ -111,7 +111,7 @@ export const ForumPostPreview: React.FC<IProps> = ({ post }) => {
 							className={clubsTheme.row}
 							style={{ marginTop: 16 }}
 						>
-							<Link href={`/${post.clubSlug}/forum/post1`}>
+							<Link href={`/${post.clubSlug}/e/forum/post1`}>
 								<div
 									className={clubsTheme.centeredRow}
 									style={{ cursor: 'pointer' }}

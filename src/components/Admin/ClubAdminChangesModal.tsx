@@ -4,7 +4,7 @@ import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useSockets, useWallet } from '@meemproject/react'
-import { MeemAPI, makeFetcher, useMeemApollo } from '@meemproject/sdk'
+import { MeemAPI, useMeemApollo } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
@@ -147,13 +147,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					)
 				}
 
-				const reInitializeContractFetcher = makeFetcher<
-					MeemAPI.v1.ReInitializeAgreement.IQueryParams,
-					MeemAPI.v1.ReInitializeAgreement.IRequestBody,
-					MeemAPI.v1.ReInitializeAgreement.IResponseBody
-				>({
-					method: MeemAPI.v1.ReInitializeAgreement.method
-				})
+				// const reInitializeContractFetcher = makeFetcher<
+				// 	MeemAPI.v1.ReInitializeAgreement.IQueryParams,
+				// 	MeemAPI.v1.ReInitializeAgreement.IRequestBody,
+				// 	MeemAPI.v1.ReInitializeAgreement.IResponseBody
+				// >({
+				// 	method: MeemAPI.v1.ReInitializeAgreement.method
+				// })
 
 				if (!club.id) {
 					showNotification({
@@ -227,13 +227,13 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				// log.debug(JSON.stringify(data))
 				log.debug(data)
 
-				await reInitializeContractFetcher(
-					MeemAPI.v1.ReInitializeAgreement.path({
-						agreementId: club.id
-					}),
-					undefined,
-					data
-				)
+				// await reInitializeContractFetcher(
+				// 	MeemAPI.v1.ReInitializeAgreement.path({
+				// 		agreementId: club.id
+				// 	}),
+				// 	undefined,
+				// 	data
+				// )
 
 				// Now we wait for an update on the db.
 			} catch (e) {

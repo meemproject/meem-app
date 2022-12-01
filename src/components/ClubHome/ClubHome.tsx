@@ -17,12 +17,12 @@ import {
 } from '../../graphql/clubs'
 import clubFromAgreement, { Club } from '../../model/club/club'
 import { hostnameToChainId } from '../App'
+import { ClubForumWidget } from '../Extensions/Forum/ClubWidgetForum'
 import { useClubsTheme } from '../Styles/ClubsTheme'
-import { ClubAddAppsWidget } from './Widgets/ClubAddAppsWidget'
-import { ClubForumWidget } from './Widgets/ClubForumWidget'
-import { ClubInfoWidget } from './Widgets/ClubInfoWidget'
-import { ClubMembersWidget } from './Widgets/ClubMembersWidget'
-import { ClubRequirementsWidget } from './Widgets/ClubRequirementsWidget'
+import { ClubAddAppsWidget } from './CoreWidgets/ClubAddAppsWidget'
+import { ClubInfoWidget } from './CoreWidgets/ClubInfoWidget'
+import { ClubMembersWidget } from './CoreWidgets/ClubMembersWidget'
+import { ClubRequirementsWidget } from './CoreWidgets/ClubRequirementsWidget'
 
 interface IProps {
 	slug: string

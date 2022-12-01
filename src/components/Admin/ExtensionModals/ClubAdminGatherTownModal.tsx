@@ -11,13 +11,9 @@ import {
 	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
-import request from 'superagent'
-import { AlertCircle } from 'tabler-icons-react'
 import { Club, Extension } from '../../../model/club/club'
-import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -38,15 +34,15 @@ enum Step {
 }
 
 export const ClubAdminGatherTownModal: React.FC<IProps> = ({
-	club,
+	// club,
 	extension,
 	isOpened,
-	onModalClosed,
-	onSpaceSaved
+	onModalClosed
+	// onSpaceSaved
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
-	const wallet = useWallet()
+	//const wallet = useWallet()
 
 	const [step, setStep] = useState<Step>(Step.CreateGatherSpace)
 
@@ -104,41 +100,41 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 		setIsSavingChanges(true)
 
 		log.debug('saving extension')
-		try {
-			const postData = `${
-				process.env.NEXT_PUBLIC_API_URL
-			}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
-				agreementId: club.id ?? '',
-				integrationId: extension?.extensionId ?? ''
-			})}`
-			const data = {
-				isEnabled: true,
-				isPublic,
-				metadata: {
-					externalUrl: spaceUrl,
-					gatherTownSpacePw: spacePassword
-				}
-			}
-			log.debug(JSON.stringify(postData))
-			log.debug(JSON.stringify(data))
-			await request
-				.post(postData)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send(data)
-			onSpaceSaved(spaceUrl, isEnabled, isPublic, spacePassword)
-			setIsSavingChanges(false)
-		} catch (e) {
-			log.debug(e)
-			showNotification({
-				title: 'Something went wrong',
-				autoClose: 5000,
-				color: colorPink,
-				icon: <AlertCircle />,
-				message: `Please check that all fields are complete and try again.`
-			})
-			setIsSavingChanges(false)
-			return
-		}
+		// try {
+		// 	const postData = `${
+		// 		process.env.NEXT_PUBLIC_API_URL
+		// 	}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
+		// 		agreementId: club.id ?? '',
+		// 		integrationId: extension?.extensionId ?? ''
+		// 	})}`
+		// 	const data = {
+		// 		isEnabled: true,
+		// 		isPublic,
+		// 		metadata: {
+		// 			externalUrl: spaceUrl,
+		// 			gatherTownSpacePw: spacePassword
+		// 		}
+		// 	}
+		// 	log.debug(JSON.stringify(postData))
+		// 	log.debug(JSON.stringify(data))
+		// 	await request
+		// 		.post(postData)
+		// 		.set('Authorization', `JWT ${wallet.jwt}`)
+		// 		.send(data)
+		// 	onSpaceSaved(spaceUrl, isEnabled, isPublic, spacePassword)
+		// 	setIsSavingChanges(false)
+		// } catch (e) {
+		// 	log.debug(e)
+		// 	showNotification({
+		// 		title: 'Something went wrong',
+		// 		autoClose: 5000,
+		// 		color: colorPink,
+		// 		icon: <AlertCircle />,
+		// 		message: `Please check that all fields are complete and try again.`
+		// 	})
+		// 	setIsSavingChanges(false)
+		// 	return
+		// }
 	}
 
 	return (

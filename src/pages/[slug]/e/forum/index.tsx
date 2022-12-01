@@ -5,12 +5,12 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { hostnameToChainId } from '../../../components/App'
-import { ForumPostSubmit } from '../../../components/ClubExtensions/Forum/ForumPostSubmit'
-import { MeemFooter } from '../../../components/Footer/MeemFooter'
-import { HeaderMenu } from '../../../components/Header/Header'
-import { GET_CLUB_INFO } from '../../../graphql/clubs'
-import { ssrGraphqlClient } from '../../../utils/ssr_graphql'
+import { hostnameToChainId } from '../../../../components/App'
+import { ForumHome } from '../../../components/ClubExtensions/Forum/ForumHome'
+import { MeemFooter } from '../../../../components/Footer/MeemFooter'
+import { HeaderMenu } from '../../../../components/Header/Header'
+import { GET_CLUB_INFO } from '../../../../graphql/clubs'
+import { ssrGraphqlClient } from '../../../../utils/ssr_graphql'
 
 export interface ClubPropViewModel {
 	responseBody: any
@@ -22,7 +22,7 @@ interface IProps {
 	club: ClubPropViewModel
 }
 
-const ForumPostSubmitPage: NextPage<IProps> = ({ club }) => {
+const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 	const router = useRouter()
 
 	const clubSlug =
@@ -33,14 +33,14 @@ const ForumPostSubmitPage: NextPage<IProps> = ({ club }) => {
 				<title>
 					{club === undefined || club.isError
 						? 'Not found'
-						: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`}
+						: `${club.responseBody.Agreements[0].name} | Forum | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
 				<meta name="description" content={club.description} />
@@ -51,7 +51,7 @@ const ForumPostSubmitPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
 				<meta property="og:description" content={club.description} />
@@ -62,7 +62,7 @@ const ForumPostSubmitPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
 				<meta
@@ -90,7 +90,7 @@ const ForumPostSubmitPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ForumPostSubmit clubSlug={clubSlug} />
+			<ForumHome slug={clubSlug} />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -152,4 +152,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ForumPostSubmitPage
+export default ClubDetailPage

@@ -338,13 +338,16 @@ export const CreateClubModal: React.FC<IProps> = ({
 	useEffect(() => {
 		let newActiveStep = 1
 		const deployTransaction = transactions?.Transactions.find(
-			t => t.id === transactionState?.deployContractTxId
+			(t: { id: string | undefined }) =>
+				t.id === transactionState?.deployContractTxId
 		)
 		const cutTransaction = transactions?.Transactions.find(
-			t => t.id === transactionState?.cutTxId
+			(t: { id: string | undefined }) =>
+				t.id === transactionState?.cutTxId
 		)
 		const mintTransaction = transactions?.Transactions.find(
-			t => t.id === transactionState?.mintTxId
+			(t: { id: string | undefined }) =>
+				t.id === transactionState?.mintTxId
 		)
 
 		if (deployTransaction?.status === MeemAPI.TransactionStatus.Success) {

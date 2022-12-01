@@ -1,4 +1,3 @@
-import log from '@kengoldfarb/log'
 import {
 	Text,
 	Space,
@@ -10,14 +9,10 @@ import {
 	Button
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
-import request from 'superagent'
-import { AlertCircle, Check } from 'tabler-icons-react'
 import twitterIntent from 'twitter-intent'
 import { Club, Extension } from '../../../model/club/club'
-import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -38,11 +33,11 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 	club,
 	extension,
 	isOpened,
-	onModalClosed,
-	onSuccessfulVerification
+	onModalClosed
+	// onSuccessfulVerification
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
-	const wallet = useWallet()
+	//const wallet = useWallet()
 
 	const [step, setStep] = useState<Step>(Step.Start)
 
@@ -52,50 +47,50 @@ export const ClubAdminVerifyTwitterModal: React.FC<IProps> = ({
 		setStep(Step.Verifying)
 
 		// Save the change to the db
-		try {
-			const { body } = await request
-				.post(
-					`${
-						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
-						agreementId: club.id ?? '',
-						integrationId: extension?.extensionId ?? ''
-					})}`
-				)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send({
-					isEnabled: true,
-					isPublic: true,
-					metadata: {
-						externalUrl: extension?.extensionId,
-						twitterUsername
-					}
-				})
-			log.debug(body)
-			showNotification({
-				radius: 'lg',
-				title: 'Success!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color={colorGreen} />,
+		// try {
+		// 	const { body } = await request
+		// 		.post(
+		// 			`${
+		// 				process.env.NEXT_PUBLIC_API_URL
+		// 			}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
+		// 				agreementId: club.id ?? '',
+		// 				integrationId: extension?.extensionId ?? ''
+		// 			})}`
+		// 		)
+		// 		.set('Authorization', `JWT ${wallet.jwt}`)
+		// 		.send({
+		// 			isEnabled: true,
+		// 			isPublic: true,
+		// 			metadata: {
+		// 				externalUrl: extension?.extensionId,
+		// 				twitterUsername
+		// 			}
+		// 		})
+		// 	log.debug(body)
+		// 	showNotification({
+		// 		radius: 'lg',
+		// 		title: 'Success!',
+		// 		autoClose: 5000,
+		// 		color: colorGreen,
+		// 		icon: <Check color={colorGreen} />,
 
-				message: `Your club is now verified.`
-			})
-			onSuccessfulVerification(twitterUsername)
-			onModalClosed()
-		} catch (e) {
-			log.debug(e)
-			showNotification({
-				radius: 'lg',
-				title: 'Verification failed',
-				autoClose: 5000,
-				color: colorPink,
-				icon: <AlertCircle />,
-				message: `Please make sure your tweet was public and try again.`
-			})
-			setStep(Step.Verify)
-			return
-		}
+		// 		message: `Your club is now verified.`
+		// 	})
+		// 	onSuccessfulVerification(twitterUsername)
+		// 	onModalClosed()
+		// } catch (e) {
+		// 	log.debug(e)
+		// 	showNotification({
+		// 		radius: 'lg',
+		// 		title: 'Verification failed',
+		// 		autoClose: 5000,
+		// 		color: colorPink,
+		// 		icon: <AlertCircle />,
+		// 		message: `Please make sure your tweet was public and try again.`
+		// 	})
+		// 	setStep(Step.Verify)
+		// 	return
+		// }
 	}
 	return (
 		<>

@@ -52,7 +52,7 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 					<Button
 						className={clubsTheme.buttonRed}
 						onClick={() => {
-							router.push({ pathname: `/${club.slug}/forum` })
+							router.push({ pathname: `/${club.slug}/e/forum` })
 						}}
 					>
 						View All

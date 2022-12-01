@@ -62,7 +62,6 @@ export function emptyRole(): ClubRole {
 	return {
 		id: 'addRole',
 		isAdminRole: false,
-		isDefaultRole: false,
 		name: '',
 		permissions: [],
 		rolesExtensionData: '',
@@ -183,14 +182,14 @@ export function agreementRolesToClubRoles(
 	const roles: ClubRole[] = []
 	agreementRoles.forEach(rawRole => {
 		const permissions: ClubRolePermission[] = []
-		if (rawRole.AgreementRolePermissions) {
-			rawRole.AgreementRolePermissions.forEach(rolePermission => {
-				const rp: ClubRolePermission = {
-					id: rolePermission.RolePermissionId ?? ''
-				}
-				permissions.push(rp)
-			})
-		}
+		// if (rawRole.AgreementRolePermissions) {
+		// 	rawRole.AgreementRolePermissions.forEach(rolePermission => {
+		// 		const rp: ClubRolePermission = {
+		// 			id: rolePermission.RolePermissionId ?? ''
+		// 		}
+		// 		permissions.push(rp)
+		// 	})
+		// }
 
 		// Roles discord extension metadata
 		const metadata = rawRole.metadata
@@ -482,33 +481,33 @@ export default async function clubFromAgreement(
 								})
 
 								// Set the current user's available permissions, if they exist
-								agreementToken.Agreement.AgreementRoles.forEach(
-									clubMemberRole => {
-										// Current member logic
-										if (
-											agreementToken.Wallet &&
-											agreementToken.Wallet.address.toLowerCase() ===
-												walletAddress.toLowerCase()
-										) {
-											// Set the current user's available permissions
-											if (
-												clubMemberRole.AgreementRolePermissions
-											) {
-												clubMemberRole.AgreementRolePermissions.forEach(
-													permission => {
-														if (
-															permission.RolePermissionId
-														) {
-															currentUserClubPermissions.push(
-																permission.RolePermissionId
-															)
-														}
-													}
-												)
-											}
-										}
-									}
-								)
+								// agreementToken.Agreement.AgreementRoles.forEach(
+								// 	clubMemberRole => {
+								// 		// Current member logic
+								// 		if (
+								// 			agreementToken.Wallet &&
+								// 			agreementToken.Wallet.address.toLowerCase() ===
+								// 				walletAddress.toLowerCase()
+								// 		) {
+								// 			// Set the current user's available permissions
+								// 			if (
+								// 				clubMemberRole.AgreementRolePermissions
+								// 			) {
+								// 				clubMemberRole.AgreementRolePermissions.forEach(
+								// 					permission => {
+								// 						if (
+								// 							permission.RolePermissionId
+								// 						) {
+								// 							currentUserClubPermissions.push(
+								// 								permission.RolePermissionId
+								// 							)
+								// 						}
+								// 					}
+								// 				)
+								// 			}
+								// 		}
+								// 	}
+								// )
 							}
 
 							// Club member metadata + extensions
@@ -518,27 +517,27 @@ export default async function clubFromAgreement(
 									? agreementToken.Wallet.Users[0]
 									: undefined
 
-							let twitterUsername = ''
-							let discordUsername = ''
-							let discordUserId = ''
-							let emailAddress = ''
+							const twitterUsername = ''
+							const discordUsername = ''
+							const discordUserId = ''
+							const emailAddress = ''
 
-							memberIdentity?.IdentityIntegrations.forEach(
-								inte => {
-									if (inte.metadata.twitterUsername) {
-										twitterUsername =
-											inte.metadata.twitterUsername
-									} else if (inte.metadata.discordUsername) {
-										discordUsername =
-											inte.metadata.discordUsername
-										discordUserId =
-											inte.metadata.discordUserId
-									} else if (inte.metadata.emailAddress) {
-										emailAddress =
-											inte.metadata.emailAddress
-									}
-								}
-							)
+							// memberIdentity?.IdentityIntegrations.forEach(
+							// 	inte => {
+							// 		if (inte.metadata.twitterUsername) {
+							// 			twitterUsername =
+							// 				inte.metadata.twitterUsername
+							// 		} else if (inte.metadata.discordUsername) {
+							// 			discordUsername =
+							// 				inte.metadata.discordUsername
+							// 			discordUserId =
+							// 				inte.metadata.discordUserId
+							// 		} else if (inte.metadata.emailAddress) {
+							// 			emailAddress =
+							// 				inte.metadata.emailAddress
+							// 		}
+							// 	}
+							// )
 
 							// Assemble member
 							const memberData = {
@@ -761,7 +760,6 @@ export default async function clubFromAgreement(
 						description: inte.Extension?.description ?? 'Unknown',
 						icon: inte.Extension?.icon ?? '',
 						isEnabled: inte.isEnabled,
-						isPublic: inte.isPublic,
 						isVerified: inte.metadata.isVerified ?? false,
 
 						guideUrl: inte.Extension?.guideUrl,
@@ -776,11 +774,12 @@ export default async function clubFromAgreement(
 						gatherTownSpacePw: inte.metadata.gatherTownSpacePw ?? ''
 					}
 
-					if (inte.isPublic) {
-						publicExtensions.push(extension)
-					} else {
-						privateExtensions.push(extension)
-					}
+					// TODO:
+					// if (inte.isPublic) {
+					// 	publicExtensions.push(extension)
+					// } else {
+					// 	privateExtensions.push(extension)
+					// }
 
 					allExtensions.push(extension)
 				}
