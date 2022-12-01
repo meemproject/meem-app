@@ -1,48 +1,50 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Container, Text, Space, Loader, Center } from '@mantine/core'
+import {
+	Container,
+	Text,
+	TextInput,
+	Image,
+	Space,
+	Loader,
+	Center,
+	Button
+} from '@mantine/core'
 import { useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { Search } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
 	GetIsMemberOfClubSubscriptionSubscription,
 	Agreements
-} from '../../../generated/graphql'
+} from '../../../../generated/graphql'
 import {
 	SUB_CLUB,
 	SUB_CLUB_AS_MEMBER,
 	SUB_IS_MEMBER_OF_CLUB
-} from '../../graphql/clubs'
-import clubFromAgreement, { Club } from '../../model/club/club'
-import { hostnameToChainId } from '../App'
-import { useClubsTheme } from '../Styles/ClubsTheme'
-import { ClubAddAppsWidget } from './Widgets/ClubAddAppsWidget'
-import { ClubForumWidget } from './Widgets/ClubForumWidget'
-import { ClubInfoWidget } from './Widgets/ClubInfoWidget'
-import { ClubMembersWidget } from './Widgets/ClubMembersWidget'
-import { ClubRequirementsWidget } from './Widgets/ClubRequirementsWidget'
+} from '../../../graphql/clubs'
+import clubFromAgreement, { Club } from '../../../model/club/club'
+import { ForumPost } from '../../../model/club/forum/forumPost'
+import { hostnameToChainId } from '../../App'
+import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { ForumPostPreview } from './ForumPostPreview'
 
 interface IProps {
 	slug: string
 }
 
-export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
-	// General imports
+export const ForumHome: React.FC<IProps> = ({ slug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-
-	// Club data
 	const { anonClient, mutualMembersClient } = useMeemApollo()
-	const [club, setClub] = useState<Club | undefined>()
-	const [previousClubDataString, setPreviousClubDataString] = useState('')
-	const [isLoadingClub, setIsLoadingClub] = useState(true)
-	const [doesMeetAllRequirements, setDoesMeetAllRequirements] =
-		useState(false)
 
-	// Subscriptions
+	const [club, setClub] = useState<Club | undefined>()
+
+	const [previousClubDataString, setPreviousClubDataString] = useState('')
+
 	const { data: isCurrentUserClubMemberData, error: userClubMemberError } =
 		useSubscription<GetIsMemberOfClubSubscriptionSubscription>(
 			SUB_IS_MEMBER_OF_CLUB,
@@ -97,6 +99,8 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			!isCurrentUserClubMemberData ||
 			isCurrentUserClubMemberData.AgreementTokens.length === 0
 	})
+
+	const [isLoadingClub, setIsLoadingClub] = useState(true)
 
 	useEffect(() => {
 		if (errorAnonClub) {
@@ -180,6 +184,25 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 		isCurrentUserClubMemberData
 	])
 
+	const posts: ForumPost[] = [
+		{
+			id: '1',
+			title: 'Test post one',
+			tags: ['funny', 'crazy'],
+			clubSlug: club?.slug ?? '',
+			content: 'This is just a small test post.',
+			user: club && club.members ? club.members[0] : { wallet: '' }
+		},
+		{
+			id: '2',
+			title: 'Test post two',
+			tags: ['funny', 'crazy'],
+			clubSlug: club?.slug ?? '',
+			content: 'And another test post',
+			user: club && club.members ? club.members[0] : { wallet: '' }
+		}
+	]
+
 	return (
 		<>
 			{isLoadingClub && (
@@ -213,29 +236,73 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 				</Container>
 			)}
 			{!isLoadingClub && club?.name && (
-				<div>
-					<Container size={1000}>
-						<div className={clubsTheme.pageResponsiveContainer}>
-							<div className={clubsTheme.pageLeftColumn}>
-								<ClubInfoWidget
-									club={club}
-									meetsReqs={doesMeetAllRequirements}
-								/>
-							</div>
-							<div className={clubsTheme.pageRightColumn}>
-								<ClubForumWidget club={club} />
-								<ClubAddAppsWidget club={club} />
-								<ClubRequirementsWidget
-									club={club}
-									onMeetsAllReqsChanged={meetsReqs => {
-										setDoesMeetAllRequirements(meetsReqs)
-									}}
-								/>
-								<ClubMembersWidget club={club} />
-							</div>
+				<>
+					<Container>
+						<Space h={48} />
+
+						<Center>
+							<Image
+								className={clubsTheme.imagePixelated}
+								height={100}
+								width={100}
+								src={club.image}
+							/>
+						</Center>
+
+						<Space h={24} />
+						<Center>
+							<Text className={clubsTheme.tLargeBold}>
+								{club.name}
+							</Text>
+						</Center>
+						<Space h={8} />
+
+						<Center>
+							<Text className={clubsTheme.tMedium}>
+								{club.description}
+							</Text>
+						</Center>
+						<Space h={24} />
+
+						<Center>
+							<Button
+								className={clubsTheme.buttonBlack}
+								onClick={() => {
+									router.push({
+										pathname: `/${club.slug}/forum/submit`
+									})
+								}}
+							>
+								+ Start a discussion
+							</Button>
+						</Center>
+						<Space h={48} />
+						<div className={clubsTheme.centeredRow}>
+							<TextInput
+								radius={20}
+								classNames={{
+									input: clubsTheme.fTextField
+								}}
+								icon={<Search />}
+								placeholder={'Search discussions'}
+								className={clubsTheme.fullWidth}
+								size={'lg'}
+								onChange={event => {
+									log.debug(event.target.value)
+									// TODO
+								}}
+							/>
+							<Space w={16} />
+							<Button className={clubsTheme.buttonBlack}>
+								Sort
+							</Button>
 						</div>
+						<Space h={32} />
+						{posts.map(post => (
+							<ForumPostPreview key={post.id} post={post} />
+						))}
 					</Container>
-				</div>
+				</>
 			)}
 		</>
 	)

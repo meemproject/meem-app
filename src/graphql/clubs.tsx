@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client'
 
 export const MEEM_PARTS = gql`
-	fragment MeemParts on Meems {
+	fragment MeemParts on AgreementTokens {
 		tokenId
-		MeemContractId
-		MeemContract {
+		AgreementId
+		Agreement {
 			address
 			name
 			symbol
@@ -13,7 +13,7 @@ export const MEEM_PARTS = gql`
 `
 
 export const MEEM_CONTRACT_PARTS = gql`
-	fragment MeemContractParts on MeemContracts {
+	fragment AgreementParts on Agreements {
 		slug
 		address
 		metadata
@@ -28,19 +28,19 @@ export const GET_IS_MEMBER_OF_CLUB = gql`
 		$clubSlug: String
 		$chainId: Int!
 	) {
-		Meems(
+		AgreementTokens(
 			where: {
-				MeemContractId: { _is_null: false }
-				MeemContract: {
+				AgreementId: { _is_null: false }
+				Agreement: {
 					slug: { _eq: $clubSlug }
 					chainId: { _eq: $chainId }
 				}
-				Owner: { address: { _ilike: $walletAddress } }
+				Wallet: { address: { _ilike: $walletAddress } }
 			}
 		) {
 			id
 			tokenId
-			Owner {
+			Wallet {
 				address
 			}
 		}
@@ -53,19 +53,19 @@ export const SUB_IS_MEMBER_OF_CLUB = gql`
 		$clubSlug: String
 		$chainId: Int
 	) {
-		Meems(
+		AgreementTokens(
 			where: {
-				MeemContractId: { _is_null: false }
-				MeemContract: {
+				AgreementId: { _is_null: false }
+				Agreement: {
 					slug: { _eq: $clubSlug }
 					chainId: { _eq: $chainId }
 				}
-				Owner: { address: { _ilike: $walletAddress } }
+				Wallet: { address: { _ilike: $walletAddress } }
 			}
 		) {
 			id
 			tokenId
-			Owner {
+			Wallet {
 				address
 			}
 		}
@@ -74,7 +74,7 @@ export const SUB_IS_MEMBER_OF_CLUB = gql`
 
 export const GET_CLUBS_AUTOCOMPLETE = gql`
 	query GetClubsAutocomplete($query: String, $chainId: Int) {
-		MeemContracts(
+		Agreements(
 			where: { name: { _ilike: $query }, chainId: { _eq: $chainId } }
 		) {
 			id
@@ -87,7 +87,7 @@ export const GET_CLUBS_AUTOCOMPLETE = gql`
 
 export const GET_CLUB_SLUG = gql`
 	query GetClubSlug($contractAddress: String) {
-		MeemContracts(where: { address: { _eq: $contractAddress } }) {
+		Agreements(where: { address: { _eq: $contractAddress } }) {
 			slug
 		}
 	}
@@ -95,7 +95,7 @@ export const GET_CLUB_SLUG = gql`
 
 export const GET_CLUB = gql`
 	query GetClub($slug: String, $chainId: Int) {
-		MeemContracts(
+		Agreements(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
 			slug
@@ -103,8 +103,8 @@ export const GET_CLUB = gql`
 			metadata
 			createdAt
 			name
-			Meems {
-				Owner {
+			AgreementTokens {
+				Wallet {
 					address
 					ens
 					User {
@@ -126,19 +126,19 @@ export const GET_CLUB = gql`
 			mintPermissions
 			symbol
 			id
-			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
-				IntegrationId
+			AgreementExtensions(where: { isEnabled: { _eq: true } }) {
+				ExtensionId
 				id
 				isEnabled
 				metadata
-				Integration {
+				Extension {
 					description
 					guideUrl
 					icon
 					id
 					name
 				}
-				isPublic
+				#isPublic
 			}
 		}
 	}
@@ -146,7 +146,7 @@ export const GET_CLUB = gql`
 
 export const GET_CLUB_AS_MEMBER = gql`
 	query GetClubAsMember($slug: String, $chainId: Int) {
-		MeemContracts(
+		Agreements(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
 			slug
@@ -155,8 +155,8 @@ export const GET_CLUB_AS_MEMBER = gql`
 			createdAt
 			name
 			gnosisSafeAddress
-			Meems {
-				Owner {
+			AgreementTokens {
+				Wallet {
 					address
 					ens
 					User {
@@ -177,7 +177,7 @@ export const GET_CLUB_AS_MEMBER = gql`
 			maxSupply
 			mintPermissions
 			symbol
-			MeemContractWallets {
+			AgreementWallets {
 				role
 				Wallet {
 					address
@@ -185,19 +185,19 @@ export const GET_CLUB_AS_MEMBER = gql`
 				}
 			}
 			id
-			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
-				IntegrationId
+			AgreementExtensions(where: { isEnabled: { _eq: true } }) {
+				ExtensionId
 				id
 				isEnabled
 				metadata
-				Integration {
+				Extension {
 					description
 					guideUrl
 					icon
 					id
 					name
 				}
-				isPublic
+				#isPublic
 			}
 		}
 	}
@@ -205,7 +205,7 @@ export const GET_CLUB_AS_MEMBER = gql`
 
 export const GET_CLUB_INFO = gql`
 	query GetClubInfo($slug: String, $chainId: Int) {
-		MeemContracts(
+		Agreements(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
 			slug
@@ -219,7 +219,7 @@ export const GET_CLUB_INFO = gql`
 
 export const SUB_CLUB = gql`
 	subscription GetClubSubscription($slug: String, $chainId: Int) {
-		MeemContracts(
+		Agreements(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
 			slug
@@ -227,8 +227,8 @@ export const SUB_CLUB = gql`
 			metadata
 			createdAt
 			name
-			Meems {
-				Owner {
+			AgreementTokens {
+				Wallet {
 					address
 					ens
 					User {
@@ -250,19 +250,19 @@ export const SUB_CLUB = gql`
 			mintPermissions
 			symbol
 			id
-			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
-				IntegrationId
+			AgreementExtensions(where: { isEnabled: { _eq: true } }) {
+				ExtensionId
 				id
 				isEnabled
 				metadata
-				Integration {
+				Extension {
 					description
 					guideUrl
 					icon
 					id
 					name
 				}
-				isPublic
+				#isPublic
 			}
 		}
 	}
@@ -270,7 +270,7 @@ export const SUB_CLUB = gql`
 
 export const SUB_CLUB_AS_MEMBER = gql`
 	subscription GetClubAsMemberSubscription($slug: String, $chainId: Int) {
-		MeemContracts(
+		Agreements(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
 			slug
@@ -280,9 +280,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			name
 			gnosisSafeAddress
 			OwnerId
-			Meems {
+			AgreementTokens {
 				OwnerId
-				Owner {
+				Wallet {
 					address
 					ens
 					User {
@@ -298,24 +298,23 @@ export const SUB_CLUB_AS_MEMBER = gql`
 				tokenURI
 				mintedAt
 				mintedBy
-				MeemContract {
-					MeemContractWallets {
+				Agreement {
+					AgreementWallets {
 						role
 						Wallet {
 							address
 						}
 					}
-					MeemContractRoles {
+					AgreementRoles {
 						id
 						isAdminRole
-						isDefaultRole
 						name
-						MeemContractRolePermissions {
-							RolePermissionId
-						}
-						tokenAddress
-						integrationsMetadata
-						RoleMeemContract {
+						# AgreementRolePermissions {
+						# 	RolePermissionId
+						# }
+						address
+						metadata
+						Agreement {
 							isTransferrable
 						}
 					}
@@ -326,31 +325,30 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			mintPermissions
 			symbol
 			id
-			MeemContractIntegrations(where: { isEnabled: { _eq: true } }) {
-				IntegrationId
+			AgreementExtensions(where: { isEnabled: { _eq: true } }) {
+				ExtensionId
 				id
 				isEnabled
 				metadata
-				Integration {
+				Extension {
 					description
 					guideUrl
 					icon
 					id
 					name
 				}
-				isPublic
+				#isPublic
 			}
-			MeemContractRoles {
+			AgreementRoles {
 				id
 				name
 				isAdminRole
-				isDefaultRole
-				MeemContractRolePermissions {
-					RolePermissionId
-				}
-				tokenAddress
-				integrationsMetadata
-				RoleMeemContract {
+				# AgreementRolePermissions {
+				# 	RolePermissionId
+				# }
+				address
+				metadata
+				Agreement {
 					isTransferrable
 				}
 			}
@@ -360,7 +358,7 @@ export const SUB_CLUB_AS_MEMBER = gql`
 
 export const SUB_CLUBS = gql`
 	subscription ClubSubscription($address: String, $chainId: Int) {
-		MeemContracts(
+		Agreements(
 			where: { address: { _eq: $address }, chainId: { _eq: $chainId } }
 		) {
 			slug
@@ -368,8 +366,8 @@ export const SUB_CLUBS = gql`
 			createdAt
 			name
 			metadata
-			Meems {
-				Owner {
+			AgreementTokens {
+				Wallet {
 					address
 					ens
 				}
@@ -381,7 +379,7 @@ export const SUB_CLUBS = gql`
 			splits
 			mintPermissions
 			symbol
-			MeemContractWallets {
+			AgreementWallets {
 				role
 				Wallet {
 					ens
@@ -393,8 +391,8 @@ export const SUB_CLUBS = gql`
 `
 
 export const GET_INTEGRATIONS = gql`
-	query GetIntegrations {
-		Integrations {
+	query GetExtensions {
+		Extensions {
 			createdAt
 			description
 			guideUrl
@@ -418,17 +416,15 @@ export const GET_AVAILABLE_PERMISSIONS = gql`
 
 export const GET_MEMBERS_FOR_ROLE = gql`
 	query GetClubMembersForRole($slug: String, $chainId: Int, $roleId: uuid) {
-		MeemContracts(
+		Agreements(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
-			Meems(
+			AgreementTokens(
 				where: {
-					MeemContract: {
-						MeemContractRoles: { id: { _eq: $roleId } }
-					}
+					Agreement: { AgreementRoles: { id: { _eq: $roleId } } }
 				}
 			) {
-				Owner {
+				Wallet {
 					address
 					ens
 					User {
@@ -447,9 +443,9 @@ export const GET_MEMBERS_FOR_ROLE = gql`
 
 export const GET_ALL_CLUBS = gql`
 	query AllClubs($chainId: Int, $limit: Int, $offset: Int) {
-		MeemContracts(
-			where: { chainId: { _eq: $chainId }, type: { _eq: "meem-club" } }
-			order_by: { Meems_aggregate: { count: desc } }
+		Agreements(
+			where: { chainId: { _eq: $chainId } }
+			order_by: { AgreementTokens_aggregate: { count: desc } }
 			limit: $limit
 			offset: $offset
 		) {
@@ -458,8 +454,8 @@ export const GET_ALL_CLUBS = gql`
 			createdAt
 			name
 			metadata
-			Meems {
-				Owner {
+			AgreementTokens {
+				Wallet {
 					address
 					ens
 				}
@@ -471,15 +467,15 @@ export const GET_ALL_CLUBS = gql`
 			splits
 			mintPermissions
 			symbol
-			# MeemContractWallets {
+			# AgreementWallets {
 			# 	role
 			# 	Wallet {
 			# 		ens
 			# 		address
 			# 	}
 			# }
-			# Meems {
-			# 	Owner {
+			# AgreementTokens {
+			# 	Wallet {
 			# 		address
 			# 		ens
 			# 	}
@@ -490,20 +486,19 @@ export const GET_ALL_CLUBS = gql`
 
 export const SUB_MY_CLUBS = gql`
 	subscription MyClubsSubscription($walletAddress: String, $chainId: Int) {
-		Meems(
+		AgreementTokens(
 			where: {
-				MeemContractId: { _is_null: false }
-				Owner: { address: { _ilike: $walletAddress } }
-				MeemContract: {
-					chainId: { _eq: $chainId }
-					type: { _eq: "meem-club" }
-				}
+				AgreementId: { _is_null: false }
+				Wallet: { address: { _ilike: $walletAddress } }
+				Agreement: { chainId: { _eq: $chainId } }
 			}
-			order_by: { MeemContract: { Meems_aggregate: { count: desc } } }
+			order_by: {
+				Agreement: { AgreementTokens_aggregate: { count: desc } }
+			}
 		) {
 			tokenId
-			MeemContractId
-			MeemContract {
+			AgreementId
+			Agreement {
 				id
 				slug
 				address
@@ -514,20 +509,20 @@ export const SUB_MY_CLUBS = gql`
 				gnosisSafeAddress
 				mintPermissions
 				symbol
-				MeemContractWallets {
+				AgreementWallets {
 					role
 					Wallet {
 						ens
 						address
 					}
 				}
-				Meems_aggregate {
+				AgreementTokens_aggregate {
 					aggregate {
 						count
 					}
 				}
-				Meems {
-					Owner {
+				AgreementTokens {
+					Wallet {
 						address
 						ens
 					}

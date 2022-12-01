@@ -1,76 +1,72 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/prop-types */
 import log from '@kengoldfarb/log'
+import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { hostnameToChainId } from '../../components/App'
-import { MeemFooter } from '../../components/Footer/MeemFooter'
-import { HeaderMenu } from '../../components/Header/Header'
-import { RolesManager } from '../../components/Roles/RolesManager'
-import { GET_CLUB } from '../../graphql/clubs'
-import { ssrGraphqlClient } from '../../utils/ssr_graphql'
-import { ClubPropViewModel } from '.'
+import { hostnameToChainId } from '../../../../components/App'
+import { ForumPostComponent } from '../../../../components/ClubExtensions/Forum/ForumPost'
+import { MeemFooter } from '../../../../components/Footer/MeemFooter'
+import { HeaderMenu } from '../../../../components/Header/Header'
+import { GET_CLUB_INFO } from '../../../../graphql/clubs'
+import { ssrGraphqlClient } from '../../../../utils/ssr_graphql'
 
-interface IProps {
-	club: ClubPropViewModel
+export interface ForumPostPropViewModel {
+	responseBody: any
+	description: string
+	isError: boolean
 }
 
-const ClubRolesPage: NextPage<IProps> = ({ club }) => {
+interface IProps {
+	post: ForumPostPropViewModel
+}
+
+const ForumPostPage: NextPage<IProps> = ({ post }) => {
 	const router = useRouter()
 
+	const postId: string =
+		router.query.postId === undefined ? '' : `${router.query.postId}`
 	const clubSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
 				<title>
-					{club === undefined || club.isError
+					{post === undefined || post.isError
 						? 'Not found'
-						: `${club.responseBody.Agreements[0].name} | Roles | Clubs`}
+						: `${post.responseBody.Agreements[0].name} | Forum | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
-						club === undefined || club.isError
+						post === undefined || post.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Roles | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
-				<meta
-					name="description"
-					content={`Roles page for ${
-						club === undefined || club.isError
-							? 'an unknown club'
-							: club.responseBody.Agreements[0].name
-					}`}
-				/>
+				{/* <meta name="description" content={post.description} /> */}
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta
 					property="og:title"
 					content={
-						club === undefined || club.isError
+						post === undefined || post.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Roles | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
-				<meta
-					property="og:description"
-					content={`Roles page for ${
-						club === undefined || club.isError
-							? 'an unknown club'
-							: club.responseBody.Agreements[0].name
-					}`}
-				/>
+				{/* <meta property="og:description" content={post.description} /> */}
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
 				<meta
 					property="twitter:title"
 					content={
-						club === undefined || club.isError
+						post === undefined || post.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Roles | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
 					}
 				/>
 				<meta
@@ -98,7 +94,8 @@ const ClubRolesPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<RolesManager slug={clubSlug} />
+			<ForumPostComponent postId={postId} />
+			<Space h={64} />
 			<MeemFooter />
 		</>
 	)
@@ -108,13 +105,13 @@ export const getServerSideProps: GetServerSideProps = async ({
 	params,
 	req
 }) => {
-	let club: ClubPropViewModel | undefined
+	let club: ForumPostPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {
 		if (params?.slug) {
-			const { data } = await client.query({
-				query: GET_CLUB,
+			const { data, errors } = await client.query({
+				query: GET_CLUB_INFO,
 				variables: {
 					slug: params.slug,
 					chainId: hostnameToChainId(req.headers.host ?? '')
@@ -134,13 +131,16 @@ export const getServerSideProps: GetServerSideProps = async ({
 					description: data.Agreements[0].metadata.description ?? ''
 				}
 			}
-		}
-
-		return {
-			props: {
-				club
+			return {
+				props: {
+					club,
+					isError: !!errors,
+					description: 'There was an error fetching club data'
+				}
 			}
 		}
+
+		return { props: {} }
 	} catch (e) {
 		log.debug(e)
 		club = {
@@ -156,4 +156,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ClubRolesPage
+export default ForumPostPage

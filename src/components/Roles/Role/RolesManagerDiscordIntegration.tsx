@@ -18,7 +18,7 @@ interface IProps {
 	club?: Club
 }
 
-export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
+export const RolesManagerDiscordExtension: React.FC<IProps> = ({
 	role,
 	club
 }) => {
@@ -72,16 +72,16 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 				}
 				setIsFetchingGuildInfo(true)
 				const guildInfoFetcher = makeFetcher<
-					MeemAPI.v1.GetMeemContractGuild.IQueryParams,
-					MeemAPI.v1.GetMeemContractGuild.IRequestBody,
-					MeemAPI.v1.GetMeemContractGuild.IResponseBody
+					MeemAPI.v1.GetAgreementGuild.IQueryParams,
+					MeemAPI.v1.GetAgreementGuild.IRequestBody,
+					MeemAPI.v1.GetAgreementGuild.IResponseBody
 				>({
-					method: MeemAPI.v1.GetMeemContractGuild.method
+					method: MeemAPI.v1.GetAgreementGuild.method
 				})
 
 				const data = await guildInfoFetcher(
-					MeemAPI.v1.GetMeemContractGuild.path({
-						meemContractId: club.id
+					MeemAPI.v1.GetAgreementGuild.path({
+						agreementId: club.id
 					})
 				)
 				log.debug(JSON.stringify(data))
@@ -248,22 +248,22 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 										<Space h={24} />
 										<div
 											className={
-												clubsTheme.integrationGridItemEnabled
+												clubsTheme.extensionGridItemEnabled
 											}
 											style={{ width: 400 }}
 										>
 											<div
 												className={
-													clubsTheme.integrationGridItemEnabledHeaderBackground
+													clubsTheme.extensionGridItemEnabledHeaderBackground
 												}
 											/>
 											<div
 												className={
-													clubsTheme.integrationGridItemHeader
+													clubsTheme.extensionGridItemHeader
 												}
 											>
 												<Image
-													src={`/integration-discord.png`}
+													src={`/extension-discord.png`}
 													width={16}
 													height={16}
 													fit={'contain'}
@@ -281,7 +281,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 											</div>
 											<div
 												className={
-													clubsTheme.integrationGridItemActions
+													clubsTheme.extensionGridItemActions
 												}
 											>
 												<a
@@ -293,7 +293,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												>
 													<div
 														className={
-															clubsTheme.integrationGridItemAction
+															clubsTheme.extensionGridItemAction
 														}
 													>
 														<ExternalLink
@@ -324,7 +324,7 @@ export const RolesManagerDiscordIntegration: React.FC<IProps> = ({
 												>
 													<div
 														className={
-															clubsTheme.integrationGridItemAction
+															clubsTheme.extensionGridItemAction
 														}
 													>
 														<Settings size={20} />

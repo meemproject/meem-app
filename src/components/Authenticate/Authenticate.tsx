@@ -1,8 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useAuth } from '@meemproject/react'
-import { MeemAPI, makeRequest, getNonce } from '@meemproject/sdk'
+import { useAuth, useMeemSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
@@ -11,6 +10,7 @@ import { useClubsTheme } from '../Styles/ClubsTheme'
 const MAuthenticate: React.FC = () => {
 	const wallet = useAuth()
 	const router = useRouter()
+	const { sdk } = useMeemSDK()
 
 	const [isLoading, setIsLoading] = useState(false)
 	const { classes: clubsTheme } = useClubsTheme()
@@ -26,18 +26,10 @@ const MAuthenticate: React.FC = () => {
 			if (address && walletSig) {
 				try {
 					setIsLoading(true)
-
-					const loginRequest =
-						await makeRequest<MeemAPI.v1.Login.IDefinition>(
-							MeemAPI.v1.Login.path(),
-							{
-								method: MeemAPI.v1.Login.method,
-								body: {
-									address,
-									signature: walletSig
-								}
-							}
-						)
+					const loginRequest = await sdk.auth.login({
+						address,
+						signature: walletSig
+					})
 
 					log.debug(`logged in successfully.`, { loginRequest })
 					wallet.setJwt(loginRequest.jwt)
@@ -62,7 +54,7 @@ const MAuthenticate: React.FC = () => {
 				}
 			}
 		},
-		[router, wallet]
+		[router, wallet, sdk]
 	)
 
 	const sign = useCallback(async () => {
@@ -70,7 +62,7 @@ const MAuthenticate: React.FC = () => {
 		setIsLoading(true)
 
 		try {
-			const { nonce } = await getNonce({
+			const { nonce } = await sdk.auth.getNonce({
 				address
 			})
 			log.debug('got nonce')
@@ -99,7 +91,7 @@ const MAuthenticate: React.FC = () => {
 			setIsLoading(false)
 			log.crit(e)
 		}
-	}, [login, wallet.signer, wallet.accounts])
+	}, [login, wallet.signer, wallet.accounts, sdk])
 
 	const connectWallet = useCallback(async () => {
 		setIsLoading(true)

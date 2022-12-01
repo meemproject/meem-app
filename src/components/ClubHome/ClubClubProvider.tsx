@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
-import { useWallet } from '@meemproject/react'
+import { useWallet, useMeemApollo } from '@meemproject/react'
 import React, {
 	useState,
 	useEffect,
@@ -11,7 +11,6 @@ import React, {
 } from 'react'
 import { GetIsMemberOfClubSubscriptionSubscription } from '../../../generated/graphql'
 import { SUB_IS_MEMBER_OF_CLUB } from '../../graphql/clubs'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 
 const defaultState = {
@@ -31,7 +30,7 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 
 	const wallet = useWallet()
 
-	const { anonClient } = useCustomApollo()
+	const { anonClient } = useMeemApollo()
 
 	const {
 		loading,
@@ -56,7 +55,7 @@ export const ClubClubProvider: FC<IClubClubProviderProps> = ({ ...props }) => {
 
 	useEffect(() => {
 		if (!loading && !errorFetchingIsClubClub && clubClubData) {
-			if (clubClubData.Meems.length > 0) {
+			if (clubClubData.AgreementTokens.length > 0) {
 				setIsMember(true)
 			} else {
 				setIsMember(false)

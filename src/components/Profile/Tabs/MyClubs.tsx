@@ -9,17 +9,16 @@ import {
 	Badge,
 	useMantineColorScheme
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import {
-	MeemContracts,
+	Agreements,
 	MyClubsSubscriptionSubscription
 } from '../../../../generated/graphql'
 import { SUB_MY_CLUBS } from '../../../graphql/clubs'
-import { Club, clubSummaryFromMeemContract } from '../../../model/club/club'
-import { useCustomApollo } from '../../../providers/ApolloProvider'
+import { Club, clubSummaryFromAgreement } from '../../../model/club/club'
 import { hostnameToChainId } from '../../App'
 import {
 	colorBlack,
@@ -32,7 +31,7 @@ export const MyClubsComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { mutualMembersClient } = useCustomApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -81,9 +80,9 @@ export const MyClubsComponent: React.FC = () => {
 
 	const clubs: Club[] = []
 
-	clubData?.Meems.forEach(meem => {
-		const possibleClub = clubSummaryFromMeemContract(
-			meem.MeemContract as MeemContracts
+	clubData?.AgreementTokens.forEach(meem => {
+		const possibleClub = clubSummaryFromAgreement(
+			meem.Agreement as Agreements
 		)
 
 		if (possibleClub.name) {

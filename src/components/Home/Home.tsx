@@ -124,7 +124,7 @@ export function HomeComponent() {
 
 				const typedData = data as GetClubsAutocompleteQuery
 
-				if (typedData.MeemContracts.length === 0) {
+				if (typedData.Agreements.length === 0) {
 					setAutocompleteData([])
 					setIsFetchingData(false)
 					setIsLoadingSuggestions(false)
@@ -132,7 +132,7 @@ export function HomeComponent() {
 					log.debug('allowing create button = true')
 				} else {
 					const clubsList: React.SetStateAction<any[]> = []
-					typedData.MeemContracts.forEach(club => {
+					typedData.Agreements.forEach(club => {
 						const clubData = {
 							image: club.metadata.image
 								? club.metadata.image

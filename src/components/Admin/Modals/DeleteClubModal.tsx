@@ -32,17 +32,17 @@ export const DeleteClubModal: React.FC<IProps> = ({
 
 			try {
 				// const updateRoleFetcher = makeFetcher<
-				// 	MeemAPI.v1.DeleteMeemContractRole.IQueryParams,
-				// 	MeemAPI.v1.DeleteMeemContractRole.IRequestBody,
-				// 	MeemAPI.v1.DeleteMeemContractRole.IResponseBody
+				// 	MeemAPI.v1.DeleteAgreementRole.IQueryParams,
+				// 	MeemAPI.v1.DeleteAgreementRole.IRequestBody,
+				// 	MeemAPI.v1.DeleteAgreementRole.IResponseBody
 				// >({
-				// 	method: MeemAPI.v1.DeleteMeemContractRole.method
+				// 	method: MeemAPI.v1.DeleteAgreementRole.method
 				// })
 
 				// await updateRoleFetcher(
-				// 	MeemAPI.v1.DeleteMeemContractRole.path({
-				// 		meemContractId: club.id ?? '',
-				// 		meemContractRoleId: role.id ?? ''
+				// 	MeemAPI.v1.DeleteAgreementRole.path({
+				// 		agreementId: club.id ?? '',
+				// 		agreementRoleId: role.id ?? ''
 				// 	})
 				// )
 

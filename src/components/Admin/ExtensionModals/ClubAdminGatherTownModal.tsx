@@ -16,12 +16,12 @@ import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
-import { Club, Integration } from '../../../model/club/club'
+import { Club, Extension } from '../../../model/club/club'
 import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
-	integration?: Integration
+	extension?: Extension
 	isOpened: boolean
 	onModalClosed: () => void
 	onSpaceSaved: (
@@ -39,7 +39,7 @@ enum Step {
 
 export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 	club,
-	integration,
+	extension,
 	isOpened,
 	onModalClosed,
 	onSpaceSaved
@@ -61,16 +61,16 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	useEffect(() => {
-		if (integration && integration.isExistingIntegration) {
+		if (extension && extension.isExistingExtension) {
 			setStep(Step.AddGatherSpaceDetails)
-			setSpaceUrl(integration.url ?? '')
-			setIsPublic(integration.isPublic ?? false)
-			setIsEnabled(integration.isEnabled ?? true)
-			setSpacePassword(integration.gatherTownSpacePw ?? '')
+			setSpaceUrl(extension.url ?? '')
+			setIsPublic(extension.isPublic ?? false)
+			setIsEnabled(extension.isEnabled ?? true)
+			setSpacePassword(extension.gatherTownSpacePw ?? '')
 		}
-	}, [integration])
+	}, [extension])
 
-	const saveIntegration = async () => {
+	const saveExtension = async () => {
 		if (!spaceUrl.includes('https://app.gather.town/app/')) {
 			showNotification({
 				radius: 'lg',
@@ -103,13 +103,13 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 
 		setIsSavingChanges(true)
 
-		log.debug('saving integration')
+		log.debug('saving extension')
 		try {
 			const postData = `${
 				process.env.NEXT_PUBLIC_API_URL
-			}${MeemAPI.v1.CreateOrUpdateMeemContractIntegration.path({
-				meemContractId: club.id ?? '',
-				integrationId: integration?.integrationId ?? ''
+			}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
+				agreementId: club.id ?? '',
+				integrationId: extension?.extensionId ?? ''
 			})}`
 			const data = {
 				isEnabled: true,
@@ -251,22 +251,20 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 								)}
 
 								<Space h={24} />
-								{integration &&
-									integration.isExistingIntegration && (
-										<>
-											<Switch
-												checked={isEnabled}
-												onChange={event =>
-													setIsEnabled(
-														event.currentTarget
-															.checked
-													)
-												}
-												label="App enabled"
-											/>
-											<Space h={8} />
-										</>
-									)}
+								{extension && extension.isExistingExtension && (
+									<>
+										<Switch
+											checked={isEnabled}
+											onChange={event =>
+												setIsEnabled(
+													event.currentTarget.checked
+												)
+											}
+											label="App enabled"
+										/>
+										<Space h={8} />
+									</>
+								)}
 								<Switch
 									checked={isPublic}
 									onChange={event =>
@@ -285,7 +283,7 @@ export const ClubAdminGatherTownModal: React.FC<IProps> = ({
 									<>
 										<Button
 											onClick={() => {
-												saveIntegration()
+												saveExtension()
 											}}
 											className={clubsTheme.buttonBlack}
 										>

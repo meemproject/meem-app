@@ -1468,6 +1468,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				<CreateClubModal
 					membershipSettings={membershipSettings}
 					isOpened={isClubCreationModalOpened}
+					// isOpened={true}
 					onModalClosed={() => {
 						setIsSavingChanges(false)
 						setIsClubCreationModalOpened(false)

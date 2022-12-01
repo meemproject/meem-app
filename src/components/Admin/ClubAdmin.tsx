@@ -13,23 +13,22 @@ import {
 	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { LoginState, useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
-	MeemContracts
+	Agreements
 } from '../../../generated/graphql'
 import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
-import clubFromMeemContract, { Club } from '../../model/club/club'
+import clubFromAgreement, { Club } from '../../model/club/club'
 import {
 	userHasPermissionEditProfile,
 	userHasPermissionManageApps,
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 import { colorGreen, useClubsTheme } from '../Styles/ClubsTheme'
 import { CABulkMint } from './Tabs/CABulkMint'
@@ -62,7 +61,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { mutualMembersClient } = useCustomApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
@@ -149,10 +148,10 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 
 	useEffect(() => {
 		async function getClub(data: GetClubSubscriptionSubscription) {
-			const possibleClub = await clubFromMeemContract(
+			const possibleClub = await clubFromAgreement(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
-				data.MeemContracts[0] as MeemContracts
+				data.Agreements[0] as Agreements
 			)
 
 			if (possibleClub && possibleClub.name) {

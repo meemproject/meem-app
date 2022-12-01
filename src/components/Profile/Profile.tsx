@@ -41,8 +41,7 @@ export const ProfileComponent: React.FC = () => {
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
 	const [isMobileNavBarVisible, setIsMobileNavBarVisible] = useState(false)
-	const [hasConnectedIntegration, setHasConnectedIntegration] =
-		useState(false)
+	const [hasConnectedExtension, setHasConnectedExtension] = useState(false)
 
 	const [
 		isDiscordRoleRedirectModalOpened,
@@ -90,14 +89,14 @@ export const ProfileComponent: React.FC = () => {
 			}
 		}
 
-		if (isAuthenticated && !hasConnectedIntegration) {
-			setHasConnectedIntegration(true)
+		if (isAuthenticated && !hasConnectedExtension) {
+			setHasConnectedExtension(true)
 			doLogin()
 		}
 	}, [
 		isAuthenticated,
-		hasConnectedIntegration,
-		setHasConnectedIntegration,
+		hasConnectedExtension,
+		setHasConnectedExtension,
 		getAccessTokenSilently
 	])
 

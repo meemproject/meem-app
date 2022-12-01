@@ -81,12 +81,12 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 
 					const { proof } = await getProofFetcher(
 						MeemAPI.v1.GetMintingProof.path({
-							meemContractId: club.id
+							agreementId: club.id
 						})
 					)
 
 					// Cost to join. Run the transaction in browser.
-					const meemContract = new Contract(
+					const agreement = new Contract(
 						club?.address ?? '',
 						bundleData?.Bundles[0].abi,
 						wallet.signer
@@ -110,7 +110,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 					}
 
 					log.debug(JSON.stringify(data))
-					const tx = await meemContract?.mint(data, {
+					const tx = await agreement?.mint(data, {
 						gasLimit: '5000000',
 						value: ethers.utils.parseEther(
 							club?.membershipSettings
@@ -132,7 +132,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 					})
 
 					const data = {
-						meemContractAddress: club.address,
+						agreementAddress: club.address,
 						to: wallet.accounts[0],
 						metadata: {
 							name: club?.name ?? '',
@@ -142,7 +142,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 									? club?.description
 									: 'Club Token',
 							image: club?.image,
-							meem_metadata_version: 'MeemClub_Token_20220718'
+							agreement_metadata_version:
+								'MeemClub_Token_20220718'
 						},
 						chainId:
 							wallet.chainId ??
@@ -219,13 +220,13 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 
 		setIsLeavingClub(true)
 		try {
-			const meemContract = new Contract(
+			const agreement = new Contract(
 				club?.address ?? '',
 				bundleData?.Bundles[0].abi,
 				wallet.signer
 			)
 			if (club && club.membershipToken) {
-				const tx = await meemContract?.burn(club?.membershipToken)
+				const tx = await agreement?.burn(club?.membershipToken)
 				// @ts-ignore
 				await tx.wait()
 			}
@@ -344,8 +345,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 						<Button
 							style={{
 								margin:
-									club.allIntegrations &&
-									club.allIntegrations?.length > 0
+									club.allExtensions &&
+									club.allExtensions?.length > 0
 										? 3
 										: 0
 							}}
@@ -357,7 +358,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 							<QrCode />
 						</Button>
 
-						{club.allIntegrations?.map(integration => (
+						{club.allExtensions?.map(extension => (
 							<>
 								<Button
 									style={{
@@ -365,27 +366,23 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 									}}
 									className={clubsTheme.buttonWhite}
 									onClick={() => {
-										if (
-											integration.name === 'Phone Number'
-										) {
-											window.open(
-												`tel:${integration.url}`
-											)
+										if (extension.name === 'Phone Number') {
+											window.open(`tel:${extension.url}`)
 										} else if (
-											integration.name === 'Email Address'
+											extension.name === 'Email Address'
 										) {
 											window.open(
-												`mailto:${integration.url}`
+												`mailto:${extension.url}`
 											)
 										} else {
-											window.open(integration.url)
+											window.open(extension.url)
 										}
 									}}
 								>
 									<Image
 										width={20}
 										height={20}
-										src={integration.icon}
+										src={extension.icon}
 									/>
 								</Button>
 							</>

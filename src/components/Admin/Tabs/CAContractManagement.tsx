@@ -255,7 +255,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 				className={clubsTheme.buttonBlack}
 				onClick={async () => {
 					try {
-						const meemContract = new Contract(
+						const agreement = new Contract(
 							club?.address ?? '',
 							bundleData?.Bundles[0].abi,
 							wallet.signer
@@ -266,7 +266,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 							smartContractPermission === 'members-and-meem' &&
 							!club.isClubControlledByMeemApi
 						) {
-							const tx = await meemContract?.grantRole(
+							const tx = await agreement?.grantRole(
 								ClubAdminRole,
 								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
 							)
@@ -277,7 +277,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 							smartContractPermission === 'members' &&
 							club.isClubControlledByMeemApi
 						) {
-							const tx = await meemContract?.revokeRole(
+							const tx = await agreement?.revokeRole(
 								ClubAdminRole,
 								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
 							)
@@ -336,7 +336,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 								await upgradeClubFetcher(
 									MeemAPI.v1.UpgradeClub.path({
-										meemContractId: club.id
+										agreementId: club.id
 									})
 								)
 							} catch (e) {
@@ -436,7 +436,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 
 							await createSafeFetcher(
 								MeemAPI.v1.CreateClubSafe.path({
-									meemContractId: club.id
+									agreementId: club.id
 								}),
 								undefined,
 								{

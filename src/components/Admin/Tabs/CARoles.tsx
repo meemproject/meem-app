@@ -140,7 +140,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 										>
 											Manage Role
 										</Menu.Item>
-										{!role.isDefaultRole && (
+										{!role.isAdminRole && (
 											<>
 												<Menu.Item
 													onClick={() => {

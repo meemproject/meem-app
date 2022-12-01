@@ -13,7 +13,7 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemUser } from '@meemproject/react'
+import { useMeemUser, useMeemApollo } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { updateUser } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
@@ -25,7 +25,6 @@ import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
 import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
-import { useCustomApollo } from '../../../../providers/ApolloProvider'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -38,7 +37,7 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	const { loginWithRedirect } = useAuth0()
 	const { user: me } = useMeemUser()
-	const { anonClient } = useCustomApollo()
+	const { anonClient } = useMeemApollo()
 
 	// Mutable identity data
 	const [displayName, setDisplayName] = useState('')
@@ -49,8 +48,8 @@ export const ManageIdentityComponent: React.FC = () => {
 	const [userIdentityCurrentlyEditing, setUserIdentityCurrentlyEditing] =
 		useState<UserIdentity>()
 
-	// Fetch a list of available integrations.
-	const { data: inteData, loading: isLoadingAvailableIntegrations } =
+	// Fetch a list of available extensions.
+	const { data: inteData, loading: isLoadingAvailableExtensions } =
 		useQuery<GetIdentityIntegrationsQuery>(IDENTITY_INTEGRATIONS_QUERY, {
 			client: anonClient
 		})
@@ -154,21 +153,21 @@ export const ManageIdentityComponent: React.FC = () => {
 	// useEffect(() => {
 	// 	if (
 	// 		router.query.code &&
-	// 		availableIntegrations.length > 0 &&
+	// 		availableExtensions.length > 0 &&
 	// 		!Cookies.get('authForDiscordRole')
 	// 	) {
 	// 		// We have a discord auth code
 
-	// 		// create or update integration
-	// 		// availableIntegrations.forEach(inte => {
+	// 		// create or update extension
+	// 		// availableExtensions.forEach(inte => {
 	// 		// 	if (inte.name === 'Discord') {
-	// 		// 		setIntegrationCurrentlyEditing(inte)
+	// 		// 		setExtensionCurrentlyEditing(inte)
 	// 		// 		setIsDiscordAuthCode(router.query.code as string)
 	// 		// 		setIsDiscordModalOpen(true)
 	// 		// 	}
 	// 		// })
 	// 	}
-	// }, [availableIntegrations])
+	// }, [availableExtensions])
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -206,13 +205,13 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	const filteredAvilableIntegrations =
+	const filteredAvilableExtensions =
 		inteData?.IdentityIntegrations.filter(ai => {
-			const connectedIntegration = me?.UserIdentities?.find(
+			const connectedExtension = me?.UserIdentities?.find(
 				i => i.IdentityIntegrationId === ai.id
 			)
 
-			if (connectedIntegration) {
+			if (connectedExtension) {
 				return false
 			}
 
@@ -338,7 +337,7 @@ export const ManageIdentityComponent: React.FC = () => {
 										md={4}
 										lg={4}
 										xl={4}
-										key={`verified-integration-${userIdentity.IdentityIntegration?.name}`}
+										key={`verified-extension-${userIdentity.IdentityIntegration?.name}`}
 									>
 										<a
 											onClick={() => {
@@ -355,7 +354,7 @@ export const ManageIdentityComponent: React.FC = () => {
 											>
 												<div
 													className={
-														clubsTheme.integrationGridItemHeader
+														clubsTheme.extensionGridItemHeader
 													}
 												>
 													<Image
@@ -387,58 +386,54 @@ export const ManageIdentityComponent: React.FC = () => {
 						Verify Accounts
 					</Text>
 					<Space h={16} />
-					{isLoadingAvailableIntegrations && (
+					{isLoadingAvailableExtensions && (
 						<Loader variant="oval" color="red" />
 					)}
-					{filteredAvilableIntegrations.length > 0 && (
+					{filteredAvilableExtensions.length > 0 && (
 						<>
 							<Grid style={{ maxWidth: 800 }}>
-								{filteredAvilableIntegrations.map(
-									integration => (
-										<Grid.Col
-											xs={6}
-											sm={4}
-											md={4}
-											lg={4}
-											xl={4}
-											key={integration.name}
+								{filteredAvilableExtensions.map(extension => (
+									<Grid.Col
+										xs={6}
+										sm={4}
+										md={4}
+										lg={4}
+										xl={4}
+										key={extension.name}
+									>
+										<a
+											onClick={() => {
+												loginWithRedirect({
+													connection:
+														extension.connectionName,
+													redirectUri:
+														window.location.href
+												})
+											}}
 										>
-											<a
-												onClick={() => {
-													loginWithRedirect({
-														connection:
-															integration.connectionName,
-														redirectUri:
-															window.location.href
-													})
-												}}
+											<div
+												className={clubsTheme.gridItem}
 											>
 												<div
 													className={
-														clubsTheme.gridItem
+														clubsTheme.extensionGridItemHeader
 													}
 												>
-													<div
-														className={
-															clubsTheme.integrationGridItemHeader
-														}
-													>
-														<Image
-															src={`${integration.icon}`}
-															width={16}
-															height={16}
-															fit={'contain'}
-														/>
-														<Space w={8} />
-														<Text>
-															{integration.name}
-														</Text>
-													</div>
+													<Image
+														src={`${extension.icon}`}
+														width={16}
+														height={16}
+														fit={'contain'}
+													/>
+													<Space w={8} />
+													<Text>
+														{extension.name}
+													</Text>
 												</div>
-											</a>
-										</Grid.Col>
-									)
-								)}
+											</div>
+										</a>
+									</Grid.Col>
+								))}
 							</Grid>
 						</>
 					)}
@@ -454,14 +449,14 @@ export const ManageIdentityComponent: React.FC = () => {
 			</Button>
 			<Space h={'xl'} />
 			{/* <ProfileLinkTwitterModal
-				integration={integrationCurrentlyEditing}
+				extension={extensionCurrentlyEditing}
 				isOpened={isTwitterModalOpen}
 				onModalClosed={() => {
 					setIsTwitterModalOpen(false)
 				}}
 			/>
 			<ProfileLinkEmailModal
-				integrationId={integrationCurrentlyEditing?.id}
+				extensionId={extensionCurrentlyEditing?.id}
 				identity={id.identity}
 				isOpened={isEmailModalOpen}
 				onModalClosed={() => {
@@ -469,7 +464,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				}}
 			/>
 			<ProfileLinkDiscordModal
-				integrationId={integrationCurrentlyEditing?.id}
+				extensionId={extensionCurrentlyEditing?.id}
 				discordAuthCode={discordAuthCode}
 				isOpened={isDiscordModalOpen}
 				onModalClosed={() => {

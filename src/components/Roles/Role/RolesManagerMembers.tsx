@@ -116,7 +116,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						}}
 					/>
 
-					{!role?.isDefaultRole && role?.name !== 'Club Member' && (
+					{role?.name !== 'Club Member' && (
 						<div className={clubsTheme.row}>
 							<Space w={16} />
 
@@ -196,9 +196,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 										<ClubMemberCard member={member} />
 									</HoverCard>
 
-									{(!role?.isDefaultRole ||
-										(role.isAdminRole &&
-											!member.isClubOwner)) && (
+									{!role?.isAdminRole && !member.isClubOwner && (
 										<>
 											<CircleMinus
 												className={clubsTheme.clickable}

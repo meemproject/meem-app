@@ -100,7 +100,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 					name: club?.name ?? '',
 					description: club?.description,
 					image: club?.image,
-					meem_metadata_version: 'MeemClub_Token_20220718'
+					agreement_metadata_version: 'MeemClub_Token_20220718'
 				}
 			})
 		})
@@ -117,7 +117,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 
 			await bulkMintFetcher(
 				MeemAPI.v1.BulkMint.path({
-					meemContractId: club.id ?? ''
+					agreementId: club.id ?? ''
 				}),
 				undefined,
 				{

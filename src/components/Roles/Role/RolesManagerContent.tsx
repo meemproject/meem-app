@@ -14,6 +14,7 @@ import {
 	Radio
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { useMeemApollo } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
@@ -24,10 +25,9 @@ import {
 	ClubRole,
 	ClubRolePermission
 } from '../../../model/club/club'
-import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
-import { RolesManagerDiscordIntegration } from './RolesManagerDiscordIntegration'
+import { RolesManagerDiscordExtension } from './RolesManagerDiscordIntegration'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
 interface IProps {
@@ -53,7 +53,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [isTokenTransferrable, setIsTokenTransferrable] =
 		useState('non-transferrable')
 
-	const { anonClient } = useCustomApollo()
+	const { anonClient } = useMeemApollo()
 
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
 		useState(false)
@@ -357,8 +357,8 @@ export const RolesManagerContent: React.FC<IProps> = ({
 															role?.isAdminRole,
 														isDefaultRole:
 															role?.isDefaultRole,
-														rolesIntegrationData:
-															role?.rolesIntegrationData,
+														rolesExtensionData:
+															role?.rolesExtensionData,
 														guildDiscordServerId:
 															role?.guildDiscordServerId ??
 															'',
@@ -395,7 +395,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 								</div>
 							)}
 
-							<RolesManagerDiscordIntegration
+							<RolesManagerDiscordExtension
 								club={club}
 								role={role}
 							/>

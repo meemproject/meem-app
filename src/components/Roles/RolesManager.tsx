@@ -14,21 +14,20 @@ import {
 	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { LoginState, useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check, Plus } from 'tabler-icons-react'
 import {
 	GetClubSubscriptionSubscription,
-	MeemContracts
+	Agreements
 } from '../../../generated/graphql'
 import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
-import clubFromMeemContract, {
+import clubFromAgreement, {
 	Club,
 	ClubRole,
 	emptyRole
 } from '../../model/club/club'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
@@ -47,7 +46,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const { mutualMembersClient } = useCustomApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const [tabs, setTabs] = useState<Tab[]>([])
 	const [currentTab, setCurrentTab] = useState<Tab>()
@@ -132,10 +131,10 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 		}
 
 		async function getClub(data: GetClubSubscriptionSubscription) {
-			const possibleClub = await clubFromMeemContract(
+			const possibleClub = await clubFromAgreement(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
-				data.MeemContracts[0] as MeemContracts
+				data.Agreements[0] as Agreements
 			)
 
 			if (possibleClub && possibleClub.name) {

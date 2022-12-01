@@ -12,15 +12,14 @@ import {
 	Badge,
 	useMantineColorScheme
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
-import { AllClubsQuery, MeemContracts } from '../../../generated/graphql'
+import { AllClubsQuery, Agreements } from '../../../generated/graphql'
 import { GET_ALL_CLUBS } from '../../graphql/clubs'
-import { Club, clubSummaryFromMeemContract } from '../../model/club/club'
-import { useCustomApollo } from '../../providers/ApolloProvider'
+import { Club, clubSummaryFromAgreement } from '../../model/club/club'
 import { hostnameToChainId } from '../App'
 import {
 	colorBlack,
@@ -38,7 +37,7 @@ export const BrowseComponent: React.FC = () => {
 
 	const [clubs] = useState<Club[]>([])
 
-	const { anonClient } = useCustomApollo()
+	const { anonClient } = useMeemApollo()
 
 	const {
 		loading,
@@ -69,8 +68,8 @@ export const BrowseComponent: React.FC = () => {
 		router.push({ pathname: `/${club}` })
 	}
 
-	clubData?.MeemContracts.forEach(meem => {
-		const possibleClub = clubSummaryFromMeemContract(meem as MeemContracts)
+	clubData?.Agreements.forEach(meem => {
+		const possibleClub = clubSummaryFromAgreement(meem as Agreements)
 
 		if (possibleClub.name) {
 			let doesClubExist = false

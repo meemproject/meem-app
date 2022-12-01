@@ -316,9 +316,7 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({
 				{parsedRequirements.length > 0 && (
 					<>
 						{parsedRequirements.map(requirement => (
-							<div
-								key={requirement.requirementComponent?.toString()}
-							>
+							<div key={requirement.requirementKey}>
 								<div
 									className={clubsTheme.centeredRow}
 									style={{ marginTop: 8 }}
