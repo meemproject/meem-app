@@ -4,7 +4,7 @@ import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useSockets, useWallet } from '@meemproject/react'
-import { MeemAPI, makeFetcher } from '@meemproject/sdk'
+import { MeemAPI, makeFetcher, useMeemApollo } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
@@ -16,7 +16,6 @@ import {
 	Club,
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 import { colorGreen, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
 
@@ -35,7 +34,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 
 	const { classes: clubsTheme } = useClubsTheme()
 
-	const { mutualMembersClient } = useCustomApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 

@@ -12,7 +12,7 @@ import {
 	Badge,
 	useMantineColorScheme
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -20,7 +20,6 @@ import { ArrowLeft } from 'tabler-icons-react'
 import { AllClubsQuery, Agreements } from '../../../generated/graphql'
 import { GET_ALL_CLUBS } from '../../graphql/clubs'
 import { Club, clubSummaryFromAgreement } from '../../model/club/club'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 import {
 	colorBlack,
@@ -38,7 +37,7 @@ export const BrowseComponent: React.FC = () => {
 
 	const [clubs] = useState<Club[]>([])
 
-	const { anonClient } = useCustomApollo()
+	const { anonClient } = useMeemApollo()
 
 	const {
 		loading,

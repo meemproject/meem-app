@@ -2,7 +2,7 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Container, Text, Space, Loader, Center } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
@@ -16,7 +16,6 @@ import {
 	SUB_IS_MEMBER_OF_CLUB
 } from '../../graphql/clubs'
 import clubFromAgreement, { Club } from '../../model/club/club'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubAddAppsWidget } from './Widgets/ClubAddAppsWidget'
@@ -36,7 +35,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 	const wallet = useWallet()
 
 	// Club data
-	const { anonClient, mutualMembersClient } = useCustomApollo()
+	const { anonClient, mutualMembersClient } = useMeemApollo()
 	const [club, setClub] = useState<Club | undefined>()
 	const [previousClubDataString, setPreviousClubDataString] = useState('')
 	const [isLoadingClub, setIsLoadingClub] = useState(true)

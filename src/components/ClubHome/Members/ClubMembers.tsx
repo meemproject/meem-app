@@ -12,7 +12,7 @@ import {
 	Center,
 	HoverCard
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search, Star } from 'tabler-icons-react'
@@ -27,7 +27,6 @@ import {
 	SUB_IS_MEMBER_OF_CLUB
 } from '../../../graphql/clubs'
 import clubFromAgreement, { Club, ClubMember } from '../../../model/club/club'
-import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { hostnameToChainId } from '../../App'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
@@ -41,7 +40,7 @@ export const ClubMembersComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { anonClient, mutualMembersClient } = useCustomApollo()
+	const { anonClient, mutualMembersClient } = useMeemApollo()
 
 	const [club, setClub] = useState<Club | undefined>()
 

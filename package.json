@@ -34,7 +34,7 @@
 		"ethers": "^5.6.4"
 	},
 	"dependencies": {
-		"@apollo/client": "^3.5.10",
+		"@apollo/client": "^3.7.1",
 		"@auth0/auth0-react": "^1.12.0",
 		"@emotion/react": "^11.10.0",
 		"@emotion/server": "^11.10.0",
@@ -54,9 +54,9 @@
 		"@tiptap/react": "^2.0.0-beta.202",
 		"@tiptap/starter-kit": "^2.0.0-beta.202",
 		"@mantine/tiptap": "^5.8.0",
-		"@meemproject/sdk": "^0.10.4",
-		"@meemproject/meem-contracts": "^0.10.4",
-		"@meemproject/react": "^0.10.4",
+		"@meemproject/sdk": "^0.10.6",
+		"@meemproject/meem-contracts": "^0.10.6",
+		"@meemproject/react": "^0.10.6",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@types/superagent": "^4.1.15",
 		"blob-util": "^2.0.2",

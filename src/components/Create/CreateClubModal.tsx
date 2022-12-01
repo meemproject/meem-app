@@ -1,26 +1,20 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Image, Space, Modal, Loader } from '@mantine/core'
+import { Text, Image, Space, Modal, Loader, Stepper } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useSockets, useWallet } from '@meemproject/react'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { useMeemSDK, useWallet, useMeemApollo } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
-import { uniq } from 'lodash'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
+import { GetTransactionsSubscription } from '../../../generated/graphql'
+import { SUB_TRANSACTIONS } from '../../graphql/transactions'
 import {
-	Agreements,
-	MyClubsSubscriptionSubscription
-} from '../../../generated/graphql'
-import { SUB_MY_CLUBS } from '../../graphql/clubs'
-import clubFromAgreement, {
 	MembershipSettings,
-	MembershipRequirementToMeemPermission,
-	Club
+	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
 import { colorGreen, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
@@ -37,61 +31,60 @@ export const CreateClubModal: React.FC<IProps> = ({
 }) => {
 	const router = useRouter()
 
+	const { sdk } = useMeemSDK()
+
 	const wallet = useWallet()
 
-	const { userClient } = useCustomApollo()
+	const { anonClient } = useMeemApollo()
 
 	const { classes: clubsTheme } = useClubsTheme()
+
+	const [activeStep, setActiveStep] = useState(1)
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
 	const [hasStartedCreatingSafe, setHasStartedCreatingSafe] = useState(false)
 
-	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
+	log.debug({ hasStartedCreatingSafe })
 
-	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
+	const [transactionIds, setTransactionIds] = useState<string[]>([])
 
-	const [clubSlug, setClubSlug] = useState('')
+	const [transactionState, setTransactionState] = useState<{
+		deployContractTxId?: string
+		cutTxId?: string
+		mintTxId?: string
+	}>({})
+
+	const { error, data: transactions } =
+		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
+			variables: {
+				transactionIds
+			},
+			// @ts-ignore
+			client: anonClient
+		})
+
+	useEffect(() => {
+		if (error) {
+			log.crit(error)
+			showNotification({
+				radius: 'lg',
+				title: 'Error Fetching Data',
+				message: 'Please reload and try again.',
+				color: colorPink
+			})
+		}
+	}, [error])
 
 	const closeModal = useCallback(() => {
-		if (sockets) {
-			sockets.unsubscribe([
-				{ type: MeemAPI.MeemEvent.Err },
-				{ type: MeemAPI.MeemEvent.MeemIdUpdated },
-				{ type: MeemAPI.MeemEvent.MeemMinted }
-			])
-		}
 		onModalClosed()
 
 		setHasStartedCreating(false)
 		setHasStartedCreatingSafe(false)
-		setHasSubscribedToSockets(false)
-	}, [onModalClosed, sockets])
+	}, [onModalClosed])
 
-	// Club subscription - watch for specific changes in order to update correctly
-	const { data: myClubsData } =
-		useSubscription<MyClubsSubscriptionSubscription>(SUB_MY_CLUBS, {
-			variables: {
-				walletAddress: wallet.accounts[0],
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
-			},
-			client: userClient
-		})
-
-	useEffect(() => {
-		if (!isSocketsConnected && isOpened) {
-			connect()
-
-			log.debug(`${JSON.stringify(membershipSettings)}`)
-		}
-	}, [connect, isOpened, isSocketsConnected, membershipSettings])
-
-	useEffect(() => {
-		async function finishClubCreation() {
+	const finishClubCreation = useCallback(
+		async (slug: string) => {
 			// Successfully created club
 			log.debug('club creation complete')
 
@@ -113,326 +106,277 @@ export const CreateClubModal: React.FC<IProps> = ({
 			})
 
 			router.push({
-				pathname: `/${Cookies.get(CookieKeys.clubSlug)}`
+				pathname: `/${slug}`
 			})
 			Cookies.remove(CookieKeys.clubSlug)
+		},
+		[router]
+	)
+
+	// TODO: Do we really need to create a club safe for every club? Seem unnecessary for many
+	// const createSafe = useCallback(
+	// 	async (club: Club) => {
+	// 		if (hasStartedCreatingSafe || !wallet.chainId) {
+	// 			return
+	// 		}
+	// 		setHasStartedCreatingSafe(true)
+	// 		log.debug(
+	// 			`creating safe with id ${club.id}, admins ${JSON.stringify(
+	// 				membershipSettings?.clubAdminsAtClubCreation
+	// 			)} ...`
+	// 		)
+
+	// 		try {
+	// 			const createSafeFetcher = makeFetcher<
+	// 				MeemAPI.v1.CreateClubSafe.IQueryParams,
+	// 				MeemAPI.v1.CreateClubSafe.IRequestBody,
+	// 				MeemAPI.v1.CreateClubSafe.IResponseBody
+	// 			>({
+	// 				method: MeemAPI.v1.CreateClubSafe.method
+	// 			})
+
+	// 			await createSafeFetcher(
+	// 				MeemAPI.v1.CreateClubSafe.path({
+	// 					agreementId: club.id ?? ''
+	// 				}),
+	// 				undefined,
+	// 				{
+	// 					safeOwners:
+	// 						uniq(
+	// 							membershipSettings?.clubAdminsAtClubCreation
+	// 						) ?? [],
+	// 					chainId:
+	// 						wallet.chainId ??
+	// 						hostnameToChainId(
+	// 							global.window ? global.window.location.host : ''
+	// 						)
+	// 				}
+	// 			)
+	// 		} catch (e) {
+	// 			// Ignore - the user can create later?
+	// 			finishClubCreation()
+	// 		}
+	// 	},
+	// 	[finishClubCreation, hasStartedCreatingSafe, membershipSettings, wallet]
+	// )
+
+	const create = useCallback(async () => {
+		log.debug('creating club...')
+		if (!wallet.web3Provider || !wallet.chainId) {
+			log.debug('no web3 provider, returning.')
+			showNotification({
+				radius: 'lg',
+				title: 'Error Creating Club',
+				message: 'Please connect your wallet first.',
+				color: colorPink
+			})
+			closeModal()
+			setHasStartedCreating(false)
+			return
 		}
 
-		async function createSafe(club: Club) {
-			if (hasStartedCreatingSafe || !wallet.chainId) {
-				return
-			}
-			setHasStartedCreatingSafe(true)
+		if (!membershipSettings) {
+			log.debug('no membership settings found, returning.')
+			showNotification({
+				radius: 'lg',
+				title: 'Error Creating Club',
+				message:
+					'An error occurred while creating the club. Please try again.',
+				color: colorPink
+			})
+
+			closeModal()
+			setHasStartedCreating(false)
+			return
+		}
+
+		try {
+			const splits =
+				membershipSettings.membershipFundsAddress.length > 0 &&
+				membershipSettings.costToJoin > 0
+					? [
+							{
+								amount: 10000,
+								toAddress:
+									membershipSettings.membershipFundsAddress,
+								lockedBy: MeemAPI.zeroAddress
+							}
+					  ]
+					: []
+
+			const mintPermissions: MeemAPI.IMeemPermission[] =
+				membershipSettings.requirements.map(mr => {
+					return MembershipRequirementToMeemPermission({
+						...mr,
+						costEth: membershipSettings.costToJoin,
+						mintStartTimestamp:
+							membershipSettings.membershipStartDate
+								? membershipSettings.membershipStartDate.getTime() /
+								  1000
+								: 0,
+						mintEndTimestamp: membershipSettings.membershipEndDate
+							? membershipSettings.membershipEndDate.getTime() /
+							  1000
+							: 0
+					})
+				})
+
 			log.debug(
-				`creating safe with id ${club.id}, admins ${JSON.stringify(
-					membershipSettings?.clubAdminsAtClubCreation
-				)} ...`
+				`call createContractFetcher for ${Cookies.get(
+					CookieKeys.clubName
+				)}`
 			)
 
-			try {
-				const createSafeFetcher = makeFetcher<
-					MeemAPI.v1.CreateClubSafe.IQueryParams,
-					MeemAPI.v1.CreateClubSafe.IRequestBody,
-					MeemAPI.v1.CreateClubSafe.IResponseBody
-				>({
-					method: MeemAPI.v1.CreateClubSafe.method
-				})
-
-				await createSafeFetcher(
-					MeemAPI.v1.CreateClubSafe.path({
-						agreementId: club.id ?? ''
-					}),
-					undefined,
-					{
-						safeOwners:
-							uniq(
-								membershipSettings?.clubAdminsAtClubCreation
-							) ?? [],
-						chainId:
-							wallet.chainId ??
-							hostnameToChainId(
-								global.window ? global.window.location.host : ''
-							)
-					}
-				)
-			} catch (e) {
-				// Ignore - the user can create later?
-				finishClubCreation()
-			}
-		}
-
-		async function create() {
-			log.debug('creating club...')
-			if (!wallet.web3Provider || !wallet.chainId) {
-				log.debug('no web3 provider, returning.')
-				showNotification({
-					radius: 'lg',
-					title: 'Error Creating Club',
-					message: 'Please connect your wallet first.',
-					color: colorPink
-				})
-				closeModal()
-				setHasStartedCreating(false)
-				return
-			}
-
-			if (!membershipSettings) {
-				log.debug('no membership settings found, returning.')
-				showNotification({
-					radius: 'lg',
-					title: 'Error Creating Club',
-					message:
-						'An error occurred while creating the club. Please try again.',
-					color: colorPink
-				})
-
-				closeModal()
-				setHasStartedCreating(false)
-				return
-			}
-
-			try {
-				const createContractFetcher = makeFetcher<
-					MeemAPI.v1.CreateAgreement.IQueryParams,
-					MeemAPI.v1.CreateAgreement.IRequestBody,
-					MeemAPI.v1.CreateAgreement.IResponseBody
-				>({
-					method: MeemAPI.v1.CreateAgreement.method
-				})
-
-				log.debug('assemble fetcher')
-
-				const splits =
-					membershipSettings.membershipFundsAddress.length > 0 &&
-					membershipSettings.costToJoin > 0
-						? [
-								{
-									amount: 10000,
-									toAddress:
-										membershipSettings.membershipFundsAddress,
-									lockedBy: MeemAPI.zeroAddress
-								}
-						  ]
-						: []
-
-				const mintPermissions: MeemAPI.IMeemPermission[] =
-					membershipSettings.requirements.map(mr => {
-						return MembershipRequirementToMeemPermission({
-							...mr,
-							costEth: membershipSettings.costToJoin,
-							mintStartTimestamp:
-								membershipSettings.membershipStartDate
-									? membershipSettings.membershipStartDate.getTime() /
-									  1000
-									: 0,
-							mintEndTimestamp:
-								membershipSettings.membershipEndDate
-									? membershipSettings.membershipEndDate.getTime() /
-									  1000
-									: 0
-						})
-					})
-
-				log.debug(
-					`call createContractFetcher for ${Cookies.get(
-						CookieKeys.clubName
-					)}`
-				)
-
-				// Setup application instructions for club
-				const applicationInstructions: string[] = []
-				membershipSettings.requirements.forEach(requirement => {
-					if (
-						requirement.applicationInstructions &&
-						requirement.applicationInstructions?.length > 0
-					) {
-						applicationInstructions.push(
-							requirement.applicationInstructions
-						)
-					}
-				})
-
-				if (mintPermissions.length === 0) {
-					showNotification({
-						radius: 'lg',
-						title: 'Oops!',
-						message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
-						color: colorPink
-					})
-					closeModal()
-					setHasStartedCreating(false)
-					return
-				}
-
-				const data = {
-					shouldMintTokens: true,
-					metadata: {
-						agreement_type: 'meem-club',
-						agreement_metadata_version:
-							'MeemClub_Contract_20220718',
-						name: Cookies.get(CookieKeys.clubName),
-						description: Cookies.get(CookieKeys.clubDescription),
-						image: Cookies.get(CookieKeys.clubImage),
-						associations: [],
-						external_url: '',
-						application_instructions: applicationInstructions
-					},
-					name: Cookies.get(CookieKeys.clubName) ?? '',
-					admins: membershipSettings.clubAdminsAtClubCreation,
-					minters: membershipSettings.clubAdminsAtClubCreation,
-					maxSupply: ethers.BigNumber.from(
-						membershipSettings.membershipQuantity
-					).toHexString(),
-					mintPermissions,
-					splits,
-					tokenMetadata: {
-						agreement_metadata_version: 'MeemClub_Token_20220718',
-						description: `Membership token for ${Cookies.get(
-							CookieKeys.clubName
-						)}`,
-						name: `${Cookies.get(
-							CookieKeys.clubName
-						)} membership token`,
-						image: Cookies.get(CookieKeys.clubImage),
-						associations: [],
-						external_url: ''
-					},
-					chainId:
-						wallet.chainId ??
-						hostnameToChainId(
-							global.window ? global.window.location.host : ''
-						)
-				}
-
-				log.debug(`${JSON.stringify(data, null, 2)}`)
-
-				await createContractFetcher(
-					MeemAPI.v1.CreateAgreement.path(),
-					undefined,
-					data
-				)
-
-				log.debug('finish fetcher')
-			} catch (e) {
-				log.crit(e)
-				showNotification({
-					radius: 'lg',
-					title: 'Error Creating Club',
-					message:
-						'An error occurred while creating the club. Please try again.',
-					color: colorPink
-				})
-
-				closeModal()
-				setHasStartedCreating(false)
-			}
-		}
-
-		if (!hasSubscribedToSockets && sockets && wallet.accounts[0]) {
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.Err }],
-				wallet.accounts[0]
-			)
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.Err,
-				handler: err => {
-					if (err.detail.code === 'CONTRACT_CREATION_FAILED') {
-						showNotification({
-							radius: 'lg',
-							title: 'Club Creation Failed',
-							message:
-								'An error occurred while creating the club. Please try again.',
-							color: colorPink
-						})
-
-						closeModal()
-					} else if (err.detail.code === 'SAFE_CREATE_FAILED') {
-						// If there's an error with creating the safe, ignore it
-						// and proceed to club homepage
-						log.debug('Safe creation failed. Skipping for now...')
-						finishClubCreation()
-					} else if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
-						showNotification({
-							radius: 'lg',
-							title: 'Transaction limit exceeded',
-							message:
-								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
-							color: colorPink
-						})
-					} else {
-						// Handle a generic socket error too
-						showNotification({
-							radius: 'lg',
-							title: 'Club Creation Failed',
-							message:
-								'An error occurred while creating the club. Please try again.',
-							color: colorPink
-						})
-
-						closeModal()
-					}
-					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
-					log.crit(err)
-					log.crit(err.detail.code)
+			// Setup application instructions for club
+			const applicationInstructions: string[] = []
+			membershipSettings.requirements.forEach(requirement => {
+				if (
+					requirement.applicationInstructions &&
+					requirement.applicationInstructions?.length > 0
+				) {
+					applicationInstructions.push(
+						requirement.applicationInstructions
+					)
 				}
 			})
-			setHasSubscribedToSockets(true)
-		}
 
-		async function checkClubState() {
-			log.debug('listening for new club...')
-			const newClub = myClubsData?.AgreementTokens.find(
-				m => m.Agreement?.name === Cookies.get(CookieKeys.clubName)
-			)
-			if (newClub) {
-				if (newClub.Agreement && newClub.Agreement.gnosisSafeAddress) {
-					finishClubCreation()
-				} else {
-					const clubModel = await clubFromAgreement(
-						wallet,
-						wallet.accounts[0],
-						newClub.Agreement as Agreements
-					)
-
-					setClubSlug(clubModel.slug ?? '')
-
-					// Create club safe (if not on Optimism Goerli)
-					if (wallet.chainId !== 420) {
-						await createSafe(clubModel)
-					} else {
-						finishClubCreation()
-					}
-				}
+			if (mintPermissions.length === 0) {
+				showNotification({
+					radius: 'lg',
+					title: 'Oops!',
+					message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
+					color: colorPink
+				})
+				closeModal()
+				setHasStartedCreating(false)
+				return
 			}
-		}
 
+			const data = {
+				shouldMintTokens: true,
+				metadata: {
+					meem_metadata_type: 'Meem_AgreementContract',
+					meem_metadata_version: '20221116',
+					name: Cookies.get(CookieKeys.clubName),
+					description: Cookies.get(CookieKeys.clubDescription),
+					image: Cookies.get(CookieKeys.clubImage),
+					associations: [],
+					external_url: '',
+					application_instructions: applicationInstructions
+				},
+				name: Cookies.get(CookieKeys.clubName) ?? '',
+				admins: membershipSettings.clubAdminsAtClubCreation,
+				minters: membershipSettings.clubAdminsAtClubCreation,
+				maxSupply: ethers.BigNumber.from(
+					membershipSettings.membershipQuantity
+				).toHexString(),
+				mintPermissions,
+				splits,
+				tokenMetadata: {
+					meem_metadata_type: 'Meem_AgreementToken',
+					meem_metadata_version: '20221116',
+					description: `Membership token for ${Cookies.get(
+						CookieKeys.clubName
+					)}`,
+					name: `${Cookies.get(
+						CookieKeys.clubName
+					)} membership token`,
+					image: Cookies.get(CookieKeys.clubImage),
+					associations: [],
+					external_url: ''
+				},
+				chainId:
+					wallet.chainId ??
+					hostnameToChainId(
+						global.window ? global.window.location.host : ''
+					)
+			}
+
+			const { deployContractTxId, cutTxId, mintTxId } =
+				await sdk.agreement.createAgreement({
+					...data
+					// useMeemAPI: false,
+					// signer: wallet.signer,
+					// contractURI: 'https://meem.wtf',
+					// proxyContractId: '2479c932-17cd-451c-a650-ffdc9961419a',
+					// bundleId: 'e713daae-e2eb-4782-863e-685cfd0e7153'
+				})
+
+			setTransactionState({ deployContractTxId, cutTxId, mintTxId })
+
+			const tIds = [deployContractTxId, cutTxId]
+			if (mintTxId) {
+				tIds.push(mintTxId)
+			}
+
+			setTransactionIds(tIds)
+
+			log.debug('finish fetcher')
+		} catch (e) {
+			log.crit(e)
+			showNotification({
+				radius: 'lg',
+				title: 'Error Creating Club',
+				message:
+					'An error occurred while creating the club. Please try again.',
+				color: colorPink
+			})
+
+			closeModal()
+			setHasStartedCreating(false)
+		}
+	}, [closeModal, membershipSettings, wallet, sdk.agreement])
+
+	useEffect(() => {
 		// Create the club
 		if (isOpened && !hasStartedCreating) {
 			setHasStartedCreating(true)
 			create()
 		}
+	}, [hasStartedCreating, isOpened, create])
 
-		// Start monitoring
-		if (isOpened) {
-			if (wallet.accounts.length > 0) {
-				checkClubState()
+	useEffect(() => {
+		let newActiveStep = 1
+		const deployTransaction = transactions?.Transactions.find(
+			t => t.id === transactionState?.deployContractTxId
+		)
+		const cutTransaction = transactions?.Transactions.find(
+			t => t.id === transactionState?.cutTxId
+		)
+		const mintTransaction = transactions?.Transactions.find(
+			t => t.id === transactionState?.mintTxId
+		)
+
+		if (deployTransaction?.status === MeemAPI.TransactionStatus.Success) {
+			newActiveStep = 2
+		}
+
+		if (cutTransaction?.status === MeemAPI.TransactionStatus.Success) {
+			newActiveStep = 3
+		}
+
+		if (mintTransaction?.status === MeemAPI.TransactionStatus.Success) {
+			newActiveStep = 4
+			if (cutTransaction?.Agreements[0]) {
+				finishClubCreation(cutTransaction.Agreements[0].slug)
 			} else {
-				log.debug('No club data (yet) or wallet not connected...')
+				// TODO: Handle edge case error
+				showNotification({
+					radius: 'lg',
+					title: 'Error Creating Club',
+					message: 'Please try again.',
+					color: colorPink
+				})
 			}
 		}
+
+		setActiveStep(newActiveStep)
 	}, [
-		closeModal,
-		clubSlug,
-		hasStartedCreating,
-		hasStartedCreatingSafe,
-		hasSubscribedToSockets,
-		isOpened,
-		membershipSettings,
-		myClubsData?.AgreementTokens,
-		onModalClosed,
+		transactionState,
+		setActiveStep,
+		transactions,
 		router,
-		sockets,
-		wallet
+		finishClubCreation
 	])
 
 	return (
@@ -454,6 +398,33 @@ export const CreateClubModal: React.FC<IProps> = ({
 					<Text
 						className={clubsTheme.tLargeBold}
 					>{`We're creating your club!`}</Text>
+					<Space h={32} />
+					<Stepper
+						active={activeStep}
+						onStepClick={() => {}}
+						breakpoint="sm"
+						orientation="vertical"
+					>
+						<Stepper.Step
+							label="Queued"
+							description="Club creation has been queued"
+						></Stepper.Step>
+						<Stepper.Step
+							label="Deploying Club"
+							description="Your Club smart contract is being deployed to the blockchain"
+						></Stepper.Step>
+						<Stepper.Step
+							label="Initializing Club"
+							description="Setting up your Club's smart contract"
+						></Stepper.Step>
+						<Stepper.Step
+							label="Minting Tokens"
+							description="Minting membership tokens for your club"
+						></Stepper.Step>
+						<Stepper.Completed>
+							{/** TODO: Show a message when complete before redirecting? */}
+						</Stepper.Completed>
+					</Stepper>
 					<Space h={32} />
 					<Image
 						height={120}

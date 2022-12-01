@@ -1410,6 +1410,9 @@ export type AgreementRoles = {
   AgreementRoleTokens_aggregate: AgreementRoleTokens_Aggregate;
   OwnerId?: Maybe<Scalars['uuid']>;
   /** An object relationship */
+  Transaction?: Maybe<Transactions>;
+  TransactionId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
   Wallet?: Maybe<Wallets>;
   address: Scalars['String'];
   adminContractAddress?: Maybe<Scalars['String']>;
@@ -1597,6 +1600,8 @@ export type AgreementRoles_Bool_Exp = {
   AgreementRoleTokens?: InputMaybe<AgreementRoleTokens_Bool_Exp>;
   AgreementRoleTokens_aggregate?: InputMaybe<AgreementRoleTokens_Aggregate_Bool_Exp>;
   OwnerId?: InputMaybe<Uuid_Comparison_Exp>;
+  Transaction?: InputMaybe<Transactions_Bool_Exp>;
+  TransactionId?: InputMaybe<Uuid_Comparison_Exp>;
   Wallet?: InputMaybe<Wallets_Bool_Exp>;
   _and?: InputMaybe<Array<AgreementRoles_Bool_Exp>>;
   _not?: InputMaybe<AgreementRoles_Bool_Exp>;
@@ -1662,6 +1667,8 @@ export type AgreementRoles_Insert_Input = {
   AgreementRoleExtensions?: InputMaybe<AgreementRoleExtensions_Arr_Rel_Insert_Input>;
   AgreementRoleTokens?: InputMaybe<AgreementRoleTokens_Arr_Rel_Insert_Input>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  Transaction?: InputMaybe<Transactions_Obj_Rel_Insert_Input>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   Wallet?: InputMaybe<Wallets_Obj_Rel_Insert_Input>;
   address?: InputMaybe<Scalars['String']>;
   adminContractAddress?: InputMaybe<Scalars['String']>;
@@ -1689,6 +1696,7 @@ export type AgreementRoles_Max_Fields = {
   __typename?: 'AgreementRoles_max_fields';
   AgreementId?: Maybe<Scalars['uuid']>;
   OwnerId?: Maybe<Scalars['uuid']>;
+  TransactionId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
   adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
@@ -1709,6 +1717,7 @@ export type AgreementRoles_Max_Fields = {
 export type AgreementRoles_Max_Order_By = {
   AgreementId?: InputMaybe<Order_By>;
   OwnerId?: InputMaybe<Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
   adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
@@ -1730,6 +1739,7 @@ export type AgreementRoles_Min_Fields = {
   __typename?: 'AgreementRoles_min_fields';
   AgreementId?: Maybe<Scalars['uuid']>;
   OwnerId?: Maybe<Scalars['uuid']>;
+  TransactionId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
   adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
@@ -1750,6 +1760,7 @@ export type AgreementRoles_Min_Fields = {
 export type AgreementRoles_Min_Order_By = {
   AgreementId?: InputMaybe<Order_By>;
   OwnerId?: InputMaybe<Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
   adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
@@ -1797,6 +1808,8 @@ export type AgreementRoles_Order_By = {
   AgreementRoleExtensions_aggregate?: InputMaybe<AgreementRoleExtensions_Aggregate_Order_By>;
   AgreementRoleTokens_aggregate?: InputMaybe<AgreementRoleTokens_Aggregate_Order_By>;
   OwnerId?: InputMaybe<Order_By>;
+  Transaction?: InputMaybe<Transactions_Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   Wallet?: InputMaybe<Wallets_Order_By>;
   address?: InputMaybe<Order_By>;
   adminContractAddress?: InputMaybe<Order_By>;
@@ -1837,6 +1850,8 @@ export enum AgreementRoles_Select_Column {
   AgreementId = 'AgreementId',
   /** column name */
   OwnerId = 'OwnerId',
+  /** column name */
+  TransactionId = 'TransactionId',
   /** column name */
   Address = 'address',
   /** column name */
@@ -1897,6 +1912,7 @@ export enum AgreementRoles_Select_Column_AgreementRoles_Aggregate_Bool_Exp_Bool_
 export type AgreementRoles_Set_Input = {
   AgreementId?: InputMaybe<Scalars['uuid']>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
   adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
@@ -1963,6 +1979,7 @@ export type AgreementRoles_Stream_Cursor_Input = {
 export type AgreementRoles_Stream_Cursor_Value_Input = {
   AgreementId?: InputMaybe<Scalars['uuid']>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
   adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
@@ -2001,6 +2018,8 @@ export enum AgreementRoles_Update_Column {
   AgreementId = 'AgreementId',
   /** column name */
   OwnerId = 'OwnerId',
+  /** column name */
+  TransactionId = 'TransactionId',
   /** column name */
   Address = 'address',
   /** column name */
@@ -2377,6 +2396,9 @@ export type AgreementTokens = {
   AgreementTokenTransfers_aggregate: AgreementTokenTransfers_Aggregate;
   OwnerId?: Maybe<Scalars['uuid']>;
   /** An object relationship */
+  Transaction?: Maybe<Transactions>;
+  TransactionId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
   Wallet?: Maybe<Wallets>;
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
@@ -2473,6 +2495,8 @@ export type AgreementTokens_Bool_Exp = {
   AgreementTokenTransfers?: InputMaybe<AgreementTokenTransfers_Bool_Exp>;
   AgreementTokenTransfers_aggregate?: InputMaybe<AgreementTokenTransfers_Aggregate_Bool_Exp>;
   OwnerId?: InputMaybe<Uuid_Comparison_Exp>;
+  Transaction?: InputMaybe<Transactions_Bool_Exp>;
+  TransactionId?: InputMaybe<Uuid_Comparison_Exp>;
   Wallet?: InputMaybe<Wallets_Bool_Exp>;
   _and?: InputMaybe<Array<AgreementTokens_Bool_Exp>>;
   _not?: InputMaybe<AgreementTokens_Bool_Exp>;
@@ -2514,6 +2538,8 @@ export type AgreementTokens_Insert_Input = {
   AgreementId?: InputMaybe<Scalars['uuid']>;
   AgreementTokenTransfers?: InputMaybe<AgreementTokenTransfers_Arr_Rel_Insert_Input>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  Transaction?: InputMaybe<Transactions_Obj_Rel_Insert_Input>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   Wallet?: InputMaybe<Wallets_Obj_Rel_Insert_Input>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -2530,6 +2556,7 @@ export type AgreementTokens_Max_Fields = {
   __typename?: 'AgreementTokens_max_fields';
   AgreementId?: Maybe<Scalars['uuid']>;
   OwnerId?: Maybe<Scalars['uuid']>;
+  TransactionId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   mintedAt?: Maybe<Scalars['timestamptz']>;
@@ -2543,6 +2570,7 @@ export type AgreementTokens_Max_Fields = {
 export type AgreementTokens_Max_Order_By = {
   AgreementId?: InputMaybe<Order_By>;
   OwnerId?: InputMaybe<Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   mintedAt?: InputMaybe<Order_By>;
@@ -2557,6 +2585,7 @@ export type AgreementTokens_Min_Fields = {
   __typename?: 'AgreementTokens_min_fields';
   AgreementId?: Maybe<Scalars['uuid']>;
   OwnerId?: Maybe<Scalars['uuid']>;
+  TransactionId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   mintedAt?: Maybe<Scalars['timestamptz']>;
@@ -2570,6 +2599,7 @@ export type AgreementTokens_Min_Fields = {
 export type AgreementTokens_Min_Order_By = {
   AgreementId?: InputMaybe<Order_By>;
   OwnerId?: InputMaybe<Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   mintedAt?: InputMaybe<Order_By>;
@@ -2608,6 +2638,8 @@ export type AgreementTokens_Order_By = {
   AgreementId?: InputMaybe<Order_By>;
   AgreementTokenTransfers_aggregate?: InputMaybe<AgreementTokenTransfers_Aggregate_Order_By>;
   OwnerId?: InputMaybe<Order_By>;
+  Transaction?: InputMaybe<Transactions_Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   Wallet?: InputMaybe<Wallets_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -2636,6 +2668,8 @@ export enum AgreementTokens_Select_Column {
   /** column name */
   OwnerId = 'OwnerId',
   /** column name */
+  TransactionId = 'TransactionId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
@@ -2657,6 +2691,7 @@ export enum AgreementTokens_Select_Column {
 export type AgreementTokens_Set_Input = {
   AgreementId?: InputMaybe<Scalars['uuid']>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
@@ -2679,6 +2714,7 @@ export type AgreementTokens_Stream_Cursor_Input = {
 export type AgreementTokens_Stream_Cursor_Value_Input = {
   AgreementId?: InputMaybe<Scalars['uuid']>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
@@ -2695,6 +2731,8 @@ export enum AgreementTokens_Update_Column {
   AgreementId = 'AgreementId',
   /** column name */
   OwnerId = 'OwnerId',
+  /** column name */
+  TransactionId = 'TransactionId',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -2996,6 +3034,9 @@ export type Agreements = {
   AgreementWallets_aggregate: AgreementWallets_Aggregate;
   OwnerId?: Maybe<Scalars['uuid']>;
   /** An object relationship */
+  Transaction?: Maybe<Transactions>;
+  TransactionId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
   Wallet?: Maybe<Wallets>;
   address: Scalars['String'];
   adminContractAddress?: Maybe<Scalars['String']>;
@@ -3268,6 +3309,8 @@ export type Agreements_Bool_Exp = {
   AgreementWallets?: InputMaybe<AgreementWallets_Bool_Exp>;
   AgreementWallets_aggregate?: InputMaybe<AgreementWallets_Aggregate_Bool_Exp>;
   OwnerId?: InputMaybe<Uuid_Comparison_Exp>;
+  Transaction?: InputMaybe<Transactions_Bool_Exp>;
+  TransactionId?: InputMaybe<Uuid_Comparison_Exp>;
   Wallet?: InputMaybe<Wallets_Bool_Exp>;
   _and?: InputMaybe<Array<Agreements_Bool_Exp>>;
   _not?: InputMaybe<Agreements_Bool_Exp>;
@@ -3334,6 +3377,8 @@ export type Agreements_Insert_Input = {
   AgreementTokens?: InputMaybe<AgreementTokens_Arr_Rel_Insert_Input>;
   AgreementWallets?: InputMaybe<AgreementWallets_Arr_Rel_Insert_Input>;
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  Transaction?: InputMaybe<Transactions_Obj_Rel_Insert_Input>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   Wallet?: InputMaybe<Wallets_Obj_Rel_Insert_Input>;
   address?: InputMaybe<Scalars['String']>;
   adminContractAddress?: InputMaybe<Scalars['String']>;
@@ -3360,6 +3405,7 @@ export type Agreements_Insert_Input = {
 export type Agreements_Max_Fields = {
   __typename?: 'Agreements_max_fields';
   OwnerId?: Maybe<Scalars['uuid']>;
+  TransactionId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
   adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
@@ -3380,6 +3426,7 @@ export type Agreements_Max_Fields = {
 /** order by max() on columns of table "Agreements" */
 export type Agreements_Max_Order_By = {
   OwnerId?: InputMaybe<Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
   adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
@@ -3401,6 +3448,7 @@ export type Agreements_Max_Order_By = {
 export type Agreements_Min_Fields = {
   __typename?: 'Agreements_min_fields';
   OwnerId?: Maybe<Scalars['uuid']>;
+  TransactionId?: Maybe<Scalars['uuid']>;
   address?: Maybe<Scalars['String']>;
   adminContractAddress?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
@@ -3421,6 +3469,7 @@ export type Agreements_Min_Fields = {
 /** order by min() on columns of table "Agreements" */
 export type Agreements_Min_Order_By = {
   OwnerId?: InputMaybe<Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   address?: InputMaybe<Order_By>;
   adminContractAddress?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
@@ -3470,6 +3519,8 @@ export type Agreements_Order_By = {
   AgreementTokens_aggregate?: InputMaybe<AgreementTokens_Aggregate_Order_By>;
   AgreementWallets_aggregate?: InputMaybe<AgreementWallets_Aggregate_Order_By>;
   OwnerId?: InputMaybe<Order_By>;
+  Transaction?: InputMaybe<Transactions_Order_By>;
+  TransactionId?: InputMaybe<Order_By>;
   Wallet?: InputMaybe<Wallets_Order_By>;
   address?: InputMaybe<Order_By>;
   adminContractAddress?: InputMaybe<Order_By>;
@@ -3508,6 +3559,8 @@ export type Agreements_Prepend_Input = {
 export enum Agreements_Select_Column {
   /** column name */
   OwnerId = 'OwnerId',
+  /** column name */
+  TransactionId = 'TransactionId',
   /** column name */
   Address = 'address',
   /** column name */
@@ -3563,6 +3616,7 @@ export enum Agreements_Select_Column_Agreements_Aggregate_Bool_Exp_Bool_Or_Argum
 /** input type for updating data in table "Agreements" */
 export type Agreements_Set_Input = {
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
   adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
@@ -3628,6 +3682,7 @@ export type Agreements_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Agreements_Stream_Cursor_Value_Input = {
   OwnerId?: InputMaybe<Scalars['uuid']>;
+  TransactionId?: InputMaybe<Scalars['uuid']>;
   address?: InputMaybe<Scalars['String']>;
   adminContractAddress?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
@@ -3664,6 +3719,8 @@ export type Agreements_Sum_Order_By = {
 export enum Agreements_Update_Column {
   /** column name */
   OwnerId = 'OwnerId',
+  /** column name */
+  TransactionId = 'TransactionId',
   /** column name */
   Address = 'address',
   /** column name */
@@ -4578,6 +4635,10 @@ export enum ChainNonces_Constraint {
   ChainNoncesChainIdKey = 'ChainNonces_chainId_key',
   /** unique or primary key constraint on columns "chainId" */
   ChainNoncesChainIdKey1 = 'ChainNonces_chainId_key1',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey2 = 'ChainNonces_chainId_key2',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey3 = 'ChainNonces_chainId_key3',
   /** unique or primary key constraint on columns "id" */
   ChainNoncesPkey = 'ChainNonces_pkey'
 }
@@ -6746,18 +6807,90 @@ export type String_Comparison_Exp = {
 /** columns and relationships of "Transactions" */
 export type Transactions = {
   __typename?: 'Transactions';
+  /** An array relationship */
+  AgreementRoles: Array<AgreementRoles>;
+  /** An aggregate relationship */
+  AgreementRoles_aggregate: AgreementRoles_Aggregate;
+  /** An array relationship */
+  AgreementTokens: Array<AgreementTokens>;
+  /** An aggregate relationship */
+  AgreementTokens_aggregate: AgreementTokens_Aggregate;
+  /** An array relationship */
+  Agreements: Array<Agreements>;
+  /** An aggregate relationship */
+  Agreements_aggregate: Agreements_Aggregate;
   /** An object relationship */
   Wallet?: Maybe<Wallets>;
   WalletId?: Maybe<Scalars['uuid']>;
   chainId: Scalars['Int'];
   createdAt: Scalars['timestamptz'];
   customABI?: Maybe<Scalars['jsonb']>;
-  encodeTransactionInput: Scalars['jsonb'];
-  hash: Scalars['String'];
+  hash?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
   status: Scalars['String'];
+  transactionInput: Scalars['jsonb'];
   transactionType: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "Transactions" */
+export type TransactionsAgreementRolesArgs = {
+  distinct_on?: InputMaybe<Array<AgreementRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementRoles_Order_By>>;
+  where?: InputMaybe<AgreementRoles_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Transactions" */
+export type TransactionsAgreementRoles_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementRoles_Order_By>>;
+  where?: InputMaybe<AgreementRoles_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Transactions" */
+export type TransactionsAgreementTokensArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTokens_Order_By>>;
+  where?: InputMaybe<AgreementTokens_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Transactions" */
+export type TransactionsAgreementTokens_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTokens_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTokens_Order_By>>;
+  where?: InputMaybe<AgreementTokens_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Transactions" */
+export type TransactionsAgreementsArgs = {
+  distinct_on?: InputMaybe<Array<Agreements_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Agreements_Order_By>>;
+  where?: InputMaybe<Agreements_Bool_Exp>;
+};
+
+
+/** columns and relationships of "Transactions" */
+export type TransactionsAgreements_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Agreements_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Agreements_Order_By>>;
+  where?: InputMaybe<Agreements_Bool_Exp>;
 };
 
 
@@ -6768,7 +6901,7 @@ export type TransactionsCustomAbiArgs = {
 
 
 /** columns and relationships of "Transactions" */
-export type TransactionsEncodeTransactionInputArgs = {
+export type TransactionsTransactionInputArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
@@ -6831,7 +6964,7 @@ export type Transactions_Aggregate_Order_By = {
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Transactions_Append_Input = {
   customABI?: InputMaybe<Scalars['jsonb']>;
-  encodeTransactionInput?: InputMaybe<Scalars['jsonb']>;
+  transactionInput?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** input type for inserting array relation for remote table "Transactions" */
@@ -6854,6 +6987,12 @@ export type Transactions_Avg_Order_By = {
 
 /** Boolean expression to filter rows from the table "Transactions". All fields are combined with a logical 'AND'. */
 export type Transactions_Bool_Exp = {
+  AgreementRoles?: InputMaybe<AgreementRoles_Bool_Exp>;
+  AgreementRoles_aggregate?: InputMaybe<AgreementRoles_Aggregate_Bool_Exp>;
+  AgreementTokens?: InputMaybe<AgreementTokens_Bool_Exp>;
+  AgreementTokens_aggregate?: InputMaybe<AgreementTokens_Aggregate_Bool_Exp>;
+  Agreements?: InputMaybe<Agreements_Bool_Exp>;
+  Agreements_aggregate?: InputMaybe<Agreements_Aggregate_Bool_Exp>;
   Wallet?: InputMaybe<Wallets_Bool_Exp>;
   WalletId?: InputMaybe<Uuid_Comparison_Exp>;
   _and?: InputMaybe<Array<Transactions_Bool_Exp>>;
@@ -6862,10 +7001,10 @@ export type Transactions_Bool_Exp = {
   chainId?: InputMaybe<Int_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   customABI?: InputMaybe<Jsonb_Comparison_Exp>;
-  encodeTransactionInput?: InputMaybe<Jsonb_Comparison_Exp>;
   hash?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
+  transactionInput?: InputMaybe<Jsonb_Comparison_Exp>;
   transactionType?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -6879,19 +7018,19 @@ export enum Transactions_Constraint {
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Transactions_Delete_At_Path_Input = {
   customABI?: InputMaybe<Array<Scalars['String']>>;
-  encodeTransactionInput?: InputMaybe<Array<Scalars['String']>>;
+  transactionInput?: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
 export type Transactions_Delete_Elem_Input = {
   customABI?: InputMaybe<Scalars['Int']>;
-  encodeTransactionInput?: InputMaybe<Scalars['Int']>;
+  transactionInput?: InputMaybe<Scalars['Int']>;
 };
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export type Transactions_Delete_Key_Input = {
   customABI?: InputMaybe<Scalars['String']>;
-  encodeTransactionInput?: InputMaybe<Scalars['String']>;
+  transactionInput?: InputMaybe<Scalars['String']>;
 };
 
 /** input type for incrementing numeric columns in table "Transactions" */
@@ -6901,15 +7040,18 @@ export type Transactions_Inc_Input = {
 
 /** input type for inserting data into table "Transactions" */
 export type Transactions_Insert_Input = {
+  AgreementRoles?: InputMaybe<AgreementRoles_Arr_Rel_Insert_Input>;
+  AgreementTokens?: InputMaybe<AgreementTokens_Arr_Rel_Insert_Input>;
+  Agreements?: InputMaybe<Agreements_Arr_Rel_Insert_Input>;
   Wallet?: InputMaybe<Wallets_Obj_Rel_Insert_Input>;
   WalletId?: InputMaybe<Scalars['uuid']>;
   chainId?: InputMaybe<Scalars['Int']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   customABI?: InputMaybe<Scalars['jsonb']>;
-  encodeTransactionInput?: InputMaybe<Scalars['jsonb']>;
   hash?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   status?: InputMaybe<Scalars['String']>;
+  transactionInput?: InputMaybe<Scalars['jsonb']>;
   transactionType?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -6973,6 +7115,13 @@ export type Transactions_Mutation_Response = {
   returning: Array<Transactions>;
 };
 
+/** input type for inserting object relation for remote table "Transactions" */
+export type Transactions_Obj_Rel_Insert_Input = {
+  data: Transactions_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Transactions_On_Conflict>;
+};
+
 /** on_conflict condition type for table "Transactions" */
 export type Transactions_On_Conflict = {
   constraint: Transactions_Constraint;
@@ -6982,15 +7131,18 @@ export type Transactions_On_Conflict = {
 
 /** Ordering options when selecting data from "Transactions". */
 export type Transactions_Order_By = {
+  AgreementRoles_aggregate?: InputMaybe<AgreementRoles_Aggregate_Order_By>;
+  AgreementTokens_aggregate?: InputMaybe<AgreementTokens_Aggregate_Order_By>;
+  Agreements_aggregate?: InputMaybe<Agreements_Aggregate_Order_By>;
   Wallet?: InputMaybe<Wallets_Order_By>;
   WalletId?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   customABI?: InputMaybe<Order_By>;
-  encodeTransactionInput?: InputMaybe<Order_By>;
   hash?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
+  transactionInput?: InputMaybe<Order_By>;
   transactionType?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -7003,7 +7155,7 @@ export type Transactions_Pk_Columns_Input = {
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export type Transactions_Prepend_Input = {
   customABI?: InputMaybe<Scalars['jsonb']>;
-  encodeTransactionInput?: InputMaybe<Scalars['jsonb']>;
+  transactionInput?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "Transactions" */
@@ -7017,13 +7169,13 @@ export enum Transactions_Select_Column {
   /** column name */
   CustomAbi = 'customABI',
   /** column name */
-  EncodeTransactionInput = 'encodeTransactionInput',
-  /** column name */
   Hash = 'hash',
   /** column name */
   Id = 'id',
   /** column name */
   Status = 'status',
+  /** column name */
+  TransactionInput = 'transactionInput',
   /** column name */
   TransactionType = 'transactionType',
   /** column name */
@@ -7036,10 +7188,10 @@ export type Transactions_Set_Input = {
   chainId?: InputMaybe<Scalars['Int']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   customABI?: InputMaybe<Scalars['jsonb']>;
-  encodeTransactionInput?: InputMaybe<Scalars['jsonb']>;
   hash?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   status?: InputMaybe<Scalars['String']>;
+  transactionInput?: InputMaybe<Scalars['jsonb']>;
   transactionType?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -7091,10 +7243,10 @@ export type Transactions_Stream_Cursor_Value_Input = {
   chainId?: InputMaybe<Scalars['Int']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   customABI?: InputMaybe<Scalars['jsonb']>;
-  encodeTransactionInput?: InputMaybe<Scalars['jsonb']>;
   hash?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   status?: InputMaybe<Scalars['String']>;
+  transactionInput?: InputMaybe<Scalars['jsonb']>;
   transactionType?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -7121,13 +7273,13 @@ export enum Transactions_Update_Column {
   /** column name */
   CustomAbi = 'customABI',
   /** column name */
-  EncodeTransactionInput = 'encodeTransactionInput',
-  /** column name */
   Hash = 'hash',
   /** column name */
   Id = 'id',
   /** column name */
   Status = 'status',
+  /** column name */
+  TransactionInput = 'transactionInput',
   /** column name */
   TransactionType = 'transactionType',
   /** column name */
@@ -7500,6 +7652,10 @@ export enum UserIdentities_Constraint {
   UserIdentitiesExternalIdKey = 'UserIdentities_externalId_key',
   /** unique or primary key constraint on columns "externalId" */
   UserIdentitiesExternalIdKey1 = 'UserIdentities_externalId_key1',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey2 = 'UserIdentities_externalId_key2',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey3 = 'UserIdentities_externalId_key3',
   /** unique or primary key constraint on columns "id" */
   UserIdentitiesPkey = 'UserIdentities_pkey'
 }
@@ -12482,6 +12638,13 @@ export type GetIdentityIntegrationsQueryVariables = Exact<{ [key: string]: never
 
 export type GetIdentityIntegrationsQuery = { __typename?: 'query_root', IdentityIntegrations: Array<{ __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
 
+export type GetTransactionsSubscriptionVariables = Exact<{
+  transactionIds?: InputMaybe<Array<Scalars['uuid']> | Scalars['uuid']>;
+}>;
+
+
+export type GetTransactionsSubscription = { __typename?: 'subscription_root', Transactions: Array<{ __typename?: 'Transactions', id: any, hash?: string | null, status: string, Agreements: Array<{ __typename?: 'Agreements', slug: string }> }> };
+
 export const MeemPartsFragmentDoc = gql`
     fragment MeemParts on AgreementTokens {
   tokenId
@@ -13470,3 +13633,38 @@ export function useGetIdentityIntegrationsLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetIdentityIntegrationsQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsQuery>;
 export type GetIdentityIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsLazyQuery>;
 export type GetIdentityIntegrationsQueryResult = Apollo.QueryResult<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>;
+export const GetTransactionsDocument = gql`
+    subscription GetTransactions($transactionIds: [uuid!]) {
+  Transactions(where: {id: {_in: $transactionIds}}) {
+    id
+    hash
+    status
+    Agreements {
+      slug
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTransactionsSubscription__
+ *
+ * To run a query within a React component, call `useGetTransactionsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetTransactionsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTransactionsSubscription({
+ *   variables: {
+ *      transactionIds: // value for 'transactionIds'
+ *   },
+ * });
+ */
+export function useGetTransactionsSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetTransactionsSubscription, GetTransactionsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetTransactionsSubscription, GetTransactionsSubscriptionVariables>(GetTransactionsDocument, options);
+      }
+export type GetTransactionsSubscriptionHookResult = ReturnType<typeof useGetTransactionsSubscription>;
+export type GetTransactionsSubscriptionResult = Apollo.SubscriptionResult<GetTransactionsSubscription>;

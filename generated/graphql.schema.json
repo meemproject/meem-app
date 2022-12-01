@@ -10226,6 +10226,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Transactions",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": "An object relationship",
             "args": [],
@@ -11435,6 +11459,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -12015,6 +12063,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -12289,6 +12361,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": null,
             "args": [],
@@ -12482,6 +12566,18 @@
           },
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -12695,6 +12791,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": null,
             "args": [],
@@ -12888,6 +12996,18 @@
           },
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -13303,6 +13423,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -13642,6 +13786,12 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": "column name",
             "isDeprecated": false,
@@ -13824,6 +13974,18 @@
           },
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -14275,6 +14437,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": null,
             "type": {
@@ -14569,6 +14743,12 @@
           },
           {
             "name": "OwnerId",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -17178,6 +17358,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Transactions",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": "An object relationship",
             "args": [],
@@ -17745,6 +17949,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -18058,6 +18286,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -18200,6 +18452,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "args": [],
@@ -18309,6 +18573,18 @@
           },
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -18438,6 +18714,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "args": [],
@@ -18547,6 +18835,18 @@
           },
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -18854,6 +19154,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -19037,6 +19361,12 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": "column name",
             "isDeprecated": false,
@@ -19107,6 +19437,18 @@
           },
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -19288,6 +19630,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -19404,6 +19758,12 @@
           },
           {
             "name": "OwnerId",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -22389,6 +22749,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": "An object relationship",
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "Transactions",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": "An object relationship",
             "args": [],
@@ -23654,6 +24038,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -24246,6 +24654,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_obj_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -24508,6 +24940,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": null,
             "args": [],
@@ -24701,6 +25145,18 @@
         "inputFields": [
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -24914,6 +25370,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": null,
             "args": [],
@@ -25107,6 +25575,18 @@
         "inputFields": [
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -25546,6 +26026,30 @@
             "deprecationReason": null
           },
           {
+            "name": "Transaction",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -25879,6 +26383,12 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": "column name",
             "isDeprecated": false,
@@ -26037,6 +26547,18 @@
         "inputFields": [
           {
             "name": "OwnerId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -26476,6 +26998,18 @@
             "deprecationReason": null
           },
           {
+            "name": "TransactionId",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "address",
             "description": null,
             "type": {
@@ -26764,6 +27298,12 @@
         "enumValues": [
           {
             "name": "OwnerId",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "TransactionId",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -32731,6 +33271,18 @@
           },
           {
             "name": "ChainNonces_chainId_key1",
+            "description": "unique or primary key constraint on columns \"chainId\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ChainNonces_chainId_key2",
+            "description": "unique or primary key constraint on columns \"chainId\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ChainNonces_chainId_key3",
             "description": "unique or primary key constraint on columns \"chainId\"",
             "isDeprecated": false,
             "deprecationReason": null
@@ -47415,6 +47967,588 @@
         "description": "columns and relationships of \"Transactions\"",
         "fields": [
           {
+            "name": "AgreementRoles",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "AgreementRoles_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AgreementRoles_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementRoles_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "AgreementRoles",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementRoles_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "AgreementRoles_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AgreementRoles_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementRoles_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "AgreementRoles_aggregate",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementTokens",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "AgreementTokens_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AgreementTokens_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementTokens_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "AgreementTokens",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementTokens_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "AgreementTokens_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AgreementTokens_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementTokens_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "AgreementTokens_aggregate",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Agreements",
+            "description": "An array relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "Agreements_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "Agreements_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "Agreements_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Agreements",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Agreements_aggregate",
+            "description": "An aggregate relationship",
+            "args": [
+              {
+                "name": "distinct_on",
+                "description": "distinct select on columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "Agreements_select_column",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "limit",
+                "description": "limit the number of rows returned",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "offset",
+                "description": "skip the first n rows. Use only with order_by",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "order_by",
+                "description": "sort the rows by one or more columns",
+                "type": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "Agreements_order_by",
+                      "ofType": null
+                    }
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "where",
+                "description": "filter the rows returned",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "Agreements_bool_exp",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Agreements_aggregate",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": "An object relationship",
             "args": [],
@@ -47496,46 +48630,13 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": null,
-            "args": [
-              {
-                "name": "path",
-                "description": "JSON select path",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "jsonb",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -47566,6 +48667,35 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
+            "description": null,
+            "args": [
+              {
+                "name": "path",
+                "description": "JSON select path",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "jsonb",
                 "ofType": null
               }
             },
@@ -48093,7 +49223,7 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
+            "name": "transactionInput",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -48209,6 +49339,78 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "AgreementRoles",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementRoles_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementRoles_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementRoles_aggregate_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementTokens",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementTokens_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementTokens_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementTokens_aggregate_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Agreements",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Agreements_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Agreements_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Agreements_aggregate_bool_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -48321,18 +49523,6 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "jsonb_comparison_exp",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": null,
             "type": {
@@ -48362,6 +49552,18 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "String_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "jsonb_comparison_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -48441,7 +49643,7 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
+            "name": "transactionInput",
             "description": null,
             "type": {
               "kind": "LIST",
@@ -48484,7 +49686,7 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
+            "name": "transactionInput",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -48519,7 +49721,7 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
+            "name": "transactionInput",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -48564,6 +49766,42 @@
         "description": "input type for inserting data into table \"Transactions\"",
         "fields": null,
         "inputFields": [
+          {
+            "name": "AgreementRoles",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementRoles_arr_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementTokens",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementTokens_arr_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Agreements",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Agreements_arr_rel_insert_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "Wallet",
             "description": null,
@@ -48625,18 +49863,6 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "jsonb",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": null,
             "type": {
@@ -48666,6 +49892,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
               "ofType": null
             },
             "defaultValue": null,
@@ -49182,6 +50420,45 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "Transactions_obj_rel_insert_input",
+        "description": "input type for inserting object relation for remote table \"Transactions\"",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "data",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "Transactions_insert_input",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "on_conflict",
+            "description": "upsert condition",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Transactions_on_conflict",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "Transactions_on_conflict",
         "description": "on_conflict condition type for table \"Transactions\"",
         "fields": null,
@@ -49250,6 +50527,42 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "AgreementRoles_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementRoles_aggregate_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "AgreementTokens_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementTokens_aggregate_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Agreements_aggregate",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Agreements_aggregate_order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "Wallet",
             "description": null,
             "type": {
@@ -49310,18 +50623,6 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": null,
-            "type": {
-              "kind": "ENUM",
-              "name": "order_by",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": null,
             "type": {
@@ -49347,6 +50648,18 @@
           },
           {
             "name": "status",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -49432,7 +50745,7 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
+            "name": "transactionInput",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -49481,12 +50794,6 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": "column name",
             "isDeprecated": false,
@@ -49500,6 +50807,12 @@
           },
           {
             "name": "status",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -49574,18 +50887,6 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "jsonb",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": null,
             "type": {
@@ -49615,6 +50916,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
               "ofType": null
             },
             "defaultValue": null,
@@ -49882,18 +51195,6 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": null,
-            "type": {
-              "kind": "SCALAR",
-              "name": "jsonb",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": null,
             "type": {
@@ -49923,6 +51224,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
               "ofType": null
             },
             "defaultValue": null,
@@ -50037,12 +51350,6 @@
             "deprecationReason": null
           },
           {
-            "name": "encodeTransactionInput",
-            "description": "column name",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "hash",
             "description": "column name",
             "isDeprecated": false,
@@ -50056,6 +51363,12 @@
           },
           {
             "name": "status",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "transactionInput",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -52558,6 +53871,18 @@
           },
           {
             "name": "UserIdentities_externalId_key1",
+            "description": "unique or primary key constraint on columns \"externalId\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "UserIdentities_externalId_key2",
+            "description": "unique or primary key constraint on columns \"externalId\"",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "UserIdentities_externalId_key3",
             "description": "unique or primary key constraint on columns \"externalId\"",
             "isDeprecated": false,
             "deprecationReason": null

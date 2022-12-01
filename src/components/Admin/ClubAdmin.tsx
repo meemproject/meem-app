@@ -13,7 +13,7 @@ import {
 	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { LoginState, useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
@@ -29,7 +29,6 @@ import {
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 import { colorGreen, useClubsTheme } from '../Styles/ClubsTheme'
 import { CABulkMint } from './Tabs/CABulkMint'
@@ -62,7 +61,7 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { mutualMembersClient } = useCustomApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)

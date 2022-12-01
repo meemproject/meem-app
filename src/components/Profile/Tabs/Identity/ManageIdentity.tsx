@@ -13,7 +13,7 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemUser } from '@meemproject/react'
+import { useMeemUser, useMeemApollo } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { updateUser } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
@@ -23,9 +23,8 @@ import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { GetIdentityExtensionsQuery } from '../../../../../generated/graphql'
+import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
 import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
-import { useCustomApollo } from '../../../../providers/ApolloProvider'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -38,7 +37,7 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	const { loginWithRedirect } = useAuth0()
 	const { user: me } = useMeemUser()
-	const { anonClient } = useCustomApollo()
+	const { anonClient } = useMeemApollo()
 
 	// Mutable identity data
 	const [displayName, setDisplayName] = useState('')
@@ -51,7 +50,7 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	// Fetch a list of available extensions.
 	const { data: inteData, loading: isLoadingAvailableExtensions } =
-		useQuery<GetIdentityExtensionsQuery>(IDENTITY_INTEGRATIONS_QUERY, {
+		useQuery<GetIdentityIntegrationsQuery>(IDENTITY_INTEGRATIONS_QUERY, {
 			client: anonClient
 		})
 
@@ -207,9 +206,9 @@ export const ManageIdentityComponent: React.FC = () => {
 	}
 
 	const filteredAvilableExtensions =
-		inteData?.IdentityExtensions.filter(ai => {
+		inteData?.IdentityIntegrations.filter(ai => {
 			const connectedExtension = me?.UserIdentities?.find(
-				i => i.IdentityExtensionId === ai.id
+				i => i.IdentityIntegrationId === ai.id
 			)
 
 			if (connectedExtension) {
@@ -338,7 +337,7 @@ export const ManageIdentityComponent: React.FC = () => {
 										md={4}
 										lg={4}
 										xl={4}
-										key={`verified-extension-${userIdentity.IdentityExtension?.name}`}
+										key={`verified-extension-${userIdentity.IdentityIntegration?.name}`}
 									>
 										<a
 											onClick={() => {
@@ -359,7 +358,7 @@ export const ManageIdentityComponent: React.FC = () => {
 													}
 												>
 													<Image
-														src={`${userIdentity.IdentityExtension?.icon}`}
+														src={`${userIdentity.IdentityIntegration?.icon}`}
 														width={16}
 														height={16}
 														fit={'contain'}
@@ -370,7 +369,7 @@ export const ManageIdentityComponent: React.FC = () => {
 															.username
 															? `@${userIdentity?.metadata.username}`
 															: userIdentity
-																	.IdentityExtension
+																	.IdentityIntegration
 																	?.name}
 													</Text>
 												</div>

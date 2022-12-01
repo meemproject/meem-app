@@ -14,7 +14,7 @@ import {
 	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { LoginState, useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check, Plus } from 'tabler-icons-react'
@@ -28,7 +28,6 @@ import clubFromAgreement, {
 	ClubRole,
 	emptyRole
 } from '../../model/club/club'
-import { useCustomApollo } from '../../providers/ApolloProvider'
 import { hostnameToChainId } from '../App'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
@@ -47,7 +46,7 @@ export const RolesManager: React.FC<IProps> = ({ slug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const { mutualMembersClient } = useCustomApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const [tabs, setTabs] = useState<Tab[]>([])
 	const [currentTab, setCurrentTab] = useState<Tab>()

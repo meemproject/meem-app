@@ -11,7 +11,7 @@ import {
 	Center,
 	Button
 } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
@@ -27,7 +27,6 @@ import {
 } from '../../../graphql/clubs'
 import clubFromAgreement, { Club } from '../../../model/club/club'
 import { ForumPost } from '../../../model/club/forum/forumPost'
-import { useCustomApollo } from '../../../providers/ApolloProvider'
 import { hostnameToChainId } from '../../App'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { ForumPostPreview } from './ForumPostPreview'
@@ -40,7 +39,7 @@ export const ForumHome: React.FC<IProps> = ({ slug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { anonClient, mutualMembersClient } = useCustomApollo()
+	const { anonClient, mutualMembersClient } = useMeemApollo()
 
 	const [club, setClub] = useState<Club | undefined>()
 
