@@ -422,20 +422,22 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 						/>
 					</div>
 				</Center>
-				<div
-					style={{
-						position: 'absolute',
-						top: 16,
-						right: 16,
-						cursor: 'pointer'
-					}}
-				>
-					<Settings
-						onClick={() => {
-							navigateToAdmin()
+				{club.isCurrentUserClubAdmin && (
+					<div
+						style={{
+							position: 'absolute',
+							top: 16,
+							right: 16,
+							cursor: 'pointer'
 						}}
-					/>
-				</div>
+					>
+						<Settings
+							onClick={() => {
+								navigateToAdmin()
+							}}
+						/>
+					</div>
+				)}
 			</div>
 
 			<JoinLeaveClubModal

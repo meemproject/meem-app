@@ -3,8 +3,8 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
 import { ForumPost } from '../../../model/club/forum/forumPost'
-import { ForumPostPreview } from '../../ClubExtensions/Forum/ForumPostPreview'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { ForumPostPreview } from './ForumPostPreview'
 interface IProps {
 	club: Club
 }
