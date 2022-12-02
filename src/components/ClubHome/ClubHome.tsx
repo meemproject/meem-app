@@ -20,6 +20,7 @@ import { hostnameToChainId } from '../App'
 import { ClubForumWidget } from '../Extensions/Forum/ClubWidgetForum'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubAddAppsWidget } from './CoreWidgets/ClubAddAppsWidget'
+import { ClubExtensionLinksWidget } from './CoreWidgets/ClubExtensionLinksWidget'
 import { ClubInfoWidget } from './CoreWidgets/ClubInfoWidget'
 import { ClubMembersWidget } from './CoreWidgets/ClubMembersWidget'
 import { ClubRequirementsWidget } from './CoreWidgets/ClubRequirementsWidget'
@@ -224,6 +225,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 							</div>
 							<div className={clubsTheme.pageRightColumn}>
 								<ClubForumWidget club={club} />
+								<ClubExtensionLinksWidget club={club} />
 								<ClubAddAppsWidget club={club} />
 								<ClubRequirementsWidget
 									club={club}
