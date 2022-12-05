@@ -3,7 +3,7 @@ import log from '@kengoldfarb/log'
 import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
-import { useWallet } from '@meemproject/react'
+import { useMeemSDK, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -21,6 +21,7 @@ interface IProps {
 export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
+	const { sdk } = useMeemSDK()
 
 	const [smartContractPermission, setSmartContractPermission] =
 		useState('members-and-meem')
@@ -320,32 +321,27 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						disabled={isUpgradingClub}
 						className={clubsTheme.buttonBlack}
 						onClick={async () => {
-							// try {
-							// 	if (!club?.id) {
-							// 		return
-							// 	}
-							// 	setIsUpgradingClub(true)
-							// 	const upgradeClubFetcher = makeFetcher<
-							// 		MeemAPI.v1.UpgradeClub.IQueryParams,
-							// 		MeemAPI.v1.UpgradeClub.IRequestBody,
-							// 		MeemAPI.v1.UpgradeClub.IResponseBody
-							// 	>({
-							// 		method: MeemAPI.v1.UpgradeClub.method
-							// 	})
-							// 	await upgradeClubFetcher(
-							// 		MeemAPI.v1.UpgradeClub.path({
-							// 			agreementId: club.id
-							// 		})
-							// 	)
-							// } catch (e) {
-							// 	log.crit(e)
-							// 	showNotification({
-							// 		title: 'Error Upgrading Club',
-							// 		color: colorPink,
-							// 		message: `Something went wrong during the upgrade.`
-							// 	})
-							// 	setIsUpgradingClub(false)
-							// }
+							try {
+								if (!club?.id) {
+									return
+								}
+								setIsUpgradingClub(true)
+								const txId =
+									await sdk.agreement.upgradeAgreement({
+										agreementId: club.id
+									})
+
+								// TODO: Watch for transaction to finish
+								log.debug(`Upgrade agreement w/ txId: ${txId}`)
+							} catch (e) {
+								log.crit(e)
+								showNotification({
+									title: 'Error Upgrading Club',
+									color: colorPink,
+									message: `Something went wrong during the upgrade.`
+								})
+								setIsUpgradingClub(false)
+							}
 						}}
 					>
 						Upgrade Contract
@@ -422,48 +418,26 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						) {
 							return
 						}
-						// try {
-						// 	setIsCreatingSafe(true)
-						// 	const createSafeFetcher = makeFetcher<
-						// 		MeemAPI.v1.CreateClubSafe.IQueryParams,
-						// 		MeemAPI.v1.CreateClubSafe.IRequestBody,
-						// 		MeemAPI.v1.CreateClubSafe.IResponseBody
-						// 	>({
-						// 		method: MeemAPI.v1.CreateClubSafe.method
-						// 	})
+						try {
+							setIsCreatingSafe(true)
 
-						// 	await createSafeFetcher(
-						// 		MeemAPI.v1.CreateClubSafe.path({
-						// 			agreementId: club.id
-						// 		}),
-						// 		undefined,
-						// 		{
-						// 			safeOwners: club.adminAddresses ?? [],
-						// 			chainId:
-						// 				wallet.chainId ??
-						// 				hostnameToChainId(
-						// 					global.window
-						// 						? global.window.location.host
-						// 						: ''
-						// 				)
-						// 		}
-						// 	)
-						// 	await new Promise(f => setTimeout(f, 10000))
+							await sdk.agreement.createSafe({
+								safeOwners: club.adminAddresses ?? [],
+								agreementId: club.id
+							})
 
-						// 	// refetchClub()
-
-						// 	setIsCreatingSafe(false)
-						// } catch (e) {
-						// 	log.crit(e)
-						// 	setIsCreatingSafe(false)
-						// 	showNotification({
-						// 		radius: 'lg',
-						// 		title: 'Wallet creation failed.',
-						// 		message:
-						// 			'We were unable to create treasury for your club. Please refresh the page and try again.',
-						// 		color: colorPink
-						// 	})
-						// }
+							setIsCreatingSafe(false)
+						} catch (e) {
+							log.crit(e)
+							setIsCreatingSafe(false)
+							showNotification({
+								radius: 'lg',
+								title: 'Wallet creation failed.',
+								message:
+									'We were unable to create treasury for your club. Please refresh the page and try again.',
+								color: colorPink
+							})
+						}
 					}}
 				>
 					Create Treasury

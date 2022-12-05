@@ -26,7 +26,7 @@ const MAuthenticate: React.FC = () => {
 			if (address && walletSig) {
 				try {
 					setIsLoading(true)
-					const loginRequest = await sdk.auth.login({
+					const loginRequest = await sdk.id.login({
 						address,
 						signature: walletSig
 					})
@@ -62,7 +62,7 @@ const MAuthenticate: React.FC = () => {
 		setIsLoading(true)
 
 		try {
-			const { nonce } = await sdk.auth.getNonce({
+			const { nonce } = await sdk.id.getNonce({
 				address
 			})
 			log.debug('got nonce')

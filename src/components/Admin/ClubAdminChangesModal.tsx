@@ -3,8 +3,13 @@ import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useSockets, useWallet } from '@meemproject/react'
-import { MeemAPI, useMeemApollo } from '@meemproject/sdk'
+import {
+	useMeemSDK,
+	useSockets,
+	useWallet,
+	useMeemApollo
+} from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
@@ -31,6 +36,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 	club
 }) => {
 	const wallet = useWallet()
+
+	const { sdk } = useMeemSDK()
 
 	const { classes: clubsTheme } = useClubsTheme()
 
@@ -147,14 +154,6 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					)
 				}
 
-				// const reInitializeContractFetcher = makeFetcher<
-				// 	MeemAPI.v1.ReInitializeAgreement.IQueryParams,
-				// 	MeemAPI.v1.ReInitializeAgreement.IRequestBody,
-				// 	MeemAPI.v1.ReInitializeAgreement.IResponseBody
-				// >({
-				// 	method: MeemAPI.v1.ReInitializeAgreement.method
-				// })
-
 				if (!club.id) {
 					showNotification({
 						radius: 'lg',
@@ -234,6 +233,58 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				// 	undefined,
 				// 	data
 				// )
+
+				const { txId } = await sdk.agreement.reInitialize({
+					agreementId: club.id,
+					metadata: {
+						meem_metadata_type: 'Meem_AgreementContract',
+						meem_metadata_version: '20221116',
+						name: club.name,
+						description: club.description,
+						image: club.image,
+						associations: [],
+						external_url: `https://clubs.link/${club.slug}`,
+						application_instructions: applicationInstructions
+					},
+					name: club.name ?? '',
+					admins: club.adminAddresses,
+					minters: club.adminAddresses,
+					maxSupply: !isNaN(
+						club.membershipSettings?.membershipQuantity ?? 0
+					)
+						? `${club.membershipSettings?.membershipQuantity}`
+						: '0',
+					mintPermissions,
+					splits:
+						club.membershipSettings &&
+						club.membershipSettings.membershipFundsAddress.length >
+							0
+							? [
+									{
+										toAddress: club.membershipSettings
+											? club.membershipSettings
+													.membershipFundsAddress
+											: wallet.accounts[0],
+										// Amount in basis points 10000 == 100%
+										amount: 10000,
+										lockedBy: MeemAPI.zeroAddress
+									}
+							  ]
+							: []
+				})
+
+				log.debug(`Reinitializing agreement w/ txId: ${txId}`)
+
+				// TODO: Wait for the Transaciton to finish and then bulk-mint tokens as needed
+
+				// const tokenMetadata: {
+				// 	agreement_metadata_version: 'MeemClub_Token_20220718'
+				// 	description: `Membership token for ${club.name}`
+				// 	name: `${club.name} membership token`
+				// 	image: club.image
+				// 	associations: []
+				// 	external_url: `https://clubs.link/${club.slug}`
+				// }
 
 				// Now we wait for an update on the db.
 			} catch (e) {
@@ -342,7 +393,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		loading,
 		onModalClosed,
 		sockets,
-		wallet
+		wallet,
+		sdk.agreement
 	])
 
 	return (

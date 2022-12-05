@@ -10,8 +10,8 @@ import {
 	Divider
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { LoginState, useMeemSDK, useWallet } from '@meemproject/react'
+import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'
@@ -22,7 +22,6 @@ import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import { hostnameToChainId } from '../../App'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 import { JoinLeaveClubModal } from '../JoinLeaveClubModal'
 interface IProps {
@@ -35,6 +34,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { sdk } = useMeemSDK()
 
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [isLeavingClub, setIsLeavingClub] = useState(false)
@@ -49,7 +49,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 	)
 
 	const joinClub = async () => {
-		if (!wallet.web3Provider || !wallet.isConnected) {
+		if (!wallet.web3Provider || !wallet.isConnected || !wallet.signer) {
 			await wallet.connectWallet()
 			return
 		}
@@ -66,31 +66,21 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 
 		setIsJoiningClub(true)
 		try {
-			if (club && club.rawClub && club.id) {
+			if (club && club.rawClub && club.id && club.address) {
 				if (
 					typeof club?.membershipSettings?.costToJoin === 'number' &&
 					club.membershipSettings.costToJoin > 0
 				) {
-					const getProofFetcher = makeFetcher<
-						MeemAPI.v1.GetMintingProof.IQueryParams,
-						MeemAPI.v1.GetMintingProof.IRequestBody,
-						MeemAPI.v1.GetMintingProof.IResponseBody
-					>({
-						method: MeemAPI.v1.GetMintingProof.method
+					const { proof } = await sdk.agreement.getMintingProof({
+						to: wallet.accounts[0],
+						agreementId: club.id
 					})
 
-					const { proof } = await getProofFetcher(
-						MeemAPI.v1.GetMintingProof.path({
-							agreementId: club.id
-						})
-					)
-
 					// Cost to join. Run the transaction in browser.
-					const agreement = new Contract(
-						club?.address ?? '',
-						bundleData?.Bundles[0].abi,
-						wallet.signer
-					)
+					const agreement = getAgreementContract({
+						address: club.address,
+						signer: wallet.signer
+					})
 
 					const uri = JSON.stringify({
 						name: club?.name ?? '',
@@ -122,42 +112,29 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 					// @ts-ignore
 					await tx.wait()
 				} else if (club?.address && wallet.chainId) {
-					// No cost to join. Call the API
-					const joinClubFetcher = makeFetcher<
-						MeemAPI.v1.MintOriginalMeem.IQueryParams,
-						MeemAPI.v1.MintOriginalMeem.IRequestBody,
-						MeemAPI.v1.MintOriginalMeem.IResponseBody
-					>({
-						method: MeemAPI.v1.MintOriginalMeem.method
+					const { txId } = await sdk.agreement.bulkMint({
+						agreementId: club.id,
+						tokens: [
+							{
+								to: wallet.accounts[0],
+								metadata: {
+									name: club?.name ?? '',
+									description:
+										club?.description &&
+										club?.description?.length > 0
+											? club?.description
+											: 'Club Token',
+									image: club?.image,
+									meem_metadata_type: 'Meem_AgreementToken',
+									meem_metadata_version: '20221116'
+								}
+							}
+						]
 					})
 
-					const data = {
-						agreementAddress: club.address,
-						to: wallet.accounts[0],
-						metadata: {
-							name: club?.name ?? '',
-							description:
-								club?.description &&
-								club?.description?.length > 0
-									? club?.description
-									: 'Club Token',
-							image: club?.image,
-							agreement_metadata_version:
-								'MeemClub_Token_20220718'
-						},
-						chainId:
-							wallet.chainId ??
-							hostnameToChainId(
-								global.window ? global.window.location.host : ''
-							)
-					}
-					log.debug(JSON.stringify(data))
+					// TODO: Watch for transaction to complete
 
-					await joinClubFetcher(
-						MeemAPI.v1.MintOriginalMeem.path(),
-						undefined,
-						data
-					)
+					log.debug(`Minting w/ transaction id: ${txId}`)
 				} else {
 					setIsJoiningClub(false)
 					showNotification({
@@ -168,6 +145,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 				}
 			}
 		} catch (e) {
+			log.crit(e)
 			const error: any = JSON.parse(
 				(e as any).toString().split('Error: ')[1]
 			)
@@ -185,8 +163,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 					message: `Please get in touch!`
 				})
 			}
-			setIsJoiningClub(false)
 		}
+		setIsJoiningClub(false)
 	}
 
 	const leaveClub = async () => {
