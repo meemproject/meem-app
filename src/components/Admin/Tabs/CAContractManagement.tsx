@@ -3,7 +3,7 @@ import log from '@kengoldfarb/log'
 import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
-import { useWallet } from '@meemproject/react'
+import { useMeemSDK, useWallet } from '@meemproject/react'
 import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
@@ -23,6 +23,7 @@ interface IProps {
 export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
+	const { sdk } = useMeemSDK()
 
 	const [smartContractPermission, setSmartContractPermission] =
 		useState('members-and-meem')
@@ -326,19 +327,13 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 									return
 								}
 								setIsUpgradingClub(true)
-								const upgradeClubFetcher = makeFetcher<
-									MeemAPI.v1.UpgradeClub.IQueryParams,
-									MeemAPI.v1.UpgradeClub.IRequestBody,
-									MeemAPI.v1.UpgradeClub.IResponseBody
-								>({
-									method: MeemAPI.v1.UpgradeClub.method
-								})
-
-								await upgradeClubFetcher(
-									MeemAPI.v1.UpgradeClub.path({
+								const txId =
+									await sdk.agreement.upgradeAgreement({
 										agreementId: club.id
 									})
-								)
+
+								// TODO: Watch for transaction to finish
+								log.debug(`Upgrade agreement w/ txId: ${txId}`)
 							} catch (e) {
 								log.crit(e)
 								showNotification({
@@ -426,31 +421,36 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						}
 						try {
 							setIsCreatingSafe(true)
-							const createSafeFetcher = makeFetcher<
-								MeemAPI.v1.CreateClubSafe.IQueryParams,
-								MeemAPI.v1.CreateClubSafe.IRequestBody,
-								MeemAPI.v1.CreateClubSafe.IResponseBody
-							>({
-								method: MeemAPI.v1.CreateClubSafe.method
+
+							const txId = await sdk.agreement.createSafe({
+								safeOwners: club.adminAddresses ?? []
 							})
 
-							await createSafeFetcher(
-								MeemAPI.v1.CreateClubSafe.path({
-									agreementId: club.id
-								}),
-								undefined,
-								{
-									safeOwners: club.adminAddresses ?? [],
-									chainId:
-										wallet.chainId ??
-										hostnameToChainId(
-											global.window
-												? global.window.location.host
-												: ''
-										)
-								}
-							)
-							await new Promise(f => setTimeout(f, 10000))
+							// const createSafeFetcher = makeFetcher<
+							// 	MeemAPI.v1.CreateClubSafe.IQueryParams,
+							// 	MeemAPI.v1.CreateClubSafe.IRequestBody,
+							// 	MeemAPI.v1.CreateClubSafe.IResponseBody
+							// >({
+							// 	method: MeemAPI.v1.CreateClubSafe.method
+							// })
+
+							// await createSafeFetcher(
+							// 	MeemAPI.v1.CreateClubSafe.path({
+							// 		agreementId: club.id
+							// 	}),
+							// 	undefined,
+							// 	{
+							// 		safeOwners: club.adminAddresses ?? [],
+							// 		chainId:
+							// 			wallet.chainId ??
+							// 			hostnameToChainId(
+							// 				global.window
+							// 					? global.window.location.host
+							// 					: ''
+							// 			)
+							// 	}
+							// )
+							// await new Promise(f => setTimeout(f, 10000))
 
 							// refetchClub()
 
