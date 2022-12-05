@@ -22,7 +22,7 @@ interface IProps {
 	club: ClubPropViewModel
 }
 
-const ClubExampleSettingsPage: NextPage<IProps> = ({ club }) => {
+const ClubExampleExtensionSettingsPage: NextPage<IProps> = ({ club }) => {
 	const router = useRouter()
 
 	const clubSlug =
@@ -152,4 +152,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ClubExampleSettingsPage
+export default ClubExampleExtensionSettingsPage

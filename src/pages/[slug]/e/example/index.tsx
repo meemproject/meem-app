@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { hostnameToChainId } from '../../../../components/App'
 import { DiscussionHome } from '../../../../components/Extensions/Discussion/DiscussionHome'
+import { ExampleExtensionHome } from '../../../../components/Extensions/Example/ExampleExtensionHome'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_CLUB_INFO } from '../../../../graphql/clubs'
@@ -22,7 +23,7 @@ interface IProps {
 	club: ClubPropViewModel
 }
 
-const ClubExamplePage: NextPage<IProps> = ({ club }) => {
+const ClubExampleExtensionPage: NextPage<IProps> = ({ club }) => {
 	const router = useRouter()
 
 	const clubSlug =
@@ -90,7 +91,7 @@ const ClubExamplePage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<DiscussionHome slug={clubSlug} />
+			<ExampleExtensionHome slug={clubSlug} />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -152,4 +153,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ClubExamplePage
+export default ClubExampleExtensionPage
