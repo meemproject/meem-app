@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/prop-types */
 import log from '@kengoldfarb/log'
 import { Space } from '@mantine/core'
@@ -5,64 +7,66 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { hostnameToChainId } from '../../../../components/App'
-import { DiscussionHome } from '../../../../components/Extensions/Discussion/DiscussionHome'
-import { MeemFooter } from '../../../../components/Footer/MeemFooter'
-import { HeaderMenu } from '../../../../components/Header/Header'
-import { GET_CLUB_INFO } from '../../../../graphql/clubs'
-import { ssrGraphqlClient } from '../../../../utils/ssr_graphql'
+import { hostnameToChainId } from '../../../../../components/App'
+import { DiscussionPostComponent } from '../../../../../components/Extensions/Discussion/DiscussionPost'
+import { MeemFooter } from '../../../../../components/Footer/MeemFooter'
+import { HeaderMenu } from '../../../../../components/Header/Header'
+import { GET_CLUB_INFO } from '../../../../../graphql/clubs'
+import { ssrGraphqlClient } from '../../../../../utils/ssr_graphql'
 
-export interface ClubPropViewModel {
+export interface DiscussionPostPropViewModel {
 	responseBody: any
 	description: string
 	isError: boolean
 }
 
 interface IProps {
-	club: ClubPropViewModel
+	post: DiscussionPostPropViewModel
 }
 
-const ClubExampleSettingsPage: NextPage<IProps> = ({ club }) => {
+const DiscussionPostPage: NextPage<IProps> = ({ post }) => {
 	const router = useRouter()
 
+	const postId: string =
+		router.query.postId === undefined ? '' : `${router.query.postId}`
 	const clubSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
 				<title>
-					{club === undefined || club.isError
+					{post === undefined || post.isError
 						? 'Not found'
-						: `${club.responseBody.Agreements[0].name} | Discussion Settings | Clubs`}
+						: `${post.responseBody.Agreements[0].name} | Discussion | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
-						club === undefined || club.isError
+						post === undefined || post.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Discussion Settings | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Discussion | Clubs`
 					}
 				/>
-				<meta name="description" content={club.description} />
+				{/* <meta name="description" content={post.description} /> */}
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta
 					property="og:title"
 					content={
-						club === undefined || club.isError
+						post === undefined || post.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Discussion Settings | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Discussion | Clubs`
 					}
 				/>
-				<meta property="og:description" content={club.description} />
+				{/* <meta property="og:description" content={post.description} /> */}
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
 				<meta
 					property="twitter:title"
 					content={
-						club === undefined || club.isError
+						post === undefined || post.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Discussion Settings | Clubs`
+							: `${post.responseBody.Agreements[0].name} | Discussion | Clubs`
 					}
 				/>
 				<meta
@@ -90,7 +94,7 @@ const ClubExampleSettingsPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<DiscussionHome slug={clubSlug} />
+			<DiscussionPostComponent postId={postId} />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -101,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 	params,
 	req
 }) => {
-	let club: ClubPropViewModel | undefined
+	let club: DiscussionPostPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {
@@ -152,4 +156,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ClubExampleSettingsPage
+export default DiscussionPostPage

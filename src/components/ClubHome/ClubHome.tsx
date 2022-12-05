@@ -17,7 +17,7 @@ import {
 } from '../../graphql/clubs'
 import clubFromAgreement, { Club } from '../../model/club/club'
 import { hostnameToChainId } from '../App'
-import { ClubForumWidget } from '../Extensions/Forum/ClubWidgetForum'
+import { ClubDiscussionWidget } from '../Extensions/Discussion/ClubDiscussionWidget'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubAddAppsWidget } from './CoreWidgets/ClubAddAppsWidget'
 import { ClubExtensionLinksWidget } from './CoreWidgets/ClubExtensionLinksWidget'
@@ -227,7 +227,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 								/>
 							</div>
 							<div className={clubsTheme.pageRightColumn}>
-								<ClubForumWidget club={club} />
+								<ClubDiscussionWidget club={club} />
 								<ClubExtensionLinksWidget club={club} />
 								<ClubAddAppsWidget club={club} />
 								<ClubRequirementsWidget

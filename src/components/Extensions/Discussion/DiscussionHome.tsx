@@ -26,16 +26,16 @@ import {
 	SUB_IS_MEMBER_OF_CLUB
 } from '../../../graphql/clubs'
 import clubFromAgreement, { Club } from '../../../model/club/club'
-import { ForumPost } from '../../../model/club/forum/forumPost'
+import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { hostnameToChainId } from '../../App'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
-import { ForumPostPreview } from './ForumPostPreview'
+import { DiscussionPostPreview } from './DiscussionPostPreview'
 
 interface IProps {
 	slug: string
 }
 
-export const ForumHome: React.FC<IProps> = ({ slug }) => {
+export const DiscussionHome: React.FC<IProps> = ({ slug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
@@ -184,7 +184,7 @@ export const ForumHome: React.FC<IProps> = ({ slug }) => {
 		isCurrentUserClubMemberData
 	])
 
-	const posts: ForumPost[] = [
+	const posts: DiscussionPost[] = [
 		{
 			id: '1',
 			title: 'Test post one',
@@ -269,7 +269,7 @@ export const ForumHome: React.FC<IProps> = ({ slug }) => {
 								className={clubsTheme.buttonBlack}
 								onClick={() => {
 									router.push({
-										pathname: `/${club.slug}/e/forum/submit`
+										pathname: `/${club.slug}/e/discussion/submit`
 									})
 								}}
 							>
@@ -299,7 +299,7 @@ export const ForumHome: React.FC<IProps> = ({ slug }) => {
 						</div>
 						<Space h={32} />
 						{posts.map(post => (
-							<ForumPostPreview key={post.id} post={post} />
+							<DiscussionPostPreview key={post.id} post={post} />
 						))}
 					</Container>
 				</>

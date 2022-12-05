@@ -9,13 +9,13 @@ import {
 import Link from 'next/link'
 import React from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
-import { ForumPost } from '../../../model/club/forum/forumPost'
+import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { colorDarkerGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
-	post: ForumPost
+	post: DiscussionPost
 }
 
-export const ForumPostPreview: React.FC<IProps> = ({ post }) => {
+export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const { colorScheme } = useMantineColorScheme()
@@ -111,7 +111,7 @@ export const ForumPostPreview: React.FC<IProps> = ({ post }) => {
 							className={clubsTheme.row}
 							style={{ marginTop: 16 }}
 						>
-							<Link href={`/${post.clubSlug}/e/forum/post1`}>
+							<Link href={`/${post.clubSlug}/e/discussion/post1`}>
 								<div
 									className={clubsTheme.centeredRow}
 									style={{ cursor: 'pointer' }}

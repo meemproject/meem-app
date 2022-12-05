@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/prop-types */
 import log from '@kengoldfarb/log'
 import { Space } from '@mantine/core'
@@ -7,66 +5,64 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { hostnameToChainId } from '../../../../../components/App'
-import { ForumPostComponent } from '../../../../../components/Extensions/Forum/ForumPost'
-import { MeemFooter } from '../../../../../components/Footer/MeemFooter'
-import { HeaderMenu } from '../../../../../components/Header/Header'
-import { GET_CLUB_INFO } from '../../../../../graphql/clubs'
-import { ssrGraphqlClient } from '../../../../../utils/ssr_graphql'
+import { hostnameToChainId } from '../../../../components/App'
+import { DiscussionPostSubmit } from '../../../../components/Extensions/Discussion/DiscussionPostSubmit'
+import { MeemFooter } from '../../../../components/Footer/MeemFooter'
+import { HeaderMenu } from '../../../../components/Header/Header'
+import { GET_CLUB_INFO } from '../../../../graphql/clubs'
+import { ssrGraphqlClient } from '../../../../utils/ssr_graphql'
 
-export interface ForumPostPropViewModel {
+export interface ClubPropViewModel {
 	responseBody: any
 	description: string
 	isError: boolean
 }
 
 interface IProps {
-	post: ForumPostPropViewModel
+	club: ClubPropViewModel
 }
 
-const ForumPostPage: NextPage<IProps> = ({ post }) => {
+const DiscussionPostSubmitPage: NextPage<IProps> = ({ club }) => {
 	const router = useRouter()
 
-	const postId: string =
-		router.query.postId === undefined ? '' : `${router.query.postId}`
 	const clubSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
 				<title>
-					{post === undefined || post.isError
+					{club === undefined || club.isError
 						? 'Not found'
-						: `${post.responseBody.Agreements[0].name} | Forum | Clubs`}
+						: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
-						post === undefined || post.isError
+						club === undefined || club.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
 					}
 				/>
-				{/* <meta name="description" content={post.description} /> */}
+				<meta name="description" content={club.description} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://clubs.link/" />
 				<meta
 					property="og:title"
 					content={
-						post === undefined || post.isError
+						club === undefined || club.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
 					}
 				/>
-				{/* <meta property="og:description" content={post.description} /> */}
+				<meta property="og:description" content={club.description} />
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://clubs.link/" />
 				<meta
 					property="twitter:title"
 					content={
-						post === undefined || post.isError
+						club === undefined || club.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Forum | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
 					}
 				/>
 				<meta
@@ -94,7 +90,7 @@ const ForumPostPage: NextPage<IProps> = ({ post }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ForumPostComponent postId={postId} />
+			<DiscussionPostSubmit clubSlug={clubSlug} />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -105,7 +101,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 	params,
 	req
 }) => {
-	let club: ForumPostPropViewModel | undefined
+	let club: ClubPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {
@@ -156,4 +152,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ForumPostPage
+export default DiscussionPostSubmitPage

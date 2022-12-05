@@ -18,7 +18,7 @@ import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React, { useState } from 'react'
 import { ChevronUp } from 'tabler-icons-react'
-import { ForumComment } from '../../../model/club/forum/forumComment'
+import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
 import {
 	colorDarkGrey,
 	colorLightGrey,
@@ -26,10 +26,10 @@ import {
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
 interface IProps {
-	comment: ForumComment
+	comment: DiscussionComment
 }
 
-export const ForumCommentComponent: React.FC<IProps> = ({ comment }) => {
+export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const { colorScheme } = useMantineColorScheme()
@@ -170,7 +170,7 @@ export const ForumCommentComponent: React.FC<IProps> = ({ comment }) => {
 						<>
 							{comment.replies?.map(reply => (
 								<>
-									<ForumCommentComponent
+									<DiscussionCommentComponent
 										key={reply.id}
 										comment={reply}
 									/>

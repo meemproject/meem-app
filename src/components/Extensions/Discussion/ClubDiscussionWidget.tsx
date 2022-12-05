@@ -2,21 +2,21 @@ import { Text, Button, Space } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
-import { ForumPost } from '../../../model/club/forum/forumPost'
+import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
-import { ForumPostPreview } from './ForumPostPreview'
+import { DiscussionPostPreview } from './DiscussionPostPreview'
 interface IProps {
 	club: Club
 }
 
-export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
+export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const router = useRouter()
 
 	useEffect(() => {}, [club])
 
-	const posts: ForumPost[] = [
+	const posts: DiscussionPost[] = [
 		{
 			id: '1',
 			title: 'Test post one',
@@ -52,7 +52,9 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 					<Button
 						className={clubsTheme.buttonRed}
 						onClick={() => {
-							router.push({ pathname: `/${club.slug}/e/forum` })
+							router.push({
+								pathname: `/${club.slug}/e/discussion`
+							})
 						}}
 					>
 						View All
@@ -60,7 +62,7 @@ export const ClubForumWidget: React.FC<IProps> = ({ club }) => {
 				</div>
 				<Space h={24} />
 				{posts.map(post => (
-					<ForumPostPreview key={post.id} post={post} />
+					<DiscussionPostPreview key={post.id} post={post} />
 				))}
 			</div>
 		</>
