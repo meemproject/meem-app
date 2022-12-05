@@ -35,11 +35,10 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 							</Button>
 						</Center>
 						<Space h={32} />
+						<Divider />
+						<Space h={40} />
 					</>
 				)}
-
-			<Divider />
-			<Space h={40} />
 		</div>
 	)
 }

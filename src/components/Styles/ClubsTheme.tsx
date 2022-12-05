@@ -323,6 +323,11 @@ export const useClubsTheme = createStyles(theme => ({
 		height: 48,
 		paddingTop: 8
 	},
+	pageZeroPaddingMobileContainer: {
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			padding: 0
+		}
+	},
 
 	// Modal
 	modalHeader: {
@@ -350,7 +355,7 @@ export const useClubsTheme = createStyles(theme => ({
 		marginTop: 64,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			flexDirection: 'column',
-			marginTop: 32
+			marginTop: 0
 		}
 	},
 	pageLeftColumn: {
@@ -472,7 +477,12 @@ export const useClubsTheme = createStyles(theme => ({
 			theme.colorScheme === 'dark'
 				? ''
 				: '0px 4px 30px rgba(0, 0, 0, 0.1)',
-		marginBottom: 48
+		marginBottom: 48,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			borderRadius: 0,
+			boxShadow: '',
+			marginBottom: 0
+		}
 	},
 	widgetLight: {
 		boxShadow:
@@ -483,7 +493,15 @@ export const useClubsTheme = createStyles(theme => ({
 		width: '100%',
 		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		padding: 24,
-		marginBottom: 48
+		marginBottom: 48,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			borderRadius: 0,
+			boxShadow: 'none',
+			marginBottom: 0,
+			borderBottom: `8px solid ${
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+			}`
+		}
 	},
 
 	// Images

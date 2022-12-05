@@ -179,7 +179,7 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 					<>
 						<Space h={24} />
 						<Center>
-							<Text>
+							<Text className={clubsTheme.tSmall}>
 								{`This club somehow has no members. This may or may not be a rip in the space-time continuum.`}
 							</Text>
 						</Center>

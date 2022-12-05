@@ -39,7 +39,7 @@ export const ClubExtensionLinksWidget: React.FC<IProps> = ({ club }) => {
 	// available in the API
 
 	return (
-		<div>
+		<>
 			{/* Show all extensions with links for club members */}
 			{club.isCurrentUserClubMember &&
 				club.allExtensions &&
@@ -83,6 +83,6 @@ export const ClubExtensionLinksWidget: React.FC<IProps> = ({ club }) => {
 							))}
 					</Grid>
 				)}
-		</div>
+		</>
 	)
 }

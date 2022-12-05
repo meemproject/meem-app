@@ -119,7 +119,7 @@ export const ForumPostPreview: React.FC<IProps> = ({ post }) => {
 									<Message width={20} height={20} />
 									<Space w={4} />
 									<Text className={clubsTheme.tExtraSmall}>
-										14 Comments
+										14
 									</Text>
 								</div>
 							</Link>

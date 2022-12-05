@@ -215,7 +215,10 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 			)}
 			{!isLoadingClub && club?.name && (
 				<div>
-					<Container size={1000}>
+					<Container
+						size={1000}
+						className={clubsTheme.pageZeroPaddingMobileContainer}
+					>
 						<div className={clubsTheme.pageResponsiveContainer}>
 							<div className={clubsTheme.pageLeftColumn}>
 								<ClubInfoWidget
@@ -234,6 +237,7 @@ export const ClubDetailComponent: React.FC<IProps> = ({ slug }) => {
 									}}
 								/>
 								<ClubMembersWidget club={club} />
+								<Space h={64} />
 							</div>
 						</div>
 					</Container>
