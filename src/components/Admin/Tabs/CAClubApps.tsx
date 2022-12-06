@@ -16,11 +16,8 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
 import { QuestionMarkCircle } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
-import request from 'superagent'
 import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_INTEGRATIONS } from '../../../graphql/clubs'
@@ -35,7 +32,7 @@ interface IProps {
 
 export const CAClubApps: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
-	const wallet = useWallet()
+	//const wallet = useWallet()
 
 	// Fetch a list of available extensions.
 	const {
@@ -204,38 +201,38 @@ export const CAClubApps: React.FC<IProps> = ({ club }) => {
 			log.debug(`public: ${isCurrentExtensionPublic}`)
 
 			// Save the change to the db
-			try {
-				const { body } = await request
-					.post(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
-							agreementId: club.id ?? '',
-							extensionId: currentExtensionId
-						})}`
-					)
-					.set('Authorization', `JWT ${wallet.jwt}`)
-					.send({
-						isEnabled: isCurrentExtensionEnabled,
-						isPublic: isCurrentExtensionPublic,
-						metadata: {
-							externalUrl: currentExtensionUrl
-						}
-					})
-				log.debug(body)
+			// try {
+			// 	const { body } = await request
+			// 		.post(
+			// 			`${
+			// 				process.env.NEXT_PUBLIC_API_URL
+			// 			}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
+			// 				agreementId: club.id ?? '',
+			// 				extensionId: currentExtensionId
+			// 			})}`
+			// 		)
+			// 		.set('Authorization', `JWT ${wallet.jwt}`)
+			// 		.send({
+			// 			isEnabled: isCurrentExtensionEnabled,
+			// 			isPublic: isCurrentExtensionPublic,
+			// 			metadata: {
+			// 				externalUrl: currentExtensionUrl
+			// 			}
+			// 		})
+			// 	log.debug(body)
 
-				updateExtensionLocally(false)
-			} catch (e) {
-				log.debug(e)
-				setIsSavingChanges(false)
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message:
-						'Unable to save this extension. Please get in touch!'
-				})
-				return
-			}
+			// 	updateExtensionLocally(false)
+			// } catch (e) {
+			// 	log.debug(e)
+			// 	setIsSavingChanges(false)
+			// 	showNotification({
+			// 		radius: 'lg',
+			// 		title: 'Oops!',
+			// 		message:
+			// 			'Unable to save this extension. Please get in touch!'
+			// 	})
+			// 	return
+			// }
 		}
 		setIsSavingChanges(false)
 		setExtensionModalOpened(false)

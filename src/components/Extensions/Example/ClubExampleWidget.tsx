@@ -10,5 +10,9 @@ export const ExampleWidget: React.FC<IProps> = ({ club }) => {
 
 	useEffect(() => {}, [club])
 
-	return <div className={clubsTheme.widgetLight}>Club Requirements</div>
+	return (
+		<div className={clubsTheme.widgetLight}>
+			This is an example Club Extension Widget
+		</div>
+	)
 }

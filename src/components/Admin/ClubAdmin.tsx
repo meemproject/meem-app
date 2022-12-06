@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useSubscription } from '@apollo/client'
 import {
 	Container,
 	Text,
@@ -13,23 +12,17 @@ import {
 	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet, useMeemApollo } from '@meemproject/react'
+import { LoginState, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
-import {
-	GetClubSubscriptionSubscription,
-	Agreements
-} from '../../../generated/graphql'
-import { SUB_CLUB_AS_MEMBER } from '../../graphql/clubs'
-import clubFromAgreement, { Club } from '../../model/club/club'
 import {
 	userHasPermissionEditProfile,
 	userHasPermissionManageApps,
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
-import { hostnameToChainId } from '../App'
+import ClubContext from '../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../Styles/ClubsTheme'
 import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
@@ -52,50 +45,27 @@ enum Tab {
 	DeleteClub
 }
 
-interface IProps {
-	slug: string
-}
-
-export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
+export const ClubAdminComponent: React.FC = () => {
 	// General properties / tab management
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { mutualMembersClient } = useMeemApollo()
+
+	const { club, isLoadingClub, error } = useContext(ClubContext)
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	const navigateToClubDetail = () => {
-		router.push({ pathname: `/${slug}` })
+		router.push({ pathname: `/${club?.slug}` })
 	}
-
-	const {
-		loading,
-		error,
-		data: clubData
-	} = useSubscription<GetClubSubscriptionSubscription>(SUB_CLUB_AS_MEMBER, {
-		variables: {
-			slug,
-			chainId:
-				wallet.chainId ??
-				hostnameToChainId(
-					global.window ? global.window.location.host : ''
-				)
-		},
-		client: mutualMembersClient,
-		skip: !wallet.chainId
-	})
-
-	const [isLoadingClub, setIsLoadingClub] = useState(true)
-	const [club, setClub] = useState<Club>()
 
 	useEffect(() => {
 		if (wallet.loginState === LoginState.NotLoggedIn) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/${slug}/admin`
+					return: `/${club?.slug}/admin`
 				}
 			})
 		}
@@ -108,11 +78,11 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/${slug}/admin`
+					return: `/${club?.slug}/admin`
 				}
 			})
 		}
-	}, [error, router, slug, wallet])
+	}, [club?.slug, error, router, wallet])
 
 	useEffect(() => {
 		switch (router.query.tab) {
@@ -145,32 +115,6 @@ export const ClubAdminComponent: React.FC<IProps> = ({ slug }) => {
 			// 	break
 		}
 	}, [router.query.tab])
-
-	useEffect(() => {
-		async function getClub(data: GetClubSubscriptionSubscription) {
-			const possibleClub = await clubFromAgreement(
-				wallet,
-				wallet.isConnected ? wallet.accounts[0] : '',
-				data.Agreements[0] as Agreements
-			)
-
-			if (possibleClub && possibleClub.name) {
-				setClub(possibleClub)
-			}
-			setIsLoadingClub(false)
-		}
-		if (!loading && !error && !club && clubData) {
-			getClub(clubData)
-		}
-	}, [
-		club,
-		clubData,
-		error,
-		loading,
-		wallet,
-		wallet.accounts,
-		wallet.isConnected
-	])
 
 	return (
 		<>

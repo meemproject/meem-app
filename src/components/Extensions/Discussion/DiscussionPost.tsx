@@ -23,25 +23,25 @@ import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import React from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
-import { ForumPost } from '../../../model/club/forum/forumPost'
+import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import {
 	colorBlack,
 	colorDarkerGrey,
 	colorLightestGrey,
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
-import { ForumCommentComponent } from './ForumComment'
+import { DiscussionCommentComponent } from './DiscussionComment'
 interface IProps {
 	postId: string
 }
 
-export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
+export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	const post: ForumPost = {
+	const post: DiscussionPost = {
 		id: '1',
 		title: 'Test post one',
 		tags: ['funny', 'crazy'],
@@ -286,7 +286,10 @@ export const ForumPostComponent: React.FC<IProps> = ({ postId }) => {
 				)}
 				<Space h={24} />
 				{post.comments?.map(comment => (
-					<ForumCommentComponent key={comment.id} comment={comment} />
+					<DiscussionCommentComponent
+						key={comment.id}
+						comment={comment}
+					/>
 				))}
 			</Container>
 		</div>

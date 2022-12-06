@@ -393,7 +393,8 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 		loading,
 		onModalClosed,
 		sockets,
-		wallet
+		wallet,
+		sdk.agreement
 	])
 
 	return (

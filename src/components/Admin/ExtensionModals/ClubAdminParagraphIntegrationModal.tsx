@@ -12,20 +12,10 @@ import {
 	Image,
 	Switch
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useEffect, useState } from 'react'
-import request from 'superagent'
-import { AlertCircle } from 'tabler-icons-react'
 import { Club, Extension } from '../../../model/club/club'
-import {
-	colorGreen,
-	colorGrey,
-	colorPink,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+import { colorGreen, colorGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 	extension?: Extension
@@ -49,7 +39,7 @@ export const ClubAdminParagraphExtensionModal: React.FC<IProps> = ({
 	onModalClosed,
 	onComplete
 }) => {
-	const wallet = useWallet()
+	//const wallet = useWallet()
 
 	const { classes: clubsTheme } = useClubsTheme()
 
@@ -64,45 +54,45 @@ export const ClubAdminParagraphExtensionModal: React.FC<IProps> = ({
 
 	const [hasOpenedClubTreasury, setHasOpenedClubTreasury] = useState(false)
 
-	const saveExtension = async (isPublic: boolean) => {
-		log.debug('saving extension')
-		try {
-			const postData = `${
-				process.env.NEXT_PUBLIC_API_URL
-			}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
-				agreementId: club.id ?? '',
-				integrationId: extension?.extensionId ?? ''
-			})}`
-			const data = {
-				isEnabled: isExtensionEnabled,
-				isPublic,
-				metadata: {
-					externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
-					publicationSlug: publicationUrl,
-					publicationName
-				}
-			}
-			log.debug(JSON.stringify(postData))
-			log.debug(JSON.stringify(data))
-			await request
-				.post(postData)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send(data)
+	// const saveExtension = async (isPublic: boolean) => {
+	// 	log.debug('saving extension')
+	// 	try {
+	// 		const postData = `${
+	// 			process.env.NEXT_PUBLIC_API_URL
+	// 		}${MeemAPI.v1.CreateOrUpdateAgreementExtension.path({
+	// 			agreementId: club.id ?? '',
+	// 			integrationId: extension?.extensionId ?? ''
+	// 		})}`
+	// 		const data = {
+	// 			isEnabled: isExtensionEnabled,
+	// 			isPublic,
+	// 			metadata: {
+	// 				externalUrl: `https://paragraph.xyz/@${publicationUrl}`,
+	// 				publicationSlug: publicationUrl,
+	// 				publicationName
+	// 			}
+	// 		}
+	// 		log.debug(JSON.stringify(postData))
+	// 		log.debug(JSON.stringify(data))
+	// 		await request
+	// 			.post(postData)
+	// 			.set('Authorization', `JWT ${wallet.jwt}`)
+	// 			.send(data)
 
-			setStep(Step.Success)
-		} catch (e) {
-			log.debug(e)
-			showNotification({
-				title: 'Something went wrong',
-				autoClose: 5000,
-				color: colorPink,
-				icon: <AlertCircle />,
-				message: `Please check that all fields are complete and try again.`
-			})
-			setStep(Step.Start)
-			return
-		}
-	}
+	// 		setStep(Step.Success)
+	// 	} catch (e) {
+	// 		log.debug(e)
+	// 		showNotification({
+	// 			title: 'Something went wrong',
+	// 			autoClose: 5000,
+	// 			color: colorPink,
+	// 			icon: <AlertCircle />,
+	// 			message: `Please check that all fields are complete and try again.`
+	// 		})
+	// 		setStep(Step.Start)
+	// 		return
+	// 	}
+	// }
 
 	const showParagraphPopup = () => {
 		let url = `https://paragraph.xyz/link?publicationName=${encodeURIComponent(
@@ -140,7 +130,7 @@ export const ClubAdminParagraphExtensionModal: React.FC<IProps> = ({
 					window.removeEventListener('message', listener)
 					popup.close()
 					setStep(Step.SavingExtension)
-					saveExtension(!isClubMembersOnly)
+					//saveExtension(!isClubMembersOnly)
 				}
 			}
 			window.addEventListener('message', listener)
@@ -208,9 +198,9 @@ export const ClubAdminParagraphExtensionModal: React.FC<IProps> = ({
 								<Button
 									onClick={async () => {
 										// Save the extension
-										saveExtension(
-											extension.isPublic ?? true
-										)
+										// saveExtension(
+										// 	extension.isPublic ?? true
+										// )
 										// Update the local extension
 										onComplete(
 											publicationUrl,

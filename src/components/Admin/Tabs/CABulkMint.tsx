@@ -2,12 +2,10 @@
 import log from '@kengoldfarb/log'
 import { Text, Button, Textarea, Space } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
-import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -106,47 +104,47 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 		})
 
 		// Send request
-		try {
-			const bulkMintFetcher = makeFetcher<
-				MeemAPI.v1.BulkMint.IQueryParams,
-				MeemAPI.v1.BulkMint.IRequestBody,
-				MeemAPI.v1.BulkMint.IResponseBody
-			>({
-				method: MeemAPI.v1.BulkMint.method
-			})
+		// try {
+		// 	const bulkMintFetcher = makeFetcher<
+		// 		MeemAPI.v1.BulkMint.IQueryParams,
+		// 		MeemAPI.v1.BulkMint.IRequestBody,
+		// 		MeemAPI.v1.BulkMint.IResponseBody
+		// 	>({
+		// 		method: MeemAPI.v1.BulkMint.method
+		// 	})
 
-			await bulkMintFetcher(
-				MeemAPI.v1.BulkMint.path({
-					agreementId: club.id ?? ''
-				}),
-				undefined,
-				{
-					tokens: airdrops
-				}
-			)
+		// 	await bulkMintFetcher(
+		// 		MeemAPI.v1.BulkMint.path({
+		// 			agreementId: club.id ?? ''
+		// 		}),
+		// 		undefined,
+		// 		{
+		// 			tokens: airdrops
+		// 		}
+		// 	)
 
-			showNotification({
-				title: 'Success!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color="green" />,
-				message: `Airdrops sent! The wallets you provided should have access to this club in a few minutes.`
-			})
-			setAirdropAddressesString('')
-			setAirdropAddresses([])
-			setIsSavingChanges(false)
-		} catch (e) {
-			log.debug(e)
-			showNotification({
-				title: 'Airdrop send failed.',
-				autoClose: 5000,
-				color: colorPink,
-				icon: <AlertCircle />,
-				message: `Please try again or get in touch!`
-			})
-			setIsSavingChanges(false)
-			return
-		}
+		// 	showNotification({
+		// 		title: 'Success!',
+		// 		autoClose: 5000,
+		// 		color: colorGreen,
+		// 		icon: <Check color="green" />,
+		// 		message: `Airdrops sent! The wallets you provided should have access to this club in a few minutes.`
+		// 	})
+		// 	setAirdropAddressesString('')
+		// 	setAirdropAddresses([])
+		// 	setIsSavingChanges(false)
+		// } catch (e) {
+		// 	log.debug(e)
+		// 	showNotification({
+		// 		title: 'Airdrop send failed.',
+		// 		autoClose: 5000,
+		// 		color: colorPink,
+		// 		icon: <AlertCircle />,
+		// 		message: `Please try again or get in touch!`
+		// 	})
+		// 	setIsSavingChanges(false)
+		// 	return
+		// }
 	}
 
 	return (

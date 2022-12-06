@@ -31,7 +31,7 @@ interface IProps {
 	clubSlug?: string
 }
 
-export const ForumPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
+export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	// General properties / tab management
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
@@ -133,7 +133,9 @@ export const ForumPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 					<a
 						style={{ marginTop: 34 }}
 						onClick={() => {
-							router.push({ pathname: `/${clubSlug}/forum` })
+							router.push({
+								pathname: `/${clubSlug}/e/discussion`
+							})
 						}}
 					>
 						<ArrowLeft className={clubsTheme.backArrow} size={32} />

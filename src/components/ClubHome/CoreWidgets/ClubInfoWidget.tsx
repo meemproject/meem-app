@@ -11,7 +11,7 @@ import {
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
 import { LoginState, useMeemSDK, useWallet } from '@meemproject/react'
-import { getAgreementContract, makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'
@@ -22,7 +22,6 @@ import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import { hostnameToChainId } from '../../App'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 import { JoinLeaveClubModal } from '../JoinLeaveClubModal'
 interface IProps {
@@ -401,20 +400,22 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 						/>
 					</div>
 				</Center>
-				<div
-					style={{
-						position: 'absolute',
-						top: 16,
-						right: 16,
-						cursor: 'pointer'
-					}}
-				>
-					<Settings
-						onClick={() => {
-							navigateToAdmin()
+				{club.isCurrentUserClubAdmin && (
+					<div
+						style={{
+							position: 'absolute',
+							top: 16,
+							right: 16,
+							cursor: 'pointer'
 						}}
-					/>
-				</div>
+					>
+						<Settings
+							onClick={() => {
+								navigateToAdmin()
+							}}
+						/>
+					</div>
+				)}
 			</div>
 
 			<JoinLeaveClubModal

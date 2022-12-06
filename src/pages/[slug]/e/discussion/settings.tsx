@@ -5,13 +5,13 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { hostnameToChainId } from '../../components/App'
-import { ClubProvider } from '../../components/ClubHome/ClubProvider'
-import { ClubMembersComponent } from '../../components/ClubHome/Members/ClubMembers'
-import { MeemFooter } from '../../components/Footer/MeemFooter'
-import { HeaderMenu } from '../../components/Header/Header'
-import { GET_CLUB_INFO } from '../../graphql/clubs'
-import { ssrGraphqlClient } from '../../utils/ssr_graphql'
+import { hostnameToChainId } from '../../../../components/App'
+import { ClubProvider } from '../../../../components/ClubHome/ClubProvider'
+import { DiscussionSettings } from '../../../../components/Extensions/Discussion/DiscussionSettings'
+import { MeemFooter } from '../../../../components/Footer/MeemFooter'
+import { HeaderMenu } from '../../../../components/Header/Header'
+import { GET_CLUB_INFO } from '../../../../graphql/clubs'
+import { ssrGraphqlClient } from '../../../../utils/ssr_graphql'
 
 export interface ClubPropViewModel {
 	responseBody: any
@@ -23,7 +23,7 @@ interface IProps {
 	club: ClubPropViewModel
 }
 
-const ClubMembersPage: NextPage<IProps> = ({ club }) => {
+const DiscussionSettingsPage: NextPage<IProps> = ({ club }) => {
 	const router = useRouter()
 
 	const clubSlug =
@@ -34,14 +34,14 @@ const ClubMembersPage: NextPage<IProps> = ({ club }) => {
 				<title>
 					{club === undefined || club.isError
 						? 'Not found'
-						: `${club.responseBody.Agreements[0].name} | Members | Clubs`}
+						: `${club.responseBody.Agreements[0].name} | Discussion Settings | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Members | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Discussion Settings | Clubs`
 					}
 				/>
 				<meta name="description" content={club.description} />
@@ -52,7 +52,7 @@ const ClubMembersPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Members | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Discussion | Clubs`
 					}
 				/>
 				<meta property="og:description" content={club.description} />
@@ -63,7 +63,7 @@ const ClubMembersPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Members | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Discussion | Clubs`
 					}
 				/>
 				<meta
@@ -92,9 +92,8 @@ const ClubMembersPage: NextPage<IProps> = ({ club }) => {
 			</Head>
 			<HeaderMenu />
 			<ClubProvider slug={clubSlug}>
-				<ClubMembersComponent slug={clubSlug} />
+				<DiscussionSettings />
 			</ClubProvider>
-
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -156,4 +155,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default ClubMembersPage
+export default DiscussionSettingsPage

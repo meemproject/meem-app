@@ -4,7 +4,6 @@ import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
 import { useMeemSDK, useWallet } from '@meemproject/react'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -13,7 +12,6 @@ import { Check } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club, ClubAdminRole } from '../../../model/club/club'
-import { hostnameToChainId } from '../../App'
 import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
@@ -28,6 +26,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	const [smartContractPermission, setSmartContractPermission] =
 		useState('members-and-meem')
 
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
 	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
 	const [isUpgradingClub, setIsUpgradingClub] = useState(false)
@@ -422,37 +421,10 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						try {
 							setIsCreatingSafe(true)
 
-							const txId = await sdk.agreement.createSafe({
-								safeOwners: club.adminAddresses ?? []
+							await sdk.agreement.createSafe({
+								safeOwners: club.adminAddresses ?? [],
+								agreementId: club.id
 							})
-
-							// const createSafeFetcher = makeFetcher<
-							// 	MeemAPI.v1.CreateClubSafe.IQueryParams,
-							// 	MeemAPI.v1.CreateClubSafe.IRequestBody,
-							// 	MeemAPI.v1.CreateClubSafe.IResponseBody
-							// >({
-							// 	method: MeemAPI.v1.CreateClubSafe.method
-							// })
-
-							// await createSafeFetcher(
-							// 	MeemAPI.v1.CreateClubSafe.path({
-							// 		agreementId: club.id
-							// 	}),
-							// 	undefined,
-							// 	{
-							// 		safeOwners: club.adminAddresses ?? [],
-							// 		chainId:
-							// 			wallet.chainId ??
-							// 			hostnameToChainId(
-							// 				global.window
-							// 					? global.window.location.host
-							// 					: ''
-							// 			)
-							// 	}
-							// )
-							// await new Promise(f => setTimeout(f, 10000))
-
-							// refetchClub()
 
 							setIsCreatingSafe(false)
 						} catch (e) {

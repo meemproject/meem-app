@@ -221,7 +221,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					<TextInput
 						size={'lg'}
 						radius={20}
-						disabled={role?.isDefaultRole}
+						disabled={role?.isAdminRole}
 						classNames={{
 							input: clubsTheme.fTextField
 						}}
@@ -297,7 +297,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									</Text>
 									<Space h={24} />
 
-									{role?.isDefaultRole && role?.isAdminRole && (
+									{role?.isAdminRole && (
 										<div>
 											<Text>
 												{`This is a default role and is currently the only
@@ -309,19 +309,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 										</div>
 									)}
 
-									{role?.isDefaultRole && !role?.isAdminRole && (
-										<div>
-											<Text>
-												{`This is a default role that’s automatically assigned
-							to club members who have connected a wallet.`}
-											</Text>
-											<Text>{`The
-							role cannot be deleted and members with this role
-							cannot transfer their token to another wallet.`}</Text>
-										</div>
-									)}
-
-									{!role?.isDefaultRole && (
+									{!role?.isAdminRole && (
 										<div>
 											<Text
 												className={
@@ -355,8 +343,6 @@ export const RolesManagerContent: React.FC<IProps> = ({
 															'transferrable',
 														isAdminRole:
 															role?.isAdminRole,
-														isDefaultRole:
-															role?.isDefaultRole,
 														rolesExtensionData:
 															role?.rolesExtensionData,
 														guildDiscordServerId:

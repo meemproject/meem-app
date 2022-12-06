@@ -1,12 +1,9 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Radio, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { useMeemSDK } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
-import {
-	MeemAPI,
-	updateUserIdentity,
-	detachUserIdentity
-} from '@meemproject/sdk'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'
 import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
@@ -24,9 +21,11 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [extensionVisibility, setExtensionVisibility] =
-		useState<MeemAPI.ExtensionVisibility>()
-	const extension = userIdentity?.IdentityExtension
+
+	const { sdk } = useMeemSDK()
+	const [extensionVisibility, setIntegrationVisibility] =
+		useState<MeemAPI.IntegrationVisibility>()
+	const extension = userIdentity?.IdentityIntegration
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
@@ -39,7 +38,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			// 	.post(
 			// 		`${
 			// 			process.env.NEXT_PUBLIC_API_URL
-			// 		}${MeemAPI.v1.CreateOrUpdateMeemIdExtension.path({
+			// 		}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
 			// 			extensionId: extension?.id ?? ''
 			// 		})}`
 			// 	)
@@ -48,8 +47,8 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			// 		visibility: extensionVisibility
 			// 	})
 			if (extension?.id) {
-				await updateUserIdentity({
-					identityExtensionId: extension.id,
+				await sdk.id.updateUserIdentity({
+					identityIntegrationId: extension.id,
 					visibility: extensionVisibility
 				})
 			}
@@ -72,9 +71,9 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isOpened) {
-			setExtensionVisibility(
-				(userIdentity?.visibility as MeemAPI.ExtensionVisibility) ??
-					MeemAPI.ExtensionVisibility.Anyone
+			setIntegrationVisibility(
+				(userIdentity?.visibility as MeemAPI.IntegrationVisibility) ??
+					MeemAPI.IntegrationVisibility.Anyone
 			)
 		}
 	}, [userIdentity, isOpened])
@@ -153,7 +152,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						color="dark"
 						value={extensionVisibility}
 						onChange={(value: any) => {
-							setExtensionVisibility(value)
+							setIntegrationVisibility(value)
 						}}
 						required
 					>
@@ -180,16 +179,16 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						className={clubsTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
-							if (userIdentity?.IdentityExtensionId) {
-								detachUserIdentity({
-									identityExtensionId:
-										userIdentity?.IdentityExtensionId
+							if (userIdentity?.IdentityIntegrationId) {
+								sdk.id.detachUserIdentity({
+									identityIntegrationId:
+										userIdentity?.IdentityIntegrationId
 								})
 								onModalClosed()
 							}
 						}}
 					>
-						Detach Extension
+						Detach Integration
 					</Button>
 				</div>
 			</Modal>

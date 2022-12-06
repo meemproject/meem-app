@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { hostnameToChainId } from '../../components/App'
 import { ClubDetailComponent } from '../../components/ClubHome/ClubHome'
+import { ClubProvider } from '../../components/ClubHome/ClubProvider'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { GET_CLUB_INFO } from '../../graphql/clubs'
@@ -90,7 +91,9 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ClubDetailComponent slug={clubSlug} />
+			<ClubProvider slug={clubSlug}>
+				<ClubDetailComponent />
+			</ClubProvider>
 			<Space h={64} />
 			<MeemFooter />
 		</>

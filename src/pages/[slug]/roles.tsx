@@ -5,6 +5,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { hostnameToChainId } from '../../components/App'
+import { ClubProvider } from '../../components/ClubHome/ClubProvider'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { RolesManager } from '../../components/Roles/RolesManager'
@@ -98,7 +99,10 @@ const ClubRolesPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<RolesManager slug={clubSlug} />
+			<ClubProvider slug={clubSlug}>
+				<RolesManager />
+			</ClubProvider>
+
 			<MeemFooter />
 		</>
 	)
