@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
 import { Text, Space, Divider, Button, Image, Loader } from '@mantine/core'
@@ -28,6 +30,7 @@ export const RolesManagerDiscordExtension: React.FC<IProps> = ({
 
 	const [hasFetchedGuildInfo, setHasFetchedGuildInfo] = useState(false)
 
+	// eslint-disable-next-line no-unused-vars
 	const [guildPlatform, setGuildPlatform] = useState<any>()
 
 	const [
@@ -71,28 +74,28 @@ export const RolesManagerDiscordExtension: React.FC<IProps> = ({
 					return
 				}
 				setIsFetchingGuildInfo(true)
-				const guildInfoFetcher = makeFetcher<
-					MeemAPI.v1.GetAgreementGuild.IQueryParams,
-					MeemAPI.v1.GetAgreementGuild.IRequestBody,
-					MeemAPI.v1.GetAgreementGuild.IResponseBody
-				>({
-					method: MeemAPI.v1.GetAgreementGuild.method
-				})
+				// const guildInfoFetcher = makeFetcher<
+				// 	MeemAPI.v1.GetAgreementGuild.IQueryParams,
+				// 	MeemAPI.v1.GetAgreementGuild.IRequestBody,
+				// 	MeemAPI.v1.GetAgreementGuild.IResponseBody
+				// >({
+				// 	method: MeemAPI.v1.GetAgreementGuild.method
+				// })
 
-				const data = await guildInfoFetcher(
-					MeemAPI.v1.GetAgreementGuild.path({
-						agreementId: club.id
-					})
-				)
-				log.debug(JSON.stringify(data))
-				if (data && data.guild) {
-					data.guild.guildPlatforms.forEach(platform => {
-						// Discord server
-						if (platform.platformId === 1) {
-							setGuildPlatform(platform)
-						}
-					})
-				}
+				// const data = await guildInfoFetcher(
+				// 	MeemAPI.v1.GetAgreementGuild.path({
+				// 		agreementId: club.id
+				// 	})
+				// )
+				// log.debug(JSON.stringify(data))
+				// if (data && data.guild) {
+				// 	data.guild.guildPlatforms.forEach(platform => {
+				// 		// Discord server
+				// 		if (platform.platformId === 1) {
+				// 			setGuildPlatform(platform)
+				// 		}
+				// 	})
+				// }
 				setHasFetchedGuildInfo(true)
 				setIsFetchingGuildInfo(false)
 			} catch (e) {

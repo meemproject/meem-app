@@ -292,26 +292,26 @@ export const CreateClubModal: React.FC<IProps> = ({
 					)
 			}
 
-			const { deployContractTxId, cutTxId, mintTxId } =
-				await sdk.agreement.createAgreement({
-					...data
-					// useMeemAPI: false,
-					// signer: wallet.signer,
-					// contractURI: 'https://meem.wtf',
-					// proxyContractId: '2479c932-17cd-451c-a650-ffdc9961419a',
-					// bundleId: 'e713daae-e2eb-4782-863e-685cfd0e7153'
+			const response = await sdk.agreement.createAgreement({
+				...data
+			})
+
+			if (response) {
+				setTransactionState({
+					deployContractTxId: response.deployContractTxId,
+					cutTxId: response.cutTxId,
+					mintTxId: response.mintTxId
 				})
 
-			setTransactionState({ deployContractTxId, cutTxId, mintTxId })
+				const tIds = [response.deployContractTxId, response.cutTxId]
+				if (response.mintTxId) {
+					tIds.push(response.mintTxId)
+				}
 
-			const tIds = [deployContractTxId, cutTxId]
-			if (mintTxId) {
-				tIds.push(mintTxId)
+				setTransactionIds(tIds)
+
+				log.debug('finish fetcher')
 			}
-
-			setTransactionIds(tIds)
-
-			log.debug('finish fetcher')
 		} catch (e) {
 			log.crit(e)
 			showNotification({

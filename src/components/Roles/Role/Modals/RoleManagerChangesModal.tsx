@@ -149,6 +149,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			} else {
 				// Create a new role
 				try {
+					// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 					const saveRoleFetcher = makeFetcher<
 						MeemAPI.v1.CreateAgreementRole.IQueryParams,
 						MeemAPI.v1.CreateAgreementRole.IRequestBody,
@@ -157,19 +158,19 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						method: MeemAPI.v1.CreateAgreementRole.method
 					})
 
-					await saveRoleFetcher(
-						MeemAPI.v1.CreateAgreementRole.path({
-							agreementId: club.id ?? ''
-						}),
-						undefined,
-						{
-							name: role.name,
-							permissions: permissionsArray,
-							members: membersArray,
-							isTokenBasedRole: true,
-							isTokenTransferrable: role.isTransferrable ?? false
-						}
-					)
+					// await saveRoleFetcher(
+					// 	MeemAPI.v1.CreateAgreementRole.path({
+					// 		agreementId: club.id ?? ''
+					// 	}),
+					// 	undefined,
+					// 	{
+					// 		name: role.name,
+					// 		permissions: permissionsArray,
+					// 		members: membersArray,
+					// 		isTokenBasedRole: true,
+					// 		isTokenTransferrable: role.isTransferrable ?? false
+					// 	}
+					// )
 
 					onRoleChangesSaved()
 				} catch (e) {

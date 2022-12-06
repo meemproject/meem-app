@@ -1,10 +1,9 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
+import { useMeemSDK, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect } from 'react'
-import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
 
@@ -24,25 +23,20 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
+	const { sdk } = useMeemSDK()
+
 	useEffect(() => {
 		async function authenticateWithDiscord() {
 			try {
-				await request
-					.post(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.CreateOrUpdateMeemIdExtension.path({
-							extensionId: extensionId ?? ''
-						})}`
-					)
-					.set('Authorization', `JWT ${wallet.jwt}`)
-					.send({
-						visibility: 'mutual-club-members',
-						metadata: {
-							discordAuthCode,
-							redirectUri: `${window.location.origin}/profile`
-						}
-					})
+				await sdk.id.updateUserIdentity({
+					identityIntegrationId: extensionId ?? '',
+					visibility: MeemAPI.IntegrationVisibility.MutualClubMembers,
+					metadata: {
+						discordAuthCode,
+						redirectUri: `${window.location.origin}/profile`
+					}
+				})
+
 				showNotification({
 					title: 'Success!',
 					autoClose: 5000,
@@ -68,7 +62,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 		if (isOpened && discordAuthCode && extensionId) {
 			authenticateWithDiscord()
 		}
-	}, [discordAuthCode, extensionId, isOpened, onModalClosed, wallet])
+	}, [discordAuthCode, extensionId, isOpened, onModalClosed, sdk.id, wallet])
 
 	return (
 		<>

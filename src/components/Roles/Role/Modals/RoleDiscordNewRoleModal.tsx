@@ -71,22 +71,23 @@ export const RoleDiscordNewRoleModal: React.FC<IProps> = ({
 					method: MeemAPI.v1.UpdateAgreementRole.method
 				})
 
-				await createDiscordRoleFetcher(
-					MeemAPI.v1.UpdateAgreementRole.path({
-						agreementId: club.id ?? '',
-						agreementRoleId: role.id ?? ''
-					}),
-					undefined,
-					{
-						roleExtensionsData: [
-							{
-								discordServerId: server.id,
-								discordGatedChannels: selectedDiscordChannels,
-								discordAccessToken: accessToken
-							}
-						]
-					}
-				)
+				// TODO
+				// await createDiscordRoleFetcher(
+				// 	MeemAPI.v1.UpdateAgreementRole.path({
+				// 		agreementId: club.id ?? '',
+				// 		agreementRoleId: role.id ?? ''
+				// 	}),
+				// 	undefined,
+				// 	{
+				// 		roleExtensionsData: [
+				// 			{
+				// 				discordServerId: server.id,
+				// 				discordGatedChannels: selectedDiscordChannels,
+				// 				discordAccessToken: accessToken
+				// 			}
+				// 		]
+				// 	}
+				// )
 
 				showNotification({
 					title: 'Success!',
