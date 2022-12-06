@@ -13,9 +13,8 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemUser, useMeemApollo } from '@meemproject/react'
+import { useMeemUser, useMeemApollo, useMeemSDK } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
-import { updateUser } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
@@ -36,6 +35,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const { loginWithRedirect } = useAuth0()
+	const { sdk } = useMeemSDK()
 	const { user: me } = useMeemUser()
 	const { anonClient } = useMeemApollo()
 
@@ -178,7 +178,7 @@ export const ManageIdentityComponent: React.FC = () => {
 		try {
 			// log.debug(`saving changes with body = ${JSON.stringify(body)}`)
 
-			await updateUser({
+			await sdk.id.updateUser({
 				displayName,
 				profilePicBase64
 			})

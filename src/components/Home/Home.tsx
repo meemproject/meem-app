@@ -21,8 +21,7 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useAuth } from '@meemproject/react'
-import { login } from '@meemproject/sdk'
+import { LoginState, useAuth, useMeemSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, {
@@ -75,6 +74,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 export function HomeComponent() {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
+	const { sdk } = useMeemSDK()
 	const { loginState, setJwt, chainId } = useAuth()
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 	const [hasTriedLogin, setHasTriedLogin] = useState(false)
@@ -221,7 +221,7 @@ export function HomeComponent() {
 		const doLogin = async () => {
 			try {
 				const accessToken = await getAccessTokenSilently()
-				const { jwt } = await login({
+				const { jwt } = await sdk.id.login({
 					accessToken
 				})
 				setJwt(jwt)
@@ -253,7 +253,8 @@ export function HomeComponent() {
 		hasTriedLogin,
 		setHasTriedLogin,
 		getAccessTokenSilently,
-		setJwt
+		setJwt,
+		sdk.id
 	])
 
 	return (

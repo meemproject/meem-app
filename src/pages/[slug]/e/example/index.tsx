@@ -91,7 +91,7 @@ const ClubExampleExtensionPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ExampleExtensionHome slug={clubSlug} />
+			<ExampleExtensionHome />
 			<Space h={64} />
 			<MeemFooter />
 		</>

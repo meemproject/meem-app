@@ -1,21 +1,25 @@
-import { Container, Text } from '@mantine/core'
-import React, { useEffect } from 'react'
-import { Club } from '../../../model/club/club'
+import { Container, Loader, Text } from '@mantine/core'
+import React, { useContext } from 'react'
+import ClubContext from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
-interface IProps {
-	club: Club
-}
 
-export const ExampleExtensionHome: React.FC<IProps> = ({ club }) => {
+export const ExampleExtensionHome: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
-
-	useEffect(() => {}, [club])
+	const { club, isLoadingClub, error } = useContext(ClubContext)
 
 	return (
 		<Container>
-			<Text className={clubsTheme.tSmall}>
-				This is the homepage for the example club extension.
-			</Text>
+			{club && (
+				<Text className={clubsTheme.tSmall}>
+					{`${club.name} - This is the homepage for the example club extension`}
+				</Text>
+			)}
+			{isLoadingClub && <Loader variant="oval" color="red" />}
+			{!isLoadingClub && error && (
+				<Text className={clubsTheme.tSmall}>
+					Error loading this club!
+				</Text>
+			)}
 		</Container>
 	)
 }
