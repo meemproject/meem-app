@@ -6,7 +6,8 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { hostnameToChainId } from '../../../../components/App'
-import { DiscussionHome } from '../../../../components/Extensions/Discussion/DiscussionHome'
+import { ClubProvider } from '../../../../components/ClubHome/ClubProvider'
+import { ExampleExtensionSettings } from '../../../../components/Extensions/Example/ExampleExtensionSettings'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_CLUB_INFO } from '../../../../graphql/clubs'
@@ -90,7 +91,9 @@ const ClubExampleExtensionSettingsPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<DiscussionHome slug={clubSlug} />
+			<ClubProvider slug={clubSlug}>
+				<ExampleExtensionSettings />
+			</ClubProvider>
 			<Space h={64} />
 			<MeemFooter />
 		</>

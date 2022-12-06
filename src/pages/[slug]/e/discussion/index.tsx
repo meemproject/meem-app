@@ -6,6 +6,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { hostnameToChainId } from '../../../../components/App'
+import { ClubProvider } from '../../../../components/ClubHome/ClubProvider'
 import { DiscussionHome } from '../../../../components/Extensions/Discussion/DiscussionHome'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
@@ -90,7 +91,9 @@ const ClubDetailPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<DiscussionHome slug={clubSlug} />
+			<ClubProvider slug={clubSlug}>
+				<DiscussionHome />
+			</ClubProvider>
 			<Space h={64} />
 			<MeemFooter />
 		</>
