@@ -34,14 +34,14 @@ const ClubExampleExtensionPage: NextPage<IProps> = ({ club }) => {
 				<title>
 					{club === undefined || club.isError
 						? 'Not found'
-						: `${club.responseBody.Agreements[0].name} | Discussion | Clubs`}
+						: `${club.responseBody.Agreements[0].name} | Example Extension | Clubs`}
 				</title>
 				<meta
 					name="title"
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Discussion | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Example Extension | Clubs`
 					}
 				/>
 				<meta name="description" content={club.description} />
@@ -52,7 +52,7 @@ const ClubExampleExtensionPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Discussion | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Example Extension | Clubs`
 					}
 				/>
 				<meta property="og:description" content={club.description} />
@@ -63,7 +63,7 @@ const ClubExampleExtensionPage: NextPage<IProps> = ({ club }) => {
 					content={
 						club === undefined || club.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Discussion | Clubs`
+							: `${club.responseBody.Agreements[0].name} | Example Extension | Clubs`
 					}
 				/>
 				<meta
