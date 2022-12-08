@@ -96,6 +96,8 @@ export function HomeComponent() {
 	const [autocompleteData, setAutocompleteData] = useState<any[]>([])
 	const [isShowingCreateButton, setShowCreateButton] = useState(false)
 
+	console.log({ isShowingCreateButton })
+
 	const handleChange = async (val: string) => {
 		window.clearTimeout(timeoutRef.current)
 		setAutocompleteFormValue(val)
@@ -124,7 +126,10 @@ export function HomeComponent() {
 
 				const typedData = data as GetClubsAutocompleteQuery
 
+				console.log({ typedData })
+
 				if (typedData.Agreements.length === 0) {
+					console.log('show button')
 					setAutocompleteData([])
 					setIsFetchingData(false)
 					setIsLoadingSuggestions(false)
@@ -365,7 +370,9 @@ export function HomeComponent() {
 							/>
 						) : autocompleteFormValue.length > 0 &&
 						  isShowingCreateButton &&
-						  clubclub.isMember ? (
+						  (clubclub.isMember ||
+								process.env.NEXT_PUBLIC_TEST_MODE ===
+									'true') ? (
 							<Button
 								style={{ marginRight: 64 }}
 								className={clubsTheme.buttonBlack}
