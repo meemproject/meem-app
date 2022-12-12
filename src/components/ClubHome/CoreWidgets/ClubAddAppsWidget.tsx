@@ -27,11 +27,26 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 								onClick={() => {
 									router.push({
 										pathname: `${club.slug}/admin`,
-										query: { tab: 'apps' }
+										query: { tab: 'extensions' }
 									})
 								}}
 							>
-								+ Add more apps
+								+ Add more extensions
+							</Button>
+						</Center>
+						<Space h={16} />
+
+						<Center>
+							<Button
+								className={clubsTheme.buttonGrey}
+								onClick={() => {
+									router.push({
+										pathname: `${club.slug}/admin`,
+										query: { tab: 'links' }
+									})
+								}}
+							>
+								+ Add more links
 							</Button>
 						</Center>
 						<Space h={32} />

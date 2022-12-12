@@ -69,12 +69,13 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 			<div className={clubsTheme.widgetLight}>
 				<div className={clubsTheme.spacedRowCentered}>
 					<div className={clubsTheme.centeredRow}>
-						<Text className={clubsTheme.tLargeBold}>Members</Text>
-						<Space w={8} />
-						<Text className={clubsTheme.tLarge}>{`(${
+						<Text className={clubsTheme.tMediumBold}>Members</Text>
+						<Space w={6} />
+						<Text className={clubsTheme.tMedium}>{`(${
 							club.members?.length ?? 0
 						})`}</Text>
 					</div>
+
 					<Button
 						onClick={() => {
 							router.push({ pathname: `/${club.slug}/members` })

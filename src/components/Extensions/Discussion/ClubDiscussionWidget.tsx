@@ -1,6 +1,7 @@
 import { Text, Button, Space } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+import { Settings } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
@@ -41,24 +42,40 @@ export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 			<div className={clubsTheme.widgetLight}>
 				<div className={clubsTheme.spacedRowCentered}>
 					<div className={clubsTheme.centeredRow}>
-						<Text className={clubsTheme.tLargeBold}>
+						<Text className={clubsTheme.tMediumBold}>
 							Discussions
 						</Text>
-						<Space w={8} />
-						<Text className={clubsTheme.tLarge}>
+						<Space w={6} />
+						<Text className={clubsTheme.tMedium}>
 							{`(${posts.length})`}
 						</Text>
 					</div>
-					<Button
-						className={clubsTheme.buttonRed}
-						onClick={() => {
-							router.push({
-								pathname: `/${club.slug}/e/discussion`
-							})
-						}}
-					>
-						View All
-					</Button>
+					<div className={clubsTheme.centeredRow}>
+						<Button
+							className={clubsTheme.buttonRed}
+							onClick={() => {
+								router.push({
+									pathname: `/${club.slug}/e/discussion`
+								})
+							}}
+						>
+							View All
+						</Button>
+
+						{club.isCurrentUserClubAdmin && (
+							<div className={clubsTheme.row}>
+								<Space w={8} />
+								<Settings
+									className={clubsTheme.clickable}
+									onClick={() => {
+										router.push({
+											pathname: `/${club.slug}/e/discussion/settings`
+										})
+									}}
+								/>
+							</div>
+						)}
+					</div>
 				</div>
 				<Space h={24} />
 				{posts.map(post => (
