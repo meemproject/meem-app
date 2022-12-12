@@ -203,7 +203,10 @@ export const CreateComponent: React.FC = () => {
 			})
 		}
 
-		if (!clubclub.isMember) {
+		if (
+			!clubclub.isMember &&
+			process.env.NEXT_PUBLIC_TEST_MODE !== 'true'
+		) {
 			showNotification({
 				radius: 'lg',
 				title: 'No Club Club membership found.',
