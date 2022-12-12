@@ -171,7 +171,7 @@ export const ClubProvider: FC<IClubProviderProps> = ({ slug, ...props }) => {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/browse`
+					return: window.location.pathname
 				}
 			})
 		}

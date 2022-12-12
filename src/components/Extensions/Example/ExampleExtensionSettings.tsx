@@ -9,17 +9,44 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
 import ClubContext from '../../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 
 export const ExampleExtensionSettings: React.FC = () => {
 	const router = useRouter()
-
 	const { classes: clubsTheme } = useClubsTheme()
-
 	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
+
+	/*
+	TODO:
+	Add your extension's name, which shows up as the page title.
+	 */
+	const extensionName = 'Example Extension'
+
+	/*
+	TODO
+	Add your custom extension settings here. They'll populate below the settings required for every extension.
+	 */
+	const customExtensionSettings = () => <></>
+
+	/*
+	TODO
+	Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
+	 */
+	const saveCustomChanges = async () => {}
+
+	/*
+	Boilerplate area - please leave the code below alone!
+	===============================================================
+	 */
+
+	const saveChanges = async () => {
+		setIsSavingChanges(true)
+		await saveCustomChanges()
+	}
 
 	const navigateToClubHome = () => {
 		router.push({
@@ -33,8 +60,6 @@ export const ExampleExtensionSettings: React.FC = () => {
 			query: { tab: 'extensions' }
 		})
 	}
-
-	const saveChanges = async () => {}
 
 	return (
 		<div>
@@ -133,11 +158,13 @@ export const ExampleExtensionSettings: React.FC = () => {
 								<Space h={4} />
 								<div className={clubsTheme.centeredRow}>
 									<Text className={clubsTheme.tLargeBold}>
-										Example Extension
+										{extensionName}
 									</Text>
 								</div>
 							</div>
 							<Button
+								disabled={isSavingChanges}
+								loading={isSavingChanges}
 								onClick={() => {
 									saveChanges()
 								}}
