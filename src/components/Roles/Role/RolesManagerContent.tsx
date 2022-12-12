@@ -10,7 +10,6 @@ import {
 	Button,
 	Loader,
 	Center,
-	Divider,
 	Radio
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
@@ -27,7 +26,6 @@ import {
 } from '../../../model/club/club'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
-import { RolesManagerDiscordExtension } from './RolesManagerDiscordIntegration'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
 interface IProps {
@@ -380,15 +378,6 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									<Space h={40} />
 								</div>
 							)}
-
-							<RolesManagerDiscordExtension
-								club={club}
-								role={role}
-							/>
-
-							<Divider />
-
-							<Space h={40} />
 						</div>
 					)}
 
