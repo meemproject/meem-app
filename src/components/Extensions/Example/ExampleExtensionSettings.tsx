@@ -5,7 +5,9 @@ import {
 	Text,
 	Space,
 	Center,
-	Button
+	Button,
+	Divider,
+	Switch
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
@@ -19,6 +21,10 @@ export const ExampleExtensionSettings: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const { club, isLoadingClub, error } = useContext(ClubContext)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
+	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
+	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
+		useState(false)
+	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
 
 	/*
 	TODO:
@@ -28,9 +34,25 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	/*
 	TODO
-	Add your custom extension settings here. They'll populate below the settings required for every extension.
+	Add your custom extension settings layout here.
 	 */
-	const customExtensionSettings = () => <></>
+	const customExtensionSettings = () => (
+		<>
+			<Space h={32} />
+			<Text className={clubsTheme.tExtraSmallLabel}>CONFIGURATION</Text>
+			<Space h={16} />
+			This extension does not provide any additional settings.
+			<Space h={8} />
+		</>
+	)
+
+	/*
+	TODO
+	Add your custom extension permissions layout here. 
+	 */
+	const customExtensionPermissions = () => (
+		<>This extension does not provide any permissions.</>
+	)
 
 	/*
 	TODO
@@ -39,13 +61,14 @@ export const ExampleExtensionSettings: React.FC = () => {
 	const saveCustomChanges = async () => {}
 
 	/*
-	Boilerplate area - please leave the code below alone!
+	Boilerplate area - please don't edit the below code!
 	===============================================================
 	 */
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
 		await saveCustomChanges()
+		setIsSavingChanges(false)
 	}
 
 	const navigateToClubHome = () => {
@@ -61,9 +84,14 @@ export const ExampleExtensionSettings: React.FC = () => {
 		})
 	}
 
+	const disableExtension = async () => {
+		setIsDisablingExtension(true)
+		setIsDisablingExtension(false)
+	}
+
 	return (
 		<div>
-			{!club?.isCurrentUserClubAdmin && (
+			{club && club?.isCurrentUserClubAdmin && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -75,15 +103,22 @@ export const ExampleExtensionSettings: React.FC = () => {
 				</Container>
 			)}
 
-			{club && (
+			{club && !club?.isCurrentUserClubAdmin && (
 				<div>
 					<div className={clubsTheme.pageHeader}>
 						<div className={clubsTheme.spacedRowCentered}>
+							<ArrowLeft
+								className={clubsTheme.clickable}
+								onClick={() => {
+									navigateToAllExtensions()
+								}}
+							/>
+							<Space w={24} />
 							<Image
-								width={56}
-								height={56}
 								radius={8}
-								className={clubsTheme.imageClubLogo}
+								height={56}
+								width={56}
+								className={clubsTheme.imagePixelated}
 								src={club?.image}
 							/>
 							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
@@ -130,22 +165,6 @@ export const ExampleExtensionSettings: React.FC = () => {
 					</div>
 
 					<Container>
-						<div
-							className={clubsTheme.centeredRow}
-							style={{ marginLeft: 18, marginBottom: 24 }}
-						>
-							<ArrowLeft
-								className={clubsTheme.clickable}
-								onClick={() => {
-									navigateToAllExtensions()
-								}}
-							/>
-							<Space w={8} />
-							<Text className={clubsTheme.tLargeBold}>
-								Manage Extensions
-							</Text>
-						</div>
-
 						<Space h={16} />
 						<div
 							className={clubsTheme.spacedRow}
@@ -153,7 +172,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 						>
 							<div>
 								<Text className={clubsTheme.tExtraSmallLabel}>
-									Settings
+									SETTINGS
 								</Text>
 								<Space h={4} />
 								<div className={clubsTheme.centeredRow}>
@@ -173,14 +192,102 @@ export const ExampleExtensionSettings: React.FC = () => {
 								Save Changes
 							</Button>
 						</div>
+						<Divider />
+						<Space h={32} />
+						<Text className={clubsTheme.tExtraSmallLabel}>
+							DISPLAY SETTINGS
+						</Text>
+
+						<div>
+							<Space h={16} />
+							<div className={clubsTheme.spacedRowCentered}>
+								<Switch
+									color={'green'}
+									label={'Display dashboard widget'}
+									checked={shouldDisplayDashboardWidget}
+									onChange={value => {
+										if (value) {
+											setShouldDisplayDashboardWidget(
+												value.currentTarget.checked
+											)
+										}
+									}}
+								/>
+							</div>
+							<Space h={16} />
+							<Divider />
+						</div>
+						<div>
+							<Space h={4} />
+							<div className={clubsTheme.spacedRowCentered}>
+								<Switch
+									color={'green'}
+									label={
+										'Hide widget if viewer is not a club member'
+									}
+									checked={isPrivateExtension}
+									onChange={value => {
+										if (value) {
+											setIsPrivateExtension(
+												value.currentTarget.checked
+											)
+										}
+									}}
+								/>
+							</div>
+							<Space h={16} />
+							<Divider />
+						</div>
+						<Space h={16} />
+
+						<Button
+							disabled={isDisablingExtension}
+							loading={isDisablingExtension}
+							className={clubsTheme.buttonRed}
+							onClick={disableExtension}
+						>
+							Disable extension
+						</Button>
+
+						{customExtensionSettings()}
+						<Space h={32} />
+						<Text className={clubsTheme.tExtraSmallLabel}>
+							PERMISSIONS
+						</Text>
+						<Space h={16} />
+
+						{customExtensionPermissions()}
+						<Space h={48} />
+						<Button
+							disabled={isSavingChanges}
+							loading={isSavingChanges}
+							onClick={() => {
+								saveChanges()
+							}}
+							className={clubsTheme.buttonBlack}
+						>
+							Save Changes
+						</Button>
 					</Container>
 				</div>
 			)}
-			{isLoadingClub && <Loader variant="oval" color="red" />}
+			{isLoadingClub && (
+				<>
+					<Space h={32} />
+					<Center>
+						<Loader variant="oval" color="red" />
+					</Center>
+				</>
+			)}
 			{!isLoadingClub && error && (
-				<Text className={clubsTheme.tSmall}>
-					Error loading this club!
-				</Text>
+				<>
+					<Space h={32} />
+					<Center>
+						<Text className={clubsTheme.tSmall}>
+							{`Error loading ${extensionName} settings!`}
+						</Text>
+					</Center>
+				</>
 			)}
 		</div>
 	)

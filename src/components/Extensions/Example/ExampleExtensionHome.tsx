@@ -1,4 +1,4 @@
-import { Container, Loader, Space, Text } from '@mantine/core'
+import { Center, Container, Loader, Space, Text } from '@mantine/core'
 import React, { useContext } from 'react'
 import ClubContext from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
@@ -25,17 +25,27 @@ export const ExampleExtensionHome: React.FC = () => {
 			{/* Club loaded state */}
 			{club && (
 				<Text className={clubsTheme.tSmall}>
-					{`${club.name} - This is the homepage for the example club extension`}
+					{`This is the homepage for the example club extension`}
 				</Text>
 			)}
 			{/* Club loading state */}
-			{isLoadingClub && <Loader variant="oval" color="red" />}
+			{isLoadingClub && (
+				<>
+					<Center>
+						<Loader variant="oval" color="red" />
+					</Center>
+				</>
+			)}
 
 			{/* Club error state */}
 			{!isLoadingClub && error && (
-				<Text className={clubsTheme.tSmall}>
-					Error loading this club!
-				</Text>
+				<>
+					<Center>
+						<Text className={clubsTheme.tSmall}>
+							Error loading this extension!
+						</Text>
+					</Center>
+				</>
 			)}
 		</Container>
 	)
