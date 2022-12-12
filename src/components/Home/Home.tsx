@@ -359,7 +359,9 @@ export function HomeComponent() {
 							/>
 						) : autocompleteFormValue.length > 0 &&
 						  isShowingCreateButton &&
-						  clubclub.isMember ? (
+						  (clubclub.isMember ||
+								process.env.NEXT_PUBLIC_TEST_MODE ===
+									'true') ? (
 							<Button
 								style={{ marginRight: 64 }}
 								className={clubsTheme.buttonBlack}

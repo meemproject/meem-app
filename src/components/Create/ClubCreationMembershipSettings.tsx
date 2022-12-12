@@ -256,7 +256,10 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 	const isEditedReqFirstReq: boolean = reqCurrentlyEditing.index === 0
 
 	const saveChanges = async () => {
-		if (!clubclub.isMember) {
+		if (
+			!clubclub.isMember &&
+			process.env.NEXT_PUBLIC_TEST_MODE !== 'true'
+		) {
 			showNotification({
 				radius: 'lg',
 				title: 'No Club Club membership found.',

@@ -126,6 +126,7 @@ export const GET_CLUB = gql`
 			mintPermissions
 			symbol
 			id
+			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
 				ExtensionId
 				id
@@ -184,9 +185,11 @@ export const GET_CLUB_AS_MEMBER = gql`
 				}
 			}
 			id
+			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
 				ExtensionId
 				id
+				# isEnabled
 				metadata
 				Extension {
 					description
@@ -248,9 +251,11 @@ export const SUB_CLUB = gql`
 			mintPermissions
 			symbol
 			id
+			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
 				ExtensionId
 				id
+				# isEnabled
 				metadata
 				Extension {
 					description
@@ -322,9 +327,11 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			mintPermissions
 			symbol
 			id
+			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
 				ExtensionId
 				id
+				# isEnabled
 				metadata
 				Extension {
 					description
