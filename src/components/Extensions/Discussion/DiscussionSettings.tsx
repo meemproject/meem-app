@@ -1,3 +1,4 @@
+/* eslint-disable import/named */
 import log from '@kengoldfarb/log'
 import {
 	Container,
@@ -16,7 +17,6 @@ import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
-import { ClubRole } from '../../../model/club/club'
 import ClubContext from '../../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 
@@ -40,10 +40,12 @@ export const DiscussionSettings: React.FC = () => {
 	] = useState(true)
 	const [shouldShowAuthorOnWidgetTiles, setShowAuthorOnWidgetTiles] =
 		useState(true)
-	const [newDiscussionsRole, setNewDiscussionsRole] = useState<ClubRole>()
-	const [manageExtensionRole, setManageExtensionRole] = useState<ClubRole>()
-	const [upvoteRole, setUpvoteRole] = useState<ClubRole>()
-	const [leaveCommentsRole, setLeaveCommentsRole] = useState<ClubRole>()
+
+	// These are role ids
+	const [newDiscussionsRole, setNewDiscussionsRole] = useState<string>()
+	const [manageExtensionRole, setManageExtensionRole] = useState<string>()
+	const [upvoteRole, setUpvoteRole] = useState<string>()
+	const [leaveCommentsRole, setLeaveCommentsRole] = useState<string>()
 
 	// Convert roles to Mantine SelectItems
 	const [roleSelectItems, setRoleSelectItems] = useState<SelectItem[]>([])
@@ -150,21 +152,91 @@ export const DiscussionSettings: React.FC = () => {
 	 */
 	const customExtensionPermissions = () => (
 		<>
+			<Space h={12} />
+
 			<Text className={clubsTheme.tSmallBold}>
 				Who can start new discussions?
 			</Text>
-			<Space h={4} />
-			<Text className={clubsTheme.tSmall}>Please choose one role.</Text>
 			<Space h={8} />
+			<Text className={clubsTheme.tExtraSmallFaded}>
+				Please choose one role.
+			</Text>
+			<Space h={12} />
 			<Select
 				radius={8}
 				size={'md'}
 				data={roleSelectItems}
-				value={newDiscussionsRole}
+				value={newDiscussionsRole ? newDiscussionsRole : 'club-member'}
 				onChange={(value: string) => {
-					log.debug(`chose role ${value}`)
+					setNewDiscussionsRole(value)
 				}}
 			/>
+			<Space h={24} />
+			<Text className={clubsTheme.tSmallBold}>
+				Who can manage extension settings?
+			</Text>
+			<Space h={8} />
+			<Text className={clubsTheme.tExtraSmallFaded}>
+				Please choose one role.
+			</Text>
+			<Space h={12} />
+			<Select
+				radius={8}
+				size={'md'}
+				data={roleSelectItems}
+				value={manageExtensionRole ? manageExtensionRole : 'admin'}
+				onChange={(value: string) => {
+					setManageExtensionRole(value)
+				}}
+			/>
+			<Space h={24} />
+			<Text className={clubsTheme.tSmallBold}>
+				Who can upvote and downvote?
+			</Text>
+			<Space h={8} />
+			<Text className={clubsTheme.tExtraSmallFaded}>
+				Please choose one role.
+			</Text>
+			<Space h={12} />
+			<Select
+				radius={8}
+				size={'md'}
+				data={roleSelectItems}
+				value={upvoteRole ? upvoteRole : 'club-member'}
+				onChange={(value: string) => {
+					setUpvoteRole(value)
+				}}
+			/>
+			<Space h={24} />
+			<Text className={clubsTheme.tSmallBold}>
+				Who can leave comments?
+			</Text>
+			<Space h={8} />
+			<Text className={clubsTheme.tExtraSmallFaded}>
+				Please choose one role.
+			</Text>
+			<Space h={12} />
+			<Select
+				radius={8}
+				size={'md'}
+				data={roleSelectItems}
+				value={leaveCommentsRole ? leaveCommentsRole : 'club-member'}
+				onChange={(value: string) => {
+					setLeaveCommentsRole(value)
+				}}
+			/>
+			<Space h={24} />
+			<Button
+				className={clubsTheme.buttonWhite}
+				onClick={() => {
+					router.push({
+						pathname: `/${club?.slug}/admin`,
+						query: { tab: 'roles' }
+					})
+				}}
+			>
+				Manage roles
+			</Button>
 		</>
 	)
 
