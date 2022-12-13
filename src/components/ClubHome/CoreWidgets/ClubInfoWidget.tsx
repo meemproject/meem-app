@@ -163,8 +163,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 					message: `Please get in touch!`
 				})
 			}
+			setIsJoiningClub(false)
 		}
-		setIsJoiningClub(false)
 	}
 
 	const leaveClub = async () => {
