@@ -17,6 +17,7 @@ import ClubContext from '../../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 
 export const ExampleExtensionSettings: React.FC = () => {
+	// Default extension settings / properties - leave these alone if possible!
 	const router = useRouter()
 	const { classes: clubsTheme } = useClubsTheme()
 	const { club, isLoadingClub, error } = useContext(ClubContext)
@@ -25,6 +26,8 @@ export const ExampleExtensionSettings: React.FC = () => {
 	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
 		useState(false)
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
+
+	// TODO: Add your custom extension settings here
 
 	/*
 	TODO:
@@ -91,7 +94,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			{club && club?.isCurrentUserClubAdmin && (
+			{club && !club?.isCurrentUserClubAdmin && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -103,7 +106,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 				</Container>
 			)}
 
-			{club && !club?.isCurrentUserClubAdmin && (
+			{club && club?.isCurrentUserClubAdmin && (
 				<div>
 					<div className={clubsTheme.pageHeader}>
 						<div className={clubsTheme.spacedRowCentered}>

@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	Container,
 	Loader,
@@ -7,16 +8,20 @@ import {
 	Center,
 	Button,
 	Divider,
-	Switch
+	Switch,
+	Select,
+	SelectItem
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
+import { ClubRole } from '../../../model/club/club'
 import ClubContext from '../../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 
 export const DiscussionSettings: React.FC = () => {
+	// Default settings
 	const router = useRouter()
 	const { classes: clubsTheme } = useClubsTheme()
 	const { club, isLoadingClub, error } = useContext(ClubContext)
@@ -26,11 +31,46 @@ export const DiscussionSettings: React.FC = () => {
 		useState(false)
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
 
+	// Discussion-specific settings
+	const [shouldShowUpvotesOnWidgetTiles, setShowUpvotesOnWidgetTiles] =
+		useState(true)
+	const [
+		shouldShowCommentCountOnWidgetTiles,
+		setShowCommentCountOnWidgetTiles
+	] = useState(true)
+	const [shouldShowAuthorOnWidgetTiles, setShowAuthorOnWidgetTiles] =
+		useState(true)
+	const [newDiscussionsRole, setNewDiscussionsRole] = useState<ClubRole>()
+	const [manageExtensionRole, setManageExtensionRole] = useState<ClubRole>()
+	const [upvoteRole, setUpvoteRole] = useState<ClubRole>()
+	const [leaveCommentsRole, setLeaveCommentsRole] = useState<ClubRole>()
+
+	// Convert roles to Mantine SelectItems
+	const [roleSelectItems, setRoleSelectItems] = useState<SelectItem[]>([])
+	const [hasSetRoleSelectItems, setHasSetRoleSelectItems] = useState(false)
+	useEffect(() => {
+		if (
+			roleSelectItems?.length === 0 &&
+			club &&
+			club.roles &&
+			!hasSetRoleSelectItems
+		) {
+			const items: React.SetStateAction<SelectItem[] | undefined> = []
+			club.roles.forEach(role => {
+				const item: SelectItem = { value: role.id, label: role.name }
+				items.push(item)
+			})
+			setRoleSelectItems(items)
+			setHasSetRoleSelectItems(true)
+			log.debug(`Set ${items.length} roles as dropdown options`)
+		}
+	}, [club, hasSetRoleSelectItems, roleSelectItems])
+
 	/*
 	TODO:
 	Add your extension's name, which shows up as the page title.
 	 */
-	const extensionName = 'Discussion'
+	const extensionName = 'Discussions'
 
 	/*
 	TODO
@@ -38,11 +78,69 @@ export const DiscussionSettings: React.FC = () => {
 	 */
 	const customExtensionSettings = () => (
 		<>
-			<Space h={32} />
-			<Text className={clubsTheme.tExtraSmallLabel}>CONFIGURATION</Text>
+			<Space h={48} />
+			<Text className={clubsTheme.tExtraSmallLabel}>
+				CONFIGURE WIDGET
+			</Text>
 			<Space h={16} />
-			This extension does not provide any additional settings.
-			<Space h={8} />
+			<div>
+				<Space h={4} />
+				<div className={clubsTheme.spacedRowCentered}>
+					<Switch
+						color={'green'}
+						label={'Show upvotes on widget tiles'}
+						checked={shouldShowUpvotesOnWidgetTiles}
+						onChange={value => {
+							if (value) {
+								setShowUpvotesOnWidgetTiles(
+									value.currentTarget.checked
+								)
+							}
+						}}
+					/>
+				</div>
+				<Space h={16} />
+				<Divider />
+			</div>
+			<div>
+				<Space h={4} />
+				<div className={clubsTheme.spacedRowCentered}>
+					<Switch
+						color={'green'}
+						label={'Show comment count on widget tiles'}
+						checked={shouldShowCommentCountOnWidgetTiles}
+						onChange={value => {
+							if (value) {
+								setShowCommentCountOnWidgetTiles(
+									value.currentTarget.checked
+								)
+							}
+						}}
+					/>
+				</div>
+				<Space h={16} />
+				<Divider />
+			</div>
+			<div>
+				<Space h={4} />
+				<div className={clubsTheme.spacedRowCentered}>
+					<Switch
+						color={'green'}
+						label={'Show author on widget tiles'}
+						checked={shouldShowAuthorOnWidgetTiles}
+						onChange={value => {
+							if (value) {
+								setShowAuthorOnWidgetTiles(
+									value.currentTarget.checked
+								)
+							}
+						}}
+					/>
+				</div>
+				<Space h={16} />
+				<Divider />
+			</div>
+			<Space h={16} />
 		</>
 	)
 
@@ -51,7 +149,23 @@ export const DiscussionSettings: React.FC = () => {
 	Add your custom extension permissions layout here. 
 	 */
 	const customExtensionPermissions = () => (
-		<>This extension does not provide any permissions.</>
+		<>
+			<Text className={clubsTheme.tSmallBold}>
+				Who can start new discussions?
+			</Text>
+			<Space h={4} />
+			<Text className={clubsTheme.tSmall}>Please choose one role.</Text>
+			<Space h={8} />
+			<Select
+				radius={8}
+				size={'md'}
+				data={roleSelectItems}
+				value={newDiscussionsRole}
+				onChange={(value: string) => {
+					log.debug(`chose role ${value}`)
+				}}
+			/>
+		</>
 	)
 
 	/*
@@ -91,7 +205,7 @@ export const DiscussionSettings: React.FC = () => {
 
 	return (
 		<div>
-			{club && club?.isCurrentUserClubAdmin && (
+			{club && !club?.isCurrentUserClubAdmin && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -103,7 +217,7 @@ export const DiscussionSettings: React.FC = () => {
 				</Container>
 			)}
 
-			{club && !club?.isCurrentUserClubAdmin && (
+			{club && club?.isCurrentUserClubAdmin && (
 				<div>
 					<div className={clubsTheme.pageHeader}>
 						<div className={clubsTheme.spacedRowCentered}>
