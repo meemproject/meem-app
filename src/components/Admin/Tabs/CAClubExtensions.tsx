@@ -30,7 +30,7 @@ interface IProps {
 	club: Club
 }
 
-export const CAClubApps: React.FC<IProps> = ({ club }) => {
+export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	//const wallet = useWallet()
 

@@ -25,9 +25,10 @@ import {
 import ClubContext from '../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../Styles/ClubsTheme'
 import { CABulkMint } from './Tabs/CABulkMint'
-import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
+import { CAClubExtensions } from './Tabs/CAClubExtensions'
 import { CAClubIcon } from './Tabs/CAClubIcon'
+import { CAClubLinks } from './Tabs/CAClubLinks'
 import { CAContractAddress as CAContractManagement } from './Tabs/CAContractManagement'
 import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
 import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
@@ -437,11 +438,11 @@ export const ClubAdminComponent: React.FC = () => {
 										)}
 									{currentTab === Tab.Extensions &&
 										userHasPermissionManageApps(club) && (
-											<CAClubApps club={club} />
+											<CAClubExtensions club={club} />
 										)}
 									{currentTab === Tab.Links &&
 										userHasPermissionManageApps(club) && (
-											<CAClubApps club={club} />
+											<CAClubLinks club={club} />
 										)}
 									{currentTab === Tab.Airdrops && (
 										<CABulkMint club={club} />
