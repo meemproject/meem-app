@@ -1,5 +1,6 @@
 /* eslint-disable import/no-named-as-default */
 import log from '@kengoldfarb/log'
+import * as Lit from '@lit-protocol/lit-node-client'
 import {
 	Container,
 	Text,
@@ -12,7 +13,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
-import { useWallet } from '@meemproject/react'
+import { useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -25,6 +26,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { useClub } from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
@@ -36,6 +38,9 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { club } = useClub()
+
+	const { sdk } = useSDK()
 
 	const [postTitle, setPostTitle] = useState('')
 
@@ -70,6 +75,8 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 		maxFileSize: 10
 	})
 
+	const chainId = +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
+
 	useEffect(() => {
 		const createResizedFile = async () => {
 			setPostAttachment(rawPostAttachment[0].content)
@@ -87,10 +94,17 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	const deleteImage = () => {
 		setPostAttachment('')
 	}
+
+	console.log({ club })
+
 	const createPost = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			await wallet.connectWallet()
-			router.reload()
+			return
+		}
+
+		if (!club?.address) {
+			router.push('/')
 			return
 		}
 
@@ -120,11 +134,96 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 		// TODO: create or edit post
 		// TODO: We will need post slug (from api?)
+		const tl = await sdk.storage.getTablelandInstance({
+			chainId: +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
+		})
+
+		if (!tl.signer) {
+			// await tl.siwe()
+		}
+
+		const authSig = await sdk.id.getLitAuthSig()
+
+		console.log({ authSig })
+
+		const { accessControlConditions, encryptedStr, encryptedSymmetricKey } =
+			await sdk.storage.encryptAndSave({
+				authSig,
+				data: {
+					title: postTitle,
+					body: editor?.getHTML(),
+					tags: postTags.split(' ').map(tag => tag.trim()),
+					walletAddress: wallet.accounts[0]
+				},
+				chainId,
+				accessControlConditions: [
+					// {
+					// 	contractAddress: club.address
+					// }
+					{
+						contractAddress: '',
+						standardContractType: '',
+						chain: 'ethereum',
+						method: 'eth_getBalance',
+						parameters: [':userAddress', 'latest'],
+						returnValueTest: {
+							comparator: '>=',
+							value: '1000000000000' // 0.000001 ETH
+						}
+					}
+				]
+			})
+
+		console.log({
+			accessControlConditions,
+			encryptedStr,
+			encryptedSymmetricKey
+		})
+
+		if (!encryptedSymmetricKey) {
+			log.crit('Unable to fetch encryptedSymmetricKey')
+			return
+		}
+
+		// const strToDecrypt = await Lit.uint8arrayToString(encryptedStr)
+
+		const decrypted = await sdk.storage.decrypt({
+			authSig,
+			chainId,
+			accessControlConditions,
+			encryptedSymmetricKey,
+			strToDecrypt: encryptedStr
+		})
+
+		console.log({ decrypted })
+
 		setIsLoading(true)
 		// router.push({
 		// 	pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}/hello-world`
 		// })
 	}
+
+	useEffect(() => {
+		const runQuery = async () => {
+			const tl = await sdk.storage.getTablelandInstance({
+				chainId
+			})
+
+			const result = await tl.read(
+				'SELECT "data", "accessControlConditions", "createdAt", "updatedAt" from _420_192'
+			)
+
+			console.log({ tl, signer: tl.signer, result })
+		}
+
+		runQuery()
+	}, [sdk])
+
+	console.log({
+		postTitle,
+		editor: editor?.getHTML(),
+		isLoading
+	})
 
 	return (
 		<>
@@ -158,10 +257,11 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 					disabled={
 						postTitle.length === 0 ||
 						editor?.getHTML().length === 0 ||
-						postAttachment.length === 0 ||
+						// postAttachment.length === 0 ||
 						isLoading
 					}
-					onClick={() => {
+					onClick={e => {
+						e.preventDefault()
 						createPost()
 					}}
 				>
@@ -220,6 +320,31 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 							<Button
 								className={clubsTheme.buttonBlack}
 								style={{ marginBottom: 16, marginRight: 16 }}
+								onClick={async () => {
+									const tl =
+										await sdk.storage.getTablelandInstance({
+											chainId:
+												+process.env
+													.NEXT_PUBLIC_CHAIN_ID
+										})
+									await tl.siwe()
+
+									console.log(tl)
+
+									const now = (
+										new Date().getTime() / 1000
+									).toFixed(0)
+
+									console.log({ now })
+
+									await tl.write(
+										`insert into _420_192 ("data", "accessControlConditions", "createdAt", "updatedAt") values ('test data', '${JSON.stringify(
+											{
+												some: 'condition'
+											}
+										)}', '${now}', '${now}')`
+									)
+								}}
 							>
 								Comment
 							</Button>
@@ -302,7 +427,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 					disabled={
 						postTitle.length === 0 ||
 						editor?.getHTML().length === 0 ||
-						postAttachment.length === 0 ||
+						// postAttachment.length === 0 ||
 						isLoading
 					}
 					className={clubsTheme.buttonBlack}

@@ -1,7 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Radio, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemSDK } from '@meemproject/react'
+import { useSDK } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 	const [extensionVisibility, setIntegrationVisibility] =
 		useState<MeemAPI.IntegrationVisibility>()
 	const extension = userIdentity?.IdentityIntegration

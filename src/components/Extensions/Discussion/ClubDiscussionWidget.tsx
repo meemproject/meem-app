@@ -1,4 +1,5 @@
 import { Text, Button, Space } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
@@ -14,7 +15,25 @@ export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 
 	const router = useRouter()
 
+	const { sdk } = useSDK()
+
 	useEffect(() => {}, [club])
+
+	useEffect(() => {
+		const runQuery = async () => {
+			const tl = await sdk.storage.getTablelandInstance({
+				chainId: +process.env.NEXT_PUBLIC_CHAIN_ID
+			})
+
+			const result = await tl.read(
+				'SELECT "data", "accessControlConditions", "createdAt", "updatedAt" from _420_192'
+			)
+
+			console.log({ result })
+		}
+
+		runQuery()
+	}, [sdk])
 
 	const posts: DiscussionPost[] = [
 		{

@@ -11,10 +11,10 @@ import {
 	Button
 } from '@mantine/core'
 import { useRouter } from 'next/router'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Search } from 'tabler-icons-react'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
-import ClubContext from '../../ClubHome/ClubProvider'
+import { useClub } from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
@@ -22,7 +22,7 @@ export const DiscussionHome: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 
 	const posts: DiscussionPost[] = [
 		{

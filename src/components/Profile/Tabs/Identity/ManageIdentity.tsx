@@ -13,7 +13,7 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemUser, useMeemApollo, useMeemSDK } from '@meemproject/react'
+import { useMeemUser, useMeemApollo, useSDK } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
@@ -35,7 +35,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const { loginWithRedirect } = useAuth0()
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 	const { user: me } = useMeemUser()
 	const { anonClient } = useMeemApollo()
 

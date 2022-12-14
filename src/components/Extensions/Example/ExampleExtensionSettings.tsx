@@ -1,12 +1,12 @@
 import { Container, Loader, Text } from '@mantine/core'
-import React, { useContext } from 'react'
-import ClubContext from '../../ClubHome/ClubProvider'
+import React from 'react'
+import { useClub } from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 export const ExampleExtensionSettings: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 
 	return (
 		<Container>

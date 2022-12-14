@@ -9,7 +9,8 @@ import React, {
 	createContext,
 	FC,
 	useMemo,
-	ReactNode
+	ReactNode,
+	useContext
 } from 'react'
 import {
 	Agreements,
@@ -198,4 +199,13 @@ export const ClubProvider: FC<IClubProviderProps> = ({ slug, ...props }) => {
 		[club, errorAnonClub, errorMemberClub, isLoadingClub]
 	)
 	return <ClubContext.Provider value={value} {...props} />
+}
+
+export function useClub() {
+	const context = useContext(ClubContext)
+
+	if (typeof context === 'undefined') {
+		throw new Error('useClub must be used within a ClubProvider')
+	}
+	return context
 }

@@ -13,12 +13,7 @@ import {
 	NavLink
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import {
-	LoginState,
-	useAuth,
-	useMeemSDK,
-	useMeemUser
-} from '@meemproject/react'
+import { LoginState, useAuth, useSDK, useMeemUser } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check, X } from 'tabler-icons-react'
@@ -40,7 +35,7 @@ export const ProfileComponent: React.FC = () => {
 	const wallet = useAuth()
 	const { isMeLoading, isGetMeError } = useAuth()
 	const { user } = useMeemUser()
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 

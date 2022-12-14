@@ -15,10 +15,10 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check, Plus } from 'tabler-icons-react'
 import { Club, ClubRole, emptyRole } from '../../model/club/club'
-import ClubContext from '../ClubHome/ClubProvider'
+import { useClub } from '../ClubHome/ClubProvider'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface Tab {
@@ -32,7 +32,7 @@ export const RolesManager: React.FC = () => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 
 	const [tabs, setTabs] = useState<Tab[]>([])
 	const [currentTab, setCurrentTab] = useState<Tab>()

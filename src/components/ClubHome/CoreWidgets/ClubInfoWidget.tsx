@@ -10,7 +10,7 @@ import {
 	Divider
 } from '@mantine/core'
 import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { LoginState, useMeemSDK, useWallet } from '@meemproject/react'
+import { LoginState, useSDK, useWallet } from '@meemproject/react'
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
@@ -34,7 +34,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 
 	const [isJoiningClub, setIsJoiningClub] = useState(false)
 	const [isLeavingClub, setIsLeavingClub] = useState(false)

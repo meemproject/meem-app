@@ -14,7 +14,7 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { LoginState, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import {
 	userHasPermissionEditProfile,
@@ -22,7 +22,7 @@ import {
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
-import ClubContext from '../ClubHome/ClubProvider'
+import { useClub } from '../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../Styles/ClubsTheme'
 import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubApps } from './Tabs/CAClubApps'
@@ -51,7 +51,7 @@ export const ClubAdminComponent: React.FC = () => {
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
