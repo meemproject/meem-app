@@ -10,7 +10,7 @@ import {
 	Center,
 	Button
 } from '@mantine/core'
-import { useAuth, useSDK } from '@meemproject/react'
+import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
@@ -89,13 +89,9 @@ export const DiscussionHome: React.FC = () => {
 					}
 				})
 
-				console.log(rows, newPosts)
+				console.log({ rows, newPosts })
 
 				setPosts(newPosts)
-
-				// const tl = await sdk.storage.getTablelandInstance({chainId})
-				// const result = await tl.read(
-				// 	`SELECT `)
 
 				setHasFetchedData(true)
 			}
