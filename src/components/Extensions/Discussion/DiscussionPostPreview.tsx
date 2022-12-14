@@ -55,9 +55,13 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 								{post.title}
 							</Text>
 							<Space h={8} />
-							<Text className={clubsTheme.tExtraSmall}>
-								{post.content}
-							</Text>
+							<Text
+								className={clubsTheme.tExtraSmall}
+								dangerouslySetInnerHTML={{
+									// TODO: Sanitize html. Possible XSS vulnerability
+									__html: post.content
+								}}
+							/>
 							<Space h={12} />
 							{post.tags && (
 								<>

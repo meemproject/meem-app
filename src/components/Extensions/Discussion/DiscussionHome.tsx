@@ -10,8 +10,9 @@ import {
 	Center,
 	Button
 } from '@mantine/core'
+import { useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClub } from '../../ClubHome/ClubProvider'
@@ -21,27 +22,81 @@ import { DiscussionPostPreview } from './DiscussionPostPreview'
 export const DiscussionHome: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
+	const [hasFetchdData, setHasFetchedData] = useState(false)
+	const [posts, setPosts] = useState<DiscussionPost[]>([])
+
+	const { sdk } = useSDK()
+	const chainId = +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
 
 	const { club, isLoadingClub, error } = useClub()
 
-	const posts: DiscussionPost[] = [
-		{
-			id: '1',
-			title: 'Test post one',
-			tags: ['funny', 'crazy'],
-			clubSlug: club?.slug ?? '',
-			content: 'This is just a small test post.',
-			user: club && club.members ? club.members[0] : { wallet: '' }
-		},
-		{
-			id: '2',
-			title: 'Test post two',
-			tags: ['funny', 'crazy'],
-			clubSlug: club?.slug ?? '',
-			content: 'And another test post',
-			user: club && club.members ? club.members[0] : { wallet: '' }
+	// const posts: DiscussionPost[] = [
+	// 	{
+	// 		id: '1',
+	// 		title: 'Test post one',
+	// 		tags: ['funny', 'crazy'],
+	// 		clubSlug: club?.slug ?? '',
+	// 		content: 'This is just a small test post.',
+	// 		user: club && club.members ? club.members[0] : { wallet: '' }
+	// 	},
+	// 	{
+	// 		id: '2',
+	// 		title: 'Test post two',
+	// 		tags: ['funny', 'crazy'],
+	// 		clubSlug: club?.slug ?? '',
+	// 		content: 'And another test post',
+	// 		user: club && club.members ? club.members[0] : { wallet: '' }
+	// 	}
+	// ]
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (hasFetchdData) {
+				return
+			}
+
+			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+				ae => ae.Extension?.slug === 'discussion'
+			)
+
+			if (
+				agreementExtension &&
+				agreementExtension.metadata?.storage?.tableland?.posts
+			) {
+				const authSig = await sdk.id.getLitAuthSig()
+
+				const rows = await sdk.storage.read({
+					chainId,
+					tableName:
+						agreementExtension.metadata?.storage?.tableland?.posts
+							.tablelandTableName,
+					authSig
+				})
+
+				const newPosts: DiscussionPost[] = rows.map(row => {
+					return {
+						id: row.id,
+						title: row.data.title,
+						tags: row.data.tags,
+						clubSlug: club?.slug ?? '',
+						content: row.data.body,
+						user:
+							club && club.members
+								? club.members[0]
+								: { wallet: '' }
+					}
+				})
+
+				console.log(rows, newPosts)
+
+				setPosts(newPosts)
+
+				setHasFetchedData(true)
+			}
 		}
-	]
+
+		fetchData()
+	}, [hasFetchdData, club, chainId, sdk])
 
 	return (
 		<>

@@ -94,26 +94,26 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 		setPostAttachment('')
 	}
 
-	console.log({ club })
+	// console.log({ club })
 
-	function blobToBase64(blob) {
-		return new Promise((resolve, _) => {
-			const reader = new FileReader()
-			reader.onloadend = () => resolve(reader.result)
-			reader.readAsDataURL(blob)
-		})
-	}
+	// function blobToBase64(blob) {
+	// 	return new Promise((resolve, _) => {
+	// 		const reader = new FileReader()
+	// 		reader.onloadend = () => resolve(reader.result)
+	// 		reader.readAsDataURL(blob)
+	// 	})
+	// }
 
-	function base64ToBlob(dataURI) {
-		const byteString = atob(dataURI.split(',')[1])
-		const ab = new ArrayBuffer(byteString.length)
-		const ia = new Uint8Array(ab)
+	// function base64ToBlob(dataURI) {
+	// 	const byteString = atob(dataURI.split(',')[1])
+	// 	const ab = new ArrayBuffer(byteString.length)
+	// 	const ia = new Uint8Array(ab)
 
-		for (let i = 0; i < byteString.length; i++) {
-			ia[i] = byteString.charCodeAt(i)
-		}
-		return new Blob([ab], { type: 'image/jpeg' })
-	}
+	// 	for (let i = 0; i < byteString.length; i++) {
+	// 		ia[i] = byteString.charCodeAt(i)
+	// 	}
+	// 	return new Blob([ab], { type: 'image/jpeg' })
+	// }
 
 	const createPost = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
@@ -218,7 +218,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 		const now = Math.floor(new Date().getTime() / 1000)
 
-		const data = await blobToBase64(encryptedStr)
+		const data = await sdk.storage.blobToBase64(encryptedStr)
 
 		const result = await tl.write(
 			`INSERT INTO ${
@@ -248,56 +248,59 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 		// })
 	}
 
-	useEffect(() => {
-		const runQuery = async () => {
-			const tl = await sdk.storage.getTablelandInstance({
-				chainId
-			})
+	// useEffect(() => {
+	// 	const runQuery = async () => {
+	// 		const tl = await sdk.storage.getTablelandInstance({
+	// 			chainId
+	// 		})
 
-			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
-				ae => ae.Extension?.slug === 'discussion'
-			)
+	// 		const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+	// 			ae => ae.Extension?.slug === 'discussion'
+	// 		)
 
-			if (!agreementExtension) {
-				// showNotification({
-				// 	title: 'Something went wrong!',
-				// 	message: 'Please reload and try again'
-				// })
-				return
-			}
+	// 		if (!agreementExtension) {
+	// 			return
+	// 		}
 
-			const postTable =
-				agreementExtension.metadata.storage?.tableland?.posts
+	// 		const postTable =
+	// 			agreementExtension.metadata.storage?.tableland?.posts
 
-			if (postTable) {
-				const authSig = await sdk.id.getLitAuthSig()
-				const result = await tl.read(
-					// `SELECT "data", "accessControlConditions", "encryptedSymmetricKey" "createdAt", "updatedAt" from ${postTable.tablelandTableName}`
-					`SELECT * from ${postTable.tablelandTableName}`
-				)
-				console.log({ tl, signer: tl.signer, result })
+	// 		if (postTable) {
+	// 			const authSig = await sdk.id.getLitAuthSig()
+	// 			// const result = await tl.read(
+	// 			// 	// `SELECT "data", "accessControlConditions", "encryptedSymmetricKey" "createdAt", "updatedAt" from ${postTable.tablelandTableName}`
+	// 			// 	`SELECT * from ${postTable.tablelandTableName}`
+	// 			// )
+	// 			// console.log({ tl, signer: tl.signer, result })
 
-				result.rows.forEach(async row => {
-					try {
-						const encryptedBlob = base64ToBlob(row[3])
-						const decrypted = await sdk.storage.decrypt({
-							authSig,
-							chainId,
-							accessControlConditions: row[5],
-							encryptedSymmetricKey: row[4],
-							strToDecrypt: encryptedBlob
-						})
+	// 			// result.rows.forEach(async row => {
+	// 			// 	try {
+	// 			// 		const encryptedBlob = base64ToBlob(row[3])
+	// 			// 		const decrypted = await sdk.storage.decrypt({
+	// 			// 			authSig,
+	// 			// 			chainId,
+	// 			// 			accessControlConditions: row[5],
+	// 			// 			encryptedSymmetricKey: row[4],
+	// 			// 			strToDecrypt: encryptedBlob
+	// 			// 		})
 
-						console.log({ decrypted })
-					} catch (e) {
-						console.log(e)
-					}
-				})
-			}
-		}
+	// 			// 		console.log({ decrypted })
+	// 			// 	} catch (e) {
+	// 			// 		console.log(e)
+	// 			// 	}
+	// 			// })
+	// 			// const result = await sdk.storage.read({
+	// 			// 	chainId,
+	// 			// 	tableName: postTable.tablelandTableName,
+	// 			// 	authSig
+	// 			// })
 
-		runQuery()
-	}, [sdk, chainId, club])
+	// 			// console.log({ result })
+	// 		}
+	// 	}
+
+	// 	runQuery()
+	// }, [sdk, chainId, club])
 
 	const agreementExtension = club?.rawClub?.AgreementExtensions.find(
 		ae => ae.Extension?.slug === 'discussion'
