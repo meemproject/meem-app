@@ -320,23 +320,24 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 									}}
 									className={clubsTheme.buttonWhite}
 									onClick={() => {
-										if (extension.name === 'Phone Number') {
-											window.open(`tel:${extension.url}`)
-										} else if (
-											extension.name === 'Email Address'
-										) {
-											window.open(
-												`mailto:${extension.url}`
-											)
-										} else {
-											window.open(extension.url)
-										}
+										// TODO
+										// if (extension.name === 'Phone Number') {
+										// 	window.open(`tel:${extension.url}`)
+										// } else if (
+										// 	extension.name === 'Email Address'
+										// ) {
+										// 	window.open(
+										// 		`mailto:${extension.url}`
+										// 	)
+										// } else {
+										// 	window.open(extension.url)
+										// }
 									}}
 								>
 									<Image
 										width={20}
 										height={20}
-										src={extension.icon}
+										src={extension.metadata.icon}
 									/>
 								</Button>
 							</>

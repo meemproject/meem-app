@@ -28,7 +28,6 @@ import { CABulkMint } from './Tabs/CABulkMint'
 import { CAClubDetails } from './Tabs/CAClubDetails'
 import { CAClubExtensions } from './Tabs/CAClubExtensions'
 import { CAClubIcon } from './Tabs/CAClubIcon'
-import { CAClubLinks } from './Tabs/CAClubLinks'
 import { CAContractAddress as CAContractManagement } from './Tabs/CAContractManagement'
 import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
 import { CAMembershipSettings } from './Tabs/CAMembershipSettings'
@@ -42,7 +41,6 @@ enum Tab {
 	ClubDetails,
 	ClubIcon,
 	Extensions,
-	Links,
 	Airdrops,
 	DeleteClub
 }
@@ -103,9 +101,6 @@ export const ClubAdminComponent: React.FC = () => {
 				break
 			case 'extensions':
 				setCurrentTab(Tab.Extensions)
-				break
-			case 'links':
-				setCurrentTab(Tab.Links)
 				break
 			case 'membershiprequirements':
 				setCurrentTab(Tab.MembershipRequirements)
@@ -335,22 +330,6 @@ export const ClubAdminComponent: React.FC = () => {
 									</>
 								)}
 
-								{userHasPermissionManageApps(club) && (
-									<>
-										<NavLink
-											className={
-												clubsTheme.pagePanelLayoutNavItem
-											}
-											active={currentTab === Tab.Links}
-											label={'Links'}
-											onClick={() => {
-												setCurrentTab(Tab.Links)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</>
-								)}
-
 								<NavLink
 									className={
 										clubsTheme.pagePanelLayoutNavItem
@@ -440,10 +419,7 @@ export const ClubAdminComponent: React.FC = () => {
 										userHasPermissionManageApps(club) && (
 											<CAClubExtensions club={club} />
 										)}
-									{currentTab === Tab.Links &&
-										userHasPermissionManageApps(club) && (
-											<CAClubLinks club={club} />
-										)}
+
 									{currentTab === Tab.Airdrops && (
 										<CABulkMint club={club} />
 									)}

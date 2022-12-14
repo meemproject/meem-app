@@ -30,7 +30,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 			try {
 				await sdk.id.updateUserIdentity({
 					identityIntegrationId: extensionId ?? '',
-					visibility: MeemAPI.IntegrationVisibility.MutualClubMembers,
+					visibility: MeemAPI.IntegrationVisibility.TokenHolders,
 					metadata: {
 						discordAuthCode,
 						redirectUri: `${window.location.origin}/profile`
