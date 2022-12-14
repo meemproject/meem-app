@@ -65,11 +65,13 @@ export const DiscussionHome: React.FC = () => {
 			) {
 				const authSig = await sdk.id.getLitAuthSig()
 
+				const tableName =
+					agreementExtension.metadata?.storage?.tableland?.posts
+						.tablelandTableName
+
 				const rows = await sdk.storage.read({
 					chainId,
-					tableName:
-						agreementExtension.metadata?.storage?.tableland?.posts
-							.tablelandTableName,
+					tableName,
 					authSig
 				})
 
@@ -90,6 +92,10 @@ export const DiscussionHome: React.FC = () => {
 				console.log(rows, newPosts)
 
 				setPosts(newPosts)
+
+				// const tl = await sdk.storage.getTablelandInstance({chainId})
+				// const result = await tl.read(
+				// 	`SELECT `)
 
 				setHasFetchedData(true)
 			}

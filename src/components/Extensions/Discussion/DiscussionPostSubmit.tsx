@@ -116,60 +116,114 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	// }
 
 	const createPost = async () => {
-		if (!wallet.web3Provider || !wallet.isConnected) {
-			await wallet.connectWallet()
-			return
-		}
+		try {
+			if (!wallet.web3Provider || !wallet.isConnected) {
+				await wallet.connectWallet()
+				return
+			}
 
-		if (!club?.address) {
-			router.push('/')
-			return
-		}
+			if (!club?.address) {
+				router.push('/')
+				return
+			}
 
-		// Some basic validation
-		if (!postTitle || postTitle.length < 3 || postTitle.length > 140) {
-			// Club name invalid
-			showNotification({
-				title: 'Oops!',
-				message:
-					'You entered an invalid post title. Please choose a longer or shorter post title.'
-			})
-			return
-		}
+			// Some basic validation
+			if (!postTitle || postTitle.length < 3 || postTitle.length > 140) {
+				// Club name invalid
+				showNotification({
+					title: 'Oops!',
+					message:
+						'You entered an invalid post title. Please choose a longer or shorter post title.'
+				})
+				return
+			}
 
-		if (
-			(editor && editor?.getHTML().length < 10) ||
-			(editor && editor?.getHTML().length > 3000)
-		) {
-			// Club name invalid
-			showNotification({
-				title: 'Oops!',
-				message:
-					'You entered an invalid post body. Please type a longer or shorter post body.'
-			})
-			return
-		}
+			if (
+				(editor && editor?.getHTML().length < 10) ||
+				(editor && editor?.getHTML().length > 3000)
+			) {
+				// Club name invalid
+				showNotification({
+					title: 'Oops!',
+					message:
+						'You entered an invalid post body. Please type a longer or shorter post body.'
+				})
+				return
+			}
 
-		setIsLoading(true)
+			setIsLoading(true)
 
-		// TODO: create or edit post
-		// TODO: We will need post slug (from api?)
-		const tl = await sdk.storage.getTablelandInstance({
-			chainId: +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
-		})
+			// TODO: create or edit post
+			// TODO: We will need post slug (from api?)
+			// const tl = await sdk.storage.getTablelandInstance({
+			// 	chainId: +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
+			// })
 
-		if (!tl.signer) {
-			await tl.siwe()
-		}
+			// if (!tl.signer) {
+			// 	await tl.siwe()
+			// }
 
-		const authSig = await sdk.id.getLitAuthSig()
+			const authSig = await sdk.id.getLitAuthSig()
 
-		console.log({ authSig })
+			// await sdk.storage
 
-		const { accessControlConditions, encryptedStr, encryptedSymmetricKey } =
-			await sdk.storage.encryptAndSave({
+			// console.log({ authSig })
+
+			// const { accessControlConditions, encryptedStr, encryptedSymmetricKey } =
+			// 	await sdk.storage.encryptAndWrite({
+			// 		authSig,
+			// 		data: {
+			// 			title: postTitle,
+			// 			body: editor?.getHTML(),
+			// 			tags: postTags.split(' ').map(tag => tag.trim()),
+			// 			walletAddress: wallet.accounts[0]
+			// 		},
+			// 		chainId,
+			// 		accessControlConditions: [
+			// 			{
+			// 				contractAddress: club.address
+			// 			}
+			// 		]
+			// 	})
+
+			// console.log({
+			// 	accessControlConditions,
+			// 	encryptedStr,
+			// 	encryptedSymmetricKey
+			// })
+
+			// if (!encryptedSymmetricKey) {
+			// 	log.crit('Unable to fetch encryptedSymmetricKey')
+			// 	return
+			// }
+
+			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+				ae => ae.Extension?.slug === 'discussion'
+			)
+
+			if (!agreementExtension) {
+				showNotification({
+					title: 'Something went wrong!',
+					message: 'Please reload and try again'
+				})
+				return
+			}
+
+			const postTable =
+				agreementExtension.metadata.storage?.tableland?.posts
+
+			if (!postTable) {
+				showNotification({
+					title: 'Something went wrong!',
+					message: 'Please reload and try again'
+				})
+				return
+			}
+
+			const result = await sdk.storage.encryptAndWrite({
 				authSig,
-				data: {
+				tableName: postTable.tablelandTableName,
+				writeColumns: {
 					title: postTitle,
 					body: editor?.getHTML(),
 					tags: postTags.split(' ').map(tag => tag.trim()),
@@ -183,69 +237,41 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				]
 			})
 
-		console.log({
-			accessControlConditions,
-			encryptedStr,
-			encryptedSymmetricKey
-		})
+			console.log('FINISHED WRITE!', result)
 
-		if (!encryptedSymmetricKey) {
-			log.crit('Unable to fetch encryptedSymmetricKey')
-			return
+			// const now = Math.floor(new Date().getTime() / 1000)
+
+			// const data = await sdk.storage.blobToBase64(encryptedStr)
+
+			// const result = await tl.write(
+			// 	`INSERT INTO ${
+			// 		postTable.tablelandTableName
+			// 	} ("data", "encryptedSymmetricKey", "accessControlConditions", "createdAt", "updatedAt") VALUES ('${data}', '${encryptedSymmetricKey}', '${JSON.stringify(
+			// 		accessControlConditions
+			// 	)}', ${now}, ${now})`
+			// )
+
+			// console.log(result)
+
+			// const strToDecrypt = await Lit.uint8arrayToString(encryptedStr)
+
+			// const decrypted = await sdk.storage.decrypt({
+			// 	authSig,
+			// 	chainId,
+			// 	accessControlConditions,
+			// 	encryptedSymmetricKey,
+			// 	strToDecrypt: encryptedStr
+			// })
+
+			// console.log({ decrypted })
+
+			// router.push({
+			// 	pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}/hello-world`
+			// })
+		} catch (e) {
+			log.crit(e)
 		}
-
-		const agreementExtension = club?.rawClub?.AgreementExtensions.find(
-			ae => ae.Extension?.slug === 'discussion'
-		)
-
-		if (!agreementExtension) {
-			showNotification({
-				title: 'Something went wrong!',
-				message: 'Please reload and try again'
-			})
-			return
-		}
-
-		const postTable = agreementExtension.metadata.storage?.tableland?.posts
-
-		if (!postTable) {
-			showNotification({
-				title: 'Something went wrong!',
-				message: 'Please reload and try again'
-			})
-			return
-		}
-
-		const now = Math.floor(new Date().getTime() / 1000)
-
-		const data = await sdk.storage.blobToBase64(encryptedStr)
-
-		const result = await tl.write(
-			`INSERT INTO ${
-				postTable.tablelandTableName
-			} ("data", "encryptedSymmetricKey", "accessControlConditions", "createdAt", "updatedAt") VALUES ('${data}', '${encryptedSymmetricKey}', '${JSON.stringify(
-				accessControlConditions
-			)}', ${now}, ${now})`
-		)
-
-		console.log(result)
-
-		// const strToDecrypt = await Lit.uint8arrayToString(encryptedStr)
-
-		// const decrypted = await sdk.storage.decrypt({
-		// 	authSig,
-		// 	chainId,
-		// 	accessControlConditions,
-		// 	encryptedSymmetricKey,
-		// 	strToDecrypt: encryptedStr
-		// })
-
-		// console.log({ decrypted })
-
 		setIsLoading(false)
-		// router.push({
-		// 	pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}/hello-world`
-		// })
 	}
 
 	// useEffect(() => {
