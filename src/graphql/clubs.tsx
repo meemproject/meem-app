@@ -331,7 +331,6 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			AgreementExtensions {
 				ExtensionId
 				id
-				# isEnabled
 				metadata
 				Extension {
 					description
@@ -339,6 +338,7 @@ export const SUB_CLUB_AS_MEMBER = gql`
 					icon
 					id
 					name
+					slug
 				}
 				#isPublic
 			}

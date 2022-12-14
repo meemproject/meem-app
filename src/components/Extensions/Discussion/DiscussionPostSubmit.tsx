@@ -1,6 +1,5 @@
 /* eslint-disable import/no-named-as-default */
 import log from '@kengoldfarb/log'
-import * as Lit from '@lit-protocol/lit-node-client'
 import {
 	Container,
 	Text,
@@ -97,6 +96,25 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 	console.log({ club })
 
+	function blobToBase64(blob) {
+		return new Promise((resolve, _) => {
+			const reader = new FileReader()
+			reader.onloadend = () => resolve(reader.result)
+			reader.readAsDataURL(blob)
+		})
+	}
+
+	function base64ToBlob(dataURI) {
+		const byteString = atob(dataURI.split(',')[1])
+		const ab = new ArrayBuffer(byteString.length)
+		const ia = new Uint8Array(ab)
+
+		for (let i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i)
+		}
+		return new Blob([ab], { type: 'image/jpeg' })
+	}
+
 	const createPost = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			await wallet.connectWallet()
@@ -132,6 +150,8 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 			return
 		}
 
+		setIsLoading(true)
+
 		// TODO: create or edit post
 		// TODO: We will need post slug (from api?)
 		const tl = await sdk.storage.getTablelandInstance({
@@ -139,7 +159,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 		})
 
 		if (!tl.signer) {
-			// await tl.siwe()
+			await tl.siwe()
 		}
 
 		const authSig = await sdk.id.getLitAuthSig()
@@ -157,19 +177,8 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				},
 				chainId,
 				accessControlConditions: [
-					// {
-					// 	contractAddress: club.address
-					// }
 					{
-						contractAddress: '',
-						standardContractType: '',
-						chain: 'ethereum',
-						method: 'eth_getBalance',
-						parameters: [':userAddress', 'latest'],
-						returnValueTest: {
-							comparator: '>=',
-							value: '1000000000000' // 0.000001 ETH
-						}
+						contractAddress: club.address
 					}
 				]
 			})
@@ -185,19 +194,55 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 			return
 		}
 
+		const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+			ae => ae.Extension?.slug === 'discussion'
+		)
+
+		if (!agreementExtension) {
+			showNotification({
+				title: 'Something went wrong!',
+				message: 'Please reload and try again'
+			})
+			return
+		}
+
+		const postTable = agreementExtension.metadata.storage?.tableland?.posts
+
+		if (!postTable) {
+			showNotification({
+				title: 'Something went wrong!',
+				message: 'Please reload and try again'
+			})
+			return
+		}
+
+		const now = Math.floor(new Date().getTime() / 1000)
+
+		const data = await blobToBase64(encryptedStr)
+
+		const result = await tl.write(
+			`INSERT INTO ${
+				postTable.tablelandTableName
+			} ("data", "encryptedSymmetricKey", "accessControlConditions", "createdAt", "updatedAt") VALUES ('${data}', '${encryptedSymmetricKey}', '${JSON.stringify(
+				accessControlConditions
+			)}', ${now}, ${now})`
+		)
+
+		console.log(result)
+
 		// const strToDecrypt = await Lit.uint8arrayToString(encryptedStr)
 
-		const decrypted = await sdk.storage.decrypt({
-			authSig,
-			chainId,
-			accessControlConditions,
-			encryptedSymmetricKey,
-			strToDecrypt: encryptedStr
-		})
+		// const decrypted = await sdk.storage.decrypt({
+		// 	authSig,
+		// 	chainId,
+		// 	accessControlConditions,
+		// 	encryptedSymmetricKey,
+		// 	strToDecrypt: encryptedStr
+		// })
 
-		console.log({ decrypted })
+		// console.log({ decrypted })
 
-		setIsLoading(true)
+		setIsLoading(false)
 		// router.push({
 		// 	pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}/hello-world`
 		// })
@@ -209,20 +254,61 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				chainId
 			})
 
-			const result = await tl.read(
-				'SELECT "data", "accessControlConditions", "createdAt", "updatedAt" from _420_192'
+			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+				ae => ae.Extension?.slug === 'discussion'
 			)
 
-			console.log({ tl, signer: tl.signer, result })
+			if (!agreementExtension) {
+				// showNotification({
+				// 	title: 'Something went wrong!',
+				// 	message: 'Please reload and try again'
+				// })
+				return
+			}
+
+			const postTable =
+				agreementExtension.metadata.storage?.tableland?.posts
+
+			if (postTable) {
+				const authSig = await sdk.id.getLitAuthSig()
+				const result = await tl.read(
+					// `SELECT "data", "accessControlConditions", "encryptedSymmetricKey" "createdAt", "updatedAt" from ${postTable.tablelandTableName}`
+					`SELECT * from ${postTable.tablelandTableName}`
+				)
+				console.log({ tl, signer: tl.signer, result })
+
+				result.rows.forEach(async row => {
+					try {
+						const encryptedBlob = base64ToBlob(row[3])
+						const decrypted = await sdk.storage.decrypt({
+							authSig,
+							chainId,
+							accessControlConditions: row[5],
+							encryptedSymmetricKey: row[4],
+							strToDecrypt: encryptedBlob
+						})
+
+						console.log({ decrypted })
+					} catch (e) {
+						console.log(e)
+					}
+				})
+			}
 		}
 
 		runQuery()
-	}, [sdk])
+	}, [sdk, chainId, club])
+
+	const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+		ae => ae.Extension?.slug === 'discussion'
+	)
 
 	console.log({
 		postTitle,
 		editor: editor?.getHTML(),
-		isLoading
+		isLoading,
+		club,
+		agreementExtension
 	})
 
 	return (
@@ -323,9 +409,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 								onClick={async () => {
 									const tl =
 										await sdk.storage.getTablelandInstance({
-											chainId:
-												+process.env
-													.NEXT_PUBLIC_CHAIN_ID
+											chainId: +(
+												process.env
+													.NEXT_PUBLIC_CHAIN_ID ?? ''
+											)
 										})
 									await tl.siwe()
 
@@ -342,7 +429,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 											{
 												some: 'condition'
 											}
-										)}', '${now}', '${now}')`
+										)}', '${now}', '${now}')`,
+										{
+											rpcRelay: false
+										}
 									)
 								}}
 							>
