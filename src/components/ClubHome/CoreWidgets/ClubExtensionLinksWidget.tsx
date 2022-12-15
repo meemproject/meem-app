@@ -42,10 +42,10 @@ export const ClubExtensionLinksWidget: React.FC<IProps> = ({ club }) => {
 		<>
 			{/* Show all extensions with links for club members */}
 			{club.isCurrentUserClubMember &&
-				club.allExtensions &&
-				club.allExtensions.length > 0 && (
+				club.extensions &&
+				club.extensions.length > 0 && (
 					<Grid>
-						{club.allExtensions
+						{club.extensions
 							.filter(ext => ext.url)
 							.map(extension => (
 								<Grid.Col

@@ -14,7 +14,7 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
-import { GET_INTEGRATIONS as GET_EXTENSIONS } from '../../../graphql/clubs'
+import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/clubs'
 import { Club, Extension } from '../../../model/club/club'
 import { colorGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
@@ -58,6 +58,8 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
+	const enableExtension = async (extention: AgreementExtensions) => {}
+
 	return (
 		<>
 			<div>
@@ -66,14 +68,14 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 				<Text className={clubsTheme.tLargeBold}>Club Apps</Text>
 				<Space h={32} />
 
-				{club.allExtensions && club.allExtensions.length > 0 && (
+				{club.extensions && club.extensions.length > 0 && (
 					<>
 						<Text
 							className={clubsTheme.tMediumBold}
-						>{`Enabled extensions (${club.allExtensions.length})`}</Text>
+						>{`Enabled extensions (${club.extensions.length})`}</Text>
 						<Space h={12} />
 						<Grid>
-							{club.allExtensions.map(extension => (
+							{club.extensions.map(extension => (
 								<Grid.Col
 									xs={8}
 									sm={8}

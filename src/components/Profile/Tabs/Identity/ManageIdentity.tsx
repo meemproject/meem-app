@@ -22,8 +22,8 @@ import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
-import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
+import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
+import { IDENTITY_PROVIDERS_QUERY } from '../../../../graphql/id'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -50,7 +50,7 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	// Fetch a list of available extensions.
 	const { data: inteData, loading: isLoadingAvailableExtensions } =
-		useQuery<GetIdentityIntegrationsQuery>(IDENTITY_INTEGRATIONS_QUERY, {
+		useQuery<GetIdentityProvidersQuery>(IDENTITY_PROVIDERS_QUERY, {
 			client: anonClient
 		})
 
@@ -206,7 +206,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	}
 
 	const filteredAvilableExtensions =
-		inteData?.IdentityIntegrations.filter(ai => {
+		inteData?.IdentityProviders.filter(ai => {
 			const connectedExtension = me?.UserIdentities?.find(
 				i => i.IdentityIntegrationId === ai.id
 			)

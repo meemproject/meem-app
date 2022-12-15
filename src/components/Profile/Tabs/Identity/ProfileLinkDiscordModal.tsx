@@ -29,7 +29,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 		async function authenticateWithDiscord() {
 			try {
 				await sdk.id.updateUserIdentity({
-					identityIntegrationId: extensionId ?? '',
+					IdentityProviderId: extensionId ?? '',
 					visibility: MeemAPI.IntegrationVisibility.TokenHolders,
 					metadata: {
 						discordAuthCode,

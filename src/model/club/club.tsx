@@ -105,9 +105,7 @@ export interface Club {
 	isClubControlledByMeemApi?: boolean
 	isValid?: boolean
 	rawClub?: Agreements
-	allExtensions?: AgreementExtensions[]
-	publicExtensions?: AgreementExtensions[]
-	privateExtensions?: AgreementExtensions[]
+	extensions?: AgreementExtensions[]
 	gnosisSafeAddress?: string | null
 	memberCount?: number
 }
@@ -322,7 +320,7 @@ export function clubSummaryFromAgreement(clubData?: Agreements): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allExtensions: [],
+			extensions: [],
 			memberCount: members.length
 		}
 	} else {
@@ -515,7 +513,7 @@ export default async function clubFromAgreement(
 							const discordUserId = ''
 							const emailAddress = ''
 
-							// memberIdentity?.IdentityIntegrations.forEach(
+							// memberIdentity?.IdentityProviders.forEach(
 							// 	inte => {
 							// 		if (inte.metadata.twitterUsername) {
 							// 			twitterUsername =
@@ -741,13 +739,9 @@ export default async function clubFromAgreement(
 
 		// Extensions
 		const allExtensions: AgreementExtensions[] = []
-		const publicExtensions: AgreementExtensions[] = []
-		const privateExtensions: AgreementExtensions[] = []
 		if (clubData.AgreementExtensions) {
 			clubData.AgreementExtensions.forEach(extension => {
 				allExtensions.push(extension)
-				publicExtensions.push(extension)
-				privateExtensions.push(extension)
 			})
 		}
 
@@ -793,9 +787,7 @@ export default async function clubFromAgreement(
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allExtensions,
-			publicExtensions,
-			privateExtensions
+			extensions: allExtensions
 		}
 	} else {
 		return {}

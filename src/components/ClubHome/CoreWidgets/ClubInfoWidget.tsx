@@ -297,8 +297,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 						<Button
 							style={{
 								margin:
-									club.allExtensions &&
-									club.allExtensions?.length > 0
+									club.extensions &&
+									club.extensions?.length > 0
 										? 3
 										: 0
 							}}
@@ -312,7 +312,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 							<Text>Scan</Text>
 						</Button>
 
-						{club.allExtensions?.map(extension => (
+						{club.extensions?.map(extension => (
 							<>
 								<Button
 									style={{

@@ -126,19 +126,33 @@ export const GET_CLUB = gql`
 			mintPermissions
 			symbol
 			id
-			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
-				ExtensionId
-				id
-				metadata
-				Extension {
-					description
-					guideUrl
-					icon
+				AgreementExtensionLinks {
+					createdAt
 					id
+					isEnabled
+					updatedAt
+					label
+					url
+					AgreementExtensionId
+				}
+				AgreementExtensionWidgets {
+					AgreementExtensionId
+					createdAt
+					id
+					isEnabled
+					metadata
+					updatedAt
+				}
+				ExtensionId
+				metadata
+				id
+				Extension {
+					slug
+					id
+					icon
 					name
 				}
-				#isPublic
 			}
 		}
 	}
@@ -185,20 +199,32 @@ export const GET_CLUB_AS_MEMBER = gql`
 				}
 			}
 			id
-			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
-				ExtensionId
-				id
-				# isEnabled
-				metadata
-				Extension {
-					description
-					guideUrl
-					icon
+				AgreementExtensionLinks {
+					createdAt
 					id
+					isEnabled
+					updatedAt
+					label
+					url
+					AgreementExtensionId
+				}
+				AgreementExtensionWidgets {
+					AgreementExtensionId
+					createdAt
+					id
+					isEnabled
+					metadata
+					updatedAt
+				}
+				metadata
+				id
+				Extension {
+					slug
+					id
+					icon
 					name
 				}
-				#isPublic
 			}
 		}
 	}
@@ -251,20 +277,32 @@ export const SUB_CLUB = gql`
 			mintPermissions
 			symbol
 			id
-			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
-				ExtensionId
-				id
-				# isEnabled
-				metadata
-				Extension {
-					description
-					guideUrl
-					icon
+				AgreementExtensionLinks {
+					createdAt
 					id
+					isEnabled
+					updatedAt
+					label
+					url
+					AgreementExtensionId
+				}
+				AgreementExtensionWidgets {
+					AgreementExtensionId
+					createdAt
+					id
+					isEnabled
+					metadata
+					updatedAt
+				}
+				metadata
+				id
+				Extension {
+					slug
+					id
+					icon
 					name
 				}
-				#isPublic
 			}
 		}
 	}
@@ -327,20 +365,31 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			mintPermissions
 			symbol
 			id
-			# AgreementExtensions(where: { isEnabled: { _eq: true } }) {
 			AgreementExtensions {
-				ExtensionId
-				id
-				# isEnabled
+				AgreementExtensionLinks {
+					createdAt
+					id
+					isEnabled
+					updatedAt
+					label
+					url
+					AgreementExtensionId
+				}
+				AgreementExtensionWidgets {
+					AgreementExtensionId
+					createdAt
+					id
+					isEnabled
+					metadata
+					updatedAt
+				}
 				metadata
 				Extension {
-					description
-					guideUrl
-					icon
+					slug
 					id
+					icon
 					name
 				}
-				#isPublic
 			}
 			AgreementRoles {
 				id
@@ -393,7 +442,7 @@ export const SUB_CLUBS = gql`
 	}
 `
 
-export const GET_INTEGRATIONS = gql`
+export const GET_EXTENSIONS = gql`
 	query GetExtensions {
 		Extensions {
 			createdAt
@@ -402,6 +451,7 @@ export const GET_INTEGRATIONS = gql`
 			icon
 			id
 			name
+			slug
 			updatedAt
 		}
 	}

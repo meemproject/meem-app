@@ -48,7 +48,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			// 	})
 			if (extension?.id) {
 				await sdk.id.updateUserIdentity({
-					identityIntegrationId: extension.id,
+					IdentityProviderId: extension.id,
 					visibility: extensionVisibility
 				})
 			}
@@ -179,10 +179,10 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						className={clubsTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
-							if (userIdentity?.IdentityIntegrationId) {
+							if (userIdentity?.IdentityProviderId) {
 								sdk.id.detachUserIdentity({
-									identityIntegrationId:
-										userIdentity?.IdentityIntegrationId
+									IdentityProviderId:
+										userIdentity?.IdentityProviderId
 								})
 								onModalClosed()
 							}
