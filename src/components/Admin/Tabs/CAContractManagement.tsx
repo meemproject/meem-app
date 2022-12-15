@@ -3,7 +3,7 @@ import log from '@kengoldfarb/log'
 import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
-import { useMeemSDK, useWallet } from '@meemproject/react'
+import { useSDK, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -21,7 +21,7 @@ interface IProps {
 export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 
 	const [smartContractPermission, setSmartContractPermission] =
 		useState('members-and-meem')

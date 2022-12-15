@@ -11,16 +11,16 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
-import ClubContext from '../../ClubHome/ClubProvider'
+import { useClub } from '../../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
 
 export const ExampleExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const router = useRouter()
 	const { classes: clubsTheme } = useClubsTheme()
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
 	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
@@ -51,7 +51,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	/*
 	TODO
-	Add your custom extension permissions layout here. 
+	Add your custom extension permissions layout here.
 	 */
 	const customExtensionPermissions = () => (
 		<>This extension does not provide any permissions.</>

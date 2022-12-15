@@ -1,7 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemSDK, useWallet } from '@meemproject/react'
+import { useSDK, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
@@ -23,14 +23,16 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 
 	useEffect(() => {
 		async function authenticateWithDiscord() {
 			try {
 				await sdk.id.updateUserIdentity({
+					// TODO: Fix this
+					// @ts-ignore
 					identityIntegrationId: extensionId ?? '',
-					visibility: MeemAPI.IntegrationVisibility.MutualClubMembers,
+					visibility: MeemAPI.IUserIdentityVisibility.TokenHolders,
 					metadata: {
 						discordAuthCode,
 						redirectUri: `${window.location.origin}/profile`

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Container, Text, Space, Loader, Center } from '@mantine/core'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { ClubDiscussionWidget } from '../Extensions/Discussion/ClubDiscussionWidget'
 import { useClubsTheme } from '../Styles/ClubsTheme'
-import ClubContext from './ClubProvider'
+import { useClub } from './ClubProvider'
 import { ClubAddAppsWidget } from './CoreWidgets/ClubAddAppsWidget'
 import { ClubExtensionLinksWidget } from './CoreWidgets/ClubExtensionLinksWidget'
 import { ClubInfoWidget } from './CoreWidgets/ClubInfoWidget'
@@ -11,7 +11,7 @@ import { ClubMembersWidget } from './CoreWidgets/ClubMembersWidget'
 import { ClubRequirementsWidget } from './CoreWidgets/ClubRequirementsWidget'
 
 export const ClubDetailComponent: React.FC = () => {
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const [doesMeetAllRequirements, setDoesMeetAllRequirements] =

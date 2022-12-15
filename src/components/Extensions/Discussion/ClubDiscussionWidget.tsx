@@ -1,10 +1,12 @@
 import { Text, Button, Space } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Settings } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 interface IProps {
 	club: Club
@@ -13,29 +15,76 @@ interface IProps {
 export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
+	const chainId = +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
+
+	const [hasFetchdData, setHasFetchedData] = useState(false)
+	const [posts, setPosts] = useState<DiscussionPost[]>([])
+
 	const router = useRouter()
+
+	const { sdk } = useSDK()
 
 	useEffect(() => {}, [club])
 
-	const posts: DiscussionPost[] = [
-		{
-			id: '1',
-			title: 'Test post one',
-			clubSlug: club.slug ?? '',
-			tags: ['funny', 'crazy'],
-			content: 'This is just a small test post.',
-			user: club.members ? club.members[0] : { wallet: '' }
-		},
-		{
-			id: '2',
-			title: 'Test post two',
-			clubSlug: club.slug ?? '',
+	useEffect(() => {
+		const fetchData = async () => {
+			if (hasFetchdData) {
+				return
+			}
 
-			tags: ['funny', 'crazy'],
-			content: 'And another test post',
-			user: club.members ? club.members[0] : { wallet: '' }
+			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+				ae => ae.Extension?.slug === 'discussion'
+			)
+
+			if (
+				agreementExtension &&
+				agreementExtension.metadata?.storage?.tableland?.posts
+			) {
+				const authSig = await sdk.id.getLitAuthSig()
+
+				const tableName =
+					agreementExtension.metadata?.storage?.tableland?.posts
+						.tablelandTableName
+
+				const rows = await sdk.storage.read({
+					chainId,
+					tableName,
+					authSig,
+					limit: 2
+				})
+
+				const newPosts: DiscussionPost[] = rows.map(row => {
+					return rowToDiscussionPost({ row, club })
+				})
+
+				setPosts(newPosts)
+
+				setHasFetchedData(true)
+			}
 		}
-	]
+
+		fetchData()
+	}, [hasFetchdData, club, chainId, sdk])
+
+	// const posts: DiscussionPost[] = [
+	// 	{
+	// 		id: '1',
+	// 		title: 'Test post one',
+	// 		clubSlug: club.slug ?? '',
+	// 		tags: ['funny', 'crazy'],
+	// 		content: 'This is just a small test post.',
+	// 		user: club.members ? club.members[0] : { wallet: '' }
+	// 	},
+	// 	{
+	// 		id: '2',
+	// 		title: 'Test post two',
+	// 		clubSlug: club.slug ?? '',
+
+	// 		tags: ['funny', 'crazy'],
+	// 		content: 'And another test post',
+	// 		user: club.members ? club.members[0] : { wallet: '' }
+	// 	}
+	// ]
 
 	return (
 		<>

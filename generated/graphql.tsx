@@ -18,11 +18,1168 @@ export type Scalars = {
   uuid: any;
 };
 
+/** columns and relationships of "AgreementExtensionLinks" */
+export type AgreementExtensionLinks = {
+  __typename?: 'AgreementExtensionLinks';
+  /** An object relationship */
+  AgreementExtension?: Maybe<AgreementExtensions>;
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  isEnabled: Scalars['Boolean'];
+  label?: Maybe<Scalars['String']>;
+  metadata?: Maybe<Scalars['jsonb']>;
+  updatedAt: Scalars['timestamptz'];
+  url: Scalars['String'];
+  visibility: Scalars['String'];
+};
+
+
+/** columns and relationships of "AgreementExtensionLinks" */
+export type AgreementExtensionLinksMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregated selection of "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Aggregate = {
+  __typename?: 'AgreementExtensionLinks_aggregate';
+  aggregate?: Maybe<AgreementExtensionLinks_Aggregate_Fields>;
+  nodes: Array<AgreementExtensionLinks>;
+};
+
+export type AgreementExtensionLinks_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<AgreementExtensionLinks_Aggregate_Bool_Exp_Count>;
+};
+
+export type AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_And = {
+  arguments: AgreementExtensionLinks_Select_Column_AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: AgreementExtensionLinks_Select_Column_AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type AgreementExtensionLinks_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Aggregate_Fields = {
+  __typename?: 'AgreementExtensionLinks_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementExtensionLinks_Max_Fields>;
+  min?: Maybe<AgreementExtensionLinks_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<AgreementExtensionLinks_Max_Order_By>;
+  min?: InputMaybe<AgreementExtensionLinks_Min_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionLinks_Append_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** input type for inserting array relation for remote table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Arr_Rel_Insert_Input = {
+  data: Array<AgreementExtensionLinks_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<AgreementExtensionLinks_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementExtensionLinks". All fields are combined with a logical 'AND'. */
+export type AgreementExtensionLinks_Bool_Exp = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Bool_Exp>;
+  AgreementExtensionId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementExtensionLinks_Bool_Exp>>;
+  _not?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementExtensionLinks_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  isEnabled?: InputMaybe<Boolean_Comparison_Exp>;
+  label?: InputMaybe<String_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  url?: InputMaybe<String_Comparison_Exp>;
+  visibility?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "AgreementExtensionLinks" */
+export enum AgreementExtensionLinks_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementExtensionLinksPkey = 'AgreementExtensionLinks_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type AgreementExtensionLinks_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type AgreementExtensionLinks_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type AgreementExtensionLinks_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Insert_Input = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Obj_Rel_Insert_Input>;
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
+  label?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  url?: InputMaybe<Scalars['String']>;
+  visibility?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type AgreementExtensionLinks_Max_Fields = {
+  __typename?: 'AgreementExtensionLinks_max_fields';
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  label?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  url?: Maybe<Scalars['String']>;
+  visibility?: Maybe<Scalars['String']>;
+};
+
+/** order by max() on columns of table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Max_Order_By = {
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  label?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  url?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type AgreementExtensionLinks_Min_Fields = {
+  __typename?: 'AgreementExtensionLinks_min_fields';
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  label?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  url?: Maybe<Scalars['String']>;
+  visibility?: Maybe<Scalars['String']>;
+};
+
+/** order by min() on columns of table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Min_Order_By = {
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  label?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  url?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Mutation_Response = {
+  __typename?: 'AgreementExtensionLinks_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementExtensionLinks>;
+};
+
+/** on_conflict condition type for table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_On_Conflict = {
+  constraint: AgreementExtensionLinks_Constraint;
+  update_columns?: Array<AgreementExtensionLinks_Update_Column>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "AgreementExtensionLinks". */
+export type AgreementExtensionLinks_Order_By = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Order_By>;
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  isEnabled?: InputMaybe<Order_By>;
+  label?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  url?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementExtensionLinks */
+export type AgreementExtensionLinks_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionLinks_Prepend_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "AgreementExtensionLinks" */
+export enum AgreementExtensionLinks_Select_Column {
+  /** column name */
+  AgreementExtensionId = 'AgreementExtensionId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsEnabled = 'isEnabled',
+  /** column name */
+  Label = 'label',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Url = 'url',
+  /** column name */
+  Visibility = 'visibility'
+}
+
+/** select "AgreementExtensionLinks_aggregate_bool_exp_bool_and_arguments_columns" columns of table "AgreementExtensionLinks" */
+export enum AgreementExtensionLinks_Select_Column_AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsEnabled = 'isEnabled'
+}
+
+/** select "AgreementExtensionLinks_aggregate_bool_exp_bool_or_arguments_columns" columns of table "AgreementExtensionLinks" */
+export enum AgreementExtensionLinks_Select_Column_AgreementExtensionLinks_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsEnabled = 'isEnabled'
+}
+
+/** input type for updating data in table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Set_Input = {
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
+  label?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  url?: InputMaybe<Scalars['String']>;
+  visibility?: InputMaybe<Scalars['String']>;
+};
+
+/** Streaming cursor of the table "AgreementExtensionLinks" */
+export type AgreementExtensionLinks_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementExtensionLinks_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementExtensionLinks_Stream_Cursor_Value_Input = {
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
+  label?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  url?: InputMaybe<Scalars['String']>;
+  visibility?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "AgreementExtensionLinks" */
+export enum AgreementExtensionLinks_Update_Column {
+  /** column name */
+  AgreementExtensionId = 'AgreementExtensionId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsEnabled = 'isEnabled',
+  /** column name */
+  Label = 'label',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Url = 'url',
+  /** column name */
+  Visibility = 'visibility'
+}
+
+export type AgreementExtensionLinks_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<AgreementExtensionLinks_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<AgreementExtensionLinks_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<AgreementExtensionLinks_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<AgreementExtensionLinks_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<AgreementExtensionLinks_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementExtensionLinks_Set_Input>;
+  where: AgreementExtensionLinks_Bool_Exp;
+};
+
+/** columns and relationships of "AgreementExtensionRoles" */
+export type AgreementExtensionRoles = {
+  __typename?: 'AgreementExtensionRoles';
+  /** An object relationship */
+  AgreementExtension?: Maybe<AgreementExtensions>;
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  /** An object relationship */
+  AgreementRole?: Maybe<AgreementRoles>;
+  AgreementRoleId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  metadata?: Maybe<Scalars['jsonb']>;
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "AgreementExtensionRoles" */
+export type AgreementExtensionRolesMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregated selection of "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Aggregate = {
+  __typename?: 'AgreementExtensionRoles_aggregate';
+  aggregate?: Maybe<AgreementExtensionRoles_Aggregate_Fields>;
+  nodes: Array<AgreementExtensionRoles>;
+};
+
+export type AgreementExtensionRoles_Aggregate_Bool_Exp = {
+  count?: InputMaybe<AgreementExtensionRoles_Aggregate_Bool_Exp_Count>;
+};
+
+export type AgreementExtensionRoles_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Aggregate_Fields = {
+  __typename?: 'AgreementExtensionRoles_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementExtensionRoles_Max_Fields>;
+  min?: Maybe<AgreementExtensionRoles_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<AgreementExtensionRoles_Max_Order_By>;
+  min?: InputMaybe<AgreementExtensionRoles_Min_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionRoles_Append_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** input type for inserting array relation for remote table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Arr_Rel_Insert_Input = {
+  data: Array<AgreementExtensionRoles_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<AgreementExtensionRoles_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementExtensionRoles". All fields are combined with a logical 'AND'. */
+export type AgreementExtensionRoles_Bool_Exp = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Bool_Exp>;
+  AgreementExtensionId?: InputMaybe<Uuid_Comparison_Exp>;
+  AgreementRole?: InputMaybe<AgreementRoles_Bool_Exp>;
+  AgreementRoleId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementExtensionRoles_Bool_Exp>>;
+  _not?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementExtensionRoles_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "AgreementExtensionRoles" */
+export enum AgreementExtensionRoles_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementExtensionRolesPkey = 'AgreementExtensionRoles_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type AgreementExtensionRoles_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type AgreementExtensionRoles_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type AgreementExtensionRoles_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Insert_Input = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Obj_Rel_Insert_Input>;
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  AgreementRole?: InputMaybe<AgreementRoles_Obj_Rel_Insert_Input>;
+  AgreementRoleId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type AgreementExtensionRoles_Max_Fields = {
+  __typename?: 'AgreementExtensionRoles_max_fields';
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  AgreementRoleId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by max() on columns of table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Max_Order_By = {
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  AgreementRoleId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type AgreementExtensionRoles_Min_Fields = {
+  __typename?: 'AgreementExtensionRoles_min_fields';
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  AgreementRoleId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** order by min() on columns of table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Min_Order_By = {
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  AgreementRoleId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Mutation_Response = {
+  __typename?: 'AgreementExtensionRoles_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementExtensionRoles>;
+};
+
+/** on_conflict condition type for table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_On_Conflict = {
+  constraint: AgreementExtensionRoles_Constraint;
+  update_columns?: Array<AgreementExtensionRoles_Update_Column>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "AgreementExtensionRoles". */
+export type AgreementExtensionRoles_Order_By = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Order_By>;
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  AgreementRole?: InputMaybe<AgreementRoles_Order_By>;
+  AgreementRoleId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementExtensionRoles */
+export type AgreementExtensionRoles_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionRoles_Prepend_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "AgreementExtensionRoles" */
+export enum AgreementExtensionRoles_Select_Column {
+  /** column name */
+  AgreementExtensionId = 'AgreementExtensionId',
+  /** column name */
+  AgreementRoleId = 'AgreementRoleId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** input type for updating data in table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Set_Input = {
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  AgreementRoleId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** Streaming cursor of the table "AgreementExtensionRoles" */
+export type AgreementExtensionRoles_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementExtensionRoles_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementExtensionRoles_Stream_Cursor_Value_Input = {
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  AgreementRoleId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "AgreementExtensionRoles" */
+export enum AgreementExtensionRoles_Update_Column {
+  /** column name */
+  AgreementExtensionId = 'AgreementExtensionId',
+  /** column name */
+  AgreementRoleId = 'AgreementRoleId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type AgreementExtensionRoles_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<AgreementExtensionRoles_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<AgreementExtensionRoles_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<AgreementExtensionRoles_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<AgreementExtensionRoles_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<AgreementExtensionRoles_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementExtensionRoles_Set_Input>;
+  where: AgreementExtensionRoles_Bool_Exp;
+};
+
+/** columns and relationships of "AgreementExtensionStorages" */
+export type AgreementExtensionStorages = {
+  __typename?: 'AgreementExtensionStorages';
+  AgreementId?: Maybe<Scalars['uuid']>;
+  ExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  metadata: Scalars['jsonb'];
+  type: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "AgreementExtensionStorages" */
+export type AgreementExtensionStoragesMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregated selection of "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_Aggregate = {
+  __typename?: 'AgreementExtensionStorages_aggregate';
+  aggregate?: Maybe<AgreementExtensionStorages_Aggregate_Fields>;
+  nodes: Array<AgreementExtensionStorages>;
+};
+
+/** aggregate fields of "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_Aggregate_Fields = {
+  __typename?: 'AgreementExtensionStorages_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementExtensionStorages_Max_Fields>;
+  min?: Maybe<AgreementExtensionStorages_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementExtensionStorages_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionStorages_Append_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementExtensionStorages". All fields are combined with a logical 'AND'. */
+export type AgreementExtensionStorages_Bool_Exp = {
+  AgreementId?: InputMaybe<Uuid_Comparison_Exp>;
+  ExtensionId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementExtensionStorages_Bool_Exp>>;
+  _not?: InputMaybe<AgreementExtensionStorages_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementExtensionStorages_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  type?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "AgreementExtensionStorages" */
+export enum AgreementExtensionStorages_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementExtensionStoragesPkey = 'AgreementExtensionStorages_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type AgreementExtensionStorages_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type AgreementExtensionStorages_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type AgreementExtensionStorages_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_Insert_Input = {
+  AgreementId?: InputMaybe<Scalars['uuid']>;
+  ExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  type?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type AgreementExtensionStorages_Max_Fields = {
+  __typename?: 'AgreementExtensionStorages_max_fields';
+  AgreementId?: Maybe<Scalars['uuid']>;
+  ExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  type?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type AgreementExtensionStorages_Min_Fields = {
+  __typename?: 'AgreementExtensionStorages_min_fields';
+  AgreementId?: Maybe<Scalars['uuid']>;
+  ExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  type?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_Mutation_Response = {
+  __typename?: 'AgreementExtensionStorages_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementExtensionStorages>;
+};
+
+/** on_conflict condition type for table "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_On_Conflict = {
+  constraint: AgreementExtensionStorages_Constraint;
+  update_columns?: Array<AgreementExtensionStorages_Update_Column>;
+  where?: InputMaybe<AgreementExtensionStorages_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "AgreementExtensionStorages". */
+export type AgreementExtensionStorages_Order_By = {
+  AgreementId?: InputMaybe<Order_By>;
+  ExtensionId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementExtensionStorages */
+export type AgreementExtensionStorages_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionStorages_Prepend_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "AgreementExtensionStorages" */
+export enum AgreementExtensionStorages_Select_Column {
+  /** column name */
+  AgreementId = 'AgreementId',
+  /** column name */
+  ExtensionId = 'ExtensionId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** input type for updating data in table "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_Set_Input = {
+  AgreementId?: InputMaybe<Scalars['uuid']>;
+  ExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  type?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** Streaming cursor of the table "AgreementExtensionStorages" */
+export type AgreementExtensionStorages_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementExtensionStorages_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementExtensionStorages_Stream_Cursor_Value_Input = {
+  AgreementId?: InputMaybe<Scalars['uuid']>;
+  ExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  type?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "AgreementExtensionStorages" */
+export enum AgreementExtensionStorages_Update_Column {
+  /** column name */
+  AgreementId = 'AgreementId',
+  /** column name */
+  ExtensionId = 'ExtensionId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type AgreementExtensionStorages_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<AgreementExtensionStorages_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<AgreementExtensionStorages_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<AgreementExtensionStorages_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<AgreementExtensionStorages_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<AgreementExtensionStorages_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementExtensionStorages_Set_Input>;
+  where: AgreementExtensionStorages_Bool_Exp;
+};
+
+/** columns and relationships of "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets = {
+  __typename?: 'AgreementExtensionWidgets';
+  /** An object relationship */
+  AgreementExtension?: Maybe<AgreementExtensions>;
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  isEnabled: Scalars['Boolean'];
+  metadata?: Maybe<Scalars['jsonb']>;
+  updatedAt: Scalars['timestamptz'];
+  visibility: Scalars['String'];
+};
+
+
+/** columns and relationships of "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgetsMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregated selection of "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Aggregate = {
+  __typename?: 'AgreementExtensionWidgets_aggregate';
+  aggregate?: Maybe<AgreementExtensionWidgets_Aggregate_Fields>;
+  nodes: Array<AgreementExtensionWidgets>;
+};
+
+export type AgreementExtensionWidgets_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<AgreementExtensionWidgets_Aggregate_Bool_Exp_Count>;
+};
+
+export type AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_And = {
+  arguments: AgreementExtensionWidgets_Select_Column_AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: AgreementExtensionWidgets_Select_Column_AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type AgreementExtensionWidgets_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Aggregate_Fields = {
+  __typename?: 'AgreementExtensionWidgets_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementExtensionWidgets_Max_Fields>;
+  min?: Maybe<AgreementExtensionWidgets_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<AgreementExtensionWidgets_Max_Order_By>;
+  min?: InputMaybe<AgreementExtensionWidgets_Min_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionWidgets_Append_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** input type for inserting array relation for remote table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Arr_Rel_Insert_Input = {
+  data: Array<AgreementExtensionWidgets_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<AgreementExtensionWidgets_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementExtensionWidgets". All fields are combined with a logical 'AND'. */
+export type AgreementExtensionWidgets_Bool_Exp = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Bool_Exp>;
+  AgreementExtensionId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementExtensionWidgets_Bool_Exp>>;
+  _not?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementExtensionWidgets_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  isEnabled?: InputMaybe<Boolean_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  visibility?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "AgreementExtensionWidgets" */
+export enum AgreementExtensionWidgets_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementExtensionWidgetsPkey = 'AgreementExtensionWidgets_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type AgreementExtensionWidgets_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type AgreementExtensionWidgets_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type AgreementExtensionWidgets_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Insert_Input = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Obj_Rel_Insert_Input>;
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  visibility?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type AgreementExtensionWidgets_Max_Fields = {
+  __typename?: 'AgreementExtensionWidgets_max_fields';
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  visibility?: Maybe<Scalars['String']>;
+};
+
+/** order by max() on columns of table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Max_Order_By = {
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type AgreementExtensionWidgets_Min_Fields = {
+  __typename?: 'AgreementExtensionWidgets_min_fields';
+  AgreementExtensionId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  visibility?: Maybe<Scalars['String']>;
+};
+
+/** order by min() on columns of table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Min_Order_By = {
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Mutation_Response = {
+  __typename?: 'AgreementExtensionWidgets_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementExtensionWidgets>;
+};
+
+/** on_conflict condition type for table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_On_Conflict = {
+  constraint: AgreementExtensionWidgets_Constraint;
+  update_columns?: Array<AgreementExtensionWidgets_Update_Column>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "AgreementExtensionWidgets". */
+export type AgreementExtensionWidgets_Order_By = {
+  AgreementExtension?: InputMaybe<AgreementExtensions_Order_By>;
+  AgreementExtensionId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  isEnabled?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementExtensionWidgets */
+export type AgreementExtensionWidgets_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionWidgets_Prepend_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "AgreementExtensionWidgets" */
+export enum AgreementExtensionWidgets_Select_Column {
+  /** column name */
+  AgreementExtensionId = 'AgreementExtensionId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsEnabled = 'isEnabled',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Visibility = 'visibility'
+}
+
+/** select "AgreementExtensionWidgets_aggregate_bool_exp_bool_and_arguments_columns" columns of table "AgreementExtensionWidgets" */
+export enum AgreementExtensionWidgets_Select_Column_AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsEnabled = 'isEnabled'
+}
+
+/** select "AgreementExtensionWidgets_aggregate_bool_exp_bool_or_arguments_columns" columns of table "AgreementExtensionWidgets" */
+export enum AgreementExtensionWidgets_Select_Column_AgreementExtensionWidgets_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsEnabled = 'isEnabled'
+}
+
+/** input type for updating data in table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Set_Input = {
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  visibility?: InputMaybe<Scalars['String']>;
+};
+
+/** Streaming cursor of the table "AgreementExtensionWidgets" */
+export type AgreementExtensionWidgets_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementExtensionWidgets_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementExtensionWidgets_Stream_Cursor_Value_Input = {
+  AgreementExtensionId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  isEnabled?: InputMaybe<Scalars['Boolean']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  visibility?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "AgreementExtensionWidgets" */
+export enum AgreementExtensionWidgets_Update_Column {
+  /** column name */
+  AgreementExtensionId = 'AgreementExtensionId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsEnabled = 'isEnabled',
+  /** column name */
+  Metadata = 'metadata',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Visibility = 'visibility'
+}
+
+export type AgreementExtensionWidgets_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<AgreementExtensionWidgets_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<AgreementExtensionWidgets_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<AgreementExtensionWidgets_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<AgreementExtensionWidgets_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<AgreementExtensionWidgets_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementExtensionWidgets_Set_Input>;
+  where: AgreementExtensionWidgets_Bool_Exp;
+};
+
 /** columns and relationships of "AgreementExtensions" */
 export type AgreementExtensions = {
   __typename?: 'AgreementExtensions';
   /** An object relationship */
   Agreement?: Maybe<Agreements>;
+  /** An array relationship */
+  AgreementExtensionLinks: Array<AgreementExtensionLinks>;
+  /** An aggregate relationship */
+  AgreementExtensionLinks_aggregate: AgreementExtensionLinks_Aggregate;
+  /** An array relationship */
+  AgreementExtensionRoles: Array<AgreementExtensionRoles>;
+  /** An aggregate relationship */
+  AgreementExtensionRoles_aggregate: AgreementExtensionRoles_Aggregate;
+  /** An array relationship */
+  AgreementExtensionWidgets: Array<AgreementExtensionWidgets>;
+  /** An aggregate relationship */
+  AgreementExtensionWidgets_aggregate: AgreementExtensionWidgets_Aggregate;
   AgreementId?: Maybe<Scalars['uuid']>;
   /** An object relationship */
   AgreementRole?: Maybe<AgreementRoles>;
@@ -36,9 +1193,68 @@ export type AgreementExtensions = {
   ExtensionId?: Maybe<Scalars['uuid']>;
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
-  isEnabled: Scalars['Boolean'];
-  metadata: Scalars['jsonb'];
+  metadata?: Maybe<Scalars['jsonb']>;
   updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "AgreementExtensions" */
+export type AgreementExtensionsAgreementExtensionLinksArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionLinks_Order_By>>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+
+/** columns and relationships of "AgreementExtensions" */
+export type AgreementExtensionsAgreementExtensionLinks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionLinks_Order_By>>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+
+/** columns and relationships of "AgreementExtensions" */
+export type AgreementExtensionsAgreementExtensionRolesArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionRoles_Order_By>>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+
+/** columns and relationships of "AgreementExtensions" */
+export type AgreementExtensionsAgreementExtensionRoles_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionRoles_Order_By>>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+
+/** columns and relationships of "AgreementExtensions" */
+export type AgreementExtensionsAgreementExtensionWidgetsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionWidgets_Order_By>>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+};
+
+
+/** columns and relationships of "AgreementExtensions" */
+export type AgreementExtensionsAgreementExtensionWidgets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionWidgets_Order_By>>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
 };
 
 
@@ -75,23 +1291,7 @@ export type AgreementExtensions_Aggregate = {
 };
 
 export type AgreementExtensions_Aggregate_Bool_Exp = {
-  bool_and?: InputMaybe<AgreementExtensions_Aggregate_Bool_Exp_Bool_And>;
-  bool_or?: InputMaybe<AgreementExtensions_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<AgreementExtensions_Aggregate_Bool_Exp_Count>;
-};
-
-export type AgreementExtensions_Aggregate_Bool_Exp_Bool_And = {
-  arguments: AgreementExtensions_Select_Column_AgreementExtensions_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<AgreementExtensions_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
-};
-
-export type AgreementExtensions_Aggregate_Bool_Exp_Bool_Or = {
-  arguments: AgreementExtensions_Select_Column_AgreementExtensions_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<AgreementExtensions_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
 };
 
 export type AgreementExtensions_Aggregate_Bool_Exp_Count = {
@@ -138,6 +1338,12 @@ export type AgreementExtensions_Arr_Rel_Insert_Input = {
 /** Boolean expression to filter rows from the table "AgreementExtensions". All fields are combined with a logical 'AND'. */
 export type AgreementExtensions_Bool_Exp = {
   Agreement?: InputMaybe<Agreements_Bool_Exp>;
+  AgreementExtensionLinks?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+  AgreementExtensionLinks_aggregate?: InputMaybe<AgreementExtensionLinks_Aggregate_Bool_Exp>;
+  AgreementExtensionRoles?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+  AgreementExtensionRoles_aggregate?: InputMaybe<AgreementExtensionRoles_Aggregate_Bool_Exp>;
+  AgreementExtensionWidgets?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+  AgreementExtensionWidgets_aggregate?: InputMaybe<AgreementExtensionWidgets_Aggregate_Bool_Exp>;
   AgreementId?: InputMaybe<Uuid_Comparison_Exp>;
   AgreementRole?: InputMaybe<AgreementRoles_Bool_Exp>;
   AgreementRoleExtensions?: InputMaybe<AgreementRoleExtensions_Bool_Exp>;
@@ -150,7 +1356,6 @@ export type AgreementExtensions_Bool_Exp = {
   _or?: InputMaybe<Array<AgreementExtensions_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  isEnabled?: InputMaybe<Boolean_Comparison_Exp>;
   metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -183,6 +1388,9 @@ export type AgreementExtensions_Delete_Key_Input = {
 /** input type for inserting data into table "AgreementExtensions" */
 export type AgreementExtensions_Insert_Input = {
   Agreement?: InputMaybe<Agreements_Obj_Rel_Insert_Input>;
+  AgreementExtensionLinks?: InputMaybe<AgreementExtensionLinks_Arr_Rel_Insert_Input>;
+  AgreementExtensionRoles?: InputMaybe<AgreementExtensionRoles_Arr_Rel_Insert_Input>;
+  AgreementExtensionWidgets?: InputMaybe<AgreementExtensionWidgets_Arr_Rel_Insert_Input>;
   AgreementId?: InputMaybe<Scalars['uuid']>;
   AgreementRole?: InputMaybe<AgreementRoles_Obj_Rel_Insert_Input>;
   AgreementRoleExtensions?: InputMaybe<AgreementRoleExtensions_Arr_Rel_Insert_Input>;
@@ -191,7 +1399,6 @@ export type AgreementExtensions_Insert_Input = {
   ExtensionId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
-  isEnabled?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -264,6 +1471,9 @@ export type AgreementExtensions_On_Conflict = {
 /** Ordering options when selecting data from "AgreementExtensions". */
 export type AgreementExtensions_Order_By = {
   Agreement?: InputMaybe<Agreements_Order_By>;
+  AgreementExtensionLinks_aggregate?: InputMaybe<AgreementExtensionLinks_Aggregate_Order_By>;
+  AgreementExtensionRoles_aggregate?: InputMaybe<AgreementExtensionRoles_Aggregate_Order_By>;
+  AgreementExtensionWidgets_aggregate?: InputMaybe<AgreementExtensionWidgets_Aggregate_Order_By>;
   AgreementId?: InputMaybe<Order_By>;
   AgreementRole?: InputMaybe<AgreementRoles_Order_By>;
   AgreementRoleExtensions_aggregate?: InputMaybe<AgreementRoleExtensions_Aggregate_Order_By>;
@@ -272,7 +1482,6 @@ export type AgreementExtensions_Order_By = {
   ExtensionId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  isEnabled?: InputMaybe<Order_By>;
   metadata?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -300,23 +1509,9 @@ export enum AgreementExtensions_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  IsEnabled = 'isEnabled',
-  /** column name */
   Metadata = 'metadata',
   /** column name */
   UpdatedAt = 'updatedAt'
-}
-
-/** select "AgreementExtensions_aggregate_bool_exp_bool_and_arguments_columns" columns of table "AgreementExtensions" */
-export enum AgreementExtensions_Select_Column_AgreementExtensions_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  IsEnabled = 'isEnabled'
-}
-
-/** select "AgreementExtensions_aggregate_bool_exp_bool_or_arguments_columns" columns of table "AgreementExtensions" */
-export enum AgreementExtensions_Select_Column_AgreementExtensions_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  IsEnabled = 'isEnabled'
 }
 
 /** input type for updating data in table "AgreementExtensions" */
@@ -326,7 +1521,6 @@ export type AgreementExtensions_Set_Input = {
   ExtensionId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
-  isEnabled?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -346,7 +1540,6 @@ export type AgreementExtensions_Stream_Cursor_Value_Input = {
   ExtensionId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
-  isEnabled?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -363,8 +1556,6 @@ export enum AgreementExtensions_Update_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
-  /** column name */
-  IsEnabled = 'isEnabled',
   /** column name */
   Metadata = 'metadata',
   /** column name */
@@ -743,7 +1934,6 @@ export type AgreementRoleTokenTransfers = {
   AgreementRoleToken?: Maybe<AgreementRoleTokens>;
   AgreementRoleTokenId?: Maybe<Scalars['uuid']>;
   createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   from: Scalars['String'];
   id: Scalars['uuid'];
   to: Scalars['String'];
@@ -807,7 +1997,6 @@ export type AgreementRoleTokenTransfers_Bool_Exp = {
   _not?: InputMaybe<AgreementRoleTokenTransfers_Bool_Exp>;
   _or?: InputMaybe<Array<AgreementRoleTokenTransfers_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   from?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   to?: InputMaybe<String_Comparison_Exp>;
@@ -827,7 +2016,6 @@ export type AgreementRoleTokenTransfers_Insert_Input = {
   AgreementRoleToken?: InputMaybe<AgreementRoleTokens_Obj_Rel_Insert_Input>;
   AgreementRoleTokenId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   from?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   to?: InputMaybe<Scalars['String']>;
@@ -841,7 +2029,6 @@ export type AgreementRoleTokenTransfers_Max_Fields = {
   __typename?: 'AgreementRoleTokenTransfers_max_fields';
   AgreementRoleTokenId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   from?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   to?: Maybe<Scalars['String']>;
@@ -854,7 +2041,6 @@ export type AgreementRoleTokenTransfers_Max_Fields = {
 export type AgreementRoleTokenTransfers_Max_Order_By = {
   AgreementRoleTokenId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   from?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   to?: InputMaybe<Order_By>;
@@ -868,7 +2054,6 @@ export type AgreementRoleTokenTransfers_Min_Fields = {
   __typename?: 'AgreementRoleTokenTransfers_min_fields';
   AgreementRoleTokenId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   from?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   to?: Maybe<Scalars['String']>;
@@ -881,7 +2066,6 @@ export type AgreementRoleTokenTransfers_Min_Fields = {
 export type AgreementRoleTokenTransfers_Min_Order_By = {
   AgreementRoleTokenId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   from?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   to?: InputMaybe<Order_By>;
@@ -911,7 +2095,6 @@ export type AgreementRoleTokenTransfers_Order_By = {
   AgreementRoleToken?: InputMaybe<AgreementRoleTokens_Order_By>;
   AgreementRoleTokenId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   from?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   to?: InputMaybe<Order_By>;
@@ -932,8 +2115,6 @@ export enum AgreementRoleTokenTransfers_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
-  DeletedAt = 'deletedAt',
-  /** column name */
   From = 'from',
   /** column name */
   Id = 'id',
@@ -951,7 +2132,6 @@ export enum AgreementRoleTokenTransfers_Select_Column {
 export type AgreementRoleTokenTransfers_Set_Input = {
   AgreementRoleTokenId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   from?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   to?: InputMaybe<Scalars['String']>;
@@ -972,7 +2152,6 @@ export type AgreementRoleTokenTransfers_Stream_Cursor_Input = {
 export type AgreementRoleTokenTransfers_Stream_Cursor_Value_Input = {
   AgreementRoleTokenId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   from?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   to?: InputMaybe<Scalars['String']>;
@@ -987,8 +2166,6 @@ export enum AgreementRoleTokenTransfers_Update_Column {
   AgreementRoleTokenId = 'AgreementRoleTokenId',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   From = 'from',
   /** column name */
@@ -1390,6 +2567,187 @@ export type AgreementRoleTokens_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementRoleTokens_Set_Input>;
   where: AgreementRoleTokens_Bool_Exp;
+};
+
+/** columns and relationships of "AgreementRoleWallets" */
+export type AgreementRoleWallets = {
+  __typename?: 'AgreementRoleWallets';
+  AgreementRoleId?: Maybe<Scalars['uuid']>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  role: Scalars['String'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "AgreementRoleWallets" */
+export type AgreementRoleWallets_Aggregate = {
+  __typename?: 'AgreementRoleWallets_aggregate';
+  aggregate?: Maybe<AgreementRoleWallets_Aggregate_Fields>;
+  nodes: Array<AgreementRoleWallets>;
+};
+
+/** aggregate fields of "AgreementRoleWallets" */
+export type AgreementRoleWallets_Aggregate_Fields = {
+  __typename?: 'AgreementRoleWallets_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementRoleWallets_Max_Fields>;
+  min?: Maybe<AgreementRoleWallets_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementRoleWallets" */
+export type AgreementRoleWallets_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementRoleWallets_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementRoleWallets". All fields are combined with a logical 'AND'. */
+export type AgreementRoleWallets_Bool_Exp = {
+  AgreementRoleId?: InputMaybe<Uuid_Comparison_Exp>;
+  WalletId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementRoleWallets_Bool_Exp>>;
+  _not?: InputMaybe<AgreementRoleWallets_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementRoleWallets_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  role?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "AgreementRoleWallets" */
+export enum AgreementRoleWallets_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementRoleWalletsPkey = 'AgreementRoleWallets_pkey'
+}
+
+/** input type for inserting data into table "AgreementRoleWallets" */
+export type AgreementRoleWallets_Insert_Input = {
+  AgreementRoleId?: InputMaybe<Scalars['uuid']>;
+  WalletId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  role?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type AgreementRoleWallets_Max_Fields = {
+  __typename?: 'AgreementRoleWallets_max_fields';
+  AgreementRoleId?: Maybe<Scalars['uuid']>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  role?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type AgreementRoleWallets_Min_Fields = {
+  __typename?: 'AgreementRoleWallets_min_fields';
+  AgreementRoleId?: Maybe<Scalars['uuid']>;
+  WalletId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  role?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "AgreementRoleWallets" */
+export type AgreementRoleWallets_Mutation_Response = {
+  __typename?: 'AgreementRoleWallets_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementRoleWallets>;
+};
+
+/** on_conflict condition type for table "AgreementRoleWallets" */
+export type AgreementRoleWallets_On_Conflict = {
+  constraint: AgreementRoleWallets_Constraint;
+  update_columns?: Array<AgreementRoleWallets_Update_Column>;
+  where?: InputMaybe<AgreementRoleWallets_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "AgreementRoleWallets". */
+export type AgreementRoleWallets_Order_By = {
+  AgreementRoleId?: InputMaybe<Order_By>;
+  WalletId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  role?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementRoleWallets */
+export type AgreementRoleWallets_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** select columns of table "AgreementRoleWallets" */
+export enum AgreementRoleWallets_Select_Column {
+  /** column name */
+  AgreementRoleId = 'AgreementRoleId',
+  /** column name */
+  WalletId = 'WalletId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Role = 'role',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** input type for updating data in table "AgreementRoleWallets" */
+export type AgreementRoleWallets_Set_Input = {
+  AgreementRoleId?: InputMaybe<Scalars['uuid']>;
+  WalletId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  role?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** Streaming cursor of the table "AgreementRoleWallets" */
+export type AgreementRoleWallets_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementRoleWallets_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementRoleWallets_Stream_Cursor_Value_Input = {
+  AgreementRoleId?: InputMaybe<Scalars['uuid']>;
+  WalletId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  role?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "AgreementRoleWallets" */
+export enum AgreementRoleWallets_Update_Column {
+  /** column name */
+  AgreementRoleId = 'AgreementRoleId',
+  /** column name */
+  WalletId = 'WalletId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Role = 'role',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type AgreementRoleWallets_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementRoleWallets_Set_Input>;
+  where: AgreementRoleWallets_Bool_Exp;
 };
 
 /** columns and relationships of "AgreementRoles" */
@@ -2118,7 +3476,6 @@ export type AgreementTokenTransfers = {
   AgreementToken?: Maybe<AgreementTokens>;
   AgreementTokenId?: Maybe<Scalars['uuid']>;
   createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   from: Scalars['String'];
   id: Scalars['uuid'];
   to: Scalars['String'];
@@ -2182,7 +3539,6 @@ export type AgreementTokenTransfers_Bool_Exp = {
   _not?: InputMaybe<AgreementTokenTransfers_Bool_Exp>;
   _or?: InputMaybe<Array<AgreementTokenTransfers_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   from?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   to?: InputMaybe<String_Comparison_Exp>;
@@ -2202,7 +3558,6 @@ export type AgreementTokenTransfers_Insert_Input = {
   AgreementToken?: InputMaybe<AgreementTokens_Obj_Rel_Insert_Input>;
   AgreementTokenId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   from?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   to?: InputMaybe<Scalars['String']>;
@@ -2216,7 +3571,6 @@ export type AgreementTokenTransfers_Max_Fields = {
   __typename?: 'AgreementTokenTransfers_max_fields';
   AgreementTokenId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   from?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   to?: Maybe<Scalars['String']>;
@@ -2229,7 +3583,6 @@ export type AgreementTokenTransfers_Max_Fields = {
 export type AgreementTokenTransfers_Max_Order_By = {
   AgreementTokenId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   from?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   to?: InputMaybe<Order_By>;
@@ -2243,7 +3596,6 @@ export type AgreementTokenTransfers_Min_Fields = {
   __typename?: 'AgreementTokenTransfers_min_fields';
   AgreementTokenId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   from?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   to?: Maybe<Scalars['String']>;
@@ -2256,7 +3608,6 @@ export type AgreementTokenTransfers_Min_Fields = {
 export type AgreementTokenTransfers_Min_Order_By = {
   AgreementTokenId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   from?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   to?: InputMaybe<Order_By>;
@@ -2286,7 +3637,6 @@ export type AgreementTokenTransfers_Order_By = {
   AgreementToken?: InputMaybe<AgreementTokens_Order_By>;
   AgreementTokenId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   from?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   to?: InputMaybe<Order_By>;
@@ -2307,8 +3657,6 @@ export enum AgreementTokenTransfers_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
-  DeletedAt = 'deletedAt',
-  /** column name */
   From = 'from',
   /** column name */
   Id = 'id',
@@ -2326,7 +3674,6 @@ export enum AgreementTokenTransfers_Select_Column {
 export type AgreementTokenTransfers_Set_Input = {
   AgreementTokenId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   from?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   to?: InputMaybe<Scalars['String']>;
@@ -2347,7 +3694,6 @@ export type AgreementTokenTransfers_Stream_Cursor_Input = {
 export type AgreementTokenTransfers_Stream_Cursor_Value_Input = {
   AgreementTokenId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   from?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   to?: InputMaybe<Scalars['String']>;
@@ -2362,8 +3708,6 @@ export enum AgreementTokenTransfers_Update_Column {
   AgreementTokenId = 'AgreementTokenId',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   From = 'from',
   /** column name */
@@ -4237,7 +5581,6 @@ export type Bundles = {
   CreatorId?: Maybe<Scalars['uuid']>;
   abi: Scalars['jsonb'];
   createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description: Scalars['String'];
   id: Scalars['uuid'];
   name: Scalars['String'];
@@ -4334,7 +5677,6 @@ export type Bundles_Bool_Exp = {
   _or?: InputMaybe<Array<Bundles_Bool_Exp>>;
   abi?: InputMaybe<Jsonb_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
@@ -4370,7 +5712,6 @@ export type Bundles_Insert_Input = {
   CreatorId?: InputMaybe<Scalars['uuid']>;
   abi?: InputMaybe<Scalars['jsonb']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
@@ -4383,7 +5724,6 @@ export type Bundles_Max_Fields = {
   __typename?: 'Bundles_max_fields';
   CreatorId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
@@ -4395,7 +5735,6 @@ export type Bundles_Max_Fields = {
 export type Bundles_Max_Order_By = {
   CreatorId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -4408,7 +5747,6 @@ export type Bundles_Min_Fields = {
   __typename?: 'Bundles_min_fields';
   CreatorId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
@@ -4420,7 +5758,6 @@ export type Bundles_Min_Fields = {
 export type Bundles_Min_Order_By = {
   CreatorId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -4458,7 +5795,6 @@ export type Bundles_Order_By = {
   CreatorId?: InputMaybe<Order_By>;
   abi?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -4485,8 +5821,6 @@ export enum Bundles_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
-  DeletedAt = 'deletedAt',
-  /** column name */
   Description = 'description',
   /** column name */
   Id = 'id',
@@ -4503,7 +5837,6 @@ export type Bundles_Set_Input = {
   CreatorId?: InputMaybe<Scalars['uuid']>;
   abi?: InputMaybe<Scalars['jsonb']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
@@ -4524,7 +5857,6 @@ export type Bundles_Stream_Cursor_Value_Input = {
   CreatorId?: InputMaybe<Scalars['uuid']>;
   abi?: InputMaybe<Scalars['jsonb']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
@@ -4540,8 +5872,6 @@ export enum Bundles_Update_Column {
   Abi = 'abi',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -4639,6 +5969,12 @@ export enum ChainNonces_Constraint {
   ChainNoncesChainIdKey2 = 'ChainNonces_chainId_key2',
   /** unique or primary key constraint on columns "chainId" */
   ChainNoncesChainIdKey3 = 'ChainNonces_chainId_key3',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey4 = 'ChainNonces_chainId_key4',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey5 = 'ChainNonces_chainId_key5',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey6 = 'ChainNonces_chainId_key6',
   /** unique or primary key constraint on columns "id" */
   ChainNoncesPkey = 'ChainNonces_pkey'
 }
@@ -4832,7 +6168,6 @@ export type ContractInstances = {
   address: Scalars['String'];
   chainId: Scalars['Int'];
   createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
   updatedAt: Scalars['timestamptz'];
 };
@@ -4943,7 +6278,6 @@ export type ContractInstances_Bool_Exp = {
   address?: InputMaybe<String_Comparison_Exp>;
   chainId?: InputMaybe<Int_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -4967,7 +6301,6 @@ export type ContractInstances_Insert_Input = {
   address?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -4979,7 +6312,6 @@ export type ContractInstances_Max_Fields = {
   address?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
@@ -4990,7 +6322,6 @@ export type ContractInstances_Max_Order_By = {
   address?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -5002,7 +6333,6 @@ export type ContractInstances_Min_Fields = {
   address?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
@@ -5013,7 +6343,6 @@ export type ContractInstances_Min_Order_By = {
   address?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -5049,7 +6378,6 @@ export type ContractInstances_Order_By = {
   address?: InputMaybe<Order_By>;
   chainId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -5070,8 +6398,6 @@ export enum ContractInstances_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
-  DeletedAt = 'deletedAt',
-  /** column name */
   Id = 'id',
   /** column name */
   UpdatedAt = 'updatedAt'
@@ -5083,7 +6409,6 @@ export type ContractInstances_Set_Input = {
   address?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -5135,7 +6460,6 @@ export type ContractInstances_Stream_Cursor_Value_Input = {
   address?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -5161,8 +6485,6 @@ export enum ContractInstances_Update_Column {
   ChainId = 'chainId',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   Id = 'id',
   /** column name */
@@ -5228,7 +6550,6 @@ export type Contracts = {
   bytecode: Scalars['String'];
   contractType: Scalars['String'];
   createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description: Scalars['String'];
   functionSelectors: Scalars['jsonb'];
   id: Scalars['uuid'];
@@ -5384,7 +6705,6 @@ export type Contracts_Bool_Exp = {
   bytecode?: InputMaybe<String_Comparison_Exp>;
   contractType?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   functionSelectors?: InputMaybe<Jsonb_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -5432,7 +6752,6 @@ export type Contracts_Insert_Input = {
   bytecode?: InputMaybe<Scalars['String']>;
   contractType?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   functionSelectors?: InputMaybe<Scalars['jsonb']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -5448,7 +6767,6 @@ export type Contracts_Max_Fields = {
   bytecode?: Maybe<Scalars['String']>;
   contractType?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
@@ -5462,7 +6780,6 @@ export type Contracts_Max_Order_By = {
   bytecode?: InputMaybe<Order_By>;
   contractType?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -5477,7 +6794,6 @@ export type Contracts_Min_Fields = {
   bytecode?: Maybe<Scalars['String']>;
   contractType?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
@@ -5491,7 +6807,6 @@ export type Contracts_Min_Order_By = {
   bytecode?: InputMaybe<Order_By>;
   contractType?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -5532,7 +6847,6 @@ export type Contracts_Order_By = {
   bytecode?: InputMaybe<Order_By>;
   contractType?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   functionSelectors?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -5565,8 +6879,6 @@ export enum Contracts_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
-  DeletedAt = 'deletedAt',
-  /** column name */
   Description = 'description',
   /** column name */
   FunctionSelectors = 'functionSelectors',
@@ -5587,7 +6899,6 @@ export type Contracts_Set_Input = {
   bytecode?: InputMaybe<Scalars['String']>;
   contractType?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   functionSelectors?: InputMaybe<Scalars['jsonb']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -5644,7 +6955,6 @@ export type Contracts_Stream_Cursor_Value_Input = {
   bytecode?: InputMaybe<Scalars['String']>;
   contractType?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   functionSelectors?: InputMaybe<Scalars['jsonb']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -5676,8 +6986,6 @@ export enum Contracts_Update_Column {
   ContractType = 'contractType',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -5755,12 +7063,13 @@ export type Extensions = {
   /** An aggregate relationship */
   AgreementRoleExtensions_aggregate: AgreementRoleExtensions_Aggregate;
   createdAt: Scalars['timestamptz'];
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description: Scalars['String'];
   guideUrl: Scalars['String'];
   icon: Scalars['String'];
   id: Scalars['uuid'];
   name: Scalars['String'];
+  slug: Scalars['String'];
+  storageDefinition: Scalars['jsonb'];
   updatedAt: Scalars['timestamptz'];
 };
 
@@ -5804,6 +7113,12 @@ export type ExtensionsAgreementRoleExtensions_AggregateArgs = {
   where?: InputMaybe<AgreementRoleExtensions_Bool_Exp>;
 };
 
+
+/** columns and relationships of "Extensions" */
+export type ExtensionsStorageDefinitionArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
 /** aggregated selection of "Extensions" */
 export type Extensions_Aggregate = {
   __typename?: 'Extensions_aggregate';
@@ -5826,6 +7141,11 @@ export type Extensions_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Extensions_Append_Input = {
+  storageDefinition?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** Boolean expression to filter rows from the table "Extensions". All fields are combined with a logical 'AND'. */
 export type Extensions_Bool_Exp = {
   AgreementExtensions?: InputMaybe<AgreementExtensions_Bool_Exp>;
@@ -5836,12 +7156,13 @@ export type Extensions_Bool_Exp = {
   _not?: InputMaybe<Extensions_Bool_Exp>;
   _or?: InputMaybe<Array<Extensions_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deletedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   guideUrl?: InputMaybe<String_Comparison_Exp>;
   icon?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  slug?: InputMaybe<String_Comparison_Exp>;
+  storageDefinition?: InputMaybe<Jsonb_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -5851,17 +7172,33 @@ export enum Extensions_Constraint {
   ExtensionsPkey = 'Extensions_pkey'
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Extensions_Delete_At_Path_Input = {
+  storageDefinition?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Extensions_Delete_Elem_Input = {
+  storageDefinition?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Extensions_Delete_Key_Input = {
+  storageDefinition?: InputMaybe<Scalars['String']>;
+};
+
 /** input type for inserting data into table "Extensions" */
 export type Extensions_Insert_Input = {
   AgreementExtensions?: InputMaybe<AgreementExtensions_Arr_Rel_Insert_Input>;
   AgreementRoleExtensions?: InputMaybe<AgreementRoleExtensions_Arr_Rel_Insert_Input>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guideUrl?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  storageDefinition?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -5869,12 +7206,12 @@ export type Extensions_Insert_Input = {
 export type Extensions_Max_Fields = {
   __typename?: 'Extensions_max_fields';
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   guideUrl?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -5882,12 +7219,12 @@ export type Extensions_Max_Fields = {
 export type Extensions_Min_Fields = {
   __typename?: 'Extensions_min_fields';
   createdAt?: Maybe<Scalars['timestamptz']>;
-  deletedAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   guideUrl?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
@@ -5919,12 +7256,13 @@ export type Extensions_Order_By = {
   AgreementExtensions_aggregate?: InputMaybe<AgreementExtensions_Aggregate_Order_By>;
   AgreementRoleExtensions_aggregate?: InputMaybe<AgreementRoleExtensions_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
-  deletedAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   guideUrl?: InputMaybe<Order_By>;
   icon?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  slug?: InputMaybe<Order_By>;
+  storageDefinition?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
 
@@ -5933,12 +7271,15 @@ export type Extensions_Pk_Columns_Input = {
   id: Scalars['uuid'];
 };
 
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Extensions_Prepend_Input = {
+  storageDefinition?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** select columns of table "Extensions" */
 export enum Extensions_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -5950,18 +7291,23 @@ export enum Extensions_Select_Column {
   /** column name */
   Name = 'name',
   /** column name */
+  Slug = 'slug',
+  /** column name */
+  StorageDefinition = 'storageDefinition',
+  /** column name */
   UpdatedAt = 'updatedAt'
 }
 
 /** input type for updating data in table "Extensions" */
 export type Extensions_Set_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guideUrl?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  storageDefinition?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -5976,12 +7322,13 @@ export type Extensions_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Extensions_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  deletedAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guideUrl?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  storageDefinition?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
@@ -5989,8 +7336,6 @@ export type Extensions_Stream_Cursor_Value_Input = {
 export enum Extensions_Update_Column {
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  DeletedAt = 'deletedAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -6002,22 +7347,32 @@ export enum Extensions_Update_Column {
   /** column name */
   Name = 'name',
   /** column name */
+  Slug = 'slug',
+  /** column name */
+  StorageDefinition = 'storageDefinition',
+  /** column name */
   UpdatedAt = 'updatedAt'
 }
 
 export type Extensions_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Extensions_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Extensions_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Extensions_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Extensions_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Extensions_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Extensions_Set_Input>;
   where: Extensions_Bool_Exp;
 };
 
-/** columns and relationships of "IdentityIntegrations" */
-export type IdentityIntegrations = {
-  __typename?: 'IdentityIntegrations';
-  /** An array relationship */
-  UserIdentities: Array<UserIdentities>;
-  /** An aggregate relationship */
-  UserIdentities_aggregate: UserIdentities_Aggregate;
+/** columns and relationships of "IdentityProviders" */
+export type IdentityProviders = {
+  __typename?: 'IdentityProviders';
   connectionId: Scalars['String'];
   connectionName: Scalars['String'];
   createdAt: Scalars['timestamptz'];
@@ -6028,55 +7383,33 @@ export type IdentityIntegrations = {
   updatedAt: Scalars['timestamptz'];
 };
 
-
-/** columns and relationships of "IdentityIntegrations" */
-export type IdentityIntegrationsUserIdentitiesArgs = {
-  distinct_on?: InputMaybe<Array<UserIdentities_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<UserIdentities_Order_By>>;
-  where?: InputMaybe<UserIdentities_Bool_Exp>;
+/** aggregated selection of "IdentityProviders" */
+export type IdentityProviders_Aggregate = {
+  __typename?: 'IdentityProviders_aggregate';
+  aggregate?: Maybe<IdentityProviders_Aggregate_Fields>;
+  nodes: Array<IdentityProviders>;
 };
 
-
-/** columns and relationships of "IdentityIntegrations" */
-export type IdentityIntegrationsUserIdentities_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<UserIdentities_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<UserIdentities_Order_By>>;
-  where?: InputMaybe<UserIdentities_Bool_Exp>;
-};
-
-/** aggregated selection of "IdentityIntegrations" */
-export type IdentityIntegrations_Aggregate = {
-  __typename?: 'IdentityIntegrations_aggregate';
-  aggregate?: Maybe<IdentityIntegrations_Aggregate_Fields>;
-  nodes: Array<IdentityIntegrations>;
-};
-
-/** aggregate fields of "IdentityIntegrations" */
-export type IdentityIntegrations_Aggregate_Fields = {
-  __typename?: 'IdentityIntegrations_aggregate_fields';
+/** aggregate fields of "IdentityProviders" */
+export type IdentityProviders_Aggregate_Fields = {
+  __typename?: 'IdentityProviders_aggregate_fields';
   count: Scalars['Int'];
-  max?: Maybe<IdentityIntegrations_Max_Fields>;
-  min?: Maybe<IdentityIntegrations_Min_Fields>;
+  max?: Maybe<IdentityProviders_Max_Fields>;
+  min?: Maybe<IdentityProviders_Min_Fields>;
 };
 
 
-/** aggregate fields of "IdentityIntegrations" */
-export type IdentityIntegrations_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+/** aggregate fields of "IdentityProviders" */
+export type IdentityProviders_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Boolean expression to filter rows from the table "IdentityIntegrations". All fields are combined with a logical 'AND'. */
-export type IdentityIntegrations_Bool_Exp = {
-  UserIdentities?: InputMaybe<UserIdentities_Bool_Exp>;
-  UserIdentities_aggregate?: InputMaybe<UserIdentities_Aggregate_Bool_Exp>;
-  _and?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
-  _not?: InputMaybe<IdentityIntegrations_Bool_Exp>;
-  _or?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
+/** Boolean expression to filter rows from the table "IdentityProviders". All fields are combined with a logical 'AND'. */
+export type IdentityProviders_Bool_Exp = {
+  _and?: InputMaybe<Array<IdentityProviders_Bool_Exp>>;
+  _not?: InputMaybe<IdentityProviders_Bool_Exp>;
+  _or?: InputMaybe<Array<IdentityProviders_Bool_Exp>>;
   connectionId?: InputMaybe<String_Comparison_Exp>;
   connectionName?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -6087,15 +7420,14 @@ export type IdentityIntegrations_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "IdentityIntegrations" */
-export enum IdentityIntegrations_Constraint {
+/** unique or primary key constraints on table "IdentityProviders" */
+export enum IdentityProviders_Constraint {
   /** unique or primary key constraint on columns "id" */
-  IdentityIntegrationsPkey = 'IdentityIntegrations_pkey'
+  IdentityProvidersPkey = 'IdentityProviders_pkey'
 }
 
-/** input type for inserting data into table "IdentityIntegrations" */
-export type IdentityIntegrations_Insert_Input = {
-  UserIdentities?: InputMaybe<UserIdentities_Arr_Rel_Insert_Input>;
+/** input type for inserting data into table "IdentityProviders" */
+export type IdentityProviders_Insert_Input = {
   connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -6107,8 +7439,8 @@ export type IdentityIntegrations_Insert_Input = {
 };
 
 /** aggregate max on columns */
-export type IdentityIntegrations_Max_Fields = {
-  __typename?: 'IdentityIntegrations_max_fields';
+export type IdentityProviders_Max_Fields = {
+  __typename?: 'IdentityProviders_max_fields';
   connectionId?: Maybe<Scalars['String']>;
   connectionName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -6120,8 +7452,8 @@ export type IdentityIntegrations_Max_Fields = {
 };
 
 /** aggregate min on columns */
-export type IdentityIntegrations_Min_Fields = {
-  __typename?: 'IdentityIntegrations_min_fields';
+export type IdentityProviders_Min_Fields = {
+  __typename?: 'IdentityProviders_min_fields';
   connectionId?: Maybe<Scalars['String']>;
   connectionName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -6132,32 +7464,31 @@ export type IdentityIntegrations_Min_Fields = {
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
-/** response of any mutation on the table "IdentityIntegrations" */
-export type IdentityIntegrations_Mutation_Response = {
-  __typename?: 'IdentityIntegrations_mutation_response';
+/** response of any mutation on the table "IdentityProviders" */
+export type IdentityProviders_Mutation_Response = {
+  __typename?: 'IdentityProviders_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int'];
   /** data from the rows affected by the mutation */
-  returning: Array<IdentityIntegrations>;
+  returning: Array<IdentityProviders>;
 };
 
-/** input type for inserting object relation for remote table "IdentityIntegrations" */
-export type IdentityIntegrations_Obj_Rel_Insert_Input = {
-  data: IdentityIntegrations_Insert_Input;
+/** input type for inserting object relation for remote table "IdentityProviders" */
+export type IdentityProviders_Obj_Rel_Insert_Input = {
+  data: IdentityProviders_Insert_Input;
   /** upsert condition */
-  on_conflict?: InputMaybe<IdentityIntegrations_On_Conflict>;
+  on_conflict?: InputMaybe<IdentityProviders_On_Conflict>;
 };
 
-/** on_conflict condition type for table "IdentityIntegrations" */
-export type IdentityIntegrations_On_Conflict = {
-  constraint: IdentityIntegrations_Constraint;
-  update_columns?: Array<IdentityIntegrations_Update_Column>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+/** on_conflict condition type for table "IdentityProviders" */
+export type IdentityProviders_On_Conflict = {
+  constraint: IdentityProviders_Constraint;
+  update_columns?: Array<IdentityProviders_Update_Column>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
-/** Ordering options when selecting data from "IdentityIntegrations". */
-export type IdentityIntegrations_Order_By = {
-  UserIdentities_aggregate?: InputMaybe<UserIdentities_Aggregate_Order_By>;
+/** Ordering options when selecting data from "IdentityProviders". */
+export type IdentityProviders_Order_By = {
   connectionId?: InputMaybe<Order_By>;
   connectionName?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -6168,13 +7499,13 @@ export type IdentityIntegrations_Order_By = {
   updatedAt?: InputMaybe<Order_By>;
 };
 
-/** primary key columns input for table: IdentityIntegrations */
-export type IdentityIntegrations_Pk_Columns_Input = {
+/** primary key columns input for table: IdentityProviders */
+export type IdentityProviders_Pk_Columns_Input = {
   id: Scalars['uuid'];
 };
 
-/** select columns of table "IdentityIntegrations" */
-export enum IdentityIntegrations_Select_Column {
+/** select columns of table "IdentityProviders" */
+export enum IdentityProviders_Select_Column {
   /** column name */
   ConnectionId = 'connectionId',
   /** column name */
@@ -6193,8 +7524,8 @@ export enum IdentityIntegrations_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
-/** input type for updating data in table "IdentityIntegrations" */
-export type IdentityIntegrations_Set_Input = {
+/** input type for updating data in table "IdentityProviders" */
+export type IdentityProviders_Set_Input = {
   connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -6205,16 +7536,16 @@ export type IdentityIntegrations_Set_Input = {
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
-/** Streaming cursor of the table "IdentityIntegrations" */
-export type IdentityIntegrations_Stream_Cursor_Input = {
+/** Streaming cursor of the table "IdentityProviders" */
+export type IdentityProviders_Stream_Cursor_Input = {
   /** Stream column input with initial value */
-  initial_value: IdentityIntegrations_Stream_Cursor_Value_Input;
+  initial_value: IdentityProviders_Stream_Cursor_Value_Input;
   /** cursor ordering */
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
 /** Initial value of the column from where the streaming should start */
-export type IdentityIntegrations_Stream_Cursor_Value_Input = {
+export type IdentityProviders_Stream_Cursor_Value_Input = {
   connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -6225,8 +7556,8 @@ export type IdentityIntegrations_Stream_Cursor_Value_Input = {
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
-/** update columns of table "IdentityIntegrations" */
-export enum IdentityIntegrations_Update_Column {
+/** update columns of table "IdentityProviders" */
+export enum IdentityProviders_Update_Column {
   /** column name */
   ConnectionId = 'connectionId',
   /** column name */
@@ -6245,10 +7576,10 @@ export enum IdentityIntegrations_Update_Column {
   UpdatedAt = 'updatedAt'
 }
 
-export type IdentityIntegrations_Updates = {
+export type IdentityProviders_Updates = {
   /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<IdentityIntegrations_Set_Input>;
-  where: IdentityIntegrations_Bool_Exp;
+  _set?: InputMaybe<IdentityProviders_Set_Input>;
+  where: IdentityProviders_Bool_Exp;
 };
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -7558,8 +8889,8 @@ export type Transfers_Updates = {
 export type UserIdentities = {
   __typename?: 'UserIdentities';
   /** An object relationship */
-  IdentityIntegration?: Maybe<IdentityIntegrations>;
-  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  IdentityProvider?: Maybe<IdentityProviders>;
+  IdentityProviderId?: Maybe<Scalars['uuid']>;
   /** An object relationship */
   User?: Maybe<Users>;
   UserId?: Maybe<Scalars['uuid']>;
@@ -7631,8 +8962,8 @@ export type UserIdentities_Arr_Rel_Insert_Input = {
 
 /** Boolean expression to filter rows from the table "UserIdentities". All fields are combined with a logical 'AND'. */
 export type UserIdentities_Bool_Exp = {
-  IdentityIntegration?: InputMaybe<IdentityIntegrations_Bool_Exp>;
-  IdentityIntegrationId?: InputMaybe<Uuid_Comparison_Exp>;
+  IdentityProvider?: InputMaybe<IdentityProviders_Bool_Exp>;
+  IdentityProviderId?: InputMaybe<Uuid_Comparison_Exp>;
   User?: InputMaybe<Users_Bool_Exp>;
   UserId?: InputMaybe<Uuid_Comparison_Exp>;
   _and?: InputMaybe<Array<UserIdentities_Bool_Exp>>;
@@ -7652,10 +8983,6 @@ export enum UserIdentities_Constraint {
   UserIdentitiesExternalIdKey = 'UserIdentities_externalId_key',
   /** unique or primary key constraint on columns "externalId" */
   UserIdentitiesExternalIdKey1 = 'UserIdentities_externalId_key1',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey2 = 'UserIdentities_externalId_key2',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey3 = 'UserIdentities_externalId_key3',
   /** unique or primary key constraint on columns "id" */
   UserIdentitiesPkey = 'UserIdentities_pkey'
 }
@@ -7677,8 +9004,8 @@ export type UserIdentities_Delete_Key_Input = {
 
 /** input type for inserting data into table "UserIdentities" */
 export type UserIdentities_Insert_Input = {
-  IdentityIntegration?: InputMaybe<IdentityIntegrations_Obj_Rel_Insert_Input>;
-  IdentityIntegrationId?: InputMaybe<Scalars['uuid']>;
+  IdentityProvider?: InputMaybe<IdentityProviders_Obj_Rel_Insert_Input>;
+  IdentityProviderId?: InputMaybe<Scalars['uuid']>;
   User?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   UserId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -7692,7 +9019,7 @@ export type UserIdentities_Insert_Input = {
 /** aggregate max on columns */
 export type UserIdentities_Max_Fields = {
   __typename?: 'UserIdentities_max_fields';
-  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  IdentityProviderId?: Maybe<Scalars['uuid']>;
   UserId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   externalId?: Maybe<Scalars['String']>;
@@ -7703,7 +9030,7 @@ export type UserIdentities_Max_Fields = {
 
 /** order by max() on columns of table "UserIdentities" */
 export type UserIdentities_Max_Order_By = {
-  IdentityIntegrationId?: InputMaybe<Order_By>;
+  IdentityProviderId?: InputMaybe<Order_By>;
   UserId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   externalId?: InputMaybe<Order_By>;
@@ -7715,7 +9042,7 @@ export type UserIdentities_Max_Order_By = {
 /** aggregate min on columns */
 export type UserIdentities_Min_Fields = {
   __typename?: 'UserIdentities_min_fields';
-  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  IdentityProviderId?: Maybe<Scalars['uuid']>;
   UserId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   externalId?: Maybe<Scalars['String']>;
@@ -7726,7 +9053,7 @@ export type UserIdentities_Min_Fields = {
 
 /** order by min() on columns of table "UserIdentities" */
 export type UserIdentities_Min_Order_By = {
-  IdentityIntegrationId?: InputMaybe<Order_By>;
+  IdentityProviderId?: InputMaybe<Order_By>;
   UserId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   externalId?: InputMaybe<Order_By>;
@@ -7753,8 +9080,8 @@ export type UserIdentities_On_Conflict = {
 
 /** Ordering options when selecting data from "UserIdentities". */
 export type UserIdentities_Order_By = {
-  IdentityIntegration?: InputMaybe<IdentityIntegrations_Order_By>;
-  IdentityIntegrationId?: InputMaybe<Order_By>;
+  IdentityProvider?: InputMaybe<IdentityProviders_Order_By>;
+  IdentityProviderId?: InputMaybe<Order_By>;
   User?: InputMaybe<Users_Order_By>;
   UserId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -7778,7 +9105,7 @@ export type UserIdentities_Prepend_Input = {
 /** select columns of table "UserIdentities" */
 export enum UserIdentities_Select_Column {
   /** column name */
-  IdentityIntegrationId = 'IdentityIntegrationId',
+  IdentityProviderId = 'IdentityProviderId',
   /** column name */
   UserId = 'UserId',
   /** column name */
@@ -7797,7 +9124,7 @@ export enum UserIdentities_Select_Column {
 
 /** input type for updating data in table "UserIdentities" */
 export type UserIdentities_Set_Input = {
-  IdentityIntegrationId?: InputMaybe<Scalars['uuid']>;
+  IdentityProviderId?: InputMaybe<Scalars['uuid']>;
   UserId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   externalId?: InputMaybe<Scalars['String']>;
@@ -7817,7 +9144,7 @@ export type UserIdentities_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type UserIdentities_Stream_Cursor_Value_Input = {
-  IdentityIntegrationId?: InputMaybe<Scalars['uuid']>;
+  IdentityProviderId?: InputMaybe<Scalars['uuid']>;
   UserId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   externalId?: InputMaybe<Scalars['String']>;
@@ -7830,7 +9157,7 @@ export type UserIdentities_Stream_Cursor_Value_Input = {
 /** update columns of table "UserIdentities" */
 export enum UserIdentities_Update_Column {
   /** column name */
-  IdentityIntegrationId = 'IdentityIntegrationId',
+  IdentityProviderId = 'IdentityProviderId',
   /** column name */
   UserId = 'UserId',
   /** column name */
@@ -9145,6 +10472,22 @@ export type Jsonb_Comparison_Exp = {
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
+  /** delete data from the table: "AgreementExtensionLinks" */
+  delete_AgreementExtensionLinks?: Maybe<AgreementExtensionLinks_Mutation_Response>;
+  /** delete single row from the table: "AgreementExtensionLinks" */
+  delete_AgreementExtensionLinks_by_pk?: Maybe<AgreementExtensionLinks>;
+  /** delete data from the table: "AgreementExtensionRoles" */
+  delete_AgreementExtensionRoles?: Maybe<AgreementExtensionRoles_Mutation_Response>;
+  /** delete single row from the table: "AgreementExtensionRoles" */
+  delete_AgreementExtensionRoles_by_pk?: Maybe<AgreementExtensionRoles>;
+  /** delete data from the table: "AgreementExtensionStorages" */
+  delete_AgreementExtensionStorages?: Maybe<AgreementExtensionStorages_Mutation_Response>;
+  /** delete single row from the table: "AgreementExtensionStorages" */
+  delete_AgreementExtensionStorages_by_pk?: Maybe<AgreementExtensionStorages>;
+  /** delete data from the table: "AgreementExtensionWidgets" */
+  delete_AgreementExtensionWidgets?: Maybe<AgreementExtensionWidgets_Mutation_Response>;
+  /** delete single row from the table: "AgreementExtensionWidgets" */
+  delete_AgreementExtensionWidgets_by_pk?: Maybe<AgreementExtensionWidgets>;
   /** delete data from the table: "AgreementExtensions" */
   delete_AgreementExtensions?: Maybe<AgreementExtensions_Mutation_Response>;
   /** delete single row from the table: "AgreementExtensions" */
@@ -9161,6 +10504,10 @@ export type Mutation_Root = {
   delete_AgreementRoleTokens?: Maybe<AgreementRoleTokens_Mutation_Response>;
   /** delete single row from the table: "AgreementRoleTokens" */
   delete_AgreementRoleTokens_by_pk?: Maybe<AgreementRoleTokens>;
+  /** delete data from the table: "AgreementRoleWallets" */
+  delete_AgreementRoleWallets?: Maybe<AgreementRoleWallets_Mutation_Response>;
+  /** delete single row from the table: "AgreementRoleWallets" */
+  delete_AgreementRoleWallets_by_pk?: Maybe<AgreementRoleWallets>;
   /** delete data from the table: "AgreementRoles" */
   delete_AgreementRoles?: Maybe<AgreementRoles_Mutation_Response>;
   /** delete single row from the table: "AgreementRoles" */
@@ -9205,10 +10552,10 @@ export type Mutation_Root = {
   delete_Extensions?: Maybe<Extensions_Mutation_Response>;
   /** delete single row from the table: "Extensions" */
   delete_Extensions_by_pk?: Maybe<Extensions>;
-  /** delete data from the table: "IdentityIntegrations" */
-  delete_IdentityIntegrations?: Maybe<IdentityIntegrations_Mutation_Response>;
-  /** delete single row from the table: "IdentityIntegrations" */
-  delete_IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
+  /** delete data from the table: "IdentityProviders" */
+  delete_IdentityProviders?: Maybe<IdentityProviders_Mutation_Response>;
+  /** delete single row from the table: "IdentityProviders" */
+  delete_IdentityProviders_by_pk?: Maybe<IdentityProviders>;
   /** delete data from the table: "Integrations" */
   delete_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** delete single row from the table: "Integrations" */
@@ -9245,6 +10592,22 @@ export type Mutation_Root = {
   delete_Wallets?: Maybe<Wallets_Mutation_Response>;
   /** delete single row from the table: "Wallets" */
   delete_Wallets_by_pk?: Maybe<Wallets>;
+  /** insert data into the table: "AgreementExtensionLinks" */
+  insert_AgreementExtensionLinks?: Maybe<AgreementExtensionLinks_Mutation_Response>;
+  /** insert a single row into the table: "AgreementExtensionLinks" */
+  insert_AgreementExtensionLinks_one?: Maybe<AgreementExtensionLinks>;
+  /** insert data into the table: "AgreementExtensionRoles" */
+  insert_AgreementExtensionRoles?: Maybe<AgreementExtensionRoles_Mutation_Response>;
+  /** insert a single row into the table: "AgreementExtensionRoles" */
+  insert_AgreementExtensionRoles_one?: Maybe<AgreementExtensionRoles>;
+  /** insert data into the table: "AgreementExtensionStorages" */
+  insert_AgreementExtensionStorages?: Maybe<AgreementExtensionStorages_Mutation_Response>;
+  /** insert a single row into the table: "AgreementExtensionStorages" */
+  insert_AgreementExtensionStorages_one?: Maybe<AgreementExtensionStorages>;
+  /** insert data into the table: "AgreementExtensionWidgets" */
+  insert_AgreementExtensionWidgets?: Maybe<AgreementExtensionWidgets_Mutation_Response>;
+  /** insert a single row into the table: "AgreementExtensionWidgets" */
+  insert_AgreementExtensionWidgets_one?: Maybe<AgreementExtensionWidgets>;
   /** insert data into the table: "AgreementExtensions" */
   insert_AgreementExtensions?: Maybe<AgreementExtensions_Mutation_Response>;
   /** insert a single row into the table: "AgreementExtensions" */
@@ -9261,6 +10624,10 @@ export type Mutation_Root = {
   insert_AgreementRoleTokens?: Maybe<AgreementRoleTokens_Mutation_Response>;
   /** insert a single row into the table: "AgreementRoleTokens" */
   insert_AgreementRoleTokens_one?: Maybe<AgreementRoleTokens>;
+  /** insert data into the table: "AgreementRoleWallets" */
+  insert_AgreementRoleWallets?: Maybe<AgreementRoleWallets_Mutation_Response>;
+  /** insert a single row into the table: "AgreementRoleWallets" */
+  insert_AgreementRoleWallets_one?: Maybe<AgreementRoleWallets>;
   /** insert data into the table: "AgreementRoles" */
   insert_AgreementRoles?: Maybe<AgreementRoles_Mutation_Response>;
   /** insert a single row into the table: "AgreementRoles" */
@@ -9305,10 +10672,10 @@ export type Mutation_Root = {
   insert_Extensions?: Maybe<Extensions_Mutation_Response>;
   /** insert a single row into the table: "Extensions" */
   insert_Extensions_one?: Maybe<Extensions>;
-  /** insert data into the table: "IdentityIntegrations" */
-  insert_IdentityIntegrations?: Maybe<IdentityIntegrations_Mutation_Response>;
-  /** insert a single row into the table: "IdentityIntegrations" */
-  insert_IdentityIntegrations_one?: Maybe<IdentityIntegrations>;
+  /** insert data into the table: "IdentityProviders" */
+  insert_IdentityProviders?: Maybe<IdentityProviders_Mutation_Response>;
+  /** insert a single row into the table: "IdentityProviders" */
+  insert_IdentityProviders_one?: Maybe<IdentityProviders>;
   /** insert data into the table: "Integrations" */
   insert_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** insert a single row into the table: "Integrations" */
@@ -9345,6 +10712,30 @@ export type Mutation_Root = {
   insert_Wallets?: Maybe<Wallets_Mutation_Response>;
   /** insert a single row into the table: "Wallets" */
   insert_Wallets_one?: Maybe<Wallets>;
+  /** update data of the table: "AgreementExtensionLinks" */
+  update_AgreementExtensionLinks?: Maybe<AgreementExtensionLinks_Mutation_Response>;
+  /** update single row of the table: "AgreementExtensionLinks" */
+  update_AgreementExtensionLinks_by_pk?: Maybe<AgreementExtensionLinks>;
+  /** update multiples rows of table: "AgreementExtensionLinks" */
+  update_AgreementExtensionLinks_many?: Maybe<Array<Maybe<AgreementExtensionLinks_Mutation_Response>>>;
+  /** update data of the table: "AgreementExtensionRoles" */
+  update_AgreementExtensionRoles?: Maybe<AgreementExtensionRoles_Mutation_Response>;
+  /** update single row of the table: "AgreementExtensionRoles" */
+  update_AgreementExtensionRoles_by_pk?: Maybe<AgreementExtensionRoles>;
+  /** update multiples rows of table: "AgreementExtensionRoles" */
+  update_AgreementExtensionRoles_many?: Maybe<Array<Maybe<AgreementExtensionRoles_Mutation_Response>>>;
+  /** update data of the table: "AgreementExtensionStorages" */
+  update_AgreementExtensionStorages?: Maybe<AgreementExtensionStorages_Mutation_Response>;
+  /** update single row of the table: "AgreementExtensionStorages" */
+  update_AgreementExtensionStorages_by_pk?: Maybe<AgreementExtensionStorages>;
+  /** update multiples rows of table: "AgreementExtensionStorages" */
+  update_AgreementExtensionStorages_many?: Maybe<Array<Maybe<AgreementExtensionStorages_Mutation_Response>>>;
+  /** update data of the table: "AgreementExtensionWidgets" */
+  update_AgreementExtensionWidgets?: Maybe<AgreementExtensionWidgets_Mutation_Response>;
+  /** update single row of the table: "AgreementExtensionWidgets" */
+  update_AgreementExtensionWidgets_by_pk?: Maybe<AgreementExtensionWidgets>;
+  /** update multiples rows of table: "AgreementExtensionWidgets" */
+  update_AgreementExtensionWidgets_many?: Maybe<Array<Maybe<AgreementExtensionWidgets_Mutation_Response>>>;
   /** update data of the table: "AgreementExtensions" */
   update_AgreementExtensions?: Maybe<AgreementExtensions_Mutation_Response>;
   /** update single row of the table: "AgreementExtensions" */
@@ -9369,6 +10760,12 @@ export type Mutation_Root = {
   update_AgreementRoleTokens_by_pk?: Maybe<AgreementRoleTokens>;
   /** update multiples rows of table: "AgreementRoleTokens" */
   update_AgreementRoleTokens_many?: Maybe<Array<Maybe<AgreementRoleTokens_Mutation_Response>>>;
+  /** update data of the table: "AgreementRoleWallets" */
+  update_AgreementRoleWallets?: Maybe<AgreementRoleWallets_Mutation_Response>;
+  /** update single row of the table: "AgreementRoleWallets" */
+  update_AgreementRoleWallets_by_pk?: Maybe<AgreementRoleWallets>;
+  /** update multiples rows of table: "AgreementRoleWallets" */
+  update_AgreementRoleWallets_many?: Maybe<Array<Maybe<AgreementRoleWallets_Mutation_Response>>>;
   /** update data of the table: "AgreementRoles" */
   update_AgreementRoles?: Maybe<AgreementRoles_Mutation_Response>;
   /** update single row of the table: "AgreementRoles" */
@@ -9435,12 +10832,12 @@ export type Mutation_Root = {
   update_Extensions_by_pk?: Maybe<Extensions>;
   /** update multiples rows of table: "Extensions" */
   update_Extensions_many?: Maybe<Array<Maybe<Extensions_Mutation_Response>>>;
-  /** update data of the table: "IdentityIntegrations" */
-  update_IdentityIntegrations?: Maybe<IdentityIntegrations_Mutation_Response>;
-  /** update single row of the table: "IdentityIntegrations" */
-  update_IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
-  /** update multiples rows of table: "IdentityIntegrations" */
-  update_IdentityIntegrations_many?: Maybe<Array<Maybe<IdentityIntegrations_Mutation_Response>>>;
+  /** update data of the table: "IdentityProviders" */
+  update_IdentityProviders?: Maybe<IdentityProviders_Mutation_Response>;
+  /** update single row of the table: "IdentityProviders" */
+  update_IdentityProviders_by_pk?: Maybe<IdentityProviders>;
+  /** update multiples rows of table: "IdentityProviders" */
+  update_IdentityProviders_many?: Maybe<Array<Maybe<IdentityProviders_Mutation_Response>>>;
   /** update data of the table: "Integrations" */
   update_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** update single row of the table: "Integrations" */
@@ -9499,6 +10896,54 @@ export type Mutation_Root = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_AgreementExtensionLinksArgs = {
+  where: AgreementExtensionLinks_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementExtensionLinks_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementExtensionRolesArgs = {
+  where: AgreementExtensionRoles_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementExtensionRoles_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementExtensionStoragesArgs = {
+  where: AgreementExtensionStorages_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementExtensionStorages_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementExtensionWidgetsArgs = {
+  where: AgreementExtensionWidgets_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementExtensionWidgets_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_AgreementExtensionsArgs = {
   where: AgreementExtensions_Bool_Exp;
 };
@@ -9542,6 +10987,18 @@ export type Mutation_RootDelete_AgreementRoleTokensArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_AgreementRoleTokens_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementRoleWalletsArgs = {
+  where: AgreementRoleWallets_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementRoleWallets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -9679,13 +11136,13 @@ export type Mutation_RootDelete_Extensions_By_PkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_IdentityIntegrationsArgs = {
-  where: IdentityIntegrations_Bool_Exp;
+export type Mutation_RootDelete_IdentityProvidersArgs = {
+  where: IdentityProviders_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_IdentityIntegrations_By_PkArgs = {
+export type Mutation_RootDelete_IdentityProviders_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -9799,6 +11256,62 @@ export type Mutation_RootDelete_Wallets_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_AgreementExtensionLinksArgs = {
+  objects: Array<AgreementExtensionLinks_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementExtensionLinks_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementExtensionLinks_OneArgs = {
+  object: AgreementExtensionLinks_Insert_Input;
+  on_conflict?: InputMaybe<AgreementExtensionLinks_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementExtensionRolesArgs = {
+  objects: Array<AgreementExtensionRoles_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementExtensionRoles_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementExtensionRoles_OneArgs = {
+  object: AgreementExtensionRoles_Insert_Input;
+  on_conflict?: InputMaybe<AgreementExtensionRoles_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementExtensionStoragesArgs = {
+  objects: Array<AgreementExtensionStorages_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementExtensionStorages_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementExtensionStorages_OneArgs = {
+  object: AgreementExtensionStorages_Insert_Input;
+  on_conflict?: InputMaybe<AgreementExtensionStorages_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementExtensionWidgetsArgs = {
+  objects: Array<AgreementExtensionWidgets_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementExtensionWidgets_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementExtensionWidgets_OneArgs = {
+  object: AgreementExtensionWidgets_Insert_Input;
+  on_conflict?: InputMaybe<AgreementExtensionWidgets_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_AgreementExtensionsArgs = {
   objects: Array<AgreementExtensions_Insert_Input>;
   on_conflict?: InputMaybe<AgreementExtensions_On_Conflict>;
@@ -9851,6 +11364,20 @@ export type Mutation_RootInsert_AgreementRoleTokensArgs = {
 export type Mutation_RootInsert_AgreementRoleTokens_OneArgs = {
   object: AgreementRoleTokens_Insert_Input;
   on_conflict?: InputMaybe<AgreementRoleTokens_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementRoleWalletsArgs = {
+  objects: Array<AgreementRoleWallets_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementRoleWallets_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementRoleWallets_OneArgs = {
+  object: AgreementRoleWallets_Insert_Input;
+  on_conflict?: InputMaybe<AgreementRoleWallets_On_Conflict>;
 };
 
 
@@ -10009,16 +11536,16 @@ export type Mutation_RootInsert_Extensions_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_IdentityIntegrationsArgs = {
-  objects: Array<IdentityIntegrations_Insert_Input>;
-  on_conflict?: InputMaybe<IdentityIntegrations_On_Conflict>;
+export type Mutation_RootInsert_IdentityProvidersArgs = {
+  objects: Array<IdentityProviders_Insert_Input>;
+  on_conflict?: InputMaybe<IdentityProviders_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_IdentityIntegrations_OneArgs = {
-  object: IdentityIntegrations_Insert_Input;
-  on_conflict?: InputMaybe<IdentityIntegrations_On_Conflict>;
+export type Mutation_RootInsert_IdentityProviders_OneArgs = {
+  object: IdentityProviders_Insert_Input;
+  on_conflict?: InputMaybe<IdentityProviders_On_Conflict>;
 };
 
 
@@ -10149,6 +11676,126 @@ export type Mutation_RootInsert_Wallets_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionLinksArgs = {
+  _append?: InputMaybe<AgreementExtensionLinks_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionLinks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionLinks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionLinks_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionLinks_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionLinks_Set_Input>;
+  where: AgreementExtensionLinks_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionLinks_By_PkArgs = {
+  _append?: InputMaybe<AgreementExtensionLinks_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionLinks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionLinks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionLinks_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionLinks_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionLinks_Set_Input>;
+  pk_columns: AgreementExtensionLinks_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionLinks_ManyArgs = {
+  updates: Array<AgreementExtensionLinks_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionRolesArgs = {
+  _append?: InputMaybe<AgreementExtensionRoles_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionRoles_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionRoles_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionRoles_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionRoles_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionRoles_Set_Input>;
+  where: AgreementExtensionRoles_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionRoles_By_PkArgs = {
+  _append?: InputMaybe<AgreementExtensionRoles_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionRoles_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionRoles_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionRoles_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionRoles_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionRoles_Set_Input>;
+  pk_columns: AgreementExtensionRoles_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionRoles_ManyArgs = {
+  updates: Array<AgreementExtensionRoles_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionStoragesArgs = {
+  _append?: InputMaybe<AgreementExtensionStorages_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionStorages_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionStorages_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionStorages_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionStorages_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionStorages_Set_Input>;
+  where: AgreementExtensionStorages_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionStorages_By_PkArgs = {
+  _append?: InputMaybe<AgreementExtensionStorages_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionStorages_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionStorages_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionStorages_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionStorages_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionStorages_Set_Input>;
+  pk_columns: AgreementExtensionStorages_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionStorages_ManyArgs = {
+  updates: Array<AgreementExtensionStorages_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionWidgetsArgs = {
+  _append?: InputMaybe<AgreementExtensionWidgets_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionWidgets_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionWidgets_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionWidgets_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionWidgets_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionWidgets_Set_Input>;
+  where: AgreementExtensionWidgets_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionWidgets_By_PkArgs = {
+  _append?: InputMaybe<AgreementExtensionWidgets_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionWidgets_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionWidgets_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionWidgets_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionWidgets_Prepend_Input>;
+  _set?: InputMaybe<AgreementExtensionWidgets_Set_Input>;
+  pk_columns: AgreementExtensionWidgets_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementExtensionWidgets_ManyArgs = {
+  updates: Array<AgreementExtensionWidgets_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_AgreementExtensionsArgs = {
   _append?: InputMaybe<AgreementExtensions_Append_Input>;
   _delete_at_path?: InputMaybe<AgreementExtensions_Delete_At_Path_Input>;
@@ -10255,6 +11902,26 @@ export type Mutation_RootUpdate_AgreementRoleTokens_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_AgreementRoleTokens_ManyArgs = {
   updates: Array<AgreementRoleTokens_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementRoleWalletsArgs = {
+  _set?: InputMaybe<AgreementRoleWallets_Set_Input>;
+  where: AgreementRoleWallets_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementRoleWallets_By_PkArgs = {
+  _set?: InputMaybe<AgreementRoleWallets_Set_Input>;
+  pk_columns: AgreementRoleWallets_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementRoleWallets_ManyArgs = {
+  updates: Array<AgreementRoleWallets_Updates>;
 };
 
 
@@ -10532,6 +12199,11 @@ export type Mutation_RootUpdate_Contracts_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_ExtensionsArgs = {
+  _append?: InputMaybe<Extensions_Append_Input>;
+  _delete_at_path?: InputMaybe<Extensions_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Extensions_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Extensions_Delete_Key_Input>;
+  _prepend?: InputMaybe<Extensions_Prepend_Input>;
   _set?: InputMaybe<Extensions_Set_Input>;
   where: Extensions_Bool_Exp;
 };
@@ -10539,6 +12211,11 @@ export type Mutation_RootUpdate_ExtensionsArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Extensions_By_PkArgs = {
+  _append?: InputMaybe<Extensions_Append_Input>;
+  _delete_at_path?: InputMaybe<Extensions_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Extensions_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Extensions_Delete_Key_Input>;
+  _prepend?: InputMaybe<Extensions_Prepend_Input>;
   _set?: InputMaybe<Extensions_Set_Input>;
   pk_columns: Extensions_Pk_Columns_Input;
 };
@@ -10551,22 +12228,22 @@ export type Mutation_RootUpdate_Extensions_ManyArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_IdentityIntegrationsArgs = {
-  _set?: InputMaybe<IdentityIntegrations_Set_Input>;
-  where: IdentityIntegrations_Bool_Exp;
+export type Mutation_RootUpdate_IdentityProvidersArgs = {
+  _set?: InputMaybe<IdentityProviders_Set_Input>;
+  where: IdentityProviders_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_IdentityIntegrations_By_PkArgs = {
-  _set?: InputMaybe<IdentityIntegrations_Set_Input>;
-  pk_columns: IdentityIntegrations_Pk_Columns_Input;
+export type Mutation_RootUpdate_IdentityProviders_By_PkArgs = {
+  _set?: InputMaybe<IdentityProviders_Set_Input>;
+  pk_columns: IdentityProviders_Pk_Columns_Input;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_IdentityIntegrations_ManyArgs = {
-  updates: Array<IdentityIntegrations_Updates>;
+export type Mutation_RootUpdate_IdentityProviders_ManyArgs = {
+  updates: Array<IdentityProviders_Updates>;
 };
 
 
@@ -10792,6 +12469,30 @@ export enum Order_By {
 export type Query_Root = {
   __typename?: 'query_root';
   /** An array relationship */
+  AgreementExtensionLinks: Array<AgreementExtensionLinks>;
+  /** An aggregate relationship */
+  AgreementExtensionLinks_aggregate: AgreementExtensionLinks_Aggregate;
+  /** fetch data from the table: "AgreementExtensionLinks" using primary key columns */
+  AgreementExtensionLinks_by_pk?: Maybe<AgreementExtensionLinks>;
+  /** An array relationship */
+  AgreementExtensionRoles: Array<AgreementExtensionRoles>;
+  /** An aggregate relationship */
+  AgreementExtensionRoles_aggregate: AgreementExtensionRoles_Aggregate;
+  /** fetch data from the table: "AgreementExtensionRoles" using primary key columns */
+  AgreementExtensionRoles_by_pk?: Maybe<AgreementExtensionRoles>;
+  /** fetch data from the table: "AgreementExtensionStorages" */
+  AgreementExtensionStorages: Array<AgreementExtensionStorages>;
+  /** fetch aggregated fields from the table: "AgreementExtensionStorages" */
+  AgreementExtensionStorages_aggregate: AgreementExtensionStorages_Aggregate;
+  /** fetch data from the table: "AgreementExtensionStorages" using primary key columns */
+  AgreementExtensionStorages_by_pk?: Maybe<AgreementExtensionStorages>;
+  /** An array relationship */
+  AgreementExtensionWidgets: Array<AgreementExtensionWidgets>;
+  /** An aggregate relationship */
+  AgreementExtensionWidgets_aggregate: AgreementExtensionWidgets_Aggregate;
+  /** fetch data from the table: "AgreementExtensionWidgets" using primary key columns */
+  AgreementExtensionWidgets_by_pk?: Maybe<AgreementExtensionWidgets>;
+  /** An array relationship */
   AgreementExtensions: Array<AgreementExtensions>;
   /** An aggregate relationship */
   AgreementExtensions_aggregate: AgreementExtensions_Aggregate;
@@ -10815,6 +12516,12 @@ export type Query_Root = {
   AgreementRoleTokens_aggregate: AgreementRoleTokens_Aggregate;
   /** fetch data from the table: "AgreementRoleTokens" using primary key columns */
   AgreementRoleTokens_by_pk?: Maybe<AgreementRoleTokens>;
+  /** fetch data from the table: "AgreementRoleWallets" */
+  AgreementRoleWallets: Array<AgreementRoleWallets>;
+  /** fetch aggregated fields from the table: "AgreementRoleWallets" */
+  AgreementRoleWallets_aggregate: AgreementRoleWallets_Aggregate;
+  /** fetch data from the table: "AgreementRoleWallets" using primary key columns */
+  AgreementRoleWallets_by_pk?: Maybe<AgreementRoleWallets>;
   /** An array relationship */
   AgreementRoles: Array<AgreementRoles>;
   /** An aggregate relationship */
@@ -10881,12 +12588,12 @@ export type Query_Root = {
   Extensions_aggregate: Extensions_Aggregate;
   /** fetch data from the table: "Extensions" using primary key columns */
   Extensions_by_pk?: Maybe<Extensions>;
-  /** fetch data from the table: "IdentityIntegrations" */
-  IdentityIntegrations: Array<IdentityIntegrations>;
-  /** fetch aggregated fields from the table: "IdentityIntegrations" */
-  IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
-  /** fetch data from the table: "IdentityIntegrations" using primary key columns */
-  IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
+  /** fetch data from the table: "IdentityProviders" */
+  IdentityProviders: Array<IdentityProviders>;
+  /** fetch aggregated fields from the table: "IdentityProviders" */
+  IdentityProviders_aggregate: IdentityProviders_Aggregate;
+  /** fetch data from the table: "IdentityProviders" using primary key columns */
+  IdentityProviders_by_pk?: Maybe<IdentityProviders>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
   /** fetch aggregated fields from the table: "Integrations" */
@@ -10941,6 +12648,98 @@ export type Query_Root = {
   Wallets_aggregate: Wallets_Aggregate;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
+};
+
+
+export type Query_RootAgreementExtensionLinksArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionLinks_Order_By>>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionLinks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionLinks_Order_By>>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionLinks_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootAgreementExtensionRolesArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionRoles_Order_By>>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionRoles_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionRoles_Order_By>>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionRoles_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootAgreementExtensionStoragesArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionStorages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionStorages_Order_By>>;
+  where?: InputMaybe<AgreementExtensionStorages_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionStorages_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionStorages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionStorages_Order_By>>;
+  where?: InputMaybe<AgreementExtensionStorages_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionStorages_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootAgreementExtensionWidgetsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionWidgets_Order_By>>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionWidgets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionWidgets_Order_By>>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementExtensionWidgets_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
@@ -11032,6 +12831,29 @@ export type Query_RootAgreementRoleTokens_AggregateArgs = {
 
 
 export type Query_RootAgreementRoleTokens_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootAgreementRoleWalletsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementRoleWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementRoleWallets_Order_By>>;
+  where?: InputMaybe<AgreementRoleWallets_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementRoleWallets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementRoleWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementRoleWallets_Order_By>>;
+  where?: InputMaybe<AgreementRoleWallets_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementRoleWallets_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -11289,25 +13111,25 @@ export type Query_RootExtensions_By_PkArgs = {
 };
 
 
-export type Query_RootIdentityIntegrationsArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Query_RootIdentityProvidersArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Query_RootIdentityIntegrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Query_RootIdentityProviders_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Query_RootIdentityIntegrations_By_PkArgs = {
+export type Query_RootIdentityProviders_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -11521,6 +13343,38 @@ export type Query_RootWallets_By_PkArgs = {
 export type Subscription_Root = {
   __typename?: 'subscription_root';
   /** An array relationship */
+  AgreementExtensionLinks: Array<AgreementExtensionLinks>;
+  /** An aggregate relationship */
+  AgreementExtensionLinks_aggregate: AgreementExtensionLinks_Aggregate;
+  /** fetch data from the table: "AgreementExtensionLinks" using primary key columns */
+  AgreementExtensionLinks_by_pk?: Maybe<AgreementExtensionLinks>;
+  /** fetch data from the table in a streaming manner: "AgreementExtensionLinks" */
+  AgreementExtensionLinks_stream: Array<AgreementExtensionLinks>;
+  /** An array relationship */
+  AgreementExtensionRoles: Array<AgreementExtensionRoles>;
+  /** An aggregate relationship */
+  AgreementExtensionRoles_aggregate: AgreementExtensionRoles_Aggregate;
+  /** fetch data from the table: "AgreementExtensionRoles" using primary key columns */
+  AgreementExtensionRoles_by_pk?: Maybe<AgreementExtensionRoles>;
+  /** fetch data from the table in a streaming manner: "AgreementExtensionRoles" */
+  AgreementExtensionRoles_stream: Array<AgreementExtensionRoles>;
+  /** fetch data from the table: "AgreementExtensionStorages" */
+  AgreementExtensionStorages: Array<AgreementExtensionStorages>;
+  /** fetch aggregated fields from the table: "AgreementExtensionStorages" */
+  AgreementExtensionStorages_aggregate: AgreementExtensionStorages_Aggregate;
+  /** fetch data from the table: "AgreementExtensionStorages" using primary key columns */
+  AgreementExtensionStorages_by_pk?: Maybe<AgreementExtensionStorages>;
+  /** fetch data from the table in a streaming manner: "AgreementExtensionStorages" */
+  AgreementExtensionStorages_stream: Array<AgreementExtensionStorages>;
+  /** An array relationship */
+  AgreementExtensionWidgets: Array<AgreementExtensionWidgets>;
+  /** An aggregate relationship */
+  AgreementExtensionWidgets_aggregate: AgreementExtensionWidgets_Aggregate;
+  /** fetch data from the table: "AgreementExtensionWidgets" using primary key columns */
+  AgreementExtensionWidgets_by_pk?: Maybe<AgreementExtensionWidgets>;
+  /** fetch data from the table in a streaming manner: "AgreementExtensionWidgets" */
+  AgreementExtensionWidgets_stream: Array<AgreementExtensionWidgets>;
+  /** An array relationship */
   AgreementExtensions: Array<AgreementExtensions>;
   /** An aggregate relationship */
   AgreementExtensions_aggregate: AgreementExtensions_Aggregate;
@@ -11552,6 +13406,14 @@ export type Subscription_Root = {
   AgreementRoleTokens_by_pk?: Maybe<AgreementRoleTokens>;
   /** fetch data from the table in a streaming manner: "AgreementRoleTokens" */
   AgreementRoleTokens_stream: Array<AgreementRoleTokens>;
+  /** fetch data from the table: "AgreementRoleWallets" */
+  AgreementRoleWallets: Array<AgreementRoleWallets>;
+  /** fetch aggregated fields from the table: "AgreementRoleWallets" */
+  AgreementRoleWallets_aggregate: AgreementRoleWallets_Aggregate;
+  /** fetch data from the table: "AgreementRoleWallets" using primary key columns */
+  AgreementRoleWallets_by_pk?: Maybe<AgreementRoleWallets>;
+  /** fetch data from the table in a streaming manner: "AgreementRoleWallets" */
+  AgreementRoleWallets_stream: Array<AgreementRoleWallets>;
   /** An array relationship */
   AgreementRoles: Array<AgreementRoles>;
   /** An aggregate relationship */
@@ -11640,14 +13502,14 @@ export type Subscription_Root = {
   Extensions_by_pk?: Maybe<Extensions>;
   /** fetch data from the table in a streaming manner: "Extensions" */
   Extensions_stream: Array<Extensions>;
-  /** fetch data from the table: "IdentityIntegrations" */
-  IdentityIntegrations: Array<IdentityIntegrations>;
-  /** fetch aggregated fields from the table: "IdentityIntegrations" */
-  IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
-  /** fetch data from the table: "IdentityIntegrations" using primary key columns */
-  IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
-  /** fetch data from the table in a streaming manner: "IdentityIntegrations" */
-  IdentityIntegrations_stream: Array<IdentityIntegrations>;
+  /** fetch data from the table: "IdentityProviders" */
+  IdentityProviders: Array<IdentityProviders>;
+  /** fetch aggregated fields from the table: "IdentityProviders" */
+  IdentityProviders_aggregate: IdentityProviders_Aggregate;
+  /** fetch data from the table: "IdentityProviders" using primary key columns */
+  IdentityProviders_by_pk?: Maybe<IdentityProviders>;
+  /** fetch data from the table in a streaming manner: "IdentityProviders" */
+  IdentityProviders_stream: Array<IdentityProviders>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
   /** fetch aggregated fields from the table: "Integrations" */
@@ -11720,6 +13582,126 @@ export type Subscription_Root = {
   Wallets_by_pk?: Maybe<Wallets>;
   /** fetch data from the table in a streaming manner: "Wallets" */
   Wallets_stream: Array<Wallets>;
+};
+
+
+export type Subscription_RootAgreementExtensionLinksArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionLinks_Order_By>>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionLinks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionLinks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionLinks_Order_By>>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionLinks_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementExtensionLinks_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementExtensionLinks_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementExtensionLinks_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionRolesArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionRoles_Order_By>>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionRoles_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionRoles_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionRoles_Order_By>>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionRoles_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementExtensionRoles_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementExtensionRoles_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementExtensionRoles_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionStoragesArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionStorages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionStorages_Order_By>>;
+  where?: InputMaybe<AgreementExtensionStorages_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionStorages_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionStorages_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionStorages_Order_By>>;
+  where?: InputMaybe<AgreementExtensionStorages_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionStorages_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementExtensionStorages_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementExtensionStorages_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementExtensionStorages_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionWidgetsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionWidgets_Order_By>>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionWidgets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementExtensionWidgets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementExtensionWidgets_Order_By>>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementExtensionWidgets_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementExtensionWidgets_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementExtensionWidgets_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementExtensionWidgets_Bool_Exp>;
 };
 
 
@@ -11840,6 +13822,36 @@ export type Subscription_RootAgreementRoleTokens_StreamArgs = {
   batch_size: Scalars['Int'];
   cursor: Array<InputMaybe<AgreementRoleTokens_Stream_Cursor_Input>>;
   where?: InputMaybe<AgreementRoleTokens_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementRoleWalletsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementRoleWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementRoleWallets_Order_By>>;
+  where?: InputMaybe<AgreementRoleWallets_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementRoleWallets_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementRoleWallets_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementRoleWallets_Order_By>>;
+  where?: InputMaybe<AgreementRoleWallets_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementRoleWallets_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementRoleWallets_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementRoleWallets_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementRoleWallets_Bool_Exp>;
 };
 
 
@@ -12173,33 +14185,33 @@ export type Subscription_RootExtensions_StreamArgs = {
 };
 
 
-export type Subscription_RootIdentityIntegrationsArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Subscription_RootIdentityProvidersArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Subscription_RootIdentityIntegrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Subscription_RootIdentityProviders_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Subscription_RootIdentityIntegrations_By_PkArgs = {
+export type Subscription_RootIdentityProviders_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
-export type Subscription_RootIdentityIntegrations_StreamArgs = {
+export type Subscription_RootIdentityProviders_StreamArgs = {
   batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<IdentityIntegrations_Stream_Cursor_Input>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  cursor: Array<InputMaybe<IdentityProviders_Stream_Cursor_Input>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
@@ -12541,7 +14553,7 @@ export type GetClubQueryVariables = Exact<{
 }>;
 
 
-export type GetClubQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, isEnabled: boolean, metadata: any, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type GetClubAsMemberQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -12549,7 +14561,7 @@ export type GetClubAsMemberQueryVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, isEnabled: boolean, metadata: any, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubAsMemberQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type GetClubInfoQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -12565,7 +14577,7 @@ export type GetClubSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, isEnabled: boolean, metadata: any, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
 
 export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -12573,7 +14585,7 @@ export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null, Agreement?: { __typename?: 'Agreements', AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, isAdminRole: boolean, name: string, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, isEnabled: boolean, metadata: any, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
+export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null, Agreement?: { __typename?: 'Agreements', AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, isAdminRole: boolean, name: string, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string, slug: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -12586,7 +14598,7 @@ export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', A
 export type GetExtensionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', createdAt: any, description: string, guideUrl: string, icon: string, id: any, name: string, updatedAt: any }> };
+export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', createdAt: any, description: string, guideUrl: string, icon: string, id: any, name: string }> };
 
 export type GetAvailablePermissionQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -12631,12 +14643,12 @@ export type MeemIdSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string } | null }> }> };
+export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', profilePicUrl?: string | null, id: any, displayName?: string | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityProviderId?: any | null, IdentityProvider?: { __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string } | null }> }> };
 
-export type GetIdentityIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetIdentityProvidersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetIdentityIntegrationsQuery = { __typename?: 'query_root', IdentityIntegrations: Array<{ __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
+export type GetIdentityProvidersQuery = { __typename?: 'query_root', IdentityProviders: Array<{ __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
 
 export type GetTransactionsSubscriptionVariables = Exact<{
   transactionIds?: InputMaybe<Array<Scalars['uuid']> | Scalars['uuid']>;
@@ -12851,10 +14863,9 @@ export const GetClubDocument = gql`
     mintPermissions
     symbol
     id
-    AgreementExtensions(where: {isEnabled: {_eq: true}}) {
+    AgreementExtensions {
       ExtensionId
       id
-      isEnabled
       metadata
       Extension {
         description
@@ -12935,10 +14946,9 @@ export const GetClubAsMemberDocument = gql`
       }
     }
     id
-    AgreementExtensions(where: {isEnabled: {_eq: true}}) {
+    AgreementExtensions {
       ExtensionId
       id
-      isEnabled
       metadata
       Extension {
         description
@@ -13051,10 +15061,9 @@ export const GetClubSubscriptionDocument = gql`
     mintPermissions
     symbol
     id
-    AgreementExtensions(where: {isEnabled: {_eq: true}}) {
+    AgreementExtensions {
       ExtensionId
       id
-      isEnabled
       metadata
       Extension {
         description
@@ -13143,10 +15152,9 @@ export const GetClubAsMemberSubscriptionDocument = gql`
     mintPermissions
     symbol
     id
-    AgreementExtensions(where: {isEnabled: {_eq: true}}) {
+    AgreementExtensions {
       ExtensionId
       id
-      isEnabled
       metadata
       Extension {
         description
@@ -13154,6 +15162,7 @@ export const GetClubAsMemberSubscriptionDocument = gql`
         icon
         id
         name
+        slug
       }
     }
     AgreementRoles {
@@ -13257,7 +15266,6 @@ export const GetExtensionsDocument = gql`
     icon
     id
     name
-    updatedAt
   }
 }
     `;
@@ -13546,7 +15554,6 @@ export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, Ge
 export const MeemIdSubscriptionDocument = gql`
     subscription MeemIdSubscription($walletAddress: String) {
   Users(where: {Wallets: {address: {_ilike: $walletAddress}}}) {
-    updatedAt
     profilePicUrl
     id
     displayName
@@ -13558,8 +15565,8 @@ export const MeemIdSubscriptionDocument = gql`
     UserIdentities {
       metadata
       visibility
-      IdentityIntegrationId
-      IdentityIntegration {
+      IdentityProviderId
+      IdentityProvider {
         description
         icon
         id
@@ -13594,9 +15601,9 @@ export function useMeemIdSubscriptionSubscription(baseOptions?: Apollo.Subscript
       }
 export type MeemIdSubscriptionSubscriptionHookResult = ReturnType<typeof useMeemIdSubscriptionSubscription>;
 export type MeemIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MeemIdSubscriptionSubscription>;
-export const GetIdentityIntegrationsDocument = gql`
-    query GetIdentityIntegrations {
-  IdentityIntegrations {
+export const GetIdentityProvidersDocument = gql`
+    query GetIdentityProviders {
+  IdentityProviders {
     description
     icon
     id
@@ -13608,31 +15615,31 @@ export const GetIdentityIntegrationsDocument = gql`
     `;
 
 /**
- * __useGetIdentityIntegrationsQuery__
+ * __useGetIdentityProvidersQuery__
  *
- * To run a query within a React component, call `useGetIdentityIntegrationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetIdentityIntegrationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetIdentityProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIdentityProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetIdentityIntegrationsQuery({
+ * const { data, loading, error } = useGetIdentityProvidersQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetIdentityIntegrationsQuery(baseOptions?: Apollo.QueryHookOptions<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>) {
+export function useGetIdentityProvidersQuery(baseOptions?: Apollo.QueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>(GetIdentityIntegrationsDocument, options);
+        return Apollo.useQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
       }
-export function useGetIdentityIntegrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>) {
+export function useGetIdentityProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>(GetIdentityIntegrationsDocument, options);
+          return Apollo.useLazyQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
         }
-export type GetIdentityIntegrationsQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsQuery>;
-export type GetIdentityIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsLazyQuery>;
-export type GetIdentityIntegrationsQueryResult = Apollo.QueryResult<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>;
+export type GetIdentityProvidersQueryHookResult = ReturnType<typeof useGetIdentityProvidersQuery>;
+export type GetIdentityProvidersLazyQueryHookResult = ReturnType<typeof useGetIdentityProvidersLazyQuery>;
+export type GetIdentityProvidersQueryResult = Apollo.QueryResult<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>;
 export const GetTransactionsDocument = gql`
     subscription GetTransactions($transactionIds: [uuid!]) {
   Transactions(where: {id: {_in: $transactionIds}}) {
