@@ -44,9 +44,9 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 		const filteredExtensions: Extension[] = []
 
 		if (currentSearchTerm.length > 0) {
-			available.forEach(inte => {
-				if (inte.name.toLowerCase().includes(search)) {
-					filteredExtensions.push(inte)
+			available.forEach(ext => {
+				if (ext.name.toLowerCase().includes(search)) {
+					filteredExtensions.push(ext)
 				}
 			})
 			setSearchedExtensions(filteredExtensions)
@@ -58,7 +58,13 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	const enableExtension = async (extention: AgreementExtensions) => {}
+	const enableExtension = async (extention: Extension) => {
+		// TODO
+	}
+
+	const navigateToExtensionSettings = (slug: string) => {
+		router.push(`${club.slug}/e/${slug}/settings`)
+	}
 
 	return (
 		<>
@@ -102,19 +108,23 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 											<Image
 												src={`/${
 													isDarkTheme
-														? `${extension.metadata.icon?.replace(
+														? `${(
+																extension
+																	.Extension
+																	?.icon ?? ''
+														  ).replace(
 																'.png',
 																'-white.png'
 														  )}`
-														: extension.metadata
-																.icon
+														: extension.Extension
+																?.icon
 												}`}
 												width={16}
 												height={16}
 												fit={'contain'}
 											/>
 											<Space w={8} />
-											<Text>{`${extension.metadata.name}`}</Text>
+											<Text>{`${extension.Extension?.name}`}</Text>
 											{/* {extension.isVerified && (
 												<>
 													<Space w={12} />
@@ -170,7 +180,16 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 											<Divider orientation="vertical" />
 											<Space w={4} />
 
-											<a onClick={() => {}}>
+											<a
+												onClick={() => {
+													if (extension.Extension) {
+														navigateToExtensionSettings(
+															extension.Extension
+																?.slug ?? ''
+														)
+													}
+												}}
+											>
 												<div
 													className={clubsTheme.row}
 													style={{
@@ -232,7 +251,11 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 									xl={4}
 									key={extension.name}
 								>
-									<a onClick={() => {}}>
+									<a
+										onClick={() => {
+											enableExtension(extension)
+										}}
+									>
 										<div
 											className={
 												clubsTheme.extensionGridItem

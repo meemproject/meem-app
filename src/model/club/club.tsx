@@ -26,8 +26,10 @@ export interface Extension {
 	icon: string
 	id: any
 	name: string
+	slug: string
 	updatedAt: any
 }
+
 export interface ClubRolePermission {
 	id: string
 	name?: string
@@ -108,6 +110,13 @@ export interface Club {
 	extensions?: AgreementExtensions[]
 	gnosisSafeAddress?: string | null
 	memberCount?: number
+}
+
+export const extensionFromSlug = (club: Club, slug: string) => {
+	const agreementExtension = club?.extensions?.find(
+		ae => ae.Extension?.slug === slug
+	)
+	return agreementExtension
 }
 
 export interface MembershipSettings {
