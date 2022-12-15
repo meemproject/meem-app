@@ -2,8 +2,9 @@ import log from '@kengoldfarb/log'
 import { Text, Space, Alert, Loader } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
+import { useRouter } from 'next/router'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
-import { CircleCheck, CircleX } from 'tabler-icons-react'
+import { CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import { Club, MembershipReqType } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
 import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
@@ -23,6 +24,7 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({
 	onMeetsAllReqsChanged
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+	const router = useRouter()
 	const wallet = useWallet()
 
 	const [parsedRequirements, setParsedRequirements] = useState<
@@ -306,9 +308,27 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({
 	return (
 		<>
 			<div className={clubsTheme.widgetLight}>
-				<Text className={clubsTheme.tLargeBold}>
-					Membership Requirements
-				</Text>
+				<div className={clubsTheme.spacedRowCentered}>
+					<Text className={clubsTheme.tMediumBold}>
+						Membership Requirements
+					</Text>
+					<div className={clubsTheme.centeredRow}>
+						{club.isCurrentUserClubAdmin && (
+							<div className={clubsTheme.row}>
+								<Space w={8} />
+								<Settings
+									className={clubsTheme.clickable}
+									onClick={() => {
+										router.push({
+											pathname: `/${club.slug}/e/discussion/settings`
+										})
+									}}
+								/>
+							</div>
+						)}
+					</div>
+				</div>
+
 				<Space h={16} />
 				{parsedRequirements.length === 0 && (
 					<Loader variant="oval" color={colorPink} />

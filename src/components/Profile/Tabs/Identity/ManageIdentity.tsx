@@ -22,7 +22,7 @@ import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
+import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
 import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
@@ -50,7 +50,7 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	// Fetch a list of available extensions.
 	const { data: inteData, loading: isLoadingAvailableExtensions } =
-		useQuery<GetIdentityIntegrationsQuery>(IDENTITY_INTEGRATIONS_QUERY, {
+		useQuery<GetIdentityProvidersQuery>(IDENTITY_INTEGRATIONS_QUERY, {
 			client: anonClient
 		})
 
@@ -206,9 +206,9 @@ export const ManageIdentityComponent: React.FC = () => {
 	}
 
 	const filteredAvilableExtensions =
-		inteData?.IdentityIntegrations.filter(ai => {
+		inteData?.IdentityProviders.filter(ai => {
 			const connectedExtension = me?.UserIdentities?.find(
-				i => i.IdentityIntegrationId === ai.id
+				i => i.IdentityProviderId === ai.id
 			)
 
 			if (connectedExtension) {
@@ -337,7 +337,7 @@ export const ManageIdentityComponent: React.FC = () => {
 										md={4}
 										lg={4}
 										xl={4}
-										key={`verified-extension-${userIdentity.IdentityIntegration?.name}`}
+										key={`verified-extension-${userIdentity.IdentityProvider?.name}`}
 									>
 										<a
 											onClick={() => {
@@ -358,7 +358,7 @@ export const ManageIdentityComponent: React.FC = () => {
 													}
 												>
 													<Image
-														src={`${userIdentity.IdentityIntegration?.icon}`}
+														src={`${userIdentity.IdentityProvider?.icon}`}
 														width={16}
 														height={16}
 														fit={'contain'}
@@ -369,7 +369,7 @@ export const ManageIdentityComponent: React.FC = () => {
 															.username
 															? `@${userIdentity?.metadata.username}`
 															: userIdentity
-																	.IdentityIntegration
+																	.IdentityProvider
 																	?.name}
 													</Text>
 												</div>

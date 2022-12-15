@@ -100,6 +100,31 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": null,
+            "args": [
+              {
+                "name": "path",
+                "description": "JSON select path",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": null,
             "args": [],
@@ -117,6 +142,22 @@
           },
           {
             "name": "url",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "args": [],
             "type": {
@@ -569,6 +610,29 @@
       },
       {
         "kind": "INPUT_OBJECT",
+        "name": "AgreementExtensionLinks_append_input",
+        "description": "append existing jsonb value of filtered columns with new jsonb value",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
         "name": "AgreementExtensionLinks_arr_rel_insert_input",
         "description": "input type for inserting array relation for remote table \"AgreementExtensionLinks\"",
         "fields": null,
@@ -745,6 +809,18 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "jsonb_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": null,
             "type": {
@@ -758,6 +834,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "String_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -788,6 +876,83 @@
             "deprecationReason": null
           }
         ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AgreementExtensionLinks_delete_at_path_input",
+        "description": "delete the field or element with specified path (for JSON arrays, negative integers count from the end)",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AgreementExtensionLinks_delete_elem_input",
+        "description": "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AgreementExtensionLinks_delete_key_input",
+        "description": "delete key/value pair or string element. key/value pairs are matched based on their key value",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
         "possibleTypes": null
       },
       {
@@ -869,6 +1034,18 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": null,
             "type": {
@@ -882,6 +1059,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -964,6 +1153,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "args": [],
             "type": {
@@ -1057,6 +1258,18 @@
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "interfaces": null,
@@ -1130,6 +1343,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "args": [],
             "type": {
@@ -1214,6 +1439,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -1422,6 +1659,18 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": null,
             "type": {
@@ -1435,6 +1684,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -1467,6 +1728,29 @@
                 "name": "uuid",
                 "ofType": null
               }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "AgreementExtensionLinks_prepend_input",
+        "description": "prepend existing jsonb value of filtered columns with new jsonb value",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
             },
             "defaultValue": null,
             "isDeprecated": false,
@@ -1516,6 +1800,12 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": "column name",
             "isDeprecated": false,
@@ -1523,6 +1813,12 @@
           },
           {
             "name": "url",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -1631,6 +1927,18 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": null,
             "type": {
@@ -1644,6 +1952,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -1765,6 +2085,18 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": null,
             "type": {
@@ -1778,6 +2110,18 @@
           },
           {
             "name": "url",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -1832,6 +2176,12 @@
             "deprecationReason": null
           },
           {
+            "name": "metadata",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": "column name",
             "isDeprecated": false,
@@ -1839,6 +2189,12 @@
           },
           {
             "name": "url",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -1852,6 +2208,66 @@
         "description": null,
         "fields": null,
         "inputFields": [
+          {
+            "name": "_append",
+            "description": "append existing jsonb value of filtered columns with new jsonb value",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementExtensionLinks_append_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "_delete_at_path",
+            "description": "delete the field or element with specified path (for JSON arrays, negative integers count from the end)",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementExtensionLinks_delete_at_path_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "_delete_elem",
+            "description": "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementExtensionLinks_delete_elem_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "_delete_key",
+            "description": "delete key/value pair or string element. key/value pairs are matched based on their key value",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementExtensionLinks_delete_key_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "_prepend",
+            "description": "prepend existing jsonb value of filtered columns with new jsonb value",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "AgreementExtensionLinks_prepend_input",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "_set",
             "description": "sets the columns of the filtered rows to the given values",
@@ -5266,6 +5682,22 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -5914,6 +6346,18 @@
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "String_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "interfaces": null,
@@ -6103,6 +6547,18 @@
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "interfaces": null,
@@ -6161,6 +6617,18 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -6212,6 +6680,18 @@
           },
           {
             "name": "updatedAt",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -6279,6 +6759,18 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -6330,6 +6822,18 @@
           },
           {
             "name": "updatedAt",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -6548,6 +7052,18 @@
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "interfaces": null,
@@ -6644,6 +7160,12 @@
           },
           {
             "name": "updatedAt",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -6757,6 +7279,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "timestamptz",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "defaultValue": null,
@@ -6884,6 +7418,18 @@
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "visibility",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "interfaces": null,
@@ -6930,6 +7476,12 @@
           },
           {
             "name": "updatedAt",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "visibility",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -41571,60 +42123,6 @@
             "deprecationReason": null
           },
           {
-            "name": "ChainNonces_chainId_key7",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key8",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key9",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key10",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key11",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key12",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key13",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key14",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key15",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "ChainNonces_pkey",
             "description": "unique or primary key constraint on columns \"id\"",
             "isDeprecated": false,
@@ -50949,203 +51447,9 @@
       },
       {
         "kind": "OBJECT",
-        "name": "IdentityIntegrations",
-        "description": "columns and relationships of \"IdentityIntegrations\"",
+        "name": "IdentityProviders",
+        "description": "columns and relationships of \"IdentityProviders\"",
         "fields": [
-          {
-            "name": "UserIdentities",
-            "description": "An array relationship",
-            "args": [
-              {
-                "name": "distinct_on",
-                "description": "distinct select on columns",
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "ENUM",
-                      "name": "UserIdentities_select_column",
-                      "ofType": null
-                    }
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "limit",
-                "description": "limit the number of rows returned",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "offset",
-                "description": "skip the first n rows. Use only with order_by",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "order_by",
-                "description": "sort the rows by one or more columns",
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "UserIdentities_order_by",
-                      "ofType": null
-                    }
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "where",
-                "description": "filter the rows returned",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "UserIdentities_bool_exp",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "UserIdentities",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_aggregate",
-            "description": "An aggregate relationship",
-            "args": [
-              {
-                "name": "distinct_on",
-                "description": "distinct select on columns",
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "ENUM",
-                      "name": "UserIdentities_select_column",
-                      "ofType": null
-                    }
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "limit",
-                "description": "limit the number of rows returned",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "offset",
-                "description": "skip the first n rows. Use only with order_by",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "order_by",
-                "description": "sort the rows by one or more columns",
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "UserIdentities_order_by",
-                      "ofType": null
-                    }
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "where",
-                "description": "filter the rows returned",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "UserIdentities_bool_exp",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "UserIdentities_aggregate",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "connectionId",
             "description": null,
@@ -51282,8 +51586,8 @@
       },
       {
         "kind": "OBJECT",
-        "name": "IdentityIntegrations_aggregate",
-        "description": "aggregated selection of \"IdentityIntegrations\"",
+        "name": "IdentityProviders_aggregate",
+        "description": "aggregated selection of \"IdentityProviders\"",
         "fields": [
           {
             "name": "aggregate",
@@ -51291,7 +51595,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations_aggregate_fields",
+              "name": "IdentityProviders_aggregate_fields",
               "ofType": null
             },
             "isDeprecated": false,
@@ -51312,7 +51616,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "IdentityIntegrations",
+                    "name": "IdentityProviders",
                     "ofType": null
                   }
                 }
@@ -51329,8 +51633,8 @@
       },
       {
         "kind": "OBJECT",
-        "name": "IdentityIntegrations_aggregate_fields",
-        "description": "aggregate fields of \"IdentityIntegrations\"",
+        "name": "IdentityProviders_aggregate_fields",
+        "description": "aggregate fields of \"IdentityProviders\"",
         "fields": [
           {
             "name": "count",
@@ -51347,7 +51651,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "IdentityIntegrations_select_column",
+                      "name": "IdentityProviders_select_column",
                       "ofType": null
                     }
                   }
@@ -51387,7 +51691,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations_max_fields",
+              "name": "IdentityProviders_max_fields",
               "ofType": null
             },
             "isDeprecated": false,
@@ -51399,7 +51703,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations_min_fields",
+              "name": "IdentityProviders_min_fields",
               "ofType": null
             },
             "isDeprecated": false,
@@ -51413,34 +51717,10 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_bool_exp",
-        "description": "Boolean expression to filter rows from the table \"IdentityIntegrations\". All fields are combined with a logical 'AND'.",
+        "name": "IdentityProviders_bool_exp",
+        "description": "Boolean expression to filter rows from the table \"IdentityProviders\". All fields are combined with a logical 'AND'.",
         "fields": null,
         "inputFields": [
-          {
-            "name": "UserIdentities",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "UserIdentities_bool_exp",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_aggregate",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "UserIdentities_aggregate_bool_exp",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "_and",
             "description": null,
@@ -51452,7 +51732,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_bool_exp",
+                  "name": "IdentityProviders_bool_exp",
                   "ofType": null
                 }
               }
@@ -51466,7 +51746,7 @@
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IdentityIntegrations_bool_exp",
+              "name": "IdentityProviders_bool_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -51484,7 +51764,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_bool_exp",
+                  "name": "IdentityProviders_bool_exp",
                   "ofType": null
                 }
               }
@@ -51596,14 +51876,14 @@
       },
       {
         "kind": "ENUM",
-        "name": "IdentityIntegrations_constraint",
-        "description": "unique or primary key constraints on table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_constraint",
+        "description": "unique or primary key constraints on table \"IdentityProviders\"",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
         "enumValues": [
           {
-            "name": "IdentityIntegrations_pkey",
+            "name": "IdentityProviders_pkey",
             "description": "unique or primary key constraint on columns \"id\"",
             "isDeprecated": false,
             "deprecationReason": null
@@ -51613,22 +51893,10 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_insert_input",
-        "description": "input type for inserting data into table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_insert_input",
+        "description": "input type for inserting data into table \"IdentityProviders\"",
         "fields": null,
         "inputFields": [
-          {
-            "name": "UserIdentities",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "UserIdentities_arr_rel_insert_input",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "connectionId",
             "description": null,
@@ -51732,7 +52000,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "IdentityIntegrations_max_fields",
+        "name": "IdentityProviders_max_fields",
         "description": "aggregate max on columns",
         "fields": [
           {
@@ -51839,7 +52107,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "IdentityIntegrations_min_fields",
+        "name": "IdentityProviders_min_fields",
         "description": "aggregate min on columns",
         "fields": [
           {
@@ -51946,8 +52214,8 @@
       },
       {
         "kind": "OBJECT",
-        "name": "IdentityIntegrations_mutation_response",
-        "description": "response of any mutation on the table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_mutation_response",
+        "description": "response of any mutation on the table \"IdentityProviders\"",
         "fields": [
           {
             "name": "affected_rows",
@@ -51980,7 +52248,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "IdentityIntegrations",
+                    "name": "IdentityProviders",
                     "ofType": null
                   }
                 }
@@ -51997,8 +52265,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_obj_rel_insert_input",
-        "description": "input type for inserting object relation for remote table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_obj_rel_insert_input",
+        "description": "input type for inserting object relation for remote table \"IdentityProviders\"",
         "fields": null,
         "inputFields": [
           {
@@ -52009,7 +52277,7 @@
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "IdentityIntegrations_insert_input",
+                "name": "IdentityProviders_insert_input",
                 "ofType": null
               }
             },
@@ -52022,7 +52290,7 @@
             "description": "upsert condition",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IdentityIntegrations_on_conflict",
+              "name": "IdentityProviders_on_conflict",
               "ofType": null
             },
             "defaultValue": null,
@@ -52036,8 +52304,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_on_conflict",
-        "description": "on_conflict condition type for table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_on_conflict",
+        "description": "on_conflict condition type for table \"IdentityProviders\"",
         "fields": null,
         "inputFields": [
           {
@@ -52048,7 +52316,7 @@
               "name": null,
               "ofType": {
                 "kind": "ENUM",
-                "name": "IdentityIntegrations_constraint",
+                "name": "IdentityProviders_constraint",
                 "ofType": null
               }
             },
@@ -52070,7 +52338,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "ENUM",
-                    "name": "IdentityIntegrations_update_column",
+                    "name": "IdentityProviders_update_column",
                     "ofType": null
                   }
                 }
@@ -52085,7 +52353,7 @@
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IdentityIntegrations_bool_exp",
+              "name": "IdentityProviders_bool_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -52099,22 +52367,10 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_order_by",
-        "description": "Ordering options when selecting data from \"IdentityIntegrations\".",
+        "name": "IdentityProviders_order_by",
+        "description": "Ordering options when selecting data from \"IdentityProviders\".",
         "fields": null,
         "inputFields": [
-          {
-            "name": "UserIdentities_aggregate",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "UserIdentities_aggregate_order_by",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
           {
             "name": "connectionId",
             "description": null,
@@ -52218,8 +52474,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_pk_columns_input",
-        "description": "primary key columns input for table: IdentityIntegrations",
+        "name": "IdentityProviders_pk_columns_input",
+        "description": "primary key columns input for table: IdentityProviders",
         "fields": null,
         "inputFields": [
           {
@@ -52245,8 +52501,8 @@
       },
       {
         "kind": "ENUM",
-        "name": "IdentityIntegrations_select_column",
-        "description": "select columns of table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_select_column",
+        "description": "select columns of table \"IdentityProviders\"",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -52304,8 +52560,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_set_input",
-        "description": "input type for updating data in table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_set_input",
+        "description": "input type for updating data in table \"IdentityProviders\"",
         "fields": null,
         "inputFields": [
           {
@@ -52411,8 +52667,8 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_stream_cursor_input",
-        "description": "Streaming cursor of the table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_stream_cursor_input",
+        "description": "Streaming cursor of the table \"IdentityProviders\"",
         "fields": null,
         "inputFields": [
           {
@@ -52423,7 +52679,7 @@
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "IdentityIntegrations_stream_cursor_value_input",
+                "name": "IdentityProviders_stream_cursor_value_input",
                 "ofType": null
               }
             },
@@ -52450,7 +52706,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_stream_cursor_value_input",
+        "name": "IdentityProviders_stream_cursor_value_input",
         "description": "Initial value of the column from where the streaming should start",
         "fields": null,
         "inputFields": [
@@ -52557,8 +52813,8 @@
       },
       {
         "kind": "ENUM",
-        "name": "IdentityIntegrations_update_column",
-        "description": "update columns of table \"IdentityIntegrations\"",
+        "name": "IdentityProviders_update_column",
+        "description": "update columns of table \"IdentityProviders\"",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -52616,7 +52872,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "IdentityIntegrations_updates",
+        "name": "IdentityProviders_updates",
         "description": null,
         "fields": null,
         "inputFields": [
@@ -52625,7 +52881,7 @@
             "description": "sets the columns of the filtered rows to the given values",
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IdentityIntegrations_set_input",
+              "name": "IdentityProviders_set_input",
               "ofType": null
             },
             "defaultValue": null,
@@ -52640,7 +52896,7 @@
               "name": null,
               "ofType": {
                 "kind": "INPUT_OBJECT",
-                "name": "IdentityIntegrations_bool_exp",
+                "name": "IdentityProviders_bool_exp",
                 "ofType": null
               }
             },
@@ -61533,19 +61789,19 @@
         "description": "columns and relationships of \"UserIdentities\"",
         "fields": [
           {
-            "name": "IdentityIntegration",
+            "name": "IdentityProvider",
             "description": "An object relationship",
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations",
+              "name": "IdentityProviders",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "args": [],
             "type": {
@@ -62040,11 +62296,11 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "IdentityIntegration",
+            "name": "IdentityProvider",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IdentityIntegrations_bool_exp",
+              "name": "IdentityProviders_bool_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -62052,7 +62308,7 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -62237,90 +62493,6 @@
             "deprecationReason": null
           },
           {
-            "name": "UserIdentities_externalId_key2",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key3",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key4",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key5",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key6",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key7",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key8",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key9",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key10",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key11",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key12",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key13",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key14",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key15",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "UserIdentities_pkey",
             "description": "unique or primary key constraint on columns \"id\"",
             "isDeprecated": false,
@@ -62413,11 +62585,11 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "IdentityIntegration",
+            "name": "IdentityProvider",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IdentityIntegrations_obj_rel_insert_input",
+              "name": "IdentityProviders_obj_rel_insert_input",
               "ofType": null
             },
             "defaultValue": null,
@@ -62425,7 +62597,7 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -62543,7 +62715,7 @@
         "description": "aggregate max on columns",
         "fields": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "args": [],
             "type": {
@@ -62639,7 +62811,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -62733,7 +62905,7 @@
         "description": "aggregate min on columns",
         "fields": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "args": [],
             "type": {
@@ -62829,7 +63001,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -63038,11 +63210,11 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "IdentityIntegration",
+            "name": "IdentityProvider",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
-              "name": "IdentityIntegrations_order_by",
+              "name": "IdentityProviders_order_by",
               "ofType": null
             },
             "defaultValue": null,
@@ -63050,7 +63222,7 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -63221,7 +63393,7 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -63278,7 +63450,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -63424,7 +63596,7 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -63533,7 +63705,7 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "IdentityIntegrationId",
+            "name": "IdentityProviderId",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -75232,8 +75404,8 @@
             "deprecationReason": null
           },
           {
-            "name": "delete_IdentityIntegrations",
-            "description": "delete data from the table: \"IdentityIntegrations\"",
+            "name": "delete_IdentityProviders",
+            "description": "delete data from the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "where",
@@ -75243,7 +75415,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "IdentityIntegrations_bool_exp",
+                    "name": "IdentityProviders_bool_exp",
                     "ofType": null
                   }
                 },
@@ -75254,15 +75426,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations_mutation_response",
+              "name": "IdentityProviders_mutation_response",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "delete_IdentityIntegrations_by_pk",
-            "description": "delete single row from the table: \"IdentityIntegrations\"",
+            "name": "delete_IdentityProviders_by_pk",
+            "description": "delete single row from the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "id",
@@ -75283,7 +75455,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations",
+              "name": "IdentityProviders",
               "ofType": null
             },
             "isDeprecated": false,
@@ -77612,8 +77784,8 @@
             "deprecationReason": null
           },
           {
-            "name": "insert_IdentityIntegrations",
-            "description": "insert data into the table: \"IdentityIntegrations\"",
+            "name": "insert_IdentityProviders",
+            "description": "insert data into the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "objects",
@@ -77629,7 +77801,7 @@
                       "name": null,
                       "ofType": {
                         "kind": "INPUT_OBJECT",
-                        "name": "IdentityIntegrations_insert_input",
+                        "name": "IdentityProviders_insert_input",
                         "ofType": null
                       }
                     }
@@ -77644,7 +77816,7 @@
                 "description": "upsert condition",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_on_conflict",
+                  "name": "IdentityProviders_on_conflict",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -77654,15 +77826,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations_mutation_response",
+              "name": "IdentityProviders_mutation_response",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "insert_IdentityIntegrations_one",
-            "description": "insert a single row into the table: \"IdentityIntegrations\"",
+            "name": "insert_IdentityProviders_one",
+            "description": "insert a single row into the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "object",
@@ -77672,7 +77844,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "IdentityIntegrations_insert_input",
+                    "name": "IdentityProviders_insert_input",
                     "ofType": null
                   }
                 },
@@ -77685,7 +77857,7 @@
                 "description": "upsert condition",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_on_conflict",
+                  "name": "IdentityProviders_on_conflict",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -77695,7 +77867,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations",
+              "name": "IdentityProviders",
               "ofType": null
             },
             "isDeprecated": false,
@@ -78516,6 +78688,66 @@
             "description": "update data of the table: \"AgreementExtensionLinks\"",
             "args": [
               {
+                "name": "_append",
+                "description": "append existing jsonb value of filtered columns with new jsonb value",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_append_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_delete_at_path",
+                "description": "delete the field or element with specified path (for JSON arrays, negative integers count from the end)",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_delete_at_path_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_delete_elem",
+                "description": "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_delete_elem_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_delete_key",
+                "description": "delete key/value pair or string element. key/value pairs are matched based on their key value",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_delete_key_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_prepend",
+                "description": "prepend existing jsonb value of filtered columns with new jsonb value",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_prepend_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
                 "name": "_set",
                 "description": "sets the columns of the filtered rows to the given values",
                 "type": {
@@ -78556,6 +78788,66 @@
             "name": "update_AgreementExtensionLinks_by_pk",
             "description": "update single row of the table: \"AgreementExtensionLinks\"",
             "args": [
+              {
+                "name": "_append",
+                "description": "append existing jsonb value of filtered columns with new jsonb value",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_append_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_delete_at_path",
+                "description": "delete the field or element with specified path (for JSON arrays, negative integers count from the end)",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_delete_at_path_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_delete_elem",
+                "description": "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_delete_elem_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_delete_key",
+                "description": "delete key/value pair or string element. key/value pairs are matched based on their key value",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_delete_key_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "_prepend",
+                "description": "prepend existing jsonb value of filtered columns with new jsonb value",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "AgreementExtensionLinks_prepend_input",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
               {
                 "name": "_set",
                 "description": "sets the columns of the filtered rows to the given values",
@@ -82676,15 +82968,15 @@
             "deprecationReason": null
           },
           {
-            "name": "update_IdentityIntegrations",
-            "description": "update data of the table: \"IdentityIntegrations\"",
+            "name": "update_IdentityProviders",
+            "description": "update data of the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "_set",
                 "description": "sets the columns of the filtered rows to the given values",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_set_input",
+                  "name": "IdentityProviders_set_input",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -82699,7 +82991,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "IdentityIntegrations_bool_exp",
+                    "name": "IdentityProviders_bool_exp",
                     "ofType": null
                   }
                 },
@@ -82710,22 +83002,22 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations_mutation_response",
+              "name": "IdentityProviders_mutation_response",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "update_IdentityIntegrations_by_pk",
-            "description": "update single row of the table: \"IdentityIntegrations\"",
+            "name": "update_IdentityProviders_by_pk",
+            "description": "update single row of the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "_set",
                 "description": "sets the columns of the filtered rows to the given values",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_set_input",
+                  "name": "IdentityProviders_set_input",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -82740,7 +83032,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "IdentityIntegrations_pk_columns_input",
+                    "name": "IdentityProviders_pk_columns_input",
                     "ofType": null
                   }
                 },
@@ -82751,15 +83043,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations",
+              "name": "IdentityProviders",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "update_IdentityIntegrations_many",
-            "description": "update multiples rows of table: \"IdentityIntegrations\"",
+            "name": "update_IdentityProviders_many",
+            "description": "update multiples rows of table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "updates",
@@ -82775,7 +83067,7 @@
                       "name": null,
                       "ofType": {
                         "kind": "INPUT_OBJECT",
-                        "name": "IdentityIntegrations_updates",
+                        "name": "IdentityProviders_updates",
                         "ofType": null
                       }
                     }
@@ -82791,7 +83083,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "IdentityIntegrations_mutation_response",
+                "name": "IdentityProviders_mutation_response",
                 "ofType": null
               }
             },
@@ -88712,8 +89004,8 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrations",
-            "description": "fetch data from the table: \"IdentityIntegrations\"",
+            "name": "IdentityProviders",
+            "description": "fetch data from the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -88726,7 +89018,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "IdentityIntegrations_select_column",
+                      "name": "IdentityProviders_select_column",
                       "ofType": null
                     }
                   }
@@ -88770,7 +89062,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "IdentityIntegrations_order_by",
+                      "name": "IdentityProviders_order_by",
                       "ofType": null
                     }
                   }
@@ -88784,7 +89076,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_bool_exp",
+                  "name": "IdentityProviders_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -88803,7 +89095,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "IdentityIntegrations",
+                    "name": "IdentityProviders",
                     "ofType": null
                   }
                 }
@@ -88813,8 +89105,8 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrations_aggregate",
-            "description": "fetch aggregated fields from the table: \"IdentityIntegrations\"",
+            "name": "IdentityProviders_aggregate",
+            "description": "fetch aggregated fields from the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -88827,7 +89119,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "IdentityIntegrations_select_column",
+                      "name": "IdentityProviders_select_column",
                       "ofType": null
                     }
                   }
@@ -88871,7 +89163,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "IdentityIntegrations_order_by",
+                      "name": "IdentityProviders_order_by",
                       "ofType": null
                     }
                   }
@@ -88885,7 +89177,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_bool_exp",
+                  "name": "IdentityProviders_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -88898,7 +89190,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "IdentityIntegrations_aggregate",
+                "name": "IdentityProviders_aggregate",
                 "ofType": null
               }
             },
@@ -88906,8 +89198,8 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrations_by_pk",
-            "description": "fetch data from the table: \"IdentityIntegrations\" using primary key columns",
+            "name": "IdentityProviders_by_pk",
+            "description": "fetch data from the table: \"IdentityProviders\" using primary key columns",
             "args": [
               {
                 "name": "id",
@@ -88928,7 +89220,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations",
+              "name": "IdentityProviders",
               "ofType": null
             },
             "isDeprecated": false,
@@ -96873,8 +97165,8 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrations",
-            "description": "fetch data from the table: \"IdentityIntegrations\"",
+            "name": "IdentityProviders",
+            "description": "fetch data from the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -96887,7 +97179,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "IdentityIntegrations_select_column",
+                      "name": "IdentityProviders_select_column",
                       "ofType": null
                     }
                   }
@@ -96931,7 +97223,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "IdentityIntegrations_order_by",
+                      "name": "IdentityProviders_order_by",
                       "ofType": null
                     }
                   }
@@ -96945,7 +97237,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_bool_exp",
+                  "name": "IdentityProviders_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -96964,7 +97256,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "IdentityIntegrations",
+                    "name": "IdentityProviders",
                     "ofType": null
                   }
                 }
@@ -96974,8 +97266,8 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrations_aggregate",
-            "description": "fetch aggregated fields from the table: \"IdentityIntegrations\"",
+            "name": "IdentityProviders_aggregate",
+            "description": "fetch aggregated fields from the table: \"IdentityProviders\"",
             "args": [
               {
                 "name": "distinct_on",
@@ -96988,7 +97280,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "ENUM",
-                      "name": "IdentityIntegrations_select_column",
+                      "name": "IdentityProviders_select_column",
                       "ofType": null
                     }
                   }
@@ -97032,7 +97324,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "IdentityIntegrations_order_by",
+                      "name": "IdentityProviders_order_by",
                       "ofType": null
                     }
                   }
@@ -97046,7 +97338,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_bool_exp",
+                  "name": "IdentityProviders_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -97059,7 +97351,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "IdentityIntegrations_aggregate",
+                "name": "IdentityProviders_aggregate",
                 "ofType": null
               }
             },
@@ -97067,8 +97359,8 @@
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrations_by_pk",
-            "description": "fetch data from the table: \"IdentityIntegrations\" using primary key columns",
+            "name": "IdentityProviders_by_pk",
+            "description": "fetch data from the table: \"IdentityProviders\" using primary key columns",
             "args": [
               {
                 "name": "id",
@@ -97089,15 +97381,15 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "IdentityIntegrations",
+              "name": "IdentityProviders",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "IdentityIntegrations_stream",
-            "description": "fetch data from the table in a streaming manner: \"IdentityIntegrations\"",
+            "name": "IdentityProviders_stream",
+            "description": "fetch data from the table in a streaming manner: \"IdentityProviders\"",
             "args": [
               {
                 "name": "batch_size",
@@ -97126,7 +97418,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "IdentityIntegrations_stream_cursor_input",
+                      "name": "IdentityProviders_stream_cursor_input",
                       "ofType": null
                     }
                   }
@@ -97140,7 +97432,7 @@
                 "description": "filter the rows returned",
                 "type": {
                   "kind": "INPUT_OBJECT",
-                  "name": "IdentityIntegrations_bool_exp",
+                  "name": "IdentityProviders_bool_exp",
                   "ofType": null
                 },
                 "defaultValue": null,
@@ -97159,7 +97451,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "IdentityIntegrations",
+                    "name": "IdentityProviders",
                     "ofType": null
                   }
                 }

@@ -177,12 +177,6 @@ export function HomeComponent() {
 		})
 	}
 
-	const goToBrowse = () => {
-		router.push({
-			pathname: `/browse`
-		})
-	}
-
 	const goToCreate = () => {
 		if (loginState === LoginState.NotLoggedIn) {
 			Cookies.set(CookieKeys.clubName, autocompleteFormValue)
@@ -221,7 +215,7 @@ export function HomeComponent() {
 		const doLogin = async () => {
 			try {
 				const accessToken = await getAccessTokenSilently()
-				const { jwt } = await sdk.id.login({
+				const { jwt } = await sdk.id.loginWithAPI({
 					accessToken
 				})
 				setJwt(jwt)
@@ -392,22 +386,7 @@ export function HomeComponent() {
 						</a>
 					</Text>
 				)}
-				<Space h={64} />
-				<Text className={clubsTheme.tExtraSmallLabel}>JOIN A CLUB</Text>
-				<Space h={16} />
-				<Text
-					style={{
-						fontSize: 20,
-						fontWeight: 'bold'
-					}}
-					color="dimmed"
-				>
-					{`Find your community on Clubs`}
-				</Text>
-				<Space h={16} />
-				<Button className={clubsTheme.buttonBlack} onClick={goToBrowse}>
-					Browse all clubs
-				</Button>
+
 				<Space h={64} />
 			</Container>
 			<ClubsFAQModal

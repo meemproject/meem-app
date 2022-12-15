@@ -522,23 +522,6 @@ export default async function clubFromAgreement(
 							const discordUserId = ''
 							const emailAddress = ''
 
-							// memberIdentity?.IdentityIntegrations.forEach(
-							// 	inte => {
-							// 		if (inte.metadata.twitterUsername) {
-							// 			twitterUsername =
-							// 				inte.metadata.twitterUsername
-							// 		} else if (inte.metadata.discordUsername) {
-							// 			discordUsername =
-							// 				inte.metadata.discordUsername
-							// 			discordUserId =
-							// 				inte.metadata.discordUserId
-							// 		} else if (inte.metadata.emailAddress) {
-							// 			emailAddress =
-							// 				inte.metadata.emailAddress
-							// 		}
-							// 	}
-							// )
-
 							// Assemble member
 							const memberData = {
 								wallet: agreementToken.Wallet.address,
@@ -752,37 +735,36 @@ export default async function clubFromAgreement(
 		const privateExtensions: Extension[] = []
 		if (clubData.AgreementExtensions) {
 			clubData.AgreementExtensions.forEach(inte => {
-				if (inte.isEnabled) {
-					const extension: Extension = {
-						id: inte.id,
-						extensionId: inte.ExtensionId,
-						name: inte.Extension?.name ?? 'Unknown',
-						description: inte.Extension?.description ?? 'Unknown',
-						icon: inte.Extension?.icon ?? '',
-						isEnabled: inte.isEnabled,
-						isVerified: inte.metadata.isVerified ?? false,
+				// if (inte.isEnabled) {
+				const extension: Extension = {
+					id: inte.id,
+					extensionId: inte.ExtensionId,
+					name: inte.Extension?.name ?? 'Unknown',
+					description: inte.Extension?.description ?? 'Unknown',
+					icon: inte.Extension?.icon ?? '',
+					// isEnabled: inte.isEnabled,
+					isVerified: inte.metadata.isVerified ?? false,
 
-						guideUrl: inte.Extension?.guideUrl,
-						url: inte.metadata.externalUrl ?? '',
-						isExistingExtension: true,
+					guideUrl: inte.Extension?.guideUrl,
+					url: inte.metadata.externalUrl ?? '',
+					isExistingExtension: true,
 
-						// Per app properties
-						verifiedTwitterUser:
-							inte.metadata.twitterUsername ?? '',
-						publicationSlug: inte.metadata.publicationSlug ?? '',
-						publicationName: inte.metadata.publicationName ?? '',
-						gatherTownSpacePw: inte.metadata.gatherTownSpacePw ?? ''
-					}
-
-					// TODO:
-					// if (inte.isPublic) {
-					// 	publicExtensions.push(extension)
-					// } else {
-					// 	privateExtensions.push(extension)
-					// }
-
-					allExtensions.push(extension)
+					// Per app properties
+					verifiedTwitterUser: inte.metadata.twitterUsername ?? '',
+					publicationSlug: inte.metadata.publicationSlug ?? '',
+					publicationName: inte.metadata.publicationName ?? '',
+					gatherTownSpacePw: inte.metadata.gatherTownSpacePw ?? ''
 				}
+
+				// TODO:
+				// if (inte.isPublic) {
+				// 	publicExtensions.push(extension)
+				// } else {
+				// 	privateExtensions.push(extension)
+				// }
+
+				allExtensions.push(extension)
+				// }
 			})
 		}
 

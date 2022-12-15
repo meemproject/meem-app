@@ -45,48 +45,53 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 		id: '1',
 		title: 'Test post one',
 		tags: ['funny', 'crazy'],
-		content: 'This is just a small test post.',
+		body: 'This is just a small test post.',
 		clubSlug: '',
-		votes: 16,
-		comments: [
-			{
-				id: '1',
-				content: 'Test comment',
-				votes: 1,
-				replies: [
-					{
-						id: '1',
-						content: 'Test comment',
-						votes: 1,
-						user: {
-							displayName: 'James',
-							profilePicture: '/exampleclub.png',
-							wallet: ''
-						}
-					},
-					{
-						id: '2',
-						content: 'Test comment',
-						votes: 1,
-						user: {
-							displayName: 'James',
-							profilePicture: '/exampleclub.png',
-							wallet: ''
-						}
-					}
-				],
-				user: {
-					displayName: 'James',
-					profilePicture: '/exampleclub.png',
-					wallet: ''
-				}
-			}
-		],
-		user: {
-			displayName: 'James',
-			profilePicture: '/exampleclub.png',
-			wallet: ''
-		}
+		userId: '123',
+		walletAddress: '123',
+		createdAt: 2934872323,
+		updatedAt: 2934872323
+		// votes: 16,
+		// comments: [
+		// 	{
+		// 		id: '1',
+		// 		content: 'Test comment',
+		// 		votes: 1,
+		// 		replies: [
+		// 			{
+		// 				id: '1',
+		// 				content: 'Test comment',
+		// 				votes: 1,
+		// 				user: {
+		// 					displayName: 'James',
+		// 					profilePicture: '/exampleclub.png',
+		// 					wallet: ''
+		// 				}
+		// 			},
+		// 			{
+		// 				id: '2',
+		// 				content: 'Test comment',
+		// 				votes: 1,
+		// 				user: {
+		// 					displayName: 'James',
+		// 					profilePicture: '/exampleclub.png',
+		// 					wallet: ''
+		// 				}
+		// 			}
+		// 		],
+		// 		user: {
+		// 			displayName: 'James',
+		// 			profilePicture: '/exampleclub.png',
+		// 			wallet: ''
+		// 		}
+		// 	}
+		// ],
+
+		// user: {
+		// 	displayName: 'James',
+		// 	profilePicture: '/exampleclub.png',
+		// 	wallet: ''
+		// }
 	}
 
 	const content = ''
@@ -197,7 +202,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 								)}
 								<Space h={24} />
 								<Text className={clubsTheme.tSmall}>
-									{post.content}
+									{post.body}
 								</Text>
 								<Space h={16} />
 

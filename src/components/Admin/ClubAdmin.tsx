@@ -40,7 +40,8 @@ enum Tab {
 	Roles,
 	ClubDetails,
 	ClubIcon,
-	Apps,
+	Extensions,
+	Links,
 	Airdrops,
 	DeleteClub
 }
@@ -89,9 +90,7 @@ export const ClubAdminComponent: React.FC = () => {
 			case 'airdrops':
 				setCurrentTab(Tab.Airdrops)
 				break
-			case 'apps':
-				setCurrentTab(Tab.Apps)
-				break
+
 			case 'clubdetails':
 				setCurrentTab(Tab.ClubDetails)
 				break
@@ -100,6 +99,12 @@ export const ClubAdminComponent: React.FC = () => {
 				break
 			case 'contractmanagement':
 				setCurrentTab(Tab.ContractManagement)
+				break
+			case 'extensions':
+				setCurrentTab(Tab.Extensions)
+				break
+			case 'links':
+				setCurrentTab(Tab.Links)
 				break
 			case 'membershiprequirements':
 				setCurrentTab(Tab.MembershipRequirements)
@@ -317,10 +322,28 @@ export const ClubAdminComponent: React.FC = () => {
 											className={
 												clubsTheme.pagePanelLayoutNavItem
 											}
-											active={currentTab === Tab.Apps}
-											label={'Club Apps'}
+											active={
+												currentTab === Tab.Extensions
+											}
+											label={'Extensions'}
 											onClick={() => {
-												setCurrentTab(Tab.Apps)
+												setCurrentTab(Tab.Extensions)
+												setMobileNavBarVisible(false)
+											}}
+										/>
+									</>
+								)}
+
+								{userHasPermissionManageApps(club) && (
+									<>
+										<NavLink
+											className={
+												clubsTheme.pagePanelLayoutNavItem
+											}
+											active={currentTab === Tab.Links}
+											label={'Links'}
+											onClick={() => {
+												setCurrentTab(Tab.Links)
 												setMobileNavBarVisible(false)
 											}}
 										/>
@@ -412,7 +435,11 @@ export const ClubAdminComponent: React.FC = () => {
 										userHasPermissionEditProfile(club) && (
 											<CAClubIcon club={club} />
 										)}
-									{currentTab === Tab.Apps &&
+									{currentTab === Tab.Extensions &&
+										userHasPermissionManageApps(club) && (
+											<CAClubApps club={club} />
+										)}
+									{currentTab === Tab.Links &&
 										userHasPermissionManageApps(club) && (
 											<CAClubApps club={club} />
 										)}

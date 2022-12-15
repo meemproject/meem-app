@@ -226,7 +226,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 						// postAttachment.length === 0 ||
 						isLoading
 					}
-					onClick={e => {
+					onClick={(e: any) => {
 						e.preventDefault()
 						createPost()
 					}}

@@ -163,8 +163,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 					message: `Please get in touch!`
 				})
 			}
+			setIsJoiningClub(false)
 		}
-		setIsJoiningClub(false)
 	}
 
 	const leaveClub = async () => {
@@ -287,33 +287,7 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 						{club.description}
 					</Text>
 				</Center>
-				<Space h={16} />
-				<Center>
-					{club.isCurrentUserClubMember && (
-						<Button
-							className={clubsTheme.buttonDarkGrey}
-							disabled={isLeavingClub}
-							loading={isLeavingClub}
-							onClick={() => {
-								leaveClub()
-							}}
-						>
-							Leave Club
-						</Button>
-					)}
-					{!club.isCurrentUserClubMember && (
-						<Button
-							className={clubsTheme.buttonWhite}
-							disabled={isJoiningClub || !meetsReqs}
-							loading={isJoiningClub}
-							onClick={() => {
-								joinClub()
-							}}
-						>
-							{meetsReqs ? 'Join Club' : 'Requirements Not Met'}
-						</Button>
-					)}
-				</Center>
+
 				<Space h={32} />
 				<Center>
 					<div
@@ -334,6 +308,8 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 							}}
 						>
 							<QrCode />
+							<Space w={4} />
+							<Text>Scan</Text>
 						</Button>
 
 						{club.allExtensions?.map(extension => (
@@ -366,6 +342,34 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 							</>
 						))}
 					</div>
+				</Center>
+				<Space h={16} />
+
+				<Center>
+					{club.isCurrentUserClubMember && (
+						<Button
+							className={clubsTheme.buttonDarkGrey}
+							disabled={isLeavingClub}
+							loading={isLeavingClub}
+							onClick={() => {
+								leaveClub()
+							}}
+						>
+							Leave Club
+						</Button>
+					)}
+					{!club.isCurrentUserClubMember && (
+						<Button
+							className={clubsTheme.buttonWhite}
+							disabled={isJoiningClub || !meetsReqs}
+							loading={isJoiningClub}
+							onClick={() => {
+								joinClub()
+							}}
+						>
+							{meetsReqs ? 'Join Club' : 'Requirements Not Met'}
+						</Button>
+					)}
 				</Center>
 				<Space h={32} />
 				<Center>

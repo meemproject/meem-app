@@ -71,7 +71,7 @@ export const ProfileComponent: React.FC = () => {
 		const doLogin = async () => {
 			try {
 				const accessToken = await getAccessTokenSilently()
-				sdk.id.login({
+				sdk.id.loginWithAPI({
 					accessToken,
 					shouldConnectUser: true
 				})

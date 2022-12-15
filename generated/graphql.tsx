@@ -28,8 +28,16 @@ export type AgreementExtensionLinks = {
   id: Scalars['uuid'];
   isEnabled: Scalars['Boolean'];
   label?: Maybe<Scalars['String']>;
+  metadata?: Maybe<Scalars['jsonb']>;
   updatedAt: Scalars['timestamptz'];
   url: Scalars['String'];
+  visibility: Scalars['String'];
+};
+
+
+/** columns and relationships of "AgreementExtensionLinks" */
+export type AgreementExtensionLinksMetadataArgs = {
+  path?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregated selection of "AgreementExtensionLinks" */
@@ -88,6 +96,11 @@ export type AgreementExtensionLinks_Aggregate_Order_By = {
   min?: InputMaybe<AgreementExtensionLinks_Min_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionLinks_Append_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** input type for inserting array relation for remote table "AgreementExtensionLinks" */
 export type AgreementExtensionLinks_Arr_Rel_Insert_Input = {
   data: Array<AgreementExtensionLinks_Insert_Input>;
@@ -106,8 +119,10 @@ export type AgreementExtensionLinks_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   isEnabled?: InputMaybe<Boolean_Comparison_Exp>;
   label?: InputMaybe<String_Comparison_Exp>;
+  metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   url?: InputMaybe<String_Comparison_Exp>;
+  visibility?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "AgreementExtensionLinks" */
@@ -115,6 +130,21 @@ export enum AgreementExtensionLinks_Constraint {
   /** unique or primary key constraint on columns "id" */
   AgreementExtensionLinksPkey = 'AgreementExtensionLinks_pkey'
 }
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type AgreementExtensionLinks_Delete_At_Path_Input = {
+  metadata?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type AgreementExtensionLinks_Delete_Elem_Input = {
+  metadata?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type AgreementExtensionLinks_Delete_Key_Input = {
+  metadata?: InputMaybe<Scalars['String']>;
+};
 
 /** input type for inserting data into table "AgreementExtensionLinks" */
 export type AgreementExtensionLinks_Insert_Input = {
@@ -124,8 +154,10 @@ export type AgreementExtensionLinks_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
   url?: InputMaybe<Scalars['String']>;
+  visibility?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregate max on columns */
@@ -137,6 +169,7 @@ export type AgreementExtensionLinks_Max_Fields = {
   label?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
   url?: Maybe<Scalars['String']>;
+  visibility?: Maybe<Scalars['String']>;
 };
 
 /** order by max() on columns of table "AgreementExtensionLinks" */
@@ -147,6 +180,7 @@ export type AgreementExtensionLinks_Max_Order_By = {
   label?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
   url?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -158,6 +192,7 @@ export type AgreementExtensionLinks_Min_Fields = {
   label?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
   url?: Maybe<Scalars['String']>;
+  visibility?: Maybe<Scalars['String']>;
 };
 
 /** order by min() on columns of table "AgreementExtensionLinks" */
@@ -168,6 +203,7 @@ export type AgreementExtensionLinks_Min_Order_By = {
   label?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
   url?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "AgreementExtensionLinks" */
@@ -194,13 +230,20 @@ export type AgreementExtensionLinks_Order_By = {
   id?: InputMaybe<Order_By>;
   isEnabled?: InputMaybe<Order_By>;
   label?: InputMaybe<Order_By>;
+  metadata?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
   url?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: AgreementExtensionLinks */
 export type AgreementExtensionLinks_Pk_Columns_Input = {
   id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type AgreementExtensionLinks_Prepend_Input = {
+  metadata?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "AgreementExtensionLinks" */
@@ -216,9 +259,13 @@ export enum AgreementExtensionLinks_Select_Column {
   /** column name */
   Label = 'label',
   /** column name */
+  Metadata = 'metadata',
+  /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  Url = 'url'
+  Url = 'url',
+  /** column name */
+  Visibility = 'visibility'
 }
 
 /** select "AgreementExtensionLinks_aggregate_bool_exp_bool_and_arguments_columns" columns of table "AgreementExtensionLinks" */
@@ -240,8 +287,10 @@ export type AgreementExtensionLinks_Set_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
   url?: InputMaybe<Scalars['String']>;
+  visibility?: InputMaybe<Scalars['String']>;
 };
 
 /** Streaming cursor of the table "AgreementExtensionLinks" */
@@ -259,8 +308,10 @@ export type AgreementExtensionLinks_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   label?: InputMaybe<Scalars['String']>;
+  metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
   url?: InputMaybe<Scalars['String']>;
+  visibility?: InputMaybe<Scalars['String']>;
 };
 
 /** update columns of table "AgreementExtensionLinks" */
@@ -276,12 +327,26 @@ export enum AgreementExtensionLinks_Update_Column {
   /** column name */
   Label = 'label',
   /** column name */
+  Metadata = 'metadata',
+  /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
-  Url = 'url'
+  Url = 'url',
+  /** column name */
+  Visibility = 'visibility'
 }
 
 export type AgreementExtensionLinks_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<AgreementExtensionLinks_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<AgreementExtensionLinks_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<AgreementExtensionLinks_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<AgreementExtensionLinks_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<AgreementExtensionLinks_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementExtensionLinks_Set_Input>;
   where: AgreementExtensionLinks_Bool_Exp;
@@ -803,6 +868,7 @@ export type AgreementExtensionWidgets = {
   isEnabled: Scalars['Boolean'];
   metadata?: Maybe<Scalars['jsonb']>;
   updatedAt: Scalars['timestamptz'];
+  visibility: Scalars['String'];
 };
 
 
@@ -891,6 +957,7 @@ export type AgreementExtensionWidgets_Bool_Exp = {
   isEnabled?: InputMaybe<Boolean_Comparison_Exp>;
   metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  visibility?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "AgreementExtensionWidgets" */
@@ -923,6 +990,7 @@ export type AgreementExtensionWidgets_Insert_Input = {
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  visibility?: InputMaybe<Scalars['String']>;
 };
 
 /** aggregate max on columns */
@@ -932,6 +1000,7 @@ export type AgreementExtensionWidgets_Max_Fields = {
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
+  visibility?: Maybe<Scalars['String']>;
 };
 
 /** order by max() on columns of table "AgreementExtensionWidgets" */
@@ -940,6 +1009,7 @@ export type AgreementExtensionWidgets_Max_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -949,6 +1019,7 @@ export type AgreementExtensionWidgets_Min_Fields = {
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   updatedAt?: Maybe<Scalars['timestamptz']>;
+  visibility?: Maybe<Scalars['String']>;
 };
 
 /** order by min() on columns of table "AgreementExtensionWidgets" */
@@ -957,6 +1028,7 @@ export type AgreementExtensionWidgets_Min_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "AgreementExtensionWidgets" */
@@ -984,6 +1056,7 @@ export type AgreementExtensionWidgets_Order_By = {
   isEnabled?: InputMaybe<Order_By>;
   metadata?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+  visibility?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: AgreementExtensionWidgets */
@@ -1009,7 +1082,9 @@ export enum AgreementExtensionWidgets_Select_Column {
   /** column name */
   Metadata = 'metadata',
   /** column name */
-  UpdatedAt = 'updatedAt'
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Visibility = 'visibility'
 }
 
 /** select "AgreementExtensionWidgets_aggregate_bool_exp_bool_and_arguments_columns" columns of table "AgreementExtensionWidgets" */
@@ -1032,6 +1107,7 @@ export type AgreementExtensionWidgets_Set_Input = {
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  visibility?: InputMaybe<Scalars['String']>;
 };
 
 /** Streaming cursor of the table "AgreementExtensionWidgets" */
@@ -1050,6 +1126,7 @@ export type AgreementExtensionWidgets_Stream_Cursor_Value_Input = {
   isEnabled?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  visibility?: InputMaybe<Scalars['String']>;
 };
 
 /** update columns of table "AgreementExtensionWidgets" */
@@ -1065,7 +1142,9 @@ export enum AgreementExtensionWidgets_Update_Column {
   /** column name */
   Metadata = 'metadata',
   /** column name */
-  UpdatedAt = 'updatedAt'
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Visibility = 'visibility'
 }
 
 export type AgreementExtensionWidgets_Updates = {
@@ -5896,24 +5975,6 @@ export enum ChainNonces_Constraint {
   ChainNoncesChainIdKey5 = 'ChainNonces_chainId_key5',
   /** unique or primary key constraint on columns "chainId" */
   ChainNoncesChainIdKey6 = 'ChainNonces_chainId_key6',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey7 = 'ChainNonces_chainId_key7',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey8 = 'ChainNonces_chainId_key8',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey9 = 'ChainNonces_chainId_key9',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey10 = 'ChainNonces_chainId_key10',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey11 = 'ChainNonces_chainId_key11',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey12 = 'ChainNonces_chainId_key12',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey13 = 'ChainNonces_chainId_key13',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey14 = 'ChainNonces_chainId_key14',
-  /** unique or primary key constraint on columns "chainId" */
-  ChainNoncesChainIdKey15 = 'ChainNonces_chainId_key15',
   /** unique or primary key constraint on columns "id" */
   ChainNoncesPkey = 'ChainNonces_pkey'
 }
@@ -7309,13 +7370,9 @@ export type Extensions_Updates = {
   where: Extensions_Bool_Exp;
 };
 
-/** columns and relationships of "IdentityIntegrations" */
-export type IdentityIntegrations = {
-  __typename?: 'IdentityIntegrations';
-  /** An array relationship */
-  UserIdentities: Array<UserIdentities>;
-  /** An aggregate relationship */
-  UserIdentities_aggregate: UserIdentities_Aggregate;
+/** columns and relationships of "IdentityProviders" */
+export type IdentityProviders = {
+  __typename?: 'IdentityProviders';
   connectionId: Scalars['String'];
   connectionName: Scalars['String'];
   createdAt: Scalars['timestamptz'];
@@ -7326,55 +7383,33 @@ export type IdentityIntegrations = {
   updatedAt: Scalars['timestamptz'];
 };
 
-
-/** columns and relationships of "IdentityIntegrations" */
-export type IdentityIntegrationsUserIdentitiesArgs = {
-  distinct_on?: InputMaybe<Array<UserIdentities_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<UserIdentities_Order_By>>;
-  where?: InputMaybe<UserIdentities_Bool_Exp>;
+/** aggregated selection of "IdentityProviders" */
+export type IdentityProviders_Aggregate = {
+  __typename?: 'IdentityProviders_aggregate';
+  aggregate?: Maybe<IdentityProviders_Aggregate_Fields>;
+  nodes: Array<IdentityProviders>;
 };
 
-
-/** columns and relationships of "IdentityIntegrations" */
-export type IdentityIntegrationsUserIdentities_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<UserIdentities_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<UserIdentities_Order_By>>;
-  where?: InputMaybe<UserIdentities_Bool_Exp>;
-};
-
-/** aggregated selection of "IdentityIntegrations" */
-export type IdentityIntegrations_Aggregate = {
-  __typename?: 'IdentityIntegrations_aggregate';
-  aggregate?: Maybe<IdentityIntegrations_Aggregate_Fields>;
-  nodes: Array<IdentityIntegrations>;
-};
-
-/** aggregate fields of "IdentityIntegrations" */
-export type IdentityIntegrations_Aggregate_Fields = {
-  __typename?: 'IdentityIntegrations_aggregate_fields';
+/** aggregate fields of "IdentityProviders" */
+export type IdentityProviders_Aggregate_Fields = {
+  __typename?: 'IdentityProviders_aggregate_fields';
   count: Scalars['Int'];
-  max?: Maybe<IdentityIntegrations_Max_Fields>;
-  min?: Maybe<IdentityIntegrations_Min_Fields>;
+  max?: Maybe<IdentityProviders_Max_Fields>;
+  min?: Maybe<IdentityProviders_Min_Fields>;
 };
 
 
-/** aggregate fields of "IdentityIntegrations" */
-export type IdentityIntegrations_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+/** aggregate fields of "IdentityProviders" */
+export type IdentityProviders_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** Boolean expression to filter rows from the table "IdentityIntegrations". All fields are combined with a logical 'AND'. */
-export type IdentityIntegrations_Bool_Exp = {
-  UserIdentities?: InputMaybe<UserIdentities_Bool_Exp>;
-  UserIdentities_aggregate?: InputMaybe<UserIdentities_Aggregate_Bool_Exp>;
-  _and?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
-  _not?: InputMaybe<IdentityIntegrations_Bool_Exp>;
-  _or?: InputMaybe<Array<IdentityIntegrations_Bool_Exp>>;
+/** Boolean expression to filter rows from the table "IdentityProviders". All fields are combined with a logical 'AND'. */
+export type IdentityProviders_Bool_Exp = {
+  _and?: InputMaybe<Array<IdentityProviders_Bool_Exp>>;
+  _not?: InputMaybe<IdentityProviders_Bool_Exp>;
+  _or?: InputMaybe<Array<IdentityProviders_Bool_Exp>>;
   connectionId?: InputMaybe<String_Comparison_Exp>;
   connectionName?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -7385,15 +7420,14 @@ export type IdentityIntegrations_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "IdentityIntegrations" */
-export enum IdentityIntegrations_Constraint {
+/** unique or primary key constraints on table "IdentityProviders" */
+export enum IdentityProviders_Constraint {
   /** unique or primary key constraint on columns "id" */
-  IdentityIntegrationsPkey = 'IdentityIntegrations_pkey'
+  IdentityProvidersPkey = 'IdentityProviders_pkey'
 }
 
-/** input type for inserting data into table "IdentityIntegrations" */
-export type IdentityIntegrations_Insert_Input = {
-  UserIdentities?: InputMaybe<UserIdentities_Arr_Rel_Insert_Input>;
+/** input type for inserting data into table "IdentityProviders" */
+export type IdentityProviders_Insert_Input = {
   connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -7405,8 +7439,8 @@ export type IdentityIntegrations_Insert_Input = {
 };
 
 /** aggregate max on columns */
-export type IdentityIntegrations_Max_Fields = {
-  __typename?: 'IdentityIntegrations_max_fields';
+export type IdentityProviders_Max_Fields = {
+  __typename?: 'IdentityProviders_max_fields';
   connectionId?: Maybe<Scalars['String']>;
   connectionName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -7418,8 +7452,8 @@ export type IdentityIntegrations_Max_Fields = {
 };
 
 /** aggregate min on columns */
-export type IdentityIntegrations_Min_Fields = {
-  __typename?: 'IdentityIntegrations_min_fields';
+export type IdentityProviders_Min_Fields = {
+  __typename?: 'IdentityProviders_min_fields';
   connectionId?: Maybe<Scalars['String']>;
   connectionName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
@@ -7430,32 +7464,31 @@ export type IdentityIntegrations_Min_Fields = {
   updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
-/** response of any mutation on the table "IdentityIntegrations" */
-export type IdentityIntegrations_Mutation_Response = {
-  __typename?: 'IdentityIntegrations_mutation_response';
+/** response of any mutation on the table "IdentityProviders" */
+export type IdentityProviders_Mutation_Response = {
+  __typename?: 'IdentityProviders_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int'];
   /** data from the rows affected by the mutation */
-  returning: Array<IdentityIntegrations>;
+  returning: Array<IdentityProviders>;
 };
 
-/** input type for inserting object relation for remote table "IdentityIntegrations" */
-export type IdentityIntegrations_Obj_Rel_Insert_Input = {
-  data: IdentityIntegrations_Insert_Input;
+/** input type for inserting object relation for remote table "IdentityProviders" */
+export type IdentityProviders_Obj_Rel_Insert_Input = {
+  data: IdentityProviders_Insert_Input;
   /** upsert condition */
-  on_conflict?: InputMaybe<IdentityIntegrations_On_Conflict>;
+  on_conflict?: InputMaybe<IdentityProviders_On_Conflict>;
 };
 
-/** on_conflict condition type for table "IdentityIntegrations" */
-export type IdentityIntegrations_On_Conflict = {
-  constraint: IdentityIntegrations_Constraint;
-  update_columns?: Array<IdentityIntegrations_Update_Column>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+/** on_conflict condition type for table "IdentityProviders" */
+export type IdentityProviders_On_Conflict = {
+  constraint: IdentityProviders_Constraint;
+  update_columns?: Array<IdentityProviders_Update_Column>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
-/** Ordering options when selecting data from "IdentityIntegrations". */
-export type IdentityIntegrations_Order_By = {
-  UserIdentities_aggregate?: InputMaybe<UserIdentities_Aggregate_Order_By>;
+/** Ordering options when selecting data from "IdentityProviders". */
+export type IdentityProviders_Order_By = {
   connectionId?: InputMaybe<Order_By>;
   connectionName?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -7466,13 +7499,13 @@ export type IdentityIntegrations_Order_By = {
   updatedAt?: InputMaybe<Order_By>;
 };
 
-/** primary key columns input for table: IdentityIntegrations */
-export type IdentityIntegrations_Pk_Columns_Input = {
+/** primary key columns input for table: IdentityProviders */
+export type IdentityProviders_Pk_Columns_Input = {
   id: Scalars['uuid'];
 };
 
-/** select columns of table "IdentityIntegrations" */
-export enum IdentityIntegrations_Select_Column {
+/** select columns of table "IdentityProviders" */
+export enum IdentityProviders_Select_Column {
   /** column name */
   ConnectionId = 'connectionId',
   /** column name */
@@ -7491,8 +7524,8 @@ export enum IdentityIntegrations_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
-/** input type for updating data in table "IdentityIntegrations" */
-export type IdentityIntegrations_Set_Input = {
+/** input type for updating data in table "IdentityProviders" */
+export type IdentityProviders_Set_Input = {
   connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -7503,16 +7536,16 @@ export type IdentityIntegrations_Set_Input = {
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
-/** Streaming cursor of the table "IdentityIntegrations" */
-export type IdentityIntegrations_Stream_Cursor_Input = {
+/** Streaming cursor of the table "IdentityProviders" */
+export type IdentityProviders_Stream_Cursor_Input = {
   /** Stream column input with initial value */
-  initial_value: IdentityIntegrations_Stream_Cursor_Value_Input;
+  initial_value: IdentityProviders_Stream_Cursor_Value_Input;
   /** cursor ordering */
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
 /** Initial value of the column from where the streaming should start */
-export type IdentityIntegrations_Stream_Cursor_Value_Input = {
+export type IdentityProviders_Stream_Cursor_Value_Input = {
   connectionId?: InputMaybe<Scalars['String']>;
   connectionName?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -7523,8 +7556,8 @@ export type IdentityIntegrations_Stream_Cursor_Value_Input = {
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
-/** update columns of table "IdentityIntegrations" */
-export enum IdentityIntegrations_Update_Column {
+/** update columns of table "IdentityProviders" */
+export enum IdentityProviders_Update_Column {
   /** column name */
   ConnectionId = 'connectionId',
   /** column name */
@@ -7543,10 +7576,10 @@ export enum IdentityIntegrations_Update_Column {
   UpdatedAt = 'updatedAt'
 }
 
-export type IdentityIntegrations_Updates = {
+export type IdentityProviders_Updates = {
   /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<IdentityIntegrations_Set_Input>;
-  where: IdentityIntegrations_Bool_Exp;
+  _set?: InputMaybe<IdentityProviders_Set_Input>;
+  where: IdentityProviders_Bool_Exp;
 };
 
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
@@ -8856,8 +8889,8 @@ export type Transfers_Updates = {
 export type UserIdentities = {
   __typename?: 'UserIdentities';
   /** An object relationship */
-  IdentityIntegration?: Maybe<IdentityIntegrations>;
-  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  IdentityProvider?: Maybe<IdentityProviders>;
+  IdentityProviderId?: Maybe<Scalars['uuid']>;
   /** An object relationship */
   User?: Maybe<Users>;
   UserId?: Maybe<Scalars['uuid']>;
@@ -8929,8 +8962,8 @@ export type UserIdentities_Arr_Rel_Insert_Input = {
 
 /** Boolean expression to filter rows from the table "UserIdentities". All fields are combined with a logical 'AND'. */
 export type UserIdentities_Bool_Exp = {
-  IdentityIntegration?: InputMaybe<IdentityIntegrations_Bool_Exp>;
-  IdentityIntegrationId?: InputMaybe<Uuid_Comparison_Exp>;
+  IdentityProvider?: InputMaybe<IdentityProviders_Bool_Exp>;
+  IdentityProviderId?: InputMaybe<Uuid_Comparison_Exp>;
   User?: InputMaybe<Users_Bool_Exp>;
   UserId?: InputMaybe<Uuid_Comparison_Exp>;
   _and?: InputMaybe<Array<UserIdentities_Bool_Exp>>;
@@ -8950,34 +8983,6 @@ export enum UserIdentities_Constraint {
   UserIdentitiesExternalIdKey = 'UserIdentities_externalId_key',
   /** unique or primary key constraint on columns "externalId" */
   UserIdentitiesExternalIdKey1 = 'UserIdentities_externalId_key1',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey2 = 'UserIdentities_externalId_key2',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey3 = 'UserIdentities_externalId_key3',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey4 = 'UserIdentities_externalId_key4',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey5 = 'UserIdentities_externalId_key5',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey6 = 'UserIdentities_externalId_key6',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey7 = 'UserIdentities_externalId_key7',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey8 = 'UserIdentities_externalId_key8',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey9 = 'UserIdentities_externalId_key9',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey10 = 'UserIdentities_externalId_key10',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey11 = 'UserIdentities_externalId_key11',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey12 = 'UserIdentities_externalId_key12',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey13 = 'UserIdentities_externalId_key13',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey14 = 'UserIdentities_externalId_key14',
-  /** unique or primary key constraint on columns "externalId" */
-  UserIdentitiesExternalIdKey15 = 'UserIdentities_externalId_key15',
   /** unique or primary key constraint on columns "id" */
   UserIdentitiesPkey = 'UserIdentities_pkey'
 }
@@ -8999,8 +9004,8 @@ export type UserIdentities_Delete_Key_Input = {
 
 /** input type for inserting data into table "UserIdentities" */
 export type UserIdentities_Insert_Input = {
-  IdentityIntegration?: InputMaybe<IdentityIntegrations_Obj_Rel_Insert_Input>;
-  IdentityIntegrationId?: InputMaybe<Scalars['uuid']>;
+  IdentityProvider?: InputMaybe<IdentityProviders_Obj_Rel_Insert_Input>;
+  IdentityProviderId?: InputMaybe<Scalars['uuid']>;
   User?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   UserId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -9014,7 +9019,7 @@ export type UserIdentities_Insert_Input = {
 /** aggregate max on columns */
 export type UserIdentities_Max_Fields = {
   __typename?: 'UserIdentities_max_fields';
-  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  IdentityProviderId?: Maybe<Scalars['uuid']>;
   UserId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   externalId?: Maybe<Scalars['String']>;
@@ -9025,7 +9030,7 @@ export type UserIdentities_Max_Fields = {
 
 /** order by max() on columns of table "UserIdentities" */
 export type UserIdentities_Max_Order_By = {
-  IdentityIntegrationId?: InputMaybe<Order_By>;
+  IdentityProviderId?: InputMaybe<Order_By>;
   UserId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   externalId?: InputMaybe<Order_By>;
@@ -9037,7 +9042,7 @@ export type UserIdentities_Max_Order_By = {
 /** aggregate min on columns */
 export type UserIdentities_Min_Fields = {
   __typename?: 'UserIdentities_min_fields';
-  IdentityIntegrationId?: Maybe<Scalars['uuid']>;
+  IdentityProviderId?: Maybe<Scalars['uuid']>;
   UserId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   externalId?: Maybe<Scalars['String']>;
@@ -9048,7 +9053,7 @@ export type UserIdentities_Min_Fields = {
 
 /** order by min() on columns of table "UserIdentities" */
 export type UserIdentities_Min_Order_By = {
-  IdentityIntegrationId?: InputMaybe<Order_By>;
+  IdentityProviderId?: InputMaybe<Order_By>;
   UserId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   externalId?: InputMaybe<Order_By>;
@@ -9075,8 +9080,8 @@ export type UserIdentities_On_Conflict = {
 
 /** Ordering options when selecting data from "UserIdentities". */
 export type UserIdentities_Order_By = {
-  IdentityIntegration?: InputMaybe<IdentityIntegrations_Order_By>;
-  IdentityIntegrationId?: InputMaybe<Order_By>;
+  IdentityProvider?: InputMaybe<IdentityProviders_Order_By>;
+  IdentityProviderId?: InputMaybe<Order_By>;
   User?: InputMaybe<Users_Order_By>;
   UserId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -9100,7 +9105,7 @@ export type UserIdentities_Prepend_Input = {
 /** select columns of table "UserIdentities" */
 export enum UserIdentities_Select_Column {
   /** column name */
-  IdentityIntegrationId = 'IdentityIntegrationId',
+  IdentityProviderId = 'IdentityProviderId',
   /** column name */
   UserId = 'UserId',
   /** column name */
@@ -9119,7 +9124,7 @@ export enum UserIdentities_Select_Column {
 
 /** input type for updating data in table "UserIdentities" */
 export type UserIdentities_Set_Input = {
-  IdentityIntegrationId?: InputMaybe<Scalars['uuid']>;
+  IdentityProviderId?: InputMaybe<Scalars['uuid']>;
   UserId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   externalId?: InputMaybe<Scalars['String']>;
@@ -9139,7 +9144,7 @@ export type UserIdentities_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type UserIdentities_Stream_Cursor_Value_Input = {
-  IdentityIntegrationId?: InputMaybe<Scalars['uuid']>;
+  IdentityProviderId?: InputMaybe<Scalars['uuid']>;
   UserId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   externalId?: InputMaybe<Scalars['String']>;
@@ -9152,7 +9157,7 @@ export type UserIdentities_Stream_Cursor_Value_Input = {
 /** update columns of table "UserIdentities" */
 export enum UserIdentities_Update_Column {
   /** column name */
-  IdentityIntegrationId = 'IdentityIntegrationId',
+  IdentityProviderId = 'IdentityProviderId',
   /** column name */
   UserId = 'UserId',
   /** column name */
@@ -10547,10 +10552,10 @@ export type Mutation_Root = {
   delete_Extensions?: Maybe<Extensions_Mutation_Response>;
   /** delete single row from the table: "Extensions" */
   delete_Extensions_by_pk?: Maybe<Extensions>;
-  /** delete data from the table: "IdentityIntegrations" */
-  delete_IdentityIntegrations?: Maybe<IdentityIntegrations_Mutation_Response>;
-  /** delete single row from the table: "IdentityIntegrations" */
-  delete_IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
+  /** delete data from the table: "IdentityProviders" */
+  delete_IdentityProviders?: Maybe<IdentityProviders_Mutation_Response>;
+  /** delete single row from the table: "IdentityProviders" */
+  delete_IdentityProviders_by_pk?: Maybe<IdentityProviders>;
   /** delete data from the table: "Integrations" */
   delete_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** delete single row from the table: "Integrations" */
@@ -10667,10 +10672,10 @@ export type Mutation_Root = {
   insert_Extensions?: Maybe<Extensions_Mutation_Response>;
   /** insert a single row into the table: "Extensions" */
   insert_Extensions_one?: Maybe<Extensions>;
-  /** insert data into the table: "IdentityIntegrations" */
-  insert_IdentityIntegrations?: Maybe<IdentityIntegrations_Mutation_Response>;
-  /** insert a single row into the table: "IdentityIntegrations" */
-  insert_IdentityIntegrations_one?: Maybe<IdentityIntegrations>;
+  /** insert data into the table: "IdentityProviders" */
+  insert_IdentityProviders?: Maybe<IdentityProviders_Mutation_Response>;
+  /** insert a single row into the table: "IdentityProviders" */
+  insert_IdentityProviders_one?: Maybe<IdentityProviders>;
   /** insert data into the table: "Integrations" */
   insert_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** insert a single row into the table: "Integrations" */
@@ -10827,12 +10832,12 @@ export type Mutation_Root = {
   update_Extensions_by_pk?: Maybe<Extensions>;
   /** update multiples rows of table: "Extensions" */
   update_Extensions_many?: Maybe<Array<Maybe<Extensions_Mutation_Response>>>;
-  /** update data of the table: "IdentityIntegrations" */
-  update_IdentityIntegrations?: Maybe<IdentityIntegrations_Mutation_Response>;
-  /** update single row of the table: "IdentityIntegrations" */
-  update_IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
-  /** update multiples rows of table: "IdentityIntegrations" */
-  update_IdentityIntegrations_many?: Maybe<Array<Maybe<IdentityIntegrations_Mutation_Response>>>;
+  /** update data of the table: "IdentityProviders" */
+  update_IdentityProviders?: Maybe<IdentityProviders_Mutation_Response>;
+  /** update single row of the table: "IdentityProviders" */
+  update_IdentityProviders_by_pk?: Maybe<IdentityProviders>;
+  /** update multiples rows of table: "IdentityProviders" */
+  update_IdentityProviders_many?: Maybe<Array<Maybe<IdentityProviders_Mutation_Response>>>;
   /** update data of the table: "Integrations" */
   update_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** update single row of the table: "Integrations" */
@@ -11131,13 +11136,13 @@ export type Mutation_RootDelete_Extensions_By_PkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_IdentityIntegrationsArgs = {
-  where: IdentityIntegrations_Bool_Exp;
+export type Mutation_RootDelete_IdentityProvidersArgs = {
+  where: IdentityProviders_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_IdentityIntegrations_By_PkArgs = {
+export type Mutation_RootDelete_IdentityProviders_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -11531,16 +11536,16 @@ export type Mutation_RootInsert_Extensions_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_IdentityIntegrationsArgs = {
-  objects: Array<IdentityIntegrations_Insert_Input>;
-  on_conflict?: InputMaybe<IdentityIntegrations_On_Conflict>;
+export type Mutation_RootInsert_IdentityProvidersArgs = {
+  objects: Array<IdentityProviders_Insert_Input>;
+  on_conflict?: InputMaybe<IdentityProviders_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_IdentityIntegrations_OneArgs = {
-  object: IdentityIntegrations_Insert_Input;
-  on_conflict?: InputMaybe<IdentityIntegrations_On_Conflict>;
+export type Mutation_RootInsert_IdentityProviders_OneArgs = {
+  object: IdentityProviders_Insert_Input;
+  on_conflict?: InputMaybe<IdentityProviders_On_Conflict>;
 };
 
 
@@ -11672,6 +11677,11 @@ export type Mutation_RootInsert_Wallets_OneArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_AgreementExtensionLinksArgs = {
+  _append?: InputMaybe<AgreementExtensionLinks_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionLinks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionLinks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionLinks_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionLinks_Prepend_Input>;
   _set?: InputMaybe<AgreementExtensionLinks_Set_Input>;
   where: AgreementExtensionLinks_Bool_Exp;
 };
@@ -11679,6 +11689,11 @@ export type Mutation_RootUpdate_AgreementExtensionLinksArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_AgreementExtensionLinks_By_PkArgs = {
+  _append?: InputMaybe<AgreementExtensionLinks_Append_Input>;
+  _delete_at_path?: InputMaybe<AgreementExtensionLinks_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<AgreementExtensionLinks_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<AgreementExtensionLinks_Delete_Key_Input>;
+  _prepend?: InputMaybe<AgreementExtensionLinks_Prepend_Input>;
   _set?: InputMaybe<AgreementExtensionLinks_Set_Input>;
   pk_columns: AgreementExtensionLinks_Pk_Columns_Input;
 };
@@ -12213,22 +12228,22 @@ export type Mutation_RootUpdate_Extensions_ManyArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_IdentityIntegrationsArgs = {
-  _set?: InputMaybe<IdentityIntegrations_Set_Input>;
-  where: IdentityIntegrations_Bool_Exp;
+export type Mutation_RootUpdate_IdentityProvidersArgs = {
+  _set?: InputMaybe<IdentityProviders_Set_Input>;
+  where: IdentityProviders_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_IdentityIntegrations_By_PkArgs = {
-  _set?: InputMaybe<IdentityIntegrations_Set_Input>;
-  pk_columns: IdentityIntegrations_Pk_Columns_Input;
+export type Mutation_RootUpdate_IdentityProviders_By_PkArgs = {
+  _set?: InputMaybe<IdentityProviders_Set_Input>;
+  pk_columns: IdentityProviders_Pk_Columns_Input;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_IdentityIntegrations_ManyArgs = {
-  updates: Array<IdentityIntegrations_Updates>;
+export type Mutation_RootUpdate_IdentityProviders_ManyArgs = {
+  updates: Array<IdentityProviders_Updates>;
 };
 
 
@@ -12573,12 +12588,12 @@ export type Query_Root = {
   Extensions_aggregate: Extensions_Aggregate;
   /** fetch data from the table: "Extensions" using primary key columns */
   Extensions_by_pk?: Maybe<Extensions>;
-  /** fetch data from the table: "IdentityIntegrations" */
-  IdentityIntegrations: Array<IdentityIntegrations>;
-  /** fetch aggregated fields from the table: "IdentityIntegrations" */
-  IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
-  /** fetch data from the table: "IdentityIntegrations" using primary key columns */
-  IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
+  /** fetch data from the table: "IdentityProviders" */
+  IdentityProviders: Array<IdentityProviders>;
+  /** fetch aggregated fields from the table: "IdentityProviders" */
+  IdentityProviders_aggregate: IdentityProviders_Aggregate;
+  /** fetch data from the table: "IdentityProviders" using primary key columns */
+  IdentityProviders_by_pk?: Maybe<IdentityProviders>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
   /** fetch aggregated fields from the table: "Integrations" */
@@ -13096,25 +13111,25 @@ export type Query_RootExtensions_By_PkArgs = {
 };
 
 
-export type Query_RootIdentityIntegrationsArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Query_RootIdentityProvidersArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Query_RootIdentityIntegrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Query_RootIdentityProviders_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Query_RootIdentityIntegrations_By_PkArgs = {
+export type Query_RootIdentityProviders_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -13487,14 +13502,14 @@ export type Subscription_Root = {
   Extensions_by_pk?: Maybe<Extensions>;
   /** fetch data from the table in a streaming manner: "Extensions" */
   Extensions_stream: Array<Extensions>;
-  /** fetch data from the table: "IdentityIntegrations" */
-  IdentityIntegrations: Array<IdentityIntegrations>;
-  /** fetch aggregated fields from the table: "IdentityIntegrations" */
-  IdentityIntegrations_aggregate: IdentityIntegrations_Aggregate;
-  /** fetch data from the table: "IdentityIntegrations" using primary key columns */
-  IdentityIntegrations_by_pk?: Maybe<IdentityIntegrations>;
-  /** fetch data from the table in a streaming manner: "IdentityIntegrations" */
-  IdentityIntegrations_stream: Array<IdentityIntegrations>;
+  /** fetch data from the table: "IdentityProviders" */
+  IdentityProviders: Array<IdentityProviders>;
+  /** fetch aggregated fields from the table: "IdentityProviders" */
+  IdentityProviders_aggregate: IdentityProviders_Aggregate;
+  /** fetch data from the table: "IdentityProviders" using primary key columns */
+  IdentityProviders_by_pk?: Maybe<IdentityProviders>;
+  /** fetch data from the table in a streaming manner: "IdentityProviders" */
+  IdentityProviders_stream: Array<IdentityProviders>;
   /** fetch data from the table: "Integrations" */
   Integrations: Array<Integrations>;
   /** fetch aggregated fields from the table: "Integrations" */
@@ -14170,33 +14185,33 @@ export type Subscription_RootExtensions_StreamArgs = {
 };
 
 
-export type Subscription_RootIdentityIntegrationsArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Subscription_RootIdentityProvidersArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Subscription_RootIdentityIntegrations_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<IdentityIntegrations_Select_Column>>;
+export type Subscription_RootIdentityProviders_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<IdentityProviders_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<IdentityIntegrations_Order_By>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  order_by?: InputMaybe<Array<IdentityProviders_Order_By>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
-export type Subscription_RootIdentityIntegrations_By_PkArgs = {
+export type Subscription_RootIdentityProviders_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
 
-export type Subscription_RootIdentityIntegrations_StreamArgs = {
+export type Subscription_RootIdentityProviders_StreamArgs = {
   batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<IdentityIntegrations_Stream_Cursor_Input>>;
-  where?: InputMaybe<IdentityIntegrations_Bool_Exp>;
+  cursor: Array<InputMaybe<IdentityProviders_Stream_Cursor_Input>>;
+  where?: InputMaybe<IdentityProviders_Bool_Exp>;
 };
 
 
@@ -14583,7 +14598,7 @@ export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', A
 export type GetExtensionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', createdAt: any, description: string, guideUrl: string, icon: string, id: any, name: string, updatedAt: any }> };
+export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', createdAt: any, description: string, guideUrl: string, icon: string, id: any, name: string }> };
 
 export type GetAvailablePermissionQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -14628,12 +14643,12 @@ export type MeemIdSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', updatedAt: any, profilePicUrl?: string | null, id: any, displayName?: string | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityIntegrationId?: any | null, IdentityIntegration?: { __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string } | null }> }> };
+export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', profilePicUrl?: string | null, id: any, displayName?: string | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityProviderId?: any | null, IdentityProvider?: { __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string } | null }> }> };
 
-export type GetIdentityIntegrationsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetIdentityProvidersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetIdentityIntegrationsQuery = { __typename?: 'query_root', IdentityIntegrations: Array<{ __typename?: 'IdentityIntegrations', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
+export type GetIdentityProvidersQuery = { __typename?: 'query_root', IdentityProviders: Array<{ __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
 
 export type GetTransactionsSubscriptionVariables = Exact<{
   transactionIds?: InputMaybe<Array<Scalars['uuid']> | Scalars['uuid']>;
@@ -15251,7 +15266,6 @@ export const GetExtensionsDocument = gql`
     icon
     id
     name
-    updatedAt
   }
 }
     `;
@@ -15540,7 +15554,6 @@ export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, Ge
 export const MeemIdSubscriptionDocument = gql`
     subscription MeemIdSubscription($walletAddress: String) {
   Users(where: {Wallets: {address: {_ilike: $walletAddress}}}) {
-    updatedAt
     profilePicUrl
     id
     displayName
@@ -15552,8 +15565,8 @@ export const MeemIdSubscriptionDocument = gql`
     UserIdentities {
       metadata
       visibility
-      IdentityIntegrationId
-      IdentityIntegration {
+      IdentityProviderId
+      IdentityProvider {
         description
         icon
         id
@@ -15588,9 +15601,9 @@ export function useMeemIdSubscriptionSubscription(baseOptions?: Apollo.Subscript
       }
 export type MeemIdSubscriptionSubscriptionHookResult = ReturnType<typeof useMeemIdSubscriptionSubscription>;
 export type MeemIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MeemIdSubscriptionSubscription>;
-export const GetIdentityIntegrationsDocument = gql`
-    query GetIdentityIntegrations {
-  IdentityIntegrations {
+export const GetIdentityProvidersDocument = gql`
+    query GetIdentityProviders {
+  IdentityProviders {
     description
     icon
     id
@@ -15602,31 +15615,31 @@ export const GetIdentityIntegrationsDocument = gql`
     `;
 
 /**
- * __useGetIdentityIntegrationsQuery__
+ * __useGetIdentityProvidersQuery__
  *
- * To run a query within a React component, call `useGetIdentityIntegrationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetIdentityIntegrationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetIdentityProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIdentityProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetIdentityIntegrationsQuery({
+ * const { data, loading, error } = useGetIdentityProvidersQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetIdentityIntegrationsQuery(baseOptions?: Apollo.QueryHookOptions<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>) {
+export function useGetIdentityProvidersQuery(baseOptions?: Apollo.QueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>(GetIdentityIntegrationsDocument, options);
+        return Apollo.useQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
       }
-export function useGetIdentityIntegrationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>) {
+export function useGetIdentityProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>(GetIdentityIntegrationsDocument, options);
+          return Apollo.useLazyQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
         }
-export type GetIdentityIntegrationsQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsQuery>;
-export type GetIdentityIntegrationsLazyQueryHookResult = ReturnType<typeof useGetIdentityIntegrationsLazyQuery>;
-export type GetIdentityIntegrationsQueryResult = Apollo.QueryResult<GetIdentityIntegrationsQuery, GetIdentityIntegrationsQueryVariables>;
+export type GetIdentityProvidersQueryHookResult = ReturnType<typeof useGetIdentityProvidersQuery>;
+export type GetIdentityProvidersLazyQueryHookResult = ReturnType<typeof useGetIdentityProvidersLazyQuery>;
+export type GetIdentityProvidersQueryResult = Apollo.QueryResult<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>;
 export const GetTransactionsDocument = gql`
     subscription GetTransactions($transactionIds: [uuid!]) {
   Transactions(where: {id: {_in: $transactionIds}}) {

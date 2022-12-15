@@ -19,19 +19,12 @@ const MAuthenticate: React.FC = () => {
 
 		try {
 			if (wallet.signer) {
-				// const { jwt } =
 				await login({
-					message:
-						'Welcome to Clubs! Signing this message will not cost any fees or gas.',
+					message: process.env.NEXT_PUBLIC_LOGIN_MESSAGE ?? '',
 					signer: wallet.signer,
 					chainId: +(process.env.NEXT_PUBLIC_CHAIN_ID ?? ''),
 					uri: window.location.href
 				})
-
-				// log.debug(`Setting JWT: ${jwt}`)
-
-				// sdk.setJwt(jwt)
-				// wallet.setJwt(jwt)
 
 				Cookies.set('redirectPath', JSON.stringify(router.asPath ?? ''))
 
