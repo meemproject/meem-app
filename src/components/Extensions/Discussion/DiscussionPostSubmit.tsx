@@ -12,7 +12,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
-import { useSDK, useWallet } from '@meemproject/react'
+import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -38,6 +38,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 	const { club } = useClub()
+	const { me } = useAuth()
 
 	const { sdk } = useSDK()
 
@@ -164,7 +165,16 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 					title: postTitle,
 					body: editor?.getHTML(),
 					tags: postTags.split(' ').map(tag => tag.trim()),
-					walletAddress: wallet.accounts[0]
+					walletAddress: wallet.accounts[0],
+					userId: me?.user.id,
+					displayName: me?.user.displayName,
+					profilePicUrl: me?.user.profilePicUrl,
+					ens: me?.user.DefaultWallet.ens,
+					clubSlug: club?.slug,
+					attachment:
+						postAttachment && postAttachment.length > 0
+							? postAttachment
+							: null
 				},
 				chainId,
 				accessControlConditions: [
@@ -180,10 +190,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 		}
 		setIsLoading(false)
 	}
-
-	const agreementExtension = club?.rawClub?.AgreementExtensions.find(
-		ae => ae.Extension?.slug === 'discussion'
-	)
 
 	return (
 		<>
@@ -275,7 +281,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 							<Divider />
 							<RichTextEditor.Content />
 						</RichTextEditor>
-						<Space h={16} />
+						{/* <Space h={16} />
 						<div className={clubsTheme.rowEndAlign}>
 							<Button
 								className={clubsTheme.buttonBlack}
@@ -312,7 +318,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 							>
 								Comment
 							</Button>
-						</div>
+						</div> */}
 					</div>
 				)}
 				<Space h={32} />

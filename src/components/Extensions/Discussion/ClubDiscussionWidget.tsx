@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Club } from '../../../model/club/club'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 interface IProps {
 	club: Club
@@ -47,23 +48,12 @@ export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 				const rows = await sdk.storage.read({
 					chainId,
 					tableName,
-					authSig
-					// TODO: limit the # of in the widget?
-					// limit: 2
+					authSig,
+					limit: 2
 				})
 
 				const newPosts: DiscussionPost[] = rows.map(row => {
-					return {
-						id: row.id,
-						title: row.data.title,
-						tags: row.data.tags,
-						clubSlug: club?.slug ?? '',
-						content: row.data.body,
-						user:
-							club && club.members
-								? club.members[0]
-								: { wallet: '' }
-					}
+					return rowToDiscussionPost({ row, club })
 				})
 
 				setPosts(newPosts)

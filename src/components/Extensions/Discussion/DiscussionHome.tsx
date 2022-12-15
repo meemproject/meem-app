@@ -14,10 +14,34 @@ import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
+import { Club } from '../../../model/club/club'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClub } from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
+
+export function rowToDiscussionPost(options: {
+	row: {
+		[columnName: string]: any
+	}
+	club?: Club
+}): DiscussionPost {
+	const { row, club } = options
+	return {
+		id: row.id,
+		title: row.data.title,
+		tags: row.data.tags,
+		clubSlug: club?.slug ?? '',
+		body: row.data.body,
+		userId: row.data.userId,
+		displayName: row.data.displayName ?? row.data.ens,
+		walletAddress: row.data.walletAddress,
+		profilePicUrl: row.data.profilePicUrl,
+		createdAt: row.createdAt,
+		updatedAt: row.updatedAt,
+		attachment: row.data.attachment
+	}
+}
 
 export const DiscussionHome: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
@@ -75,21 +99,9 @@ export const DiscussionHome: React.FC = () => {
 					authSig
 				})
 
-				const newPosts: DiscussionPost[] = rows.map(row => {
-					return {
-						id: row.id,
-						title: row.data.title,
-						tags: row.data.tags,
-						clubSlug: club?.slug ?? '',
-						content: row.data.body,
-						user:
-							club && club.members
-								? club.members[0]
-								: { wallet: '' }
-					}
-				})
-
-				console.log({ rows, newPosts })
+				const newPosts: DiscussionPost[] = rows.map(row =>
+					rowToDiscussionPost({ row, club })
+				)
 
 				setPosts(newPosts)
 

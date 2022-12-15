@@ -6,10 +6,12 @@ import {
 	Badge,
 	useMantineColorScheme
 } from '@mantine/core'
+import { DateTime } from 'luxon'
 import Link from 'next/link'
 import React from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
+import { quickTruncate } from '../../../utils/truncated_wallet'
 import { colorDarkerGrey, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	post: DiscussionPost
@@ -59,7 +61,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 								className={clubsTheme.tExtraSmall}
 								dangerouslySetInnerHTML={{
 									// TODO: Sanitize html. Possible XSS vulnerability
-									__html: post.content
+									__html: post.body
 								}}
 							/>
 							<Space h={12} />
@@ -96,7 +98,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 					<div className={clubsTheme.spacedRowCentered}>
 						<div className={clubsTheme.centeredRow}>
 							<Image
-								src={`/exampleclub.png`}
+								src={post.profilePicUrl ?? `/exampleclub.png`}
 								height={32}
 								width={32}
 								radius={16}
@@ -104,10 +106,13 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 							<Space w={8} />
 							<div>
 								<Text className={clubsTheme.tExtraSmallBold}>
-									Kate
+									{post.displayName ??
+										quickTruncate(post.walletAddress)}
 								</Text>
 								<Text className={clubsTheme.tExtraExtraSmall}>
-									1h ago
+									{DateTime.fromSeconds(
+										post.createdAt
+									).toRelative()}
 								</Text>
 							</div>
 						</div>

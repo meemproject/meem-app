@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Container, Text, Space, Loader, Center } from '@mantine/core'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { ClubDiscussionWidget } from '../Extensions/Discussion/ClubDiscussionWidget'
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { useClub } from './ClubProvider'
