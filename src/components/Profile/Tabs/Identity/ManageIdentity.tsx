@@ -208,7 +208,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	const filteredAvilableExtensions =
 		inteData?.IdentityProviders.filter(ai => {
 			const connectedExtension = me?.UserIdentities?.find(
-				i => i.IdentityIntegrationId === ai.id
+				i => i.IdentityProviderId === ai.id
 			)
 
 			if (connectedExtension) {
