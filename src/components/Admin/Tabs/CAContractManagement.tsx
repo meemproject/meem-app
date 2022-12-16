@@ -3,7 +3,7 @@ import log from '@kengoldfarb/log'
 import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
-import { useSDK, useWallet } from '@meemproject/react'
+import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -22,6 +22,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const wallet = useWallet()
 	const { sdk } = useSDK()
+	const { chainId } = useAuth()
 
 	const [smartContractPermission, setSmartContractPermission] =
 		useState('members-and-meem')
@@ -40,21 +41,21 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 		}
 	)
 
-	const chainIdToGnosisUrlPrefix = (): string => {
-		switch (process.env.NEXT_PUBLIC_CHAIN_ID) {
-			case '5':
+	const chainIdToGnosisUrlPrefix = (chainIdToCheck: number): string => {
+		switch (chainIdToCheck) {
+			case 5:
 				return 'gor'
-			case '10':
+			case 10:
 				return 'oeth'
-			case '420':
+			case 420:
 				return 'gor'
-			case '42161':
+			case 42161:
 				return 'arb1'
-			case '43114':
+			case 43114:
 				return 'avax'
-			case '80001':
+			case 80001:
 				return 'matic'
-			case '421613':
+			case 421613:
 				return 'gor'
 		}
 
@@ -394,9 +395,9 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						className={clubsTheme.buttonBlack}
 						onClick={() => {
 							window.open(
-								`https://gnosis-safe.io/app/${chainIdToGnosisUrlPrefix()}:${
-									club.gnosisSafeAddress
-								}/home`
+								`https://gnosis-safe.io/app/${chainIdToGnosisUrlPrefix(
+									chainId
+								)}:${club.gnosisSafeAddress}/home`
 							)
 						}}
 					>
