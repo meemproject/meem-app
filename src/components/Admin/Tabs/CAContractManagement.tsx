@@ -396,7 +396,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						onClick={() => {
 							window.open(
 								`https://gnosis-safe.io/app/${chainIdToGnosisUrlPrefix(
-									chainId
+									chainId ?? 137
 								)}:${club.gnosisSafeAddress}/home`
 							)
 						}}

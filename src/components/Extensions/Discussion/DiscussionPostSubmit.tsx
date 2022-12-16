@@ -38,7 +38,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	const router = useRouter()
 	const wallet = useWallet()
 	const { club } = useClub()
-	const { me, chainId } = useAuth()
+	const { me } = useAuth()
 
 	const { sdk } = useSDK()
 
@@ -95,7 +95,11 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 	const createPost = async () => {
 		try {
-			if (!wallet.web3Provider || !wallet.isConnected) {
+			if (
+				!wallet.web3Provider ||
+				!wallet.isConnected ||
+				!wallet.chainId
+			) {
 				await wallet.connectWallet()
 				return
 			}
@@ -174,7 +178,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 							? postAttachment
 							: null
 				},
-				chainId,
+				chainId: wallet.chainId,
 				accessControlConditions: [
 					{
 						contractAddress: club.address
