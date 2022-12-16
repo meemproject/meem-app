@@ -4,7 +4,7 @@ import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import {
-	useMeemSDK,
+	useSDK,
 	useSockets,
 	useWallet,
 	useMeemApollo
@@ -37,7 +37,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 }) => {
 	const wallet = useWallet()
 
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 
 	const { classes: clubsTheme } = useClubsTheme()
 

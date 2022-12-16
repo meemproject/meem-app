@@ -1,7 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Radio, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemSDK } from '@meemproject/react'
+import { useSDK } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
@@ -22,10 +22,10 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 	const [extensionVisibility, setIntegrationVisibility] =
-		useState<MeemAPI.IntegrationVisibility>()
-	const extension = userIdentity?.IdentityIntegration
+		useState<MeemAPI.IUserIdentityVisibility>()
+	const extension = userIdentity?.IdentityProvider
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
@@ -46,9 +46,9 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			// 	.send({
 			// 		visibility: extensionVisibility
 			// 	})
-			if (extension?.id) {
+			if (userIdentity?.id) {
 				await sdk.id.updateUserIdentity({
-					IdentityProviderId: extension.id,
+					userIdentityId: userIdentity.id,
 					visibility: extensionVisibility
 				})
 			}
@@ -72,8 +72,8 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	useEffect(() => {
 		if (isOpened) {
 			setIntegrationVisibility(
-				(userIdentity?.visibility as MeemAPI.IntegrationVisibility) ??
-					MeemAPI.IntegrationVisibility.Anyone
+				(userIdentity?.visibility as MeemAPI.IUserIdentityVisibility) ??
+					MeemAPI.IUserIdentityVisibility.Anyone
 			)
 		}
 	}, [userIdentity, isOpened])
@@ -179,10 +179,9 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						className={clubsTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
-							if (userIdentity?.IdentityProviderId) {
-								sdk.id.detachUserIdentity({
-									IdentityProviderId:
-										userIdentity?.IdentityProviderId
+							if (userIdentity?.id) {
+								sdk.id.removeUserIdentity({
+									userIdentityId: userIdentity.id
 								})
 								onModalClosed()
 							}

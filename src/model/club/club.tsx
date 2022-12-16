@@ -522,23 +522,6 @@ export default async function clubFromAgreement(
 							const discordUserId = ''
 							const emailAddress = ''
 
-							// memberIdentity?.IdentityProviders.forEach(
-							// 	inte => {
-							// 		if (inte.metadata.twitterUsername) {
-							// 			twitterUsername =
-							// 				inte.metadata.twitterUsername
-							// 		} else if (inte.metadata.discordUsername) {
-							// 			discordUsername =
-							// 				inte.metadata.discordUsername
-							// 			discordUserId =
-							// 				inte.metadata.discordUserId
-							// 		} else if (inte.metadata.emailAddress) {
-							// 			emailAddress =
-							// 				inte.metadata.emailAddress
-							// 		}
-							// 	}
-							// )
-
 							// Assemble member
 							const memberData = {
 								wallet: agreementToken.Wallet.address,

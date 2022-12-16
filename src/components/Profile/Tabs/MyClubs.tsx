@@ -31,7 +31,7 @@ export const MyClubsComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { mutualMembersClient } = useMeemApollo()
+	const { userClient } = useMeemApollo()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -52,7 +52,7 @@ export const MyClubsComponent: React.FC = () => {
 				wallet.accounts[0] &&
 				wallet.accounts[0].toLowerCase()
 		},
-		client: mutualMembersClient
+		client: userClient
 	})
 
 	useEffect(() => {

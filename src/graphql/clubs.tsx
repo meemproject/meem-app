@@ -389,6 +389,7 @@ export const SUB_CLUB_AS_MEMBER = gql`
 					id
 					icon
 					name
+					slug
 				}
 			}
 			AgreementRoles {
@@ -580,7 +581,6 @@ export const SUB_MY_CLUBS = gql`
 						ens
 					}
 				}
-				updatedAt
 			}
 		}
 	}

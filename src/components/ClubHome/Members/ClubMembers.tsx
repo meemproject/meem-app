@@ -12,13 +12,13 @@ import {
 	HoverCard
 } from '@mantine/core'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Search, Star } from 'tabler-icons-react'
 import { ClubMember } from '../../../model/club/club'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
-import ClubContext from '../ClubProvider'
+import { useClub } from '../ClubProvider'
 
 interface IProps {
 	slug: string
@@ -27,7 +27,7 @@ interface IProps {
 export const ClubMembersComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 
 	const navigateToClubDetail = () => {
 		router.push({ pathname: `/${slug}` })

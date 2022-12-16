@@ -2,7 +2,7 @@ import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Image, Space, Modal, Loader, Stepper } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemSDK, useWallet, useMeemApollo } from '@meemproject/react'
+import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
@@ -31,7 +31,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 }) => {
 	const router = useRouter()
 
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 
 	const wallet = useWallet()
 

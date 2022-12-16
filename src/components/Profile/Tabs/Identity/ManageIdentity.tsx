@@ -13,7 +13,12 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemUser, useMeemApollo, useMeemSDK } from '@meemproject/react'
+import {
+	useMeemUser,
+	useMeemApollo,
+	useSDK,
+	IDENTITY_PROVIDERS_QUERY
+} from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
@@ -23,7 +28,6 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
-import { IDENTITY_PROVIDERS_QUERY } from '../../../../graphql/id'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -35,7 +39,7 @@ export const ManageIdentityComponent: React.FC = () => {
 	const { classes: clubsTheme } = useClubsTheme()
 
 	const { loginWithRedirect } = useAuth0()
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 	const { user: me } = useMeemUser()
 	const { anonClient } = useMeemApollo()
 
@@ -337,7 +341,7 @@ export const ManageIdentityComponent: React.FC = () => {
 										md={4}
 										lg={4}
 										xl={4}
-										key={`verified-extension-${userIdentity.IdentityIntegration?.name}`}
+										key={`verified-extension-${userIdentity.IdentityProvider?.name}`}
 									>
 										<a
 											onClick={() => {
@@ -358,7 +362,7 @@ export const ManageIdentityComponent: React.FC = () => {
 													}
 												>
 													<Image
-														src={`${userIdentity.IdentityIntegration?.icon}`}
+														src={`${userIdentity.IdentityProvider?.icon}`}
 														width={16}
 														height={16}
 														fit={'contain'}
@@ -369,7 +373,7 @@ export const ManageIdentityComponent: React.FC = () => {
 															.username
 															? `@${userIdentity?.metadata.username}`
 															: userIdentity
-																	.IdentityIntegration
+																	.IdentityProvider
 																	?.name}
 													</Text>
 												</div>

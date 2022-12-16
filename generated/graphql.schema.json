@@ -42123,72 +42123,6 @@
             "deprecationReason": null
           },
           {
-            "name": "ChainNonces_chainId_key7",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key8",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key9",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key10",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key11",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key12",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key13",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key14",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key15",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key16",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "ChainNonces_chainId_key17",
-            "description": "unique or primary key constraint on columns \"chainId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "ChainNonces_pkey",
             "description": "unique or primary key constraint on columns \"id\"",
             "isDeprecated": false,
@@ -62554,12 +62488,6 @@
           },
           {
             "name": "UserIdentities_externalId_key1",
-            "description": "unique or primary key constraint on columns \"externalId\"",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "UserIdentities_externalId_key2",
             "description": "unique or primary key constraint on columns \"externalId\"",
             "isDeprecated": false,
             "deprecationReason": null

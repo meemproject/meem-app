@@ -2,7 +2,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Button, Textarea, Space } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemSDK } from '@meemproject/react'
+import { useSDK } from '@meemproject/react'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
@@ -15,7 +15,7 @@ interface IProps {
 
 export const CABulkMint: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
-	const { sdk } = useMeemSDK()
+	const { sdk } = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')

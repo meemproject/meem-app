@@ -12,7 +12,7 @@ import {
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
-import { useWallet } from '@meemproject/react'
+import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -25,6 +25,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { useClub } from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
@@ -36,6 +37,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { club } = useClub()
+	const { me } = useAuth()
+
+	const { sdk } = useSDK()
 
 	const [postTitle, setPostTitle] = useState('')
 
@@ -70,6 +75,8 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 		maxFileSize: 10
 	})
 
+	const chainId = +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
+
 	useEffect(() => {
 		const createResizedFile = async () => {
 			setPostAttachment(rawPostAttachment[0].content)
@@ -87,43 +94,101 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 	const deleteImage = () => {
 		setPostAttachment('')
 	}
+
 	const createPost = async () => {
-		if (!wallet.web3Provider || !wallet.isConnected) {
-			await wallet.connectWallet()
-			router.reload()
-			return
-		}
+		try {
+			if (!wallet.web3Provider || !wallet.isConnected) {
+				await wallet.connectWallet()
+				return
+			}
 
-		// Some basic validation
-		if (!postTitle || postTitle.length < 3 || postTitle.length > 140) {
-			// Club name invalid
-			showNotification({
-				title: 'Oops!',
-				message:
-					'You entered an invalid post title. Please choose a longer or shorter post title.'
+			if (!club?.address) {
+				router.push('/')
+				return
+			}
+
+			// Some basic validation
+			if (!postTitle || postTitle.length < 3 || postTitle.length > 140) {
+				// Club name invalid
+				showNotification({
+					title: 'Oops!',
+					message:
+						'You entered an invalid post title. Please choose a longer or shorter post title.'
+				})
+				return
+			}
+
+			if (
+				(editor && editor?.getHTML().length < 10) ||
+				(editor && editor?.getHTML().length > 3000)
+			) {
+				// Club name invalid
+				showNotification({
+					title: 'Oops!',
+					message:
+						'You entered an invalid post body. Please type a longer or shorter post body.'
+				})
+				return
+			}
+
+			setIsLoading(true)
+
+			const authSig = await sdk.id.getLitAuthSig()
+
+			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+				ae => ae.Extension?.slug === 'discussion'
+			)
+
+			if (!agreementExtension) {
+				showNotification({
+					title: 'Something went wrong!',
+					message: 'Please reload and try again'
+				})
+				return
+			}
+
+			const postTable =
+				agreementExtension.metadata.storage?.tableland?.posts
+
+			if (!postTable) {
+				showNotification({
+					title: 'Something went wrong!',
+					message: 'Please reload and try again'
+				})
+				return
+			}
+
+			await sdk.storage.encryptAndWrite({
+				authSig,
+				tableName: postTable.tablelandTableName,
+				writeColumns: {
+					title: postTitle,
+					body: editor?.getHTML(),
+					tags: postTags.split(' ').map(tag => tag.trim()),
+					walletAddress: wallet.accounts[0],
+					userId: me?.user.id,
+					displayName: me?.user.displayName,
+					profilePicUrl: me?.user.profilePicUrl,
+					ens: me?.user.DefaultWallet.ens,
+					clubSlug: club?.slug,
+					attachment:
+						postAttachment && postAttachment.length > 0
+							? postAttachment
+							: null
+				},
+				chainId,
+				accessControlConditions: [
+					{
+						contractAddress: club.address
+					}
+				]
 			})
-			return
-		}
 
-		if (
-			(editor && editor?.getHTML().length < 10) ||
-			(editor && editor?.getHTML().length > 3000)
-		) {
-			// Club name invalid
-			showNotification({
-				title: 'Oops!',
-				message:
-					'You entered an invalid post body. Please type a longer or shorter post body.'
-			})
-			return
+			// TODO: Redirect?
+		} catch (e) {
+			log.crit(e)
 		}
-
-		// TODO: create or edit post
-		// TODO: We will need post slug (from api?)
-		setIsLoading(true)
-		// router.push({
-		// 	pathname: `/${getClubSlug()}/zeen/${getZeenSlug()}/hello-world`
-		// })
+		setIsLoading(false)
 	}
 
 	return (
@@ -158,10 +223,11 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 					disabled={
 						postTitle.length === 0 ||
 						editor?.getHTML().length === 0 ||
-						postAttachment.length === 0 ||
+						// postAttachment.length === 0 ||
 						isLoading
 					}
-					onClick={() => {
+					onClick={(e: any) => {
+						e.preventDefault()
 						createPost()
 					}}
 				>
@@ -215,15 +281,44 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 							<Divider />
 							<RichTextEditor.Content />
 						</RichTextEditor>
-						<Space h={16} />
+						{/* <Space h={16} />
 						<div className={clubsTheme.rowEndAlign}>
 							<Button
 								className={clubsTheme.buttonBlack}
 								style={{ marginBottom: 16, marginRight: 16 }}
+								onClick={async () => {
+									const tl =
+										await sdk.storage.getTablelandInstance({
+											chainId: +(
+												process.env
+													.NEXT_PUBLIC_CHAIN_ID ?? ''
+											)
+										})
+									await tl.siwe()
+
+									console.log(tl)
+
+									const now = (
+										new Date().getTime() / 1000
+									).toFixed(0)
+
+									console.log({ now })
+
+									await tl.write(
+										`insert into _420_192 ("data", "accessControlConditions", "createdAt", "updatedAt") values ('test data', '${JSON.stringify(
+											{
+												some: 'condition'
+											}
+										)}', '${now}', '${now}')`,
+										{
+											rpcRelay: false
+										}
+									)
+								}}
 							>
 								Comment
 							</Button>
-						</div>
+						</div> */}
 					</div>
 				)}
 				<Space h={32} />
@@ -302,7 +397,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 					disabled={
 						postTitle.length === 0 ||
 						editor?.getHTML().length === 0 ||
-						postAttachment.length === 0 ||
+						// postAttachment.length === 0 ||
 						isLoading
 					}
 					className={clubsTheme.buttonBlack}

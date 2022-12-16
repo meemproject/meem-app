@@ -1,6 +1,6 @@
 import { Center, Container, Loader, Space, Text } from '@mantine/core'
-import React, { useContext } from 'react'
-import ClubContext from '../../ClubHome/ClubProvider'
+import React from 'react'
+import { useClub } from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 
 export const ExampleExtensionHome: React.FC = () => {
@@ -13,10 +13,10 @@ export const ExampleExtensionHome: React.FC = () => {
 	/*
 	Access the club, loading and error states using ClubContext.
 	Look inside /pages/e/example/index.tsx for an example of how
-	the ClubProvider and ClubContext is used to fetch a club 
+	the ClubProvider and ClubContext is used to fetch a club
 	where required.
 	*/
-	const { club, isLoadingClub, error } = useContext(ClubContext)
+	const { club, isLoadingClub, error } = useClub()
 
 	return (
 		<Container>
