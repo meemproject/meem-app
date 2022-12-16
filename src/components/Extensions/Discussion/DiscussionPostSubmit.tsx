@@ -75,8 +75,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 		maxFileSize: 10
 	})
 
-	const chainId = +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
-
 	useEffect(() => {
 		const createResizedFile = async () => {
 			setPostAttachment(rawPostAttachment[0].content)
@@ -97,7 +95,11 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 	const createPost = async () => {
 		try {
-			if (!wallet.web3Provider || !wallet.isConnected) {
+			if (
+				!wallet.web3Provider ||
+				!wallet.isConnected ||
+				!wallet.chainId
+			) {
 				await wallet.connectWallet()
 				return
 			}
@@ -176,7 +178,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 							? postAttachment
 							: null
 				},
-				chainId,
+				chainId: wallet.chainId,
 				accessControlConditions: [
 					{
 						contractAddress: club.address
@@ -281,44 +283,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 							<Divider />
 							<RichTextEditor.Content />
 						</RichTextEditor>
-						{/* <Space h={16} />
-						<div className={clubsTheme.rowEndAlign}>
-							<Button
-								className={clubsTheme.buttonBlack}
-								style={{ marginBottom: 16, marginRight: 16 }}
-								onClick={async () => {
-									const tl =
-										await sdk.storage.getTablelandInstance({
-											chainId: +(
-												process.env
-													.NEXT_PUBLIC_CHAIN_ID ?? ''
-											)
-										})
-									await tl.siwe()
-
-									console.log(tl)
-
-									const now = (
-										new Date().getTime() / 1000
-									).toFixed(0)
-
-									console.log({ now })
-
-									await tl.write(
-										`insert into _420_192 ("data", "accessControlConditions", "createdAt", "updatedAt") values ('test data', '${JSON.stringify(
-											{
-												some: 'condition'
-											}
-										)}', '${now}', '${now}')`,
-										{
-											rpcRelay: false
-										}
-									)
-								}}
-							>
-								Comment
-							</Button>
-						</div> */}
 					</div>
 				)}
 				<Space h={32} />

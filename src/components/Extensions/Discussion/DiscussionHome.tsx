@@ -10,7 +10,7 @@ import {
 	Center,
 	Button
 } from '@mantine/core'
-import { useSDK } from '@meemproject/react'
+import { useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
@@ -50,7 +50,7 @@ export const DiscussionHome: React.FC = () => {
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
 
 	const { sdk } = useSDK()
-	const chainId = +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
+	const { chainId } = useAuth()
 
 	const { club, isLoadingClub, error } = useClub()
 
@@ -75,7 +75,7 @@ export const DiscussionHome: React.FC = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchdData) {
+			if (hasFetchdData || !chainId) {
 				return
 			}
 

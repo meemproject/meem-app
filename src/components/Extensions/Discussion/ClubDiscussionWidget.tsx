@@ -1,5 +1,5 @@
 import { Text, Button, Space } from '@mantine/core'
-import { useSDK } from '@meemproject/react'
+import { useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Settings } from 'tabler-icons-react'
@@ -15,20 +15,19 @@ interface IProps {
 export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
-	const chainId = +(process.env.NEXT_PUBLIC_CHAIN_ID ?? '')
-
 	const [hasFetchdData, setHasFetchedData] = useState(false)
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
 
 	const router = useRouter()
 
 	const { sdk } = useSDK()
+	const { chainId } = useAuth()
 
 	useEffect(() => {}, [club])
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchdData) {
+			if (hasFetchdData || !chainId) {
 				return
 			}
 

@@ -18,11 +18,11 @@ const MAuthenticate: React.FC = () => {
 		setIsLoading(true)
 
 		try {
-			if (wallet.signer) {
+			if (wallet.signer && wallet.chainId) {
 				await login({
 					message: process.env.NEXT_PUBLIC_LOGIN_MESSAGE ?? '',
 					signer: wallet.signer,
-					chainId: +(process.env.NEXT_PUBLIC_CHAIN_ID ?? ''),
+					chainId: wallet.chainId,
 					uri: window.location.href
 				})
 
