@@ -103,7 +103,12 @@ export function HeaderMenu() {
 			loginState === LoginState.NotLoggedIn &&
 			router.pathname !== '/authenticate'
 		) {
-			router.push('/authenticate')
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: window.location.pathname
+				}
+			})
 		}
 	}, [isConnected, loginState, router])
 
