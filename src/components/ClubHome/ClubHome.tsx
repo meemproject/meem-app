@@ -60,7 +60,34 @@ export const ClubDetailComponent: React.FC = () => {
 								/>
 							</div>
 							<div className={clubsTheme.pageRightColumn}>
-								<ClubDiscussionWidget club={club} />
+								{club.extensions && (
+									<>
+										{club.extensions
+											// As of MVP, we only support one widget per extension, so we can
+											// safely make the assumption that if the extension doesn't have a
+											// widget, it's either a link extension or its contents are private.
+											.filter(
+												ext =>
+													ext.AgreementExtensionWidgets &&
+													ext
+														.AgreementExtensionWidgets[0]
+											)
+											.map(extension => (
+												// TODO: Developers, make sure you import your extension's widget
+												// TODO: here, checking against the slug you chose for your extension.
+												<>
+													{extension.Extension
+														?.slug ===
+														'discussion' && (
+														<ClubDiscussionWidget
+															club={club}
+														/>
+													)}
+												</>
+											))}
+									</>
+								)}
+
 								<ClubExtensionLinksWidget club={club} />
 								<ClubAddAppsWidget club={club} />
 								<ClubRequirementsWidget

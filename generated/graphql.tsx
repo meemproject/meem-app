@@ -5975,6 +5975,32 @@ export enum ChainNonces_Constraint {
   ChainNoncesChainIdKey5 = 'ChainNonces_chainId_key5',
   /** unique or primary key constraint on columns "chainId" */
   ChainNoncesChainIdKey6 = 'ChainNonces_chainId_key6',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey7 = 'ChainNonces_chainId_key7',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey8 = 'ChainNonces_chainId_key8',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey9 = 'ChainNonces_chainId_key9',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey10 = 'ChainNonces_chainId_key10',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey11 = 'ChainNonces_chainId_key11',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey12 = 'ChainNonces_chainId_key12',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey13 = 'ChainNonces_chainId_key13',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey14 = 'ChainNonces_chainId_key14',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey15 = 'ChainNonces_chainId_key15',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey16 = 'ChainNonces_chainId_key16',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey17 = 'ChainNonces_chainId_key17',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey18 = 'ChainNonces_chainId_key18',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey19 = 'ChainNonces_chainId_key19',
   /** unique or primary key constraint on columns "id" */
   ChainNoncesPkey = 'ChainNonces_pkey'
 }
@@ -8983,6 +9009,12 @@ export enum UserIdentities_Constraint {
   UserIdentitiesExternalIdKey = 'UserIdentities_externalId_key',
   /** unique or primary key constraint on columns "externalId" */
   UserIdentitiesExternalIdKey1 = 'UserIdentities_externalId_key1',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey2 = 'UserIdentities_externalId_key2',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey3 = 'UserIdentities_externalId_key3',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey4 = 'UserIdentities_externalId_key4',
   /** unique or primary key constraint on columns "id" */
   UserIdentitiesPkey = 'UserIdentities_pkey'
 }
@@ -14553,7 +14585,7 @@ export type GetClubQueryVariables = Exact<{
 }>;
 
 
-export type GetClubQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, metadata?: any | null, id: any, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }> }> };
 
 export type GetClubAsMemberQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -14561,7 +14593,7 @@ export type GetClubAsMemberQueryVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubAsMemberQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, id: any, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }> }> };
 
 export type GetClubInfoQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -14577,7 +14609,7 @@ export type GetClubSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string } | null }> }> };
+export type GetClubSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, id: any, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }> }> };
 
 export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -14585,7 +14617,7 @@ export type GetClubAsMemberSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null, Agreement?: { __typename?: 'Agreements', AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, isAdminRole: boolean, name: string, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', ExtensionId?: any | null, id: any, metadata?: any | null, Extension?: { __typename?: 'Extensions', description: string, guideUrl: string, icon: string, id: any, name: string, slug: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
+export type GetClubAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null, Agreement?: { __typename?: 'Agreements', AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, isAdminRole: boolean, name: string, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
 
 export type ClubSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -14598,7 +14630,7 @@ export type ClubSubscriptionSubscription = { __typename?: 'subscription_root', A
 export type GetExtensionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', createdAt: any, description: string, guideUrl: string, icon: string, id: any, name: string }> };
+export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', createdAt: any, description: string, guideUrl: string, icon: string, id: any, name: string, slug: string, updatedAt: any }> };
 
 export type GetAvailablePermissionQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -14629,7 +14661,7 @@ export type MyClubsSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type MyClubsSubscriptionSubscription = { __typename?: 'subscription_root', AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, AgreementId?: any | null, Agreement?: { __typename?: 'Agreements', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, updatedAt: any, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, AgreementTokens_aggregate: { __typename?: 'AgreementTokens_aggregate', aggregate?: { __typename?: 'AgreementTokens_aggregate_fields', count: number } | null }, AgreementTokens: Array<{ __typename?: 'AgreementTokens', Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> } | null }> };
+export type MyClubsSubscriptionSubscription = { __typename?: 'subscription_root', AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, AgreementId?: any | null, Agreement?: { __typename?: 'Agreements', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, AgreementTokens_aggregate: { __typename?: 'AgreementTokens_aggregate', aggregate?: { __typename?: 'AgreementTokens_aggregate_fields', count: number } | null }, AgreementTokens: Array<{ __typename?: 'AgreementTokens', Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> } | null }> };
 
 export type GetBundleByIdQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -14864,14 +14896,32 @@ export const GetClubDocument = gql`
     symbol
     id
     AgreementExtensions {
-      ExtensionId
-      id
-      metadata
-      Extension {
-        description
-        guideUrl
-        icon
+      AgreementExtensionLinks(where: {visibility: {_eq: "anyone"}}) {
+        createdAt
         id
+        isEnabled
+        updatedAt
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets(where: {visibility: {_eq: "anyone"}}) {
+        AgreementExtensionId
+        createdAt
+        id
+        isEnabled
+        metadata
+        updatedAt
+        visibility
+      }
+      ExtensionId
+      metadata
+      id
+      Extension {
+        slug
+        id
+        icon
         name
       }
     }
@@ -14947,14 +14997,33 @@ export const GetClubAsMemberDocument = gql`
     }
     id
     AgreementExtensions {
-      ExtensionId
-      id
-      metadata
-      Extension {
-        description
-        guideUrl
-        icon
+      AgreementExtensionLinks(where: {visibility: {_in: ["token-holders", "anyone"]}}) {
+        createdAt
         id
+        isEnabled
+        updatedAt
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets(
+        where: {visibility: {_in: ["token-holders", "anyone"]}}
+      ) {
+        AgreementExtensionId
+        createdAt
+        id
+        isEnabled
+        metadata
+        updatedAt
+        visibility
+      }
+      metadata
+      id
+      Extension {
+        slug
+        id
+        icon
         name
       }
     }
@@ -15062,14 +15131,31 @@ export const GetClubSubscriptionDocument = gql`
     symbol
     id
     AgreementExtensions {
-      ExtensionId
-      id
-      metadata
-      Extension {
-        description
-        guideUrl
-        icon
+      AgreementExtensionLinks(where: {visibility: {_eq: "anyone"}}) {
+        createdAt
         id
+        isEnabled
+        updatedAt
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets(where: {visibility: {_eq: "anyone"}}) {
+        AgreementExtensionId
+        createdAt
+        id
+        isEnabled
+        metadata
+        updatedAt
+        visibility
+      }
+      metadata
+      id
+      Extension {
+        slug
+        id
+        icon
         name
       }
     }
@@ -15153,14 +15239,32 @@ export const GetClubAsMemberSubscriptionDocument = gql`
     symbol
     id
     AgreementExtensions {
-      ExtensionId
-      id
+      AgreementExtensionLinks(where: {visibility: {_in: ["token-holders", "anyone"]}}) {
+        createdAt
+        id
+        isEnabled
+        updatedAt
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets(
+        where: {visibility: {_in: ["token-holders", "anyone"]}}
+      ) {
+        AgreementExtensionId
+        createdAt
+        id
+        isEnabled
+        metadata
+        updatedAt
+        visibility
+      }
       metadata
       Extension {
-        description
-        guideUrl
-        icon
+        slug
         id
+        icon
         name
         slug
       }
@@ -15266,6 +15370,8 @@ export const GetExtensionsDocument = gql`
     icon
     id
     name
+    slug
+    updatedAt
   }
 }
     `;
@@ -15478,7 +15584,6 @@ export const MyClubsSubscriptionDocument = gql`
           ens
         }
       }
-      updatedAt
     }
   }
 }

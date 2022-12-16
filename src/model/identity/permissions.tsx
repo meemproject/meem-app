@@ -56,7 +56,7 @@ export function userHasPermissionManageApps(club: Club): boolean {
 		return true
 	}
 
-	return false
+	return true
 }
 
 export function userHasPermissionViewApps(club: Club): boolean {

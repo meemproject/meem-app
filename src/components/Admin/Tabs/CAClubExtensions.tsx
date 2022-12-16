@@ -11,7 +11,7 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/clubs'
@@ -38,28 +38,47 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	)
 	// Current search term
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
+	const [isEnablingExtension, setIsEnablingExtension] = useState(false)
+	const [hasSetInitialSearchTerm, setHasSetInitialSearchTerm] =
+		useState(false)
 
-	const filterExtensions = (available: Extension[]) => {
-		const search = currentSearchTerm
-		const filteredExtensions: Extension[] = []
+	const filterExtensions = useCallback(
+		(available: Extension[]) => {
+			const search = currentSearchTerm
+			const filteredExtensions: Extension[] = []
 
-		if (currentSearchTerm.length > 0) {
-			available.forEach(ext => {
-				if (ext.name.toLowerCase().includes(search)) {
-					filteredExtensions.push(ext)
-				}
-			})
-			setSearchedExtensions(filteredExtensions)
-		} else {
-			setSearchedExtensions(available)
+			if (currentSearchTerm.length > 0) {
+				available.forEach(ext => {
+					if (ext.name.toLowerCase().includes(search)) {
+						filteredExtensions.push(ext)
+					}
+				})
+				setSearchedExtensions(filteredExtensions)
+			} else {
+				setSearchedExtensions(available)
+			}
+		},
+		[currentSearchTerm]
+	)
+
+	useEffect(() => {
+		if (availableExtensionsData && !loading && !hasSetInitialSearchTerm) {
+			filterExtensions(availableExtensionsData.Extensions)
 		}
-	}
+	}, [
+		availableExtensionsData,
+		filterExtensions,
+		hasSetInitialSearchTerm,
+		loading
+	])
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
 	const enableExtension = async (extention: Extension) => {
 		// TODO
+		setIsEnablingExtension(true)
+		setIsEnablingExtension(false)
 	}
 
 	const navigateToExtensionSettings = (slug: string) => {
@@ -71,7 +90,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 			<div>
 				<Space h={12} />
 
-				<Text className={clubsTheme.tLargeBold}>Club Apps</Text>
+				<Text className={clubsTheme.tLargeBold}>Club Extensions</Text>
 				<Space h={32} />
 
 				{club.extensions && club.extensions.length > 0 && (
@@ -297,7 +316,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 						</Grid>
 					</>
 				)}
-				{loading && !availableExtensionsData && (
+				{loading && (
 					<>
 						<Loader color="red" variant="oval" />
 					</>

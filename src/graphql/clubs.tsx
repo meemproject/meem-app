@@ -127,7 +127,9 @@ export const GET_CLUB = gql`
 			symbol
 			id
 			AgreementExtensions {
-				AgreementExtensionLinks {
+				AgreementExtensionLinks(
+					where: { visibility: { _eq: "anyone" } }
+				) {
 					createdAt
 					id
 					isEnabled
@@ -135,14 +137,18 @@ export const GET_CLUB = gql`
 					label
 					url
 					AgreementExtensionId
+					visibility
 				}
-				AgreementExtensionWidgets {
+				AgreementExtensionWidgets(
+					where: { visibility: { _eq: "anyone" } }
+				) {
 					AgreementExtensionId
 					createdAt
 					id
 					isEnabled
 					metadata
 					updatedAt
+					visibility
 				}
 				ExtensionId
 				metadata
@@ -200,7 +206,9 @@ export const GET_CLUB_AS_MEMBER = gql`
 			}
 			id
 			AgreementExtensions {
-				AgreementExtensionLinks {
+				AgreementExtensionLinks(
+					where: { visibility: { _in: ["token-holders", "anyone"] } }
+				) {
 					createdAt
 					id
 					isEnabled
@@ -208,14 +216,18 @@ export const GET_CLUB_AS_MEMBER = gql`
 					label
 					url
 					AgreementExtensionId
+					visibility
 				}
-				AgreementExtensionWidgets {
+				AgreementExtensionWidgets(
+					where: { visibility: { _in: ["token-holders", "anyone"] } }
+				) {
 					AgreementExtensionId
 					createdAt
 					id
 					isEnabled
 					metadata
 					updatedAt
+					visibility
 				}
 				metadata
 				id
@@ -278,7 +290,9 @@ export const SUB_CLUB = gql`
 			symbol
 			id
 			AgreementExtensions {
-				AgreementExtensionLinks {
+				AgreementExtensionLinks(
+					where: { visibility: { _eq: "anyone" } }
+				) {
 					createdAt
 					id
 					isEnabled
@@ -286,14 +300,18 @@ export const SUB_CLUB = gql`
 					label
 					url
 					AgreementExtensionId
+					visibility
 				}
-				AgreementExtensionWidgets {
+				AgreementExtensionWidgets(
+					where: { visibility: { _eq: "anyone" } }
+				) {
 					AgreementExtensionId
 					createdAt
 					id
 					isEnabled
 					metadata
 					updatedAt
+					visibility
 				}
 				metadata
 				id
@@ -366,7 +384,9 @@ export const SUB_CLUB_AS_MEMBER = gql`
 			symbol
 			id
 			AgreementExtensions {
-				AgreementExtensionLinks {
+				AgreementExtensionLinks(
+					where: { visibility: { _in: ["token-holders", "anyone"] } }
+				) {
 					createdAt
 					id
 					isEnabled
@@ -374,14 +394,18 @@ export const SUB_CLUB_AS_MEMBER = gql`
 					label
 					url
 					AgreementExtensionId
+					visibility
 				}
-				AgreementExtensionWidgets {
+				AgreementExtensionWidgets(
+					where: { visibility: { _in: ["token-holders", "anyone"] } }
+				) {
 					AgreementExtensionId
 					createdAt
 					id
 					isEnabled
 					metadata
 					updatedAt
+					visibility
 				}
 				metadata
 				Extension {
