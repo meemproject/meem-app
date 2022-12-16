@@ -8,6 +8,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { hostnameToChainId } from '../../../../../components/App'
+import { ClubProvider } from '../../../../../components/ClubHome/ClubProvider'
 import { DiscussionPostComponent } from '../../../../../components/Extensions/Discussion/DiscussionPost'
 import { MeemFooter } from '../../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../../components/Header/Header'
@@ -94,7 +95,9 @@ const DiscussionPostPage: NextPage<IProps> = ({ post }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<DiscussionPostComponent postId={postId} />
+			<ClubProvider slug={clubSlug}>
+				<DiscussionPostComponent postId={postId} />
+			</ClubProvider>
 			<Space h={64} />
 			<MeemFooter />
 		</>

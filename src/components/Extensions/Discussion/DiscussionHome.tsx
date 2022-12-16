@@ -15,6 +15,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
+import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClub } from '../../ClubHome/ClubProvider'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
@@ -40,6 +41,26 @@ export function rowToDiscussionPost(options: {
 		createdAt: row.createdAt,
 		updatedAt: row.updatedAt,
 		attachment: row.data.attachment
+	}
+}
+
+export function rowToDiscussionComment(options: {
+	row: {
+		[columnName: string]: any
+	}
+	club?: Club
+}): DiscussionComment {
+	const { row, club } = options
+	return {
+		id: row.id,
+		clubSlug: club?.slug ?? '',
+		body: row.data.body,
+		userId: row.data.userId,
+		displayName: row.data.displayName ?? row.data.ens,
+		walletAddress: row.data.walletAddress,
+		profilePicUrl: row.data.profilePicUrl,
+		createdAt: row.createdAt,
+		updatedAt: row.updatedAt
 	}
 }
 

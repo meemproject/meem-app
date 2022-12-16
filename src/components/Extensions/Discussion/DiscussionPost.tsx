@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-named-as-default */
+import log from '@kengoldfarb/log'
 import {
 	Center,
 	Space,
@@ -13,6 +14,7 @@ import {
 	Button
 } from '@mantine/core'
 import { RichTextEditor } from '@mantine/tiptap'
+import { LoginState, useAuth, useSDK } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -21,9 +23,12 @@ import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
+import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
+import { useClub } from '../../ClubHome/ClubProvider'
 import {
 	colorBlack,
 	colorDarkerGrey,
@@ -31,68 +36,24 @@ import {
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
 import { DiscussionCommentComponent } from './DiscussionComment'
+import { rowToDiscussionComment, rowToDiscussionPost } from './DiscussionHome'
 interface IProps {
 	postId: string
 }
 
 export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const { classes: clubsTheme } = useClubsTheme()
+	const [hasFetchdData, setHasFetchedData] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
+	const [post, setPost] = useState<DiscussionPost>()
+	const [comments, setComments] = useState<DiscussionComment[]>()
+	const { accounts, chainId, me, loginState } = useAuth()
+	const { sdk } = useSDK()
+	const { club } = useClub()
+	const router = useRouter()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
-
-	const post: DiscussionPost = {
-		id: '1',
-		title: 'Test post one',
-		tags: ['funny', 'crazy'],
-		body: 'This is just a small test post.',
-		clubSlug: '',
-		userId: '123',
-		walletAddress: '123',
-		createdAt: 2934872323,
-		updatedAt: 2934872323
-		// votes: 16,
-		// comments: [
-		// 	{
-		// 		id: '1',
-		// 		content: 'Test comment',
-		// 		votes: 1,
-		// 		replies: [
-		// 			{
-		// 				id: '1',
-		// 				content: 'Test comment',
-		// 				votes: 1,
-		// 				user: {
-		// 					displayName: 'James',
-		// 					profilePicture: '/exampleclub.png',
-		// 					wallet: ''
-		// 				}
-		// 			},
-		// 			{
-		// 				id: '2',
-		// 				content: 'Test comment',
-		// 				votes: 1,
-		// 				user: {
-		// 					displayName: 'James',
-		// 					profilePicture: '/exampleclub.png',
-		// 					wallet: ''
-		// 				}
-		// 			}
-		// 		],
-		// 		user: {
-		// 			displayName: 'James',
-		// 			profilePicture: '/exampleclub.png',
-		// 			wallet: ''
-		// 		}
-		// 	}
-		// ],
-
-		// user: {
-		// 	displayName: 'James',
-		// 	profilePicture: '/exampleclub.png',
-		// 	wallet: ''
-		// }
-	}
 
 	const content = ''
 
@@ -109,6 +70,144 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 		content
 	})
 
+	const handleCommentSubmit = useCallback(async () => {
+		try {
+			if (!router.query.postId) {
+				log.crit('No postId found')
+				return
+			}
+			if (!chainId) {
+				log.crit('No chainId found')
+				return
+			}
+			if (!club) {
+				log.crit('No club found')
+				return
+			}
+			setIsLoading(true)
+
+			const authSig = await sdk.id.getLitAuthSig()
+
+			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+				ae => ae.Extension?.slug === 'discussion'
+			)
+
+			const tableName =
+				agreementExtension?.metadata?.storage?.tableland?.comments
+					.tablelandTableName
+
+			await sdk.storage.encryptAndWrite({
+				chainId,
+				tableName,
+				authSig,
+				writeColumns: {
+					refId: router.query.postId
+				},
+				data: {
+					body: editor?.getHTML(),
+					walletAddress: accounts[0],
+					userId: me?.user.id,
+					displayName: me?.user.displayName,
+					profilePicUrl: me?.user.profilePicUrl,
+					ens: me?.user.DefaultWallet.ens,
+					clubSlug: club?.slug
+				},
+				accessControlConditions: [
+					{
+						contractAddress: club.address
+					}
+				]
+			})
+		} catch (e) {
+			log.crit(e)
+		}
+		setIsLoading(false)
+	}, [chainId, router, editor, club, sdk, accounts, me])
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (
+				hasFetchdData ||
+				!chainId ||
+				loginState !== LoginState.LoggedIn
+			) {
+				return
+			}
+
+			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
+				ae => ae.Extension?.slug === 'discussion'
+			)
+
+			const authSig = await sdk.id.getLitAuthSig()
+
+			// Fetch Post
+			if (
+				agreementExtension &&
+				agreementExtension.metadata?.storage?.tableland?.posts
+			) {
+				const tableName =
+					agreementExtension.metadata?.storage?.tableland?.posts
+						.tablelandTableName
+
+				const rows = await sdk.storage.read({
+					chainId,
+					tableName,
+					authSig,
+					where: {
+						id: router.query.postId
+					}
+				})
+
+				const newPost: DiscussionPost = rowToDiscussionPost({
+					row: rows[0],
+					club
+				})
+
+				setPost(newPost)
+			}
+
+			// Fetch Comments
+			console.log({
+				commentTable:
+					agreementExtension.metadata?.storage?.tableland?.comments
+			})
+			if (
+				agreementExtension &&
+				agreementExtension.metadata?.storage?.tableland?.comments
+			) {
+				const tableName =
+					agreementExtension.metadata?.storage?.tableland?.comments
+						.tablelandTableName
+
+				const rows = await sdk.storage.read({
+					chainId,
+					tableName,
+					authSig,
+					where: {
+						refId: router.query.postId
+					}
+				})
+
+				console.log({ rows })
+
+				const newComments: DiscussionComment[] = rows.map(row =>
+					rowToDiscussionComment({
+						row,
+						club
+					})
+				)
+
+				setComments(newComments)
+			}
+
+			setHasFetchedData(true)
+		}
+
+		fetchData()
+	}, [hasFetchdData, club, chainId, sdk, router.query.postId, loginState])
+
+	console.log({ comments, post })
+
 	return (
 		<div>
 			<Space h={48} />
@@ -120,7 +219,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 						</Center>
 
 						<Space h={16} />
-						<Center>{post.votes ?? 0}</Center>
+						<Center>{post?.votes ?? 0}</Center>
 						<Space h={16} />
 						<Center>
 							<ChevronDown />
@@ -130,10 +229,10 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					<div style={{ width: '100%' }}>
 						<div className={clubsTheme.row}>
 							<Space w={16} />
-							{post.attachment && (
+							{post?.attachment && (
 								<>
 									<Image
-										src={post.attachment}
+										src={post?.attachment}
 										height={80}
 										width={80}
 										radius={4}
@@ -170,13 +269,13 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 								<Space h={24} />
 
 								<Text className={clubsTheme.tMediumBold}>
-									{post.title}
+									{post?.title}
 								</Text>
-								{post.tags && (
+								{post?.tags && (
 									<>
 										<Space h={12} />
 
-										{post.tags.map(tag => (
+										{post?.tags.map(tag => (
 											<Badge
 												style={{ marginRight: 4 }}
 												key={tag}
@@ -201,9 +300,13 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 									</>
 								)}
 								<Space h={24} />
-								<Text className={clubsTheme.tSmall}>
-									{post.body}
-								</Text>
+								<Text
+									className={clubsTheme.tSmall}
+									dangerouslySetInnerHTML={{
+										// TODO: Sanitize html. Possible XSS vulnerability
+										__html: post?.body ?? ''
+									}}
+								/>
 								<Space h={16} />
 
 								<div className={clubsTheme.centeredRow}>
@@ -283,6 +386,9 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 							<Button
 								className={clubsTheme.buttonBlack}
 								style={{ marginBottom: 16, marginRight: 16 }}
+								loading={isLoading}
+								disabled={isLoading}
+								onClick={handleCommentSubmit}
 							>
 								Comment
 							</Button>
@@ -290,12 +396,13 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					</div>
 				)}
 				<Space h={24} />
-				{post.comments?.map(comment => (
-					<DiscussionCommentComponent
-						key={comment.id}
-						comment={comment}
-					/>
-				))}
+				{comments &&
+					comments.map(comment => (
+						<DiscussionCommentComponent
+							key={comment.id}
+							comment={comment}
+						/>
+					))}
 			</Container>
 		</div>
 	)
