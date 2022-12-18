@@ -9,7 +9,7 @@ import { ClubProvider } from '../../components/ClubHome/ClubProvider'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { RolesManager } from '../../components/Roles/RolesManager'
-import { GET_CLUB } from '../../graphql/clubs'
+import { GET_CLUB_INFO } from '../../graphql/clubs'
 import { ssrGraphqlClient } from '../../utils/ssr_graphql'
 import { ClubPropViewModel } from '.'
 
@@ -117,8 +117,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 	try {
 		if (params?.slug) {
-			const { data } = await client.query({
-				query: GET_CLUB,
+			const { data, errors } = await client.query({
+				query: GET_CLUB_INFO,
 				variables: {
 					slug: params.slug,
 					chainId: hostnameToChainId(req.headers.host ?? '')
@@ -138,13 +138,16 @@ export const getServerSideProps: GetServerSideProps = async ({
 					description: data.Agreements[0].metadata.description ?? ''
 				}
 			}
-		}
-
-		return {
-			props: {
-				club
+			return {
+				props: {
+					club,
+					isError: !!errors,
+					description: 'There was an error fetching club data'
+				}
 			}
 		}
+
+		return { props: {} }
 	} catch (e) {
 		log.debug(e)
 		club = {

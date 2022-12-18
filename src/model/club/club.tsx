@@ -3,7 +3,11 @@ import log from '@kengoldfarb/log'
 import { MeemAPI, normalizeImageUrl } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
-import { AgreementRoles, Agreements } from '../../../generated/graphql'
+import {
+	AgreementExtensions,
+	AgreementRoles,
+	Agreements
+} from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
 
 export const ClubAdminRole =
@@ -12,27 +16,18 @@ export const ClubMinterRole =
 	'0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6'
 export const ClubUpgraderRole =
 	'0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3'
+
+// GraphQL extension
 export interface Extension {
-	// Convenience for admin screen
-	isExistingExtension?: boolean
-
-	// DB properties
-	id?: string
-	extensionId: string
+	__typename?: 'Extensions' | undefined
+	createdAt: any
+	description: string
+	guideUrl: string
+	icon: string
+	id: any
 	name: string
-	isEnabled?: boolean
-	isPublic?: boolean
-	isVerified?: boolean
-	url?: string
-	icon?: string
-	description?: string
-	guideUrl?: string
-
-	// Per-app properties
-	verifiedTwitterUser?: string
-	publicationSlug?: string
-	publicationName?: string
-	gatherTownSpacePw?: string
+	slug: string
+	updatedAt: any
 }
 
 export interface ClubRolePermission {
@@ -112,11 +107,16 @@ export interface Club {
 	isClubControlledByMeemApi?: boolean
 	isValid?: boolean
 	rawClub?: Agreements
-	allExtensions?: Extension[]
-	publicExtensions?: Extension[]
-	privateExtensions?: Extension[]
+	extensions?: AgreementExtensions[]
 	gnosisSafeAddress?: string | null
 	memberCount?: number
+}
+
+export const extensionFromSlug = (club: Club, slug: string) => {
+	const agreementExtension = club?.extensions?.find(
+		ae => ae.Extension?.slug === slug
+	)
+	return agreementExtension
 }
 
 export interface MembershipSettings {
@@ -329,7 +329,7 @@ export function clubSummaryFromAgreement(clubData?: Agreements): Club {
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allExtensions: [],
+			extensions: [],
 			memberCount: members.length
 		}
 	} else {
@@ -730,41 +730,10 @@ export default async function clubFromAgreement(
 		}
 
 		// Extensions
-		const allExtensions: Extension[] = []
-		const publicExtensions: Extension[] = []
-		const privateExtensions: Extension[] = []
+		const allExtensions: AgreementExtensions[] = []
 		if (clubData.AgreementExtensions) {
-			clubData.AgreementExtensions.forEach(inte => {
-				// if (inte.isEnabled) {
-				const extension: Extension = {
-					id: inte.id,
-					extensionId: inte.ExtensionId,
-					name: inte.Extension?.name ?? 'Unknown',
-					description: inte.Extension?.description ?? 'Unknown',
-					icon: inte.Extension?.icon ?? '',
-					// isEnabled: inte.isEnabled,
-					isVerified: inte.metadata.isVerified ?? false,
-
-					guideUrl: inte.Extension?.guideUrl,
-					url: inte.metadata.externalUrl ?? '',
-					isExistingExtension: true,
-
-					// Per app properties
-					verifiedTwitterUser: inte.metadata.twitterUsername ?? '',
-					publicationSlug: inte.metadata.publicationSlug ?? '',
-					publicationName: inte.metadata.publicationName ?? '',
-					gatherTownSpacePw: inte.metadata.gatherTownSpacePw ?? ''
-				}
-
-				// TODO:
-				// if (inte.isPublic) {
-				// 	publicExtensions.push(extension)
-				// } else {
-				// 	privateExtensions.push(extension)
-				// }
-
+			clubData.AgreementExtensions.forEach(extension => {
 				allExtensions.push(extension)
-				// }
 			})
 		}
 
@@ -810,9 +779,7 @@ export default async function clubFromAgreement(
 			},
 			isValid: clubData.mintPermissions !== undefined,
 			rawClub: clubData,
-			allExtensions,
-			publicExtensions,
-			privateExtensions
+			extensions: allExtensions
 		}
 	} else {
 		return {}

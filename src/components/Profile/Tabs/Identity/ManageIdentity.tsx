@@ -13,7 +13,12 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useMeemUser, useMeemApollo, useSDK } from '@meemproject/react'
+import {
+	useMeemUser,
+	useMeemApollo,
+	useSDK,
+	IDENTITY_PROVIDERS_QUERY
+} from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
@@ -23,7 +28,6 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
-import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
 import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -50,7 +54,7 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	// Fetch a list of available extensions.
 	const { data: inteData, loading: isLoadingAvailableExtensions } =
-		useQuery<GetIdentityProvidersQuery>(IDENTITY_INTEGRATIONS_QUERY, {
+		useQuery<GetIdentityProvidersQuery>(IDENTITY_PROVIDERS_QUERY, {
 			client: anonClient
 		})
 

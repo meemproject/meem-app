@@ -12,7 +12,7 @@ import {
 	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
@@ -25,8 +25,8 @@ import {
 import { useClub } from '../ClubHome/ClubProvider'
 import { colorGreen, useClubsTheme } from '../Styles/ClubsTheme'
 import { CABulkMint } from './Tabs/CABulkMint'
-import { CAClubApps } from './Tabs/CAClubApps'
 import { CAClubDetails } from './Tabs/CAClubDetails'
+import { CAClubExtensions } from './Tabs/CAClubExtensions'
 import { CAClubIcon } from './Tabs/CAClubIcon'
 import { CAContractAddress as CAContractManagement } from './Tabs/CAContractManagement'
 import { CAMembershipRequirements } from './Tabs/CAMembershipRequirements'
@@ -41,7 +41,6 @@ enum Tab {
 	ClubDetails,
 	ClubIcon,
 	Extensions,
-	Links,
 	Airdrops,
 	DeleteClub
 }
@@ -62,15 +61,6 @@ export const ClubAdminComponent: React.FC = () => {
 	}
 
 	useEffect(() => {
-		if (wallet.loginState === LoginState.NotLoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${club?.slug}/admin`
-				}
-			})
-		}
-
 		if (
 			error &&
 			error.graphQLErrors.length > 0 &&
@@ -102,9 +92,6 @@ export const ClubAdminComponent: React.FC = () => {
 				break
 			case 'extensions':
 				setCurrentTab(Tab.Extensions)
-				break
-			case 'links':
-				setCurrentTab(Tab.Links)
 				break
 			case 'membershiprequirements':
 				setCurrentTab(Tab.MembershipRequirements)
@@ -334,22 +321,6 @@ export const ClubAdminComponent: React.FC = () => {
 									</>
 								)}
 
-								{userHasPermissionManageApps(club) && (
-									<>
-										<NavLink
-											className={
-												clubsTheme.pagePanelLayoutNavItem
-											}
-											active={currentTab === Tab.Links}
-											label={'Links'}
-											onClick={() => {
-												setCurrentTab(Tab.Links)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</>
-								)}
-
 								<NavLink
 									className={
 										clubsTheme.pagePanelLayoutNavItem
@@ -437,12 +408,9 @@ export const ClubAdminComponent: React.FC = () => {
 										)}
 									{currentTab === Tab.Extensions &&
 										userHasPermissionManageApps(club) && (
-											<CAClubApps club={club} />
+											<CAClubExtensions club={club} />
 										)}
-									{currentTab === Tab.Links &&
-										userHasPermissionManageApps(club) && (
-											<CAClubApps club={club} />
-										)}
+
 									{currentTab === Tab.Airdrops && (
 										<CABulkMint club={club} />
 									)}
