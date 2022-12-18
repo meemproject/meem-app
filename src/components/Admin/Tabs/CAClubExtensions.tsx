@@ -63,6 +63,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 
 	useEffect(() => {
 		if (availableExtensionsData && !loading && !hasSetInitialSearchTerm) {
+			setHasSetInitialSearchTerm(true)
 			filterExtensions(availableExtensionsData.Extensions)
 		}
 	}, [
