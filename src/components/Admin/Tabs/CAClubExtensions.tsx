@@ -345,16 +345,21 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 					size={'60%'}
 					padding={'lg'}
 					opened={isEnablingExtension}
-					title={<Text className={clubsTheme.tMediumBold}>FAQ</Text>}
 					onClose={() => {}}
 				>
 					<Center>
 						<Text className={clubsTheme.tMediumBold}>
 							Please wait...
 						</Text>
-						<Space h={16} />
+					</Center>
+					<Space h={16} />
+
+					<Center>
 						<Text>{`Enabling ${enablingExtensionName}`}</Text>
-						<Space h={16} />
+					</Center>
+					<Space h={16} />
+
+					<Center>
 						<Loader variant="oval" color="red" />
 					</Center>
 				</Modal>

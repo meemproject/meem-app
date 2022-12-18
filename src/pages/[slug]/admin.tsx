@@ -9,7 +9,7 @@ import { hostnameToChainId } from '../../components/App'
 import { ClubProvider } from '../../components/ClubHome/ClubProvider'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
-import { GET_CLUB } from '../../graphql/clubs'
+import { GET_CLUB_INFO } from '../../graphql/clubs'
 import { ssrGraphqlClient } from '../../utils/ssr_graphql'
 import { ClubPropViewModel } from '.'
 
@@ -118,10 +118,10 @@ export const getServerSideProps: GetServerSideProps = async ({
 	try {
 		if (params?.slug) {
 			const { data, errors } = await client.query({
-				query: GET_CLUB,
+				query: GET_CLUB_INFO,
 				variables: {
-					chainId: hostnameToChainId(req.headers.host ?? ''),
-					slug: params.slug
+					slug: params.slug,
+					chainId: hostnameToChainId(req.headers.host ?? '')
 				}
 			})
 
