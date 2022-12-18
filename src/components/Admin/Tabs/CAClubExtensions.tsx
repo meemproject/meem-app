@@ -8,8 +8,11 @@ import {
 	Grid,
 	Divider,
 	Loader,
-	useMantineColorScheme
+	useMantineColorScheme,
+	Center,
+	Modal
 } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ExternalLink, Settings } from 'tabler-icons-react'
@@ -24,6 +27,7 @@ interface IProps {
 export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 	const router = useRouter()
+	const { sdk } = useSDK()
 
 	// Fetch a list of available extensions.
 	const {
@@ -39,6 +43,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	// Current search term
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 	const [isEnablingExtension, setIsEnablingExtension] = useState(false)
+	const [enablingExtensionName, setEnablingExtensionName] = useState('')
 	const [hasSetInitialSearchTerm, setHasSetInitialSearchTerm] =
 		useState(false)
 
@@ -76,9 +81,13 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	const enableExtension = async (extention: Extension) => {
-		// TODO
+	const enableExtension = async (extension: Extension) => {
+		setEnablingExtensionName(extension?.name ?? '')
 		setIsEnablingExtension(true)
+		await sdk.agreementExtension.createAgreementExtension({
+			agreementId: club?.id ?? '',
+			extensionId: extension.id
+		})
 		setIsEnablingExtension(false)
 	}
 
@@ -329,6 +338,26 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 				)}
 
 				<Space h="xl" />
+				<Modal
+					centered
+					radius={16}
+					overlayBlur={8}
+					size={'60%'}
+					padding={'lg'}
+					opened={isEnablingExtension}
+					title={<Text className={clubsTheme.tMediumBold}>FAQ</Text>}
+					onClose={() => {}}
+				>
+					<Center>
+						<Text className={clubsTheme.tMediumBold}>
+							Please wait...
+						</Text>
+						<Space h={16} />
+						<Text>{`Enabling ${enablingExtensionName}`}</Text>
+						<Space h={16} />
+						<Loader variant="oval" color="red" />
+					</Center>
+				</Modal>
 			</div>
 		</>
 	)
