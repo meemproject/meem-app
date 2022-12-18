@@ -92,7 +92,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 	}
 
 	const navigateToExtensionSettings = (slug: string) => {
-		router.push(`${club.slug}/e/${slug}/settings`)
+		router.push(`/${club.slug}/e/${slug}/settings`)
 	}
 
 	return (
@@ -201,7 +201,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 															clubsTheme.tExtraSmall
 														}
 													>
-														Launch App
+														Homepage
 													</Text>
 												</div>
 											</a>

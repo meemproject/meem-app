@@ -12,7 +12,7 @@ import {
 	Burger
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
@@ -61,15 +61,6 @@ export const ClubAdminComponent: React.FC = () => {
 	}
 
 	useEffect(() => {
-		if (wallet.loginState === LoginState.NotLoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${club?.slug}/admin`
-				}
-			})
-		}
-
 		if (
 			error &&
 			error.graphQLErrors.length > 0 &&

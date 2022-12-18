@@ -1,6 +1,5 @@
 import { Container, Text } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { LoginState, useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -13,18 +12,6 @@ export const CreatePermissionsComponent: React.FC = () => {
 
 	const [clubName, setClubName] = useState('')
 	const router = useRouter()
-	const wallet = useWallet()
-
-	useEffect(() => {
-		if (wallet.loginState === LoginState.NotLoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/create/permissions`
-				}
-			})
-		}
-	}, [router, wallet.loginState])
 
 	useEffect(() => {
 		if (Cookies.get(CookieKeys.clubName) != null) {
