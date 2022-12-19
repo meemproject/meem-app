@@ -16,13 +16,14 @@ import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { DateTime } from 'luxon'
 import React, { useState } from 'react'
 import { ChevronUp } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
 import {
 	colorDarkGrey,
 	colorLightGrey,
-	colorPink,
+	// colorPink,
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
 interface IProps {
@@ -57,15 +58,19 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 		<div>
 			<div className={clubsTheme.centeredRow}>
 				<Image
-					src={`/exampleclub.png`}
+					src={comment.profilePicUrl ?? `/exampleclub.png`}
 					height={32}
 					width={32}
 					radius={16}
 				/>
 				<Space w={8} />
 				<div>
-					<Text className={clubsTheme.tExtraSmallBold}>Kate</Text>
-					<Text className={clubsTheme.tExtraExtraSmall}>1h ago</Text>
+					<Text className={clubsTheme.tExtraSmallBold}>
+						{comment.displayName ?? comment.walletAddress}
+					</Text>
+					<Text className={clubsTheme.tExtraExtraSmall}>
+						{DateTime.fromSeconds(comment.createdAt).toRelative()}
+					</Text>
 				</div>
 			</div>
 			<div className={clubsTheme.row}>
@@ -87,9 +92,12 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 				<div style={{ width: '100%' }}>
 					<Space h={16} />
 
-					<Text className={clubsTheme.tExtraSmall}>
-						{comment.content}
-					</Text>
+					<Text
+						className={clubsTheme.tExtraSmall}
+						dangerouslySetInnerHTML={{
+							__html: comment.body
+						}}
+					/>
 					<Space h={16} />
 					<div className={clubsTheme.centeredRow}>
 						<ChevronUp />
@@ -99,7 +107,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 							className={clubsTheme.tExtraExtraSmall}
 							style={{ fontWeight: '700' }}
 						>
-							{comment.votes}
+							{30}
 						</Text>
 						<Space w={20} />
 						<Image
@@ -164,7 +172,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 							</div>
 						</>
 					)}
-					<Space h={16} />
+					{/* <Space h={16} />
 
 					{comment.replies && !isCommentRepliesHidden && (
 						<>
@@ -189,7 +197,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 							className={clubsTheme.tExtraSmall}
 							style={{ color: colorPink, cursor: 'pointer' }}
 						>{`${comment.replies?.length} replies hidden`}</Text>
-					)}
+					)} */}
 				</div>
 			</div>
 		</div>

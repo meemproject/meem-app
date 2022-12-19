@@ -1,9 +1,11 @@
-import { ClubMember } from '../../club'
-
 export interface DiscussionComment {
 	id: string
-	content: string
-	user: ClubMember
-	votes?: number
-	replies?: DiscussionComment[]
+	body: string
+	userId: string
+	displayName?: string
+	profilePicUrl?: string
+	walletAddress: string
+	clubSlug: string
+	createdAt: number
+	updatedAt: number
 }

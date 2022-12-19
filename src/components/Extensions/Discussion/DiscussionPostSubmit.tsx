@@ -163,7 +163,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 			await sdk.storage.encryptAndWrite({
 				authSig,
 				tableName: postTable.tablelandTableName,
-				writeColumns: {
+				data: {
 					title: postTitle,
 					body: editor?.getHTML(),
 					tags: postTags.split(' ').map(tag => tag.trim()),
