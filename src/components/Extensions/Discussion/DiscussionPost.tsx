@@ -48,7 +48,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const [post, setPost] = useState<DiscussionPost>()
 	const [comments, setComments] = useState<DiscussionComment[]>()
 	const { accounts, chainId, me, loginState } = useAuth()
-	const { sdk, hasInitialized } = useSDK()
+	const { sdk } = useSDK()
 	const { club } = useClub()
 	const router = useRouter()
 
