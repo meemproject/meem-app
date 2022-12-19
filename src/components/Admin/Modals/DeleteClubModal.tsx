@@ -31,20 +31,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 			setIsDeletingClub(true)
 
 			try {
-				// const updateRoleFetcher = makeFetcher<
-				// 	MeemAPI.v1.DeleteAgreementRole.IQueryParams,
-				// 	MeemAPI.v1.DeleteAgreementRole.IRequestBody,
-				// 	MeemAPI.v1.DeleteAgreementRole.IResponseBody
-				// >({
-				// 	method: MeemAPI.v1.DeleteAgreementRole.method
-				// })
-
-				// await updateRoleFetcher(
-				// 	MeemAPI.v1.DeleteAgreementRole.path({
-				// 		agreementId: club.id ?? '',
-				// 		agreementRoleId: role.id ?? ''
-				// 	})
-				// )
+				// TODO: Actually delete the club here
 
 				showNotification({
 					title: 'Deleted Club',

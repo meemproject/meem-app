@@ -2,7 +2,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
+import { useSDK, useWallet } from '@meemproject/react'
 import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -31,6 +31,8 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 	const wallet = useWallet()
 
 	const router = useRouter()
+
+	const { sdk } = useSDK()
 
 	const { classes: clubsTheme } = useClubsTheme()
 
@@ -98,6 +100,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			if (isExistingRole) {
 				// Save the updates to the existing role
 				try {
+
+					await sdk.agreement.upgradeAgreementRole({
+						agreementId: '',
+						agreementRoleId: '',
+						{
+							name: role.name,
+							permissions: permissionsArray,
+							members: membersArray
+						}
+					})
 					const updateRoleFetcher = makeFetcher<
 						MeemAPI.v1.UpdateAgreementRole.IQueryParams,
 						MeemAPI.v1.UpdateAgreementRole.IRequestBody,

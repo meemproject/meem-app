@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
+import { useSDK } from '@meemproject/react'
 import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import router from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -24,6 +26,9 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 }) => {
 	const { classes: clubsTheme } = useClubsTheme()
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { sdk } = useSDK()
+
 	const [isDeletingRole, setIsDeletingRole] = useState(false)
 
 	const deleteRole = async () => {
@@ -31,6 +36,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 			setIsDeletingRole(true)
 
 			try {
+				// TODO: Need 'deleteAgreementRole'
 				const updateRoleFetcher = makeFetcher<
 					MeemAPI.v1.DeleteAgreementRole.IQueryParams,
 					MeemAPI.v1.DeleteAgreementRole.IRequestBody,

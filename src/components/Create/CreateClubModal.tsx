@@ -113,53 +113,6 @@ export const CreateClubModal: React.FC<IProps> = ({
 		[router]
 	)
 
-	// TODO: Do we really need to create a club safe for every club? Seem unnecessary for many
-	// const createSafe = useCallback(
-	// 	async (club: Club) => {
-	// 		if (hasStartedCreatingSafe || !wallet.chainId) {
-	// 			return
-	// 		}
-	// 		setHasStartedCreatingSafe(true)
-	// 		log.debug(
-	// 			`creating safe with id ${club.id}, admins ${JSON.stringify(
-	// 				membershipSettings?.clubAdminsAtClubCreation
-	// 			)} ...`
-	// 		)
-
-	// 		try {
-	// 			const createSafeFetcher = makeFetcher<
-	// 				MeemAPI.v1.CreateClubSafe.IQueryParams,
-	// 				MeemAPI.v1.CreateClubSafe.IRequestBody,
-	// 				MeemAPI.v1.CreateClubSafe.IResponseBody
-	// 			>({
-	// 				method: MeemAPI.v1.CreateClubSafe.method
-	// 			})
-
-	// 			await createSafeFetcher(
-	// 				MeemAPI.v1.CreateClubSafe.path({
-	// 					agreementId: club.id ?? ''
-	// 				}),
-	// 				undefined,
-	// 				{
-	// 					safeOwners:
-	// 						uniq(
-	// 							membershipSettings?.clubAdminsAtClubCreation
-	// 						) ?? [],
-	// 					chainId:
-	// 						wallet.chainId ??
-	// 						hostnameToChainId(
-	// 							global.window ? global.window.location.host : ''
-	// 						)
-	// 				}
-	// 			)
-	// 		} catch (e) {
-	// 			// Ignore - the user can create later?
-	// 			finishClubCreation()
-	// 		}
-	// 	},
-	// 	[finishClubCreation, hasStartedCreatingSafe, membershipSettings, wallet]
-	// )
-
 	const create = useCallback(async () => {
 		log.debug('creating club...')
 		if (!wallet.web3Provider || !wallet.chainId) {
@@ -220,12 +173,6 @@ export const CreateClubModal: React.FC<IProps> = ({
 							: 0
 					})
 				})
-
-			log.debug(
-				`call createContractFetcher for ${Cookies.get(
-					CookieKeys.clubName
-				)}`
-			)
 
 			// Setup application instructions for club
 			const applicationInstructions: string[] = []

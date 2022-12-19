@@ -223,16 +223,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 					}
 				}
 
-				// log.debug(JSON.stringify(data))
 				log.debug(data)
-
-				// await reInitializeContractFetcher(
-				// 	MeemAPI.v1.ReInitializeAgreement.path({
-				// 		agreementId: club.id
-				// 	}),
-				// 	undefined,
-				// 	data
-				// )
 
 				const { txId } = await sdk.agreement.reInitialize({
 					agreementId: club.id,
@@ -274,19 +265,6 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				})
 
 				log.debug(`Reinitializing agreement w/ txId: ${txId}`)
-
-				// TODO: Wait for the Transaciton to finish and then bulk-mint tokens as needed
-
-				// const tokenMetadata: {
-				// 	agreement_metadata_version: 'MeemClub_Token_20220718'
-				// 	description: `Membership token for ${club.name}`
-				// 	name: `${club.name} membership token`
-				// 	image: club.image
-				// 	associations: []
-				// 	external_url: `https://clubs.link/${club.slug}`
-				// }
-
-				// Now we wait for an update on the db.
 			} catch (e) {
 				log.debug(e)
 				showNotification({

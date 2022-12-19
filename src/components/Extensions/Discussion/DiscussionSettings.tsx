@@ -10,7 +10,6 @@ import {
 	Button,
 	Divider,
 	Switch,
-	Select,
 	SelectItem
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
@@ -40,12 +39,6 @@ export const DiscussionSettings: React.FC = () => {
 	] = useState(true)
 	const [shouldShowAuthorOnWidgetTiles, setShowAuthorOnWidgetTiles] =
 		useState(true)
-
-	// These are role ids
-	const [newDiscussionsRole, setNewDiscussionsRole] = useState<string>()
-	const [manageExtensionRole, setManageExtensionRole] = useState<string>()
-	const [upvoteRole, setUpvoteRole] = useState<string>()
-	const [leaveCommentsRole, setLeaveCommentsRole] = useState<string>()
 
 	// Convert roles to Mantine SelectItems
 	const [roleSelectItems, setRoleSelectItems] = useState<SelectItem[]>([])
@@ -145,101 +138,6 @@ export const DiscussionSettings: React.FC = () => {
 			<Space h={16} />
 		</>
 	)
-
-	/*
-	TODO
-	Add your custom extension permissions layout here.
-	 */
-	const customExtensionPermissions = () => (
-		<>
-			<Space h={12} />
-
-			<Text className={clubsTheme.tSmallBold}>
-				Who can start new discussions?
-			</Text>
-			<Space h={8} />
-			<Text className={clubsTheme.tExtraSmallFaded}>
-				Please choose one role.
-			</Text>
-			<Space h={12} />
-			<Select
-				radius={8}
-				size={'md'}
-				data={roleSelectItems}
-				value={newDiscussionsRole ? newDiscussionsRole : 'club-member'}
-				onChange={(value: string) => {
-					setNewDiscussionsRole(value)
-				}}
-			/>
-			<Space h={24} />
-			<Text className={clubsTheme.tSmallBold}>
-				Who can manage extension settings?
-			</Text>
-			<Space h={8} />
-			<Text className={clubsTheme.tExtraSmallFaded}>
-				Please choose one role.
-			</Text>
-			<Space h={12} />
-			<Select
-				radius={8}
-				size={'md'}
-				data={roleSelectItems}
-				value={manageExtensionRole ? manageExtensionRole : 'admin'}
-				onChange={(value: string) => {
-					setManageExtensionRole(value)
-				}}
-			/>
-			<Space h={24} />
-			<Text className={clubsTheme.tSmallBold}>
-				Who can upvote and downvote?
-			</Text>
-			<Space h={8} />
-			<Text className={clubsTheme.tExtraSmallFaded}>
-				Please choose one role.
-			</Text>
-			<Space h={12} />
-			<Select
-				radius={8}
-				size={'md'}
-				data={roleSelectItems}
-				value={upvoteRole ? upvoteRole : 'club-member'}
-				onChange={(value: string) => {
-					setUpvoteRole(value)
-				}}
-			/>
-			<Space h={24} />
-			<Text className={clubsTheme.tSmallBold}>
-				Who can leave comments?
-			</Text>
-			<Space h={8} />
-			<Text className={clubsTheme.tExtraSmallFaded}>
-				Please choose one role.
-			</Text>
-			<Space h={12} />
-			<Select
-				radius={8}
-				size={'md'}
-				data={roleSelectItems}
-				value={leaveCommentsRole ? leaveCommentsRole : 'club-member'}
-				onChange={(value: string) => {
-					setLeaveCommentsRole(value)
-				}}
-			/>
-			<Space h={24} />
-			<Button
-				className={clubsTheme.buttonWhite}
-				onClick={() => {
-					router.push({
-						pathname: `/${club?.slug}/admin`,
-						query: { tab: 'roles' }
-					})
-				}}
-			>
-				Manage roles
-			</Button>
-		</>
-	)
-
 	/*
 	TODO
 	Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
@@ -436,13 +334,7 @@ export const DiscussionSettings: React.FC = () => {
 						</Button>
 
 						{customExtensionSettings()}
-						<Space h={32} />
-						<Text className={clubsTheme.tExtraSmallLabel}>
-							PERMISSIONS
-						</Text>
-						<Space h={16} />
 
-						{customExtensionPermissions()}
 						<Space h={48} />
 						<Button
 							disabled={isSavingChanges}
