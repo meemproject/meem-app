@@ -3,7 +3,6 @@ import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { useSDK, useWallet } from '@meemproject/react'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
@@ -100,12 +99,18 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			if (isExistingRole) {
 				// Save the updates to the existing role
 				try {
-					await sdk.agreement.upgradeAgreementRole({
+					await sdk.agreement.reInitializeAgreementRole({
 						agreementId: club?.id ?? '',
 						agreementRoleId: role?.id,
 						name: role.name,
-						permissions: permissionsArray,
-						members: membersArray
+						metadata: {
+							meem_metadata_type: 'Meem_AgreementContract',
+							meem_metadata_version: '20221116',
+							permissions: permissionsArray,
+							members: membersArray,
+							isTokenBasedRole: true,
+							isTokenTransferrable: role.isTransferrable ?? false
+						}
 					})
 
 					onRoleChangesSaved()
@@ -134,7 +139,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							isTokenBasedRole: true,
 							isTokenTransferrable: role.isTransferrable ?? false
 						},
-						maxSupply: '-1',
+						maxSupply: '0',
 						agreementId: club.id ?? ''
 					})
 
