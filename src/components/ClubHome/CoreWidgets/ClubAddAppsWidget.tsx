@@ -16,29 +16,26 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div>
-			{club.isCurrentUserClubAdmin &&
-				club.currentUserClubPermissions?.includes(
-					PERMISSION_MANAGE_APPS
-				) && (
-					<>
-						<Center>
-							<Button
-								className={clubsTheme.buttonGrey}
-								onClick={() => {
-									router.push({
-										pathname: `${club.slug}/admin`,
-										query: { tab: 'apps' }
-									})
-								}}
-							>
-								+ Add more apps
-							</Button>
-						</Center>
-						<Space h={32} />
-						<Divider />
-						<Space h={40} />
-					</>
-				)}
+			{club.isCurrentUserClubAdmin && (
+				<>
+					<Center>
+						<Button
+							className={clubsTheme.buttonGrey}
+							onClick={() => {
+								router.push({
+									pathname: `${club.slug}/admin`,
+									query: { tab: 'apps' }
+								})
+							}}
+						>
+							+ Add more apps
+						</Button>
+					</Center>
+					<Space h={32} />
+					<Divider />
+					<Space h={40} />
+				</>
+			)}
 		</div>
 	)
 }

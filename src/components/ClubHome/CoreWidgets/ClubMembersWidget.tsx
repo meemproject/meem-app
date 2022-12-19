@@ -14,6 +14,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Club, ClubMember } from '../../../model/club/club'
+import { quickTruncate } from '../../../utils/truncated_wallet'
 import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
@@ -162,7 +163,9 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 													>
 														{member.ens
 															? member.ens
-															: member.wallet}
+															: quickTruncate(
+																	member.wallet
+															  )}
 													</Text>
 												</div>
 											</div>

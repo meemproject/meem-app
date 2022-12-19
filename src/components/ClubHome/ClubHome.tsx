@@ -58,6 +58,13 @@ export const ClubDetailComponent: React.FC = () => {
 									club={club}
 									meetsReqs={doesMeetAllRequirements}
 								/>
+								<ClubRequirementsWidget
+									club={club}
+									onMeetsAllReqsChanged={meetsReqs => {
+										setDoesMeetAllRequirements(meetsReqs)
+									}}
+								/>
+								<ClubMembersWidget club={club} />
 							</div>
 							<div className={clubsTheme.pageRightColumn}>
 								{club.extensions && (
@@ -90,13 +97,7 @@ export const ClubDetailComponent: React.FC = () => {
 
 								<ClubExtensionLinksWidget club={club} />
 								<ClubAddAppsWidget club={club} />
-								<ClubRequirementsWidget
-									club={club}
-									onMeetsAllReqsChanged={meetsReqs => {
-										setDoesMeetAllRequirements(meetsReqs)
-									}}
-								/>
-								<ClubMembersWidget club={club} />
+
 								<Space h={64} />
 							</div>
 						</div>
