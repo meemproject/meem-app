@@ -27,7 +27,7 @@ export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchdData || !chainId) {
+			if (hasFetchdData || !chainId || !sdk.id.hasInitialized) {
 				return
 			}
 

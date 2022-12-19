@@ -48,7 +48,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const [post, setPost] = useState<DiscussionPost>()
 	const [comments, setComments] = useState<DiscussionComment[]>()
 	const { accounts, chainId, me, loginState } = useAuth()
-	const { sdk } = useSDK()
+	const { sdk, hasInitialized } = useSDK()
 	const { club } = useClub()
 	const router = useRouter()
 
@@ -129,7 +129,8 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			if (
 				hasFetchdData ||
 				!chainId ||
-				loginState !== LoginState.LoggedIn
+				loginState !== LoginState.LoggedIn ||
+				!sdk.id.hasInitialized
 			) {
 				return
 			}
@@ -166,11 +167,6 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				setPost(newPost)
 			}
 
-			// Fetch Comments
-			console.log({
-				commentTable:
-					agreementExtension.metadata?.storage?.tableland?.comments
-			})
 			if (
 				agreementExtension &&
 				agreementExtension.metadata?.storage?.tableland?.comments
@@ -188,8 +184,6 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					}
 				})
 
-				console.log({ rows })
-
 				const newComments: DiscussionComment[] = rows.map(row =>
 					rowToDiscussionComment({
 						row,
@@ -205,8 +199,6 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 		fetchData()
 	}, [hasFetchdData, club, chainId, sdk, router.query.postId, loginState])
-
-	console.log({ comments, post })
 
 	return (
 		<div>

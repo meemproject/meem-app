@@ -96,7 +96,7 @@ export const DiscussionHome: React.FC = () => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchdData || !chainId) {
+			if (hasFetchdData || !chainId || !sdk.id.hasInitialized) {
 				return
 			}
 
