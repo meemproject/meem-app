@@ -11,8 +11,10 @@ import {
 	useMantineColorScheme,
 	Container,
 	Divider,
-	Button
+	Button,
+	Loader
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
 import { LoginState, useAuth, useSDK } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
@@ -23,15 +25,23 @@ import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { DateTime } from 'luxon'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
+import {
+	Check,
+	ChevronDown,
+	ChevronUp,
+	Message,
+	Share
+} from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
 import { useClub } from '../../ClubHome/ClubProvider'
 import {
 	colorBlack,
 	colorDarkerGrey,
+	colorGreen,
 	colorLightestGrey,
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
@@ -47,6 +57,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [post, setPost] = useState<DiscussionPost>()
 	const [comments, setComments] = useState<DiscussionComment[]>()
+	const [commentCount, setCommentCount] = useState(0)
 	const { accounts, chainId, me, loginState } = useAuth()
 	const { sdk } = useSDK()
 	const { club } = useClub()
@@ -118,6 +129,21 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					}
 				]
 			})
+
+			editor?.commands.clearContent()
+
+			showNotification({
+				radius: 'lg',
+				title: 'Comment Submitted!',
+				autoClose: 5000,
+				color: colorGreen,
+				icon: <Check color="green" />,
+				message:
+					'Your comment has been submitted. Reloading comments...'
+			})
+
+			// Re-fetch
+			setHasFetchedData(false)
 		} catch (e) {
 			log.crit(e)
 		}
@@ -144,20 +170,35 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			// Fetch Post
 			if (
 				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.posts
+				agreementExtension.metadata?.storage?.tableland?.posts &&
+				agreementExtension.metadata?.storage?.tableland?.comments
 			) {
 				const tableName =
 					agreementExtension.metadata?.storage?.tableland?.posts
 						.tablelandTableName
+				const commentsTableName =
+					agreementExtension.metadata?.storage?.tableland?.comments
+						.tablelandTableName
 
-				const rows = await sdk.storage.read({
-					chainId,
-					tableName,
-					authSig,
-					where: {
-						id: router.query.postId
-					}
-				})
+				const [rows, count] = await Promise.all([
+					sdk.storage.read({
+						chainId,
+						tableName,
+						authSig,
+						where: {
+							id: router.query.postId
+						}
+					}),
+					sdk.storage.count({
+						chainId,
+						tableName: commentsTableName,
+						where: {
+							refId: router.query.postId
+						}
+					})
+				])
+
+				setCommentCount(count)
 
 				const newPost: DiscussionPost = rowToDiscussionPost({
 					row: rows[0],
@@ -203,145 +244,174 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	return (
 		<div>
 			<Space h={48} />
-			<Container>
-				<div className={clubsTheme.row}>
-					<div>
-						<Center>
-							<ChevronUp />
-						</Center>
+			{!hasFetchdData && (
+				<Center>
+					<Loader color="red" variant="oval" />
+				</Center>
+			)}
+			{hasFetchdData && (
+				<Container>
+					<div className={clubsTheme.row}>
+						<div>
+							<Center>
+								<ChevronUp />
+							</Center>
 
-						<Space h={16} />
-						<Center>{post?.votes ?? 0}</Center>
-						<Space h={16} />
-						<Center>
-							<ChevronDown />
-						</Center>
-					</div>
-					<Space w={16} />
-					<div style={{ width: '100%' }}>
-						<div className={clubsTheme.row}>
-							<Space w={16} />
-							{post?.attachment && (
-								<>
-									<Image
-										src={post?.attachment}
-										height={80}
-										width={80}
-										radius={4}
-									/>
-									<Space w={16} />
-								</>
-							)}
-							<div>
-								<div className={clubsTheme.centeredRow}>
-									<Image
-										src={`/exampleclub.png`}
-										height={32}
-										width={32}
-										radius={16}
-									/>
-									<Space w={8} />
-									<div>
-										<Text
-											className={
-												clubsTheme.tExtraSmallBold
-											}
-										>
-											Kate
-										</Text>
-										<Text
-											className={
-												clubsTheme.tExtraExtraSmall
-											}
-										>
-											1h ago
-										</Text>
-									</div>
-								</div>
-								<Space h={24} />
-
-								<Text className={clubsTheme.tMediumBold}>
-									{post?.title}
-								</Text>
-								{post?.tags && (
+							<Space h={16} />
+							<Center>{post?.votes ?? 0}</Center>
+							<Space h={16} />
+							<Center>
+								<ChevronDown />
+							</Center>
+						</div>
+						<Space w={16} />
+						<div style={{ width: '100%' }}>
+							<div className={clubsTheme.row}>
+								<Space w={16} />
+								{post?.attachment && (
 									<>
-										<Space h={12} />
-
-										{post?.tags.map(tag => (
-											<Badge
-												style={{ marginRight: 4 }}
-												key={tag}
-												size={'xs'}
-												gradient={{
-													from: isDarkTheme
-														? colorDarkerGrey
-														: '#DCDCDC',
-													to: isDarkTheme
-														? colorDarkerGrey
-														: '#DCDCDC',
-													deg: 35
-												}}
-												classNames={{
-													inner: clubsTheme.tBadgeTextSmall
-												}}
-												variant={'gradient'}
-											>
-												{tag}
-											</Badge>
-										))}
+										<Image
+											src={post?.attachment}
+											height={80}
+											width={80}
+											radius={4}
+										/>
+										<Space w={16} />
 									</>
 								)}
-								<Space h={24} />
-								<Text
-									className={clubsTheme.tSmall}
-									dangerouslySetInnerHTML={{
-										// TODO: Sanitize html. Possible XSS vulnerability
-										__html: post?.body ?? ''
-									}}
-								/>
-								<Space h={16} />
+								<div>
+									<div className={clubsTheme.centeredRow}>
+										<Image
+											src={
+												post?.profilePicUrl ??
+												`/exampleclub.png`
+											}
+											height={32}
+											width={32}
+											radius={16}
+										/>
+										<Space w={8} />
+										<div>
+											<Text
+												className={
+													clubsTheme.tExtraSmallBold
+												}
+											>
+												{post?.displayName ??
+													post?.walletAddress}
+											</Text>
+											<Text
+												className={
+													clubsTheme.tExtraExtraSmall
+												}
+											>
+												{post?.createdAt
+													? DateTime.fromSeconds(
+															post.createdAt
+													  ).toRelative()
+													: ''}
+											</Text>
+										</div>
+									</div>
+									<Space h={24} />
 
-								<div className={clubsTheme.centeredRow}>
-									<div
-										className={clubsTheme.row}
-										style={{ marginTop: 16 }}
-									>
-										<div className={clubsTheme.centeredRow}>
-											<Message width={20} height={20} />
-											<Space w={4} />
-											<Text
-												className={
-													clubsTheme.tExtraSmall
-												}
-											>
-												14 Comments
-											</Text>
-										</div>
-										<Space w={16} />
+									<Text className={clubsTheme.tMediumBold}>
+										{post?.title}
+									</Text>
+									{post?.tags && (
+										<>
+											<Space h={12} />
+
+											{post?.tags.map(tag => (
+												<Badge
+													style={{ marginRight: 4 }}
+													key={tag}
+													size={'xs'}
+													gradient={{
+														from: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
+														to: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
+														deg: 35
+													}}
+													classNames={{
+														inner: clubsTheme.tBadgeTextSmall
+													}}
+													variant={'gradient'}
+												>
+													{tag}
+												</Badge>
+											))}
+										</>
+									)}
+									<Space h={24} />
+									<Text
+										className={clubsTheme.tSmall}
+										dangerouslySetInnerHTML={{
+											// TODO: Sanitize html. Possible XSS vulnerability
+											__html: post?.body ?? ''
+										}}
+									/>
+									<Space h={16} />
+
+									<div className={clubsTheme.centeredRow}>
 										<div
-											className={clubsTheme.centeredRow}
-											style={{ cursor: 'pointer' }}
+											className={clubsTheme.row}
+											style={{ marginTop: 16 }}
 										>
-											<Share width={20} height={20} />
-											<Space w={4} />
-											<Text
+											<div
 												className={
-													clubsTheme.tExtraSmall
+													clubsTheme.centeredRow
 												}
 											>
-												Share
-											</Text>
+												<Message
+													width={20}
+													height={20}
+												/>
+												<Space w={4} />
+												<Text
+													className={
+														clubsTheme.tExtraSmall
+													}
+												>
+													{`${commentCount} ${
+														commentCount === 1
+															? 'Comment'
+															: 'Comments'
+													}
+												`}
+												</Text>
+											</div>
+											<Space w={16} />
+											<div
+												className={
+													clubsTheme.centeredRow
+												}
+												style={{ cursor: 'pointer' }}
+											>
+												<Share width={20} height={20} />
+												<Space w={4} />
+												<Text
+													className={
+														clubsTheme.tExtraSmall
+													}
+												>
+													Share
+												</Text>
+											</div>
+											<Space w={16} />
 										</div>
-										<Space w={16} />
 									</div>
 								</div>
 							</div>
-						</div>
 
-						<Space h={20} />
+							<Space h={20} />
+						</div>
 					</div>
-				</div>
-			</Container>
+				</Container>
+			)}
 			<Space h={24} />
 			<Divider
 				size={8}
