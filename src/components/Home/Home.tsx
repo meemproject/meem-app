@@ -4,7 +4,6 @@ import log from '@kengoldfarb/log'
 import {
 	Container,
 	Text,
-	Image,
 	Autocomplete,
 	Loader,
 	Avatar,
@@ -17,8 +16,7 @@ import {
 	// eslint-disable-next-line import/named
 	MantineColor,
 	// eslint-disable-next-line import/named
-	AutocompleteItem,
-	useMantineColorScheme
+	AutocompleteItem
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { LoginState, useAuth, useSDK } from '@meemproject/react'
@@ -39,12 +37,7 @@ import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
 import ClubClubContext from '../ClubHome/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
-import {
-	colorDarkGrey,
-	colorLightBlue,
-	colorBlue,
-	useClubsTheme
-} from '../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../Styles/ClubsTheme'
 
 interface ItemProps extends SelectItemProps {
 	color: MantineColor
@@ -208,9 +201,6 @@ export function HomeComponent() {
 
 	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
 
-	const { colorScheme } = useMantineColorScheme()
-	const isDarkTheme = colorScheme === 'dark'
-
 	useEffect(() => {
 		const doLogin = async () => {
 			try {
@@ -252,66 +242,7 @@ export function HomeComponent() {
 	])
 
 	return (
-		<div>
-			<div
-				style={{
-					backgroundColor: isDarkTheme
-						? colorDarkGrey
-						: colorLightBlue
-				}}
-			>
-				<Container
-					size={900}
-					className={clubsTheme.rowResponsive}
-					style={{
-						paddingTop: 32,
-						paddingBottom: 32
-					}}
-				>
-					<Image
-						style={{
-							filter: 'invert(52%) sepia(97%) saturate(1775%) hue-rotate(326deg) brightness(99%) contrast(105%)',
-							marginRight: 48
-						}}
-						src="/clubs-home.svg"
-						height={120}
-						width={120}
-						fit={'contain'}
-					/>
-
-					<div
-						style={{
-							color: colorBlue,
-							fontWeight: 600,
-							marginTop: 6
-						}}
-					>
-						<Text
-							style={{
-								fontSize: 22,
-								fontWeight: 800,
-								lineHeight: 1.4
-							}}
-						>
-							Effortless access management and collaborative
-							publishing tools for your online community
-						</Text>
-						<Space h={24} />
-						<Text
-							onClick={() => {
-								setIsClubsFAQModalOpen(true)
-							}}
-							className={clubsTheme.tLink}
-							style={{
-								fontSize: 18
-							}}
-						>
-							Get to know Clubs
-						</Text>
-					</div>
-				</Container>
-			</div>
-
+		<div className={clubsTheme.widgetMeem}>
 			<Container
 				size={900}
 				style={{
@@ -321,16 +252,16 @@ export function HomeComponent() {
 					marginTop: 70
 				}}
 			>
-				<Text className={clubsTheme.tExtraSmallLabel}>
+				<Text className={clubsTheme.tExtraSmallLabel} color="black">
 					CREATE A CLUB
 				</Text>
 				<Space h={16} />
 				<Text
 					style={{
+						color: 'black',
 						fontSize: 20,
 						fontWeight: 'bold'
 					}}
-					color="dimmed"
 				>
 					{`What's your club called?`}
 				</Text>
@@ -353,7 +284,7 @@ export function HomeComponent() {
 						isLoadingSuggestions ? (
 							<Loader
 								variant="oval"
-								color={'red'}
+								color={'blue'}
 								size={24}
 								style={{ marginRight: '12px' }}
 							/>

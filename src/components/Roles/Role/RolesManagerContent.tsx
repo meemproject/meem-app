@@ -213,7 +213,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							ROLE NAME
 						</Text>
 						<Space w={2} />
-						<Text color={'red'}>*</Text>
+						<Text color={'blue'}>*</Text>
 					</div>
 					<Space h={24} />
 					<TextInput
