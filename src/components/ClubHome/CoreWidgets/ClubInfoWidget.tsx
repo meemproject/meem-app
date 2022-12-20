@@ -312,36 +312,38 @@ export const ClubInfoWidget: React.FC<IProps> = ({ club, meetsReqs }) => {
 							<Text>Scan</Text>
 						</Button>
 
-						{club.extensions?.map(extension => (
-							<>
-								<Button
-									style={{
-										margin: 3
-									}}
-									className={clubsTheme.buttonWhite}
-									onClick={() => {
-										// TODO
-										// if (extension.name === 'Phone Number') {
-										// 	window.open(`tel:${extension.url}`)
-										// } else if (
-										// 	extension.name === 'Email Address'
-										// ) {
-										// 	window.open(
-										// 		`mailto:${extension.url}`
-										// 	)
-										// } else {
-										// 	window.open(extension.url)
-										// }
-									}}
-								>
-									<Image
-										width={20}
-										height={20}
-										src={extension.metadata.icon}
-									/>
-								</Button>
-							</>
-						))}
+						{club.extensions
+							?.filter(
+								ext => ext.AgreementExtensionLinks.length > 0
+							)
+							.map(extension => (
+								<>
+									<Button
+										style={{
+											margin: 3
+										}}
+										className={clubsTheme.buttonWhite}
+										onClick={() => {
+											if (
+												extension
+													.AgreementExtensionLinks[0]
+											) {
+												window.open(
+													extension
+														.AgreementExtensionLinks[0]
+														.url
+												)
+											}
+										}}
+									>
+										<Image
+											width={20}
+											height={20}
+											src={extension.Extension?.icon}
+										/>
+									</Button>
+								</>
+							))}
 					</div>
 				</Center>
 				<Space h={16} />

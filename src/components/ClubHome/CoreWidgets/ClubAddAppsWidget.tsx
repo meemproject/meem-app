@@ -2,7 +2,6 @@ import { Button, Center, Divider, Space } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
-import { PERMISSION_MANAGE_APPS } from '../../../model/identity/permissions'
 import { useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
