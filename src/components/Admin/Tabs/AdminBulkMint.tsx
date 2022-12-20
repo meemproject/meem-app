@@ -150,9 +150,8 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 				<Space h={32} />
 
 				<Text className={meemTheme.tMediumBold}>
-					Invite others to your agreement by airdropping them a
-					agreement token. They will automatically become a agreement
-					member.
+					Invite others to your agreement by airdropping them a token.
+					They will automatically become a agreement member.
 				</Text>
 				<Space h={16} />
 				<Text className={meemTheme.tMediumFaded}>

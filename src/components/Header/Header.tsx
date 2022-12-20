@@ -187,7 +187,7 @@ export function HeaderMenu() {
 												meemTheme.tExtraSmallBold
 											}
 										>
-											My Agreements
+											My Communities
 										</Menu.Item>
 									</>
 								)}
@@ -221,7 +221,7 @@ export function HeaderMenu() {
 									setIsJoinAgreementsModalOpen(true)
 								}}
 							>
-								Join Agreements
+								Join Meem
 							</a>
 						</Text>
 					)}
@@ -276,7 +276,7 @@ export function HeaderMenu() {
 									/>
 								}
 							>
-								{`What's a agreement?`}
+								{`What's this?`}
 							</Menu.Item>
 							<Space h={4} />
 							<Divider />

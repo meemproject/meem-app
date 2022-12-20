@@ -97,7 +97,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							agreement?.description &&
 							agreement?.description?.length > 0
 								? agreement?.description
-								: 'Agreement Token',
+								: 'Community Token',
 						image: agreement?.image,
 						external_link: '',
 						application_instructions: []
@@ -133,7 +133,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 										agreement?.description &&
 										agreement?.description?.length > 0
 											? agreement?.description
-											: 'Agreement Token',
+											: 'Community Token',
 									image: agreement?.image,
 									meem_metadata_type: 'Meem_AgreementToken',
 									meem_metadata_version: '20221116'
@@ -372,7 +372,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 								leaveAgreement()
 							}}
 						>
-							Leave Agreement
+							Leave Community
 						</Button>
 					)}
 					{!agreement.isCurrentUserAgreementMember && (
@@ -385,7 +385,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							}}
 						>
 							{meetsReqs
-								? 'Join Agreement'
+								? 'Join Community'
 								: 'Requirements Not Met'}
 						</Button>
 					)}

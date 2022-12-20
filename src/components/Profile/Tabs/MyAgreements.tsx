@@ -107,10 +107,12 @@ export const MyAgreementsComponent: React.FC = () => {
 			{agreements.length === 0 && !loading && (
 				<>
 					<Space h={16} />
-					<Text className={meemTheme.tMediumBold}>My Agreements</Text>
+					<Text className={meemTheme.tMediumBold}>
+						My Communities
+					</Text>
 					<Space h={32} />
 					<Text className={meemTheme.tMediumBold}>
-						{`You haven't joined any agreements!`}
+						{`You haven't joined any communities!`}
 					</Text>
 					<Space h={16} />
 					<Text className={meemTheme.tLink}>
@@ -121,7 +123,7 @@ export const MyAgreementsComponent: React.FC = () => {
 			{agreements.length > 0 && !loading && (
 				<>
 					<Space h={12} />
-					<Text className={meemTheme.tLargeBold}>My Agreements</Text>
+					<Text className={meemTheme.tLargeBold}>My Communities</Text>
 					<Space h={32} />
 
 					<Grid style={{ maxWidth: 1000 }}>

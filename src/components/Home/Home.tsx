@@ -245,7 +245,7 @@ export function HomeComponent() {
 				}}
 			>
 				<Text className={meemTheme.tExtraSmallLabel} color="black">
-					CREATE A AGREEMENT
+					CREATE A COMMUNITY
 				</Text>
 				<Space h={16} />
 				<Text
@@ -255,7 +255,7 @@ export function HomeComponent() {
 						fontWeight: 'bold'
 					}}
 				>
-					{`What's your agreement called?`}
+					{`What's your community called?`}
 				</Text>
 				<Autocomplete
 					style={{
@@ -269,7 +269,7 @@ export function HomeComponent() {
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
 					placeholder={
-						'Start typing to see suggestions or create a new agreement...'
+						'Start typing to see suggestions or create a new community...'
 					}
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={
@@ -292,17 +292,6 @@ export function HomeComponent() {
 						) : null
 					}
 				/>
-				<Text className={meemTheme.tLink} style={{ marginTop: 16 }}>
-					<a
-						onClick={() => {
-							router.push({
-								pathname: '/agreement-agreement'
-							})
-						}}
-					>
-						Join Agreement Agreement to create
-					</a>
-				</Text>
 
 				<Space h={64} />
 			</Container>
