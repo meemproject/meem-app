@@ -110,51 +110,74 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 						>{`Enabled extensions (${club.extensions.length})`}</Text>
 						<Space h={12} />
 						<Grid>
-							{club.extensions.map(extension => (
-								<Grid.Col
-									xs={8}
-									sm={8}
-									md={4}
-									lg={4}
-									xl={4}
-									key={extension.id}
-								>
-									<div
-										className={
-											clubsTheme.extensionGridItemEnabled
+							{club.extensions.map(extension => {
+								let isExtensionBeingEnabled = false
+								if (
+									Array.isArray(
+										extension.metadata?.transactions
+									)
+								) {
+									extension.metadata?.transactions.forEach(
+										tx => {
+											if (tx.status === 'pending') {
+												isExtensionBeingEnabled = true
+											}
 										}
+									)
+								}
+								return (
+									<Grid.Col
+										xs={8}
+										sm={8}
+										md={4}
+										lg={4}
+										xl={4}
+										key={extension.id}
 									>
 										<div
 											className={
-												clubsTheme.extensionGridItemEnabledHeaderBackground
-											}
-										/>
-										<div
-											className={
-												clubsTheme.extensionGridItemHeader
+												clubsTheme.extensionGridItemEnabled
 											}
 										>
-											<Image
-												src={`/${
-													isDarkTheme
-														? `${(
-																extension
-																	.Extension
-																	?.icon ?? ''
-														  ).replace(
-																'.png',
-																'-white.png'
-														  )}`
-														: extension.Extension
-																?.icon
-												}`}
-												width={16}
-												height={16}
-												fit={'contain'}
+											<div
+												className={
+													clubsTheme.extensionGridItemEnabledHeaderBackground
+												}
 											/>
-											<Space w={8} />
-											<Text>{`${extension.Extension?.name}`}</Text>
-											{/* {extension.isVerified && (
+											<div
+												className={
+													clubsTheme.extensionGridItemHeader
+												}
+											>
+												<Image
+													src={`/${
+														isDarkTheme
+															? `${(
+																	extension
+																		.Extension
+																		?.icon ??
+																	''
+															  ).replace(
+																	'.png',
+																	'-white.png'
+															  )}`
+															: extension
+																	.Extension
+																	?.icon
+													}`}
+													width={16}
+													height={16}
+													fit={'contain'}
+												/>
+												<Space w={8} />
+												<Text>{`${extension.Extension?.name}`}</Text>
+												{isExtensionBeingEnabled && (
+													<Loader
+														color="red"
+														variant="oval"
+													/>
+												)}
+												{/* {extension.isVerified && (
 												<>
 													<Space w={12} />
 													<Image
@@ -171,76 +194,86 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 													</Text>
 												</>
 											)} */}
-										</div>
-										<div
-											style={{
-												width: '100%'
-											}}
-										>
-											<Space h={16} />
-											<Divider color={colorGrey} />
-										</div>
-										<div
-											className={clubsTheme.row}
-											style={{
-												height: 46
-											}}
-										>
-											<a onClick={() => {}}>
-												<div
-													className={clubsTheme.row}
-													style={{
-														cursor: 'pointer',
-														padding: 12
-													}}
-												>
-													<ExternalLink size={20} />
-													<Space w={4} />
-													<Text
-														className={
-															clubsTheme.tExtraSmall
-														}
-													>
-														Homepage
-													</Text>
-												</div>
-											</a>
-											<Space w={4} />
-											<Divider orientation="vertical" />
-											<Space w={4} />
-
-											<a
-												onClick={() => {
-													if (extension.Extension) {
-														navigateToExtensionSettings(
-															extension.Extension
-																?.slug ?? ''
-														)
-													}
+											</div>
+											<div
+												style={{
+													width: '100%'
 												}}
 											>
-												<div
-													className={clubsTheme.row}
-													style={{
-														cursor: 'pointer',
-														padding: 12
+												<Space h={16} />
+												<Divider color={colorGrey} />
+											</div>
+											<div
+												className={clubsTheme.row}
+												style={{
+													height: 46
+												}}
+											>
+												<a onClick={() => {}}>
+													<div
+														className={
+															clubsTheme.row
+														}
+														style={{
+															cursor: 'pointer',
+															padding: 12
+														}}
+													>
+														<ExternalLink
+															size={20}
+														/>
+														<Space w={4} />
+														<Text
+															className={
+																clubsTheme.tExtraSmall
+															}
+														>
+															Homepage
+														</Text>
+													</div>
+												</a>
+												<Space w={4} />
+												<Divider orientation="vertical" />
+												<Space w={4} />
+
+												<a
+													onClick={() => {
+														if (
+															extension.Extension
+														) {
+															navigateToExtensionSettings(
+																extension
+																	.Extension
+																	?.slug ?? ''
+															)
+														}
 													}}
 												>
-													<Settings size={20} />
-													<Space w={4} />
-													<Text
+													<div
 														className={
-															clubsTheme.tExtraSmall
+															clubsTheme.row
 														}
+														style={{
+															cursor: 'pointer',
+															padding: 12
+														}}
 													>
-														Settings
-													</Text>
-												</div>
-											</a>
+														<Settings size={20} />
+														<Space w={4} />
+														<Text
+															className={
+																clubsTheme.tExtraSmall
+															}
+														>
+															Settings
+														</Text>
+													</div>
+												</a>
+											</div>
 										</div>
-									</div>
-								</Grid.Col>
-							))}
+									</Grid.Col>
+								)
+							})}
 						</Grid>
 						<Space h={32} />
 					</>

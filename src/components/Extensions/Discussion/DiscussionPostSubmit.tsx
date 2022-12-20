@@ -144,8 +144,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 			if (!agreementExtension) {
 				showNotification({
 					title: 'Something went wrong!',
-					message: 'Please reload and try again'
+					message:
+						'Unable to find extension information. Please reload and try again'
 				})
+				setIsLoading(false)
 				return
 			}
 
@@ -155,8 +157,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 			if (!postTable) {
 				showNotification({
 					title: 'Something went wrong!',
-					message: 'Please reload and try again'
+					message:
+						'Unable to find Posts table. Please reload and try again'
 				})
+				setIsLoading(false)
 				return
 			}
 
