@@ -392,7 +392,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 				}}
 			>
 				<div className={clubsTheme.modalHeader}>
-					<Loader color="red" variant="oval" />
+					<Loader color="blue" variant="oval" />
 					<Space h={16} />
 					<Text
 						className={clubsTheme.tMediumBold}

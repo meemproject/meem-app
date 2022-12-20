@@ -382,7 +382,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 									>
 										<span
 											className={
-												clubsTheme.fOrangeSelectableSpan
+												clubsTheme.fBlueSelectableSpan
 											}
 										>
 											{membershipTypeString(requirement)}

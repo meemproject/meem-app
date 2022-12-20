@@ -95,7 +95,7 @@ export const MyClubsComponent: React.FC = () => {
 			{loading && (
 				<>
 					<Space h={16} />
-					<Loader variant="oval" color="red" />
+					<Loader variant="oval" color="blue" />
 				</>
 			)}
 			{clubs.length === 0 && !loading && (

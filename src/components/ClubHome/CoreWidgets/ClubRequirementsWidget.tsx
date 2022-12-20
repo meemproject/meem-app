@@ -131,7 +131,7 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({
 															title="Follow these
 														instructions to
 														apply:"
-															color="red"
+															color="blue"
 															radius="lg"
 														>
 															<Text

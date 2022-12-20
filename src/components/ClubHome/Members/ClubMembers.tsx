@@ -91,7 +91,7 @@ export const ClubMembersComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="red" variant="oval" />
+						<Loader color="blue" variant="oval" />
 					</Center>
 				</Container>
 			)}

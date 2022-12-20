@@ -479,7 +479,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							openMembershipReqModal(0)
 						}}
 					>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{membershipTypeStringForFirstReq(
 								membershipRequirements[0]
 							)}
@@ -499,7 +499,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								>
 									<span
 										className={
-											clubsTheme.fOrangeSelectableSpan
+											clubsTheme.fBlueSelectableSpan
 										}
 									>
 										{
@@ -521,7 +521,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								}}
 							>
 								<span
-									className={clubsTheme.fOrangeSelectableSpan}
+									className={clubsTheme.fBlueSelectableSpan}
 								>
 									{membershipRequirements[0].tokenMinQuantity}{' '}
 									{membershipRequirements[0].tokenName}
@@ -553,7 +553,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							}}
 						/>
 						{/* <a onClick={openSecondReqTypeModal}>
-							<span className={clubsTheme.fOrangeSelectableSpan}>
+							<span className={clubsTheme.fBlueSelectableSpan}>
 								{membershipRequirements[1].andor === MembershipReqAndor.And
 									? 'In addition'
 									: 'Alternatively'}
@@ -569,7 +569,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 								openMembershipReqModal(1)
 							}}
 						>
-							<span className={clubsTheme.fOrangeSelectableSpan}>
+							<span className={clubsTheme.fBlueSelectableSpan}>
 								{membershipTypeStringForSecondReq(
 									membershipRequirements[1]
 								)}
@@ -604,7 +604,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{isNaN(costToJoin) || costToJoin === 0
 								? 'free'
 								: costToJoin}
@@ -619,7 +619,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
 								<span
-									className={clubsTheme.fOrangeSelectableSpan}
+									className={clubsTheme.fBlueSelectableSpan}
 								>
 									{quickTruncate(membershipFundsAddress)}
 								</span>
@@ -637,7 +637,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{membershipQuantity === 0 ||
 							isNaN(membershipQuantity)
 								? 'unlimited'
@@ -655,7 +655,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 				>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{membershipStartDate === undefined
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
@@ -667,7 +667,7 @@ export const ClubCreationMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>{' '}
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{membershipEndDate === undefined
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${

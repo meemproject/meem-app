@@ -341,7 +341,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 				)}
 				{loading && (
 					<>
-						<Loader color="red" variant="oval" />
+						<Loader color="blue" variant="oval" />
 					</>
 				)}
 				{!loading && error && (
@@ -373,7 +373,7 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 					<Space h={16} />
 
 					<Center>
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					</Center>
 				</Modal>
 			</div>

@@ -32,7 +32,7 @@ export const ExampleExtensionHome: React.FC = () => {
 			{isLoadingClub && (
 				<>
 					<Center>
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					</Center>
 				</>
 			)}

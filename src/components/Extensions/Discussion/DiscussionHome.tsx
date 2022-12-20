@@ -139,7 +139,7 @@ export const DiscussionHome: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="red" variant="oval" />
+						<Loader color="blue" variant="oval" />
 					</Center>
 				</Container>
 			)}

@@ -182,7 +182,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		<>
 			{isLoadingPermissions && (
 				<div>
-					<Loader variant="oval" color="red" />
+					<Loader variant="oval" color="blue" />
 				</div>
 			)}
 

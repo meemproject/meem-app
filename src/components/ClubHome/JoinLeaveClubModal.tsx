@@ -35,7 +35,7 @@ export const JoinLeaveClubModal: React.FC<IProps> = ({
 				<div className={clubsTheme.modalHeader}>
 					<Space h={128} />
 
-					<Loader color="red" variant="oval" />
+					<Loader color="blue" variant="oval" />
 					<Space h={24} />
 					<Text
 						className={clubsTheme.tLargeBold}

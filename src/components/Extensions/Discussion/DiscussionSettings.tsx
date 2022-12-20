@@ -461,7 +461,7 @@ export const DiscussionSettings: React.FC = () => {
 				<>
 					<Space h={32} />
 					<Center>
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					</Center>
 				</>
 			)}

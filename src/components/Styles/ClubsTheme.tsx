@@ -12,7 +12,7 @@ export const colorLightGrey = '#F2F2F2'
 export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
 export const colorBlue = '#9ED3FD'
-export const colorLightBlue = '#e0eaff'
+export const colorLightBlue = '#f3faff'
 export const colorDarkBlue = '#6895f7'
 export const colorYellow = '#F9FF15'
 
@@ -73,7 +73,7 @@ export const useClubsTheme = createStyles(theme => ({
 		height: 60,
 		backgroundColor: theme.colorScheme === 'dark' ? '' : colorLightestGrey
 	},
-	fOrangeSelectableSpan: {
+	fBlueSelectableSpan: {
 		padding: 4,
 		borderRadius: 8,
 		fontWeight: 'bold',
@@ -81,7 +81,7 @@ export const useClubsTheme = createStyles(theme => ({
 			theme.colorScheme === 'dark'
 				? 'rgba(255, 102, 81, 0.3)'
 				: colorLightBlue,
-		color: colorBlue,
+		color: colorDarkBlue,
 		cursor: 'pointer'
 	},
 	fRichTextEditorContainer: {

@@ -319,7 +319,7 @@ export const CreateComponent: React.FC = () => {
 						</Button>
 					</div>
 				)}
-				{isLoadingImage && <Loader color="red" variant="oval" />}
+				{isLoadingImage && <Loader color="blue" variant="oval" />}
 				{!isLoadingImage && smallClubLogo.length > 0 && (
 					<div className={clubsTheme.imageClubLogoContainer}>
 						<Image
@@ -352,6 +352,7 @@ export const CreateComponent: React.FC = () => {
 				>
 					Continue
 				</Button>
+				<Space h={64} />
 			</Container>
 			<div id="emojiCanvas" className={clubsTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}

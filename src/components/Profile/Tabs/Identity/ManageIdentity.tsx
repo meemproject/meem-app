@@ -247,7 +247,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					</Button>
 				</div>
 			)}
-			{isLoadingImage && <Loader color="red" variant="oval" />}
+			{isLoadingImage && <Loader color="blue" variant="oval" />}
 			{!isLoadingImage && profilePicture.length > 0 && (
 				<div
 					style={{
@@ -391,7 +391,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					</Text>
 					<Space h={16} />
 					{isLoadingAvailableExtensions && (
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					)}
 					{filteredAvilableExtensions.length > 0 && (
 						<>

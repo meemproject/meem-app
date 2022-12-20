@@ -198,7 +198,7 @@ export const CAClubIcon: React.FC<IProps> = ({ club }) => {
 					</Button>
 				</div>
 			)}
-			{isLoadingImage && <Loader color="red" variant="oval" />}
+			{isLoadingImage && <Loader color="blue" variant="oval" />}
 			{!isLoadingImage && smallClubLogo.length > 0 && (
 				<div className={clubsTheme.imageClubLogoContainer}>
 					<Image

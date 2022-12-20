@@ -115,7 +115,7 @@ export const BrowseComponent: React.FC = () => {
 					<Container>
 						<Space h={60} />
 						<Center>
-							<Loader color="red" variant="oval" />
+							<Loader color="blue" variant="oval" />
 						</Center>
 					</Container>
 				)}

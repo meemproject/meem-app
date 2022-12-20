@@ -216,7 +216,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					Our club{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{isNaN(costToJoin) || costToJoin === 0
 								? 'free'
 								: costToJoin}
@@ -231,7 +231,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 							Funds will be sent to{' '}
 							<a onClick={openMembershipCostModal}>
 								<span
-									className={clubsTheme.fOrangeSelectableSpan}
+									className={clubsTheme.fBlueSelectableSpan}
 								>
 									{quickTruncate(membershipFundsAddress)}
 								</span>
@@ -249,7 +249,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				>
 					There are{' '}
 					<a onClick={openMembershipQuantityModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{membershipQuantity === 0 ||
 							isNaN(membershipQuantity)
 								? 'unlimited'
@@ -267,7 +267,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 				>
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{membershipStartDate === undefined
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
@@ -279,7 +279,7 @@ export const CAMembershipSettings: React.FC<IProps> = ({ club }) => {
 					</a>{' '}
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
-						<span className={clubsTheme.fOrangeSelectableSpan}>
+						<span className={clubsTheme.fBlueSelectableSpan}>
 							{membershipEndDate === undefined
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${

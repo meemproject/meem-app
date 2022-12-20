@@ -118,7 +118,14 @@ export function HeaderMenu() {
 			<div className={clubsTheme.siteHeaderInner}>
 				<div className={clubsTheme.siteHeaderLeftItems}>
 					<a onClick={navigateHome} className={clubsTheme.clickable}>
-						<Image src="/meem-logo.svg" height={20} />
+						<Image
+							src={
+								isDarkTheme
+									? '/meem-logo-white.svg'
+									: '/meem-logo.svg'
+							}
+							height={20}
+						/>
 					</a>
 				</div>
 
@@ -142,7 +149,7 @@ export function HeaderMenu() {
 										<Loader
 											style={{ marginTop: 4 }}
 											variant="oval"
-											color="red"
+											color="blue"
 											size={20}
 										/>
 									)}
@@ -195,7 +202,7 @@ export function HeaderMenu() {
 									onClick={async () => {
 										await disconnectWallet()
 									}}
-									color="red"
+									color="blue"
 									icon={<Logout size={14} />}
 								>
 									{isConnected ? 'Disconnect' : 'Sign Out'}

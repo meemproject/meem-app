@@ -98,7 +98,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					</Text>
 					<Space h={8} />
 
-					<Loader variant="oval" color="red" />
+					<Loader variant="oval" color="blue" />
 				</div>
 			</Modal>
 		</>
