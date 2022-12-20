@@ -7,7 +7,7 @@ import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import { Club, MembershipReqType } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
-import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorGreen, colorBlue, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 	onMeetsAllReqsChanged: (changed: boolean) => void
@@ -136,7 +136,7 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({
 														>
 															<Text
 																style={{
-																	color: colorPink
+																	color: colorBlue
 																}}
 															>
 																<Space h={4} />
@@ -331,7 +331,7 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({
 
 				<Space h={16} />
 				{parsedRequirements.length === 0 && (
-					<Loader variant="oval" color={colorPink} />
+					<Loader variant="oval" color={colorBlue} />
 				)}
 				{parsedRequirements.length > 0 && (
 					<>
@@ -350,7 +350,7 @@ export const ClubRequirementsWidget: React.FC<IProps> = ({
 									{!requirement.meetsRequirement && (
 										<CircleX
 											style={{ width: 24 }}
-											color={colorPink}
+											color={colorBlue}
 										/>
 									)}
 									<Space w={12} />

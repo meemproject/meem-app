@@ -1,4 +1,4 @@
-import { Button, Center, Divider, Space } from '@mantine/core'
+import { Button, Center, Space } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
@@ -15,26 +15,27 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 
 	return (
 		<div>
-			{club.isCurrentUserClubAdmin && (
-				<>
-					<Center>
-						<Button
-							className={clubsTheme.buttonGrey}
-							onClick={() => {
-								router.push({
-									pathname: `${club.slug}/admin`,
-									query: { tab: 'apps' }
-								})
-							}}
-						>
-							+ Add more apps
-						</Button>
-					</Center>
-					<Space h={32} />
-					<Divider />
-					<Space h={40} />
-				</>
-			)}
+			{club.isCurrentUserClubAdmin &&
+				club.extensions?.filter(
+					ext => ext.AgreementExtensionWidgets.length > 0
+				).length === 0 && (
+					<>
+						<Center>
+							<Button
+								className={clubsTheme.buttonGrey}
+								onClick={() => {
+									router.push({
+										pathname: `${club.slug}/admin`,
+										query: { tab: 'apps' }
+									})
+								}}
+							>
+								+ Add an extension
+							</Button>
+						</Center>
+						<Space h={32} />
+					</>
+				)}
 		</div>
 	)
 }

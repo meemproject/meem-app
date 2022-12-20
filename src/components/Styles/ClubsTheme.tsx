@@ -11,9 +11,10 @@ export const colorGrey = '#E1E1E1'
 export const colorLightGrey = '#F2F2F2'
 export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
-export const colorPink = '#FF6651'
-export const colorLightPink = '#FFF0EE'
-export const colorDarkPink = '#DC5745'
+export const colorBlue = '#9ED3FD'
+export const colorLightBlue = '#e0eaff'
+export const colorDarkBlue = '#6895f7'
+export const colorYellow = '#F9FF15'
 
 // Utility colors
 export const colorGreen = '#1DAD4E'
@@ -47,11 +48,11 @@ export const useClubsTheme = createStyles(theme => ({
 		color: colorWhite,
 		borderRadius: 24
 	},
-	buttonRed: {
-		color: colorWhite,
-		backgroundColor: colorPink,
+	buttonBlue: {
+		color: colorBlack,
+		backgroundColor: colorBlue,
 		'&:hover': {
-			backgroundColor: colorDarkPink
+			backgroundColor: colorDarkBlue
 		},
 		borderRadius: 24
 	},
@@ -79,8 +80,8 @@ export const useClubsTheme = createStyles(theme => ({
 		backgroundColor:
 			theme.colorScheme === 'dark'
 				? 'rgba(255, 102, 81, 0.3)'
-				: colorLightPink,
-		color: colorPink,
+				: colorLightBlue,
+		color: colorBlue,
 		cursor: 'pointer'
 	},
 	fRichTextEditorContainer: {
@@ -503,6 +504,26 @@ export const useClubsTheme = createStyles(theme => ({
 			}`
 		}
 	},
+	widgetMeem: {
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 16,
+		width: '100%',
+		background:
+			'linear-gradient(117deg, rgba(227,255,191,1) 0%, rgba(229,255,183,0.8477984943977591) 3%, rgba(247,254,113,0.8534007352941176) 31%, rgba(177,220,255,0.8505996148459384) 66%, rgba(133,139,33,0.4724483543417367) 100%)',
+		padding: 24,
+		marginBottom: 48,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			borderRadius: 0,
+			boxShadow: 'none',
+			marginBottom: 0,
+			borderBottom: `8px solid ${
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+			}`
+		}
+	},
 
 	// Images
 	copyIcon: {
@@ -658,7 +679,7 @@ export const useClubsTheme = createStyles(theme => ({
 	tLink: {
 		textDecoration: 'underline',
 		cursor: 'pointer',
-		color: colorPink,
+		color: colorBlue,
 		fontWeight: 600
 	},
 

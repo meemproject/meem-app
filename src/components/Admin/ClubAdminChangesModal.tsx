@@ -22,7 +22,7 @@ import {
 	MembershipRequirementToMeemPermission
 } from '../../model/club/club'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
+import { colorGreen, colorBlue, useClubsTheme } from '../Styles/ClubsTheme'
 
 interface IProps {
 	club?: Club
@@ -159,7 +159,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						radius: 'lg',
 						title: 'Error saving club settings',
 						message: `Please get in touch!`,
-						color: colorPink
+						color: colorBlue
 					})
 					closeModal()
 					return
@@ -170,7 +170,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 						radius: 'lg',
 						title: 'Oops!',
 						message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
-						color: colorPink
+						color: colorBlue
 					})
 					closeModal()
 					return
@@ -336,7 +336,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							title: 'Transaction limit exceeded',
 							message:
 								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
-							color: colorPink
+							color: colorBlue
 						})
 					} else {
 						showNotification({
@@ -344,7 +344,7 @@ export const ClubAdminChangesModal: React.FC<IProps> = ({
 							title: 'Error saving changes',
 							message:
 								'An error occurred while saving changes. Please try again.',
-							color: colorPink
+							color: colorBlue
 						})
 					}
 

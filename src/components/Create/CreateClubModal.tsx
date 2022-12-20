@@ -17,7 +17,7 @@ import {
 } from '../../model/club/club'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorPink, useClubsTheme } from '../Styles/ClubsTheme'
+import { colorGreen, colorBlue, useClubsTheme } from '../Styles/ClubsTheme'
 interface IProps {
 	membershipSettings?: MembershipSettings
 	isOpened: boolean
@@ -71,7 +71,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				radius: 'lg',
 				title: 'Error Fetching Data',
 				message: 'Please reload and try again.',
-				color: colorPink
+				color: colorBlue
 			})
 		}
 	}, [error])
@@ -121,7 +121,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				radius: 'lg',
 				title: 'Error Creating Club',
 				message: 'Please connect your wallet first.',
-				color: colorPink
+				color: colorBlue
 			})
 			closeModal()
 			setHasStartedCreating(false)
@@ -135,7 +135,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				title: 'Error Creating Club',
 				message:
 					'An error occurred while creating the club. Please try again.',
-				color: colorPink
+				color: colorBlue
 			})
 
 			closeModal()
@@ -192,7 +192,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					radius: 'lg',
 					title: 'Oops!',
 					message: `This club has invalid membership requirements. Please double-check your entries and try again.`,
-					color: colorPink
+					color: colorBlue
 				})
 				closeModal()
 				setHasStartedCreating(false)
@@ -266,7 +266,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 				title: 'Error Creating Club',
 				message:
 					'An error occurred while creating the club. Please try again.',
-				color: colorPink
+				color: colorBlue
 			})
 
 			closeModal()
@@ -315,7 +315,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					radius: 'lg',
 					title: 'Error Creating Club',
 					message: 'Please try again.',
-					color: colorPink
+					color: colorBlue
 				})
 			}
 		}

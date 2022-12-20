@@ -7,7 +7,7 @@ import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-import { colorGreen, colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorGreen, colorBlue, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -42,7 +42,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message: 'You must add at least one address.',
-				color: colorPink
+				color: colorBlue
 			})
 			setIsSavingChanges(false)
 			return
@@ -53,7 +53,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message: 'You can only airdrop to up to 15 addresses at once.',
-				color: colorPink
+				color: colorBlue
 			})
 			setIsSavingChanges(false)
 			return
@@ -87,7 +87,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 				title: 'Oops!',
 				message:
 					'One or more addresses are not valid. Double check what you entered and try again.',
-				color: colorPink
+				color: colorBlue
 			})
 			setIsSavingChanges(false)
 			return
@@ -128,7 +128,7 @@ export const CABulkMint: React.FC<IProps> = ({ club }) => {
 			showNotification({
 				title: 'Airdrop send failed.',
 				autoClose: 5000,
-				color: colorPink,
+				color: colorBlue,
 				icon: <AlertCircle />,
 				message: `Please try again or get in touch!`
 			})

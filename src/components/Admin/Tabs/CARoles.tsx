@@ -16,7 +16,7 @@ import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
 import {
 	colorBlack,
 	colorDarkerGrey,
-	colorPink,
+	colorBlue,
 	colorWhite,
 	useClubsTheme
 } from '../../Styles/ClubsTheme'
@@ -152,7 +152,7 @@ export const CARoles: React.FC<IProps> = ({ club }) => {
 													style={{
 														marginBottom: '-2px',
 														marginTop: '-2px',
-														color: colorPink
+														color: colorBlue
 													}}
 													className={
 														clubsTheme.tSmallBold

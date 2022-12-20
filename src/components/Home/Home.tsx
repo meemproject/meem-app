@@ -41,8 +41,8 @@ import ClubClubContext from '../ClubHome/ClubClubProvider'
 import { ClubsFAQModal } from '../Header/ClubsFAQModal'
 import {
 	colorDarkGrey,
-	colorLightPink,
-	colorPink,
+	colorLightBlue,
+	colorBlue,
 	useClubsTheme
 } from '../Styles/ClubsTheme'
 
@@ -195,7 +195,7 @@ export function HomeComponent() {
 					radius: 'lg',
 					title: 'Oops!',
 					message: `That club name is too long or short. Choose something else.`,
-					color: colorPink
+					color: colorBlue
 				})
 			} else {
 				router.push({
@@ -257,7 +257,7 @@ export function HomeComponent() {
 				style={{
 					backgroundColor: isDarkTheme
 						? colorDarkGrey
-						: colorLightPink
+						: colorLightBlue
 				}}
 			>
 				<Container
@@ -281,7 +281,7 @@ export function HomeComponent() {
 
 					<div
 						style={{
-							color: colorPink,
+							color: colorBlue,
 							fontWeight: 600,
 							marginTop: 6
 						}}

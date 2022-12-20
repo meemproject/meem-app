@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { Text, Center, Space, Divider } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
@@ -8,7 +10,7 @@ export const MeemFooter: React.FC = () => {
 
 	return (
 		<div>
-			<Space h={128} />
+			{/* <Space h={128} />
 			<div className={clubsTheme.pageFooterContainer}>
 				<Divider />
 				<div className={clubsTheme.pageFooterBackground}>
@@ -26,7 +28,7 @@ export const MeemFooter: React.FC = () => {
 						<Space h={32} />
 					</Center>
 				</div>
-			</div>
+			</div> */}
 		</div>
 	)
 }

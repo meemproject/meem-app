@@ -9,7 +9,7 @@ import router from 'next/router'
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Club } from '../../../model/club/club'
-import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -46,7 +46,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Error',
 					autoClose: 5000,
-					color: colorPink,
+					color: colorBlue,
 					icon: <AlertCircle />,
 					message: `Unable to delete this club. Please let us know!`
 				})

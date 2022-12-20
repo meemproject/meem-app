@@ -24,7 +24,7 @@ import {
 } from '../../../model/club/club'
 import { tokenFromContractAddress } from '../../../model/token/token'
 import ClubClubContext from '../../ClubHome/ClubClubProvider'
-import { colorPink, colorWhite, useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorBlue, colorWhite, useClubsTheme } from '../../Styles/ClubsTheme'
 import { ClubAdminChangesModal } from '../ClubAdminChangesModal'
 
 interface IProps {
@@ -401,7 +401,7 @@ export const CAMembershipRequirements: React.FC<IProps> = ({ club }) => {
 											width: 18,
 											height: 18,
 											cursor: 'pointer',
-											color: colorPink
+											color: colorBlue
 										}}
 									/>
 								</div>

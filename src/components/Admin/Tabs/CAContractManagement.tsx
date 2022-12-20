@@ -12,7 +12,7 @@ import { Check } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/clubs'
 import { Club, ClubAdminRole } from '../../../model/club/club'
-import { colorPink, useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../../Styles/ClubsTheme'
 
 interface IProps {
 	club: Club
@@ -287,7 +287,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 						} else {
 							showNotification({
 								title: 'Oops!',
-								color: colorPink,
+								color: colorBlue,
 								message: `There are no changes to save.`
 							})
 						}
@@ -338,7 +338,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 								log.crit(e)
 								showNotification({
 									title: 'Error Upgrading Club',
-									color: colorPink,
+									color: colorBlue,
 									message: `Something went wrong during the upgrade.`
 								})
 								setIsUpgradingClub(false)
@@ -436,7 +436,7 @@ export const CAContractAddress: React.FC<IProps> = ({ club }) => {
 								title: 'Wallet creation failed.',
 								message:
 									'We were unable to create treasury for your club. Please refresh the page and try again.',
-								color: colorPink
+								color: colorBlue
 							})
 						}
 					}}

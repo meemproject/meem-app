@@ -5,7 +5,7 @@ import { useSDK, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	extensionId?: string
@@ -52,7 +52,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Verification failed',
 					autoClose: 5000,
-					color: colorPink,
+					color: colorBlue,
 					icon: <AlertCircle />,
 					message: `Please try again or get in touch!`
 				})

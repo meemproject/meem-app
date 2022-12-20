@@ -2,6 +2,7 @@ import {
 	Header,
 	Text,
 	Menu,
+	Image,
 	UnstyledButton,
 	Group,
 	Avatar,
@@ -33,7 +34,7 @@ import {
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import ClubClubContext from '../ClubHome/ClubClubProvider'
-import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../Styles/ClubsTheme'
 import { ClubsFAQModal } from './ClubsFAQModal'
 
 export function HeaderMenu() {
@@ -117,7 +118,7 @@ export function HeaderMenu() {
 			<div className={clubsTheme.siteHeaderInner}>
 				<div className={clubsTheme.siteHeaderLeftItems}>
 					<a onClick={navigateHome}>
-						<Text className={clubsTheme.siteHeaderMainLogo}>♣</Text>
+						<Image src="/meem-logo.svg" />
 					</a>
 				</div>
 
@@ -208,7 +209,7 @@ export function HeaderMenu() {
 							style={{
 								marginBottom: 4,
 								marginRight: 16,
-								color: colorPink,
+								color: colorBlue,
 								cursor: 'pointer'
 							}}
 						>
@@ -326,7 +327,7 @@ export function HeaderMenu() {
 								onClick={handleShareFeedback}
 								className={clubsTheme.tExtraSmallBold}
 								style={{
-									color: colorPink,
+									color: colorBlue,
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}

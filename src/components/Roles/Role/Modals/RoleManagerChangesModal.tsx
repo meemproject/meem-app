@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Club, ClubMember, ClubRole } from '../../../../model/club/club'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	club?: Club
@@ -119,7 +119,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: colorPink,
+						color: colorBlue,
 						icon: <AlertCircle />,
 						message: `Unable to save role. Please let us know!`
 					})
@@ -149,7 +149,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: colorPink,
+						color: colorBlue,
 						icon: <AlertCircle />,
 						message: `Unable to save role. Please let us know!`
 					})

@@ -6,7 +6,7 @@ import type { UserIdentity } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../../../Styles/ClubsTheme'
 interface IProps {
 	userIdentity?: UserIdentity
 	isOpened: boolean
@@ -61,7 +61,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Oops!',
 				autoClose: 5000,
-				color: colorPink,
+				color: colorBlue,
 				icon: <AlertCircle />,
 				message: `Unable to save changes to this account.`
 			})

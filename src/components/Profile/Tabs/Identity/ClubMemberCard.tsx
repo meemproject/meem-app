@@ -11,7 +11,7 @@ import React from 'react'
 import { Check } from 'tabler-icons-react'
 import { ClubMember } from '../../../../model/club/club'
 import { quickTruncate } from '../../../../utils/truncated_wallet'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { colorBlue, useClubsTheme } from '../../../Styles/ClubsTheme'
 
 interface IProps {
 	member: ClubMember
@@ -181,8 +181,8 @@ export const ClubMemberCard: React.FC<IProps> = ({ member }) => {
 							<Badge
 								variant="gradient"
 								gradient={{
-									from: colorPink,
-									to: colorPink,
+									from: colorBlue,
+									to: colorBlue,
 									deg: 35
 								}}
 								classNames={{

@@ -5,6 +5,7 @@ import { ClubDiscussionWidget } from '../Extensions/Discussion/ClubDiscussionWid
 import { useClubsTheme } from '../Styles/ClubsTheme'
 import { useClub } from './ClubProvider'
 import { ClubAddAppsWidget } from './CoreWidgets/ClubAddAppsWidget'
+import { ClubBlankSlateWidget } from './CoreWidgets/ClubBlankSlateWidget'
 import { ClubExtensionLinksWidget } from './CoreWidgets/ClubExtensionLinksWidget'
 import { ClubInfoWidget } from './CoreWidgets/ClubInfoWidget'
 import { ClubMembersWidget } from './CoreWidgets/ClubMembersWidget'
@@ -97,6 +98,7 @@ export const ClubDetailComponent: React.FC = () => {
 
 								<ClubExtensionLinksWidget club={club} />
 								<ClubAddAppsWidget club={club} />
+								<ClubBlankSlateWidget club={club} />
 
 								<Space h={64} />
 							</div>
