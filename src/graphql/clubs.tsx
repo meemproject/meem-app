@@ -153,6 +153,7 @@ export const GET_CLUB = gql`
 				ExtensionId
 				metadata
 				id
+				isInitialized
 				Extension {
 					slug
 					id
@@ -231,6 +232,7 @@ export const GET_CLUB_AS_MEMBER = gql`
 				}
 				metadata
 				id
+				isInitialized
 				Extension {
 					slug
 					id
@@ -315,6 +317,7 @@ export const SUB_CLUB = gql`
 				}
 				metadata
 				id
+				isInitialized
 				Extension {
 					slug
 					id
@@ -408,6 +411,7 @@ export const SUB_CLUB_AS_MEMBER = gql`
 					visibility
 				}
 				metadata
+				isInitialized
 				Extension {
 					slug
 					id

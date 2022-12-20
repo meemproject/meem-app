@@ -211,6 +211,7 @@ export const CreateClubModal: React.FC<IProps> = ({
 					external_url: '',
 					application_instructions: applicationInstructions
 				},
+				shouldCreateAdminRole: true,
 				name: Cookies.get(CookieKeys.clubName) ?? '',
 				admins: membershipSettings.clubAdminsAtClubCreation,
 				minters: membershipSettings.clubAdminsAtClubCreation,
