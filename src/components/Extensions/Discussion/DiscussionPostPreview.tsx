@@ -10,26 +10,26 @@ import { DateTime } from 'luxon'
 import Link from 'next/link'
 import React from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
-import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
+import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import { useClub } from '../../ClubHome/ClubProvider'
-import { colorDarkerGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { colorDarkerGrey, useMeemTheme } from '../../Styles/AgreementsTheme'
 interface IProps {
 	post: DiscussionPost
 }
 
 export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
-	const { classes: clubsTheme } = useClubsTheme()
-	const { club } = useClub()
+	const { classes: meemTheme } = useMeemTheme()
+	const { agreement } = useAgreement()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
 	return (
-		<div className={clubsTheme.greyContentBox} style={{ marginBottom: 16 }}>
-			<Link href={`/${club?.slug}/e/discussion/${post.id}`}>
+		<div className={meemTheme.greyContentBox} style={{ marginBottom: 16 }}>
+			<Link href={`/${agreement?.slug}/e/discussion/${post.id}`}>
 				<a>
-					<div className={clubsTheme.row}>
+					<div className={meemTheme.row}>
 						<div>
 							<Center>
 								<ChevronUp />
@@ -44,7 +44,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 						</div>
 						<Space w={16} />
 						<div style={{ width: '100%' }}>
-							<div className={clubsTheme.row}>
+							<div className={meemTheme.row}>
 								{post.attachment && (
 									<>
 										<Image
@@ -57,12 +57,12 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									</>
 								)}
 								<div>
-									<Text className={clubsTheme.tSmallBold}>
+									<Text className={meemTheme.tSmallBold}>
 										{post.title}
 									</Text>
 									<Space h={8} />
 									<Text
-										className={clubsTheme.tExtraSmall}
+										className={meemTheme.tExtraSmall}
 										dangerouslySetInnerHTML={{
 											// TODO: Sanitize html. Possible XSS vulnerability
 											__html: post.body
@@ -86,7 +86,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 														deg: 35
 													}}
 													classNames={{
-														inner: clubsTheme.tBadgeTextSmall
+														inner: meemTheme.tBadgeTextSmall
 													}}
 													variant={'gradient'}
 												>
@@ -99,12 +99,12 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 							</div>
 
 							<Space h={20} />
-							<div className={clubsTheme.spacedRowCentered}>
-								<div className={clubsTheme.centeredRow}>
+							<div className={meemTheme.spacedRowCentered}>
+								<div className={meemTheme.centeredRow}>
 									<Image
 										src={
 											post.profilePicUrl ??
-											`/exampleclub.png`
+											`/exampleagreement.png`
 										}
 										height={32}
 										width={32}
@@ -114,7 +114,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									<div>
 										<Text
 											className={
-												clubsTheme.tExtraSmallBold
+												meemTheme.tExtraSmallBold
 											}
 										>
 											{post.displayName ??
@@ -124,7 +124,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 										</Text>
 										<Text
 											className={
-												clubsTheme.tExtraExtraSmall
+												meemTheme.tExtraExtraSmall
 											}
 										>
 											{DateTime.fromSeconds(
@@ -134,21 +134,21 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									</div>
 								</div>
 								<div
-									className={clubsTheme.row}
+									className={meemTheme.row}
 									style={{ marginTop: 16 }}
 								>
 									<Link
-										href={`/${post.clubSlug}/e/discussion/post1`}
+										href={`/${post.agreementSlug}/e/discussion/post1`}
 									>
 										<div
-											className={clubsTheme.centeredRow}
+											className={meemTheme.centeredRow}
 											style={{ cursor: 'pointer' }}
 										>
 											<Message width={20} height={20} />
 											<Space w={4} />
 											<Text
 												className={
-													clubsTheme.tExtraSmall
+													meemTheme.tExtraSmall
 												}
 											>
 												14
@@ -157,14 +157,12 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									</Link>
 									<Space w={16} />
 									<div
-										className={clubsTheme.centeredRow}
+										className={meemTheme.centeredRow}
 										style={{ cursor: 'pointer' }}
 									>
 										<Share width={20} height={20} />
 										<Space w={4} />
-										<Text
-											className={clubsTheme.tExtraSmall}
-										>
+										<Text className={meemTheme.tExtraSmall}>
 											Share
 										</Text>
 									</div>

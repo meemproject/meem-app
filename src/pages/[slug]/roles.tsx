@@ -4,74 +4,74 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { AgreementProvider } from '../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../components/App'
-import { ClubProvider } from '../../components/ClubHome/ClubProvider'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { RolesManager } from '../../components/Roles/RolesManager'
-import { GET_CLUB_INFO } from '../../graphql/clubs'
+import { GET_AGREEMENT_INFO } from '../../graphql/agreements'
 import { ssrGraphqlClient } from '../../utils/ssr_graphql'
-import { ClubPropViewModel } from '.'
+import { AgreementPropViewModel } from '.'
 
 interface IProps {
-	club: ClubPropViewModel
+	agreement: AgreementPropViewModel
 }
 
-const ClubRolesPage: NextPage<IProps> = ({ club }) => {
+const AgreementRolesPage: NextPage<IProps> = ({ agreement }) => {
 	const router = useRouter()
 
-	const clubSlug =
+	const agreementSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
 				<title>
-					{club === undefined || club.isError
+					{agreement === undefined || agreement.isError
 						? 'Not found'
-						: `${club.responseBody.Agreements[0].name} | Roles | Clubs`}
+						: `${agreement.responseBody.Agreements[0].name} | Roles | Agreements`}
 				</title>
 				<meta
 					name="title"
 					content={
-						club === undefined || club.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Roles | Clubs`
+							: `${agreement.responseBody.Agreements[0].name} | Roles | Agreements`
 					}
 				/>
 				<meta
 					name="description"
 					content={`Roles page for ${
-						club === undefined || club.isError
-							? 'an unknown club'
-							: club.responseBody.Agreements[0].name
+						agreement === undefined || agreement.isError
+							? 'an unknown agreement'
+							: agreement.responseBody.Agreements[0].name
 					}`}
 				/>
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content="https://clubs.link/" />
+				<meta property="og:url" content="https://app.meem.wtf/" />
 				<meta
 					property="og:title"
 					content={
-						club === undefined || club.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Roles | Clubs`
+							: `${agreement.responseBody.Agreements[0].name} | Roles | Agreements`
 					}
 				/>
 				<meta
 					property="og:description"
 					content={`Roles page for ${
-						club === undefined || club.isError
-							? 'an unknown club'
-							: club.responseBody.Agreements[0].name
+						agreement === undefined || agreement.isError
+							? 'an unknown agreement'
+							: agreement.responseBody.Agreements[0].name
 					}`}
 				/>
 				<meta property="twitter:card" content="summary_large_image" />
-				<meta property="twitter:url" content="https://clubs.link/" />
+				<meta property="twitter:url" content="https://app.meem.wtf/" />
 				<meta
 					property="twitter:title"
 					content={
-						club === undefined || club.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Roles | Clubs`
+							: `${agreement.responseBody.Agreements[0].name} | Roles | Agreements`
 					}
 				/>
 				<meta
@@ -99,9 +99,9 @@ const ClubRolesPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ClubProvider slug={clubSlug}>
+			<AgreementProvider slug={agreementSlug}>
 				<RolesManager />
-			</ClubProvider>
+			</AgreementProvider>
 
 			<MeemFooter />
 		</>
@@ -112,13 +112,13 @@ export const getServerSideProps: GetServerSideProps = async ({
 	params,
 	req
 }) => {
-	let club: ClubPropViewModel | undefined
+	let agreement: AgreementPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {
 		if (params?.slug) {
 			const { data, errors } = await client.query({
-				query: GET_CLUB_INFO,
+				query: GET_AGREEMENT_INFO,
 				variables: {
 					slug: params.slug,
 					chainId: hostnameToChainId(req.headers.host ?? '')
@@ -126,13 +126,13 @@ export const getServerSideProps: GetServerSideProps = async ({
 			})
 
 			if (data.Agreements.length === 0) {
-				club = {
+				agreement = {
 					isError: true,
-					description: 'This club does not exist. Yet.',
+					description: 'This agreement does not exist. Yet.',
 					responseBody: null
 				}
 			} else {
-				club = {
+				agreement = {
 					isError: false,
 					responseBody: data,
 					description: data.Agreements[0].metadata.description ?? ''
@@ -140,9 +140,9 @@ export const getServerSideProps: GetServerSideProps = async ({
 			}
 			return {
 				props: {
-					club,
+					agreement,
 					isError: !!errors,
-					description: 'There was an error fetching club data'
+					description: 'There was an error fetching agreement data'
 				}
 			}
 		}
@@ -150,17 +150,17 @@ export const getServerSideProps: GetServerSideProps = async ({
 		return { props: {} }
 	} catch (e) {
 		log.debug(e)
-		club = {
+		agreement = {
 			isError: true,
 			responseBody: null,
-			description: 'This club does not exist. Yet.'
+			description: 'This agreement does not exist. Yet.'
 		}
 		return {
 			props: {
-				club
+				agreement
 			}
 		}
 	}
 }
 
-export default ClubRolesPage
+export default AgreementRolesPage

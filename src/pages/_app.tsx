@@ -11,7 +11,7 @@ import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React, { useEffect } from 'react'
 import { App } from '../components/App'
-import { ClubClubProvider } from '../components/ClubHome/ClubClubProvider'
+import { AgreementAgreementProvider } from '../components/AgreementHome/AgreementAgreementProvider'
 import '@fontsource/inter'
 // import { CustomApolloProvider } from '../providers/ApolloProvider'
 
@@ -88,11 +88,11 @@ function MyApp(props: AppProps) {
 			>
 				<MeemProvider>
 					<NotificationsProvider>
-						<ClubClubProvider>
+						<AgreementAgreementProvider>
 							<App>
 								<Component {...pageProps} />
 							</App>
-						</ClubClubProvider>
+						</AgreementAgreementProvider>
 					</NotificationsProvider>
 				</MeemProvider>
 			</MantineProvider>

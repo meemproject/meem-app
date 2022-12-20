@@ -16,13 +16,12 @@ import html2canvas from 'html2canvas'
 import Cookies from 'js-cookie'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
-import ClubClubContext from '../ClubHome/ClubClubProvider'
-import { useClubsTheme } from '../Styles/ClubsTheme'
+import { useMeemTheme } from '../Styles/AgreementsTheme'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -30,60 +29,61 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export const CreateComponent: React.FC = () => {
 	const router = useRouter()
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
-	const clubclub = useContext(ClubClubContext)
-
-	const [clubName, setClubName] = useState(
-		router.query.clubname?.toString() ?? ''
+	const [agreementName, setAgreementName] = useState(
+		router.query.agreementname?.toString() ?? ''
 	)
 	const [defaultNamespace, setDefaultNamespace] = useState('')
-	const [clubNamespace, setClubNamespace] = useState('')
+	const [agreementNamespace, setAgreementNamespace] = useState('')
 
-	const [clubDescription, setClubDescription] = useState('')
+	const [agreementDescription, setAgreementDescription] = useState('')
 
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 	const { web3Provider, accounts, isConnected, connectWallet } = useWallet()
 
 	useEffect(() => {
-		if (clubName === undefined || clubName.length === 0) {
-			const cookieName = Cookies.get(CookieKeys.clubName)
+		if (agreementName === undefined || agreementName.length === 0) {
+			const cookieName = Cookies.get(CookieKeys.agreementName)
 
 			if (cookieName === undefined) {
 				showNotification({
 					radius: 'lg',
-					title: 'Unable to create this club.',
+					title: 'Unable to create this agreement.',
 					message: `Some data is missing. Try again!`,
 					autoClose: 5000
 				})
 				router.push({ pathname: '/' })
 			} else {
-				setClubName(cookieName)
+				setAgreementName(cookieName)
 				const name = cookieName.replaceAll(' ', '-').toLowerCase()
 				setDefaultNamespace(name)
-				setClubNamespace(name)
-				Cookies.remove(CookieKeys.clubName)
+				setAgreementNamespace(name)
+				Cookies.remove(CookieKeys.agreementName)
 			}
 		}
-	}, [accounts.length, clubName, router])
+	}, [accounts.length, agreementName, router])
 
 	useEffect(() => {
 		if (
-			clubNamespace.length === 0 &&
+			agreementNamespace.length === 0 &&
 			defaultNamespace.length === 0 &&
-			clubName !== undefined
+			agreementName !== undefined
 		) {
-			const name = clubName.toString().replaceAll(' ', '-').toLowerCase()
+			const name = agreementName
+				.toString()
+				.replaceAll(' ', '-')
+				.toLowerCase()
 			setDefaultNamespace(name)
-			setClubNamespace(name)
+			setAgreementNamespace(name)
 		}
-	}, [clubName, clubNamespace.length, defaultNamespace.length])
+	}, [agreementName, agreementNamespace.length, defaultNamespace.length])
 
-	// Club logo
-	const [smallClubLogo, setSmallClubLogo] = useState('')
+	// Agreement logo
+	const [smallAgreementLogo, setSmallAgreementLogo] = useState('')
 	const [
 		openFileSelector,
-		{ filesContent: clubLogo, loading: isLoadingImage }
+		{ filesContent: agreementLogo, loading: isLoadingImage }
 	] = useFilePicker({
 		readAs: 'DataURL',
 		accept: 'image/*',
@@ -128,12 +128,12 @@ export const CreateComponent: React.FC = () => {
 
 			const canvas = await html2canvas(element as HTMLElement)
 			const image = canvas.toDataURL('image/png', 1.0)
-			const clubLogoBlob = base64StringToBlob(
+			const agreementLogoBlob = base64StringToBlob(
 				image.split(',')[1],
 				'image/png'
 			)
-			const file = await resizeFile(clubLogoBlob)
-			setSmallClubLogo(file as string)
+			const file = await resizeFile(agreementLogoBlob)
+			setSmallAgreementLogo(file as string)
 		} else {
 			log.debug('no emojiCanvas found')
 		}
@@ -145,109 +145,104 @@ export const CreateComponent: React.FC = () => {
 
 	useEffect(() => {
 		const createResizedFile = async () => {
-			const clubLogoBlob = base64StringToBlob(
-				clubLogo[0].content.split(',')[1],
+			const agreementLogoBlob = base64StringToBlob(
+				agreementLogo[0].content.split(',')[1],
 				'image/png'
 			)
-			const file = await resizeFile(clubLogoBlob)
-			setSmallClubLogo(file as string)
+			const file = await resizeFile(agreementLogoBlob)
+			setSmallAgreementLogo(file as string)
 		}
-		if (clubLogo.length > 0) {
+		if (agreementLogo.length > 0) {
 			log.debug('Found an image...')
-			log.debug(clubLogo[0].content)
+			log.debug(agreementLogo[0].content)
 
 			createResizedFile()
 		} else {
-			// log.debug('no current club image')
+			// log.debug('no current agreement image')
 		}
-	}, [clubLogo, clubclub.isMember, router])
+	}, [agreementLogo, router])
 
 	const deleteImage = () => {
-		setSmallClubLogo('')
+		setSmallAgreementLogo('')
 	}
 
-	const createClub = async () => {
+	const createAgreement = async () => {
 		if (!web3Provider || !isConnected) {
 			await connectWallet()
 			return
 		}
 
 		// Some basic validation
-		if (!clubName || clubName.length < 3 || clubName.length > 30) {
-			// Club name invalid
+		if (
+			!agreementName ||
+			agreementName.length < 3 ||
+			agreementName.length > 30
+		) {
+			// Agreement name invalid
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'You entered an invalid club name. Please choose a longer or shorter name.'
+					'You entered an invalid agreement name. Please choose a longer or shorter name.'
 			})
 			return
-		}
-
-		if (clubDescription.length < 3 || clubDescription.length > 140) {
-			// Club name invalid
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'You entered an invalid club description. Please choose a longer or shorter description.'
-			})
-			return
-		}
-
-		if (smallClubLogo.length === 0) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'Please provide a club logo.'
-			})
 		}
 
 		if (
-			!clubclub.isMember &&
-			process.env.NEXT_PUBLIC_TEST_MODE !== 'true'
+			agreementDescription.length < 3 ||
+			agreementDescription.length > 140
 		) {
+			// Agreement name invalid
 			showNotification({
 				radius: 'lg',
-				title: 'No Club Club membership found.',
-				message: `Join Club Club to continue.`
+				title: 'Oops!',
+				message:
+					'You entered an invalid agreement description. Please choose a longer or shorter description.'
 			})
-			router.push({ pathname: '/' })
 			return
 		}
-		Cookies.set(CookieKeys.clubName, clubName ?? '')
-		Cookies.set(CookieKeys.clubImage, smallClubLogo)
-		Cookies.set(CookieKeys.clubDescription, clubDescription)
-		Cookies.set(CookieKeys.clubSlug, clubNamespace)
+
+		if (smallAgreementLogo.length === 0) {
+			showNotification({
+				radius: 'lg',
+				title: 'Oops!',
+				message: 'Please provide a agreement logo.'
+			})
+		}
+
+		Cookies.set(CookieKeys.agreementName, agreementName ?? '')
+		Cookies.set(CookieKeys.agreementImage, smallAgreementLogo)
+		Cookies.set(CookieKeys.agreementDescription, agreementDescription)
+		Cookies.set(CookieKeys.agreementSlug, agreementNamespace)
 		router.push({ pathname: `/create/permissions` })
 	}
 
 	return (
 		<>
-			<div className={clubsTheme.pageHeader}>
-				<div className={clubsTheme.centeredRow}>
+			<div className={meemTheme.pageHeader}>
+				<div className={meemTheme.centeredRow}>
 					<a onClick={navigateHome}>
 						<ArrowLeft
-							className={clubsTheme.pageHeaderExitButton}
+							className={meemTheme.pageHeaderExitButton}
 							size={32}
 						/>
 					</a>
 					<div>
-						<Text className={clubsTheme.tSmallBoldFaded}>
-							Create a club
+						<Text className={meemTheme.tSmallBoldFaded}>
+							Create a agreement
 						</Text>
-						<Text className={clubsTheme.tLargeBold}>
-							{clubName}
+						<Text className={meemTheme.tLargeBold}>
+							{agreementName}
 						</Text>
 					</div>
 				</div>
 			</div>
 
 			<Container>
-				{/* <Text className={clubsTheme.tMediumBold}>
-					{`Set your club's URL.`}
+				{/* <Text className={meemTheme.tMediumBold}>
+					{`Set your agreement's URL.`}
 				</Text>
-				<Text size="sm" className={classes.clubNamespaceHint}>
+				<Text size="sm" className={classes.agreementNamespaceHint}>
 					{'Lowercase letters, numbers and dashes are allowed.'}
 				</Text>
 				<div className={classes.namespaceTextInputContainer}>
@@ -255,21 +250,21 @@ export const CreateComponent: React.FC = () => {
 						classNames={{ input: classes.namespaceTextInput }}
 						radius="lg"
 						size="md"
-						value={clubNamespace ?? ''}
+						value={agreementNamespace ?? ''}
 						onChange={event => {
-							setClubNamespace(
+							setAgreementNamespace(
 								event.target.value.replaceAll(' ', '').toLowerCase()
 							)
 						}}
 					/>
 					<Text
 						className={classes.namespaceTextInputUrlPrefix}
-					>{`https://clubs.link/`}</Text>
+					>{`https://app.meem.wtf/`}</Text>
 				</div>
 
 				<Space h={'md'} /> */}
 				<Space h={32} />
-				<Text className={clubsTheme.tMediumBold}>
+				<Text className={meemTheme.tMediumBold}>
 					In a sentence, describe what your members do together.
 				</Text>
 				<Space h={16} />
@@ -282,29 +277,30 @@ export const CreateComponent: React.FC = () => {
 					maxRows={4}
 					maxLength={140}
 					onChange={event =>
-						setClubDescription(event.currentTarget.value)
+						setAgreementDescription(event.currentTarget.value)
 					}
 				/>
 
 				<Space h={40} />
-				<Text className={clubsTheme.tMediumBold}>
-					Upload an icon for your club.
+				<Text className={meemTheme.tMediumBold}>
+					Upload an icon for your agreement.
 				</Text>
 				<Space h={8} />
 				<Text
-					className={clubsTheme.tExtraSmallFaded}
+					className={meemTheme.tExtraSmallFaded}
 					style={{ maxWidth: 650 }}
 				>
-					This will be your club’s membership token. You can change it
-					anytime. Icons should be square and either JPG or PNG files.
-					Note that all uploads will be rendered at 24x24 px.
+					This will be your agreement’s membership token. You can
+					change it anytime. Icons should be square and either JPG or
+					PNG files. Note that all uploads will be rendered at 24x24
+					px.
 				</Text>
 				<Space h={16} />
-				{smallClubLogo.length === 0 && !isLoadingImage && (
-					<div className={clubsTheme.row}>
+				{smallAgreementLogo.length === 0 && !isLoadingImage && (
+					<div className={meemTheme.row}>
 						<Button
 							leftIcon={<Upload size={14} />}
-							className={clubsTheme.buttonWhite}
+							className={meemTheme.buttonWhite}
 							onClick={() => openFileSelector()}
 						>
 							Upload
@@ -312,7 +308,7 @@ export const CreateComponent: React.FC = () => {
 						<Space w={'xs'} />
 						<Button
 							leftIcon={<Text>😈</Text>}
-							className={clubsTheme.buttonWhite}
+							className={meemTheme.buttonWhite}
 							onClick={() => openEmojiPicker()}
 						>
 							Choose emoji
@@ -320,18 +316,20 @@ export const CreateComponent: React.FC = () => {
 					</div>
 				)}
 				{isLoadingImage && <Loader color="blue" variant="oval" />}
-				{!isLoadingImage && smallClubLogo.length > 0 && (
-					<div className={clubsTheme.imageClubLogoContainer}>
+				{!isLoadingImage && smallAgreementLogo.length > 0 && (
+					<div className={meemTheme.imageAgreementLogoContainer}>
 						<Image
-							className={clubsTheme.imageClubLogo}
-							src={smallClubLogo}
+							className={meemTheme.imageAgreementLogo}
+							src={smallAgreementLogo}
 							width={200}
 							height={200}
 							fit={'cover'}
 						/>
 						<a onClick={deleteImage}>
 							<Image
-								className={clubsTheme.imageClubLogoDeleteButton}
+								className={
+									meemTheme.imageAgreementLogoDeleteButton
+								}
 								src="delete.png"
 								width={24}
 								height={24}
@@ -339,22 +337,22 @@ export const CreateComponent: React.FC = () => {
 						</a>
 					</div>
 				)}
-				<Space h={smallClubLogo.length > 0 ? 148 : 40} />
+				<Space h={smallAgreementLogo.length > 0 ? 148 : 40} />
 				<Button
 					onClick={() => {
-						createClub()
+						createAgreement()
 					}}
 					disabled={
-						clubDescription.length === 0 ||
-						smallClubLogo.length === 0
+						agreementDescription.length === 0 ||
+						smallAgreementLogo.length === 0
 					}
-					className={clubsTheme.buttonBlack}
+					className={meemTheme.buttonBlack}
 				>
 					Continue
 				</Button>
 				<Space h={64} />
 			</Container>
-			<div id="emojiCanvas" className={clubsTheme.emojiCanvas}>
+			<div id="emojiCanvas" className={meemTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
 

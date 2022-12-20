@@ -7,23 +7,26 @@ import router from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
-import { Club, ClubRole } from '../../../../model/club/club'
-import { colorBlue, useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	Agreement,
+	AgreementRole
+} from '../../../../model/agreement/agreements'
+import { colorBlue, useMeemTheme } from '../../../Styles/AgreementsTheme'
 
 interface IProps {
 	isOpened: boolean
 	onModalClosed: () => void
-	role?: ClubRole
-	club?: Club
+	role?: AgreementRole
+	agreement?: Agreement
 }
 
 export const DeleteRoleModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
 	role,
-	club
+	agreement
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const { sdk } = useSDK()
@@ -32,7 +35,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const deleteRole = async () => {
-		if (role && club) {
+		if (role && agreement) {
 			setIsDeletingRole(true)
 
 			try {
@@ -72,7 +75,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				withCloseButton={!isDeletingRole}
 				opened={isOpened}
 				title={
-					<Text className={clubsTheme.tMediumBold}>Delete Role</Text>
+					<Text className={meemTheme.tMediumBold}>Delete Role</Text>
 				}
 				onClose={() => {
 					onModalClosed()
@@ -81,31 +84,31 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				<Divider />
 				<Space h={24} />
 				<Text
-					className={clubsTheme.tMediumBold}
+					className={meemTheme.tMediumBold}
 				>{`Deleting roles is coming soon.`}</Text>
 				<Space h={16} />
 
 				<Text
-					className={clubsTheme.tSmall}
+					className={meemTheme.tSmall}
 				>{`It's complicated. We're working on it!`}</Text>
 				<Space h={32} />
 				<Button
 					onClick={() => {
 						onModalClosed()
 					}}
-					className={clubsTheme.buttonGrey}
+					className={meemTheme.buttonGrey}
 				>
 					Close
 				</Button>
 
 				{/* <Text
-					className={clubsTheme.tMediumBold}
+					className={meemTheme.tMediumBold}
 				>{`Are you sure you want to delete this role?`}</Text>
 				<Space h={32} />
-				<div className={clubsTheme.row}>
+				<div className={meemTheme.row}>
 					<Button
 						loading={isDeletingRole}
-						className={clubsTheme.buttonBlack}
+						className={meemTheme.buttonBlack}
 						onClick={async () => {
 							deleteRole()
 						}}
@@ -119,7 +122,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={clubsTheme.buttonGrey}
+								className={meemTheme.buttonGrey}
 							>
 								Cancel
 							</Button>

@@ -13,14 +13,14 @@ import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
-import { useClub } from '../../ClubHome/ClubProvider'
-import { colorGreen, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { colorGreen, useMeemTheme } from '../../Styles/AgreementsTheme'
 
 export const ExampleExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const router = useRouter()
-	const { classes: clubsTheme } = useClubsTheme()
-	const { club, isLoadingClub, error } = useClub()
+	const { classes: meemTheme } = useMeemTheme()
+	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
 	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
@@ -42,7 +42,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 	const customExtensionSettings = () => (
 		<>
 			<Space h={32} />
-			<Text className={clubsTheme.tExtraSmallLabel}>CONFIGURATION</Text>
+			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
 			<Space h={16} />
 			This extension does not provide any additional settings.
 			<Space h={8} />
@@ -74,15 +74,15 @@ export const ExampleExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-	const navigateToClubHome = () => {
+	const navigateToAgreementHome = () => {
 		router.push({
-			pathname: `/${club?.slug}`
+			pathname: `/${agreement?.slug}`
 		})
 	}
 
 	const navigateToAllExtensions = () => {
 		router.push({
-			pathname: `/${club?.slug}/admin`,
+			pathname: `/${agreement?.slug}/admin`,
 			query: { tab: 'extensions' }
 		})
 	}
@@ -94,24 +94,24 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			{club && !club?.isCurrentUserClubAdmin && (
+			{agreement && !agreement?.isCurrentUserAgreementAdmin && (
 				<Container>
 					<Space h={120} />
 					<Center>
 						<Text>
 							Sorry, you do not have permission to view this page.
-							Contact the club owner for help.
+							Contact the agreement owner for help.
 						</Text>
 					</Center>
 				</Container>
 			)}
 
-			{club && club?.isCurrentUserClubAdmin && (
+			{agreement && agreement?.isCurrentUserAgreementAdmin && (
 				<div>
-					<div className={clubsTheme.pageHeader}>
-						<div className={clubsTheme.spacedRowCentered}>
+					<div className={meemTheme.pageHeader}>
+						<div className={meemTheme.spacedRowCentered}>
 							<ArrowLeft
-								className={clubsTheme.clickable}
+								className={meemTheme.clickable}
 								onClick={() => {
 									navigateToAllExtensions()
 								}}
@@ -121,37 +121,35 @@ export const ExampleExtensionSettings: React.FC = () => {
 								radius={8}
 								height={56}
 								width={56}
-								className={clubsTheme.imagePixelated}
-								src={club?.image}
+								className={meemTheme.imagePixelated}
+								src={agreement?.image}
 							/>
-							{/* <Text className={classes.headerClubName}>{clubName}</Text> */}
-							<div
-								className={clubsTheme.pageHeaderTitleContainer}
-							>
-								<Text className={clubsTheme.tLargeBold}>
-									{club.name}
+							{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
+							<div className={meemTheme.pageHeaderTitleContainer}>
+								<Text className={meemTheme.tLargeBold}>
+									{agreement.name}
 								</Text>
 								<Space h={8} />
-								<div className={clubsTheme.row}>
+								<div className={meemTheme.row}>
 									<Text
-										className={clubsTheme.tExtraSmallFaded}
-									>{`${window.location.origin}/${club.slug}`}</Text>
+										className={meemTheme.tExtraSmallFaded}
+									>{`${window.location.origin}/${agreement.slug}`}</Text>
 									<Image
-										className={clubsTheme.copyIcon}
+										className={meemTheme.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
 											navigator.clipboard.writeText(
-												`${window.location.origin}/${club.slug}`
+												`${window.location.origin}/${agreement.slug}`
 											)
 											showNotification({
 												radius: 'lg',
-												title: 'Club URL copied',
+												title: 'Agreement URL copied',
 												autoClose: 2000,
 												color: colorGreen,
 												icon: <Check />,
 
-												message: `This club's URL was copied to your clipboard.`
+												message: `This agreement's URL was copied to your clipboard.`
 											})
 										}}
 										width={20}
@@ -160,8 +158,8 @@ export const ExampleExtensionSettings: React.FC = () => {
 							</div>
 						</div>
 						<a
-							className={clubsTheme.pageHeaderExitButton}
-							onClick={navigateToClubHome}
+							className={meemTheme.pageHeaderExitButton}
+							onClick={navigateToAgreementHome}
 						>
 							<Image src="/delete.png" width={24} height={24} />
 						</a>
@@ -170,16 +168,16 @@ export const ExampleExtensionSettings: React.FC = () => {
 					<Container>
 						<Space h={16} />
 						<div
-							className={clubsTheme.spacedRow}
+							className={meemTheme.spacedRow}
 							style={{ marginBottom: 32 }}
 						>
 							<div>
-								<Text className={clubsTheme.tExtraSmallLabel}>
+								<Text className={meemTheme.tExtraSmallLabel}>
 									SETTINGS
 								</Text>
 								<Space h={4} />
-								<div className={clubsTheme.centeredRow}>
-									<Text className={clubsTheme.tLargeBold}>
+								<div className={meemTheme.centeredRow}>
+									<Text className={meemTheme.tLargeBold}>
 										{extensionName}
 									</Text>
 								</div>
@@ -190,20 +188,20 @@ export const ExampleExtensionSettings: React.FC = () => {
 								onClick={() => {
 									saveChanges()
 								}}
-								className={clubsTheme.buttonBlack}
+								className={meemTheme.buttonBlack}
 							>
 								Save Changes
 							</Button>
 						</div>
 						<Divider />
 						<Space h={32} />
-						<Text className={clubsTheme.tExtraSmallLabel}>
+						<Text className={meemTheme.tExtraSmallLabel}>
 							DISPLAY SETTINGS
 						</Text>
 
 						<div>
 							<Space h={16} />
-							<div className={clubsTheme.spacedRowCentered}>
+							<div className={meemTheme.spacedRowCentered}>
 								<Switch
 									color={'green'}
 									label={'Display dashboard widget'}
@@ -222,11 +220,11 @@ export const ExampleExtensionSettings: React.FC = () => {
 						</div>
 						<div>
 							<Space h={4} />
-							<div className={clubsTheme.spacedRowCentered}>
+							<div className={meemTheme.spacedRowCentered}>
 								<Switch
 									color={'green'}
 									label={
-										'Hide widget if viewer is not a club member'
+										'Hide widget if viewer is not a agreement member'
 									}
 									checked={isPrivateExtension}
 									onChange={value => {
@@ -246,7 +244,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 						<Button
 							disabled={isDisablingExtension}
 							loading={isDisablingExtension}
-							className={clubsTheme.buttonBlue}
+							className={meemTheme.buttonBlue}
 							onClick={disableExtension}
 						>
 							Disable extension
@@ -254,7 +252,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 						{customExtensionSettings()}
 						<Space h={32} />
-						<Text className={clubsTheme.tExtraSmallLabel}>
+						<Text className={meemTheme.tExtraSmallLabel}>
 							PERMISSIONS
 						</Text>
 						<Space h={16} />
@@ -267,14 +265,14 @@ export const ExampleExtensionSettings: React.FC = () => {
 							onClick={() => {
 								saveChanges()
 							}}
-							className={clubsTheme.buttonBlack}
+							className={meemTheme.buttonBlack}
 						>
 							Save Changes
 						</Button>
 					</Container>
 				</div>
 			)}
-			{isLoadingClub && (
+			{isLoadingAgreement && (
 				<>
 					<Space h={32} />
 					<Center>
@@ -282,11 +280,11 @@ export const ExampleExtensionSettings: React.FC = () => {
 					</Center>
 				</>
 			)}
-			{!isLoadingClub && error && (
+			{!isLoadingAgreement && error && (
 				<>
 					<Space h={32} />
 					<Center>
-						<Text className={clubsTheme.tSmall}>
+						<Text className={meemTheme.tSmall}>
 							{`Error loading ${extensionName} settings!`}
 						</Text>
 					</Center>

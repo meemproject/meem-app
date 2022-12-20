@@ -1,0 +1,209 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+import { useSubscription } from '@apollo/client'
+import {
+	Text,
+	Image,
+	Space,
+	Loader,
+	Grid,
+	Badge,
+	useMantineColorScheme
+} from '@mantine/core'
+import { useWallet, useMeemApollo } from '@meemproject/react'
+import { Group } from 'iconoir-react'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
+import {
+	Agreements,
+	MyAgreementsSubscriptionSubscription
+} from '../../../../generated/graphql'
+import { SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
+import {
+	Agreement,
+	agreementSummaryFromAgreement
+} from '../../../model/agreement/agreements'
+import { hostnameToChainId } from '../../App'
+import {
+	colorBlack,
+	colorDarkerGrey,
+	colorWhite,
+	useMeemTheme
+} from '../../Styles/AgreementsTheme'
+
+export const MyAgreementsComponent: React.FC = () => {
+	const { classes: meemTheme } = useMeemTheme()
+	const router = useRouter()
+	const wallet = useWallet()
+	const { userClient } = useMeemApollo()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
+
+	const {
+		loading,
+		data: agreementData,
+		error
+	} = useSubscription<MyAgreementsSubscriptionSubscription>(
+		SUB_MY_AGREEMENTS,
+		{
+			variables: {
+				chainId:
+					wallet.chainId ??
+					hostnameToChainId(
+						global.window ? global.window.location.host : ''
+					),
+				walletAddress:
+					wallet.accounts &&
+					wallet.accounts[0] &&
+					wallet.accounts[0].toLowerCase()
+			},
+			client: userClient
+		}
+	)
+
+	useEffect(() => {
+		if (
+			error?.graphQLErrors &&
+			error.graphQLErrors.length > 0 &&
+			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: `/profile?tab=myAgreements`
+				}
+			})
+		}
+	}, [error, router])
+
+	const navigateToCreate = () => {
+		router.push({ pathname: '/' })
+	}
+
+	const navigateToAgreement = (agreement: string) => {
+		router.push({ pathname: `/${agreement}` })
+	}
+
+	const agreements: Agreement[] = []
+
+	agreementData?.AgreementTokens.forEach(meem => {
+		const possibleAgreement = agreementSummaryFromAgreement(
+			meem.Agreement as Agreements
+		)
+
+		if (possibleAgreement.name) {
+			agreements.push(possibleAgreement)
+		}
+	})
+
+	return (
+		<>
+			{loading && (
+				<>
+					<Space h={16} />
+					<Loader variant="oval" color="blue" />
+				</>
+			)}
+			{agreements.length === 0 && !loading && (
+				<>
+					<Space h={16} />
+					<Text className={meemTheme.tMediumBold}>My Agreements</Text>
+					<Space h={32} />
+					<Text className={meemTheme.tMediumBold}>
+						{`You haven't joined any agreements!`}
+					</Text>
+					<Space h={16} />
+					<Text className={meemTheme.tLink}>
+						<a onClick={navigateToCreate}>Start a new one?</a>
+					</Text>
+				</>
+			)}
+			{agreements.length > 0 && !loading && (
+				<>
+					<Space h={12} />
+					<Text className={meemTheme.tLargeBold}>My Agreements</Text>
+					<Space h={32} />
+
+					<Grid style={{ maxWidth: 1000 }}>
+						{agreements.map(agreement => (
+							<Grid.Col
+								xs={6}
+								sm={6}
+								md={6}
+								lg={4}
+								xl={4}
+								key={agreement.address}
+							>
+								<div
+									key={agreement.address}
+									className={meemTheme.gridItem}
+									onClick={() => {
+										navigateToAgreement(
+											agreement.slug ?? ''
+										)
+									}}
+								>
+									<div className={meemTheme.row}>
+										<Image
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											src={agreement.image ?? ''}
+											width={40}
+											height={40}
+											radius={8}
+											fit={'cover'}
+										/>
+										<Space w="xs" />
+
+										<div className={meemTheme.tEllipsis}>
+											<Text
+												className={meemTheme.tEllipsis}
+											>
+												{agreement.name}
+											</Text>
+											<Space h={8} />
+											<div className={meemTheme.row}>
+												<Badge
+													gradient={{
+														from: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
+														to: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
+														deg: 35
+													}}
+													classNames={{
+														inner: meemTheme.tBadgeText
+													}}
+													variant={'gradient'}
+													leftSection={
+														<>
+															<Group
+																style={{
+																	color: isDarkTheme
+																		? colorWhite
+																		: colorBlack,
+																	marginTop: 5
+																}}
+															/>
+														</>
+													}
+												>
+													{agreement.memberCount}
+												</Badge>
+											</div>
+										</div>
+									</div>
+								</div>
+							</Grid.Col>
+						))}
+					</Grid>
+
+					<Space h={60} />
+				</>
+			)}
+		</>
+	)
+}
