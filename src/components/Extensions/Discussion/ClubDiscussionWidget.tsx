@@ -100,7 +100,7 @@ export const ClubDiscussionWidget: React.FC<IProps> = ({ club }) => {
 					</div>
 					<div className={clubsTheme.centeredRow}>
 						<Button
-							className={clubsTheme.buttonRed}
+							className={clubsTheme.buttonBlue}
 							onClick={() => {
 								router.push({
 									pathname: `/${club.slug}/e/discussion`

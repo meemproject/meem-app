@@ -81,7 +81,7 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 						onClick={() => {
 							router.push({ pathname: `/${club.slug}/members` })
 						}}
-						className={clubsTheme.buttonRed}
+						className={clubsTheme.buttonBlue}
 					>
 						View All
 					</Button>
@@ -150,6 +150,8 @@ export const ClubMembersWidget: React.FC<IProps> = ({ club }) => {
 													>
 														{member.displayName
 															? member.displayName
+															: member.isMeemApi
+															? 'Meem API'
 															: member.isClubOwner
 															? 'Club Owner'
 															: member.isClubAdmin

@@ -32,7 +32,7 @@ export const CADeleteClub: React.FC<IProps> = ({ club }) => {
 			<Space h={24} />
 
 			<Button
-				className={clubsTheme.buttonRed}
+				className={clubsTheme.buttonBlue}
 				onClick={() => {
 					setIsDeleteClubModalOpened(true)
 				}}

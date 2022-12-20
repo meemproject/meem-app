@@ -22,6 +22,7 @@ export const ClubBlankSlateWidget: React.FC<IProps> = ({ club }) => {
 		<div>
 			{shouldShowBlankSlate && (
 				<>
+					<Space h={24} />
 					<>
 						{club?.isCurrentUserClubAdmin && (
 							<div className={clubsTheme.widgetMeem}>

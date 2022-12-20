@@ -18,7 +18,7 @@ export const ClubAddAppsWidget: React.FC<IProps> = ({ club }) => {
 			{club.isCurrentUserClubAdmin &&
 				club.extensions?.filter(
 					ext => ext.AgreementExtensionWidgets.length > 0
-				).length === 0 && (
+				).length !== 0 && (
 					<>
 						<Center>
 							<Button

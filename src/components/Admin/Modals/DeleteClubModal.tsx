@@ -79,7 +79,7 @@ export const DeleteClubModal: React.FC<IProps> = ({
 				<Space h={32} />
 				<Button
 					loading={isDeletingClub}
-					className={clubsTheme.buttonRed}
+					className={clubsTheme.buttonBlue}
 					onClick={async () => {
 						deleteClub()
 					}}

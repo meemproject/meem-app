@@ -80,6 +80,7 @@ export interface ClubMember {
 	roles?: ClubRole[]
 	isClubOwner?: boolean
 	isClubAdmin?: boolean
+	isMeemApi?: boolean
 
 	// Convenience bool for roles
 	chosen?: boolean
@@ -402,6 +403,13 @@ export default async function clubFromAgreement(
 						// Is this member the club owner?
 						let isMemberTheClubOwner = false
 
+						// Is this member the Meem API wallet?
+						const meemApiWallet =
+							process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
+						const isMemberMeemAPI: boolean =
+							agreementToken.Wallet?.address.toLowerCase() ===
+							meemApiWallet
+
 						if (!hasAlreadyBeenAdded) {
 							// Is this the current user?
 							const isCurrentUser =
@@ -419,12 +427,11 @@ export default async function clubFromAgreement(
 								membershipToken = agreementToken.tokenId
 
 								log.debug(
-									`meem ownerId ${agreementToken.Wallet.id}`
+									`meem ownerId ${agreementToken.OwnerId}`
 								)
-								log.debug(`club ownerId ${clubData.Wallet?.id}`)
+								log.debug(`club ownerId ${clubData.OwnerId}`)
 								isClubOwner =
-									agreementToken.Wallet.id ===
-									clubData.Wallet?.id
+									agreementToken.OwnerId === clubData.OwnerId
 
 								// Is the current user an admin?
 								if (memberAgreementWallet) {
@@ -456,7 +463,16 @@ export default async function clubFromAgreement(
 
 							// Is this member the club owner?
 							isMemberTheClubOwner =
-								agreementToken.Wallet.id === clubData.Wallet?.id
+								agreementToken.OwnerId === clubData.OwnerId
+
+							// Check to see if the club is controlled by the meem api
+							if (
+								agreementToken.Wallet?.address.toLowerCase() ===
+								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
+							) {
+								isClubControlledByMeemApi = true
+								log.debug(`Club is controlled by meem API`)
+							}
 
 							// Roles + permissions logic
 							let memberRoles: ClubRole[] = []
@@ -465,20 +481,6 @@ export default async function clubFromAgreement(
 								memberRoles = agreementRolesToClubRoles(
 									agreementToken.Agreement?.AgreementRoles
 								)
-
-								// Check to see if the club is controlled by the meem api
-								memberRoles.forEach(role => {
-									if (
-										role.isAdminRole &&
-										agreementToken.Wallet?.address.toLowerCase() ===
-											process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
-									) {
-										isClubControlledByMeemApi = true
-										log.debug(
-											`Club is controlled by meem API`
-										)
-									}
-								})
 
 								// Set the current user's available permissions, if they exist
 								// agreementToken.Agreement.AgreementRoles.forEach(
@@ -540,7 +542,8 @@ export default async function clubFromAgreement(
 								discordUserId,
 								emailAddress,
 								isClubOwner: isMemberTheClubOwner,
-								isClubAdmin: isMemberAnAdmin
+								isClubAdmin: isMemberAnAdmin,
+								isMeemApi: isMemberMeemAPI
 							}
 
 							// Add to members
