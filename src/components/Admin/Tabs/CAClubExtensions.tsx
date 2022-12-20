@@ -95,6 +95,10 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 		router.push(`/${club.slug}/e/${slug}/settings`)
 	}
 
+	const navigateToExtensionHome = (slug: string) => {
+		router.push(`/${club.slug}/e/${slug}`)
+	}
+
 	return (
 		<>
 			<div>
@@ -186,7 +190,16 @@ export const CAClubExtensions: React.FC<IProps> = ({ club }) => {
 												height: 46
 											}}
 										>
-											<a onClick={() => {}}>
+											<a
+												onClick={() => {
+													if (extension.Extension) {
+														navigateToExtensionHome(
+															extension.Extension
+																?.slug ?? ''
+														)
+													}
+												}}
+											>
 												<div
 													className={clubsTheme.row}
 													style={{
