@@ -14,25 +14,25 @@ import { useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
-import { Club } from '../../../model/club/club'
-import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
-import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
-import { useClub } from '../../ClubHome/ClubProvider'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { Agreement } from '../../../model/agreement/agreements'
+import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
+import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { useMeemTheme } from '../../Styles/AgreementsTheme'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
 export function rowToDiscussionPost(options: {
 	row: {
 		[columnName: string]: any
 	}
-	club?: Club
+	agreement?: Agreement
 }): DiscussionPost {
-	const { row, club } = options
+	const { row, agreement } = options
 	return {
 		id: row.id,
 		title: row.data.title,
 		tags: row.data.tags,
-		clubSlug: club?.slug ?? '',
+		agreementSlug: agreement?.slug ?? '',
 		body: row.data.body,
 		userId: row.data.userId,
 		displayName: row.data.displayName ?? row.data.ens,
@@ -48,12 +48,12 @@ export function rowToDiscussionComment(options: {
 	row: {
 		[columnName: string]: any
 	}
-	club?: Club
+	agreement?: Agreement
 }): DiscussionComment {
-	const { row, club } = options
+	const { row, agreement } = options
 	return {
 		id: row.id,
-		clubSlug: club?.slug ?? '',
+		agreementSlug: agreement?.slug ?? '',
 		body: row.data.body,
 		userId: row.data.userId,
 		displayName: row.data.displayName ?? row.data.ens,
@@ -65,7 +65,7 @@ export function rowToDiscussionComment(options: {
 }
 
 export const DiscussionHome: React.FC = () => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const [hasFetchdData, setHasFetchedData] = useState(false)
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
@@ -73,24 +73,24 @@ export const DiscussionHome: React.FC = () => {
 	const { sdk } = useSDK()
 	const { chainId } = useAuth()
 
-	const { club, isLoadingClub, error } = useClub()
+	const { agreement, isLoadingAgreement, error } = useAgreement()
 
 	// const posts: DiscussionPost[] = [
 	// 	{
 	// 		id: '1',
 	// 		title: 'Test post one',
 	// 		tags: ['funny', 'crazy'],
-	// 		clubSlug: club?.slug ?? '',
+	// 		agreementSlug: agreement?.slug ?? '',
 	// 		content: 'This is just a small test post.',
-	// 		user: club && club.members ? club.members[0] : { wallet: '' }
+	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
 	// 	},
 	// 	{
 	// 		id: '2',
 	// 		title: 'Test post two',
 	// 		tags: ['funny', 'crazy'],
-	// 		clubSlug: club?.slug ?? '',
+	// 		agreementSlug: agreement?.slug ?? '',
 	// 		content: 'And another test post',
-	// 		user: club && club.members ? club.members[0] : { wallet: '' }
+	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
 	// 	}
 	// ]
 
@@ -100,9 +100,10 @@ export const DiscussionHome: React.FC = () => {
 				return
 			}
 
-			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
-				ae => ae.Extension?.slug === 'discussion'
-			)
+			const agreementExtension =
+				agreement?.rawAgreement?.AgreementExtensions.find(
+					ae => ae.Extension?.slug === 'discussion'
+				)
 
 			if (
 				agreementExtension &&
@@ -121,7 +122,7 @@ export const DiscussionHome: React.FC = () => {
 				})
 
 				const newPosts: DiscussionPost[] = rows.map(row =>
-					rowToDiscussionPost({ row, club })
+					rowToDiscussionPost({ row, agreement })
 				)
 
 				setPosts(newPosts)
@@ -131,72 +132,72 @@ export const DiscussionHome: React.FC = () => {
 		}
 
 		fetchData()
-	}, [hasFetchdData, club, chainId, sdk])
+	}, [hasFetchdData, agreement, chainId, sdk])
 
 	return (
 		<>
-			{isLoadingClub && (
+			{isLoadingAgreement && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="red" variant="oval" />
+						<Loader color="blue" variant="oval" />
 					</Center>
 				</Container>
 			)}
-			{!isLoadingClub && !error && !club?.name && (
+			{!isLoadingAgreement && !error && !agreement?.name && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that club does not exist!</Text>
+						<Text>Sorry, that agreement does not exist!</Text>
 					</Center>
 				</Container>
 			)}
-			{!isLoadingClub && error && (
+			{!isLoadingAgreement && error && (
 				<Container>
 					<Space h={120} />
 					<Center>
 						<Text>
-							There was an error loading this club. Please let us
-							know!
+							There was an error loading this agreement. Please
+							let us know!
 						</Text>
 					</Center>
 				</Container>
 			)}
-			{!isLoadingClub && club?.name && (
+			{!isLoadingAgreement && agreement?.name && (
 				<>
 					<Container>
 						<Space h={48} />
 
 						<Center>
 							<Image
-								className={clubsTheme.imagePixelated}
+								className={meemTheme.imagePixelated}
 								height={100}
 								width={100}
-								src={club.image}
+								src={agreement.image}
 							/>
 						</Center>
 
 						<Space h={24} />
 						<Center>
-							<Text className={clubsTheme.tLargeBold}>
-								{club.name}
+							<Text className={meemTheme.tLargeBold}>
+								{agreement.name}
 							</Text>
 						</Center>
 						<Space h={8} />
 
 						<Center>
-							<Text className={clubsTheme.tMedium}>
-								{club.description}
+							<Text className={meemTheme.tMedium}>
+								{agreement.description}
 							</Text>
 						</Center>
 						<Space h={24} />
 
 						<Center>
 							<Button
-								className={clubsTheme.buttonBlack}
+								className={meemTheme.buttonBlack}
 								onClick={() => {
 									router.push({
-										pathname: `/${club.slug}/e/discussion/submit`
+										pathname: `/${agreement.slug}/e/discussion/submit`
 									})
 								}}
 							>
@@ -204,15 +205,15 @@ export const DiscussionHome: React.FC = () => {
 							</Button>
 						</Center>
 						<Space h={48} />
-						<div className={clubsTheme.centeredRow}>
+						<div className={meemTheme.centeredRow}>
 							<TextInput
 								radius={20}
 								classNames={{
-									input: clubsTheme.fTextField
+									input: meemTheme.fTextField
 								}}
 								icon={<Search />}
 								placeholder={'Search discussions'}
-								className={clubsTheme.fullWidth}
+								className={meemTheme.fullWidth}
 								size={'lg'}
 								onChange={event => {
 									log.debug(event.target.value)
@@ -220,7 +221,7 @@ export const DiscussionHome: React.FC = () => {
 								}}
 							/>
 							<Space w={16} />
-							<Button className={clubsTheme.buttonBlack}>
+							<Button className={meemTheme.buttonBlack}>
 								Sort
 							</Button>
 						</div>

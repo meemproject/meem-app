@@ -2,19 +2,22 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { useWallet } from '@meemproject/react'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { useSDK, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
-import { Club, ClubMember, ClubRole } from '../../../../model/club/club'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	Agreement,
+	AgreementMember,
+	AgreementRole
+} from '../../../../model/agreement/agreements'
+import { colorBlue, useMeemTheme } from '../../../Styles/AgreementsTheme'
 
 interface IProps {
-	club?: Club
+	agreement?: Agreement
 	isExistingRole?: boolean
-	role?: ClubRole
-	roleMembers?: ClubMember[]
+	role?: AgreementRole
+	roleMembers?: AgreementMember[]
 	roleName?: string
 	isOpened: boolean
 	onModalClosed: () => void
@@ -23,7 +26,7 @@ interface IProps {
 export const RoleManagerChangesModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
-	club,
+	agreement,
 	role,
 	isExistingRole,
 	roleMembers
@@ -32,16 +35,19 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 
 	const router = useRouter()
 
-	const { classes: clubsTheme } = useClubsTheme()
+	const { sdk } = useSDK()
+
+	const { classes: meemTheme } = useMeemTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [currentClubDataString, setCurrentClubDataString] = useState('')
+	const [currentAgreementDataString, setCurrentAgreementDataString] =
+		useState('')
 
 	const closeModal = useCallback(() => {
 		onModalClosed()
 		setIsSavingChanges(false)
-		setCurrentClubDataString('')
+		setCurrentAgreementDataString('')
 	}, [onModalClosed])
 
 	useEffect(() => {
@@ -56,10 +62,10 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				icon: <Check color="green" />,
 				message: `This role has been saved. Please wait...`
 			})
-			if (club) {
+			if (agreement) {
 				if (router.query.createRole) {
 					router.push({
-						pathname: `/${club.slug}/admin`,
+						pathname: `/${agreement.slug}/admin`,
 						query: { tab: 'roles' }
 					})
 				} else {
@@ -69,8 +75,8 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		}
 
 		async function saveRoleChanges() {
-			if (!wallet.web3Provider || !club) {
-				log.debug('no web3provider or club')
+			if (!wallet.web3Provider || !agreement) {
+				log.debug('no web3provider or agreement')
 				return
 			}
 
@@ -98,40 +104,19 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			if (isExistingRole) {
 				// Save the updates to the existing role
 				try {
-					const updateRoleFetcher = makeFetcher<
-						MeemAPI.v1.UpdateAgreementRole.IQueryParams,
-						MeemAPI.v1.UpdateAgreementRole.IRequestBody,
-						MeemAPI.v1.UpdateAgreementRole.IResponseBody
-					>({
-						method: MeemAPI.v1.UpdateAgreementRole.method
-					})
-
-					log.debug(
-						`path: ${MeemAPI.v1.UpdateAgreementRole.path({
-							agreementId: club.id ?? '',
-							agreementRoleId: role.id ?? ''
-						})}`
-					)
-
-					log.debug(
-						`data: ${JSON.stringify({
+					await sdk.agreement.reInitializeAgreementRole({
+						agreementId: agreement?.id ?? '',
+						agreementRoleId: role?.id,
+						name: role.name,
+						metadata: {
+							meem_metadata_type: 'Meem_AgreementContract',
+							meem_metadata_version: '20221116',
 							permissions: permissionsArray,
-							members: membersArray
-						})}`
-					)
-
-					await updateRoleFetcher(
-						MeemAPI.v1.UpdateAgreementRole.path({
-							agreementId: club.id ?? '',
-							agreementRoleId: role.id ?? ''
-						}),
-						undefined,
-						{
-							name: role.name,
-							permissions: permissionsArray,
-							members: membersArray
+							members: membersArray,
+							isTokenBasedRole: true,
+							isTokenTransferrable: role.isTransferrable ?? false
 						}
-					)
+					})
 
 					onRoleChangesSaved()
 				} catch (e) {
@@ -139,7 +124,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: colorPink,
+						color: colorBlue,
 						icon: <AlertCircle />,
 						message: `Unable to save role. Please let us know!`
 					})
@@ -149,28 +134,19 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			} else {
 				// Create a new role
 				try {
-					// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-					const saveRoleFetcher = makeFetcher<
-						MeemAPI.v1.CreateAgreementRole.IQueryParams,
-						MeemAPI.v1.CreateAgreementRole.IRequestBody,
-						MeemAPI.v1.CreateAgreementRole.IResponseBody
-					>({
-						method: MeemAPI.v1.CreateAgreementRole.method
+					await sdk.agreement.createAgreementRole({
+						name: role.name,
+						metadata: {
+							meem_metadata_type: 'Meem_AgreementContract',
+							meem_metadata_version: '20221116',
+							permissions: permissionsArray,
+							members: membersArray,
+							isTokenBasedRole: true,
+							isTokenTransferrable: role.isTransferrable ?? false
+						},
+						maxSupply: '0',
+						agreementId: agreement.id ?? ''
 					})
-
-					// await saveRoleFetcher(
-					// 	MeemAPI.v1.CreateAgreementRole.path({
-					// 		agreementId: club.id ?? ''
-					// 	}),
-					// 	undefined,
-					// 	{
-					// 		name: role.name,
-					// 		permissions: permissionsArray,
-					// 		members: membersArray,
-					// 		isTokenBasedRole: true,
-					// 		isTokenTransferrable: role.isTransferrable ?? false
-					// 	}
-					// )
 
 					onRoleChangesSaved()
 				} catch (e) {
@@ -178,7 +154,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					showNotification({
 						title: 'Error',
 						autoClose: 5000,
-						color: colorPink,
+						color: colorBlue,
 						icon: <AlertCircle />,
 						message: `Unable to save role. Please let us know!`
 					})
@@ -195,15 +171,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 	}, [
 		closeModal,
 		isSavingChanges,
-		club,
-		currentClubDataString,
+		agreement,
+		currentAgreementDataString,
 		isOpened,
 		onModalClosed,
 		wallet,
 		role,
 		isExistingRole,
 		roleMembers,
-		router
+		router,
+		sdk.agreement
 	])
 
 	return (
@@ -220,18 +197,18 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<div className={clubsTheme.modalHeader}>
+				<div className={meemTheme.modalHeader}>
 					<Space h={128} />
 
-					<Loader color="red" variant="oval" />
+					<Loader color="blue" variant="oval" />
 					<Space h={24} />
 					<Text
-						className={clubsTheme.tLargeBold}
+						className={meemTheme.tLargeBold}
 					>{`There's magic happening on the blockchain.`}</Text>
 					<Space h={24} />
 
 					<Text
-						className={clubsTheme.tMediumBold}
+						className={meemTheme.tMediumBold}
 						styles={{ textAlign: 'center' }}
 					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
 				</div>

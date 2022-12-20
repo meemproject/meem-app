@@ -17,33 +17,36 @@ import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { ArrowLeft } from 'tabler-icons-react'
-import { AllClubsQuery, Agreements } from '../../../generated/graphql'
-import { GET_ALL_CLUBS } from '../../graphql/clubs'
-import { Club, clubSummaryFromAgreement } from '../../model/club/club'
+import { AllAgreementsQuery, Agreements } from '../../../generated/graphql'
+import { GET_ALL_AGREEMENTS } from '../../graphql/agreements'
+import {
+	Agreement,
+	agreementSummaryFromAgreement
+} from '../../model/agreement/agreements'
 import { hostnameToChainId } from '../App'
 import {
 	colorBlack,
 	colorDarkerGrey,
 	colorWhite,
-	useClubsTheme
-} from '../Styles/ClubsTheme'
+	useMeemTheme
+} from '../Styles/AgreementsTheme'
 
 export const BrowseComponent: React.FC = () => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const { chainId } = useWallet()
 	const limit = 20
 	const [page, setPage] = useState(0)
 
-	const [clubs] = useState<Club[]>([])
+	const [agreements] = useState<Agreement[]>([])
 
 	const { anonClient } = useMeemApollo()
 
 	const {
 		loading,
 		error,
-		data: clubData
-	} = useQuery<AllClubsQuery>(GET_ALL_CLUBS, {
+		data: agreementData
+	} = useQuery<AllAgreementsQuery>(GET_ALL_AGREEMENTS, {
 		variables: {
 			chainId:
 				chainId ??
@@ -64,58 +67,60 @@ export const BrowseComponent: React.FC = () => {
 		router.push({ pathname: '/' })
 	}
 
-	const navigateToClub = (club: string) => {
-		router.push({ pathname: `/${club}` })
+	const navigateToAgreement = (agreement: string) => {
+		router.push({ pathname: `/${agreement}` })
 	}
 
-	clubData?.Agreements.forEach(meem => {
-		const possibleClub = clubSummaryFromAgreement(meem as Agreements)
+	agreementData?.Agreements.forEach(meem => {
+		const possibleAgreement = agreementSummaryFromAgreement(
+			meem as Agreements
+		)
 
-		if (possibleClub.name) {
-			let doesClubExist = false
-			clubs.forEach(club => {
-				if (possibleClub.slug === club.slug) {
-					doesClubExist = true
+		if (possibleAgreement.name) {
+			let doesAgreementExist = false
+			agreements.forEach(agreement => {
+				if (possibleAgreement.slug === agreement.slug) {
+					doesAgreementExist = true
 				}
 			})
-			if (!doesClubExist) {
-				clubs.push(possibleClub)
+			if (!doesAgreementExist) {
+				agreements.push(possibleAgreement)
 			}
 		}
 	})
 
-	const isLoadingClubs = clubs.length === 0
+	const isLoadingAgreements = agreements.length === 0
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
 	return (
 		<>
-			<div className={clubsTheme.pageHeader}>
-				<div className={clubsTheme.centeredRow}>
+			<div className={meemTheme.pageHeader}>
+				<div className={meemTheme.centeredRow}>
 					<a onClick={navigateHome}>
-						<ArrowLeft className={clubsTheme.backArrow} size={32} />
+						<ArrowLeft className={meemTheme.backArrow} size={32} />
 					</a>
 					<Space w={16} />
-					<Text className={clubsTheme.tLargeBold}>
-						Browse all clubs
+					<Text className={meemTheme.tLargeBold}>
+						Browse all agreements
 					</Text>
 				</div>
 				<Button
 					style={{ marginRight: 32 }}
 					onClick={navigateToCreate}
-					className={clubsTheme.buttonBlack}
+					className={meemTheme.buttonBlack}
 				>
-					Create a Club
+					Create a Agreement
 				</Button>
 			</div>
 
 			<Container>
-				{!error && isLoadingClubs && (
+				{!error && isLoadingAgreements && (
 					<Container>
 						<Space h={60} />
 						<Center>
-							<Loader color="red" variant="oval" />
+							<Loader color="blue" variant="oval" />
 						</Center>
 					</Container>
 				)}
@@ -126,8 +131,8 @@ export const BrowseComponent: React.FC = () => {
 						<Center>
 							<div>
 								<Text>
-									An error occurred loading clubs. Try again
-									later.
+									An error occurred loading agreements. Try
+									again later.
 								</Text>
 								<Space h={8} />
 								<Text>{JSON.stringify(error)}</Text>
@@ -138,42 +143,44 @@ export const BrowseComponent: React.FC = () => {
 
 				<Space h={32} />
 
-				{!isLoadingClubs && (
+				{!isLoadingAgreements && (
 					<>
 						<Grid>
-							{clubs.map(club => (
+							{agreements.map(agreement => (
 								<Grid.Col
 									xs={8}
 									sm={6}
 									md={4}
 									lg={4}
 									xl={4}
-									key={club.address}
+									key={agreement.address}
 								>
 									<div
-										key={club.address}
-										className={clubsTheme.gridItem}
+										key={agreement.address}
+										className={meemTheme.gridItem}
 										style={{
 											display: 'flex'
 										}}
 										onClick={() => {
-											navigateToClub(club.slug ?? '')
+											navigateToAgreement(
+												agreement.slug ?? ''
+											)
 										}}
 									>
 										<Image
-											className={clubsTheme.imageClubLogo}
-											src={club.image ?? ''}
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											src={agreement.image ?? ''}
 											width={40}
 											radius={8}
 											height={40}
 											fit={'cover'}
 										/>
 										<Space w="xs" />
-										<div className={clubsTheme.tEllipsis}>
+										<div className={meemTheme.tEllipsis}>
 											<Text
-												className={
-													clubsTheme.tSmallBold
-												}
+												className={meemTheme.tSmallBold}
 												style={{
 													textOverflow: 'ellipsis',
 													msTextOverflow: 'ellipsis',
@@ -181,12 +188,12 @@ export const BrowseComponent: React.FC = () => {
 													overflow: 'hidden'
 												}}
 											>
-												{club.name}
+												{agreement.name}
 											</Text>
 											<Space h={4} />
 											<Text
 												className={
-													clubsTheme.tExtraSmall
+													meemTheme.tExtraSmall
 												}
 												style={{
 													marginRight: 8,
@@ -197,7 +204,7 @@ export const BrowseComponent: React.FC = () => {
 													overflow: 'hidden'
 												}}
 											>
-												{club.description}{' '}
+												{agreement.description}{' '}
 											</Text>
 											<Space h={8} />
 											<Badge
@@ -211,7 +218,7 @@ export const BrowseComponent: React.FC = () => {
 													deg: 35
 												}}
 												classNames={{
-													inner: clubsTheme.tBadgeText
+													inner: meemTheme.tBadgeText
 												}}
 												variant={'gradient'}
 												leftSection={
@@ -227,7 +234,7 @@ export const BrowseComponent: React.FC = () => {
 													</>
 												}
 											>
-												{club.memberCount}
+												{agreement.memberCount}
 											</Badge>
 										</div>
 									</div>
@@ -237,7 +244,7 @@ export const BrowseComponent: React.FC = () => {
 						<Space h={24} />
 
 						<Button
-							className={clubsTheme.buttonBlack}
+							className={meemTheme.buttonBlack}
 							loading={loading}
 							onClick={() => {
 								setPage(page + 1)

@@ -19,19 +19,19 @@ import StarterKit from '@tiptap/starter-kit'
 import { DateTime } from 'luxon'
 import React, { useState } from 'react'
 import { ChevronUp } from 'tabler-icons-react'
-import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
+import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import {
 	colorDarkGrey,
 	colorLightGrey,
 	// colorPink,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+	useMeemTheme
+} from '../../Styles/AgreementsTheme'
 interface IProps {
 	comment: DiscussionComment
 }
 
 export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -56,24 +56,24 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 
 	return (
 		<div>
-			<div className={clubsTheme.centeredRow}>
+			<div className={meemTheme.centeredRow}>
 				<Image
-					src={comment.profilePicUrl ?? `/exampleclub.png`}
+					src={comment.profilePicUrl ?? `/exampleagreement.png`}
 					height={32}
 					width={32}
 					radius={16}
 				/>
 				<Space w={8} />
 				<div>
-					<Text className={clubsTheme.tExtraSmallBold}>
+					<Text className={meemTheme.tExtraSmallBold}>
 						{comment.displayName ?? comment.walletAddress}
 					</Text>
-					<Text className={clubsTheme.tExtraExtraSmall}>
+					<Text className={meemTheme.tExtraExtraSmall}>
 						{DateTime.fromSeconds(comment.createdAt).toRelative()}
 					</Text>
 				</div>
 			</div>
-			<div className={clubsTheme.row}>
+			<div className={meemTheme.row}>
 				<div
 					onClick={() => {
 						setIsCommentRepliesHidden(!isCommentRepliesHidden)
@@ -93,18 +93,18 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 					<Space h={16} />
 
 					<Text
-						className={clubsTheme.tExtraSmall}
+						className={meemTheme.tExtraSmall}
 						dangerouslySetInnerHTML={{
 							__html: comment.body
 						}}
 					/>
 					<Space h={16} />
-					<div className={clubsTheme.centeredRow}>
+					<div className={meemTheme.centeredRow}>
 						<ChevronUp />
 						<Space w={4} />
 
 						<Text
-							className={clubsTheme.tExtraExtraSmall}
+							className={meemTheme.tExtraExtraSmall}
 							style={{ fontWeight: '700' }}
 						>
 							{30}
@@ -120,7 +120,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 						<Space w={8} />
 
 						<Text
-							className={clubsTheme.tExtraExtraSmall}
+							className={meemTheme.tExtraExtraSmall}
 							style={{ cursor: 'pointer' }}
 							onClick={() => {
 								setIsReplying(!isReplying)
@@ -132,15 +132,13 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 					{isReplying && editor && (
 						<>
 							<Space h={16} />
-							<div
-								className={clubsTheme.fRichTextEditorContainer}
-							>
+							<div className={meemTheme.fRichTextEditorContainer}>
 								<RichTextEditor
 									editor={editor}
 									classNames={{
 										toolbar:
-											clubsTheme.fRichTextEditorToolbar,
-										root: clubsTheme.fRichTextEditorToolbar
+											meemTheme.fRichTextEditorToolbar,
+										root: meemTheme.fRichTextEditorToolbar
 									}}
 								>
 									<RichTextEditor.Toolbar>
@@ -158,9 +156,9 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 									<RichTextEditor.Content />
 								</RichTextEditor>
 								<Space h={16} />
-								<div className={clubsTheme.rowEndAlign}>
+								<div className={meemTheme.rowEndAlign}>
 									<Button
-										className={clubsTheme.buttonBlack}
+										className={meemTheme.buttonBlack}
 										style={{
 											marginBottom: 16,
 											marginRight: 16
@@ -194,7 +192,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 									!isCommentRepliesHidden
 								)
 							}}
-							className={clubsTheme.tExtraSmall}
+							className={meemTheme.tExtraSmall}
 							style={{ color: colorPink, cursor: 'pointer' }}
 						>{`${comment.replies?.length} replies hidden`}</Text>
 					)} */}

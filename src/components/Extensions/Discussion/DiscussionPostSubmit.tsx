@@ -25,19 +25,19 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { useClub } from '../../ClubHome/ClubProvider'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { useMeemTheme } from '../../Styles/AgreementsTheme'
 
 interface IProps {
-	clubSlug?: string
+	agreementSlug?: string
 }
 
-export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
+export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	// General properties / tab management
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { club } = useClub()
+	const { agreement } = useAgreement()
 	const { me } = useAuth()
 
 	const { sdk } = useSDK()
@@ -85,7 +85,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 			createResizedFile()
 		} else {
-			// log.debug('no current club image')
+			// log.debug('no current agreement image')
 		}
 	}, [rawPostAttachment])
 
@@ -104,14 +104,14 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				return
 			}
 
-			if (!club?.address) {
+			if (!agreement?.address) {
 				router.push('/')
 				return
 			}
 
 			// Some basic validation
 			if (!postTitle || postTitle.length < 3 || postTitle.length > 140) {
-				// Club name invalid
+				// Agreement name invalid
 				showNotification({
 					title: 'Oops!',
 					message:
@@ -124,7 +124,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				(editor && editor?.getHTML().length < 10) ||
 				(editor && editor?.getHTML().length > 3000)
 			) {
-				// Club name invalid
+				// Agreement name invalid
 				showNotification({
 					title: 'Oops!',
 					message:
@@ -137,9 +137,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 			const authSig = await sdk.id.getLitAuthSig()
 
-			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
-				ae => ae.Extension?.slug === 'discussion'
-			)
+			const agreementExtension =
+				agreement?.rawAgreement?.AgreementExtensions.find(
+					ae => ae.Extension?.slug === 'discussion'
+				)
 
 			if (!agreementExtension) {
 				showNotification({
@@ -172,7 +173,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 					displayName: me?.user.displayName,
 					profilePicUrl: me?.user.profilePicUrl,
 					ens: me?.user.DefaultWallet.ens,
-					clubSlug: club?.slug,
+					agreementSlug: agreement?.slug,
 					attachment:
 						postAttachment && postAttachment.length > 0
 							? postAttachment
@@ -181,7 +182,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				chainId: wallet.chainId,
 				accessControlConditions: [
 					{
-						contractAddress: club.address
+						contractAddress: agreement.address
 					}
 				]
 			})
@@ -195,32 +196,32 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 	return (
 		<>
-			<div className={clubsTheme.pageHeader}>
-				<div className={clubsTheme.row}>
+			<div className={meemTheme.pageHeader}>
+				<div className={meemTheme.row}>
 					<a
 						style={{ marginTop: 34 }}
 						onClick={() => {
 							router.push({
-								pathname: `/${clubSlug}/e/discussion`
+								pathname: `/${agreementSlug}/e/discussion`
 							})
 						}}
 					>
-						<ArrowLeft className={clubsTheme.backArrow} size={32} />
+						<ArrowLeft className={meemTheme.backArrow} size={32} />
 					</a>
 					<Space w={16} />
 					<div>
-						<Text className={clubsTheme.tSmallBoldFaded}>
-							{clubSlug}
+						<Text className={meemTheme.tSmallBoldFaded}>
+							{agreementSlug}
 						</Text>
 						<Space h={16} />
-						<Text className={clubsTheme.tLargeBold}>
+						<Text className={meemTheme.tLargeBold}>
 							New discussion
 						</Text>
 					</div>
 				</div>
 				<Button
 					style={{ marginRight: 32 }}
-					className={clubsTheme.buttonBlack}
+					className={meemTheme.buttonBlack}
 					loading={isLoading}
 					disabled={
 						postTitle.length === 0 ||
@@ -240,7 +241,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 			<Container>
 				<Space h={24} />
 
-				<Text className={clubsTheme.tMediumBold}>
+				<Text className={meemTheme.tMediumBold}>
 					{`What’s your post called?`}
 				</Text>
 				<Space h={16} />
@@ -255,18 +256,18 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 				<Space h={32} />
 
-				<Text className={clubsTheme.tMediumBold}>
+				<Text className={meemTheme.tMediumBold}>
 					Compose and edit your post here
 				</Text>
 				<Space h={16} />
 
 				{editor && (
-					<div className={clubsTheme.fRichTextEditorContainer}>
+					<div className={meemTheme.fRichTextEditorContainer}>
 						<RichTextEditor
 							editor={editor}
 							classNames={{
-								toolbar: clubsTheme.fRichTextEditorToolbar,
-								root: clubsTheme.fRichTextEditorToolbar
+								toolbar: meemTheme.fRichTextEditorToolbar,
+								root: meemTheme.fRichTextEditorToolbar
 							}}
 						>
 							<RichTextEditor.Toolbar>
@@ -287,21 +288,21 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				)}
 				<Space h={32} />
 
-				<Text className={clubsTheme.tMediumBold}>
+				<Text className={meemTheme.tMediumBold}>
 					{`Set a featured image for your post. (Optional)`}
 				</Text>
 				<Space h={4} />
-				<Text className={clubsTheme.tSmallFaded}>
+				<Text className={meemTheme.tSmallFaded}>
 					Recommended size is 1000px x 1000px. Please upload either
 					JPG or PNG files.
 				</Text>
 				<Space h={16} />
 
 				{postAttachment.length === 0 && !isLoadingImage && (
-					<div className={clubsTheme.row}>
+					<div className={meemTheme.row}>
 						<Button
 							leftIcon={<Upload size={14} />}
-							className={clubsTheme.buttonBlack}
+							className={meemTheme.buttonBlack}
 							onClick={() => openFileSelector()}
 						>
 							Upload
@@ -311,7 +312,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 				{isLoadingImage && <Loader />}
 				{!isLoadingImage && postAttachment.length > 0 && (
 					<div
-						className={clubsTheme.boxBorderedRounded}
+						className={meemTheme.boxBorderedRounded}
 						style={{ position: 'relative', maxWidth: 400 }}
 					>
 						<Image src={postAttachment} fit={'cover'} />
@@ -333,12 +334,12 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 				<Space h={postAttachment ? 32 : 32} />
 
-				<Text className={clubsTheme.tMediumBold}>
+				<Text className={meemTheme.tMediumBold}>
 					{`Add tags (Optional)`}
 				</Text>
 				<Space h={4} />
 
-				<Text className={clubsTheme.tSmallFaded}>
+				<Text className={meemTheme.tSmallFaded}>
 					{`Leave a space between tags.`}
 				</Text>
 				<Space h={16} />
@@ -364,7 +365,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 						// postAttachment.length === 0 ||
 						isLoading
 					}
-					className={clubsTheme.buttonBlack}
+					className={meemTheme.buttonBlack}
 				>
 					Post
 				</Button>

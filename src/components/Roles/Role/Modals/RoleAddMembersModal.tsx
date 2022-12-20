@@ -14,32 +14,37 @@ import {
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
-import { Club, ClubMember } from '../../../../model/club/club'
-import { useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	Agreement,
+	AgreementMember
+} from '../../../../model/agreement/agreements'
+import { useMeemTheme } from '../../../Styles/AgreementsTheme'
 
 interface IProps {
-	club: Club
-	existingRoleMembers: ClubMember[]
+	agreement: Agreement
+	existingRoleMembers: AgreementMember[]
 	isOpened: boolean
-	onMembersSaved: (members: ClubMember[]) => void
+	onMembersSaved: (members: AgreementMember[]) => void
 	onModalClosed: () => void
 }
 
 export const RoleAddMembersModal: React.FC<IProps> = ({
-	club,
+	agreement,
 	existingRoleMembers,
 	isOpened,
 	onMembersSaved,
 	onModalClosed
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	const [members, setMembers] = useState<ClubMember[]>([])
+	const [members, setMembers] = useState<AgreementMember[]>([])
 
-	const [filteredMembers, setFilteredMembers] = useState<ClubMember[]>([])
+	const [filteredMembers, setFilteredMembers] = useState<AgreementMember[]>(
+		[]
+	)
 
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 
@@ -50,22 +55,22 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 			isOpened &&
 			members.length === 0 &&
 			!hasFilteredMembers &&
-			club.members
+			agreement.members
 		) {
-			log.debug('filter out club members...')
-			// filter out club members by whether they're already added to this role
-			const filteredClubMembers: ClubMember[] = []
-			club.members.forEach(member => {
+			log.debug('filter out agreement members...')
+			// filter out agreement members by whether they're already added to this role
+			const filteredAgreementMembers: AgreementMember[] = []
+			agreement.members.forEach(member => {
 				const filter = existingRoleMembers.filter(
 					memb => memb.wallet === member.wallet
 				)
 				if (filter.length === 0) {
 					member.chosen = false
-					filteredClubMembers.push(member)
+					filteredAgreementMembers.push(member)
 				}
 			})
-			setMembers(filteredClubMembers)
-			setFilteredMembers(filteredClubMembers)
+			setMembers(filteredAgreementMembers)
+			setFilteredMembers(filteredAgreementMembers)
 			setHasFilteredMembers(true)
 		}
 
@@ -74,7 +79,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 			setMembers([])
 		}
 	}, [
-		club.members,
+		agreement.members,
 		existingRoleMembers,
 		filteredMembers,
 		hasFilteredMembers,
@@ -82,9 +87,12 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 		members
 	])
 
-	const filterMembers = (allMembers: ClubMember[], searchTerm: string) => {
+	const filterMembers = (
+		allMembers: AgreementMember[],
+		searchTerm: string
+	) => {
 		const search = searchTerm
-		const newFiltered: ClubMember[] = []
+		const newFiltered: AgreementMember[] = []
 
 		if (searchTerm.length > 0) {
 			allMembers.forEach(member => {
@@ -121,7 +129,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={clubsTheme.tMediumBold}>Add Members</Text>
+					<Text className={meemTheme.tMediumBold}>Add Members</Text>
 				}
 				onClose={() => {
 					onModalClosed()
@@ -130,11 +138,11 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 				<TextInput
 					radius={20}
 					classNames={{
-						input: clubsTheme.fTextField
+						input: meemTheme.fTextField
 					}}
 					icon={<Search />}
 					placeholder={'Search Members'}
-					className={clubsTheme.fullWidth}
+					className={meemTheme.fullWidth}
 					size={'lg'}
 					onChange={event => {
 						if (event.target.value) {
@@ -154,7 +162,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 							<div key={member.wallet}>
 								<Space h={16} />
 								<div>
-									<div className={clubsTheme.centeredRow}>
+									<div className={meemTheme.centeredRow}>
 										<Checkbox
 											checked={member.chosen}
 											onChange={event => {
@@ -200,16 +208,14 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 
 										<div>
 											<Text
-												className={
-													clubsTheme.tSmallBold
-												}
+												className={meemTheme.tSmallBold}
 											>
 												{member.displayName ??
-													'Club Member'}
+													'Agreement Member'}
 											</Text>
 											<Text
 												className={
-													clubsTheme.tExtraSmallFaded
+													meemTheme.tExtraSmallFaded
 												}
 											>
 												{member.ens
@@ -230,7 +236,8 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						<Space h={24} />
 						<Center>
 							<Text>
-								All members of this club already have this role.
+								All members of this agreement already have this
+								role.
 							</Text>
 						</Center>
 					</>
@@ -250,9 +257,9 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 					)}
 				<Space h={24} />
 
-				<div className={clubsTheme.row}>
+				<div className={meemTheme.row}>
 					<Button
-						className={clubsTheme.buttonBlack}
+						className={meemTheme.buttonBlack}
 						onClick={async () => {
 							const chosenMembers = members.filter(
 								member => member.chosen
@@ -276,7 +283,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						onClick={() => {
 							onModalClosed()
 						}}
-						className={clubsTheme.buttonGrey}
+						className={meemTheme.buttonGrey}
 					>
 						Cancel
 					</Button>

@@ -4,42 +4,44 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
-import { useClubsTheme } from '../Styles/ClubsTheme'
-import { ClubCreationMembershipSettings } from './ClubCreationMembershipSettings'
+import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { AgreementCreationMembershipSettings } from './AgreementCreationMembershipSettings'
 
 export const CreatePermissionsComponent: React.FC = () => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
-	const [clubName, setClubName] = useState('')
+	const [agreementName, setAgreementName] = useState('')
 	const router = useRouter()
 
 	useEffect(() => {
-		if (Cookies.get(CookieKeys.clubName) != null) {
-			setClubName(Cookies.get(CookieKeys.clubName) ?? '')
+		if (Cookies.get(CookieKeys.agreementName) != null) {
+			setAgreementName(Cookies.get(CookieKeys.agreementName) ?? '')
 		} else {
 			showNotification({
 				radius: 'lg',
-				title: 'Unable to create this club.',
+				title: 'Unable to create this agreement.',
 				message: `Some data is missing. Try again!`,
 				autoClose: 5000
 			})
 			router.push({ pathname: '/' })
 		}
-	}, [clubName, router])
+	}, [agreementName, router])
 
 	return (
 		<>
-			<div className={clubsTheme.pageHeader}>
+			<div className={meemTheme.pageHeader}>
 				<div>
-					<Text className={clubsTheme.tSmallBoldFaded}>
-						Create a club
+					<Text className={meemTheme.tSmallBoldFaded}>
+						Create a agreement
 					</Text>
-					<Text className={clubsTheme.tLargeBold}>{clubName}</Text>
+					<Text className={meemTheme.tLargeBold}>
+						{agreementName}
+					</Text>
 				</div>
 			</div>
 
 			<Container style={{ marginTop: '-24px' }}>
-				<ClubCreationMembershipSettings />
+				<AgreementCreationMembershipSettings />
 			</Container>
 		</>
 	)

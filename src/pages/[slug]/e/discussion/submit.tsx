@@ -5,65 +5,68 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { AgreementProvider } from '../../../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../../../components/App'
-import { ClubProvider } from '../../../../components/ClubHome/ClubProvider'
 import { DiscussionPostSubmit } from '../../../../components/Extensions/Discussion/DiscussionPostSubmit'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
-import { GET_CLUB_INFO } from '../../../../graphql/clubs'
+import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
 import { ssrGraphqlClient } from '../../../../utils/ssr_graphql'
 
-export interface ClubPropViewModel {
+export interface AgreementPropViewModel {
 	responseBody: any
 	description: string
 	isError: boolean
 }
 
 interface IProps {
-	club: ClubPropViewModel
+	agreement: AgreementPropViewModel
 }
 
-const DiscussionPostSubmitPage: NextPage<IProps> = ({ club }) => {
+const DiscussionPostSubmitPage: NextPage<IProps> = ({ agreement }) => {
 	const router = useRouter()
 
-	const clubSlug =
+	const agreementSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
 				<title>
-					{club === undefined || club.isError
+					{agreement === undefined || agreement.isError
 						? 'Not found'
-						: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`}
+						: `${agreement.responseBody.Agreements[0].name} | Submit Post | Agreements`}
 				</title>
 				<meta
 					name="title"
 					content={
-						club === undefined || club.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
+							: `${agreement.responseBody.Agreements[0].name} | Submit Post | Agreements`
 					}
 				/>
-				<meta name="description" content={club.description} />
+				<meta name="description" content={agreement.description} />
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content="https://clubs.link/" />
+				<meta property="og:url" content="https://app.meem.wtf/" />
 				<meta
 					property="og:title"
 					content={
-						club === undefined || club.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
+							: `${agreement.responseBody.Agreements[0].name} | Submit Post | Agreements`
 					}
 				/>
-				<meta property="og:description" content={club.description} />
+				<meta
+					property="og:description"
+					content={agreement.description}
+				/>
 				<meta property="twitter:card" content="summary_large_image" />
-				<meta property="twitter:url" content="https://clubs.link/" />
+				<meta property="twitter:url" content="https://app.meem.wtf/" />
 				<meta
 					property="twitter:title"
 					content={
-						club === undefined || club.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${club.responseBody.Agreements[0].name} | Submit Post | Clubs`
+							: `${agreement.responseBody.Agreements[0].name} | Submit Post | Agreements`
 					}
 				/>
 				<meta
@@ -91,9 +94,9 @@ const DiscussionPostSubmitPage: NextPage<IProps> = ({ club }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ClubProvider slug={clubSlug}>
-				<DiscussionPostSubmit clubSlug={clubSlug} />
-			</ClubProvider>
+			<AgreementProvider slug={agreementSlug}>
+				<DiscussionPostSubmit agreementSlug={agreementSlug} />
+			</AgreementProvider>
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -104,13 +107,13 @@ export const getServerSideProps: GetServerSideProps = async ({
 	params,
 	req
 }) => {
-	let club: ClubPropViewModel | undefined
+	let agreement: AgreementPropViewModel | undefined
 	const client = ssrGraphqlClient
 
 	try {
 		if (params?.slug) {
 			const { data, errors } = await client.query({
-				query: GET_CLUB_INFO,
+				query: GET_AGREEMENT_INFO,
 				variables: {
 					slug: params.slug,
 					chainId: hostnameToChainId(req.headers.host ?? '')
@@ -118,13 +121,13 @@ export const getServerSideProps: GetServerSideProps = async ({
 			})
 
 			if (data.Agreements.length === 0) {
-				club = {
+				agreement = {
 					isError: true,
-					description: 'This club does not exist. Yet.',
+					description: 'This agreement does not exist. Yet.',
 					responseBody: null
 				}
 			} else {
-				club = {
+				agreement = {
 					isError: false,
 					responseBody: data,
 					description: data.Agreements[0].metadata.description ?? ''
@@ -132,9 +135,9 @@ export const getServerSideProps: GetServerSideProps = async ({
 			}
 			return {
 				props: {
-					club,
+					agreement,
 					isError: !!errors,
-					description: 'There was an error fetching club data'
+					description: 'There was an error fetching agreement data'
 				}
 			}
 		}
@@ -142,14 +145,14 @@ export const getServerSideProps: GetServerSideProps = async ({
 		return { props: {} }
 	} catch (e) {
 		log.debug(e)
-		club = {
+		agreement = {
 			isError: true,
 			responseBody: null,
-			description: 'This club does not exist. Yet.'
+			description: 'This agreement does not exist. Yet.'
 		}
 		return {
 			props: {
-				club
+				agreement
 			}
 		}
 	}

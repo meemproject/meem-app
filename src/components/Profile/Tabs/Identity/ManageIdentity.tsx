@@ -28,7 +28,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
-import { colorVerified, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { colorVerified, useMeemTheme } from '../../../Styles/AgreementsTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -36,7 +36,7 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 })
 
 export const ManageIdentityComponent: React.FC = () => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	const { loginWithRedirect } = useAuth0()
 	const { sdk } = useSDK()
@@ -58,7 +58,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			client: anonClient
 		})
 
-	// Club logo
+	// Agreement logo
 	const [
 		openFileSelector,
 		{ filesContent: rawProfilePicture, loading: isLoadingImage }
@@ -225,14 +225,14 @@ export const ManageIdentityComponent: React.FC = () => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={clubsTheme.tLargeBold}>Manage Identity</Text>
+			<Text className={meemTheme.tLargeBold}>Manage Identity</Text>
 			<Space h={32} />
-			<Text className={clubsTheme.tMediumBold}>Profile Picture</Text>
+			<Text className={meemTheme.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
-				<div className={clubsTheme.row}>
+				<div className={meemTheme.row}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={clubsTheme.buttonWhite}
+						className={meemTheme.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -240,14 +240,14 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={clubsTheme.buttonWhite}
+						className={meemTheme.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
 					</Button>
 				</div>
 			)}
-			{isLoadingImage && <Loader color="red" variant="oval" />}
+			{isLoadingImage && <Loader color="blue" variant="oval" />}
 			{!isLoadingImage && profilePicture.length > 0 && (
 				<div
 					style={{
@@ -281,7 +281,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				</div>
 			)}
 			<Space h={profilePicture.length > 0 ? 148 : 32} />
-			<Text className={clubsTheme.tMediumBold}>Display Name</Text>
+			<Text className={meemTheme.tMediumBold}>Display Name</Text>
 			<Space h={16} />
 			<TextInput
 				radius="lg"
@@ -296,7 +296,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space h={48} />
 					<Divider />
 					<Space h={'xl'} />
-					<Text className={clubsTheme.tMediumBold}>
+					<Text className={meemTheme.tMediumBold}>
 						Verify Accounts
 					</Text>
 					<Space h={16} />
@@ -315,7 +315,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space h={'xl'} />
 					{me?.UserIdentities && me.UserIdentities.length > 0 && (
 						<>
-							<div className={clubsTheme.centeredRow}>
+							<div className={meemTheme.centeredRow}>
 								<Image
 									src="/icon-verified.png"
 									width={18}
@@ -327,7 +327,7 @@ export const ManageIdentityComponent: React.FC = () => {
 									style={{
 										color: colorVerified
 									}}
-									className={clubsTheme.tMediumBold}
+									className={meemTheme.tMediumBold}
 								>
 									Verified
 								</Text>
@@ -353,12 +353,10 @@ export const ManageIdentityComponent: React.FC = () => {
 												)
 											}}
 										>
-											<div
-												className={clubsTheme.gridItem}
-											>
+											<div className={meemTheme.gridItem}>
 												<div
 													className={
-														clubsTheme.extensionGridItemHeader
+														meemTheme.extensionGridItemHeader
 													}
 												>
 													<Image
@@ -386,12 +384,12 @@ export const ManageIdentityComponent: React.FC = () => {
 						</>
 					)}
 
-					<Text className={clubsTheme.tMediumBold}>
+					<Text className={meemTheme.tMediumBold}>
 						Verify Accounts
 					</Text>
 					<Space h={16} />
 					{isLoadingAvailableExtensions && (
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					)}
 					{filteredAvilableExtensions.length > 0 && (
 						<>
@@ -415,12 +413,10 @@ export const ManageIdentityComponent: React.FC = () => {
 												})
 											}}
 										>
-											<div
-												className={clubsTheme.gridItem}
-											>
+											<div className={meemTheme.gridItem}>
 												<div
 													className={
-														clubsTheme.extensionGridItemHeader
+														meemTheme.extensionGridItemHeader
 													}
 												>
 													<Image
@@ -445,7 +441,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			)}
 			<Space h={'xl'} />
 			<Button
-				className={clubsTheme.buttonBlack}
+				className={meemTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>
@@ -482,10 +478,10 @@ export const ManageIdentityComponent: React.FC = () => {
 					setIsLinkedAccountModalOpen(false)
 				}}
 			/>
-			<div id="emojiCanvas" className={clubsTheme.emojiCanvas}>
+			<div id="emojiCanvas" className={meemTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
-			<div className={clubsTheme.emojiCanvasCover} />
+			<div className={meemTheme.emojiCanvasCover} />
 			<Modal
 				withCloseButton={false}
 				padding={8}

@@ -17,31 +17,35 @@ import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check, Plus } from 'tabler-icons-react'
-import { Club, ClubRole, emptyRole } from '../../model/club/club'
-import { useClub } from '../ClubHome/ClubProvider'
-import { useClubsTheme } from '../Styles/ClubsTheme'
+import {
+	Agreement,
+	AgreementRole,
+	emptyRole
+} from '../../model/agreement/agreements'
+import { useAgreement } from '../AgreementHome/AgreementProvider'
+import { useMeemTheme } from '../Styles/AgreementsTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface Tab {
 	name: string
-	associatedRole?: ClubRole
+	associatedRole?: AgreementRole
 }
 
 export const RolesManager: React.FC = () => {
 	// General properties / tab management
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
 
-	const { club, isLoadingClub, error } = useClub()
+	const { agreement, isLoadingAgreement, error } = useAgreement()
 
 	const [tabs, setTabs] = useState<Tab[]>([])
 	const [currentTab, setCurrentTab] = useState<Tab>()
 	const [isAddingNewRole, setIsAddingNewRole] = useState(false)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
-	const navigateToClubAdmin = () => {
+	const navigateToAgreementAdmin = () => {
 		router.push({
-			pathname: `/${club?.slug}/admin`,
+			pathname: `/${agreement?.slug}/admin`,
 			query: { tab: 'roles' }
 		})
 	}
@@ -57,10 +61,10 @@ export const RolesManager: React.FC = () => {
 	}
 
 	useEffect(() => {
-		function setupTabs(theClub: Club) {
+		function setupTabs(theAgreement: Agreement) {
 			const newTabs: Tab[] = []
-			if (theClub && theClub.roles) {
-				theClub.roles.forEach(role => {
+			if (theAgreement && theAgreement.roles) {
+				theAgreement.roles.forEach(role => {
 					newTabs.push({ name: role.name, associatedRole: role })
 				})
 			}
@@ -89,13 +93,13 @@ export const RolesManager: React.FC = () => {
 			setTabs(newTabs)
 		}
 
-		if (!isLoadingClub && !error && club) {
-			setupTabs(club)
+		if (!isLoadingAgreement && !error && agreement) {
+			setupTabs(agreement)
 		}
 	}, [
-		club,
+		agreement,
 		error,
-		isLoadingClub,
+		isLoadingAgreement,
 		router.query.createRole,
 		router.query.role,
 		wallet
@@ -103,47 +107,45 @@ export const RolesManager: React.FC = () => {
 
 	return (
 		<>
-			{isLoadingClub && (
+			{isLoadingAgreement && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="red" variant="oval" />
+						<Loader color="blue" variant="oval" />
 					</Center>
 				</Container>
 			)}
-			{!isLoadingClub && !club?.name && (
+			{!isLoadingAgreement && !agreement?.name && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that club does not exist!</Text>
+						<Text>Sorry, that agreement does not exist!</Text>
 					</Center>
 				</Container>
 			)}
 
-			{!isLoadingClub && club?.name && (
+			{!isLoadingAgreement && agreement?.name && (
 				<>
-					<div className={clubsTheme.pageHeader}>
-						<div className={clubsTheme.spacedRowCentered}>
+					<div className={meemTheme.pageHeader}>
+						<div className={meemTheme.spacedRowCentered}>
 							<Image
 								width={56}
 								height={56}
-								className={clubsTheme.imageClubLogo}
-								src={club.image}
+								className={meemTheme.imageAgreementLogo}
+								src={agreement.image}
 							/>
-							<div
-								className={clubsTheme.pageHeaderTitleContainer}
-							>
-								<Text className={clubsTheme.tLargeBold}>
-									{club.name}
+							<div className={meemTheme.pageHeaderTitleContainer}>
+								<Text className={meemTheme.tLargeBold}>
+									{agreement.name}
 								</Text>
 								<div
-									className={clubsTheme.row}
+									className={meemTheme.row}
 									style={{
 										marginTop: 8
 									}}
 								>
 									<Text
-										className={clubsTheme.tExtraSmallFaded}
+										className={meemTheme.tExtraSmallFaded}
 										style={{
 											maxWidth: 220,
 											textOverflow: 'ellipsis',
@@ -151,23 +153,23 @@ export const RolesManager: React.FC = () => {
 											whiteSpace: 'nowrap',
 											overflow: 'hidden'
 										}}
-									>{`${window.location.origin}/${club.slug}`}</Text>
+									>{`${window.location.origin}/${agreement.slug}`}</Text>
 									<Image
-										className={clubsTheme.copyIcon}
+										className={meemTheme.copyIcon}
 										src="/copy.png"
 										height={20}
 										onClick={() => {
 											navigator.clipboard.writeText(
-												`${window.location.origin}/${club.slug}`
+												`${window.location.origin}/${agreement.slug}`
 											)
 											showNotification({
 												radius: 'lg',
-												title: 'Club URL copied',
+												title: 'Agreement URL copied',
 												autoClose: 2000,
 												color: 'green',
 												icon: <Check />,
 
-												message: `This club's URL was copied to your clipboard.`
+												message: `This agreement's URL was copied to your clipboard.`
 											})
 										}}
 										width={20}
@@ -176,26 +178,27 @@ export const RolesManager: React.FC = () => {
 							</div>
 						</div>
 						<a
-							className={clubsTheme.pageHeaderExitButton}
-							onClick={navigateToClubAdmin}
+							className={meemTheme.pageHeaderExitButton}
+							onClick={navigateToAgreementAdmin}
 						>
 							<Image src="/delete.png" width={24} height={24} />
 						</a>
 					</div>
 
-					{!club?.isCurrentUserClubAdmin && (
+					{!agreement?.isCurrentUserAgreementAdmin && (
 						<Container>
 							<Space h={120} />
 							<Center>
 								<Text>
 									Sorry, you do not have permission to view
-									this page. Contact the club owner for help.
+									this page. Contact the agreement owner for
+									help.
 								</Text>
 							</Center>
 						</Container>
 					)}
-					{club?.isCurrentUserClubAdmin && (
-						<div className={clubsTheme.pagePanelLayoutContainer}>
+					{agreement?.isCurrentUserAgreementAdmin && (
+						<div className={meemTheme.pagePanelLayoutContainer}>
 							<MediaQuery
 								largerThan="sm"
 								styles={{ display: 'none' }}
@@ -211,7 +214,7 @@ export const RolesManager: React.FC = () => {
 								/>
 							</MediaQuery>
 							<Navbar
-								className={clubsTheme.pagePanelLayoutNavBar}
+								className={meemTheme.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
 								hidden={!mobileNavBarVisible}
@@ -220,26 +223,26 @@ export const RolesManager: React.FC = () => {
 								p="xs"
 							>
 								<div
-									className={clubsTheme.centeredRow}
+									className={meemTheme.centeredRow}
 									style={{ marginLeft: 18, marginBottom: 24 }}
 								>
 									<ArrowLeft
-										className={clubsTheme.clickable}
+										className={meemTheme.clickable}
 										onClick={() => {
-											navigateToClubAdmin()
+											navigateToAgreementAdmin()
 										}}
 									/>
 									<Space w={8} />
-									<Text className={clubsTheme.tLargeBold}>
+									<Text className={meemTheme.tLargeBold}>
 										Manage Roles
 									</Text>
 								</div>
 								<div
-									className={clubsTheme.spacedRowCentered}
+									className={meemTheme.spacedRowCentered}
 									style={{ marginLeft: 20 }}
 								>
 									<Text
-										className={clubsTheme.tExtraSmallLabel}
+										className={meemTheme.tExtraSmallLabel}
 										style={{
 											marginLeft: 10
 										}}
@@ -247,7 +250,7 @@ export const RolesManager: React.FC = () => {
 										ROLES
 									</Text>
 									<Plus
-										className={clubsTheme.clickable}
+										className={meemTheme.clickable}
 										onClick={() => {
 											addRole()
 										}}
@@ -260,7 +263,7 @@ export const RolesManager: React.FC = () => {
 										key={tab.name}
 										style={{ marginLeft: 8 }}
 										className={
-											clubsTheme.pagePanelLayoutNavItem
+											meemTheme.pagePanelLayoutNavItem
 										}
 										active={
 											currentTab &&
@@ -276,9 +279,7 @@ export const RolesManager: React.FC = () => {
 							</Navbar>
 							{!mobileNavBarVisible && (
 								<div
-									className={
-										clubsTheme.pagePanelLayoutContent
-									}
+									className={meemTheme.pagePanelLayoutContent}
 								>
 									{tabs.map(tab => (
 										<div key={tab.name}>
@@ -286,12 +287,12 @@ export const RolesManager: React.FC = () => {
 												className={
 													currentTab &&
 													currentTab.name === tab.name
-														? clubsTheme.visibleContainer
-														: clubsTheme.invisibleContainer
+														? meemTheme.visibleContainer
+														: meemTheme.invisibleContainer
 												}
 											>
 												<RolesManagerContent
-													club={club}
+													agreement={agreement}
 													initialRole={
 														tab.associatedRole
 													}

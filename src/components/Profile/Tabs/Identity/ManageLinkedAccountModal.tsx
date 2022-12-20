@@ -6,7 +6,7 @@ import type { UserIdentity } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { colorBlue, useMeemTheme } from '../../../Styles/AgreementsTheme'
 interface IProps {
 	userIdentity?: UserIdentity
 	isOpened: boolean
@@ -18,7 +18,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -61,7 +61,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Oops!',
 				autoClose: 5000,
-				color: colorPink,
+				color: colorBlue,
 				icon: <AlertCircle />,
 				message: `Unable to save changes to this account.`
 			})
@@ -93,17 +93,17 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				title={
 					<>
 						{extension?.name === 'Twitter' && (
-							<Text className={clubsTheme.tMediumBold}>
+							<Text className={meemTheme.tMediumBold}>
 								Twitter Settings
 							</Text>
 						)}
 						{extension?.name === 'Discord' && (
-							<Text className={clubsTheme.tMediumBold}>
+							<Text className={meemTheme.tMediumBold}>
 								Discord Settings
 							</Text>
 						)}
 						{extension?.name === 'Email' && (
-							<Text className={clubsTheme.tMediumBold}>
+							<Text className={meemTheme.tMediumBold}>
 								Email Address Settings
 							</Text>
 						)}
@@ -117,7 +117,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={clubsTheme.modalStepsContainer}>
+				<div className={meemTheme.modalStepsContainer}>
 					{extension?.name === 'Twitter' && (
 						<Text>
 							{`You've successfully verified @${userIdentity?.metadata?.twitterUsername} as your Twitter username.`}
@@ -136,12 +136,12 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					<Space h={24} />
 					{(extension?.name === 'Twitter' ||
 						extension?.name === 'Discord') && (
-						<Text className={clubsTheme.tExtraSmallBold}>
+						<Text className={meemTheme.tExtraSmallBold}>
 							{`Who can view this username?`}
 						</Text>
 					)}
 					{extension?.name === 'Email' && (
-						<Text className={clubsTheme.tExtraSmallBold}>
+						<Text className={meemTheme.tExtraSmallBold}>
 							{`who can view this email address?`}
 						</Text>
 					)}
@@ -158,15 +158,15 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					>
 						<Radio value="anyone" label="Anyone" />
 						<Radio
-							value="mutual-club-members"
-							label="Mutual club members"
+							value="mutual-agreement-members"
+							label="Mutual agreement members"
 						/>
 						<Radio value="just-me" label="Just me" />
 					</Radio.Group>
 					<Space h={24} />
 
 					<Button
-						className={clubsTheme.buttonBlack}
+						className={meemTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
 							saveChanges()
@@ -176,7 +176,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					</Button>
 					<Space h={24} />
 					<Button
-						className={clubsTheme.buttonBlack}
+						className={meemTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
 							if (userIdentity?.id) {

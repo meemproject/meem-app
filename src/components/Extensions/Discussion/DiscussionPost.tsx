@@ -35,16 +35,16 @@ import {
 	Message,
 	Share
 } from 'tabler-icons-react'
-import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
-import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
-import { useClub } from '../../ClubHome/ClubProvider'
+import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
+import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
 	colorBlack,
 	colorDarkerGrey,
 	colorGreen,
 	colorLightestGrey,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+	useMeemTheme
+} from '../../Styles/AgreementsTheme'
 import { DiscussionCommentComponent } from './DiscussionComment'
 import { rowToDiscussionComment, rowToDiscussionPost } from './DiscussionHome'
 interface IProps {
@@ -52,7 +52,7 @@ interface IProps {
 }
 
 export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const [hasFetchdData, setHasFetchedData] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [post, setPost] = useState<DiscussionPost>()
@@ -60,7 +60,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const [commentCount, setCommentCount] = useState(0)
 	const { accounts, chainId, me, loginState } = useAuth()
 	const { sdk } = useSDK()
-	const { club } = useClub()
+	const { agreement } = useAgreement()
 	const router = useRouter()
 
 	const { colorScheme } = useMantineColorScheme()
@@ -91,17 +91,18 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				log.crit('No chainId found')
 				return
 			}
-			if (!club) {
-				log.crit('No club found')
+			if (!agreement) {
+				log.crit('No agreement found')
 				return
 			}
 			setIsLoading(true)
 
 			const authSig = await sdk.id.getLitAuthSig()
 
-			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
-				ae => ae.Extension?.slug === 'discussion'
-			)
+			const agreementExtension =
+				agreement?.rawAgreement?.AgreementExtensions.find(
+					ae => ae.Extension?.slug === 'discussion'
+				)
 
 			const tableName =
 				agreementExtension?.metadata?.storage?.tableland?.comments
@@ -121,11 +122,11 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					displayName: me?.user.displayName,
 					profilePicUrl: me?.user.profilePicUrl,
 					ens: me?.user.DefaultWallet.ens,
-					clubSlug: club?.slug
+					agreementSlug: agreement?.slug
 				},
 				accessControlConditions: [
 					{
-						contractAddress: club.address
+						contractAddress: agreement.address
 					}
 				]
 			})
@@ -148,7 +149,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}, [chainId, router, editor, club, sdk, accounts, me])
+	}, [chainId, router, editor, agreement, sdk, accounts, me])
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -161,9 +162,10 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				return
 			}
 
-			const agreementExtension = club?.rawClub?.AgreementExtensions.find(
-				ae => ae.Extension?.slug === 'discussion'
-			)
+			const agreementExtension =
+				agreement?.rawAgreement?.AgreementExtensions.find(
+					ae => ae.Extension?.slug === 'discussion'
+				)
 
 			const authSig = await sdk.id.getLitAuthSig()
 
@@ -202,7 +204,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 				const newPost: DiscussionPost = rowToDiscussionPost({
 					row: rows[0],
-					club
+					agreement
 				})
 
 				setPost(newPost)
@@ -228,7 +230,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				const newComments: DiscussionComment[] = rows.map(row =>
 					rowToDiscussionComment({
 						row,
-						club
+						agreement
 					})
 				)
 
@@ -239,7 +241,14 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 		}
 
 		fetchData()
-	}, [hasFetchdData, club, chainId, sdk, router.query.postId, loginState])
+	}, [
+		hasFetchdData,
+		agreement,
+		chainId,
+		sdk,
+		router.query.postId,
+		loginState
+	])
 
 	return (
 		<div>
@@ -251,7 +260,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			)}
 			{hasFetchdData && (
 				<Container>
-					<div className={clubsTheme.row}>
+					<div className={meemTheme.row}>
 						<div>
 							<Center>
 								<ChevronUp />
@@ -266,7 +275,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 						</div>
 						<Space w={16} />
 						<div style={{ width: '100%' }}>
-							<div className={clubsTheme.row}>
+							<div className={meemTheme.row}>
 								<Space w={16} />
 								{post?.attachment && (
 									<>
@@ -280,11 +289,11 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 									</>
 								)}
 								<div>
-									<div className={clubsTheme.centeredRow}>
+									<div className={meemTheme.centeredRow}>
 										<Image
 											src={
 												post?.profilePicUrl ??
-												`/exampleclub.png`
+												`/exampleagreement.png`
 											}
 											height={32}
 											width={32}
@@ -294,7 +303,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 										<div>
 											<Text
 												className={
-													clubsTheme.tExtraSmallBold
+													meemTheme.tExtraSmallBold
 												}
 											>
 												{post?.displayName ??
@@ -302,7 +311,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 											</Text>
 											<Text
 												className={
-													clubsTheme.tExtraExtraSmall
+													meemTheme.tExtraExtraSmall
 												}
 											>
 												{post?.createdAt
@@ -315,7 +324,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 									</div>
 									<Space h={24} />
 
-									<Text className={clubsTheme.tMediumBold}>
+									<Text className={meemTheme.tMediumBold}>
 										{post?.title}
 									</Text>
 									{post?.tags && (
@@ -337,7 +346,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 														deg: 35
 													}}
 													classNames={{
-														inner: clubsTheme.tBadgeTextSmall
+														inner: meemTheme.tBadgeTextSmall
 													}}
 													variant={'gradient'}
 												>
@@ -348,7 +357,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 									)}
 									<Space h={24} />
 									<Text
-										className={clubsTheme.tSmall}
+										className={meemTheme.tSmall}
 										dangerouslySetInnerHTML={{
 											// TODO: Sanitize html. Possible XSS vulnerability
 											__html: post?.body ?? ''
@@ -356,14 +365,14 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 									/>
 									<Space h={16} />
 
-									<div className={clubsTheme.centeredRow}>
+									<div className={meemTheme.centeredRow}>
 										<div
-											className={clubsTheme.row}
+											className={meemTheme.row}
 											style={{ marginTop: 16 }}
 										>
 											<div
 												className={
-													clubsTheme.centeredRow
+													meemTheme.centeredRow
 												}
 											>
 												<Message
@@ -373,7 +382,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												<Space w={4} />
 												<Text
 													className={
-														clubsTheme.tExtraSmall
+														meemTheme.tExtraSmall
 													}
 												>
 													{`${commentCount} ${
@@ -387,7 +396,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 											<Space w={16} />
 											<div
 												className={
-													clubsTheme.centeredRow
+													meemTheme.centeredRow
 												}
 												style={{ cursor: 'pointer' }}
 											>
@@ -395,7 +404,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												<Space w={4} />
 												<Text
 													className={
-														clubsTheme.tExtraSmall
+														meemTheme.tExtraSmall
 													}
 												>
 													Share
@@ -421,12 +430,12 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 			<Container>
 				{editor && (
-					<div className={clubsTheme.fRichTextEditorContainer}>
+					<div className={meemTheme.fRichTextEditorContainer}>
 						<RichTextEditor
 							editor={editor}
 							classNames={{
-								toolbar: clubsTheme.fRichTextEditorToolbar,
-								root: clubsTheme.fRichTextEditorToolbar
+								toolbar: meemTheme.fRichTextEditorToolbar,
+								root: meemTheme.fRichTextEditorToolbar
 							}}
 						>
 							<RichTextEditor.Toolbar>
@@ -444,9 +453,9 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 							<RichTextEditor.Content />
 						</RichTextEditor>
 						<Space h={16} />
-						<div className={clubsTheme.rowEndAlign}>
+						<div className={meemTheme.rowEndAlign}>
 							<Button
-								className={clubsTheme.buttonBlack}
+								className={meemTheme.buttonBlack}
 								style={{ marginBottom: 16, marginRight: 16 }}
 								loading={isLoading}
 								disabled={isLoading}

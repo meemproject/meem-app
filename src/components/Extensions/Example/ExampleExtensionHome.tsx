@@ -1,47 +1,47 @@
 import { Center, Container, Loader, Space, Text } from '@mantine/core'
 import React from 'react'
-import { useClub } from '../../ClubHome/ClubProvider'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { useMeemTheme } from '../../Styles/AgreementsTheme'
 
 export const ExampleExtensionHome: React.FC = () => {
 	/*
-	Use the clubsTheme object to access clubs styles
+	Use the meemTheme object to access agreements styles
 	such as colors, fonts and layouts
 	*/
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	/*
-	Access the club, loading and error states using ClubContext.
+	Access the agreement, loading and error states using AgreementContext.
 	Look inside /pages/e/example/index.tsx for an example of how
-	the ClubProvider and ClubContext is used to fetch a club
+	the AgreementProvider and AgreementContext is used to fetch a agreement
 	where required.
 	*/
-	const { club, isLoadingClub, error } = useClub()
+	const { agreement, isLoadingAgreement, error } = useAgreement()
 
 	return (
 		<Container>
 			<Space h={64} />
 
-			{/* Club loaded state */}
-			{club && (
-				<Text className={clubsTheme.tSmall}>
-					{`This is the homepage for the example club extension`}
+			{/* Agreement loaded state */}
+			{agreement && (
+				<Text className={meemTheme.tSmall}>
+					{`This is the homepage for the example agreement extension`}
 				</Text>
 			)}
-			{/* Club loading state */}
-			{isLoadingClub && (
+			{/* Agreement loading state */}
+			{isLoadingAgreement && (
 				<>
 					<Center>
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					</Center>
 				</>
 			)}
 
-			{/* Club error state */}
-			{!isLoadingClub && error && (
+			{/* Agreement error state */}
+			{!isLoadingAgreement && error && (
 				<>
 					<Center>
-						<Text className={clubsTheme.tSmall}>
+						<Text className={meemTheme.tSmall}>
 							Error loading this extension!
 						</Text>
 					</Center>
