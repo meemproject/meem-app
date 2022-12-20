@@ -2,7 +2,7 @@ import { Button, Center, Space, Text } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Club } from '../../../model/club/club'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import { colorBlack, useClubsTheme } from '../../Styles/ClubsTheme'
 interface IProps {
 	club: Club
 }
@@ -27,13 +27,19 @@ export const ClubBlankSlateWidget: React.FC<IProps> = ({ club }) => {
 						{club?.isCurrentUserClubAdmin && (
 							<div className={clubsTheme.widgetMeem}>
 								<Center>
-									<Text className={clubsTheme.tLargeBold}>
+									<Text
+										className={clubsTheme.tLargeBold}
+										color={colorBlack}
+									>
 										{`Let's get started`}
 									</Text>
 								</Center>
 								<Space h={16} />
 								<Center>
-									<Text className={clubsTheme.tSmall}>
+									<Text
+										className={clubsTheme.tSmall}
+										color={colorBlack}
+									>
 										{`There's nothing for your community members to do yet. Add your first extension to enable your members to talk, organize events and much more.`}
 									</Text>
 								</Center>

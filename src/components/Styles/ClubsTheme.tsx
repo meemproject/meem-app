@@ -406,22 +406,21 @@ export const useClubsTheme = createStyles(theme => ({
 
 	// Site header bar
 	siteHeader: {
-		marginTop: 0,
-		paddingTop: 8,
-		paddingBottom: '-8px',
 		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		borderBottom: `1px solid ${
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
 		}`
 	},
 	siteHeaderLeftItems: {
-		marginLeft: 4,
+		marginLeft: 16,
+		paddingTop: 2,
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center'
 	},
 
 	siteHeaderRightItems: {
+		paddingTop: 10,
 		marginBottom: 4,
 		marginRight: 0,
 		display: 'flex',

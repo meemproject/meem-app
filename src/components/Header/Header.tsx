@@ -117,8 +117,8 @@ export function HeaderMenu() {
 		<Header className={clubsTheme.siteHeader} height={56}>
 			<div className={clubsTheme.siteHeaderInner}>
 				<div className={clubsTheme.siteHeaderLeftItems}>
-					<a onClick={navigateHome}>
-						<Image src="/meem-logo.svg" />
+					<a onClick={navigateHome} className={clubsTheme.clickable}>
+						<Image src="/meem-logo.svg" height={20} />
 					</a>
 				</div>
 
