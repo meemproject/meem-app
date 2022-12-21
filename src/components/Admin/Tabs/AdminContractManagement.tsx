@@ -236,7 +236,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			<Radio.Group
 				orientation="vertical"
 				spacing={10}
-				size="sm"
+				size="md"
 				color="dark"
 				value={smartContractPermission}
 				onChange={(value: any) => {

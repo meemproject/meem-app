@@ -194,12 +194,8 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 				<Space h={32} />
 
 				<Text className={meemTheme.tSmallBoldFaded}>Price</Text>
-				<Space h={16} />
 
-				<Text
-					className={meemTheme.tMedium}
-					style={{ marginBottom: 8, lineHeight: 2 }}
-				>
+				<Text className={meemTheme.tMedium} style={{ lineHeight: 2 }}>
 					Our community{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
