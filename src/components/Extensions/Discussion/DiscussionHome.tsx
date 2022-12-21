@@ -10,7 +10,7 @@ import {
 	Center,
 	Button
 } from '@mantine/core'
-import { useAuth, useSDK } from '@meemproject/react'
+import { LoginState, useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
@@ -19,6 +19,7 @@ import { DiscussionComment } from '../../../model/agreement/extensions/discussio
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { IReactions } from './DiscussionPost'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
 export function rowToDiscussionPost(options: {
@@ -67,11 +68,20 @@ export function rowToDiscussionComment(options: {
 export const DiscussionHome: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
+	const [commentCounts, setCommentCounts] = useState<{
+		[postId: string]: number
+	}>({})
 	const [hasFetchdData, setHasFetchedData] = useState(false)
+	const [hasFetchedCommentCount, setHasFetchedCommentCount] = useState(false)
+	const [hasFetchedReactions, setHasFetchedReactions] = useState(false)
+	const [reactions, setReactions] = useState<IReactions>({
+		posts: {},
+		comments: {}
+	})
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
 
 	const { sdk } = useSDK()
-	const { chainId } = useAuth()
+	const { chainId, loginState } = useAuth()
 
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
@@ -94,16 +104,16 @@ export const DiscussionHome: React.FC = () => {
 	// 	}
 	// ]
 
+	const agreementExtension =
+		agreement?.rawAgreement?.AgreementExtensions.find(
+			ae => ae.Extension?.slug === 'discussion'
+		)
+
 	useEffect(() => {
 		const fetchData = async () => {
 			if (hasFetchdData || !chainId || !sdk.id.hasInitialized) {
 				return
 			}
-
-			const agreementExtension =
-				agreement?.rawAgreement?.AgreementExtensions.find(
-					ae => ae.Extension?.slug === 'discussion'
-				)
 
 			if (
 				agreementExtension &&
@@ -132,7 +142,152 @@ export const DiscussionHome: React.FC = () => {
 		}
 
 		fetchData()
-	}, [hasFetchdData, agreement, chainId, sdk])
+	}, [hasFetchdData, agreement, chainId, sdk, agreementExtension])
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (
+				hasFetchedCommentCount ||
+				!hasFetchdData ||
+				!chainId ||
+				!sdk.id.hasInitialized
+			) {
+				return
+			}
+
+			if (
+				agreementExtension &&
+				agreementExtension.metadata?.storage?.tableland?.comments
+			) {
+				const tableName =
+					agreementExtension.metadata?.storage?.tableland?.comments
+						.tablelandTableName
+
+				const tl = await sdk.storage.getTablelandInstance({ chainId })
+
+				const postIds = posts.map(p => `'${p.id}'`).join(',')
+
+				const query = `select count(1), "refId" from ${tableName} where "refId" in (${postIds}) group by "refId"`
+
+				const result = await tl.read(query)
+
+				const newCommentCounts: { [postId: string]: number } = {}
+
+				result.rows.forEach(row => {
+					newCommentCounts[row[1]] = row[0]
+				})
+
+				setCommentCounts(newCommentCounts)
+
+				setHasFetchedCommentCount(true)
+			}
+		}
+
+		fetchData()
+	}, [
+		hasFetchdData,
+		hasFetchedCommentCount,
+		agreement,
+		chainId,
+		sdk,
+		agreementExtension,
+		posts
+	])
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (
+				hasFetchedReactions ||
+				!hasFetchdData ||
+				!posts ||
+				!chainId ||
+				loginState !== LoginState.LoggedIn ||
+				!sdk.id.hasInitialized
+			) {
+				return
+			}
+
+			const authSig = await sdk.id.getLitAuthSig()
+
+			const refIds = posts.map(p => p.id)
+
+			// Fetch Reactions
+			if (
+				agreementExtension &&
+				agreementExtension.metadata?.storage?.tableland?.reactions
+			) {
+				const reactionsTableName =
+					agreementExtension.metadata?.storage?.tableland?.reactions
+						.tablelandTableName
+
+				const rows = await sdk.storage.read({
+					chainId,
+					tableName: reactionsTableName,
+					authSig,
+					where: {
+						refId: refIds
+					}
+				})
+
+				const newReactions: IReactions = { posts: {}, comments: {} }
+				rows.forEach(row => {
+					if (row.data?.reaction) {
+						const table = row.refTable as string
+						if (newReactions[table]) {
+							if (!newReactions[table][row.refId]) {
+								newReactions[table][row.refId] = {
+									counts: {},
+									walletAddresses: {}
+								}
+							}
+
+							// Ignore additional reactions from a wallet
+							if (
+								newReactions[table][row.refId].walletAddresses[
+									row.data.walletAddress
+								]
+							) {
+								return
+							}
+
+							if (
+								!newReactions[table][row.refId].counts[
+									row.data.reaction
+								]
+							) {
+								newReactions[table][row.refId].counts[
+									row.data.reaction
+								] = 1
+							} else {
+								newReactions[table][row.refId].counts[
+									row.data.reaction
+								]++
+							}
+
+							newReactions[table][row.refId].walletAddresses[
+								row.data.walletAddress
+							] = true
+						}
+					}
+				})
+
+				setReactions(newReactions)
+			}
+
+			setHasFetchedReactions(true)
+		}
+
+		fetchData()
+	}, [
+		hasFetchedReactions,
+		hasFetchdData,
+		agreement,
+		chainId,
+		sdk,
+		posts,
+		loginState,
+		agreementExtension
+	])
 
 	return (
 		<>
@@ -227,7 +382,16 @@ export const DiscussionHome: React.FC = () => {
 						</div>
 						<Space h={32} />
 						{posts.map(post => (
-							<DiscussionPostPreview key={post.id} post={post} />
+							<DiscussionPostPreview
+								key={post.id}
+								post={post}
+								onReaction={() => {
+									setHasFetchedReactions(false)
+								}}
+								reactions={reactions}
+								agreementExtension={agreementExtension}
+								commentCount={commentCounts[post.id.toString()]}
+							/>
 						))}
 					</Container>
 				</>

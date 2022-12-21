@@ -455,7 +455,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				setReactions(newReactions)
 			}
 
-			setHasFetchedComments(true)
+			setHasFetchedReactions(true)
 		}
 
 		fetchData()

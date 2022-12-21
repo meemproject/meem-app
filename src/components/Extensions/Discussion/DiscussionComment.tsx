@@ -68,8 +68,10 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 	})
 
 	const [isLoading, setIsLoading] = useState(false)
-	const [isReplying, setIsReplying] = useState(false)
+	const [isReplying] = useState(false)
 	const [isCommentRepliesHidden, setIsCommentRepliesHidden] = useState(false)
+
+	log.debug({ isLoading })
 
 	const handleReactionSubmit = useCallback(
 		async (options: {

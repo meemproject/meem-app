@@ -13,6 +13,7 @@ import {
 	Modal
 } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ExternalLink, Settings } from 'tabler-icons-react'
@@ -95,9 +96,9 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		router.push(`/${agreement.slug}/e/${slug}/settings`)
 	}
 
-	const navigateToExtensionHome = (slug: string) => {
-		router.push(`/${agreement.slug}/e/${slug}`)
-	}
+	// const navigateToExtensionHome = (slug: string) => {
+	// 	router.push(`/${agreement.slug}/e/${slug}`)
+	// }
 
 	return (
 		<>
@@ -124,8 +125,14 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 									)
 								) {
 									extension.metadata?.transactions.forEach(
-										tx => {
-											if (tx.status === 'pending') {
+										(tx: {
+											status: MeemAPI.TransactionStatus
+										}) => {
+											if (
+												tx.status ===
+												MeemAPI.TransactionStatus
+													.Pending
+											) {
 												isExtensionBeingEnabled = true
 											}
 										}
