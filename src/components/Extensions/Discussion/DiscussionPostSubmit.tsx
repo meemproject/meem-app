@@ -207,7 +207,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 						style={{ marginTop: 34 }}
 						onClick={() => {
 							router.push({
-								pathname: `/${agreementSlug}/e/discussion`
+								pathname: `/${agreementSlug}/e/discussions`
 							})
 						}}
 					>

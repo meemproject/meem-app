@@ -102,7 +102,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 							className={meemTheme.buttonBlue}
 							onClick={() => {
 								router.push({
-									pathname: `/${agreement.slug}/e/discussion`
+									pathname: `/${agreement.slug}/e/discussions`
 								})
 							}}
 						>
@@ -116,7 +116,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									className={meemTheme.clickable}
 									onClick={() => {
 										router.push({
-											pathname: `/${agreement.slug}/e/discussion/settings`
+											pathname: `/${agreement.slug}/e/discussions/settings`
 										})
 									}}
 								/>

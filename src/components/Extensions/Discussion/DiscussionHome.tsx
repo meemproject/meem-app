@@ -352,7 +352,7 @@ export const DiscussionHome: React.FC = () => {
 								className={meemTheme.buttonBlack}
 								onClick={() => {
 									router.push({
-										pathname: `/${agreement.slug}/e/discussion/submit`
+										pathname: `/${agreement.slug}/e/discussions/submit`
 									})
 								}}
 							>
