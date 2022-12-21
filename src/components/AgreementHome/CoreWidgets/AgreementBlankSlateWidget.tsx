@@ -23,7 +23,6 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({ agreement }) => {
 		<div>
 			{shouldShowBlankSlate && (
 				<>
-					<Space h={24} />
 					<>
 						{agreement?.isCurrentUserAgreementAdmin && (
 							<div className={meemTheme.widgetMeem}>

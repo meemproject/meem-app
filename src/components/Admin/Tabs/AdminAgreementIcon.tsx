@@ -167,6 +167,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 			<Text className={meemTheme.tMediumBold}>
 				Upload an icon to represent your community.
 			</Text>
+			<Space h={8} />
 			<Text
 				className={meemTheme.tExtraSmall}
 				style={{

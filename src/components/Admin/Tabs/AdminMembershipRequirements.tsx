@@ -324,7 +324,7 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 				<Radio.Group
 					classNames={{ label: meemTheme.fRadio }}
 					orientation="vertical"
-					spacing={16}
+					spacing={10}
 					size="md"
 					color="dark"
 					value={

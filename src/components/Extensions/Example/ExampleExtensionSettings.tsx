@@ -119,8 +119,8 @@ export const ExampleExtensionSettings: React.FC = () => {
 							<Space w={24} />
 							<Image
 								radius={8}
-								height={56}
-								width={56}
+								height={80}
+								width={80}
 								className={meemTheme.imagePixelated}
 								src={agreement?.image}
 							/>

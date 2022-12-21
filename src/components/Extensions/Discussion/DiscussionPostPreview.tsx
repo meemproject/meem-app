@@ -110,7 +110,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 
 	return (
 		<div className={meemTheme.greyContentBox} style={{ marginBottom: 16 }}>
-			<Link href={`/${agreement?.slug}/e/discussion/${post.id}`}>
+			<Link href={`/${agreement?.slug}/e/discussions/${post.id}`}>
 				<a>
 					<div className={meemTheme.row}>
 						<div>
@@ -241,7 +241,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 									style={{ marginTop: 16 }}
 								>
 									<Link
-										href={`/${post.agreementSlug}/e/discussion/post1`}
+										href={`/${post.agreementSlug}/e/discussions/post1`}
 									>
 										<div
 											className={meemTheme.centeredRow}
