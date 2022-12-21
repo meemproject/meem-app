@@ -166,7 +166,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ clubSlug }) => {
 
 			await sdk.storage.encryptAndWrite({
 				authSig,
-				tableName: postTable.tablelandTableName,
+				path: `meem-${club.id}-discussion-posts`,
 				data: {
 					title: postTitle,
 					body: editor?.getHTML(),
