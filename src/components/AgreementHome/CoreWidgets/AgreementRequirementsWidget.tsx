@@ -99,7 +99,11 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									reqs.push({
 										requirementKey: `Anyone${index}`,
 										requirementComponent: (
-											<Text>
+											<Text
+												className={
+													meemTheme.tExtraSmall
+												}
+											>
 												Anyone can join this community.
 											</Text>
 										),
@@ -116,7 +120,11 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 													flexDirection: 'column'
 												}}
 											>
-												<Text>
+												<Text
+													className={
+														meemTheme.tExtraSmall
+													}
+												>
 													Membership is available to
 													approved applicants.
 													{!req.applicationInstructions && (
@@ -142,6 +150,9 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 																style={{
 																	color: colorBlue
 																}}
+																className={
+																	meemTheme.tExtraSmall
+																}
 															>
 																<Space h={4} />
 																{`${req.applicationInstructions}`}
@@ -165,7 +176,11 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									reqs.push({
 										requirementKey: `Token${index}`,
 										requirementComponent: (
-											<Text>
+											<Text
+												className={
+													meemTheme.tExtraSmall
+												}
+											>
 												Members must hold{' '}
 												{req.tokenMinQuantity}{' '}
 												<a
@@ -185,7 +200,11 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									reqs.push({
 										requirementKey: `OtherAgreement${index}`,
 										requirementComponent: (
-											<Text>
+											<Text
+												className={
+													meemTheme.tExtraSmall
+												}
+											>
 												Members must also be a member of{' '}
 												<a
 													className={meemTheme.tLink}
@@ -209,7 +228,9 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 				reqs.push({
 					requirementKey: `Error${index}`,
 					requirementComponent: (
-						<Text>Anyone can join this community for free.</Text>
+						<Text className={meemTheme.tExtraSmall}>
+							Anyone can join this community for free.
+						</Text>
 					),
 					meetsRequirement: true
 				})
@@ -280,7 +301,11 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 
 				reqs.push({
 					requirementKey: `mintDates${index}`,
-					requirementComponent: <Text>{mintDatesText}</Text>,
+					requirementComponent: (
+						<Text className={meemTheme.tExtraSmall}>
+							{mintDatesText}
+						</Text>
+					),
 					meetsRequirement:
 						(isAfterMintStart && isBeforeMintEnd) ||
 						(mintStart &&
@@ -300,7 +325,13 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 
 			setRequirementsParsed(true)
 		},
-		[areRequirementsParsed, checkEligibility, meemTheme.tLink, wallet]
+		[
+			areRequirementsParsed,
+			checkEligibility,
+			meemTheme.tExtraSmall,
+			meemTheme.tLink,
+			wallet
+		]
 	)
 
 	useEffect(() => {
@@ -313,9 +344,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 		<>
 			<div className={meemTheme.widgetLight}>
 				<div className={meemTheme.spacedRowCentered}>
-					<Text className={meemTheme.tMediumBold}>
-						Membership Requirements
-					</Text>
+					<Text className={meemTheme.tMediumBold}>Requirements</Text>
 					<div className={meemTheme.centeredRow}>
 						{agreement.isCurrentUserAgreementAdmin && (
 							<div className={meemTheme.row}>

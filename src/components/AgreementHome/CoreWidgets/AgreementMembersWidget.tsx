@@ -96,14 +96,14 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 				<Space h={24} />
 
 				<TextInput
-					radius={20}
+					radius={16}
 					classNames={{
 						input: meemTheme.fTextField
 					}}
 					icon={<Search />}
 					placeholder={'Search Members'}
 					className={meemTheme.fullWidth}
-					size={'lg'}
+					size={'md'}
 					onChange={event => {
 						if (event.target.value) {
 							filterMembers(members, event.target.value)
