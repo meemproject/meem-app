@@ -401,20 +401,21 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 					overlayBlur={8}
 					size={'60%'}
 					padding={'lg'}
+					withCloseButton={false}
 					opened={isEnablingExtension}
 					onClose={() => {}}
 				>
 					<Center>
-						<Text className={meemTheme.tMediumBold}>
+						<Text className={meemTheme.tLargeBold}>
 							Please wait...
 						</Text>
 					</Center>
-					<Space h={16} />
+					<Space h={24} />
 
 					<Center>
 						<Text>{`Enabling ${enablingExtensionName}`}</Text>
 					</Center>
-					<Space h={16} />
+					<Space h={24} />
 
 					<Center>
 						<Loader variant="oval" color="blue" />
