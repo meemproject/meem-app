@@ -102,7 +102,7 @@ export async function tokenFromContractAddress(
 			contractAddress,
 			erc20ABI,
 			wallet.web3Provider
-		) as ERC20
+		) as unknown as ERC20
 		symbol = await contractToCheck.symbol()
 		log.debug('get symbol')
 		name = await contractToCheck.name()

@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	Center,
 	Space,
@@ -6,45 +7,147 @@ import {
 	Badge,
 	useMantineColorScheme
 } from '@mantine/core'
+import { useAuth, useSDK } from '@meemproject/react'
 import { DateTime } from 'luxon'
 import Link from 'next/link'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
-import { DiscussionPost } from '../../../model/club/extensions/discussion/discussionPost'
+import { AgreementExtensions } from '../../../../generated/graphql'
+import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import { useClub } from '../../ClubHome/ClubProvider'
-import { colorDarkerGrey, useClubsTheme } from '../../Styles/ClubsTheme'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
+import { IReactions } from './DiscussionPost'
 interface IProps {
 	post: DiscussionPost
+	reactions: IReactions
+	agreementExtension: AgreementExtensions | undefined
+	onReaction: () => void
+	commentCount?: number
 }
 
-export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
-	const { classes: clubsTheme } = useClubsTheme()
-	const { club } = useClub()
+export const DiscussionPostPreview: React.FC<IProps> = ({
+	post,
+	reactions,
+	agreementExtension,
+	onReaction,
+	commentCount
+}) => {
+	const { classes: meemTheme } = useMeemTheme()
+	const { agreement } = useAgreement()
+
+	const [isLoading, setIsLoading] = useState(false)
+
+	log.debug({ isLoading, commentCount })
+
+	const { sdk } = useSDK()
+	const { chainId, me } = useAuth()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
+	const handleReactionSubmit = useCallback(
+		async (options: {
+			e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+			reaction: string
+		}) => {
+			const { e, reaction } = options
+			e.preventDefault()
+			try {
+				if (!chainId) {
+					log.crit('No chainId found')
+					return
+				}
+				setIsLoading(true)
+
+				const authSig = await sdk.id.getLitAuthSig()
+
+				const tableName =
+					agreementExtension?.metadata?.storage?.tableland?.reactions
+						.tablelandTableName
+
+				await sdk.storage.encryptAndWrite({
+					chainId,
+					tableName,
+					authSig,
+					writeColumns: {
+						refId: post.id,
+						refTable: 'posts'
+					},
+					data: {
+						reaction,
+						userId: me?.user.id,
+						walletAddress: me?.address
+					},
+					accessControlConditions: [
+						{
+							contractAddress: agreement?.address
+						}
+					]
+				})
+
+				// Re-fetch
+				onReaction()
+			} catch (err) {
+				log.crit(err)
+			}
+			setIsLoading(false)
+		},
+		[sdk, chainId, me, agreementExtension, agreement, onReaction, post]
+	)
+
+	const upVotes =
+		(post &&
+			reactions.posts[post.id] &&
+			reactions.posts[post.id].counts.upvote) ??
+		0
+	const downVotes =
+		(post &&
+			reactions.posts[post.id] &&
+			reactions.posts[post.id].counts.downvote) ??
+		0
+	const votes = upVotes - downVotes
+
 	return (
-		<div className={clubsTheme.greyContentBox} style={{ marginBottom: 16 }}>
-			<Link href={`/${club?.slug}/e/discussion/${post.id}`}>
+		<div className={meemTheme.greyContentBox} style={{ marginBottom: 16 }}>
+			<Link href={`/${agreement?.slug}/e/discussion/${post.id}`}>
 				<a>
-					<div className={clubsTheme.row}>
+					<div className={meemTheme.row}>
 						<div>
 							<Center>
-								<ChevronUp />
+								<a
+									style={{ cursor: 'pointer' }}
+									onClick={e =>
+										handleReactionSubmit({
+											e,
+											reaction: 'upvote'
+										})
+									}
+								>
+									<ChevronUp />
+								</a>
 							</Center>
 
 							<Space h={16} />
-							<Center>{post.votes ?? 0}</Center>
+							<Center>{votes ?? 0}</Center>
 							<Space h={16} />
 							<Center>
-								<ChevronDown />
+								<a
+									style={{ cursor: 'pointer' }}
+									onClick={e =>
+										handleReactionSubmit({
+											e,
+											reaction: 'downvote'
+										})
+									}
+								>
+									<ChevronDown />
+								</a>
 							</Center>
 						</div>
 						<Space w={16} />
 						<div style={{ width: '100%' }}>
-							<div className={clubsTheme.row}>
+							<div className={meemTheme.row}>
 								{post.attachment && (
 									<>
 										<Image
@@ -57,12 +160,12 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									</>
 								)}
 								<div>
-									<Text className={clubsTheme.tSmallBold}>
+									<Text className={meemTheme.tSmallBold}>
 										{post.title}
 									</Text>
 									<Space h={8} />
 									<Text
-										className={clubsTheme.tExtraSmall}
+										className={meemTheme.tExtraSmall}
 										dangerouslySetInnerHTML={{
 											// TODO: Sanitize html. Possible XSS vulnerability
 											__html: post.body
@@ -86,7 +189,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 														deg: 35
 													}}
 													classNames={{
-														inner: clubsTheme.tBadgeTextSmall
+														inner: meemTheme.tBadgeTextSmall
 													}}
 													variant={'gradient'}
 												>
@@ -99,8 +202,8 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 							</div>
 
 							<Space h={20} />
-							<div className={clubsTheme.spacedRowCentered}>
-								<div className={clubsTheme.centeredRow}>
+							<div className={meemTheme.spacedRowCentered}>
+								<div className={meemTheme.centeredRow}>
 									<Image
 										src={
 											post.profilePicUrl ??
@@ -114,7 +217,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									<div>
 										<Text
 											className={
-												clubsTheme.tExtraSmallBold
+												meemTheme.tExtraSmallBold
 											}
 										>
 											{post.displayName ??
@@ -124,7 +227,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 										</Text>
 										<Text
 											className={
-												clubsTheme.tExtraExtraSmall
+												meemTheme.tExtraExtraSmall
 											}
 										>
 											{DateTime.fromSeconds(
@@ -134,37 +237,35 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									</div>
 								</div>
 								<div
-									className={clubsTheme.row}
+									className={meemTheme.row}
 									style={{ marginTop: 16 }}
 								>
 									<Link
-										href={`/${post.clubSlug}/e/discussion/post1`}
+										href={`/${post.agreementSlug}/e/discussion/post1`}
 									>
 										<div
-											className={clubsTheme.centeredRow}
+											className={meemTheme.centeredRow}
 											style={{ cursor: 'pointer' }}
 										>
 											<Message width={20} height={20} />
 											<Space w={4} />
 											<Text
 												className={
-													clubsTheme.tExtraSmall
+													meemTheme.tExtraSmall
 												}
 											>
-												14
+												{commentCount ?? 0}
 											</Text>
 										</div>
 									</Link>
 									<Space w={16} />
 									<div
-										className={clubsTheme.centeredRow}
+										className={meemTheme.centeredRow}
 										style={{ cursor: 'pointer' }}
 									>
 										<Share width={20} height={20} />
 										<Space w={4} />
-										<Text
-											className={clubsTheme.tExtraSmall}
-										>
+										<Text className={meemTheme.tExtraSmall}>
 											Share
 										</Text>
 									</div>

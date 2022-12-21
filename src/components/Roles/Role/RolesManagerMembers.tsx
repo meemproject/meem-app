@@ -13,45 +13,52 @@ import {
 } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { CircleMinus, Lock, Search } from 'tabler-icons-react'
-import { Club, ClubMember, ClubRole } from '../../../model/club/club'
-import { ClubMemberCard } from '../../Profile/Tabs/Identity/ClubMemberCard'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import {
+	Agreement,
+	AgreementMember,
+	AgreementRole
+} from '../../../model/agreement/agreements'
+import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
 interface IProps {
-	club: Club
-	role?: ClubRole
+	agreement: Agreement
+	role?: AgreementRole
 	onSaveChanges: () => void
-	onMembersUpdated: (members: ClubMember[]) => void
+	onMembersUpdated: (members: AgreementMember[]) => void
 }
 
 export const RolesManagerMembers: React.FC<IProps> = ({
-	club,
+	agreement,
 	role,
 	onSaveChanges,
 	onMembersUpdated
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 
-	const [members, setMembers] = useState<ClubMember[]>([])
+	const [members, setMembers] = useState<AgreementMember[]>([])
 
-	const [filteredMembers, setFilteredMembers] = useState<ClubMember[]>()
+	const [filteredMembers, setFilteredMembers] = useState<AgreementMember[]>()
 
 	useEffect(() => {
-		if (!filteredMembers && club && role && club.memberRolesMap) {
-			setMembers(club.memberRolesMap.get(role.id) ?? [])
-			setFilteredMembers(club.memberRolesMap.get(role.id) ?? [])
+		if (!filteredMembers && agreement && role && agreement.memberRolesMap) {
+			setMembers(agreement.memberRolesMap.get(role.id) ?? [])
+			setFilteredMembers(agreement.memberRolesMap.get(role.id) ?? [])
 		}
-	}, [club, filteredMembers, members, role])
+	}, [agreement, filteredMembers, members, role])
 
-	const filterMembers = (allMembers: ClubMember[], searchTerm: string) => {
+	const filterMembers = (
+		allMembers: AgreementMember[],
+		searchTerm: string
+	) => {
 		const search = searchTerm
-		const newFiltered: ClubMember[] = []
+		const newFiltered: AgreementMember[] = []
 
 		if (searchTerm.length > 0) {
 			allMembers.forEach(member => {
@@ -75,7 +82,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		}
 	}
 
-	const addMember = (member: ClubMember) => {
+	const addMember = (member: AgreementMember) => {
 		log.debug('add member')
 		const newMembers = [...members]
 		newMembers.push(member)
@@ -83,7 +90,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		setMembers(newMembers)
 	}
 
-	const removeMember = (member: ClubMember) => {
+	const removeMember = (member: AgreementMember) => {
 		const newMembers = members.filter(memb => memb.wallet !== member.wallet)
 		filterMembers(newMembers, currentSearchTerm)
 		setMembers(newMembers)
@@ -95,15 +102,15 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h={14} />
-				<div className={clubsTheme.centeredRow}>
+				<div className={meemTheme.centeredRow}>
 					<TextInput
 						radius={20}
 						classNames={{
-							input: clubsTheme.fTextField
+							input: meemTheme.fTextField
 						}}
 						icon={<Search />}
 						placeholder={'Search Members'}
-						className={clubsTheme.fullWidth}
+						className={meemTheme.fullWidth}
 						size={'lg'}
 						onChange={event => {
 							if (event.target.value) {
@@ -116,12 +123,12 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						}}
 					/>
 
-					{role?.name !== 'Club Member' && (
-						<div className={clubsTheme.row}>
+					{role?.name !== 'Agreement Member' && (
+						<div className={meemTheme.row}>
 							<Space w={16} />
 
 							<Button
-								className={clubsTheme.buttonWhite}
+								className={meemTheme.buttonWhite}
 								onClick={() => {
 									setIsMembersModalOpen(true)
 								}}
@@ -138,7 +145,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 						{filteredMembers.map(member => (
 							<div key={member.wallet}>
 								<Space h={16} />
-								<div className={clubsTheme.spacedRowCentered}>
+								<div className={meemTheme.spacedRowCentered}>
 									<HoverCard
 										width={280}
 										shadow="md"
@@ -147,7 +154,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 										<HoverCard.Target>
 											<div
 												className={
-													clubsTheme.centeredRow
+													meemTheme.centeredRow
 												}
 											>
 												<Image
@@ -170,20 +177,22 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 												<div>
 													<Text
 														className={
-															clubsTheme.tSmallBold
+															meemTheme.tSmallBold
 														}
 													>
 														{member.displayName
 															? member.displayName
-															: member.isClubOwner
-															? 'Club Owner'
-															: member.isClubAdmin
-															? 'Club Admin'
-															: 'Club Member'}
+															: member.isMeemApi
+															? 'Meem API'
+															: member.isAgreementOwner
+															? 'Community Owner'
+															: member.isAgreementAdmin
+															? 'Community Administrator'
+															: 'Community Member'}
 													</Text>
 													<Text
 														className={
-															clubsTheme.tExtraSmallFaded
+															meemTheme.tExtraSmallFaded
 														}
 													>
 														{member.ens
@@ -193,22 +202,25 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 												</div>
 											</div>
 										</HoverCard.Target>
-										<ClubMemberCard member={member} />
+										<AgreementMemberCard member={member} />
 									</HoverCard>
 
-									{!role?.isAdminRole && !member.isClubOwner && (
-										<>
-											<CircleMinus
-												className={clubsTheme.clickable}
-												onClick={() => {
-													removeMember(member)
-												}}
-											/>
-										</>
-									)}
+									{!role?.isAdminRole &&
+										!member.isAgreementOwner && (
+											<>
+												<CircleMinus
+													className={
+														meemTheme.clickable
+													}
+													onClick={() => {
+														removeMember(member)
+													}}
+												/>
+											</>
+										)}
 									{(role?.name === 'Token Holder' ||
 										(role?.isAdminRole &&
-											member.isClubOwner)) && (
+											member.isAgreementOwner)) && (
 										<>
 											<Lock />
 										</>
@@ -248,7 +260,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 
 				<Space h={24} />
 				<Button
-					className={clubsTheme.buttonBlack}
+					className={meemTheme.buttonBlack}
 					onClick={() => {
 						onSaveChanges()
 					}}
@@ -260,7 +272,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 			<Space h={64} />
 			<RoleAddMembersModal
 				existingRoleMembers={members}
-				club={club}
+				agreement={agreement}
 				onModalClosed={() => {
 					setIsMembersModalOpen(false)
 				}}

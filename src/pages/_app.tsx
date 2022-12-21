@@ -11,7 +11,6 @@ import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React, { useEffect } from 'react'
 import { App } from '../components/App'
-import { ClubClubProvider } from '../components/ClubHome/ClubClubProvider'
 import '@fontsource/inter'
 // import { CustomApolloProvider } from '../providers/ApolloProvider'
 
@@ -70,16 +69,16 @@ function MyApp(props: AppProps) {
 					},
 					colors: {
 						brand: [
-							'#FAF3F2',
-							'#F0D3D0',
-							'#ECB2AA',
-							'#F18E81',
-							'#FF6651',
-							'#EA5844',
-							'#D44E3C',
-							'#B94B3C',
-							'#9B4C41',
-							'#844B43'
+							'#F0F2FA',
+							'#CBD3F2',
+							'#A2B2F3',
+							'#748FFC',
+							'#617CEA',
+							'#546ED6',
+							'#4B62C1',
+							'#495CA8',
+							'#4B588F',
+							'#49537A'
 						]
 					},
 					colorScheme,
@@ -88,11 +87,9 @@ function MyApp(props: AppProps) {
 			>
 				<MeemProvider>
 					<NotificationsProvider>
-						<ClubClubProvider>
-							<App>
-								<Component {...pageProps} />
-							</App>
-						</ClubClubProvider>
+						<App>
+							<Component {...pageProps} />
+						</App>
 					</NotificationsProvider>
 				</MeemProvider>
 			</MantineProvider>

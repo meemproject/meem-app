@@ -9,16 +9,16 @@ const Home: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Clubs</title>
-				<meta name="title" content="Clubs" />
+				<title>Meem</title>
+				<meta name="title" content="Meem" />
 				<meta
 					name="description"
 					content="Effortless access management and collaborative
 							publishing tools for your online community"
 				/>
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content="https://clubs.link/" />
-				<meta property="og:title" content="Clubs" />
+				<meta property="og:url" content="https://app.meem.wtf/" />
+				<meta property="og:title" content="Meem" />
 				<meta
 					property="og:description"
 					content="Effortless access management and collaborative
@@ -26,8 +26,8 @@ const Home: NextPage = () => {
 				/>
 
 				<meta property="twitter:card" content="summary_large_image" />
-				<meta property="twitter:url" content="https://clubs.link/" />
-				<meta property="twitter:title" content="Clubs!" />
+				<meta property="twitter:url" content="https://app.meem.wtf/" />
+				<meta property="twitter:title" content="Meem" />
 				<meta
 					property="twitter:title"
 					content="Effortless access management and collaborative

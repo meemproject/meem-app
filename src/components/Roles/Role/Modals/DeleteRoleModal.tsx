@@ -1,57 +1,45 @@
+/* eslint-disable no-unused-vars */
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { useSDK } from '@meemproject/react'
 import router from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
-import { Club, ClubRole } from '../../../../model/club/club'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import {
+	Agreement,
+	AgreementRole
+} from '../../../../model/agreement/agreements'
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	isOpened: boolean
 	onModalClosed: () => void
-	role?: ClubRole
-	club?: Club
+	role?: AgreementRole
+	agreement?: Agreement
 }
 
 export const DeleteRoleModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
 	role,
-	club
+	agreement
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { sdk } = useSDK()
 
 	const [isDeletingRole, setIsDeletingRole] = useState(false)
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const deleteRole = async () => {
-		if (role && club) {
+		if (role && agreement) {
 			setIsDeletingRole(true)
 
 			try {
-				const updateRoleFetcher = makeFetcher<
-					MeemAPI.v1.DeleteAgreementRole.IQueryParams,
-					MeemAPI.v1.DeleteAgreementRole.IRequestBody,
-					MeemAPI.v1.DeleteAgreementRole.IResponseBody
-				>({
-					method: MeemAPI.v1.DeleteAgreementRole.method
-				})
-
-				log.debug(
-					`path: ${MeemAPI.v1.DeleteAgreementRole.path({
-						agreementId: club.id ?? '',
-						agreementRoleId: role.id ?? ''
-					})}`
-				)
-
-				await updateRoleFetcher(
-					MeemAPI.v1.DeleteAgreementRole.path({
-						agreementId: club.id ?? '',
-						agreementRoleId: role.id ?? ''
-					})
-				)
+				// TODO: Deleting a role not supported in the SDK yet.
 
 				showNotification({
 					title: 'Deleted role',
@@ -66,7 +54,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Error',
 					autoClose: 5000,
-					color: colorPink,
+					color: colorBlue,
 					icon: <AlertCircle />,
 					message: `Unable to delete this role. Please let us know!`
 				})
@@ -87,7 +75,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				withCloseButton={!isDeletingRole}
 				opened={isOpened}
 				title={
-					<Text className={clubsTheme.tMediumBold}>Delete Role</Text>
+					<Text className={meemTheme.tMediumBold}>Delete Role</Text>
 				}
 				onClose={() => {
 					onModalClosed()
@@ -96,13 +84,31 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				<Divider />
 				<Space h={24} />
 				<Text
-					className={clubsTheme.tMediumBold}
+					className={meemTheme.tMediumBold}
+				>{`Deleting roles is coming soon.`}</Text>
+				<Space h={16} />
+
+				<Text
+					className={meemTheme.tSmall}
+				>{`It's complicated. We're working on it!`}</Text>
+				<Space h={32} />
+				<Button
+					onClick={() => {
+						onModalClosed()
+					}}
+					className={meemTheme.buttonGrey}
+				>
+					Close
+				</Button>
+
+				{/* <Text
+					className={meemTheme.tMediumBold}
 				>{`Are you sure you want to delete this role?`}</Text>
 				<Space h={32} />
-				<div className={clubsTheme.row}>
+				<div className={meemTheme.row}>
 					<Button
 						loading={isDeletingRole}
-						className={clubsTheme.buttonBlack}
+						className={meemTheme.buttonBlack}
 						onClick={async () => {
 							deleteRole()
 						}}
@@ -116,13 +122,13 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 								onClick={() => {
 									onModalClosed()
 								}}
-								className={clubsTheme.buttonGrey}
+								className={meemTheme.buttonGrey}
 							>
 								Cancel
 							</Button>
 						</>
 					)}
-				</div>
+				</div> */}
 			</Modal>
 		</>
 	)

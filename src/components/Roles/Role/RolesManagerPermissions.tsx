@@ -2,14 +2,18 @@
 import { Text, Space, Switch, Divider, Button } from '@mantine/core'
 import React from 'react'
 import { Lock } from 'tabler-icons-react'
-import { Club, ClubRole, ClubRolePermission } from '../../../model/club/club'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+import {
+	Agreement,
+	AgreementRole,
+	AgreementRolePermission
+} from '../../../model/agreement/agreements'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
-	role?: ClubRole
-	club?: Club
+	role?: AgreementRole
+	agreement?: Agreement
 	onSaveChanges: () => void
-	onRoleUpdated: (role: ClubRole) => void
+	onRoleUpdated: (role: AgreementRole) => void
 }
 
 export const RolesManagerPermissions: React.FC<IProps> = ({
@@ -17,14 +21,14 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 	onSaveChanges,
 	onRoleUpdated
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
-	const permissionItem = (permission: ClubRolePermission) => (
+	const permissionItem = (permission: AgreementRolePermission) => (
 		<div key={permission.id}>
 			<Space h={22} />
-			<div className={clubsTheme.spacedRow}>
+			<div className={meemTheme.spacedRow}>
 				<Text>{permission.name}</Text>
-				<div className={clubsTheme.centeredRow}>
+				<div className={meemTheme.centeredRow}>
 					{permission.locked && <Lock />}
 					<Space w={4} />
 					<Switch
@@ -42,7 +46,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 
 								// TODO: there's got to be a better way to update a single element of an object and
 								// TODO: have it apply to useState, instead of recreating the entire object. surely?
-								const newRole: ClubRole = {
+								const newRole: AgreementRole = {
 									name: role.name,
 									id: role.id,
 									permissions: newPermissions,
@@ -73,7 +77,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 		<>
 			<div>
 				<Space h={24} />
-				<Text className={clubsTheme.tExtraSmallLabel}>
+				<Text className={meemTheme.tExtraSmallLabel}>
 					{`Contract Permissions (Admin Only)`.toUpperCase()}
 				</Text>
 				<Space h={8} />
@@ -87,8 +91,8 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 					</>
 				)}
 				<Space h={32} />
-				<Text className={clubsTheme.tExtraSmallLabel}>
-					{`Club Permissions`.toUpperCase()}
+				<Text className={meemTheme.tExtraSmallLabel}>
+					{`Agreement Permissions`.toUpperCase()}
 				</Text>
 				<Space h={8} />
 
@@ -104,7 +108,7 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 				<Space h={40} />
 
 				<Button
-					className={clubsTheme.buttonBlack}
+					className={meemTheme.buttonBlack}
 					onClick={onSaveChanges}
 				>
 					Save Changes

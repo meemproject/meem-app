@@ -9,24 +9,24 @@ const AuthenticatePage: NextPage = () => {
 	return (
 		<div style={{ position: 'relative' }}>
 			<Head>
-				<title>Authenticate | Clubs</title>
-				<meta name="title" content="Clubs" />
+				<title>Authenticate | Meem</title>
+				<meta name="title" content="Agreements" />
 				<meta
 					name="description"
 					content="Effortless access management and collaborative
 							publishing tools for your online community"
 				/>
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content="https://clubs.link/" />
-				<meta property="og:title" content="Clubs" />
+				<meta property="og:url" content="https://app.meem.wtf/" />
+				<meta property="og:title" content="Agreements" />
 				<meta
 					property="og:description"
 					content="Effortless access management and collaborative
 							publishing tools for your online community"
 				/>
 				<meta property="twitter:card" content="summary_large_image" />
-				<meta property="twitter:url" content="https://clubs.link/" />
-				<meta property="twitter:title" content="Clubs!" />
+				<meta property="twitter:url" content="https://app.meem.wtf/" />
+				<meta property="twitter:title" content="Agreements!" />
 				<meta
 					property="twitter:title"
 					content="Effortless access management and collaborative

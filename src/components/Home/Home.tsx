@@ -4,7 +4,6 @@ import log from '@kengoldfarb/log'
 import {
 	Container,
 	Text,
-	Image,
 	Autocomplete,
 	Loader,
 	Avatar,
@@ -17,34 +16,21 @@ import {
 	// eslint-disable-next-line import/named
 	MantineColor,
 	// eslint-disable-next-line import/named
-	AutocompleteItem,
-	useMantineColorScheme
+	AutocompleteItem
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { LoginState, useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, {
-	forwardRef,
-	useContext,
-	useEffect,
-	useRef,
-	useState
-} from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import { X } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
-import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
-import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
+import { GetAgreementsAutocompleteQuery } from '../../../generated/graphql'
+import { GET_AGREEMENTS_AUTOCOMPLETE } from '../../graphql/agreements'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
-import ClubClubContext from '../ClubHome/ClubClubProvider'
-import { ClubsFAQModal } from '../Header/ClubsFAQModal'
-import {
-	colorDarkGrey,
-	colorLightPink,
-	colorPink,
-	useClubsTheme
-} from '../Styles/ClubsTheme'
+import { MeemFAQModal } from '../Header/MeemFAQModal'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 
 interface ItemProps extends SelectItemProps {
 	color: MantineColor
@@ -72,7 +58,7 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 )
 
 export function HomeComponent() {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const { sdk } = useSDK()
 	const { loginState, setJwt, chainId } = useAuth()
@@ -86,8 +72,6 @@ export function HomeComponent() {
 		}),
 		ssrMode: typeof window === 'undefined'
 	})
-
-	const clubclub = useContext(ClubClubContext)
 
 	const timeoutRef = useRef<number>(-1)
 	const [autocompleteFormValue, setAutocompleteFormValue] = useState('')
@@ -111,7 +95,7 @@ export function HomeComponent() {
 				}
 				setIsFetchingData(true)
 				const { data } = await autocompleteClient.query({
-					query: GET_CLUBS_AUTOCOMPLETE,
+					query: GET_AGREEMENTS_AUTOCOMPLETE,
 					variables: {
 						query: `%${val.trim()}%`,
 						chainId:
@@ -122,7 +106,7 @@ export function HomeComponent() {
 					}
 				})
 
-				const typedData = data as GetClubsAutocompleteQuery
+				const typedData = data as GetAgreementsAutocompleteQuery
 
 				if (typedData.Agreements.length === 0) {
 					setAutocompleteData([])
@@ -131,31 +115,31 @@ export function HomeComponent() {
 					setShowCreateButton(true)
 					log.debug('allowing create button = true')
 				} else {
-					const clubsList: React.SetStateAction<any[]> = []
-					typedData.Agreements.forEach(club => {
-						const clubData = {
-							image: club.metadata.image
-								? club.metadata.image
+					const agreementsList: React.SetStateAction<any[]> = []
+					typedData.Agreements.forEach(agreement => {
+						const agreementData = {
+							image: agreement.metadata.image
+								? agreement.metadata.image
 								: '',
-							value: club.name,
-							description: club.metadata.description
-								? club.metadata.description
+							value: agreement.name,
+							description: agreement.metadata.description
+								? agreement.metadata.description
 								: 'Unknown description',
-							slug: club.slug,
-							id: club.id
+							slug: agreement.slug,
+							id: agreement.id
 						}
-						clubsList.push(clubData)
+						agreementsList.push(agreementData)
 					})
-					setAutocompleteData(clubsList)
+					setAutocompleteData(agreementsList)
 					setIsFetchingData(false)
 					setIsLoadingSuggestions(false)
 
-					// Now look through the returned clubs to see if a club of the same name exists
+					// Now look through the returned agreements to see if a agreement of the same name exists
 					let shouldAllow = true
-					clubsList.forEach(club => {
+					agreementsList.forEach(agreement => {
 						if (
-							club.value &&
-							club.value.toLowerCase() ===
+							agreement.value &&
+							agreement.value.toLowerCase() ===
 								val.trim().toLowerCase()
 						) {
 							shouldAllow = false
@@ -179,7 +163,7 @@ export function HomeComponent() {
 
 	const goToCreate = () => {
 		if (loginState === LoginState.NotLoggedIn) {
-			Cookies.set(CookieKeys.clubName, autocompleteFormValue)
+			Cookies.set(CookieKeys.agreementName, autocompleteFormValue)
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -194,22 +178,20 @@ export function HomeComponent() {
 				showNotification({
 					radius: 'lg',
 					title: 'Oops!',
-					message: `That club name is too long or short. Choose something else.`,
-					color: colorPink
+					message: `That agreement name is too long or short. Choose something else.`,
+					color: colorBlue
 				})
 			} else {
 				router.push({
 					pathname: `/create`,
-					query: { clubname: autocompleteFormValue }
+					query: { agreementname: autocompleteFormValue }
 				})
 			}
 		}
 	}
 
-	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
-
-	const { colorScheme } = useMantineColorScheme()
-	const isDarkTheme = colorScheme === 'dark'
+	const [isAgreementsFAQModalOpen, setIsAgreementsFAQModalOpen] =
+		useState(false)
 
 	useEffect(() => {
 		const doLogin = async () => {
@@ -252,66 +234,7 @@ export function HomeComponent() {
 	])
 
 	return (
-		<div>
-			<div
-				style={{
-					backgroundColor: isDarkTheme
-						? colorDarkGrey
-						: colorLightPink
-				}}
-			>
-				<Container
-					size={900}
-					className={clubsTheme.rowResponsive}
-					style={{
-						paddingTop: 32,
-						paddingBottom: 32
-					}}
-				>
-					<Image
-						style={{
-							filter: 'invert(52%) sepia(97%) saturate(1775%) hue-rotate(326deg) brightness(99%) contrast(105%)',
-							marginRight: 48
-						}}
-						src="/clubs-home.svg"
-						height={120}
-						width={120}
-						fit={'contain'}
-					/>
-
-					<div
-						style={{
-							color: colorPink,
-							fontWeight: 600,
-							marginTop: 6
-						}}
-					>
-						<Text
-							style={{
-								fontSize: 22,
-								fontWeight: 800,
-								lineHeight: 1.4
-							}}
-						>
-							Effortless access management and collaborative
-							publishing tools for your online community
-						</Text>
-						<Space h={24} />
-						<Text
-							onClick={() => {
-								setIsClubsFAQModalOpen(true)
-							}}
-							className={clubsTheme.tLink}
-							style={{
-								fontSize: 18
-							}}
-						>
-							Get to know Clubs
-						</Text>
-					</div>
-				</Container>
-			</div>
-
+		<div className={meemTheme.widgetMeem}>
 			<Container
 				size={900}
 				style={{
@@ -321,18 +244,18 @@ export function HomeComponent() {
 					marginTop: 70
 				}}
 			>
-				<Text className={clubsTheme.tExtraSmallLabel}>
-					CREATE A CLUB
+				<Text className={meemTheme.tExtraSmallLabel} color="black">
+					CREATE A COMMUNITY
 				</Text>
 				<Space h={16} />
 				<Text
 					style={{
+						color: 'black',
 						fontSize: 20,
 						fontWeight: 'bold'
 					}}
-					color="dimmed"
 				>
-					{`What's your club called?`}
+					{`What's your community called?`}
 				</Text>
 				<Autocomplete
 					style={{
@@ -346,25 +269,22 @@ export function HomeComponent() {
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
 					placeholder={
-						'Start typing to see suggestions or create a new club...'
+						'Start typing to see suggestions or create a new community...'
 					}
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={
 						isLoadingSuggestions ? (
 							<Loader
 								variant="oval"
-								color={'red'}
+								color={'blue'}
 								size={24}
 								style={{ marginRight: '12px' }}
 							/>
 						) : autocompleteFormValue.length > 0 &&
-						  isShowingCreateButton &&
-						  (clubclub.isMember ||
-								process.env.NEXT_PUBLIC_TEST_MODE ===
-									'true') ? (
+						  isShowingCreateButton ? (
 							<Button
 								style={{ marginRight: 64 }}
-								className={clubsTheme.buttonBlack}
+								className={meemTheme.buttonBlack}
 								onClick={goToCreate}
 							>
 								Create
@@ -372,28 +292,14 @@ export function HomeComponent() {
 						) : null
 					}
 				/>
-				{!clubclub.isMember && (
-					<Text
-						className={clubsTheme.tLink}
-						style={{ marginTop: 16 }}
-					>
-						<a
-							onClick={() => {
-								router.push({ pathname: '/club-club' })
-							}}
-						>
-							Join Club Club to create
-						</a>
-					</Text>
-				)}
 
 				<Space h={64} />
 			</Container>
-			<ClubsFAQModal
+			<MeemFAQModal
 				onModalClosed={() => {
-					setIsClubsFAQModalOpen(false)
+					setIsAgreementsFAQModalOpen(false)
 				}}
-				isOpened={isClubsFAQModalOpen}
+				isOpened={isAgreementsFAQModalOpen}
 			/>
 		</div>
 	)
