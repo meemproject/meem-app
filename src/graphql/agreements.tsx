@@ -240,6 +240,12 @@ export const GET_AGREEMENT_AS_MEMBER = gql`
 					name
 				}
 			}
+			AgreementWallets {
+				role
+				Wallet {
+					address
+				}
+			}
 		}
 	}
 `
@@ -434,6 +440,12 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 				metadata
 				Agreement {
 					isTransferrable
+				}
+			}
+			AgreementWallets {
+				role
+				Wallet {
+					address
 				}
 			}
 		}

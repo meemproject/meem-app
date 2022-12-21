@@ -98,10 +98,10 @@ export const AgreementDetailComponent: React.FC = () => {
 									</>
 								)}
 
-								<AgreementExtensionLinksWidget
+								<AgreementBlankSlateWidget
 									agreement={agreement}
 								/>
-								<AgreementBlankSlateWidget
+								<AgreementExtensionLinksWidget
 									agreement={agreement}
 								/>
 								<AgreementAddAppsWidget agreement={agreement} />

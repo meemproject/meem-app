@@ -25,6 +25,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
+import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 
@@ -137,10 +138,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 
 			const authSig = await sdk.id.getLitAuthSig()
 
-			const agreementExtension =
-				agreement?.rawAgreement?.AgreementExtensions.find(
-					ae => ae.Extension?.slug === 'discussion'
-				)
+			const agreementExtension = extensionFromSlug(
+				'discussions',
+				agreement
+			)
 
 			if (!agreementExtension) {
 				showNotification({

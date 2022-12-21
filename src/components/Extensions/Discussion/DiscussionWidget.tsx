@@ -3,7 +3,10 @@ import { useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Settings } from 'tabler-icons-react'
-import { Agreement } from '../../../model/agreement/agreements'
+import {
+	Agreement,
+	extensionFromSlug
+} from '../../../model/agreement/agreements'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { rowToDiscussionPost } from './DiscussionHome'
@@ -23,10 +26,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	const { sdk } = useSDK()
 	const { chainId } = useAuth()
 
-	const agreementExtension =
-		agreement?.rawAgreement?.AgreementExtensions.find(
-			ae => ae.Extension?.slug === 'discussion'
-		)
+	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	useEffect(() => {
 		const fetchData = async () => {

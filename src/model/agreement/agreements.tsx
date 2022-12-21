@@ -113,7 +113,7 @@ export interface Agreement {
 	memberCount?: number
 }
 
-export const extensionFromSlug = (agreement: Agreement, slug: string) => {
+export const extensionFromSlug = (slug: string, agreement?: Agreement) => {
 	const agreementExtension = agreement?.extensions?.find(
 		ae => ae.Extension?.slug === slug
 	)
@@ -379,6 +379,21 @@ export default async function agreementFromAgreement(
 			)
 		}
 
+		// Parse wallets (for Meem API owner status)
+		if (agreementData.AgreementWallets) {
+			for (const agreementWallet of agreementData.AgreementWallets) {
+				// Check to see if the agreement is controlled by the meem api
+				if (
+					agreementWallet.Wallet?.address.toLowerCase() ===
+						process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase() &&
+					agreementWallet.role === AgreementAdminRole
+				) {
+					isAgreementControlledByMeemApi = true
+					log.debug(`Agreement is controlled by meem API`)
+				}
+			}
+		}
+
 		// Parse members
 		if (agreementData.AgreementTokens) {
 			for (const agreementToken of agreementData.AgreementTokens) {
@@ -468,15 +483,6 @@ export default async function agreementFromAgreement(
 							// Is this member the agreement owner?
 							isMemberTheAgreementOwner =
 								agreementToken.OwnerId === agreementData.OwnerId
-
-							// Check to see if the agreement is controlled by the meem api
-							if (
-								agreementToken.Wallet?.address.toLowerCase() ===
-								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase()
-							) {
-								isAgreementControlledByMeemApi = true
-								log.debug(`Agreement is controlled by meem API`)
-							}
 
 							// Roles + permissions logic
 							let memberRoles: AgreementRole[] = []

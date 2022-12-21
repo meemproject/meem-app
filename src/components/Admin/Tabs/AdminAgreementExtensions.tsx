@@ -96,9 +96,9 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		router.push(`/${agreement.slug}/e/${slug}/settings`)
 	}
 
-	// const navigateToExtensionHome = (slug: string) => {
-	// 	router.push(`/${agreement.slug}/e/${slug}`)
-	// }
+	const navigateToExtensionHome = (slug: string) => {
+		router.push(`/${agreement.slug}/e/${slug}`)
+	}
 
 	return (
 		<>
@@ -185,10 +185,14 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												<Space w={8} />
 												<Text>{`${extension.Extension?.name}`}</Text>
 												{isExtensionBeingEnabled && (
-													<Loader
-														color="red"
-														variant="oval"
-													/>
+													<>
+														<Space w={8} />
+														<Loader
+															color="red"
+															variant="oval"
+															size={16}
+														/>
+													</>
 												)}
 												{/* {extension.isVerified && (
 												<>
@@ -222,7 +226,14 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													height: 46
 												}}
 											>
-												<a onClick={() => {}}>
+												<a
+													onClick={() => {
+														navigateToExtensionHome(
+															extension.Extension
+																?.slug ?? ''
+														)
+													}}
+												>
 													<div
 														className={
 															meemTheme.row
@@ -264,7 +275,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												>
 													<div
 														className={
-															meemTheme.tExtraSmall
+															meemTheme.row
 														}
 														style={{
 															cursor: 'pointer',

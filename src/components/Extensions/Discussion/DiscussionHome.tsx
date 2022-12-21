@@ -14,7 +14,10 @@ import { LoginState, useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
-import { Agreement } from '../../../model/agreement/agreements'
+import {
+	Agreement,
+	extensionFromSlug
+} from '../../../model/agreement/agreements'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -104,10 +107,7 @@ export const DiscussionHome: React.FC = () => {
 	// 	}
 	// ]
 
-	const agreementExtension =
-		agreement?.rawAgreement?.AgreementExtensions.find(
-			ae => ae.Extension?.slug === 'discussion'
-		)
+	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	useEffect(() => {
 		const fetchData = async () => {

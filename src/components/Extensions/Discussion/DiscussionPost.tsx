@@ -35,6 +35,7 @@ import {
 	Message,
 	Share
 } from 'tabler-icons-react'
+import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -120,10 +121,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 		content
 	})
 
-	const agreementExtension =
-		agreement?.rawAgreement?.AgreementExtensions.find(
-			ae => ae.Extension?.slug === 'discussion'
-		)
+	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	const handleReactionSubmit = useCallback(
 		async (options: {
