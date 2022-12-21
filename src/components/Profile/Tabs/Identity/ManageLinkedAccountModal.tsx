@@ -6,7 +6,7 @@ import type { UserIdentity } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { AlertCircle } from 'tabler-icons-react'
-import { colorBlue, useMeemTheme } from '../../../Styles/AgreementsTheme'
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 interface IProps {
 	userIdentity?: UserIdentity
 	isOpened: boolean

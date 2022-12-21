@@ -30,7 +30,7 @@ import { GET_AGREEMENTS_AUTOCOMPLETE } from '../../graphql/agreements'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
 import { MeemFAQModal } from '../Header/MeemFAQModal'
-import { colorBlue, useMeemTheme } from '../Styles/AgreementsTheme'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 
 interface ItemProps extends SelectItemProps {
 	color: MantineColor

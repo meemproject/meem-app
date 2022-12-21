@@ -7,7 +7,7 @@ import {
 	AgreementRole,
 	AgreementRolePermission
 } from '../../../model/agreement/agreements'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	role?: AgreementRole

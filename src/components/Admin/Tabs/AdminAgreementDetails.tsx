@@ -3,7 +3,7 @@ import { Text, Button, Textarea, Space, TextInput } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 interface IProps {
 	agreement: Agreement
@@ -36,7 +36,7 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'You entered an invalid agreement name. Please choose a longer or shorter name.'
+					'You entered an invalid community name. Please choose a longer or shorter name.'
 			})
 			return
 		}
@@ -50,7 +50,7 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'You entered an invalid agreement description. Please choose a longer or shorter description.'
+					'You entered an invalid community description. Please choose a longer or shorter description.'
 			})
 			return
 		}
@@ -87,12 +87,12 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 		<div className={meemTheme.fullWidth}>
 			<Space h={12} />
 
-			<Text className={meemTheme.tLargeBold}>Agreement Profile</Text>
+			<Text className={meemTheme.tLargeBold}>Community Profile</Text>
 			<Space h={32} />
 
 			<Text
 				className={meemTheme.tMediumBold}
-			>{`What's your agreement called?`}</Text>
+			>{`What's your community called?`}</Text>
 			<Space h={12} />
 			<TextInput
 				radius="lg"

@@ -18,7 +18,7 @@ import {
 	Agreement,
 	AgreementMember
 } from '../../../../model/agreement/agreements'
-import { useMeemTheme } from '../../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	agreement: Agreement
@@ -236,7 +236,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 						<Space h={24} />
 						<Center>
 							<Text>
-								All members of this agreement already have this
+								All members of this community already have this
 								role.
 							</Text>
 						</Center>

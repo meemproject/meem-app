@@ -23,7 +23,7 @@ import {
 	emptyRole
 } from '../../model/agreement/agreements'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface Tab {
 	name: string
@@ -119,7 +119,7 @@ export const RolesManager: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that agreement does not exist!</Text>
+						<Text>Sorry, that community does not exist!</Text>
 					</Center>
 				</Container>
 			)}
@@ -164,12 +164,12 @@ export const RolesManager: React.FC = () => {
 											)
 											showNotification({
 												radius: 'lg',
-												title: 'Agreement URL copied',
+												title: 'Community URL copied',
 												autoClose: 2000,
 												color: 'green',
 												icon: <Check />,
 
-												message: `This agreement's URL was copied to your clipboard.`
+												message: `This community's URL was copied to your clipboard.`
 											})
 										}}
 										width={20}
@@ -191,7 +191,7 @@ export const RolesManager: React.FC = () => {
 							<Center>
 								<Text>
 									Sorry, you do not have permission to view
-									this page. Contact the agreement owner for
+									this page. Contact the community owner for
 									help.
 								</Text>
 							</Center>

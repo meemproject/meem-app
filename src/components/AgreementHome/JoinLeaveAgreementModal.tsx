@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Text, Space, Modal, Loader } from '@mantine/core'
 import React, { useCallback } from 'react'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	isOpened: boolean

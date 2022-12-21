@@ -18,7 +18,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check, X } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyAgreementsComponent } from './Tabs/MyAgreements'
@@ -60,7 +60,7 @@ export const ProfileComponent: React.FC = () => {
 	}, [router, wallet])
 
 	useEffect(() => {
-		if (router.query.tab === 'myAgreements') {
+		if (router.query.tab === 'myCommunities') {
 			setCurrentTab(Tab.MyAgreements)
 		} else if (router.query.tab === 'identity') {
 			setCurrentTab(Tab.Profile)
@@ -240,7 +240,7 @@ export const ProfileComponent: React.FC = () => {
 							<NavLink
 								className={meemTheme.pagePanelLayoutNavItem}
 								active={currentTab === Tab.MyAgreements}
-								label={'My Agreements'}
+								label={'My Communities'}
 								onClick={() => {
 									setCurrentTab(Tab.MyAgreements)
 									setIsMobileNavBarVisible(false)

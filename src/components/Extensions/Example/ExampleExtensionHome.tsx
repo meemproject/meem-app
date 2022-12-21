@@ -1,7 +1,7 @@
 import { Center, Container, Loader, Space, Text } from '@mantine/core'
 import React from 'react'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 export const ExampleExtensionHome: React.FC = () => {
 	/*
@@ -25,7 +25,7 @@ export const ExampleExtensionHome: React.FC = () => {
 			{/* Agreement loaded state */}
 			{agreement && (
 				<Text className={meemTheme.tSmall}>
-					{`This is the homepage for the example agreement extension`}
+					{`This is the homepage for the example community extension`}
 				</Text>
 			)}
 			{/* Agreement loading state */}

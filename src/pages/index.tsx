@@ -9,8 +9,8 @@ const Home: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Agreements</title>
-				<meta name="title" content="Agreements" />
+				<title>Meem</title>
+				<meta name="title" content="Meem" />
 				<meta
 					name="description"
 					content="Effortless access management and collaborative
@@ -18,7 +18,7 @@ const Home: NextPage = () => {
 				/>
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://app.meem.wtf/" />
-				<meta property="og:title" content="Agreements" />
+				<meta property="og:title" content="Meem" />
 				<meta
 					property="og:description"
 					content="Effortless access management and collaborative
@@ -27,7 +27,7 @@ const Home: NextPage = () => {
 
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://app.meem.wtf/" />
-				<meta property="twitter:title" content="Agreements!" />
+				<meta property="twitter:title" content="Meem" />
 				<meta
 					property="twitter:title"
 					content="Effortless access management and collaborative

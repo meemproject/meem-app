@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Settings } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 interface IProps {

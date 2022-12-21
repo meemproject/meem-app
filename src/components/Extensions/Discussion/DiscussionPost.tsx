@@ -44,7 +44,7 @@ import {
 	colorGreen,
 	colorLightestGrey,
 	useMeemTheme
-} from '../../Styles/AgreementsTheme'
+} from '../../Styles/MeemTheme'
 import { DiscussionCommentComponent } from './DiscussionComment'
 import { rowToDiscussionComment, rowToDiscussionPost } from './DiscussionHome'
 interface IProps {
@@ -293,7 +293,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 										<Image
 											src={
 												post?.profilePicUrl ??
-												`/exampleagreement.png`
+												`/exampleclub.png`
 											}
 											height={32}
 											width={32}

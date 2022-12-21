@@ -9,7 +9,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Agreement } from '../../../model/agreement/agreements'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -127,7 +127,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
-				message: 'Please provide a agreement logo.'
+				message: 'Please provide an image for your community.'
 			})
 		}
 
@@ -162,10 +162,10 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 	return (
 		<>
 			<Space h={12} />
-			<Text className={meemTheme.tLargeBold}>Agreement Icon</Text>
+			<Text className={meemTheme.tLargeBold}>Community Icon</Text>
 			<Space h={24} />
 			<Text className={meemTheme.tMediumBold}>
-				Upload an icon for your agreement.
+				Upload an icon to represent your community.
 			</Text>
 			<Text
 				className={meemTheme.tExtraSmall}
@@ -173,9 +173,9 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 					maxWidth: 650
 				}}
 			>
-				This will be your agreement’s membership token. You can change
+				This will be your community’s membership token. You can change
 				it anytime. Icons should be square and either JPG or PNG files.
-				Note that all uploads will be rendered at 24x24 px.
+				Note that all uploads will be rendered at 24x24 pixels.
 			</Text>
 
 			<Space h={16} />

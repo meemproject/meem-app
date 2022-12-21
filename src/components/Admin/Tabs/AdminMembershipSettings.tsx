@@ -20,7 +20,7 @@ import {
 	Agreement
 } from '../../../model/agreement/agreements'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
 interface IProps {

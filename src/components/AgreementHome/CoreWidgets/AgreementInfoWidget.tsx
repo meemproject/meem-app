@@ -22,7 +22,7 @@ import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import { colorGreen, useMeemTheme } from '../../Styles/AgreementsTheme'
+import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
 import { JoinLeaveAgreementModal } from '../JoinLeaveAgreementModal'
 interface IProps {
 	agreement: Agreement
@@ -149,7 +149,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					setIsJoiningAgreement(false)
 					showNotification({
 						radius: 'lg',
-						title: 'Error joining this agreement.',
+						title: 'Error joining this community.',
 						message: `Please get in touch!`
 					})
 				}
@@ -169,7 +169,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			} else {
 				showNotification({
 					radius: 'lg',
-					title: 'Error joining this agreement.',
+					title: 'Error joining this community.',
 					message: `Please get in touch!`
 				})
 			}
@@ -181,7 +181,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			showNotification({
 				radius: 'lg',
-				title: 'Unable to leave this agreement.',
+				title: 'Unable to leave this community.',
 				message: `Did you connect your wallet?`
 			})
 			return
@@ -194,7 +194,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
-				message: `You cannot leave this agreement because you are the only admin.`
+				message: `You cannot leave this community because you are the only administrator.`
 			})
 			return
 		}
@@ -227,7 +227,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			setIsLeavingAgreement(false)
 			showNotification({
 				radius: 'lg',
-				title: 'Error leaving this agreement.',
+				title: 'Error leaving this community.',
 				message: `Did you cancel the transaction?`
 			})
 		}
@@ -244,7 +244,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					title: `Welcome to ${agreement.name}!`,
 					color: colorGreen,
 					autoClose: 5000,
-					message: `You now have access to this agreement.`
+					message: `You now have access to this community.`
 				})
 			}
 		}
@@ -258,7 +258,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				cleanNotifications()
 				showNotification({
 					radius: 'lg',
-					title: 'Successfully left the agreement.',
+					title: 'Successfully left the community.',
 					color: colorGreen,
 					autoClose: 5000,
 					message: `You'll be missed!`
@@ -411,12 +411,12 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 								)
 								showNotification({
 									radius: 'lg',
-									title: 'Agreement contract address copied!',
+									title: 'Community agreement contract address copied!',
 									autoClose: 2000,
 									color: colorGreen,
 									icon: <Check />,
 
-									message: `This agreement's contract address was copied to your clipboard.`
+									message: `This community's agreement contract address was copied to your clipboard.`
 								})
 							}}
 							width={20}
@@ -451,7 +451,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				radius={16}
 				size={300}
 				padding={'sm'}
-				title={'Agreement QR Code'}
+				title={'Community QR Code'}
 				opened={isQrModalOpened}
 				onClose={() => setIsQrModalOpened(false)}
 			>

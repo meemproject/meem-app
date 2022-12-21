@@ -18,7 +18,7 @@ import { Agreement } from '../../../model/agreement/agreements'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
 export function rowToDiscussionPost(options: {
@@ -148,7 +148,7 @@ export const DiscussionHome: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that agreement does not exist!</Text>
+						<Text>Sorry, that community does not exist!</Text>
 					</Center>
 				</Container>
 			)}
@@ -157,7 +157,7 @@ export const DiscussionHome: React.FC = () => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							There was an error loading this agreement. Please
+							There was an error loading this community. Please
 							let us know!
 						</Text>
 					</Center>

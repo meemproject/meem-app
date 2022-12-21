@@ -19,7 +19,7 @@ import {
 	AgreementRole
 } from '../../../model/agreement/agreements'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
 interface IProps {
@@ -182,11 +182,13 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 													>
 														{member.displayName
 															? member.displayName
+															: member.isMeemApi
+															? 'Meem API'
 															: member.isAgreementOwner
-															? 'Agreement Owner'
+															? 'Community Owner'
 															: member.isAgreementAdmin
-															? 'Agreement Admin'
-															: 'Agreement Member'}
+															? 'Community Administrator'
+															: 'Community Member'}
 													</Text>
 													<Text
 														className={

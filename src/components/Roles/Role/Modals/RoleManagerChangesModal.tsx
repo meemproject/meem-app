@@ -11,7 +11,7 @@ import {
 	AgreementMember,
 	AgreementRole
 } from '../../../../model/agreement/agreements'
-import { colorBlue, useMeemTheme } from '../../../Styles/AgreementsTheme'
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement

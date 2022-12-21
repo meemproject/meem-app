@@ -9,7 +9,7 @@ const CreatePermissionsPage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>New Agreement Permissions | Agreements</title>
+				<title>New Agreement Permissions | Meem</title>
 				<meta name="title" content="Agreements" />
 				<meta
 					name="description"

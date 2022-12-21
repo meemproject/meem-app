@@ -1,7 +1,7 @@
 import { Button, Space } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import React from 'react'
-import { useMeemTheme } from './Styles/AgreementsTheme'
+import { useMeemTheme } from './Styles/MeemTheme'
 
 export interface IProps {
 	children: React.ReactNode

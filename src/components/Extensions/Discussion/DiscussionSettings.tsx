@@ -18,7 +18,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Check } from 'tabler-icons-react'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorGreen, useMeemTheme } from '../../Styles/AgreementsTheme'
+import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
 
 export const DiscussionSettings: React.FC = () => {
 	// Default settings
@@ -329,12 +329,12 @@ export const DiscussionSettings: React.FC = () => {
 											)
 											showNotification({
 												radius: 'lg',
-												title: 'Agreement URL copied',
+												title: 'Community URL copied',
 												autoClose: 2000,
 												color: colorGreen,
 												icon: <Check />,
 
-												message: `This agreement's URL was copied to your clipboard.`
+												message: `This community's URL was copied to your clipboard.`
 											})
 										}}
 										width={20}
@@ -409,7 +409,7 @@ export const DiscussionSettings: React.FC = () => {
 								<Switch
 									color={'green'}
 									label={
-										'Hide widget if viewer is not a agreement member'
+										'Hide widget if viewer is not a community member'
 									}
 									checked={isPrivateExtension}
 									onChange={value => {

@@ -22,7 +22,7 @@ import {
 	MembershipRequirementToMeemPermission
 } from '../../model/agreement/agreements'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorBlue, useMeemTheme } from '../Styles/AgreementsTheme'
+import { colorGreen, colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement
@@ -161,7 +161,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 				if (!agreement.id) {
 					showNotification({
 						radius: 'lg',
-						title: 'Error saving agreement settings',
+						title: 'Error saving community settings',
 						message: `Please get in touch!`,
 						color: colorBlue
 					})
@@ -173,7 +173,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					showNotification({
 						radius: 'lg',
 						title: 'Oops!',
-						message: `This agreement has invalid membership requirements. Please double-check your entries and try again.`,
+						message: `This community has invalid membership requirements. Please double-check your entries and try again.`,
 						color: colorBlue
 					})
 					closeModal()
@@ -274,7 +274,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 				log.debug(e)
 				showNotification({
 					radius: 'lg',
-					title: 'Error saving agreement settings',
+					title: 'Error saving community settings',
 					message: `Please get in touch!`
 				})
 				closeModal()

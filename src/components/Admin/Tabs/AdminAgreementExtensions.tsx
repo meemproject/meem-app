@@ -19,7 +19,7 @@ import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
-import { colorGrey, useMeemTheme } from '../../Styles/AgreementsTheme'
+import { colorGrey, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }
@@ -105,7 +105,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 				<Space h={12} />
 
 				<Text className={meemTheme.tLargeBold}>
-					Agreement Extensions
+					Community Extensions
 				</Text>
 				<Space h={32} />
 
@@ -264,7 +264,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 					<>
 						<Text
 							className={meemTheme.tMediumBold}
-						>{`Available apps (${searchedExtensions?.length})`}</Text>
+						>{`Available extensions (${searchedExtensions?.length})`}</Text>
 						<Space h={8} />
 
 						<TextInput

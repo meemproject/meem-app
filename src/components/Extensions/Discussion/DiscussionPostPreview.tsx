@@ -13,7 +13,7 @@ import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorDarkerGrey, useMeemTheme } from '../../Styles/AgreementsTheme'
+import { colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	post: DiscussionPost
 }
@@ -104,7 +104,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 									<Image
 										src={
 											post.profilePicUrl ??
-											`/exampleagreement.png`
+											`/exampleclub.png`
 										}
 										height={32}
 										width={32}

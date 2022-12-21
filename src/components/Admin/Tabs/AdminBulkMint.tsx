@@ -7,11 +7,7 @@ import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
-import {
-	colorGreen,
-	colorBlue,
-	useMeemTheme
-} from '../../Styles/AgreementsTheme'
+import { colorGreen, colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	agreement: Agreement
@@ -150,8 +146,8 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 				<Space h={32} />
 
 				<Text className={meemTheme.tMediumBold}>
-					Invite others to your agreement by airdropping them a token.
-					They will automatically become a agreement member.
+					Invite others to your community by airdropping them a token.
+					They will automatically become a community member.
 				</Text>
 				<Space h={16} />
 				<Text className={meemTheme.tMediumFaded}>

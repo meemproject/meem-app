@@ -2,7 +2,7 @@ import { Image, Text, Space, Grid, Center } from '@mantine/core'
 import React, { useEffect } from 'react'
 import { AgreementExtensions } from '../../../../generated/graphql'
 import { Agreement } from '../../../model/agreement/agreements'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }

@@ -25,7 +25,7 @@ import {
 	colorLightGrey,
 	// colorPink,
 	useMeemTheme
-} from '../../Styles/AgreementsTheme'
+} from '../../Styles/MeemTheme'
 interface IProps {
 	comment: DiscussionComment
 }
@@ -58,7 +58,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 		<div>
 			<div className={meemTheme.centeredRow}>
 				<Image
-					src={comment.profilePicUrl ?? `/exampleagreement.png`}
+					src={comment.profilePicUrl ?? `/exampleclub.png`}
 					height={32}
 					width={32}
 					radius={16}

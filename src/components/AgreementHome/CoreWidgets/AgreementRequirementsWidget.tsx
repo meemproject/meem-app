@@ -10,11 +10,7 @@ import {
 	MembershipReqType
 } from '../../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../../model/token/token'
-import {
-	colorGreen,
-	colorBlue,
-	useMeemTheme
-} from '../../Styles/AgreementsTheme'
+import { colorGreen, colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 	onMeetsAllReqsChanged: (changed: boolean) => void
@@ -104,7 +100,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 										requirementKey: `Anyone${index}`,
 										requirementComponent: (
 											<Text>
-												Anyone can join this agreement.
+												Anyone can join this community.
 											</Text>
 										),
 										meetsRequirement: true
@@ -126,8 +122,8 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 													{!req.applicationInstructions && (
 														<span>
 															{' '}
-															Contact a Agreement
-															Admin for
+															Contact a Community
+															Administrator for
 															instructions.
 														</span>
 													)}
@@ -213,7 +209,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 				reqs.push({
 					requirementKey: `Error${index}`,
 					requirementComponent: (
-						<Text>Anyone can join this agreement for free.</Text>
+						<Text>Anyone can join this community for free.</Text>
 					),
 					meetsRequirement: true
 				})
@@ -328,7 +324,10 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									className={meemTheme.clickable}
 									onClick={() => {
 										router.push({
-											pathname: `/${agreement.slug}/e/discussion/settings`
+											pathname: `/${agreement.slug}/admin`,
+											query: {
+												tab: 'membershiprequirements'
+											}
 										})
 									}}
 								/>
