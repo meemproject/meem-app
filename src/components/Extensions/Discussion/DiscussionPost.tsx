@@ -51,12 +51,51 @@ interface IProps {
 	postId: string
 }
 
+export interface IReactions {
+	posts: {
+		[postId: string]: {
+			counts: { [reaction: string]: number }
+			walletAddresses: {
+				[walletAddress: string]: boolean
+			}
+		}
+	}
+	comments: {
+		[commentId: string]: {
+			counts: {
+				[reaction: string]: number
+			}
+			walletAddresses: {
+				[walletAddress: string]: boolean
+			}
+		}
+	}
+
+	[tableName: string]: {
+		[refId: string]: {
+			counts: {
+				[reaction: string]: number
+			}
+			walletAddresses: {
+				[walletAddress: string]: boolean
+			}
+		}
+	}
+}
+
 export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const [hasFetchdData, setHasFetchedData] = useState(false)
+	const [hasFetchedPost, setHasFetchedPost] = useState(false)
+	const [hasFetchedComments, setHasFetchedComments] = useState(false)
+	const [hasFetchedReactions, setHasFetchedReactions] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
+	const [isSubmittingReaction, setIsSubmittingReaction] = useState(false)
 	const [post, setPost] = useState<DiscussionPost>()
 	const [comments, setComments] = useState<DiscussionComment[]>()
+	const [reactions, setReactions] = useState<IReactions>({
+		posts: {},
+		comments: {}
+	})
 	const [commentCount, setCommentCount] = useState(0)
 	const { accounts, chainId, me, loginState } = useAuth()
 	const { sdk } = useSDK()
@@ -81,6 +120,69 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 		content
 	})
 
+	const agreementExtension =
+		agreement?.rawAgreement?.AgreementExtensions.find(
+			ae => ae.Extension?.slug === 'discussion'
+		)
+
+	const handleReactionSubmit = useCallback(
+		async (options: {
+			e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+			reaction: string
+		}) => {
+			const { e, reaction } = options
+			e.preventDefault()
+			try {
+				if (!router.query.postId) {
+					log.crit('No postId found')
+					return
+				}
+				if (!chainId) {
+					log.crit('No chainId found')
+					return
+				}
+				if (!agreement) {
+					log.crit('No agreement found')
+					return
+				}
+				setIsLoading(true)
+
+				const authSig = await sdk.id.getLitAuthSig()
+
+				const tableName =
+					agreementExtension?.metadata?.storage?.tableland?.reactions
+						.tablelandTableName
+
+				await sdk.storage.encryptAndWrite({
+					chainId,
+					tableName,
+					authSig,
+					writeColumns: {
+						refId: post?.id,
+						refTable: 'posts'
+					},
+					data: {
+						reaction,
+						userId: me?.user.id,
+						walletAddress: me?.address
+					},
+					accessControlConditions: [
+						{
+							contractAddress: agreement.address
+						}
+					]
+				})
+
+				// Re-fetch
+				setHasFetchedReactions(false)
+			} catch (err) {
+				log.crit(err)
+			}
+			setIsLoading(false)
+		},
+		[agreement, sdk, router, chainId, me, agreementExtension, post]
+	)
+
 	const handleCommentSubmit = useCallback(async () => {
 		try {
 			if (!router.query.postId) {
@@ -98,11 +200,6 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			setIsLoading(true)
 
 			const authSig = await sdk.id.getLitAuthSig()
-
-			const agreementExtension =
-				agreement?.rawAgreement?.AgreementExtensions.find(
-					ae => ae.Extension?.slug === 'discussion'
-				)
 
 			const tableName =
 				agreementExtension?.metadata?.storage?.tableland?.comments
@@ -144,63 +241,51 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			})
 
 			// Re-fetch
-			setHasFetchedData(false)
+			setHasFetchedComments(false)
 		} catch (e) {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}, [chainId, router, editor, agreement, sdk, accounts, me])
+	}, [
+		chainId,
+		router,
+		editor,
+		agreement,
+		sdk,
+		accounts,
+		me,
+		agreementExtension
+	])
 
 	useEffect(() => {
 		const fetchData = async () => {
 			if (
-				hasFetchdData ||
+				hasFetchedPost ||
 				!chainId ||
 				loginState !== LoginState.LoggedIn ||
 				!sdk.id.hasInitialized
 			) {
 				return
 			}
-
-			const agreementExtension =
-				agreement?.rawAgreement?.AgreementExtensions.find(
-					ae => ae.Extension?.slug === 'discussion'
-				)
-
 			const authSig = await sdk.id.getLitAuthSig()
 
 			// Fetch Post
 			if (
 				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.posts &&
-				agreementExtension.metadata?.storage?.tableland?.comments
+				agreementExtension.metadata?.storage?.tableland?.posts
 			) {
 				const tableName =
 					agreementExtension.metadata?.storage?.tableland?.posts
 						.tablelandTableName
-				const commentsTableName =
-					agreementExtension.metadata?.storage?.tableland?.comments
-						.tablelandTableName
 
-				const [rows, count] = await Promise.all([
-					sdk.storage.read({
-						chainId,
-						tableName,
-						authSig,
-						where: {
-							id: router.query.postId
-						}
-					}),
-					sdk.storage.count({
-						chainId,
-						tableName: commentsTableName,
-						where: {
-							refId: router.query.postId
-						}
-					})
-				])
-
-				setCommentCount(count)
+				const rows = await sdk.storage.read({
+					chainId,
+					tableName,
+					authSig,
+					where: {
+						id: router.query.postId
+					}
+				})
 
 				const newPost: DiscussionPost = rowToDiscussionPost({
 					row: rows[0],
@@ -209,23 +294,60 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 				setPost(newPost)
 			}
+			setHasFetchedPost(true)
+		}
 
+		fetchData()
+	}, [
+		hasFetchedPost,
+		agreement,
+		chainId,
+		sdk,
+		router.query.postId,
+		loginState,
+		agreementExtension
+	])
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (
+				hasFetchedComments ||
+				!post ||
+				!chainId ||
+				loginState !== LoginState.LoggedIn ||
+				!sdk.id.hasInitialized
+			) {
+				return
+			}
+
+			const authSig = await sdk.id.getLitAuthSig()
+
+			// Fetch Comments
 			if (
 				agreementExtension &&
 				agreementExtension.metadata?.storage?.tableland?.comments
 			) {
-				const tableName =
+				const commentsTableName =
 					agreementExtension.metadata?.storage?.tableland?.comments
 						.tablelandTableName
 
-				const rows = await sdk.storage.read({
-					chainId,
-					tableName,
-					authSig,
-					where: {
-						refId: router.query.postId
-					}
-				})
+				const [count, rows] = await Promise.all([
+					sdk.storage.count({
+						chainId,
+						tableName: commentsTableName,
+						where: {
+							refId: post.id
+						}
+					}),
+					sdk.storage.read({
+						chainId,
+						tableName: commentsTableName,
+						authSig,
+						where: {
+							refId: post.id
+						}
+					})
+				])
 
 				const newComments: DiscussionComment[] = rows.map(row =>
 					rowToDiscussionComment({
@@ -234,43 +356,173 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					})
 				)
 
-				setComments(newComments)
+				setComments(newComments ?? [])
+
+				setCommentCount(count)
 			}
 
-			setHasFetchedData(true)
+			setHasFetchedComments(true)
 		}
 
 		fetchData()
 	}, [
-		hasFetchdData,
+		hasFetchedComments,
 		agreement,
 		chainId,
 		sdk,
-		router.query.postId,
-		loginState
+		post,
+		loginState,
+		agreementExtension
 	])
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (
+				hasFetchedReactions ||
+				!post ||
+				!comments ||
+				!chainId ||
+				loginState !== LoginState.LoggedIn ||
+				!sdk.id.hasInitialized
+			) {
+				return
+			}
+
+			const authSig = await sdk.id.getLitAuthSig()
+
+			const refIds = [post.id, ...comments.map(c => c.id)]
+
+			// Fetch Reactions
+			if (
+				agreementExtension &&
+				agreementExtension.metadata?.storage?.tableland?.reactions
+			) {
+				const reactionsTableName =
+					agreementExtension.metadata?.storage?.tableland?.reactions
+						.tablelandTableName
+
+				const rows = await sdk.storage.read({
+					chainId,
+					tableName: reactionsTableName,
+					authSig,
+					where: {
+						refId: refIds
+					}
+				})
+
+				const newReactions: IReactions = { posts: {}, comments: {} }
+				rows.forEach(row => {
+					if (row.data?.reaction) {
+						const table = row.refTable as string
+						if (newReactions[table]) {
+							if (!newReactions[table][row.refId]) {
+								newReactions[table][row.refId] = {
+									counts: {},
+									walletAddresses: {}
+								}
+							}
+
+							// Ignore additional reactions from a wallet
+							if (
+								newReactions[table][row.refId].walletAddresses[
+									row.data.walletAddress
+								]
+							) {
+								return
+							}
+
+							if (
+								!newReactions[table][row.refId].counts[
+									row.data.reaction
+								]
+							) {
+								newReactions[table][row.refId].counts[
+									row.data.reaction
+								] = 1
+							} else {
+								newReactions[table][row.refId].counts[
+									row.data.reaction
+								]++
+							}
+
+							newReactions[table][row.refId].walletAddresses[
+								row.data.walletAddress
+							] = true
+						}
+					}
+				})
+
+				setReactions(newReactions)
+			}
+
+			setHasFetchedReactions(true)
+		}
+
+		fetchData()
+	}, [
+		hasFetchedReactions,
+		agreement,
+		chainId,
+		sdk,
+		post,
+		comments,
+		loginState,
+		agreementExtension
+	])
+
+	const upVotes =
+		(post &&
+			reactions.posts[post.id] &&
+			reactions.posts[post.id].counts.upvote) ??
+		0
+	const downVotes =
+		(post &&
+			reactions.posts[post.id] &&
+			reactions.posts[post.id].counts.downvote) ??
+		0
+	const votes = upVotes - downVotes
 
 	return (
 		<div>
 			<Space h={48} />
-			{!hasFetchdData && (
+			{!hasFetchedPost && (
 				<Center>
 					<Loader color="red" variant="oval" />
 				</Center>
 			)}
-			{hasFetchdData && (
+			{hasFetchedPost && post && (
 				<Container>
 					<div className={meemTheme.row}>
 						<div>
 							<Center>
-								<ChevronUp />
+								<a
+									style={{ cursor: 'pointer' }}
+									onClick={e =>
+										handleReactionSubmit({
+											e,
+											reaction: 'upvote'
+										})
+									}
+								>
+									<ChevronUp />
+								</a>
 							</Center>
 
 							<Space h={16} />
-							<Center>{post?.votes ?? 0}</Center>
+							<Center>{votes ?? 0}</Center>
 							<Space h={16} />
 							<Center>
-								<ChevronDown />
+								<a
+									style={{ cursor: 'pointer' }}
+									onClick={e =>
+										handleReactionSubmit({
+											e,
+											reaction: 'downvote'
+										})
+									}
+								>
+									<ChevronDown />
+								</a>
 							</Center>
 						</div>
 						<Space w={16} />
@@ -472,6 +724,9 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 						<DiscussionCommentComponent
 							key={comment.id}
 							comment={comment}
+							reactions={reactions}
+							agreementExtension={agreementExtension}
+							onReaction={() => setHasFetchedReactions(false)}
 						/>
 					))}
 			</Container>

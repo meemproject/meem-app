@@ -2208,7 +2208,7 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/meem-contracts@^0.13.3", "@meemproject/meem-contracts@^0.13.4":
+"@meemproject/meem-contracts@^0.13.4":
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.13.4.tgz#ea901c62277cd0c322fa2144d5871e4327857288"
   integrity sha512-7tA8C+BLAUKI5yLRxA5gozDe4l8faIB9TYtd2ZdFHWeVi78iJ4r9jDs61ph7Y+kO/S+gU/C1p6h15AsF/4mkpw==
@@ -2220,7 +2220,7 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.13.3":
+"@meemproject/react@^0.13.4":
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.13.4.tgz#337de8fc5878ca406ab880a234ddc8cbc7453a4c"
   integrity sha512-z+2bEXvk0asqaeAsDeBAaMO2DIpVP61LB2gJTmtHaHJPIEEl7G3wG0yTRIFreHV316ITrMZCJcHRYXBuVLSToA==
@@ -2251,7 +2251,7 @@
     swr "^1.3.0"
     web3modal "^1.9.9"
 
-"@meemproject/sdk@^0.13.3", "@meemproject/sdk@^0.13.4":
+"@meemproject/sdk@^0.13.4":
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.13.4.tgz#818b3df727dc481a0ebd9adf8e08dec2fdc520ae"
   integrity sha512-QshoWASZvFJlw33n1mU/xwFIAfFtzwo15AYCrdKvRlOXpZTdo3r/XgGxb67HMBJi++uTpsWvTUkjW/ta8JHSHA==

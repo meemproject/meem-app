@@ -23,18 +23,16 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	const { sdk } = useSDK()
 	const { chainId } = useAuth()
 
-	useEffect(() => {}, [agreement])
+	const agreementExtension =
+		agreement?.rawAgreement?.AgreementExtensions.find(
+			ae => ae.Extension?.slug === 'discussion'
+		)
 
 	useEffect(() => {
 		const fetchData = async () => {
 			if (hasFetchdData || !chainId || !sdk.id.hasInitialized) {
 				return
 			}
-
-			const agreementExtension =
-				agreement?.rawAgreement?.AgreementExtensions.find(
-					ae => ae.Extension?.slug === 'discussion'
-				)
 
 			if (
 				agreementExtension &&
@@ -64,7 +62,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 		}
 
 		fetchData()
-	}, [hasFetchdData, agreement, chainId, sdk])
+	}, [hasFetchdData, agreement, chainId, sdk, agreementExtension])
 
 	// const posts: DiscussionPost[] = [
 	// 	{
@@ -128,7 +126,13 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 				</div>
 				<Space h={24} />
 				{posts.map(post => (
-					<DiscussionPostPreview key={post.id} post={post} />
+					<DiscussionPostPreview
+						key={post.id}
+						post={post}
+						reactions={{ comments: {}, posts: {} }}
+						agreementExtension={agreementExtension}
+						onReaction={() => {}}
+					/>
 				))}
 			</div>
 		</>

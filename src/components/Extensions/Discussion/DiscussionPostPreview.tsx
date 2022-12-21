@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	Center,
 	Space,
@@ -6,24 +7,106 @@ import {
 	Badge,
 	useMantineColorScheme
 } from '@mantine/core'
+import { useAuth, useSDK } from '@meemproject/react'
 import { DateTime } from 'luxon'
 import Link from 'next/link'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
+import { AgreementExtensions } from '../../../../generated/graphql'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
+import { IReactions } from './DiscussionPost'
 interface IProps {
 	post: DiscussionPost
+	reactions: IReactions
+	agreementExtension: AgreementExtensions | undefined
+	onReaction: () => void
+	commentCount?: number
 }
 
-export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
+export const DiscussionPostPreview: React.FC<IProps> = ({
+	post,
+	reactions,
+	agreementExtension,
+	onReaction,
+	commentCount
+}) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement } = useAgreement()
 
+	const [isLoading, setIsLoading] = useState(false)
+
+	log.debug({ isLoading, commentCount })
+
+	const { sdk } = useSDK()
+	const { chainId, me } = useAuth()
+
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	const handleReactionSubmit = useCallback(
+		async (options: {
+			e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+			reaction: string
+		}) => {
+			const { e, reaction } = options
+			e.preventDefault()
+			try {
+				if (!chainId) {
+					log.crit('No chainId found')
+					return
+				}
+				setIsLoading(true)
+
+				const authSig = await sdk.id.getLitAuthSig()
+
+				const tableName =
+					agreementExtension?.metadata?.storage?.tableland?.reactions
+						.tablelandTableName
+
+				await sdk.storage.encryptAndWrite({
+					chainId,
+					tableName,
+					authSig,
+					writeColumns: {
+						refId: post.id,
+						refTable: 'posts'
+					},
+					data: {
+						reaction,
+						userId: me?.user.id,
+						walletAddress: me?.address
+					},
+					accessControlConditions: [
+						{
+							contractAddress: agreement?.address
+						}
+					]
+				})
+
+				// Re-fetch
+				onReaction()
+			} catch (err) {
+				log.crit(err)
+			}
+			setIsLoading(false)
+		},
+		[sdk, chainId, me, agreementExtension, agreement, onReaction, post]
+	)
+
+	const upVotes =
+		(post &&
+			reactions.posts[post.id] &&
+			reactions.posts[post.id].counts.upvote) ??
+		0
+	const downVotes =
+		(post &&
+			reactions.posts[post.id] &&
+			reactions.posts[post.id].counts.downvote) ??
+		0
+	const votes = upVotes - downVotes
 
 	return (
 		<div className={meemTheme.greyContentBox} style={{ marginBottom: 16 }}>
@@ -32,14 +115,34 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 					<div className={meemTheme.row}>
 						<div>
 							<Center>
-								<ChevronUp />
+								<a
+									style={{ cursor: 'pointer' }}
+									onClick={e =>
+										handleReactionSubmit({
+											e,
+											reaction: 'upvote'
+										})
+									}
+								>
+									<ChevronUp />
+								</a>
 							</Center>
 
 							<Space h={16} />
-							<Center>{post.votes ?? 0}</Center>
+							<Center>{votes ?? 0}</Center>
 							<Space h={16} />
 							<Center>
-								<ChevronDown />
+								<a
+									style={{ cursor: 'pointer' }}
+									onClick={e =>
+										handleReactionSubmit({
+											e,
+											reaction: 'downvote'
+										})
+									}
+								>
+									<ChevronDown />
+								</a>
 							</Center>
 						</div>
 						<Space w={16} />
@@ -151,7 +254,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({ post }) => {
 													meemTheme.tExtraSmall
 												}
 											>
-												14
+												{commentCount ?? 0}
 											</Text>
 										</div>
 									</Link>
