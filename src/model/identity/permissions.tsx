@@ -16,7 +16,10 @@ export function userHasPermissionEditProfile(agreement: Agreement): boolean {
 		) {
 			return true
 		}
-	} else if (agreement.isCurrentUserAgreementAdmin) {
+	} else if (
+		agreement.isCurrentUserAgreementAdmin ||
+		agreement.isCurrentUserAgreementOwner
+	) {
 		return true
 	}
 
@@ -34,7 +37,10 @@ export function userHasPermissionManageMembershipSettings(
 		) {
 			return true
 		}
-	} else if (agreement.isCurrentUserAgreementAdmin) {
+	} else if (
+		agreement.isCurrentUserAgreementAdmin ||
+		agreement.isCurrentUserAgreementOwner
+	) {
 		return true
 	}
 
@@ -50,7 +56,10 @@ export function userHasPermissionManageRoles(agreement: Agreement): boolean {
 		) {
 			return true
 		}
-	} else if (agreement.isCurrentUserAgreementAdmin) {
+	} else if (
+		agreement.isCurrentUserAgreementAdmin ||
+		agreement.isCurrentUserAgreementOwner
+	) {
 		return true
 	}
 
@@ -66,7 +75,10 @@ export function userHasPermissionManageApps(agreement: Agreement): boolean {
 		) {
 			return true
 		}
-	} else if (agreement.isCurrentUserAgreementAdmin) {
+	} else if (
+		agreement.isCurrentUserAgreementAdmin ||
+		agreement.isCurrentUserAgreementOwner
+	) {
 		return true
 	}
 
@@ -82,7 +94,10 @@ export function userHasPermissionViewApps(agreement: Agreement): boolean {
 		) {
 			return true
 		}
-	} else if (agreement.isCurrentUserAgreementAdmin) {
+	} else if (
+		agreement.isCurrentUserAgreementAdmin ||
+		agreement.isCurrentUserAgreementOwner
+	) {
 		return true
 	}
 

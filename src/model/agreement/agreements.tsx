@@ -391,7 +391,7 @@ export default async function agreementFromAgreement(
 						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
 					if (agreementToken.Wallet) {
-						// Filter duplicate meem owners
+						// Filter duplicate tokens
 						let hasAlreadyBeenAdded = false
 						members.forEach(member => {
 							if (
@@ -431,15 +431,14 @@ export default async function agreementFromAgreement(
 								membershipToken = agreementToken.tokenId
 
 								log.debug(
-									`meem ownerId ${agreementToken.OwnerId}`
-								)
-								log.debug(
 									`agreement ownerId ${agreementData.OwnerId}`
 								)
 								isAgreementOwner =
 									agreementToken.OwnerId ===
 									agreementData.OwnerId
-
+								log.debug(
+									`current user is agreement owner = ${isAgreementOwner}`
+								)
 								// Is the current user an admin?
 								if (memberAgreementWallet) {
 									if (
@@ -451,6 +450,10 @@ export default async function agreementFromAgreement(
 								} else if (isAgreementOwner) {
 									isAgreementAdmin = true
 								}
+
+								log.debug(
+									`current user is agreement admin = ${isAgreementAdmin}`
+								)
 
 								isMemberAnAdmin = isAgreementAdmin
 							}

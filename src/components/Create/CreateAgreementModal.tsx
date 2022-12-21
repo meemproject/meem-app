@@ -51,10 +51,6 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
-	const [hasStartedCreatingSafe, setHasStartedCreatingSafe] = useState(false)
-
-	log.debug({ hasStartedCreatingSafe })
-
 	const [transactionIds, setTransactionIds] = useState<string[]>([])
 
 	const [transactionState, setTransactionState] = useState<{
@@ -88,7 +84,6 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 		onModalClosed()
 
 		setHasStartedCreating(false)
-		setHasStartedCreatingSafe(false)
 	}, [onModalClosed])
 
 	const finishAgreementCreation = useCallback(
