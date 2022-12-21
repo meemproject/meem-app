@@ -436,9 +436,7 @@ export default async function agreementFromAgreement(
 								isAgreementOwner =
 									agreementToken.OwnerId ===
 									agreementData.OwnerId
-								log.debug(
-									`current user is agreement owner = ${isAgreementOwner}`
-								)
+
 								// Is the current user an admin?
 								if (memberAgreementWallet) {
 									if (
@@ -450,10 +448,6 @@ export default async function agreementFromAgreement(
 								} else if (isAgreementOwner) {
 									isAgreementAdmin = true
 								}
-
-								log.debug(
-									`current user is agreement admin = ${isAgreementAdmin}`
-								)
 
 								isMemberAnAdmin = isAgreementAdmin
 							}
@@ -761,6 +755,10 @@ export default async function agreementFromAgreement(
 		if (!isAgreementControlledByMeemApi) {
 			log.debug(`Agreement is NOT controlled by meem API`)
 		}
+
+		log.debug(`current user is agreement owner = ${isAgreementOwner}`)
+
+		log.debug(`current user is agreement admin = ${isAgreementAdmin}`)
 
 		return {
 			id: agreementData.id,

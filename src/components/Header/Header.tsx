@@ -33,7 +33,7 @@ import {
 	MoonStars
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { colorBlue, colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
 
 export function HeaderMenu() {
@@ -210,7 +210,7 @@ export function HeaderMenu() {
 							style={{
 								marginBottom: 4,
 								marginRight: 16,
-								color: colorBlue,
+								color: colorDarkBlue,
 								cursor: 'pointer'
 							}}
 						>
