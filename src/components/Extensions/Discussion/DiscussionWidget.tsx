@@ -1,4 +1,4 @@
-import { Text, Button, Space } from '@mantine/core'
+import { Text, Button, Space, Center } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -93,47 +93,62 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 							Discussions
 						</Text>
 						<Space w={6} />
-						<Text className={meemTheme.tMedium}>
-							{`(${posts.length})`}
-						</Text>
-					</div>
-					<div className={meemTheme.centeredRow}>
-						<Button
-							className={meemTheme.buttonBlue}
-							onClick={() => {
-								router.push({
-									pathname: `/${agreement.slug}/e/discussions`
-								})
-							}}
-						>
-							View All
-						</Button>
-
-						{agreement.isCurrentUserAgreementAdmin && (
-							<div className={meemTheme.row}>
-								<Space w={8} />
-								<Settings
-									className={meemTheme.clickable}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement.slug}/e/discussions/settings`
-										})
-									}}
-								/>
-							</div>
+						{agreementExtension?.isInitialized && (
+							<Text className={meemTheme.tMedium}>
+								{`(${posts.length})`}
+							</Text>
 						)}
 					</div>
+					{agreementExtension?.isInitialized && (
+						<div className={meemTheme.centeredRow}>
+							<Button
+								className={meemTheme.buttonBlue}
+								onClick={() => {
+									router.push({
+										pathname: `/${agreement.slug}/e/discussions`
+									})
+								}}
+							>
+								View All
+							</Button>
+
+							{agreement.isCurrentUserAgreementAdmin && (
+								<div className={meemTheme.row}>
+									<Space w={8} />
+									<Settings
+										className={meemTheme.clickable}
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement.slug}/e/discussions/settings`
+											})
+										}}
+									/>
+								</div>
+							)}
+						</div>
+					)}
 				</div>
 				<Space h={24} />
-				{posts.map(post => (
-					<DiscussionPostPreview
-						key={post.id}
-						post={post}
-						reactions={{ comments: {}, posts: {} }}
-						agreementExtension={agreementExtension}
-						onReaction={() => {}}
-					/>
-				))}
+				{agreementExtension?.isInitialized && (
+					<>
+						{posts.map(post => (
+							<DiscussionPostPreview
+								key={post.id}
+								post={post}
+								reactions={{ comments: {}, posts: {} }}
+								agreementExtension={agreementExtension}
+								onReaction={() => {}}
+							/>
+						))}
+					</>
+				)}
+				{!agreementExtension?.isInitialized && (
+					<Center>
+						<Text
+							className={meemTheme.tMedium}
+						>{`${agreementExtension?.Extension?.name} is being set up. Come back in a few minutes!`}</Text>
+					</Center>
+				)}
 			</div>
 		</>
 	)

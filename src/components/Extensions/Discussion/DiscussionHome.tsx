@@ -318,84 +318,133 @@ export const DiscussionHome: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{!isLoadingAgreement && agreement?.name && (
-				<>
-					<Container>
-						<Space h={48} />
-
-						<Center>
-							<Image
-								className={meemTheme.imagePixelated}
-								height={100}
-								width={100}
-								src={agreement.image}
-							/>
-						</Center>
-
-						<Space h={24} />
-						<Center>
-							<Text className={meemTheme.tLargeBold}>
-								{agreement.name}
-							</Text>
-						</Center>
-						<Space h={8} />
-
-						<Center>
-							<Text className={meemTheme.tMedium}>
-								{agreement.description}
-							</Text>
-						</Center>
-						<Space h={24} />
-
-						<Center>
-							<Button
-								className={meemTheme.buttonBlack}
-								onClick={() => {
-									router.push({
-										pathname: `/${agreement.slug}/e/discussions/submit`
-									})
-								}}
-							>
-								+ Start a discussion
-							</Button>
-						</Center>
-						<Space h={48} />
-						<div className={meemTheme.centeredRow}>
-							<TextInput
-								radius={20}
-								classNames={{
-									input: meemTheme.fTextField
-								}}
-								icon={<Search />}
-								placeholder={'Search discussions'}
-								className={meemTheme.fullWidth}
-								size={'lg'}
-								onChange={event => {
-									log.debug(event.target.value)
-									// TODO
-								}}
-							/>
-							<Space w={16} />
-							<Button className={meemTheme.buttonBlack}>
-								Sort
-							</Button>
-						</div>
-						<Space h={32} />
-						{posts.map(post => (
-							<DiscussionPostPreview
-								key={post.id}
-								post={post}
-								onReaction={() => {
-									setHasFetchedReactions(false)
-								}}
-								reactions={reactions}
-								agreementExtension={agreementExtension}
-								commentCount={commentCounts[post.id.toString()]}
-							/>
+			{!isLoadingAgreement && agreement?.name && !agreementExtension && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Text>
+							This extension is not enabled for this club.
+						</Text>
+					</Center>
+					{agreement.isCurrentUserAgreementOwner ||
+						(agreement.isCurrentUserAgreementAdmin && (
+							<>
+								<Space h={16} />{' '}
+								<Button
+									className={meemTheme.buttonGrey}
+									onClick={() => {
+										router.push({
+											pathname: `${agreement.slug}/admin`,
+											query: { tab: 'extensions' }
+										})
+									}}
+								>
+									Enable this extension
+								</Button>
+							</>
 						))}
-					</Container>
-				</>
+				</Container>
 			)}
+			{!isLoadingAgreement &&
+				agreement?.name &&
+				agreementExtension &&
+				!agreementExtension.isInitialized && (
+					<Container>
+						<Space h={120} />
+						<Center>
+							<Text>
+								{`${agreementExtension.Extension?.name} is being set up. Please wait...`}
+							</Text>
+						</Center>
+						<Space h={24} />
+						<Center>
+							<Loader variant="oval" color="blue" />
+						</Center>
+					</Container>
+				)}
+			{!isLoadingAgreement &&
+				agreement?.name &&
+				agreementExtension &&
+				agreementExtension.isInitialized && (
+					<>
+						<Container>
+							<Space h={48} />
+
+							<Center>
+								<Image
+									className={meemTheme.imagePixelated}
+									height={100}
+									width={100}
+									src={agreement.image}
+								/>
+							</Center>
+
+							<Space h={24} />
+							<Center>
+								<Text className={meemTheme.tLargeBold}>
+									{agreement.name}
+								</Text>
+							</Center>
+							<Space h={8} />
+
+							<Center>
+								<Text className={meemTheme.tMedium}>
+									{agreement.description}
+								</Text>
+							</Center>
+							<Space h={24} />
+
+							<Center>
+								<Button
+									className={meemTheme.buttonBlack}
+									onClick={() => {
+										router.push({
+											pathname: `/${agreement.slug}/e/discussions/submit`
+										})
+									}}
+								>
+									+ Start a discussion
+								</Button>
+							</Center>
+							<Space h={48} />
+							<div className={meemTheme.centeredRow}>
+								<TextInput
+									radius={20}
+									classNames={{
+										input: meemTheme.fTextField
+									}}
+									icon={<Search />}
+									placeholder={'Search discussions'}
+									className={meemTheme.fullWidth}
+									size={'lg'}
+									onChange={event => {
+										log.debug(event.target.value)
+										// TODO
+									}}
+								/>
+								<Space w={16} />
+								<Button className={meemTheme.buttonBlack}>
+									Sort
+								</Button>
+							</div>
+							<Space h={32} />
+							{posts.map(post => (
+								<DiscussionPostPreview
+									key={post.id}
+									post={post}
+									onReaction={() => {
+										setHasFetchedReactions(false)
+									}}
+									reactions={reactions}
+									agreementExtension={agreementExtension}
+									commentCount={
+										commentCounts[post.id.toString()]
+									}
+								/>
+							))}
+						</Container>
+					</>
+				)}
 		</>
 	)
 }
