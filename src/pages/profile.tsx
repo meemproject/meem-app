@@ -9,7 +9,7 @@ const ProfilePage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>My Profile | Meem</title>
+				<title>My Meem Profile | Meem</title>
 				<meta name="title" content="Agreements" />
 				<meta
 					name="description"

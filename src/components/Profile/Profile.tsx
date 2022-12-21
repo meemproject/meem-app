@@ -109,7 +109,9 @@ export const ProfileComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Connect your wallet to access your profile.</Text>
+						<Text>
+							Connect your wallet to access your Meem profile.
+						</Text>
 					</Center>
 				</Container>
 			)}
@@ -126,7 +128,8 @@ export const ProfileComponent: React.FC = () => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							Unable to load your profile. Please try again later.
+							Unable to load your Meem profile. Please try again
+							later.
 						</Text>
 					</Center>
 				</Container>
@@ -151,7 +154,7 @@ export const ProfileComponent: React.FC = () => {
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 							<div className={meemTheme.pageHeaderTitleContainer}>
 								<Text className={meemTheme.tLargeBold}>
-									{user.displayName ?? 'My Profile'}
+									{user.displayName ?? 'My Meem Profile'}
 								</Text>
 								<Space h={8} />
 								<div className={meemTheme.row}>
