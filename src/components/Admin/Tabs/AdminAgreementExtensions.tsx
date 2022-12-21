@@ -13,6 +13,7 @@ import {
 	Modal
 } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ExternalLink, Settings } from 'tabler-icons-react'
@@ -95,9 +96,9 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		router.push(`/${agreement.slug}/e/${slug}/settings`)
 	}
 
-	const navigateToExtensionHome = (slug: string) => {
-		router.push(`/${agreement.slug}/e/${slug}`)
-	}
+	// const navigateToExtensionHome = (slug: string) => {
+	// 	router.push(`/${agreement.slug}/e/${slug}`)
+	// }
 
 	return (
 		<>
@@ -116,51 +117,80 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 						>{`Enabled extensions (${agreement.extensions.length})`}</Text>
 						<Space h={12} />
 						<Grid>
-							{agreement.extensions.map(extension => (
-								<Grid.Col
-									xs={8}
-									sm={8}
-									md={4}
-									lg={4}
-									xl={4}
-									key={extension.id}
-								>
-									<div
-										className={
-											meemTheme.extensionGridItemEnabled
+							{agreement.extensions.map(extension => {
+								let isExtensionBeingEnabled = false
+								if (
+									Array.isArray(
+										extension.metadata?.transactions
+									)
+								) {
+									extension.metadata?.transactions.forEach(
+										(tx: {
+											status: MeemAPI.TransactionStatus
+										}) => {
+											if (
+												tx.status ===
+												MeemAPI.TransactionStatus
+													.Pending
+											) {
+												isExtensionBeingEnabled = true
+											}
 										}
+									)
+								}
+								return (
+									<Grid.Col
+										xs={8}
+										sm={8}
+										md={4}
+										lg={4}
+										xl={4}
+										key={extension.id}
 									>
 										<div
 											className={
-												meemTheme.extensionGridItemEnabledHeaderBackground
-											}
-										/>
-										<div
-											className={
-												meemTheme.extensionGridItemHeader
+												meemTheme.extensionGridItemEnabled
 											}
 										>
-											<Image
-												src={`/${
-													isDarkTheme
-														? `${(
-																extension
-																	.Extension
-																	?.icon ?? ''
-														  ).replace(
-																'.png',
-																'-white.png'
-														  )}`
-														: extension.Extension
-																?.icon
-												}`}
-												width={16}
-												height={16}
-												fit={'contain'}
+											<div
+												className={
+													meemTheme.extensionGridItemEnabledHeaderBackground
+												}
 											/>
-											<Space w={8} />
-											<Text>{`${extension.Extension?.name}`}</Text>
-											{/* {extension.isVerified && (
+											<div
+												className={
+													meemTheme.extensionGridItemHeader
+												}
+											>
+												<Image
+													src={`/${
+														isDarkTheme
+															? `${(
+																	extension
+																		.Extension
+																		?.icon ??
+																	''
+															  ).replace(
+																	'.png',
+																	'-white.png'
+															  )}`
+															: extension
+																	.Extension
+																	?.icon
+													}`}
+													width={16}
+													height={16}
+													fit={'contain'}
+												/>
+												<Space w={8} />
+												<Text>{`${extension.Extension?.name}`}</Text>
+												{isExtensionBeingEnabled && (
+													<Loader
+														color="red"
+														variant="oval"
+													/>
+												)}
+												{/* {extension.isVerified && (
 												<>
 													<Space w={12} />
 													<Image
@@ -177,85 +207,86 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													</Text>
 												</>
 											)} */}
-										</div>
-										<div
-											style={{
-												width: '100%'
-											}}
-										>
-											<Space h={16} />
-											<Divider color={colorGrey} />
-										</div>
-										<div
-											className={meemTheme.row}
-											style={{
-												height: 46
-											}}
-										>
-											<a
-												onClick={() => {
-													if (extension.Extension) {
-														navigateToExtensionHome(
-															extension.Extension
-																?.slug ?? ''
-														)
-													}
+											</div>
+											<div
+												style={{
+													width: '100%'
 												}}
 											>
-												<div
-													className={meemTheme.row}
-													style={{
-														cursor: 'pointer',
-														padding: 12
-													}}
-												>
-													<ExternalLink size={20} />
-													<Space w={4} />
-													<Text
+												<Space h={16} />
+												<Divider color={colorGrey} />
+											</div>
+											<div
+												className={meemTheme.row}
+												style={{
+													height: 46
+												}}
+											>
+												<a onClick={() => {}}>
+													<div
 														className={
-															meemTheme.tExtraSmall
+															meemTheme.row
 														}
+														style={{
+															cursor: 'pointer',
+															padding: 12
+														}}
 													>
-														Homepage
-													</Text>
-												</div>
-											</a>
-											<Space w={4} />
-											<Divider orientation="vertical" />
-											<Space w={4} />
+														<ExternalLink
+															size={20}
+														/>
+														<Space w={4} />
+														<Text
+															className={
+																meemTheme.tExtraSmall
+															}
+														>
+															Homepage
+														</Text>
+													</div>
+												</a>
+												<Space w={4} />
+												<Divider orientation="vertical" />
+												<Space w={4} />
 
-											<a
-												onClick={() => {
-													if (extension.Extension) {
-														navigateToExtensionSettings(
+												<a
+													onClick={() => {
+														if (
 															extension.Extension
-																?.slug ?? ''
-														)
-													}
-												}}
-											>
-												<div
-													className={meemTheme.row}
-													style={{
-														cursor: 'pointer',
-														padding: 12
+														) {
+															navigateToExtensionSettings(
+																extension
+																	.Extension
+																	?.slug ?? ''
+															)
+														}
 													}}
 												>
-													<Settings size={20} />
-													<Space w={4} />
-													<Text
+													<div
 														className={
 															meemTheme.tExtraSmall
 														}
+														style={{
+															cursor: 'pointer',
+															padding: 12
+														}}
 													>
-														Settings
-													</Text>
-												</div>
-											</a>
+														<Settings size={20} />
+														<Space w={4} />
+														<Text
+															className={
+																meemTheme.tExtraSmall
+															}
+														>
+															Settings
+														</Text>
+													</div>
+												</a>
+											</div>
 										</div>
-									</div>
-								</Grid.Col>
-							))}
+									</Grid.Col>
+								)
+							})}
 						</Grid>
 						<Space h={32} />
 					</>

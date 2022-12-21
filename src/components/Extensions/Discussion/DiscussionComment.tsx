@@ -1,4 +1,5 @@
 /* eslint-disable import/no-named-as-default */
+import log from '@kengoldfarb/log'
 import {
 	Space,
 	Text,
@@ -8,6 +9,7 @@ import {
 	Button
 } from '@mantine/core'
 import { RichTextEditor } from '@mantine/tiptap'
+import { useAuth, useSDK } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -17,21 +19,35 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { DateTime } from 'luxon'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ChevronUp } from 'tabler-icons-react'
+import { AgreementExtensions } from '../../../../generated/graphql'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
 	colorDarkGrey,
 	colorLightGrey,
 	// colorPink,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
+import { IReactions } from './DiscussionPost'
 interface IProps {
 	comment: DiscussionComment
+	reactions: IReactions
+	onReaction: () => void
+	agreementExtension: AgreementExtensions | undefined
 }
 
-export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
+export const DiscussionCommentComponent: React.FC<IProps> = ({
+	comment,
+	reactions,
+	agreementExtension,
+	onReaction
+}) => {
 	const { classes: meemTheme } = useMeemTheme()
+	const { sdk } = useSDK()
+	const { chainId, me } = useAuth()
+	const { agreement } = useAgreement()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -51,8 +67,61 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 		content
 	})
 
-	const [isReplying, setIsReplying] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
+	const [isReplying] = useState(false)
 	const [isCommentRepliesHidden, setIsCommentRepliesHidden] = useState(false)
+
+	log.debug({ isLoading })
+
+	const handleReactionSubmit = useCallback(
+		async (options: {
+			e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+			reaction: string
+		}) => {
+			const { e, reaction } = options
+			e.preventDefault()
+			try {
+				if (!chainId) {
+					log.crit('No chainId found')
+					return
+				}
+				setIsLoading(true)
+
+				const authSig = await sdk.id.getLitAuthSig()
+
+				const tableName =
+					agreementExtension?.metadata?.storage?.tableland?.reactions
+						.tablelandTableName
+
+				await sdk.storage.encryptAndWrite({
+					chainId,
+					tableName,
+					authSig,
+					writeColumns: {
+						refId: comment.id,
+						refTable: 'comments'
+					},
+					data: {
+						reaction,
+						userId: me?.user.id,
+						walletAddress: me?.address
+					},
+					accessControlConditions: [
+						{
+							contractAddress: agreement?.address
+						}
+					]
+				})
+
+				// Re-fetch
+				onReaction()
+			} catch (err) {
+				log.crit(err)
+			}
+			setIsLoading(false)
+		},
+		[sdk, chainId, me, agreementExtension, agreement, onReaction, comment]
+	)
 
 	return (
 		<div>
@@ -100,14 +169,26 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 					/>
 					<Space h={16} />
 					<div className={meemTheme.centeredRow}>
-						<ChevronUp />
+						<a
+							style={{ cursor: 'pointer' }}
+							onClick={e =>
+								handleReactionSubmit({
+									e,
+									reaction: 'upvote'
+								})
+							}
+						>
+							<ChevronUp />
+						</a>
 						<Space w={4} />
 
 						<Text
 							className={meemTheme.tExtraExtraSmall}
 							style={{ fontWeight: '700' }}
 						>
-							{30}
+							{(reactions.comments[comment.id] &&
+								reactions.comments[comment.id].counts.upvote) ??
+								0}
 						</Text>
 						<Space w={20} />
 						<Image
@@ -119,15 +200,15 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({ comment }) => {
 						/>
 						<Space w={8} />
 
-						<Text
-							className={meemTheme.tExtraExtraSmall}
+						{/* <Text
+							className={clubsTheme.tExtraExtraSmall}
 							style={{ cursor: 'pointer' }}
 							onClick={() => {
 								setIsReplying(!isReplying)
 							}}
 						>
 							Reply
-						</Text>
+						</Text> */}
 					</div>
 					{isReplying && editor && (
 						<>
