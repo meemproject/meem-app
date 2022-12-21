@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { AgreementCreationMembershipSettings } from './AgreementCreationMembershipSettings'
 
 export const CreatePermissionsComponent: React.FC = () => {
@@ -19,7 +19,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 		} else {
 			showNotification({
 				radius: 'lg',
-				title: 'Unable to create this agreement.',
+				title: 'Unable to create this community.',
 				message: `Some data is missing. Try again!`,
 				autoClose: 5000
 			})
@@ -32,7 +32,7 @@ export const CreatePermissionsComponent: React.FC = () => {
 			<div className={meemTheme.pageHeader}>
 				<div>
 					<Text className={meemTheme.tSmallBoldFaded}>
-						Create a agreement
+						Create a community
 					</Text>
 					<Text className={meemTheme.tLargeBold}>
 						{agreementName}

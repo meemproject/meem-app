@@ -17,7 +17,7 @@ import {
 } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorBlue, useMeemTheme } from '../Styles/AgreementsTheme'
+import { colorGreen, colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	membershipSettings?: MembershipSettings
 	isOpened: boolean
@@ -102,7 +102,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				color: colorGreen,
 				icon: <Check color="green" />,
 
-				message: `Your agreement has been published.`
+				message: `Your community has been created.`
 			})
 
 			router.push({
@@ -119,7 +119,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			log.debug('no web3 provider, returning.')
 			showNotification({
 				radius: 'lg',
-				title: 'Error Creating Agreement',
+				title: 'Error creating community',
 				message: 'Please connect your wallet first.',
 				color: colorBlue
 			})
@@ -132,9 +132,9 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			log.debug('no membership settings found, returning.')
 			showNotification({
 				radius: 'lg',
-				title: 'Error Creating Agreement',
+				title: 'Error creating community',
 				message:
-					'An error occurred while creating the agreement. Please try again.',
+					'An error occurred while creating this community. Please try again.',
 				color: colorBlue
 			})
 
@@ -191,7 +191,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				showNotification({
 					radius: 'lg',
 					title: 'Oops!',
-					message: `This agreement has invalid membership requirements. Please double-check your entries and try again.`,
+					message: `This community has invalid membership requirements. Please double-check your entries and try again.`,
 					color: colorBlue
 				})
 				closeModal()
@@ -264,9 +264,9 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			log.crit(e)
 			showNotification({
 				radius: 'lg',
-				title: 'Error Creating Agreement',
+				title: 'Error creating community',
 				message:
-					'An error occurred while creating the agreement. Please try again.',
+					'An error occurred while creating this community. Please try again.',
 				color: colorBlue
 			})
 
@@ -314,7 +314,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				// TODO: Handle edge case error
 				showNotification({
 					radius: 'lg',
-					title: 'Error Creating Agreement',
+					title: 'Error creating community',
 					message: 'Please try again.',
 					color: colorBlue
 				})
@@ -348,7 +348,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 					<Space h={16} />
 					<Text
 						className={meemTheme.tLargeBold}
-					>{`We're creating your agreement!`}</Text>
+					>{`We're creating your community!`}</Text>
 					<Space h={32} />
 					<Stepper
 						active={activeStep}
@@ -358,33 +358,38 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 					>
 						<Stepper.Step
 							label="Queued"
-							description="Agreement creation has been queued"
+							description="Community creation has been queued."
 						></Stepper.Step>
 						<Stepper.Step
-							label="Deploying Agreement"
-							description="Your Agreement smart contract is being deployed to the blockchain"
+							label="Deploying community"
+							description="Your community's smart contract is being deployed to the blockchain"
 						></Stepper.Step>
 						<Stepper.Step
-							label="Initializing Agreement"
-							description="Setting up your Agreement's smart contract"
+							label="Initializing community"
+							description="Setting up your community's smart contract"
 						></Stepper.Step>
 						<Stepper.Step
-							label="Minting Tokens"
-							description="Minting membership tokens for your agreement"
+							label="Minting tokens"
+							description="Minting membership tokens for your community"
 						></Stepper.Step>
 						<Stepper.Completed>
 							{/** TODO: Show a message when complete before redirecting? */}
 						</Stepper.Completed>
 					</Stepper>
 					<Space h={32} />
-					<Image
-						height={120}
-						width={120}
-						fit={'cover'}
-						className={meemTheme.imageAgreementLogo}
-						src={Cookies.get(CookieKeys.agreementImage)}
-					/>
-					<Space h={16} />
+					{Cookies.get(CookieKeys.agreementImage) && (
+						<>
+							<Image
+								height={120}
+								width={120}
+								fit={'cover'}
+								className={meemTheme.imageAgreementLogo}
+								src={Cookies.get(CookieKeys.agreementImage)}
+							/>
+							<Space h={16} />
+						</>
+					)}
+
 					<Text className={meemTheme.tLargeBold}>
 						{Cookies.get(CookieKeys.agreementName)}
 					</Text>

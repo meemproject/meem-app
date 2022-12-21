@@ -19,7 +19,7 @@ import {
 	colorBlue,
 	colorWhite,
 	useMeemTheme
-} from '../../Styles/AgreementsTheme'
+} from '../../Styles/MeemTheme'
 
 interface IProps {
 	agreement: Agreement

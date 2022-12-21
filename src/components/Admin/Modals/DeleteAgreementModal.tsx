@@ -9,7 +9,7 @@ import router from 'next/router'
 import React, { useState } from 'react'
 import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
-import { colorBlue, useMeemTheme } from '../../Styles/AgreementsTheme'
+import { colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -34,7 +34,7 @@ export const DeleteAgreementModal: React.FC<IProps> = ({
 				// TODO: Actually delete the agreement here
 
 				showNotification({
-					title: 'Deleted Agreement',
+					title: 'Deleted community',
 					autoClose: 5000,
 					icon: <CircleCheck />,
 					message: `Redirecting you. Please wait...`
@@ -48,7 +48,7 @@ export const DeleteAgreementModal: React.FC<IProps> = ({
 					autoClose: 5000,
 					color: colorBlue,
 					icon: <AlertCircle />,
-					message: `Unable to delete this agreement. Please let us know!`
+					message: `Unable to delete this community. Please let us know!`
 				})
 				setIsDeletingAgreement(false)
 				return
@@ -73,7 +73,7 @@ export const DeleteAgreementModal: React.FC<IProps> = ({
 				<Space h={24} />
 				<Text
 					className={meemTheme.tMediumBold}
-				>{`Are you sure you want to delete this agreement?`}</Text>
+				>{`Are you sure you want to delete this community?`}</Text>
 				<Space h={8} />
 				<Text>This action is permanent and cannot be undone.</Text>
 				<Space h={32} />
@@ -84,7 +84,7 @@ export const DeleteAgreementModal: React.FC<IProps> = ({
 						deleteAgreement()
 					}}
 				>
-					{isDeletingAgreement ? 'Deleting...' : 'Delete Agreement'}
+					{isDeletingAgreement ? 'Deleting...' : 'Delete community'}
 				</Button>
 				{!isDeletingAgreement && (
 					<>

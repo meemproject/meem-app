@@ -36,14 +36,14 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 				<title>
 					{agreement === undefined || agreement.isError
 						? 'Not found'
-						: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Agreements`}
+						: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`}
 				</title>
 				<meta
 					name="title"
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Agreements`
+							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`
 					}
 				/>
 				<meta name="description" content={agreement.description} />
@@ -54,7 +54,7 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Agreements`
+							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -68,7 +68,7 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Agreements`
+							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 			if (data.Agreements.length === 0) {
 				agreement = {
 					isError: true,
-					description: 'This agreement does not exist. Yet.',
+					description: 'This community does not exist. Yet.',
 					responseBody: null
 				}
 			} else {
@@ -150,7 +150,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 		agreement = {
 			isError: true,
 			responseBody: null,
-			description: 'This agreement does not exist. Yet.'
+			description: 'This community does not exist. Yet.'
 		}
 		return {
 			props: {

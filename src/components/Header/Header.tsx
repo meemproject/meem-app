@@ -33,7 +33,7 @@ import {
 	MoonStars
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { colorBlue, useMeemTheme } from '../Styles/AgreementsTheme'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
 
 export function HeaderMenu() {
@@ -57,7 +57,7 @@ export function HeaderMenu() {
 	}
 
 	const navigateToMyAgreements = () => {
-		router.push({ pathname: '/profile', query: { tab: 'myAgreements' } })
+		router.push({ pathname: '/profile', query: { tab: 'myCommunities' } })
 	}
 
 	const handlePoweredByMeem = () => {

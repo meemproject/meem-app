@@ -3,7 +3,7 @@
 import { Text, Center, Space, Divider } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 export const MeemFooter: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()

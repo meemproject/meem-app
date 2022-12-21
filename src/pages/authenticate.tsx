@@ -9,7 +9,7 @@ const AuthenticatePage: NextPage = () => {
 	return (
 		<div style={{ position: 'relative' }}>
 			<Head>
-				<title>Authenticate | Agreements</title>
+				<title>Authenticate | Meem</title>
 				<meta name="title" content="Agreements" />
 				<meta
 					name="description"

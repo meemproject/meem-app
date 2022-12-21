@@ -26,7 +26,7 @@ import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	agreementSlug?: string

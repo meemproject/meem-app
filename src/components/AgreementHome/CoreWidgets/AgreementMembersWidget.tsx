@@ -16,7 +16,7 @@ import { Search } from 'tabler-icons-react'
 import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }
@@ -96,14 +96,14 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 				<Space h={24} />
 
 				<TextInput
-					radius={20}
+					radius={16}
 					classNames={{
 						input: meemTheme.fTextField
 					}}
 					icon={<Search />}
 					placeholder={'Search Members'}
 					className={meemTheme.fullWidth}
-					size={'lg'}
+					size={'md'}
 					onChange={event => {
 						if (event.target.value) {
 							filterMembers(members, event.target.value)
@@ -160,10 +160,10 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 															: member.isMeemApi
 															? 'Meem API'
 															: member.isAgreementOwner
-															? 'Agreement Owner'
+															? 'Community Owner'
 															: member.isAgreementAdmin
-															? 'Agreement Admin'
-															: 'Agreement Member'}
+															? 'Community Administrator'
+															: 'Community Member'}
 													</Text>
 													<Text
 														className={
@@ -193,7 +193,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						<Space h={24} />
 						<Center>
 							<Text className={meemTheme.tSmall}>
-								{`This agreement somehow has no members. This may or may not be a rip in the space-time continuum.`}
+								{`This community somehow has no members. This may or may not be a rip in the space-time continuum.`}
 							</Text>
 						</Center>
 						<Space h={24} />

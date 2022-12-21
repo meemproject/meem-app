@@ -2,7 +2,7 @@
 import { Container, Text, Space, Loader, Center } from '@mantine/core'
 import React, { useState } from 'react'
 import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
 import { AgreementAddAppsWidget } from './CoreWidgets/AgreementAddAppsWidget'
 import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
@@ -32,7 +32,7 @@ export const AgreementDetailComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that agreement does not exist!</Text>
+						<Text>Sorry, this community does not exist!</Text>
 					</Center>
 				</Container>
 			)}
@@ -41,7 +41,7 @@ export const AgreementDetailComponent: React.FC = () => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							There was an error loading this agreement. Please
+							There was an error loading this community. Please
 							let us know!
 						</Text>
 					</Center>

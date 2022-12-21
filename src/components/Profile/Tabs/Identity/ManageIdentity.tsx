@@ -28,7 +28,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
-import { colorVerified, useMeemTheme } from '../../../Styles/AgreementsTheme'
+import { colorVerified, useMeemTheme } from '../../../Styles/MeemTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {

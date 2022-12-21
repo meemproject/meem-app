@@ -18,7 +18,7 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check, X } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyAgreementsComponent } from './Tabs/MyAgreements'
@@ -60,7 +60,7 @@ export const ProfileComponent: React.FC = () => {
 	}, [router, wallet])
 
 	useEffect(() => {
-		if (router.query.tab === 'myAgreements') {
+		if (router.query.tab === 'myCommunities') {
 			setCurrentTab(Tab.MyAgreements)
 		} else if (router.query.tab === 'identity') {
 			setCurrentTab(Tab.Profile)
@@ -109,7 +109,9 @@ export const ProfileComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Connect your wallet to access your profile.</Text>
+						<Text>
+							Connect your wallet to access your Meem profile.
+						</Text>
 					</Center>
 				</Container>
 			)}
@@ -126,7 +128,8 @@ export const ProfileComponent: React.FC = () => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							Unable to load your profile. Please try again later.
+							Unable to load your Meem profile. Please try again
+							later.
 						</Text>
 					</Center>
 				</Container>
@@ -151,7 +154,7 @@ export const ProfileComponent: React.FC = () => {
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
 							<div className={meemTheme.pageHeaderTitleContainer}>
 								<Text className={meemTheme.tLargeBold}>
-									{user.displayName ?? 'My Profile'}
+									{user.displayName ?? 'My Meem Profile'}
 								</Text>
 								<Space h={8} />
 								<div className={meemTheme.row}>
@@ -240,7 +243,7 @@ export const ProfileComponent: React.FC = () => {
 							<NavLink
 								className={meemTheme.pagePanelLayoutNavItem}
 								active={currentTab === Tab.MyAgreements}
-								label={'My Agreements'}
+								label={'My Communities'}
 								onClick={() => {
 									setCurrentTab(Tab.MyAgreements)
 									setIsMobileNavBarVisible(false)

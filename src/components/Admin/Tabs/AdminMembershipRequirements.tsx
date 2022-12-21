@@ -22,11 +22,7 @@ import {
 	Agreement
 } from '../../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../../model/token/token'
-import {
-	colorBlue,
-	colorWhite,
-	useMeemTheme
-} from '../../Styles/AgreementsTheme'
+import { colorBlue, colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
 interface IProps {
@@ -343,11 +339,11 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 				>
 					<Radio
 						value="open-for-anyone"
-						label={'This agreement is open for anyone to join.'}
+						label={'This community is open for anyone to join.'}
 					/>
 					<Radio
 						value="has-requirements"
-						label={'There are requirements to join this agreement.'}
+						label={'There are requirements to join this community.'}
 					/>
 				</Radio.Group>
 
@@ -590,8 +586,8 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 						<Text className={meemTheme.tExtraSmall}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
-							added separately in the Agreement Admins panel. New
-							approved addresses can be added manually anytime.
+							managed separately in the Roles tab. New approved
+							addresses can be added manually anytime.
 						</Text>
 						<Space h={'xs'} />
 						<Textarea
@@ -786,7 +782,7 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 											radius: 'lg',
 											title: 'Oops!',
 											message:
-												'You cannot add a agreement admin as an approved address.'
+												'You cannot add an administrator as an approved address. Manage admins in the Roles tab instead.'
 										})
 										return
 									}

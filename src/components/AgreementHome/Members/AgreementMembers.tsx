@@ -17,7 +17,7 @@ import { Search, Star } from 'tabler-icons-react'
 import { AgreementMember } from '../../../model/agreement/agreements'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { useAgreement } from '../AgreementProvider'
 
 interface IProps {
@@ -102,7 +102,7 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that agreement does not exist!</Text>
+						<Text>Sorry, this community does not exist!</Text>
 					</Center>
 				</Container>
 			)}
@@ -111,7 +111,7 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							There was an error loading this agreement. Please
+							There was an error loading this community. Please
 							let us know!
 						</Text>
 					</Center>

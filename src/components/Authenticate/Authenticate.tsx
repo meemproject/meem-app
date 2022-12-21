@@ -5,7 +5,7 @@ import { useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useAuth()
@@ -39,7 +39,7 @@ const MAuthenticate: React.FC = () => {
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'Unable to authenticate with your wallet. Please get in touch!'
+					'Unable to sign into Meem with your wallet. Please get in touch!'
 			})
 			log.crit(e)
 		}
@@ -60,7 +60,7 @@ const MAuthenticate: React.FC = () => {
 					<Space h={80} />
 					<Text
 						className={meemTheme.tLargeBold}
-					>{`Let's make sure it's really you.`}</Text>
+					>{`Sign in with Meem`}</Text>
 					<Space h={16} />
 
 					<div>

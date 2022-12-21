@@ -9,7 +9,7 @@ const CreatePage: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Create a Agreement | Agreements</title>
+				<title>Create a Agreement | Meem</title>
 				<meta name="title" content="Agreements" />
 				<meta
 					name="description"

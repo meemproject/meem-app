@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Settings } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
-import { useMeemTheme } from '../../Styles/AgreementsTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 /*
 Access agreement-level data using the 'agreement' object.
@@ -54,7 +54,7 @@ export const ExampleWidget: React.FC<IProps> = ({ agreement }) => {
 			</div>
 			<Space h={24} />
 			<Text className={meemTheme.tSmall}>
-				{`This is an example Agreement Extension Widget for ${agreement.name}`}
+				{`This is an example Community Extension Widget for ${agreement.name}`}
 			</Text>
 		</div>
 	)

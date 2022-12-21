@@ -38,14 +38,14 @@ const DiscussionPostPage: NextPage<IProps> = ({ post }) => {
 				<title>
 					{post === undefined || post.isError
 						? 'Not found'
-						: `${post.responseBody.Agreements[0].name} | Discussion | Agreements`}
+						: `${post.responseBody.Agreements[0].name} | Discussion | Meem`}
 				</title>
 				<meta
 					name="title"
 					content={
 						post === undefined || post.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Discussion | Agreements`
+							: `${post.responseBody.Agreements[0].name} | Discussion | Meem`
 					}
 				/>
 				{/* <meta name="description" content={post.description} /> */}
@@ -56,7 +56,7 @@ const DiscussionPostPage: NextPage<IProps> = ({ post }) => {
 					content={
 						post === undefined || post.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Discussion | Agreements`
+							: `${post.responseBody.Agreements[0].name} | Discussion | Meem`
 					}
 				/>
 				{/* <meta property="og:description" content={post.description} /> */}
@@ -67,7 +67,7 @@ const DiscussionPostPage: NextPage<IProps> = ({ post }) => {
 					content={
 						post === undefined || post.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Discussion | Agreements`
+							: `${post.responseBody.Agreements[0].name} | Discussion | Meem`
 					}
 				/>
 				<meta
@@ -124,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 			if (data.Agreements.length === 0) {
 				agreement = {
 					isError: true,
-					description: 'This agreement does not exist. Yet.',
+					description: 'This community does not exist. Yet.',
 					responseBody: null
 				}
 			} else {
@@ -138,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 				props: {
 					agreement,
 					isError: !!errors,
-					description: 'There was an error fetching agreement data'
+					description: 'There was an error fetching community data'
 				}
 			}
 		}
@@ -149,7 +149,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 		agreement = {
 			isError: true,
 			responseBody: null,
-			description: 'This agreement does not exist. Yet.'
+			description: 'This community does not exist. Yet.'
 		}
 		return {
 			props: {

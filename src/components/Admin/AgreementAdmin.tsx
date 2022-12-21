@@ -23,7 +23,7 @@ import {
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
-import { colorGreen, useMeemTheme } from '../Styles/AgreementsTheme'
+import { colorGreen, useMeemTheme } from '../Styles/MeemTheme'
 import { AdminAgreementDetails } from './Tabs/AdminAgreementDetails'
 import { AdminAgreementExtensions } from './Tabs/AdminAgreementExtensions'
 import { AdminAgreementIcon } from './Tabs/AdminAgreementIcon'
@@ -122,7 +122,7 @@ export const AgreementAdminComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that agreement does not exist!</Text>
+						<Text>Sorry, that community does not exist!</Text>
 					</Center>
 				</Container>
 			)}
@@ -158,12 +158,12 @@ export const AgreementAdminComponent: React.FC = () => {
 											)
 											showNotification({
 												radius: 'lg',
-												title: 'Agreement URL copied',
+												title: 'Community URL copied',
 												autoClose: 2000,
 												color: colorGreen,
 												icon: <Check />,
 
-												message: `This agreement's URL was copied to your clipboard.`
+												message: `This community's URL was copied to your clipboard.`
 											})
 										}}
 										width={20}
@@ -185,8 +185,8 @@ export const AgreementAdminComponent: React.FC = () => {
 							<Center>
 								<Text>
 									Sorry, you do not have permission to view
-									this page. Contact the agreement owner for
-									help.
+									this page. Contact the community owner or
+									administrators for help.
 								</Text>
 							</Center>
 						</Container>
@@ -350,7 +350,7 @@ export const AgreementAdminComponent: React.FC = () => {
 												currentTab ===
 												Tab.AgreementDetails
 											}
-											label={'Agreement Details'}
+											label={'Community Details'}
 											onClick={() => {
 												setCurrentTab(
 													Tab.AgreementDetails
@@ -365,7 +365,7 @@ export const AgreementAdminComponent: React.FC = () => {
 											active={
 												currentTab === Tab.AgreementIcon
 											}
-											label={'Agreement Icon'}
+											label={'Community Icon'}
 											onClick={() => {
 												setCurrentTab(Tab.AgreementIcon)
 												setMobileNavBarVisible(false)

@@ -11,7 +11,7 @@ import React from 'react'
 import { Check } from 'tabler-icons-react'
 import { AgreementMember } from '../../../../model/agreement/agreements'
 import { quickTruncate } from '../../../../utils/truncated_wallet'
-import { colorBlue, useMeemTheme } from '../../../Styles/AgreementsTheme'
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	member: AgreementMember
@@ -45,11 +45,13 @@ export const AgreementMemberCard: React.FC<IProps> = ({ member }) => {
 					<Text className={meemTheme.tSmallBold}>
 						{member.displayName
 							? member.displayName
+							: member.isMeemApi
+							? 'Meem API'
 							: member.isAgreementOwner
-							? 'Agreement Owner'
+							? 'Community Owner'
 							: member.isAgreementAdmin
-							? 'Agreement Admin'
-							: 'Agreement Member'}
+							? 'Community Administrator'
+							: 'Community Member'}
 					</Text>
 					<Space h={4} />
 

@@ -15,7 +15,7 @@ import {
 	Agreement,
 	AgreementAdminRole
 } from '../../../model/agreement/agreements'
-import { colorBlue, useMeemTheme } from '../../Styles/AgreementsTheme'
+import { colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	agreement: Agreement
@@ -158,10 +158,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 					if (shouldShowUpgrade && cuts.length === 0) {
 						showNotification({
-							title: 'Agreement Upgraded!',
+							title: 'Community agreement contract upgraded!',
 							color: 'green',
 							icon: <Check />,
-							message: `The agreement has been upgraded to the latest version.`
+							message: `This community's agreement contract has been upgraded to the latest version.`
 						})
 						setShouldShowUpgrade(false)
 						setIsUpgradingAgreement(false)
@@ -207,7 +207,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 							color: 'green',
 							icon: <Check />,
 
-							message: `This agreement's contract address was copied to your clipboard.`
+							message: `This community's agreement contract address was copied to your clipboard.`
 						})
 					}}
 					width={20}
@@ -225,7 +225,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 			<Text
 				className={meemTheme.tSmallBold}
-			>{`Does Meem protocol have permission to manage your agreement’s smart contract?`}</Text>
+			>{`Does Meem protocol have permission to manage your community's agreement smart contract?`}</Text>
 			<Space h={8} />
 			<Text className={meemTheme.tSmallFaded}>
 				Please note that a transaction will occur when you save changes
@@ -250,7 +250,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 				/>
 				<Radio
 					value="members"
-					label="No, only agreement members with the Admin role can manage this contract"
+					label="No, only community members with the Admin role can manage this contract"
 				/>
 			</Radio.Group>
 
@@ -309,15 +309,15 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 					<Divider />
 					<Space h={32} />
 					<Text className={meemTheme.tExtraSmallLabel}>
-						UPGRADE AGREEMENT CONTRACT
+						UPGRADE COMMMUNITY AGREEMENT CONTRACT
 					</Text>
 					<Space h={16} />
 					<div className={meemTheme.row}>
 						<div>
 							<Text>
-								A new version of Agreements is available!
+								{`A new version of your community's agreement contract is available!
 								Upgrade to take advantage of all the new
-								features.
+								features.`}
 							</Text>
 						</div>
 					</div>
@@ -342,7 +342,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 							} catch (e) {
 								log.crit(e)
 								showNotification({
-									title: 'Error Upgrading Agreement',
+									title: 'Error upgrading agreement contract',
 									color: colorBlue,
 									message: `Something went wrong during the upgrade.`
 								})
@@ -359,7 +359,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			<Divider />
 			<Space h={32} />
 			<Text className={meemTheme.tExtraSmallLabel}>
-				AGREEMENT TREASURY ADDRESS
+				COMMUNITY TREASURY ADDRESS
 			</Text>
 			<Space h={20} />
 			{agreement.gnosisSafeAddress && (
@@ -383,7 +383,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 									color: 'green',
 									icon: <Check />,
 
-									message: `This agreement's treasury address was copied to your clipboard.`
+									message: `This community's treasury address was copied to your clipboard.`
 								})
 							}}
 							width={20}
@@ -393,7 +393,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 					<Text
 						className={meemTheme.tSmall}
-					>{`Your agreement's treasury was set up when the agreement was created. You can manage your treasury (including signing transactions and adding members) using the button below.`}</Text>
+					>{`You can manage your community treasury (including signing transactions and adding members) using the button below.`}</Text>
 					<Space h={24} />
 
 					<Button
@@ -440,7 +440,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 								radius: 'lg',
 								title: 'Wallet creation failed.',
 								message:
-									'We were unable to create treasury for your agreement. Please refresh the page and try again.',
+									'We were unable to create a treasury for your community. Please refresh the page and try again.',
 								color: colorBlue
 							})
 						}

@@ -21,7 +21,7 @@ import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
-import { useMeemTheme } from '../Styles/AgreementsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -49,7 +49,7 @@ export const CreateComponent: React.FC = () => {
 			if (cookieName === undefined) {
 				showNotification({
 					radius: 'lg',
-					title: 'Unable to create this agreement.',
+					title: 'Unable to create this community.',
 					message: `Some data is missing. Try again!`,
 					autoClose: 5000
 				})
@@ -183,7 +183,7 @@ export const CreateComponent: React.FC = () => {
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'You entered an invalid agreement name. Please choose a longer or shorter name.'
+					'You entered an invalid community name. Please choose a longer or shorter name.'
 			})
 			return
 		}
@@ -197,7 +197,7 @@ export const CreateComponent: React.FC = () => {
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'You entered an invalid agreement description. Please choose a longer or shorter description.'
+					'You entered an invalid community description. Please choose a longer or shorter description.'
 			})
 			return
 		}
@@ -206,7 +206,7 @@ export const CreateComponent: React.FC = () => {
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
-				message: 'Please provide a agreement logo.'
+				message: 'Please provide a community logo.'
 			})
 		}
 
@@ -229,7 +229,7 @@ export const CreateComponent: React.FC = () => {
 					</a>
 					<div>
 						<Text className={meemTheme.tSmallBoldFaded}>
-							Create a agreement
+							Create a community
 						</Text>
 						<Text className={meemTheme.tLargeBold}>
 							{agreementName}
@@ -283,14 +283,14 @@ export const CreateComponent: React.FC = () => {
 
 				<Space h={40} />
 				<Text className={meemTheme.tMediumBold}>
-					Upload an icon for your agreement.
+					Upload an icon to represent your community.
 				</Text>
 				<Space h={8} />
 				<Text
 					className={meemTheme.tExtraSmallFaded}
 					style={{ maxWidth: 650 }}
 				>
-					This will be your agreement’s membership token. You can
+					This will be your community’s membership token. You can
 					change it anytime. Icons should be square and either JPG or
 					PNG files. Note that all uploads will be rendered at 24x24
 					px.

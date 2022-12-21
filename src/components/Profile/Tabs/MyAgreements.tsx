@@ -28,7 +28,7 @@ import {
 	colorDarkerGrey,
 	colorWhite,
 	useMeemTheme
-} from '../../Styles/AgreementsTheme'
+} from '../../Styles/MeemTheme'
 
 export const MyAgreementsComponent: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
@@ -70,7 +70,7 @@ export const MyAgreementsComponent: React.FC = () => {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/profile?tab=myAgreements`
+					return: `/profile?tab=myCommunities`
 				}
 			})
 		}

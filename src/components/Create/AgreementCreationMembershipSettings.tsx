@@ -26,7 +26,7 @@ import {
 } from '../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../model/token/token'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { colorWhite, useMeemTheme } from '../Styles/AgreementsTheme'
+import { colorWhite, useMeemTheme } from '../Styles/MeemTheme'
 import { CreateAgreementModal } from './CreateAgreementModal'
 
 interface IProps {
@@ -229,7 +229,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 			case MembershipReqType.TokenHolders:
 				return 'token holders'
 			case MembershipReqType.OtherAgreementMember:
-				return 'join another agreement' // Note: currently not an option for v1
+				return 'join another community' // Note: currently not an option for v1
 		}
 	}
 
@@ -256,7 +256,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
-				message: 'At least one agreement admin is required.'
+				message: 'At least one community administrator is required.'
 			})
 			return
 		}
@@ -294,7 +294,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'One or more agreement admin addresses are invalid. Check what you entered and try again.'
+					'One or more community administrator addresses are invalid. Check what you entered and try again.'
 			})
 			setIsSavingChanges(false)
 			return
@@ -413,24 +413,20 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 			<div>
 				<Space h={48} />
 
-				<Text className={meemTheme.tLargeBold}>Agreement Admins</Text>
+				<Text className={meemTheme.tLargeBold}>
+					Community administrators
+				</Text>
 
 				<div>
 					<Space h={32} />
 					<Text className={meemTheme.tMediumBold}>
-						{agreement
-							? `Who can manage this agreement’s profile and membership
-						settings?`
-							: `Who can manage this agreement’s profile, treasury and membership
+						{`Who can manage this community’s profile and membership
 						settings?`}
 					</Text>
 					<Space h={16} />
 					<Text className={meemTheme.tMediumFaded}>
-						{agreement
-							? `Add a line break between each address. Note that at
-						least one agreement admin is required at all times.`
-							: `Add a line break between each address. Note that at
-						least one agreement admin is required at all times, and you can update treasury addresses via your agreement's settings page.`}
+						{`Add a line break between each address. Note that at
+						least one community administrator is required at all times.`}
 					</Text>
 					<Space h={16} />
 					<Textarea
@@ -456,7 +452,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 					className={meemTheme.tMedium}
 					style={{ marginBottom: 8, lineHeight: 2 }}
 				>
-					This agreement is open for{' '}
+					This community is open for{' '}
 					<a
 						onClick={() => {
 							openMembershipReqModal(0)
@@ -582,7 +578,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 					className={meemTheme.tMedium}
 					style={{ marginBottom: 8, lineHeight: 2 }}
 				>
-					Our agreement{' '}
+					Our community{' '}
 					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
 					<a onClick={openMembershipCostModal}>
 						<span className={meemTheme.fBlueSelectableSpan}>
@@ -665,7 +661,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 					className={meemTheme.buttonBlack}
 					onClick={saveChanges}
 				>
-					{'Launch Agreement'}
+					{'Launch Community'}
 				</Button>
 				<Space h="lg" />
 				<Modal
@@ -754,7 +750,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 						{!isEditedReqFirstReq && (
 							<Radio
 								value="other-agreement-member"
-								label="join another agreement"
+								label="join another community"
 								disabled
 							/>
 						)}
@@ -795,8 +791,8 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 						<Text className={meemTheme.tExtraSmall}>
 							Enter one wallet address or ENS name per line.
 							Admins should not be included here, and should be
-							added separately in the Agreement Admins panel. New
-							approved addresses can be added manually anytime.
+							managed separately in the Roles tab. New approved
+							addresses can be added manually anytime.
 						</Text>
 						<Space h={'xs'} />
 
@@ -884,7 +880,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 						}
 					>
 						<Text className={meemTheme.tMediumBoldFaded}>
-							Agreement Name
+							Community Name
 						</Text>
 
 						<TextInput
@@ -968,7 +964,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 											radius: 'lg',
 											title: 'Oops!',
 											message:
-												'You cannot add a agreement admin as an approved address.'
+												'You cannot add a community administrator as an approved address.'
 										})
 										return
 									}
