@@ -18,19 +18,19 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Check, X } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { useClubsTheme } from '../Styles/ClubsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
-import { MyClubsComponent } from './Tabs/MyClubs'
+import { MyAgreementsComponent } from './Tabs/MyAgreements'
 
 enum Tab {
 	Profile,
-	MyClubs
+	MyAgreements
 }
 
 export const ProfileComponent: React.FC = () => {
 	// General properties / tab management
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useAuth()
 	const { isMeLoading, isGetMeError } = useAuth()
@@ -60,8 +60,8 @@ export const ProfileComponent: React.FC = () => {
 	}, [router, wallet])
 
 	useEffect(() => {
-		if (router.query.tab === 'myClubs') {
-			setCurrentTab(Tab.MyClubs)
+		if (router.query.tab === 'myCommunities') {
+			setCurrentTab(Tab.MyAgreements)
 		} else if (router.query.tab === 'identity') {
 			setCurrentTab(Tab.Profile)
 		}
@@ -109,7 +109,9 @@ export const ProfileComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Connect your wallet to access your profile.</Text>
+						<Text>
+							Connect your wallet to access your Meem profile.
+						</Text>
 					</Center>
 				</Container>
 			)}
@@ -117,7 +119,7 @@ export const ProfileComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					</Center>
 				</Container>
 			)}
@@ -126,15 +128,16 @@ export const ProfileComponent: React.FC = () => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							Unable to load your profile. Please try again later.
+							Unable to load your Meem profile. Please try again
+							later.
 						</Text>
 					</Center>
 				</Container>
 			)}
 			{isLoggedIn && user && (
 				<>
-					<div className={clubsTheme.pageHeader}>
-						<div className={clubsTheme.spacedRowCentered}>
+					<div className={meemTheme.pageHeader}>
+						<div className={meemTheme.spacedRowCentered}>
 							{user.profilePicUrl && (
 								<>
 									<Image
@@ -142,23 +145,21 @@ export const ProfileComponent: React.FC = () => {
 										height={64}
 										width={64}
 										fit={'cover'}
-										className={clubsTheme.imageClubLogo}
+										className={meemTheme.imageAgreementLogo}
 										src={user.profilePicUrl}
 									/>
 								</>
 							)}
 
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
-							<div
-								className={clubsTheme.pageHeaderTitleContainer}
-							>
-								<Text className={clubsTheme.tLargeBold}>
-									{user.displayName ?? 'My Profile'}
+							<div className={meemTheme.pageHeaderTitleContainer}>
+								<Text className={meemTheme.tLargeBold}>
+									{user.displayName ?? 'My Meem Profile'}
 								</Text>
 								<Space h={8} />
-								<div className={clubsTheme.row}>
+								<div className={meemTheme.row}>
 									<Text
-										className={clubsTheme.tExtraSmallFaded}
+										className={meemTheme.tExtraSmallFaded}
 									>
 										{user.DefaultWallet?.ens
 											? user.DefaultWallet?.ens
@@ -171,7 +172,7 @@ export const ProfileComponent: React.FC = () => {
 									{user.id && (
 										<>
 											<Image
-												className={clubsTheme.copyIcon}
+												className={meemTheme.copyIcon}
 												src="/copy.png"
 												height={20}
 												onClick={() => {
@@ -200,7 +201,7 @@ export const ProfileComponent: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					<div className={clubsTheme.pagePanelLayoutContainer}>
+					<div className={meemTheme.pagePanelLayoutContainer}>
 						<MediaQuery
 							largerThan="sm"
 							styles={{ display: 'none' }}
@@ -216,7 +217,7 @@ export const ProfileComponent: React.FC = () => {
 							/>
 						</MediaQuery>
 						<Navbar
-							className={clubsTheme.pagePanelLayoutNavBar}
+							className={meemTheme.pagePanelLayoutNavBar}
 							width={{ base: 288 }}
 							height={400}
 							hidden={!isMobileNavBarVisible}
@@ -225,13 +226,13 @@ export const ProfileComponent: React.FC = () => {
 							p="xs"
 						>
 							<Text
-								className={clubsTheme.tExtraSmallLabel}
+								className={meemTheme.tExtraSmallLabel}
 								style={{ marginLeft: 20, marginBottom: 8 }}
 							>
 								SETTINGS
 							</Text>
 							<NavLink
-								className={clubsTheme.pagePanelLayoutNavItem}
+								className={meemTheme.pagePanelLayoutNavItem}
 								active={currentTab === Tab.Profile}
 								label={'Manage Identity'}
 								onClick={() => {
@@ -240,22 +241,22 @@ export const ProfileComponent: React.FC = () => {
 								}}
 							/>
 							<NavLink
-								className={clubsTheme.pagePanelLayoutNavItem}
-								active={currentTab === Tab.MyClubs}
-								label={'My Clubs'}
+								className={meemTheme.pagePanelLayoutNavItem}
+								active={currentTab === Tab.MyAgreements}
+								label={'My Communities'}
 								onClick={() => {
-									setCurrentTab(Tab.MyClubs)
+									setCurrentTab(Tab.MyAgreements)
 									setIsMobileNavBarVisible(false)
 								}}
 							/>
 						</Navbar>
 						{!isMobileNavBarVisible && (
-							<div className={clubsTheme.pagePanelLayoutContent}>
+							<div className={meemTheme.pagePanelLayoutContent}>
 								{currentTab === Tab.Profile && (
 									<ManageIdentityComponent />
 								)}
-								{currentTab === Tab.MyClubs && (
-									<MyClubsComponent />
+								{currentTab === Tab.MyAgreements && (
+									<MyAgreementsComponent />
 								)}
 							</div>
 						)}

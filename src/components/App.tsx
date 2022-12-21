@@ -1,7 +1,7 @@
 import { Button, Space } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import React from 'react'
-import { useClubsTheme } from './Styles/ClubsTheme'
+import { useMeemTheme } from './Styles/MeemTheme'
 
 export interface IProps {
 	children: React.ReactNode
@@ -45,7 +45,7 @@ export function hostnameToChainId(hostname: string): number {
 
 export const App: React.FC<IProps> = ({ children }) => {
 	const { chainId, setChain } = useWallet()
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	let expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID
 		? +process.env.NEXT_PUBLIC_CHAIN_ID
@@ -79,7 +79,7 @@ export const App: React.FC<IProps> = ({ children }) => {
 						<h3>{`You're currently connected to the wrong network.`}</h3>
 						<Space h={8} />
 						<Button
-							className={clubsTheme.buttonBlack}
+							className={meemTheme.buttonBlack}
 							onClick={() => {
 								setChain(expectedChainId)
 							}}

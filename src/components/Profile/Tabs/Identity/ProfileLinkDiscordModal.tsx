@@ -5,7 +5,7 @@ import { useSDK, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect } from 'react'
 import { AlertCircle, Check } from 'tabler-icons-react'
-import { colorPink, useClubsTheme } from '../../../Styles/ClubsTheme'
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	extensionId?: string
@@ -20,7 +20,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const wallet = useWallet()
 
 	const { sdk } = useSDK()
@@ -52,7 +52,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Verification failed',
 					autoClose: 5000,
-					color: colorPink,
+					color: colorBlue,
 					icon: <AlertCircle />,
 					message: `Please try again or get in touch!`
 				})
@@ -78,7 +78,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={clubsTheme.tMediumBold}>
+					<Text className={meemTheme.tMediumBold}>
 						Connect your Discord account
 					</Text>
 				}
@@ -91,14 +91,14 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={clubsTheme.modalStepsContainer}>
+				<div className={meemTheme.modalStepsContainer}>
 					<Space h={8} />
-					<Text className={clubsTheme.tMedium}>
+					<Text className={meemTheme.tMedium}>
 						Saving Discord information to your profile...
 					</Text>
 					<Space h={8} />
 
-					<Loader variant="oval" color="red" />
+					<Loader variant="oval" color="blue" />
 				</div>
 			</Modal>
 		</>

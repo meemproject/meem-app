@@ -17,32 +17,32 @@ import { useMeemApollo } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
 import { Check } from 'tabler-icons-react'
 import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
-import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/clubs'
+import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/agreements'
 import {
-	Club,
-	ClubMember,
-	ClubRole,
-	ClubRolePermission
-} from '../../../model/club/club'
-import { useClubsTheme } from '../../Styles/ClubsTheme'
+	Agreement,
+	AgreementMember,
+	AgreementRole,
+	AgreementRolePermission
+} from '../../../model/agreement/agreements'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
 import { RolesManagerPermissions } from './RolesManagerPermissions'
 interface IProps {
-	club: Club
-	initialRole?: ClubRole
-	onRoleUpdated: (role: ClubRole) => void
+	agreement: Agreement
+	initialRole?: AgreementRole
+	onRoleUpdated: (role: AgreementRole) => void
 }
 
 export const RolesManagerContent: React.FC<IProps> = ({
 	initialRole,
-	club,
+	agreement,
 	onRoleUpdated
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
-	const [role, setRole] = useState<ClubRole>()
-	const [roleMembers, setRoleMembers] = useState<ClubMember[]>([])
+	const [role, setRole] = useState<AgreementRole>()
+	const [roleMembers, setRoleMembers] = useState<AgreementMember[]>([])
 
 	const [isLoadingPermissions, setIsLoadingPermissons] = useState(true)
 	const [isExistingRole, setIsExistingRole] = useState(false)
@@ -68,7 +68,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		}
 
 		async function parsePermissions(
-			theRole: ClubRole,
+			theRole: AgreementRole,
 			allPermissions: GetAvailablePermissionQuery
 		) {
 			const permissionedRole = theRole
@@ -77,10 +77,10 @@ export const RolesManagerContent: React.FC<IProps> = ({
 			if (permissionedRole.id === 'addRole') {
 				setIsExistingRole(false)
 
-				const convertedPermissions: ClubRolePermission[] = []
+				const convertedPermissions: AgreementRolePermission[] = []
 				if (allPermissions.RolePermissions) {
 					allPermissions.RolePermissions.forEach(permission => {
-						const convertedPermission: ClubRolePermission = {
+						const convertedPermission: AgreementRolePermission = {
 							id: permission.id,
 							description: permission.description,
 							name: permission.name,
@@ -94,18 +94,18 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				setRoleMembers([])
 			} else {
 				// This is an existing role, determine what permissions are enabled
-				// by looking at the permissions added at the club level and reconciling
+				// by looking at the permissions added at the agreement level and reconciling
 				// them with the avilable permissions
 				setIsExistingRole(true)
 
-				const convertedPermissions: ClubRolePermission[] = []
+				const convertedPermissions: AgreementRolePermission[] = []
 				if (allPermissions.RolePermissions) {
 					allPermissions.RolePermissions.forEach(permission => {
 						let isPermissionEnabled = false
-						if (club && club.roles) {
-							club.roles.forEach(clubRole => {
-								if (clubRole.id === theRole.id) {
-									clubRole.permissions.forEach(rp => {
+						if (agreement && agreement.roles) {
+							agreement.roles.forEach(agreementRole => {
+								if (agreementRole.id === theRole.id) {
+									agreementRole.permissions.forEach(rp => {
 										if (rp.id === permission.id) {
 											isPermissionEnabled = true
 										}
@@ -114,7 +114,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							})
 						}
 
-						const convertedPermission: ClubRolePermission = {
+						const convertedPermission: AgreementRolePermission = {
 							id: permission.id,
 							description: permission.description,
 							name: permission.name,
@@ -131,9 +131,9 @@ export const RolesManagerContent: React.FC<IProps> = ({
 			setRoleName(permissionedRole.name)
 
 			// Any existing role members
-			const initialRoleMembers: ClubMember[] | undefined =
-				club.memberRolesMap
-					? club.memberRolesMap.get(permissionedRole.id)
+			const initialRoleMembers: AgreementMember[] | undefined =
+				agreement.memberRolesMap
+					? agreement.memberRolesMap.get(permissionedRole.id)
 					: []
 			if (initialRoleMembers) {
 				setRoleMembers(initialRoleMembers)
@@ -153,9 +153,9 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		if (role?.isTransferrable) {
 			setIsTokenTransferrable('transferrable')
 		}
-	}, [availablePermissions, club, error, initialRole, role])
+	}, [availablePermissions, agreement, error, initialRole, role])
 
-	const updateRole = (newRole: ClubRole) => {
+	const updateRole = (newRole: AgreementRole) => {
 		setRole(newRole)
 		onRoleUpdated(newRole)
 	}
@@ -182,7 +182,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		<>
 			{isLoadingPermissions && (
 				<div>
-					<Loader variant="oval" color="red" />
+					<Loader variant="oval" color="blue" />
 				</div>
 			)}
 
@@ -190,10 +190,10 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				<div>
 					<Space h={16} />
 					<div
-						className={clubsTheme.spacedRow}
+						className={meemTheme.spacedRow}
 						style={{ marginBottom: 32 }}
 					>
-						<Text className={clubsTheme.tLargeBold}>
+						<Text className={meemTheme.tLargeBold}>
 							{role && role.name.length > 0
 								? role.name
 								: 'Add Role'}
@@ -202,18 +202,18 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							onClick={() => {
 								saveChanges()
 							}}
-							className={clubsTheme.buttonBlack}
+							className={meemTheme.buttonBlack}
 						>
 							Save Changes
 						</Button>
 					</div>
 
-					<div className={clubsTheme.row}>
-						<Text className={clubsTheme.tExtraSmallLabel}>
+					<div className={meemTheme.row}>
+						<Text className={meemTheme.tExtraSmallLabel}>
 							ROLE NAME
 						</Text>
 						<Space w={2} />
-						<Text color={'red'}>*</Text>
+						<Text color={'blue'}>*</Text>
 					</div>
 					<Space h={24} />
 					<TextInput
@@ -221,14 +221,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						radius={20}
 						disabled={role?.isAdminRole}
 						classNames={{
-							input: clubsTheme.fTextField
+							input: meemTheme.fTextField
 						}}
 						value={roleName}
 						onChange={event => {
 							if (event) {
 								setRoleName(event.target.value)
 								if (event.target.value) {
-									const newRole: ClubRole = {
+									const newRole: AgreementRole = {
 										name: event.target.value,
 										id: role ? role.id : '',
 										permissions: role
@@ -247,14 +247,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							{role?.tokenAddress && (
 								<div>
 									<Text
-										className={clubsTheme.tExtraSmallLabel}
+										className={meemTheme.tExtraSmallLabel}
 									>
 										CONTRACT ADDRESS
 									</Text>
 
 									<Space h={24} />
 
-									<div className={clubsTheme.row}>
+									<div className={meemTheme.row}>
 										<Text
 											style={{ wordBreak: 'break-word' }}
 										>
@@ -270,7 +270,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 											height={20}
 											onClick={() => {
 												navigator.clipboard.writeText(
-													club.address ?? ''
+													agreement.address ?? ''
 												)
 												showNotification({
 													radius: 'lg',
@@ -289,7 +289,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									<Space h={40} />
 
 									<Text
-										className={clubsTheme.tExtraSmallLabel}
+										className={meemTheme.tExtraSmallLabel}
 									>
 										TOKEN SETTINGS
 									</Text>
@@ -310,9 +310,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									{!role?.isAdminRole && (
 										<div>
 											<Text
-												className={
-													clubsTheme.tSmallBold
-												}
+												className={meemTheme.tSmallBold}
 											>{`Can members with this role transfer their token to another wallet?`}</Text>
 											<Space h={4} />
 
@@ -330,35 +328,38 @@ export const RolesManagerContent: React.FC<IProps> = ({
 													// Update the role's state in this component and all subcomponents
 													// TODO: there's got to be a better way to update a single element of an object and
 													// TODO: have it apply to useState, instead of recreating the entire object. surely?
-													const newRole: ClubRole = {
-														name: role?.name ?? '',
-														id: role?.id ?? '',
-														permissions:
-															role?.permissions ??
-															[],
-														isTransferrable:
-															isTokenTransferrable ===
-															'transferrable',
-														isAdminRole:
-															role?.isAdminRole,
-														rolesExtensionData:
-															role?.rolesExtensionData,
-														guildDiscordServerId:
-															role?.guildDiscordServerId ??
-															'',
-														guildDiscordServerIcon:
-															role?.guildDiscordServerIcon ??
-															'',
-														guildDiscordServerName:
-															role?.guildDiscordServerName ??
-															'',
-														guildRoleId:
-															role?.guildRoleId ??
-															'',
-														guildRoleName:
-															role?.guildRoleName ??
-															''
-													}
+													const newRole: AgreementRole =
+														{
+															name:
+																role?.name ??
+																'',
+															id: role?.id ?? '',
+															permissions:
+																role?.permissions ??
+																[],
+															isTransferrable:
+																isTokenTransferrable ===
+																'transferrable',
+															isAdminRole:
+																role?.isAdminRole,
+															rolesExtensionData:
+																role?.rolesExtensionData,
+															guildDiscordServerId:
+																role?.guildDiscordServerId ??
+																'',
+															guildDiscordServerIcon:
+																role?.guildDiscordServerIcon ??
+																'',
+															guildDiscordServerName:
+																role?.guildDiscordServerName ??
+																'',
+															guildRoleId:
+																role?.guildRoleId ??
+																'',
+															guildRoleName:
+																role?.guildRoleName ??
+																''
+														}
 													updateRole(newRole)
 												}}
 												required
@@ -401,7 +402,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							{!isLoadingPermissions && (
 								<RolesManagerPermissions
 									role={role}
-									club={club}
+									agreement={agreement}
 									onSaveChanges={() => {
 										saveChanges()
 									}}
@@ -420,7 +421,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						<Tabs.Panel value="members" pt="xs">
 							<RolesManagerMembers
 								role={role}
-								club={club}
+								agreement={agreement}
 								onMembersUpdated={members => {
 									log.debug(
 										`on members updated - members length = ${members.length}`
@@ -444,7 +445,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				role={role}
 				isExistingRole={isExistingRole}
 				roleMembers={roleMembers}
-				club={club}
+				agreement={agreement}
 			/>
 
 			<Space h={64} />

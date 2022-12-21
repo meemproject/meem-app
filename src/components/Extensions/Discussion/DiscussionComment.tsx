@@ -22,14 +22,14 @@ import { DateTime } from 'luxon'
 import React, { useCallback, useState } from 'react'
 import { ChevronUp } from 'tabler-icons-react'
 import { AgreementExtensions } from '../../../../generated/graphql'
-import { DiscussionComment } from '../../../model/club/extensions/discussion/discussionComment'
-import { useClub } from '../../ClubHome/ClubProvider'
+import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
 	colorDarkGrey,
 	colorLightGrey,
 	// colorPink,
-	useClubsTheme
-} from '../../Styles/ClubsTheme'
+	useMeemTheme
+} from '../../Styles/MeemTheme'
 import { IReactions } from './DiscussionPost'
 interface IProps {
 	comment: DiscussionComment
@@ -44,10 +44,10 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 	agreementExtension,
 	onReaction
 }) => {
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()
 	const { chainId, me } = useAuth()
-	const { club } = useClub()
+	const { agreement } = useAgreement()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -106,7 +106,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 					},
 					accessControlConditions: [
 						{
-							contractAddress: club?.address
+							contractAddress: agreement?.address
 						}
 					]
 				})
@@ -118,12 +118,12 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 			}
 			setIsLoading(false)
 		},
-		[sdk, chainId, me, agreementExtension, club, onReaction, comment]
+		[sdk, chainId, me, agreementExtension, agreement, onReaction, comment]
 	)
 
 	return (
 		<div>
-			<div className={clubsTheme.centeredRow}>
+			<div className={meemTheme.centeredRow}>
 				<Image
 					src={comment.profilePicUrl ?? `/exampleclub.png`}
 					height={32}
@@ -132,15 +132,15 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 				/>
 				<Space w={8} />
 				<div>
-					<Text className={clubsTheme.tExtraSmallBold}>
+					<Text className={meemTheme.tExtraSmallBold}>
 						{comment.displayName ?? comment.walletAddress}
 					</Text>
-					<Text className={clubsTheme.tExtraExtraSmall}>
+					<Text className={meemTheme.tExtraExtraSmall}>
 						{DateTime.fromSeconds(comment.createdAt).toRelative()}
 					</Text>
 				</div>
 			</div>
-			<div className={clubsTheme.row}>
+			<div className={meemTheme.row}>
 				<div
 					onClick={() => {
 						setIsCommentRepliesHidden(!isCommentRepliesHidden)
@@ -160,13 +160,13 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 					<Space h={16} />
 
 					<Text
-						className={clubsTheme.tExtraSmall}
+						className={meemTheme.tExtraSmall}
 						dangerouslySetInnerHTML={{
 							__html: comment.body
 						}}
 					/>
 					<Space h={16} />
-					<div className={clubsTheme.centeredRow}>
+					<div className={meemTheme.centeredRow}>
 						<a
 							style={{ cursor: 'pointer' }}
 							onClick={e =>
@@ -181,7 +181,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 						<Space w={4} />
 
 						<Text
-							className={clubsTheme.tExtraExtraSmall}
+							className={meemTheme.tExtraExtraSmall}
 							style={{ fontWeight: '700' }}
 						>
 							{(reactions.comments[comment.id] &&
@@ -211,15 +211,13 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 					{isReplying && editor && (
 						<>
 							<Space h={16} />
-							<div
-								className={clubsTheme.fRichTextEditorContainer}
-							>
+							<div className={meemTheme.fRichTextEditorContainer}>
 								<RichTextEditor
 									editor={editor}
 									classNames={{
 										toolbar:
-											clubsTheme.fRichTextEditorToolbar,
-										root: clubsTheme.fRichTextEditorToolbar
+											meemTheme.fRichTextEditorToolbar,
+										root: meemTheme.fRichTextEditorToolbar
 									}}
 								>
 									<RichTextEditor.Toolbar>
@@ -237,9 +235,9 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 									<RichTextEditor.Content />
 								</RichTextEditor>
 								<Space h={16} />
-								<div className={clubsTheme.rowEndAlign}>
+								<div className={meemTheme.rowEndAlign}>
 									<Button
-										className={clubsTheme.buttonBlack}
+										className={meemTheme.buttonBlack}
 										style={{
 											marginBottom: 16,
 											marginRight: 16
@@ -273,7 +271,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 									!isCommentRepliesHidden
 								)
 							}}
-							className={clubsTheme.tExtraSmall}
+							className={meemTheme.tExtraSmall}
 							style={{ color: colorPink, cursor: 'pointer' }}
 						>{`${comment.replies?.length} replies hidden`}</Text>
 					)} */}

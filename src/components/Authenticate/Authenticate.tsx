@@ -5,7 +5,7 @@ import { useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
-import { useClubsTheme } from '../Styles/ClubsTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useAuth()
@@ -13,7 +13,7 @@ const MAuthenticate: React.FC = () => {
 	const { login } = useSDK()
 
 	const [isLoading, setIsLoading] = useState(false)
-	const { classes: clubsTheme } = useClubsTheme()
+	const { classes: meemTheme } = useMeemTheme()
 	const sign = useCallback(async () => {
 		setIsLoading(true)
 
@@ -39,7 +39,7 @@ const MAuthenticate: React.FC = () => {
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'Unable to authenticate with your wallet. Please get in touch!'
+					'Unable to sign into Meem with your wallet. Please get in touch!'
 			})
 			log.crit(e)
 		}
@@ -56,11 +56,11 @@ const MAuthenticate: React.FC = () => {
 	return (
 		<Center>
 			<Container>
-				<div className={clubsTheme.centered}>
+				<div className={meemTheme.centered}>
 					<Space h={80} />
 					<Text
-						className={clubsTheme.tLargeBold}
-					>{`Let's make sure it's really you.`}</Text>
+						className={meemTheme.tLargeBold}
+					>{`Sign in with Meem`}</Text>
 					<Space h={16} />
 
 					<div>
@@ -73,11 +73,11 @@ const MAuthenticate: React.FC = () => {
 
 					<Space h={40} />
 
-					{isLoading && <Loader variant="oval" color={'red'} />}
+					{isLoading && <Loader variant="oval" color={'blue'} />}
 					<div>
 						{!isLoading && !wallet.isConnected && (
 							<Button
-								className={clubsTheme.buttonBlack}
+								className={meemTheme.buttonBlack}
 								onClick={connectWallet}
 							>
 								Connect Wallet
@@ -85,7 +85,7 @@ const MAuthenticate: React.FC = () => {
 						)}
 						{!isLoading && wallet.isConnected && (
 							<Button
-								className={clubsTheme.buttonBlack}
+								className={meemTheme.buttonBlack}
 								onClick={sign}
 							>
 								Sign Message

@@ -2,6 +2,7 @@ import {
 	Header,
 	Text,
 	Menu,
+	Image,
 	UnstyledButton,
 	Group,
 	Avatar,
@@ -19,7 +20,7 @@ import {
 } from '@meemproject/react'
 import { QuestionMarkCircle } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
 	Logout,
 	ChevronDown,
@@ -32,17 +33,16 @@ import {
 	MoonStars
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import ClubClubContext from '../ClubHome/ClubClubProvider'
-import { colorPink, useClubsTheme } from '../Styles/ClubsTheme'
-import { ClubsFAQModal } from './ClubsFAQModal'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { MeemFAQModal } from './MeemFAQModal'
 
 export function HeaderMenu() {
 	const [isUserMenuOpened, setUserMenuOpened] = useState(false)
-	const [isJoinClubsModalOpen, setIsJoinClubsModalOpen] = useState(false)
-	const { classes: clubsTheme, cx } = useClubsTheme()
+	const [isJoinAgreementsModalOpen, setIsJoinAgreementsModalOpen] =
+		useState(false)
+	const { classes: meemTheme, cx } = useMeemTheme()
 	const router = useRouter()
 
-	const clubclub = useContext(ClubClubContext)
 	const { loginState, disconnectWallet, isConnected, isMeLoading, accounts } =
 		useAuth()
 
@@ -56,12 +56,8 @@ export function HeaderMenu() {
 		router.push({ pathname: '/profile', query: { tab: 'identity' } })
 	}
 
-	const navigateToMyClubs = () => {
-		router.push({ pathname: '/profile', query: { tab: 'myClubs' } })
-	}
-
-	const handleJoinClubClub = () => {
-		window.open('/club-club')
+	const navigateToMyAgreements = () => {
+		router.push({ pathname: '/profile', query: { tab: 'myCommunities' } })
 	}
 
 	const handlePoweredByMeem = () => {
@@ -84,7 +80,8 @@ export function HeaderMenu() {
 		window.open('https://airtable.com/shrM296vRoDWmK8Rm')
 	}
 
-	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+	const [isAgreementsFAQModalOpen, setIsAgreementsFAQModalOpen] =
+		useState(false)
 
 	let displayName = user?.displayName ?? '0x...'
 
@@ -113,15 +110,22 @@ export function HeaderMenu() {
 	}, [isConnected, loginState, router])
 
 	return (
-		<Header className={clubsTheme.siteHeader} height={56}>
-			<div className={clubsTheme.siteHeaderInner}>
-				<div className={clubsTheme.siteHeaderLeftItems}>
-					<a onClick={navigateHome}>
-						<Text className={clubsTheme.siteHeaderMainLogo}>♣</Text>
+		<Header className={meemTheme.siteHeader} height={56}>
+			<div className={meemTheme.siteHeaderInner}>
+				<div className={meemTheme.siteHeaderLeftItems}>
+					<a onClick={navigateHome} className={meemTheme.clickable}>
+						<Image
+							src={
+								isDarkTheme
+									? '/meem-logo-white.svg'
+									: '/meem-logo.svg'
+							}
+							height={20}
+						/>
 					</a>
 				</div>
 
-				<div className={clubsTheme.siteHeaderRightItems}>
+				<div className={meemTheme.siteHeaderRightItems}>
 					{(loginState === LoginState.LoggedIn || isConnected) && (
 						<Menu
 							radius={8}
@@ -132,8 +136,8 @@ export function HeaderMenu() {
 						>
 							<Menu.Target>
 								<UnstyledButton
-									className={cx(clubsTheme.siteHeaderUser, {
-										[clubsTheme.siteHeaderUserActive]:
+									className={cx(meemTheme.siteHeaderUser, {
+										[meemTheme.siteHeaderUserActive]:
 											isUserMenuOpened
 									})}
 								>
@@ -141,7 +145,7 @@ export function HeaderMenu() {
 										<Loader
 											style={{ marginTop: 4 }}
 											variant="oval"
-											color="red"
+											color="blue"
 											size={20}
 										/>
 									)}
@@ -172,29 +176,27 @@ export function HeaderMenu() {
 										<Menu.Item
 											onClick={navigateToMyAccount}
 											className={
-												clubsTheme.tExtraSmallBold
+												meemTheme.tExtraSmallBold
 											}
 										>
 											My Account
 										</Menu.Item>
-										{clubclub.isMember && (
-											<Menu.Item
-												onClick={navigateToMyClubs}
-												className={
-													clubsTheme.tExtraSmallBold
-												}
-											>
-												My Clubs
-											</Menu.Item>
-										)}
+										<Menu.Item
+											onClick={navigateToMyAgreements}
+											className={
+												meemTheme.tExtraSmallBold
+											}
+										>
+											My Communities
+										</Menu.Item>
 									</>
 								)}
 								<Menu.Item
-									className={clubsTheme.tExtraSmallBold}
+									className={meemTheme.tExtraSmallBold}
 									onClick={async () => {
 										await disconnectWallet()
 									}}
-									color="red"
+									color="blue"
 									icon={<Logout size={14} />}
 								>
 									{isConnected ? 'Disconnect' : 'Sign Out'}
@@ -204,11 +206,11 @@ export function HeaderMenu() {
 					)}
 					{loginState === LoginState.NotLoggedIn && !isConnected && (
 						<Text
-							className={clubsTheme.tExtraSmallBold}
+							className={meemTheme.tExtraSmallBold}
 							style={{
 								marginBottom: 4,
 								marginRight: 16,
-								color: colorPink,
+								color: colorBlue,
 								cursor: 'pointer'
 							}}
 						>
@@ -216,16 +218,16 @@ export function HeaderMenu() {
 								onClick={() => {
 									// id.login(false)
 									// loginWithRedirect()
-									setIsJoinClubsModalOpen(true)
+									setIsJoinAgreementsModalOpen(true)
 								}}
 							>
-								Join Clubs
+								Join Meem
 							</a>
 						</Text>
 					)}
 
 					<ActionIcon
-						className={clubsTheme.iconDarkThemeToggle}
+						className={meemTheme.iconDarkThemeToggle}
 						radius={16}
 						variant="outline"
 						color={'black'}
@@ -243,39 +245,30 @@ export function HeaderMenu() {
 						<Menu.Target>
 							<UnstyledButton>
 								<Dots
-									className={clubsTheme.siteHeaderMenuEllipse}
+									className={meemTheme.siteHeaderMenuEllipse}
 								/>
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
 							<Menu.Item
 								onClick={handlePoweredByMeem}
-								className={clubsTheme.tExtraSmallBold}
+								className={meemTheme.tExtraSmallBold}
 							>
 								Powered by{' '}
 								<span style={{ textDecoration: 'underline' }}>
 									Meem
 								</span>
 							</Menu.Item>
-							{loginState === LoginState.LoggedIn &&
-								!clubclub.isMember && (
-									<Menu.Item
-										onClick={handleJoinClubClub}
-										className={clubsTheme.tExtraSmallBold}
-									>
-										Join Club Club
-									</Menu.Item>
-								)}
 
 							<Menu.Item
 								onClick={() => {
-									setIsClubsFAQModalOpen(true)
+									setIsAgreementsFAQModalOpen(true)
 								}}
 								style={{
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={clubsTheme.tExtraSmallBold}
+								className={meemTheme.tExtraSmallBold}
 								icon={
 									<QuestionMarkCircle
 										height={20}
@@ -283,7 +276,7 @@ export function HeaderMenu() {
 									/>
 								}
 							>
-								{`What's a club?`}
+								{`What's this?`}
 							</Menu.Item>
 							<Space h={4} />
 							<Divider />
@@ -295,7 +288,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={clubsTheme.tExtraSmallBold}
+								className={meemTheme.tExtraSmallBold}
 								icon={<BrandTwitter size={20} />}
 							>
 								Twitter
@@ -306,7 +299,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={clubsTheme.tExtraSmallBold}
+								className={meemTheme.tExtraSmallBold}
 								icon={<BrandDiscord size={20} />}
 							>
 								Discord
@@ -317,16 +310,16 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								className={clubsTheme.tExtraSmallBold}
+								className={meemTheme.tExtraSmallBold}
 								icon={<Mail size={20} />}
 							>
 								Contact Us
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleShareFeedback}
-								className={clubsTheme.tExtraSmallBold}
+								className={meemTheme.tExtraSmallBold}
 								style={{
-									color: colorPink,
+									color: colorBlue,
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
@@ -338,15 +331,15 @@ export function HeaderMenu() {
 					</Menu>
 				</div>
 			</div>
-			<ClubsFAQModal
+			<MeemFAQModal
 				onModalClosed={() => {
-					setIsClubsFAQModalOpen(false)
+					setIsAgreementsFAQModalOpen(false)
 				}}
-				isOpened={isClubsFAQModalOpen}
+				isOpened={isAgreementsFAQModalOpen}
 			/>
 			<LoginModal
-				isOpen={isJoinClubsModalOpen}
-				onRequestClose={() => setIsJoinClubsModalOpen(false)}
+				isOpen={isJoinAgreementsModalOpen}
+				onRequestClose={() => setIsJoinAgreementsModalOpen(false)}
 			/>
 		</Header>
 	)
