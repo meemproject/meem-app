@@ -386,7 +386,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 								className={meemTheme.imageAgreementLogo}
 								src={Cookies.get(CookieKeys.agreementImage)}
 							/>
-							<Space h={16} />
+							<Space h={48} />
 						</>
 					)}
 
