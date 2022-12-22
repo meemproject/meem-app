@@ -6,7 +6,6 @@ import {
 	TextInput,
 	Image,
 	Space,
-	Loader,
 	Center,
 	Button
 } from '@mantine/core'
@@ -22,6 +21,7 @@ import { DiscussionComment } from '../../../model/agreement/extensions/discussio
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlates'
 import { IReactions } from './DiscussionPost'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
@@ -291,164 +291,94 @@ export const DiscussionHome: React.FC = () => {
 
 	return (
 		<>
-			{isLoadingAgreement && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Loader color="blue" variant="oval" />
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && !error && !agreement?.name && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>Sorry, that community does not exist!</Text>
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && error && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							There was an error loading this community. Please
-							let us know!
-						</Text>
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && agreement?.name && !agreementExtension && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							This extension is not enabled for this club.
-						</Text>
-					</Center>
-					{(agreement.isCurrentUserAgreementOwner ||
-						agreement.isCurrentUserAgreementAdmin) && (
-						<>
-							<Space h={24} />{' '}
-							<Center>
-								<Button
-									className={meemTheme.buttonGrey}
-									onClick={() => {
-										router.push({
-											pathname: `${agreement.slug}/admin`,
-											query: {
-												tab: 'extensions'
-											}
-										})
-									}}
-								>
-									Enable this extension
-								</Button>
-							</Center>
-						</>
-					)}
-				</Container>
-			)}
-			{!isLoadingAgreement &&
-				agreement?.name &&
-				agreementExtension &&
-				!agreementExtension.isInitialized && (
+			<ExtensionBlankSlate
+				isLoadingAgreement
+				agreement={agreement}
+				error={error}
+				extensionSlug={'discussions'}
+			/>
+			{extensionIsReady(
+				isLoadingAgreement,
+				agreement,
+				agreementExtension
+			) && (
+				<>
 					<Container>
-						<Space h={120} />
+						<Space h={48} />
+
 						<Center>
-							<Text>
-								{`${agreementExtension.Extension?.name} is being set up. Please wait...`}
+							<Image
+								className={meemTheme.imagePixelated}
+								height={100}
+								width={100}
+								src={agreement?.image}
+							/>
+						</Center>
+
+						<Space h={24} />
+						<Center>
+							<Text className={meemTheme.tLargeBold}>
+								{agreement?.name}
+							</Text>
+						</Center>
+						<Space h={8} />
+
+						<Center>
+							<Text className={meemTheme.tMedium}>
+								{agreement?.description}
 							</Text>
 						</Center>
 						<Space h={24} />
+
 						<Center>
-							<Loader variant="oval" color="blue" />
+							<Button
+								className={meemTheme.buttonBlack}
+								onClick={() => {
+									router.push({
+										pathname: `/${agreement?.slug}/e/discussions/submit`
+									})
+								}}
+							>
+								+ Start a discussion
+							</Button>
 						</Center>
+						<Space h={48} />
+						<div className={meemTheme.centeredRow}>
+							<TextInput
+								radius={20}
+								classNames={{
+									input: meemTheme.fTextField
+								}}
+								icon={<Search />}
+								placeholder={'Search discussions'}
+								className={meemTheme.fullWidth}
+								size={'lg'}
+								onChange={event => {
+									log.debug(event.target.value)
+									// TODO
+								}}
+							/>
+							<Space w={16} />
+							<Button className={meemTheme.buttonBlack}>
+								Sort
+							</Button>
+						</div>
+						<Space h={32} />
+						{posts.map(post => (
+							<DiscussionPostPreview
+								key={post.id}
+								post={post}
+								onReaction={() => {
+									setHasFetchedReactions(false)
+								}}
+								reactions={reactions}
+								agreementExtension={agreementExtension}
+								commentCount={commentCounts[post.id.toString()]}
+							/>
+						))}
 					</Container>
-				)}
-			{!isLoadingAgreement &&
-				agreement?.name &&
-				agreementExtension &&
-				agreementExtension.isInitialized && (
-					<>
-						<Container>
-							<Space h={48} />
-
-							<Center>
-								<Image
-									className={meemTheme.imagePixelated}
-									height={100}
-									width={100}
-									src={agreement.image}
-								/>
-							</Center>
-
-							<Space h={24} />
-							<Center>
-								<Text className={meemTheme.tLargeBold}>
-									{agreement.name}
-								</Text>
-							</Center>
-							<Space h={8} />
-
-							<Center>
-								<Text className={meemTheme.tMedium}>
-									{agreement.description}
-								</Text>
-							</Center>
-							<Space h={24} />
-
-							<Center>
-								<Button
-									className={meemTheme.buttonBlack}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement.slug}/e/discussions/submit`
-										})
-									}}
-								>
-									+ Start a discussion
-								</Button>
-							</Center>
-							<Space h={48} />
-							<div className={meemTheme.centeredRow}>
-								<TextInput
-									radius={20}
-									classNames={{
-										input: meemTheme.fTextField
-									}}
-									icon={<Search />}
-									placeholder={'Search discussions'}
-									className={meemTheme.fullWidth}
-									size={'lg'}
-									onChange={event => {
-										log.debug(event.target.value)
-										// TODO
-									}}
-								/>
-								<Space w={16} />
-								<Button className={meemTheme.buttonBlack}>
-									Sort
-								</Button>
-							</div>
-							<Space h={32} />
-							{posts.map(post => (
-								<DiscussionPostPreview
-									key={post.id}
-									post={post}
-									onReaction={() => {
-										setHasFetchedReactions(false)
-									}}
-									reactions={reactions}
-									agreementExtension={agreementExtension}
-									commentCount={
-										commentCounts[post.id.toString()]
-									}
-								/>
-							))}
-						</Container>
-					</>
-				)}
+				</>
+			)}
 		</>
 	)
 }
