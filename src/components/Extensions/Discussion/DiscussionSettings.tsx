@@ -19,13 +19,13 @@ import { ArrowLeft, Check } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
-import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlates'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 
 export const DiscussionSettings: React.FC = () => {
 	// Default settings
 	const router = useRouter()
 	const { classes: meemTheme } = useMeemTheme()
-	const { agreement, isLoadingAgreement, error } = useAgreement()
+	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
@@ -281,12 +281,7 @@ export const DiscussionSettings: React.FC = () => {
 
 	return (
 		<>
-			<ExtensionBlankSlate
-				isLoadingAgreement
-				agreement={agreement}
-				error={error}
-				extensionSlug={'discussions'}
-			/>
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,

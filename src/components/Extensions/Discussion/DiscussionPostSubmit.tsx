@@ -28,7 +28,7 @@ import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlates'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 
 interface IProps {
 	agreementSlug?: string
@@ -39,7 +39,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { agreement, error, isLoadingAgreement } = useAgreement()
+	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 
@@ -200,12 +200,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 
 	return (
 		<>
-			<ExtensionBlankSlate
-				isLoadingAgreement
-				agreement={agreement}
-				error={error}
-				extensionSlug={'discussions'}
-			/>
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,

@@ -21,7 +21,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const router = useRouter()
 	const { classes: meemTheme } = useMeemTheme()
-	const { agreement, isLoadingAgreement } = useAgreement()
+	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const agreementExtension = extensionFromSlug('example', agreement)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -97,7 +97,12 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'example'} />
+			<ExtensionBlankSlate
+				isLoadingAgreement
+				agreement={agreement}
+				error={error}
+				extensionSlug={'example'}
+			/>
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,

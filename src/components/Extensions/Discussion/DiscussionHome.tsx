@@ -21,7 +21,7 @@ import { DiscussionComment } from '../../../model/agreement/extensions/discussio
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlates'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { IReactions } from './DiscussionPost'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
@@ -86,7 +86,7 @@ export const DiscussionHome: React.FC = () => {
 	const { sdk } = useSDK()
 	const { chainId, loginState } = useAuth()
 
-	const { agreement, isLoadingAgreement, error } = useAgreement()
+	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 
@@ -270,46 +270,72 @@ export const DiscussionHome: React.FC = () => {
 		agreementExtension
 	])
 
+	const navigateToAgreementHome = () => {
+		router.push({
+			pathname: `/${agreement?.slug}`
+		})
+	}
+
 	return (
 		<>
-			<ExtensionBlankSlate
-				isLoadingAgreement
-				agreement={agreement}
-				error={error}
-				extensionSlug={'discussions'}
-			/>
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
 				agreementExtension
 			) && (
 				<>
-					<Container>
-						<Space h={48} />
-
-						<Center>
+					<div className={meemTheme.pageHeader}>
+						<div className={meemTheme.spacedRowCentered}>
 							<Image
+								radius={8}
+								height={80}
+								width={80}
 								className={meemTheme.imagePixelated}
-								height={100}
-								width={100}
 								src={agreement?.image}
 							/>
-						</Center>
+							{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
+							<div className={meemTheme.pageHeaderTitleContainer}>
+								<Text className={meemTheme.tLargeBold}>
+									{agreement?.name}
+								</Text>
+								<Space h={8} />
+								<div className={meemTheme.centeredRow}>
+									<Image
+										className={meemTheme.copyIcon}
+										src={`/${agreementExtension?.Extension?.icon}`}
+										height={16}
+										width={16}
+									/>
+									<Space w={8} />
+									<Text
+										className={meemTheme.tMedium}
+									>{`${agreementExtension?.Extension?.name}`}</Text>
+								</div>
+							</div>
+						</div>
+						<a
+							className={meemTheme.pageHeaderExitButton}
+							onClick={navigateToAgreementHome}
+						>
+							<Image src="/delete.png" width={24} height={24} />
+						</a>
+					</div>
 
+					<Container>
 						<Space h={24} />
-						<Center>
-							<Text className={meemTheme.tLargeBold}>
-								{agreement?.name}
-							</Text>
-						</Center>
-						<Space h={8} />
-
-						<Center>
-							<Text className={meemTheme.tMedium}>
-								{agreement?.description}
-							</Text>
-						</Center>
-						<Space h={24} />
+						{posts.length === 0 && (
+							<>
+								<Center>
+									<Text className={meemTheme.tSmall}>
+										There are no posts yet in your
+										community. Be the first one to say
+										something!
+									</Text>
+								</Center>
+								<Space h={24} />
+							</>
+						)}
 
 						<Center>
 							<Button
@@ -324,26 +350,29 @@ export const DiscussionHome: React.FC = () => {
 							</Button>
 						</Center>
 						<Space h={48} />
-						<div className={meemTheme.centeredRow}>
-							<TextInput
-								radius={20}
-								classNames={{
-									input: meemTheme.fTextField
-								}}
-								icon={<Search />}
-								placeholder={'Search discussions'}
-								className={meemTheme.fullWidth}
-								size={'lg'}
-								onChange={event => {
-									log.debug(event.target.value)
-									// TODO
-								}}
-							/>
-							<Space w={16} />
-							<Button className={meemTheme.buttonBlack}>
-								Sort
-							</Button>
-						</div>
+						{posts.length > 0 && (
+							<div className={meemTheme.centeredRow}>
+								<TextInput
+									radius={20}
+									classNames={{
+										input: meemTheme.fTextField
+									}}
+									icon={<Search />}
+									placeholder={'Search discussions'}
+									className={meemTheme.fullWidth}
+									size={'lg'}
+									onChange={event => {
+										log.debug(event.target.value)
+										// TODO
+									}}
+								/>
+								<Space w={16} />
+								<Button className={meemTheme.buttonBlack}>
+									Sort
+								</Button>
+							</div>
+						)}
+
 						<Space h={32} />
 						{posts.map(post => (
 							<DiscussionPostPreview

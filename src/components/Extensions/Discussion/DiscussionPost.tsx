@@ -46,7 +46,7 @@ import {
 	colorLightestGrey,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
-import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlates'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { DiscussionCommentComponent } from './DiscussionComment'
 import { rowToDiscussionComment, rowToDiscussionPost } from './DiscussionHome'
 interface IProps {
@@ -483,12 +483,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate
-				isLoadingAgreement
-				agreement={agreement}
-				error={error}
-				extensionSlug={'discussions'}
-			/>
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,

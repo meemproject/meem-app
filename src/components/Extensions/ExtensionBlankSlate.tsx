@@ -1,17 +1,14 @@
-import { ApolloError } from '@apollo/client'
 import { Text, Space, Container, Loader, Center, Button } from '@mantine/core'
 import { useRouter } from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
 import { AgreementExtensions } from '../../../generated/graphql'
 import { Agreement, extensionFromSlug } from '../../model/agreement/agreements'
+import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	extensionSlug: string
-	agreement: Agreement | undefined
-	isLoadingAgreement: boolean
-	error: ApolloError | undefined
 }
 
 export const extensionIsReady = (
@@ -27,17 +24,14 @@ export const extensionIsReady = (
 	return isReady ?? false
 }
 
-export const ExtensionBlankSlate: React.FC<IProps> = ({
-	extensionSlug,
-	agreement,
-	isLoadingAgreement,
-	error
-}) => {
+export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
-
 	const router = useRouter()
+
+	const { agreement, isLoadingAgreement, error } = useAgreement()
+
+	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
 	return (
 		<>

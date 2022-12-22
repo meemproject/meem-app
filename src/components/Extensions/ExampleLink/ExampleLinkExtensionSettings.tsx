@@ -15,13 +15,13 @@ import { ArrowLeft, Check } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
-import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlates'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 
 export const ExampleLinkExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const router = useRouter()
 	const { classes: meemTheme } = useMeemTheme()
-	const { agreement, isLoadingAgreement, error } = useAgreement()
+	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('example', agreement)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -69,12 +69,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate
-				isLoadingAgreement
-				agreement={agreement}
-				error={error}
-				extensionSlug={'examplelink'}
-			/>
+			<ExtensionBlankSlate extensionSlug={'examplelink'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
