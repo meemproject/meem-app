@@ -490,23 +490,27 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 							This extension is not enabled for this club.
 						</Text>
 					</Center>
-					{agreement.isCurrentUserAgreementOwner ||
-						(agreement.isCurrentUserAgreementAdmin && (
-							<>
-								<Space h={16} />{' '}
+					{(agreement.isCurrentUserAgreementOwner ||
+						agreement.isCurrentUserAgreementAdmin) && (
+						<>
+							<Space h={24} />{' '}
+							<Center>
 								<Button
 									className={meemTheme.buttonGrey}
 									onClick={() => {
 										router.push({
 											pathname: `${agreement.slug}/admin`,
-											query: { tab: 'extensions' }
+											query: {
+												tab: 'extensions'
+											}
 										})
 									}}
 								>
 									Enable this extension
 								</Button>
-							</>
-						))}
+							</Center>
+						</>
+					)}
 				</Container>
 			)}
 			{agreement?.name &&

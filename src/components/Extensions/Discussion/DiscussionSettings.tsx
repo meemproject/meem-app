@@ -306,10 +306,11 @@ export const DiscussionSettings: React.FC = () => {
 										club.
 									</Text>
 								</Center>
-								{agreement.isCurrentUserAgreementOwner ||
-									(agreement.isCurrentUserAgreementAdmin && (
-										<>
-											<Space h={16} />{' '}
+								{(agreement.isCurrentUserAgreementOwner ||
+									agreement.isCurrentUserAgreementAdmin) && (
+									<>
+										<Space h={24} />{' '}
+										<Center>
 											<Button
 												className={meemTheme.buttonGrey}
 												onClick={() => {
@@ -323,8 +324,9 @@ export const DiscussionSettings: React.FC = () => {
 											>
 												Enable this extension
 											</Button>
-										</>
-									))}
+										</Center>
+									</>
+								)}
 							</Container>
 						)}
 					{!isLoadingAgreement &&
