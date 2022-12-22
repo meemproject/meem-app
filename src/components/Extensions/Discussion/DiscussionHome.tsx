@@ -88,25 +88,6 @@ export const DiscussionHome: React.FC = () => {
 
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
-	// const posts: DiscussionPost[] = [
-	// 	{
-	// 		id: '1',
-	// 		title: 'Test post one',
-	// 		tags: ['funny', 'crazy'],
-	// 		agreementSlug: agreement?.slug ?? '',
-	// 		content: 'This is just a small test post.',
-	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	},
-	// 	{
-	// 		id: '2',
-	// 		title: 'Test post two',
-	// 		tags: ['funny', 'crazy'],
-	// 		agreementSlug: agreement?.slug ?? '',
-	// 		content: 'And another test post',
-	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	}
-	// ]
-
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	useEffect(() => {
