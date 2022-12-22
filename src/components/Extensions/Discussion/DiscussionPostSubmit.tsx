@@ -165,9 +165,9 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				return
 			}
 
-			await sdk.storage.encryptAndWrite({
+			const result = await sdk.storage.encryptAndWrite({
 				authSig,
-				path: `meem-${club.id}-discussion-posts`,
+				path: `meem/${agreement.id}/extensions/discussion/postsssssss`,
 				data: {
 					title: postTitle,
 					body: editor?.getHTML(),
@@ -190,6 +190,8 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 					}
 				]
 			})
+
+			console.log({ result })
 
 			// TODO: Redirect?
 		} catch (e) {
