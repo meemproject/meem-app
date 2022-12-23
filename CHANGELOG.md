@@ -1,3 +1,30 @@
+# [1.8.0](https://github.com/meemproject/clubs-web/compare/v1.7.3...v1.8.0) (2022-12-23)
+
+
+### Bug Fixes
+
+* chainId should come from useAuth instead of env vars ([c2a92ce](https://github.com/meemproject/clubs-web/commit/c2a92ce))
+* missing client for subscriptions ([2ca2475](https://github.com/meemproject/clubs-web/commit/2ca2475))
+* my clubs ([a5c3e4c](https://github.com/meemproject/clubs-web/commit/a5c3e4c))
+* race condition for sdk.id.getLitAuthSig ([9b7a975](https://github.com/meemproject/clubs-web/commit/9b7a975))
+
+
+### Features
+
+* comment count on discussion post page; reload data after comment ([df8602a](https://github.com/meemproject/clubs-web/commit/df8602a))
+* custom apollo provider to set hasura role in connectionParams ([1fbe8e6](https://github.com/meemproject/clubs-web/commit/1fbe8e6))
+* discussion comments ([931f689](https://github.com/meemproject/clubs-web/commit/931f689))
+* hooking up discussion reactions and votes ([89c3f16](https://github.com/meemproject/clubs-web/commit/89c3f16))
+* implement hasura permissions; update to latest walletContext to fix several issues ([d7c775b](https://github.com/meemproject/clubs-web/commit/d7c775b))
+* multi-chain support ([9e8d73d](https://github.com/meemproject/clubs-web/commit/9e8d73d))
+
+
+### Refactoring
+
+* part 2 ([9adddc9](https://github.com/meemproject/clubs-web/commit/9adddc9))
+
+## [1.7.3](https://github.com/meemproject/clubs-web/compare/v1.7.2...v1.7.3) (2022-09-21)
+
 ## [1.7.2](https://github.com/meemproject/clubs-web/compare/v1.7.1...v1.7.2) (2022-09-14)
 
 ## [1.7.1](https://github.com/meemproject/clubs-web/compare/v1.7.0...v1.7.1) (2022-09-14)
