@@ -1,11 +1,11 @@
 export class CookieKeys {
-	public static clubName = 'clubName'
+	public static agreementName = 'agreementName'
 
-	public static clubDescription = 'clubDescription'
+	public static agreementDescription = 'agreementDescription'
 
-	public static clubImage = 'clubImage'
+	public static agreementImage = 'agreementImage'
 
-	public static clubSlug = 'clubSlug'
+	public static agreementSlug = 'agreementSlug'
 
-	public static clubExternalUrl = 'clubExternalUrl'
+	public static agreementExternalUrl = 'agreementExternalUrl'
 }

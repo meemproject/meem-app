@@ -1,10 +1,9 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { useAuth0 } from '@auth0/auth0-react'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Container,
 	Text,
-	Image,
 	Autocomplete,
 	Loader,
 	Avatar,
@@ -19,124 +18,19 @@ import {
 	// eslint-disable-next-line import/named
 	AutocompleteItem
 } from '@mantine/core'
-import { LoginState, useWallet } from '@meemproject/react'
+import { showNotification } from '@mantine/notifications'
+import { LoginState, useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { forwardRef, useContext, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import { X } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
-import { GetClubsAutocompleteQuery } from '../../../generated/graphql'
-import { GET_CLUBS_AUTOCOMPLETE } from '../../graphql/clubs'
+import { GetAgreementsAutocompleteQuery } from '../../../generated/graphql'
+import { GET_AGREEMENTS_AUTOCOMPLETE } from '../../graphql/agreements'
 import { CookieKeys } from '../../utils/cookies'
-import ClubClubContext from '../Detail/ClubClubProvider'
-import { ClubsFAQModal } from '../Header/ClubsFAQModal'
-
-const useStyles = createStyles(theme => ({
-	wrapper: {
-		position: 'relative',
-		boxSizing: 'border-box',
-		backgroundColor:
-			theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white
-	},
-
-	inner: {
-		position: 'relative',
-		paddingTop: 0,
-		paddingBottom: 32,
-		marginTop: 70,
-
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingBottom: 80,
-			paddingTop: 0,
-			marginTop: 40
-		}
-	},
-
-	title: {
-		paddingBottom: 64
-	},
-
-	searchPrompt: {
-		marginTop: 64,
-		fontSize: 20,
-		fontWeight: 'bold',
-		color: 'black',
-
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 18,
-			marginTop: 48
-		}
-	},
-
-	clubSearch: {
-		marginTop: 16,
-		input: {
-			borderRadius: 16
-		}
-	},
-
-	joinMeemLink: {
-		marginTop: 24,
-		cursor: 'pointer',
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	createButton: {
-		marginRight: 64,
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 32
-	},
-	joinButton: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 12
-	},
-	joinMeemDialogText: {
-		marginBottom: 8,
-		fontSize: 14
-	},
-	header: {
-		backgroundColor: 'rgba(255, 102, 81, 0.1)'
-	},
-	headerContainer: { display: 'flex', paddingTop: 32, paddingBottom: 32 },
-	headerLogoContainer: {
-		marginRight: 48,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 32
-		}
-	},
-	headerLogo: {
-		filter: 'invert(52%) sepia(97%) saturate(1775%) hue-rotate(326deg) brightness(99%) contrast(105%)'
-	},
-	headerTextContainer: {
-		color: 'rgba(255, 102, 81, 1)',
-		fontWeight: 600,
-		marginTop: 6
-	},
-	headerPitchText: {
-		fontSize: 22,
-		fontWeight: 800,
-		lineHeight: 1.3,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	headerLinkText: {
-		fontSize: 18,
-		textDecoration: 'underline',
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 15
-		}
-	}
-}))
+import { hostnameToChainId } from '../App'
+import { MeemFAQModal } from '../Header/MeemFAQModal'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 
 interface ItemProps extends SelectItemProps {
 	color: MantineColor
@@ -164,9 +58,12 @@ const CustomAutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
 )
 
 export function HomeComponent() {
-	const { classes } = useStyles()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
-	const wallet = useWallet()
+	const { sdk } = useSDK()
+	const { loginState, setJwt, chainId } = useAuth()
+	const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+	const [hasTriedLogin, setHasTriedLogin] = useState(false)
 
 	const autocompleteClient = new ApolloClient({
 		cache: new InMemoryCache(),
@@ -175,8 +72,6 @@ export function HomeComponent() {
 		}),
 		ssrMode: typeof window === 'undefined'
 	})
-
-	const clubclub = useContext(ClubClubContext)
 
 	const timeoutRef = useRef<number>(-1)
 	const [autocompleteFormValue, setAutocompleteFormValue] = useState('')
@@ -200,46 +95,51 @@ export function HomeComponent() {
 				}
 				setIsFetchingData(true)
 				const { data } = await autocompleteClient.query({
-					query: GET_CLUBS_AUTOCOMPLETE,
+					query: GET_AGREEMENTS_AUTOCOMPLETE,
 					variables: {
-						query: `%${val.trim()}%`
+						query: `%${val.trim()}%`,
+						chainId:
+							chainId ??
+							hostnameToChainId(
+								global.window ? global.window.location.host : ''
+							)
 					}
 				})
 
-				const typedData = data as GetClubsAutocompleteQuery
+				const typedData = data as GetAgreementsAutocompleteQuery
 
-				if (typedData.MeemContracts.length === 0) {
+				if (typedData.Agreements.length === 0) {
 					setAutocompleteData([])
 					setIsFetchingData(false)
 					setIsLoadingSuggestions(false)
 					setShowCreateButton(true)
 					log.debug('allowing create button = true')
 				} else {
-					const clubsList: React.SetStateAction<any[]> = []
-					typedData.MeemContracts.forEach(club => {
-						const clubData = {
-							image: club.metadata.image
-								? club.metadata.image
+					const agreementsList: React.SetStateAction<any[]> = []
+					typedData.Agreements.forEach(agreement => {
+						const agreementData = {
+							image: agreement.metadata.image
+								? agreement.metadata.image
 								: '',
-							value: club.name,
-							description: club.metadata.description
-								? club.metadata.description
+							value: agreement.name,
+							description: agreement.metadata.description
+								? agreement.metadata.description
 								: 'Unknown description',
-							slug: club.slug,
-							id: club.id
+							slug: agreement.slug,
+							id: agreement.id
 						}
-						clubsList.push(clubData)
+						agreementsList.push(agreementData)
 					})
-					setAutocompleteData(clubsList)
+					setAutocompleteData(agreementsList)
 					setIsFetchingData(false)
 					setIsLoadingSuggestions(false)
 
-					// Now look through the returned clubs to see if a club of the same name exists
+					// Now look through the returned agreements to see if a agreement of the same name exists
 					let shouldAllow = true
-					clubsList.forEach(club => {
+					agreementsList.forEach(agreement => {
 						if (
-							club.value &&
-							club.value.toLowerCase() ===
+							agreement.value &&
+							agreement.value.toLowerCase() ===
 								val.trim().toLowerCase()
 						) {
 							shouldAllow = false
@@ -261,15 +161,9 @@ export function HomeComponent() {
 		})
 	}
 
-	const goToBrowse = () => {
-		router.push({
-			pathname: `/browse`
-		})
-	}
-
 	const goToCreate = () => {
-		if (wallet.loginState === LoginState.NotLoggedIn) {
-			Cookies.set(CookieKeys.clubName, autocompleteFormValue)
+		if (loginState === LoginState.NotLoggedIn) {
+			Cookies.set(CookieKeys.agreementName, autocompleteFormValue)
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -277,56 +171,97 @@ export function HomeComponent() {
 				}
 			})
 		} else {
-			router.push({
-				pathname: `/create`,
-				query: { clubname: autocompleteFormValue }
-			})
+			if (
+				autocompleteFormValue.length < 3 ||
+				autocompleteFormValue.length > 50
+			) {
+				showNotification({
+					radius: 'lg',
+					title: 'Oops!',
+					message: `That agreement name is too long or short. Choose something else.`,
+					color: colorBlue
+				})
+			} else {
+				router.push({
+					pathname: `/create`,
+					query: { agreementname: autocompleteFormValue }
+				})
+			}
 		}
 	}
 
-	const [isClubsFAQModalOpen, setIsClubsFAQModalOpen] = useState(false)
+	const [isAgreementsFAQModalOpen, setIsAgreementsFAQModalOpen] =
+		useState(false)
+
+	useEffect(() => {
+		const doLogin = async () => {
+			try {
+				const accessToken = await getAccessTokenSilently()
+				const { jwt } = await sdk.id.loginWithAPI({
+					accessToken
+				})
+				setJwt(jwt)
+			} catch (e) {
+				log.crit(e)
+
+				showNotification({
+					title: 'Error connecting account',
+					autoClose: 2000,
+					color: 'red',
+					icon: <X />,
+
+					message: `Please try again.`
+				})
+			}
+		}
+
+		if (
+			isAuthenticated &&
+			loginState !== LoginState.LoggedIn &&
+			!hasTriedLogin
+		) {
+			setHasTriedLogin(true)
+			doLogin()
+		}
+	}, [
+		loginState,
+		isAuthenticated,
+		hasTriedLogin,
+		setHasTriedLogin,
+		getAccessTokenSilently,
+		setJwt,
+		sdk.id
+	])
 
 	return (
-		<div className={classes.wrapper}>
-			<div className={classes.header}>
-				<Container size={900} className={classes.headerContainer}>
-					<div className={classes.headerLogoContainer}>
-						<Image
-							className={classes.headerLogo}
-							src="/clubs-home.svg"
-							height={120}
-							width={120}
-							fit={'contain'}
-						>
-							{' '}
-							className={classes.title}{' '}
-						</Image>
-					</div>
-
-					<div className={classes.headerTextContainer}>
-						<Text className={classes.headerPitchText}>
-							Effortless access management and collaborative
-							publishing tools for your online community
-						</Text>
-						<Space h={24} />
-						<Text
-							onClick={() => {
-								setIsClubsFAQModalOpen(true)
-							}}
-							className={classes.headerLinkText}
-						>
-							Get to know Clubs
-						</Text>
-					</div>
-				</Container>
-			</div>
-
-			<Container size={900} className={classes.inner}>
-				<Text className={classes.searchPrompt} color="dimmed">
-					{`What's your club called?`}
+		<div className={meemTheme.widgetMeem}>
+			<Container
+				size={900}
+				style={{
+					position: 'relative',
+					paddingTop: 0,
+					paddingBottom: 32,
+					marginTop: 70
+				}}
+			>
+				<Text className={meemTheme.tExtraSmallLabel} color="black">
+					CREATE A COMMUNITY
+				</Text>
+				<Space h={16} />
+				<Text
+					style={{
+						color: 'black',
+						fontSize: 20,
+						fontWeight: 'bold'
+					}}
+				>
+					{`What's your community called?`}
 				</Text>
 				<Autocomplete
-					className={classes.clubSearch}
+					style={{
+						marginTop: 16
+					}}
+					radius={16}
 					value={autocompleteFormValue}
 					data={autocompleteData}
 					limit={2}
@@ -334,22 +269,22 @@ export function HomeComponent() {
 					itemComponent={CustomAutoCompleteItem}
 					onChange={handleChange}
 					placeholder={
-						'Start typing to see suggestions or create a new club...'
+						'Start typing to see suggestions or create a new community...'
 					}
 					onItemSubmit={handleSuggestionChosen}
 					rightSection={
 						isLoadingSuggestions ? (
 							<Loader
 								variant="oval"
-								color={'red'}
+								color={'blue'}
 								size={24}
 								style={{ marginRight: '12px' }}
 							/>
 						) : autocompleteFormValue.length > 0 &&
-						  isShowingCreateButton &&
-						  clubclub.isMember ? (
+						  isShowingCreateButton ? (
 							<Button
-								className={classes.createButton}
+								style={{ marginRight: 64 }}
+								className={meemTheme.buttonBlack}
 								onClick={goToCreate}
 							>
 								Create
@@ -357,27 +292,14 @@ export function HomeComponent() {
 						) : null
 					}
 				/>
-				{!clubclub.isMember && (
-					<Text className={classes.joinMeemLink}>
-						<a
-							onClick={() => {
-								router.push({ pathname: '/club-club' })
-							}}
-						>
-							Join Club Club to create
-						</a>
-					</Text>
-				)}
-				<Space h={24} />
-				<Button className={classes.createButton} onClick={goToBrowse}>
-					Browse all clubs
-				</Button>
+
+				<Space h={64} />
 			</Container>
-			<ClubsFAQModal
+			<MeemFAQModal
 				onModalClosed={() => {
-					setIsClubsFAQModalOpen(false)
+					setIsAgreementsFAQModalOpen(false)
 				}}
-				isOpened={isClubsFAQModalOpen}
+				isOpened={isAgreementsFAQModalOpen}
 			/>
 		</div>
 	)

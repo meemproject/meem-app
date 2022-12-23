@@ -1,124 +1,57 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Space,
-	Modal,
-	Divider,
-	Radio,
-	Button
-} from '@mantine/core'
+import { Text, Space, Modal, Divider, Radio, Button } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { useSDK } from '@meemproject/react'
+import type { UserIdentity } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
-import request from 'superagent'
 import { AlertCircle } from 'tabler-icons-react'
-import { IdentityIntegration } from '../../../../model/identity/identity'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	},
-	modalText: {
-		fontSize: 16
-	},
-	modalQuestion: {
-		fontSize: 14,
-		fontWeight: 600
-	}
-}))
-
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 interface IProps {
-	integration?: IdentityIntegration
+	userIdentity?: UserIdentity
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const ManageLinkedAccountModal: React.FC<IProps> = ({
-	integration,
+	userIdentity,
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes } = useStyles()
-	const wallet = useWallet()
+	const { classes: meemTheme } = useMeemTheme()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [integrationVisibility, setIntegrationVisibility] = useState('')
+
+	const { sdk } = useSDK()
+	const [extensionVisibility, setIntegrationVisibility] =
+		useState<MeemAPI.IUserIdentityVisibility>()
+	const extension = userIdentity?.IdentityProvider
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
 
-		log.debug(`integration id to edit: ${integration?.id}`)
+		log.debug(`extension id to edit: ${extension?.id}`)
 
 		// Save the change to the db
 		try {
-			await request
-				.post(
-					`${
-						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
-						integrationId: integration?.id ?? ''
-					})}`
-				)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send({
-					visibility: integrationVisibility
+			// await request
+			// 	.post(
+			// 		`${
+			// 			process.env.NEXT_PUBLIC_API_URL
+			// 		}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
+			// 			extensionId: extension?.id ?? ''
+			// 		})}`
+			// 	)
+			// 	.set('Authorization', `JWT ${wallet.jwt}`)
+			// 	.send({
+			// 		visibility: extensionVisibility
+			// 	})
+			if (userIdentity?.id) {
+				await sdk.id.updateUserIdentity({
+					userIdentityId: userIdentity.id,
+					visibility: extensionVisibility
 				})
+			}
 			setIsSavingChanges(false)
 			onModalClosed()
 		} catch (e) {
@@ -128,7 +61,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			showNotification({
 				title: 'Oops!',
 				autoClose: 5000,
-				color: 'red',
+				color: colorBlue,
 				icon: <AlertCircle />,
 				message: `Unable to save changes to this account.`
 			})
@@ -138,9 +71,12 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isOpened) {
-			setIntegrationVisibility(integration?.visibility ?? 'anyone')
+			setIntegrationVisibility(
+				(userIdentity?.visibility as MeemAPI.IUserIdentityVisibility) ??
+					MeemAPI.IUserIdentityVisibility.Anyone
+			)
 		}
-	}, [integration?.visibility, isOpened])
+	}, [userIdentity, isOpened])
 
 	return (
 		<>
@@ -156,18 +92,18 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 				opened={isOpened}
 				title={
 					<>
-						{integration?.name === 'Twitter' && (
-							<Text className={classes.modalTitle}>
+						{extension?.name === 'Twitter' && (
+							<Text className={meemTheme.tMediumBold}>
 								Twitter Settings
 							</Text>
 						)}
-						{integration?.name === 'Discord' && (
-							<Text className={classes.modalTitle}>
+						{extension?.name === 'Discord' && (
+							<Text className={meemTheme.tMediumBold}>
 								Discord Settings
 							</Text>
 						)}
-						{integration?.name === 'Email' && (
-							<Text className={classes.modalTitle}>
+						{extension?.name === 'Email' && (
+							<Text className={meemTheme.tMediumBold}>
 								Email Address Settings
 							</Text>
 						)}
@@ -181,31 +117,31 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
-					{integration?.name === 'Twitter' && (
-						<Text className={classes.modalText}>
-							{`You've successfully verified @${integration.metadata?.twitterUsername} as your Twitter username.`}
+				<div className={meemTheme.modalStepsContainer}>
+					{extension?.name === 'Twitter' && (
+						<Text>
+							{`You've successfully verified @${userIdentity?.metadata?.twitterUsername} as your Twitter username.`}
 						</Text>
 					)}
-					{integration?.name === 'Discord' && (
-						<Text className={classes.modalText}>
-							{`You've successfully verified ${integration.metadata?.discordUsername} as your Discord username.`}
+					{extension?.name === 'Discord' && (
+						<Text>
+							{`You've successfully verified ${userIdentity?.metadata?.discordUsername} as your Discord username.`}
 						</Text>
 					)}
-					{integration?.name === 'Email' && (
-						<Text className={classes.modalText}>
-							{`You've successfully verified ${integration.metadata?.emailAddress} as your email address.`}
+					{extension?.name === 'Email' && (
+						<Text>
+							{`You've successfully verified ${userIdentity?.metadata?.emailAddress} as your email address.`}
 						</Text>
 					)}
 					<Space h={24} />
-					{(integration?.name === 'Twitter' ||
-						integration?.name === 'Discord') && (
-						<Text className={classes.modalQuestion}>
+					{(extension?.name === 'Twitter' ||
+						extension?.name === 'Discord') && (
+						<Text className={meemTheme.tExtraSmallBold}>
 							{`Who can view this username?`}
 						</Text>
 					)}
-					{integration?.name === 'Email' && (
-						<Text className={classes.modalQuestion}>
+					{extension?.name === 'Email' && (
+						<Text className={meemTheme.tExtraSmallBold}>
 							{`who can view this email address?`}
 						</Text>
 					)}
@@ -214,7 +150,7 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 						spacing={10}
 						size="sm"
 						color="dark"
-						value={integrationVisibility}
+						value={extensionVisibility}
 						onChange={(value: any) => {
 							setIntegrationVisibility(value)
 						}}
@@ -222,21 +158,36 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 					>
 						<Radio value="anyone" label="Anyone" />
 						<Radio
-							value="mutual-club-members"
-							label="Mutual club members"
+							value="mutual-agreement-members"
+							label="Mutual agreement members"
 						/>
 						<Radio value="just-me" label="Just me" />
 					</Radio.Group>
 					<Space h={24} />
 
 					<Button
-						className={classes.buttonConfirm}
+						className={meemTheme.buttonBlack}
 						loading={isSavingChanges}
 						onClick={() => {
 							saveChanges()
 						}}
 					>
 						Save Preferences
+					</Button>
+					<Space h={24} />
+					<Button
+						className={meemTheme.buttonBlack}
+						loading={isSavingChanges}
+						onClick={() => {
+							if (userIdentity?.id) {
+								sdk.id.removeUserIdentity({
+									userIdentityId: userIdentity.id
+								})
+								onModalClosed()
+							}
+						}}
+					>
+						Detach Integration
 					</Button>
 				</div>
 			</Modal>

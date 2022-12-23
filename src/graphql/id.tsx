@@ -2,41 +2,41 @@ import { gql } from '@apollo/client'
 
 export const MEEM_ID_SUBSCRIPTION = gql`
 	subscription MeemIdSubscription($walletAddress: String) {
-		MeemIdentities(
-			where: { DefaultWallet: { address: { _ilike: $walletAddress } } }
-		) {
-			updatedAt
+		Users(where: { Wallets: { address: { _ilike: $walletAddress } } }) {
 			profilePicUrl
 			id
 			displayName
-			deletedAt
 			createdAt
 			DefaultWallet {
 				address
 				ens
 			}
-			MeemIdentityIntegrations {
+			UserIdentities {
 				metadata
 				visibility
-				IdentityIntegrationId
-				IdentityIntegration {
+				IdentityProviderId
+				IdentityProvider {
 					description
 					icon
 					id
 					name
+					connectionName
+					connectionId
 				}
 			}
 		}
 	}
 `
 
-export const IDENTITY_INTEGRATIONS_QUERY = gql`
-	query GetIdentityIntegrations {
-		IdentityIntegrations {
+export const IDENTITY_PROVIDERS_QUERY = gql`
+	query GetIdentityProviders {
+		IdentityProviders {
 			description
 			icon
 			id
 			name
+			connectionName
+			connectionId
 		}
 	}
 `

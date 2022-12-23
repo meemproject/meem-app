@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+import { useAuth0 } from '@auth0/auth0-react'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -13,220 +12,41 @@ import {
 	Navbar,
 	NavLink
 } from '@mantine/core'
-import { cleanNotifications, showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { LoginState, makeRequest, useWallet } from '@meemproject/react'
-import Cookies from 'js-cookie'
+import { showNotification } from '@mantine/notifications'
+import { LoginState, useAuth, useSDK, useMeemUser } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
+import React, { useEffect, useState } from 'react'
+import { Check, X } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import IdentityContext from './IdentityProvider'
+import { useMeemTheme } from '../Styles/MeemTheme'
+import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
-import { MyClubsComponent } from './Tabs/MyClubs'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		marginBottom: 32,
-		display: 'flex',
-		backgroundColor: '#FAFAFA',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 24,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			display: 'none'
-		}
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerProfileNameContainer: {
-		marginLeft: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
-		}
-	},
-	headerProfileName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	profileUrlContainer: {
-		marginTop: 8,
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	profileUrl: {
-		fontSize: 14,
-		opacity: 0.6,
-		fontWeight: 500
-	},
-
-	profileLogoImage: {
-		imageRendering: 'pixelated',
-		width: 80,
-		height: 80,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 40,
-			height: 40,
-			minHeight: 40,
-			minWidth: 40,
-			marginLeft: 16
-		}
-	},
-	profileSettingsIcon: {
-		width: 16,
-		height: 16,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			width: 24,
-			height: 24
-		}
-	},
-	profileContainer: {
-		display: 'flex',
-		width: '90%',
-		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-			flexDirection: 'column'
-		}
-	},
-	profileNavHeader: {
-		fontWeight: 600,
-		opacity: 0.5,
-		marginLeft: 20,
-		marginBottom: 4
-	},
-	profileNavItem: {
-		borderRadius: 8
-	},
-	profileMobileBurger: {
-		marginLeft: 24
-	},
-	profileNavBar: {
-		minWidth: 288,
-		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
-			paddingLeft: 32
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 24
-		}
-	},
-	profileContent: {
-		marginLeft: 32,
-		marginRight: 32,
-		width: '90%',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 8
-		}
-	},
-	buttonEditProfile: {
-		borderRadius: 24,
-		marginRight: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 0,
-			marginLeft: 16,
-			marginRight: 0,
-			borderColor: 'transparent'
-		}
-	},
-	tabs: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-
-	activeTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-		fontWeight: 600,
-		color: 'black',
-		textDecoration: 'underline',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
-	},
-	inactiveTab: {
-		fontSize: 18,
-		marginBottom: 16,
-		marginRight: 24,
-
-		fontWeight: 600,
-		color: 'rgba(45, 28, 28, 0.3)',
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginRight: 16
-		}
-	},
-	visibleTab: {
-		display: 'block'
-	},
-	invisibleTab: {
-		display: 'none'
-	},
-	profileIntegrationsSectionTitle: {
-		fontSize: 20,
-		marginBottom: 16,
-		fontWeight: 600
-	},
-	profileContractAddress: {
-		wordBreak: 'break-all',
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	contractAddressContainer: {
-		display: 'flex',
-		flexDirection: 'row'
-	},
-	copy: {
-		marginLeft: 4,
-		padding: 2,
-		cursor: 'pointer'
-	}
-}))
+import { MyAgreementsComponent } from './Tabs/MyAgreements'
 
 enum Tab {
 	Profile,
-	MyClubs
+	MyAgreements
 }
 
 export const ProfileComponent: React.FC = () => {
 	// General properties / tab management
-	const { classes } = useStyles()
+	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
-	const wallet = useWallet()
-	const id = useContext(IdentityContext)
+	const wallet = useAuth()
+	const { isMeLoading, isGetMeError } = useAuth()
+	const { user } = useMeemUser()
+	const { sdk } = useSDK()
+
+	const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
-	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
+	const [isMobileNavBarVisible, setIsMobileNavBarVisible] = useState(false)
+	const [hasConnectedExtension, setHasConnectedExtension] = useState(false)
 
-	const [isSigningIn, setIsSigningIn] = useState(false)
+	const [
+		isDiscordRoleRedirectModalOpened,
+		setIsDiscordRoleRedirectModalOpened
+	] = useState(false)
 
 	useEffect(() => {
 		if (wallet.loginState === LoginState.NotLoggedIn) {
@@ -237,252 +57,218 @@ export const ProfileComponent: React.FC = () => {
 				}
 			})
 		}
-	}, [router, wallet.loginState])
+	}, [router, wallet])
 
 	useEffect(() => {
-		if (router.query.tab === 'myClubs') {
-			setCurrentTab(Tab.MyClubs)
+		if (router.query.tab === 'myCommunities') {
+			setCurrentTab(Tab.MyAgreements)
 		} else if (router.query.tab === 'identity') {
 			setCurrentTab(Tab.Profile)
 		}
 	}, [router.query.tab])
 
-	//
-	const login = useCallback(
-		async (options: { walletSig?: string; accessToken?: string }) => {
-			setIsSigningIn(true)
-			const address = wallet.accounts[0]
-			const { walletSig, accessToken } = options
-			log.info('Logging in to Meem...')
-			log.debug(`address = ${wallet.accounts[0]}`)
-			log.debug(`sig = ${walletSig}`)
-
-			if (accessToken || (address && walletSig)) {
-				log.debug('HERE', accessToken, address)
-				try {
-					// 1. Log in
-					const loginRequest =
-						await makeRequest<MeemAPI.v1.Login.IDefinition>(
-							MeemAPI.v1.Login.path(),
-							{
-								method: MeemAPI.v1.Login.method,
-								body: {
-									...(address && { address }),
-									...(walletSig && { signature: walletSig }),
-									...(accessToken && { accessToken })
-								}
-							}
-						)
-
-					log.debug(`logged in successfully.`)
-
-					wallet.setJwt(loginRequest.jwt)
-					Cookies.remove('redirectPath')
-					setIsSigningIn(false)
-				} catch (e) {
-					setIsSigningIn(false)
-					log.error(e)
-					cleanNotifications()
-					Cookies.remove('redirectPath')
-					showNotification({
-						radius: 'lg',
-						title: 'Login Failed',
-						message: 'Please refresh the page and try again.'
-					})
-				}
-			}
-		},
-		[wallet]
-	)
-
 	useEffect(() => {
-		const hashQueryParams: { [key: string]: string } = {}
-		const possiblePath = Cookies.get('redirectPath')
-		if (possiblePath && possiblePath.includes('access_token')) {
-			const hashPath = possiblePath.split('#')
-
-			if (hashPath.length > 1) {
-				hashPath[1].split('&').forEach(value => {
-					const keyVal = value.split('=')
-					hashQueryParams[keyVal[0]] = keyVal[1]
+		const doLogin = async () => {
+			try {
+				const accessToken = await getAccessTokenSilently()
+				sdk.id.loginWithAPI({
+					accessToken,
+					shouldConnectUser: true
 				})
-			}
-			log.debug('ACCESS TOKEN', hashQueryParams)
-			if (hashQueryParams.access_token) {
-				login({
-					accessToken: hashQueryParams.access_token
+			} catch (e) {
+				log.crit(e)
+
+				showNotification({
+					title: 'Error connecting account',
+					autoClose: 2000,
+					color: 'red',
+					icon: <X />,
+
+					message: `Please try again.`
 				})
 			}
 		}
-	}, [login])
+
+		if (isAuthenticated && !hasConnectedExtension) {
+			setHasConnectedExtension(true)
+			doLogin()
+		}
+	}, [
+		isAuthenticated,
+		hasConnectedExtension,
+		setHasConnectedExtension,
+		getAccessTokenSilently,
+		sdk.id
+	])
+
+	const isLoggedIn = wallet.loginState === LoginState.LoggedIn
 
 	return (
 		<>
-			{!wallet.isConnected && !id.isLoadingIdentity && !isSigningIn && (
+			{!isLoggedIn && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Connect your wallet to access your profile.</Text>
+						<Text>
+							Connect your wallet to access your Meem profile.
+						</Text>
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected && (id.isLoadingIdentity || isSigningIn) && (
+			{isMeLoading && (
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader variant="oval" color="red" />
+						<Loader variant="oval" color="blue" />
 					</Center>
 				</Container>
 			)}
-			{wallet.isConnected &&
-				!id.isLoadingIdentity &&
-				!isSigningIn &&
-				!id.identity && (
-					<Container>
-						<Space h={120} />
-						<Center>
-							<Text>
-								Unable to load your profile. Please try again
-								later.
-							</Text>
-						</Center>
-					</Container>
-				)}
-			{wallet.isConnected &&
-				!id.isLoadingIdentity &&
-				!isSigningIn &&
-				id.identity && (
-					<>
-						<div className={classes.header}>
-							<div className={classes.headerTitle}>
-								{id.identity.profilePic && (
-									<>
-										<Image
-											radius={32}
-											height={64}
-											width={64}
-											fit={'cover'}
-											className={classes.profileLogoImage}
-											src={id.identity.profilePic ?? ''}
-										/>
-									</>
-								)}
+			{isGetMeError && (
+				<Container>
+					<Space h={120} />
+					<Center>
+						<Text>
+							Unable to load your Meem profile. Please try again
+							later.
+						</Text>
+					</Center>
+				</Container>
+			)}
+			{isLoggedIn && user && (
+				<>
+					<div className={meemTheme.pageHeader}>
+						<div className={meemTheme.spacedRowCentered}>
+							{user.profilePicUrl && (
+								<>
+									<Image
+										radius={32}
+										height={64}
+										width={64}
+										fit={'cover'}
+										className={meemTheme.imageAgreementLogo}
+										src={user.profilePicUrl}
+									/>
+								</>
+							)}
 
-								{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
-								<div
-									className={
-										classes.headerProfileNameContainer
-									}
-								>
-									<Text className={classes.headerProfileName}>
-										{id.identity.displayName ??
-											'My Profile'}
-									</Text>
-									<div
-										className={classes.profileUrlContainer}
+							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
+							<div className={meemTheme.pageHeaderTitleContainer}>
+								<Text className={meemTheme.tLargeBold}>
+									{user.displayName ?? 'My Meem Profile'}
+								</Text>
+								<Space h={8} />
+								<div className={meemTheme.row}>
+									<Text
+										className={meemTheme.tExtraSmallFaded}
 									>
-										<Text className={classes.profileUrl}>
-											{id.identity.ensAddress
-												? id.identity.ensAddress
-												: id.identity.walletAddress
-												? quickTruncate(
-														id.identity
-															.walletAddress
-												  )
-												: 'No wallet address found'}
-										</Text>
-										{id.identity.id && (
-											<>
-												<Image
-													className={classes.copy}
-													src="/copy.png"
-													height={20}
-													onClick={() => {
-														navigator.clipboard.writeText(
-															`${
-																id.identity
-																	.ensAddress ??
-																id.identity
-																	.walletAddress
-															}`
-														)
-														showNotification({
-															title: 'Wallet info copied',
-															autoClose: 2000,
-															color: 'green',
-															icon: <Check />,
+										{user.DefaultWallet?.ens
+											? user.DefaultWallet?.ens
+											: user.DefaultWallet?.address
+											? quickTruncate(
+													user.DefaultWallet?.address
+											  )
+											: 'No wallet address found'}
+									</Text>
+									{user.id && (
+										<>
+											<Image
+												className={meemTheme.copyIcon}
+												src="/copy.png"
+												height={20}
+												onClick={() => {
+													navigator.clipboard.writeText(
+														`${
+															user.DefaultWallet
+																?.ens ??
+															user.DefaultWallet
+																?.address
+														}`
+													)
+													showNotification({
+														title: 'Wallet info copied',
+														autoClose: 2000,
+														color: 'green',
+														icon: <Check />,
 
-															message: `Wallet info was copied to your clipboard.`
-														})
-													}}
-													width={20}
-												/>
-											</>
-										)}
-									</div>
+														message: `Wallet info was copied to your clipboard.`
+													})
+												}}
+												width={20}
+											/>
+										</>
+									)}
 								</div>
 							</div>
 						</div>
-
-						<div className={classes.profileContainer}>
-							<MediaQuery
-								largerThan="sm"
-								styles={{ display: 'none' }}
+					</div>
+					<div className={meemTheme.pagePanelLayoutContainer}>
+						<MediaQuery
+							largerThan="sm"
+							styles={{ display: 'none' }}
+						>
+							<Burger
+								style={{ marginLeft: 24 }}
+								opened={isMobileNavBarVisible}
+								onClick={() =>
+									setIsMobileNavBarVisible(o => !o)
+								}
+								size="sm"
+								mr="xl"
+							/>
+						</MediaQuery>
+						<Navbar
+							className={meemTheme.pagePanelLayoutNavBar}
+							width={{ base: 288 }}
+							height={400}
+							hidden={!isMobileNavBarVisible}
+							hiddenBreakpoint={'sm'}
+							withBorder={false}
+							p="xs"
+						>
+							<Text
+								className={meemTheme.tExtraSmallLabel}
+								style={{ marginLeft: 20, marginBottom: 8 }}
 							>
-								<Burger
-									className={classes.profileMobileBurger}
-									opened={mobileNavBarVisible}
-									onClick={() =>
-										setMobileNavBarVisible(o => !o)
-									}
-									size="sm"
-									mr="xl"
-								/>
-							</MediaQuery>
-							<Navbar
-								className={classes.profileNavBar}
-								width={{ base: 288 }}
-								height={400}
-								hidden={!mobileNavBarVisible}
-								hiddenBreakpoint={'sm'}
-								withBorder={false}
-								p="xs"
-							>
-								<Text className={classes.profileNavHeader}>
-									SETTINGS
-								</Text>
-								<NavLink
-									className={classes.profileNavItem}
-									active={currentTab === Tab.Profile}
-									label={'Manage Identity'}
-									onClick={() => {
-										setCurrentTab(Tab.Profile)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-								<NavLink
-									className={classes.profileNavItem}
-									active={currentTab === Tab.MyClubs}
-									label={'My Clubs'}
-									onClick={() => {
-										setCurrentTab(Tab.MyClubs)
-										setMobileNavBarVisible(false)
-									}}
-								/>
-							</Navbar>
-							{!mobileNavBarVisible && (
-								<div className={classes.profileContent}>
-									{currentTab === Tab.Profile && (
-										<ManageIdentityComponent />
-									)}
-									{currentTab === Tab.MyClubs && (
-										<MyClubsComponent />
-									)}
-								</div>
-							)}
-						</div>
-					</>
-				)}
+								SETTINGS
+							</Text>
+							<NavLink
+								className={meemTheme.pagePanelLayoutNavItem}
+								active={currentTab === Tab.Profile}
+								label={'Manage Identity'}
+								onClick={() => {
+									setCurrentTab(Tab.Profile)
+									setIsMobileNavBarVisible(false)
+								}}
+							/>
+							<NavLink
+								className={meemTheme.pagePanelLayoutNavItem}
+								active={currentTab === Tab.MyAgreements}
+								label={'My Communities'}
+								onClick={() => {
+									setCurrentTab(Tab.MyAgreements)
+									setIsMobileNavBarVisible(false)
+								}}
+							/>
+						</Navbar>
+						{!isMobileNavBarVisible && (
+							<div className={meemTheme.pagePanelLayoutContent}>
+								{currentTab === Tab.Profile && (
+									<ManageIdentityComponent />
+								)}
+								{currentTab === Tab.MyAgreements && (
+									<MyAgreementsComponent />
+								)}
+							</div>
+						)}
+					</div>
+				</>
+			)}
+			<DiscordRoleRedirectModal
+				isOpened={isDiscordRoleRedirectModalOpened}
+				onModalClosed={() => {
+					setIsDiscordRoleRedirectModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }
