@@ -93,7 +93,8 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 	fRichTextEditorToolbar: {
 		border: 'none',
-		borderRadius: 24
+		borderRadius: 24,
+		marginBottom: 10
 	},
 
 	// Layout
