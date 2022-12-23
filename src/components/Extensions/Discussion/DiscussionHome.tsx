@@ -4,9 +4,7 @@ import {
 	Container,
 	Text,
 	TextInput,
-	Image,
 	Space,
-	Loader,
 	Center,
 	Button
 } from '@mantine/core'
@@ -22,6 +20,8 @@ import { DiscussionComment } from '../../../model/agreement/extensions/discussio
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { IReactions } from './DiscussionPost'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
@@ -86,26 +86,7 @@ export const DiscussionHome: React.FC = () => {
 	const { sdk } = useSDK()
 	const { chainId, loginState } = useAuth()
 
-	const { agreement, isLoadingAgreement, error } = useAgreement()
-
-	// const posts: DiscussionPost[] = [
-	// 	{
-	// 		id: '1',
-	// 		title: 'Test post one',
-	// 		tags: ['funny', 'crazy'],
-	// 		agreementSlug: agreement?.slug ?? '',
-	// 		content: 'This is just a small test post.',
-	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	},
-	// 	{
-	// 		id: '2',
-	// 		title: 'Test post two',
-	// 		tags: ['funny', 'crazy'],
-	// 		agreementSlug: agreement?.slug ?? '',
-	// 		content: 'And another test post',
-	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	}
-	// ]
+	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 
@@ -291,122 +272,44 @@ export const DiscussionHome: React.FC = () => {
 
 	return (
 		<>
-			{isLoadingAgreement && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Loader color="blue" variant="oval" />
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && !error && !agreement?.name && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>Sorry, that community does not exist!</Text>
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && error && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							There was an error loading this community. Please
-							let us know!
-						</Text>
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && agreement?.name && !agreementExtension && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							This extension is not enabled for this club.
-						</Text>
-					</Center>
-					{agreement.isCurrentUserAgreementOwner ||
-						(agreement.isCurrentUserAgreementAdmin && (
-							<>
-								<Space h={16} />{' '}
-								<Button
-									className={meemTheme.buttonGrey}
-									onClick={() => {
-										router.push({
-											pathname: `${agreement.slug}/admin`,
-											query: { tab: 'extensions' }
-										})
-									}}
-								>
-									Enable this extension
-								</Button>
-							</>
-						))}
-				</Container>
-			)}
-			{!isLoadingAgreement &&
-				agreement?.name &&
-				agreementExtension &&
-				!agreementExtension.isInitialized && (
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
+			{extensionIsReady(
+				isLoadingAgreement,
+				agreement,
+				agreementExtension
+			) && (
+				<>
+					<ExtensionPageHeader extensionSlug={'discussions'} />
+
 					<Container>
-						<Space h={120} />
-						<Center>
-							<Text>
-								{`${agreementExtension.Extension?.name} is being set up. Please wait...`}
-							</Text>
-						</Center>
 						<Space h={24} />
+						{posts.length === 0 && (
+							<>
+								<Center>
+									<Text className={meemTheme.tSmall}>
+										There are no posts yet in your
+										community. Be the first one to say
+										something!
+									</Text>
+								</Center>
+								<Space h={24} />
+							</>
+						)}
+
 						<Center>
-							<Loader variant="oval" color="blue" />
+							<Button
+								className={meemTheme.buttonBlack}
+								onClick={() => {
+									router.push({
+										pathname: `/${agreement?.slug}/e/discussions/submit`
+									})
+								}}
+							>
+								+ Start a discussion
+							</Button>
 						</Center>
-					</Container>
-				)}
-			{!isLoadingAgreement &&
-				agreement?.name &&
-				agreementExtension &&
-				agreementExtension.isInitialized && (
-					<>
-						<Container>
-							<Space h={48} />
-
-							<Center>
-								<Image
-									className={meemTheme.imagePixelated}
-									height={100}
-									width={100}
-									src={agreement.image}
-								/>
-							</Center>
-
-							<Space h={24} />
-							<Center>
-								<Text className={meemTheme.tLargeBold}>
-									{agreement.name}
-								</Text>
-							</Center>
-							<Space h={8} />
-
-							<Center>
-								<Text className={meemTheme.tMedium}>
-									{agreement.description}
-								</Text>
-							</Center>
-							<Space h={24} />
-
-							<Center>
-								<Button
-									className={meemTheme.buttonBlack}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement.slug}/e/discussions/submit`
-										})
-									}}
-								>
-									+ Start a discussion
-								</Button>
-							</Center>
-							<Space h={48} />
+						<Space h={48} />
+						{posts.length > 0 && (
 							<div className={meemTheme.centeredRow}>
 								<TextInput
 									radius={20}
@@ -427,24 +330,24 @@ export const DiscussionHome: React.FC = () => {
 									Sort
 								</Button>
 							</div>
-							<Space h={32} />
-							{posts.map(post => (
-								<DiscussionPostPreview
-									key={post.id}
-									post={post}
-									onReaction={() => {
-										setHasFetchedReactions(false)
-									}}
-									reactions={reactions}
-									agreementExtension={agreementExtension}
-									commentCount={
-										commentCounts[post.id.toString()]
-									}
-								/>
-							))}
-						</Container>
-					</>
-				)}
+						)}
+
+						<Space h={32} />
+						{posts.map(post => (
+							<DiscussionPostPreview
+								key={post.id}
+								post={post}
+								onReaction={() => {
+									setHasFetchedReactions(false)
+								}}
+								reactions={reactions}
+								agreementExtension={agreementExtension}
+								commentCount={commentCounts[post.id.toString()]}
+							/>
+						))}
+					</Container>
+				</>
+			)}
 		</>
 	)
 }

@@ -1,7 +1,12 @@
-import { Center, Container, Loader, Space, Text } from '@mantine/core'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+import { Center, Container, Space, Text } from '@mantine/core'
 import React from 'react'
+import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const ExampleExtensionHome: React.FC = () => {
 	/*
@@ -16,37 +21,47 @@ export const ExampleExtensionHome: React.FC = () => {
 	the AgreementProvider and AgreementContext is used to fetch a agreement
 	where required.
 	*/
-	const { agreement, isLoadingAgreement, error } = useAgreement()
+	// const { agreement, isLoadingAgreement, error } = useAgreement()
+
+	// Access your extension's data like so:
+	//const agreementExtension = extensionFromSlug('example', agreement)
+
+	/*
+	NOTE: For UI development, we have disabled loading / error states for you. 
+	Enable them again when you have real data you want to fetch from the extension.
+	*/
 
 	return (
-		<Container>
+		<>
 			<Space h={64} />
 
-			{/* Agreement loaded state */}
-			{agreement && (
+			<Center>
 				<Text className={meemTheme.tSmall}>
-					{`This is the homepage for the example community extension`}
+					This is the homepage for an example extension.
 				</Text>
-			)}
-			{/* Agreement loading state */}
-			{isLoadingAgreement && (
-				<>
-					<Center>
-						<Loader variant="oval" color="blue" />
-					</Center>
-				</>
-			)}
+			</Center>
 
-			{/* Agreement error state */}
-			{!isLoadingAgreement && error && (
+			{/* TODO: Use this logic below when your agreement has live data. */}
+			{/* <ExtensionBlankSlate
+				isLoadingAgreement
+				agreement={agreement}
+				error={error}
+				extensionSlug={'discussions'}
+			/>
+			{extensionIsReady(
+				isLoadingAgreement,
+				agreement,
+				agreementExtension
+			) && (
 				<>
-					<Center>
-						<Text className={meemTheme.tSmall}>
-							Error loading this extension!
-						</Text>
-					</Center>
+
+					<ExtensionPageHeader extensionSlug={'example'} />
+
+					<Text className={meemTheme.tSmall}>
+						This is the homepage for an example extension.
+					</Text>
 				</>
-			)}
-		</Container>
+			)} */}
+		</>
 	)
 }

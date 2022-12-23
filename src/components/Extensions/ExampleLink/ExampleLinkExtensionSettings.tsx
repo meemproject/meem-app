@@ -14,7 +14,7 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const ExampleExtensionSettings: React.FC = () => {
+export const ExampleLinkExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
@@ -22,38 +22,13 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
-	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
+	const [shouldDisplayInSidebar, setShouldDisplayInSidebar] = useState(false)
+	const [shouldDisplayInFavoriteLinks, setShouldDisplayInFavoriteLinks] =
 		useState(false)
+
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
 
 	/*
-	TODO
-	Add your custom extension settings layout here.
-	 */
-	const customExtensionSettings = () => (
-		<>
-			<Space h={40} />
-			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
-			<Space h={16} />
-			This extension does not provide any additional settings.
-			<Space h={8} />
-		</>
-	)
-
-	/*
-	TODO
-	Add your custom extension permissions layout here.
-	 */
-	const customExtensionPermissions = () => (
-		<>This extension does not provide any permissions.</>
-	)
-
-	/*
-	TODO
-	Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
-	 */
-	const saveCustomChanges = async () => {}
-
 	/*
 	Boilerplate area - please don't edit the below code!
 	===============================================================
@@ -61,7 +36,6 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
-		await saveCustomChanges()
 		setIsSavingChanges(false)
 	}
 
@@ -72,7 +46,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'example'} />
+			<ExtensionBlankSlate extensionSlug={'examplelink'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -94,7 +68,9 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'example'} />
+							<ExtensionPageHeader
+								extensionSlug={'examplelink'}
+							/>
 
 							<Container>
 								<div>
@@ -103,13 +79,37 @@ export const ExampleExtensionSettings: React.FC = () => {
 									>
 										<Switch
 											color={'green'}
-											label={'Display dashboard widget'}
+											label={'Display link in sidebar'}
+											checked={shouldDisplayInSidebar}
+											onChange={value => {
+												if (value) {
+													setShouldDisplayInSidebar(
+														value.currentTarget
+															.checked
+													)
+												}
+											}}
+										/>
+									</div>
+									<Space h={16} />
+									<Divider />
+								</div>
+								<div>
+									<Space h={16} />
+									<div
+										className={meemTheme.spacedRowCentered}
+									>
+										<Switch
+											color={'green'}
+											label={
+												'Display link in Favorite Links section'
+											}
 											checked={
-												shouldDisplayDashboardWidget
+												shouldDisplayInFavoriteLinks
 											}
 											onChange={value => {
 												if (value) {
-													setShouldDisplayDashboardWidget(
+													setShouldDisplayInFavoriteLinks(
 														value.currentTarget
 															.checked
 													)
@@ -128,7 +128,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Hide widget if viewer is not a community member'
+												'Hide links if viewer is not a community member'
 											}
 											checked={isPrivateExtension}
 											onChange={value => {
@@ -155,14 +155,6 @@ export const ExampleExtensionSettings: React.FC = () => {
 									Disable extension
 								</Button>
 
-								{customExtensionSettings()}
-								<Space h={40} />
-								<Text className={meemTheme.tExtraSmallLabel}>
-									PERMISSIONS
-								</Text>
-								<Space h={16} />
-
-								{customExtensionPermissions()}
 								<Space h={48} />
 								<Button
 									disabled={isSavingChanges}
