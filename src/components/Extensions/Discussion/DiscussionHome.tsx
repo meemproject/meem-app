@@ -4,7 +4,6 @@ import {
 	Container,
 	Text,
 	TextInput,
-	Image,
 	Space,
 	Center,
 	Button
@@ -22,6 +21,7 @@ import { DiscussionPost } from '../../../model/agreement/extensions/discussion/d
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { IReactions } from './DiscussionPost'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 
@@ -270,12 +270,6 @@ export const DiscussionHome: React.FC = () => {
 		agreementExtension
 	])
 
-	const navigateToAgreementHome = () => {
-		router.push({
-			pathname: `/${agreement?.slug}`
-		})
-	}
-
 	return (
 		<>
 			<ExtensionBlankSlate extensionSlug={'discussions'} />
@@ -285,42 +279,7 @@ export const DiscussionHome: React.FC = () => {
 				agreementExtension
 			) && (
 				<>
-					<div className={meemTheme.pageHeader}>
-						<div className={meemTheme.spacedRowCentered}>
-							<Image
-								radius={8}
-								height={80}
-								width={80}
-								className={meemTheme.imagePixelated}
-								src={agreement?.image}
-							/>
-							{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
-							<div className={meemTheme.pageHeaderTitleContainer}>
-								<Text className={meemTheme.tLargeBold}>
-									{agreement?.name}
-								</Text>
-								<Space h={8} />
-								<div className={meemTheme.centeredRow}>
-									<Image
-										className={meemTheme.copyIcon}
-										src={`/${agreementExtension?.Extension?.icon}`}
-										height={16}
-										width={16}
-									/>
-									<Space w={8} />
-									<Text
-										className={meemTheme.tMedium}
-									>{`${agreementExtension?.Extension?.name}`}</Text>
-								</div>
-							</div>
-						</div>
-						<a
-							className={meemTheme.pageHeaderExitButton}
-							onClick={navigateToAgreementHome}
-						>
-							<Image src="/delete.png" width={24} height={24} />
-						</a>
-					</div>
+					<ExtensionPageHeader extensionSlug={'discussions'} />
 
 					<Container>
 						<Space h={24} />

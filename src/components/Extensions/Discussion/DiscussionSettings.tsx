@@ -2,7 +2,6 @@
 import log from '@kengoldfarb/log'
 import {
 	Container,
-	Image,
 	Text,
 	Space,
 	Center,
@@ -12,14 +11,13 @@ import {
 	Select,
 	SelectItem
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const DiscussionSettings: React.FC = () => {
 	// Default settings
@@ -69,12 +67,6 @@ export const DiscussionSettings: React.FC = () => {
 			log.debug(`Set ${items.length} roles as dropdown options`)
 		}
 	}, [agreement, hasSetRoleSelectItems, roleSelectItems])
-
-	/*
-	TODO:
-	Add your extension's name, which shows up as the page title.
-	 */
-	const extensionName = 'Discussions'
 
 	/*
 	TODO
@@ -261,19 +253,6 @@ export const DiscussionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-	const navigateToAgreementHome = () => {
-		router.push({
-			pathname: `/${agreement?.slug}`
-		})
-	}
-
-	const navigateToAllExtensions = () => {
-		router.push({
-			pathname: `/${agreement?.slug}/admin`,
-			query: { tab: 'extensions' }
-		})
-	}
-
 	const disableExtension = async () => {
 		setIsDisablingExtension(true)
 		setIsDisablingExtension(false)
@@ -303,109 +282,13 @@ export const DiscussionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<div className={meemTheme.pageHeader}>
-								<div className={meemTheme.spacedRowCentered}>
-									<ArrowLeft
-										className={meemTheme.clickable}
-										onClick={() => {
-											navigateToAllExtensions()
-										}}
-									/>
-									<Space w={24} />
-									<Image
-										radius={8}
-										height={80}
-										width={80}
-										className={meemTheme.imagePixelated}
-										src={agreement?.image}
-									/>
-									{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
-									<div
-										className={
-											meemTheme.pageHeaderTitleContainer
-										}
-									>
-										<Text className={meemTheme.tLargeBold}>
-											{agreement.name}
-										</Text>
-										<Space h={8} />
-										<div className={meemTheme.row}>
-											<Text
-												className={
-													meemTheme.tExtraSmallFaded
-												}
-											>{`${window.location.origin}/${agreement.slug}`}</Text>
-											<Image
-												className={meemTheme.copyIcon}
-												src="/copy.png"
-												height={20}
-												onClick={() => {
-													navigator.clipboard.writeText(
-														`${window.location.origin}/${agreement.slug}`
-													)
-													showNotification({
-														radius: 'lg',
-														title: 'Community URL copied',
-														autoClose: 2000,
-														color: colorGreen,
-														icon: <Check />,
-
-														message: `This community's URL was copied to your clipboard.`
-													})
-												}}
-												width={20}
-											/>
-										</div>
-									</div>
-								</div>
-								<a
-									className={meemTheme.pageHeaderExitButton}
-									onClick={navigateToAgreementHome}
-								>
-									<Image
-										src="/delete.png"
-										width={24}
-										height={24}
-									/>
-								</a>
-							</div>
+							<ExtensionPageHeader
+								extensionSlug={'discussions'}
+							/>
 
 							<Container>
 								<Space h={16} />
-								<div
-									className={meemTheme.spacedRow}
-									style={{ marginBottom: 32 }}
-								>
-									<div>
-										<Text
-											className={
-												meemTheme.tExtraSmallLabel
-											}
-										>
-											SETTINGS
-										</Text>
-										<Space h={4} />
-										<div className={meemTheme.centeredRow}>
-											<Text
-												className={meemTheme.tLargeBold}
-											>
-												{extensionName}
-											</Text>
-										</div>
-									</div>
-									<Button
-										disabled={isSavingChanges}
-										loading={isSavingChanges}
-										onClick={() => {
-											saveChanges()
-										}}
-										className={meemTheme.buttonBlack}
-									>
-										Save Changes
-									</Button>
-								</div>
-								<Divider />
-								<Space h={32} />
+
 								<Text className={meemTheme.tExtraSmallLabel}>
 									DISPLAY SETTINGS
 								</Text>

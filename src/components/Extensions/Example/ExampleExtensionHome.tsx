@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Container, Space, Text } from '@mantine/core'
+import { Center, Container, Space, Text } from '@mantine/core'
 import React from 'react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const ExampleExtensionHome: React.FC = () => {
 	/*
@@ -34,9 +35,11 @@ export const ExampleExtensionHome: React.FC = () => {
 		<>
 			<Space h={64} />
 
-			<Text className={meemTheme.tSmall}>
-				This is the homepage for an example extension.
-			</Text>
+			<Center>
+				<Text className={meemTheme.tSmall}>
+					This is the homepage for an example extension.
+				</Text>
+			</Center>
 
 			{/* TODO: Use this logic below when your agreement has live data. */}
 			{/* <ExtensionBlankSlate
@@ -51,6 +54,9 @@ export const ExampleExtensionHome: React.FC = () => {
 				agreementExtension
 			) && (
 				<>
+
+					<ExtensionPageHeader extensionSlug={'example'} />
+
 					<Text className={meemTheme.tSmall}>
 						This is the homepage for an example extension.
 					</Text>

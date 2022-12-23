@@ -1,6 +1,5 @@
 import {
 	Container,
-	Image,
 	Text,
 	Space,
 	Center,
@@ -8,18 +7,15 @@ import {
 	Divider,
 	Switch
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { ArrowLeft, Check } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const ExampleExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
-	const router = useRouter()
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('example', agreement)
@@ -30,21 +26,13 @@ export const ExampleExtensionSettings: React.FC = () => {
 		useState(false)
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
 
-	// TODO: Add your custom extension settings here
-
-	/*
-	TODO:
-	Add your extension's name, which shows up as the page title.
-	 */
-	const extensionName = 'Example Extension'
-
 	/*
 	TODO
 	Add your custom extension settings layout here.
 	 */
 	const customExtensionSettings = () => (
 		<>
-			<Space h={32} />
+			<Space h={40} />
 			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
 			<Space h={16} />
 			This extension does not provide any additional settings.
@@ -77,19 +65,6 @@ export const ExampleExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-	const navigateToAgreementHome = () => {
-		router.push({
-			pathname: `/${agreement?.slug}`
-		})
-	}
-
-	const navigateToAllExtensions = () => {
-		router.push({
-			pathname: `/${agreement?.slug}/admin`,
-			query: { tab: 'extensions' }
-		})
-	}
-
 	const disableExtension = async () => {
 		setIsDisablingExtension(true)
 		setIsDisablingExtension(false)
@@ -119,115 +94,10 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<div className={meemTheme.pageHeader}>
-								<div className={meemTheme.spacedRowCentered}>
-									<ArrowLeft
-										className={meemTheme.clickable}
-										onClick={() => {
-											navigateToAllExtensions()
-										}}
-									/>
-									<Space w={24} />
-									<Image
-										radius={8}
-										height={80}
-										width={80}
-										className={meemTheme.imagePixelated}
-										src={agreement?.image}
-									/>
-									{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
-									<div
-										className={
-											meemTheme.pageHeaderTitleContainer
-										}
-									>
-										<Text className={meemTheme.tLargeBold}>
-											{agreement.name}
-										</Text>
-										<Space h={8} />
-										<div className={meemTheme.row}>
-											<Text
-												className={
-													meemTheme.tExtraSmallFaded
-												}
-											>{`${window.location.origin}/${agreement.slug}`}</Text>
-											<Image
-												className={meemTheme.copyIcon}
-												src="/copy.png"
-												height={20}
-												onClick={() => {
-													navigator.clipboard.writeText(
-														`${window.location.origin}/${agreement.slug}`
-													)
-													showNotification({
-														radius: 'lg',
-														title: 'Community URL copied',
-														autoClose: 2000,
-														color: colorGreen,
-														icon: <Check />,
-
-														message: `This community's URL was copied to your clipboard.`
-													})
-												}}
-												width={20}
-											/>
-										</div>
-									</div>
-								</div>
-								<a
-									className={meemTheme.pageHeaderExitButton}
-									onClick={navigateToAgreementHome}
-								>
-									<Image
-										src="/delete.png"
-										width={24}
-										height={24}
-									/>
-								</a>
-							</div>
+							<ExtensionPageHeader extensionSlug={'example'} />
 
 							<Container>
-								<Space h={16} />
-								<div
-									className={meemTheme.spacedRow}
-									style={{ marginBottom: 32 }}
-								>
-									<div>
-										<Text
-											className={
-												meemTheme.tExtraSmallLabel
-											}
-										>
-											SETTINGS
-										</Text>
-										<Space h={4} />
-										<div className={meemTheme.centeredRow}>
-											<Text
-												className={meemTheme.tLargeBold}
-											>
-												{extensionName}
-											</Text>
-										</div>
-									</div>
-									<Button
-										disabled={isSavingChanges}
-										loading={isSavingChanges}
-										onClick={() => {
-											saveChanges()
-										}}
-										className={meemTheme.buttonBlack}
-									>
-										Save Changes
-									</Button>
-								</div>
-								<Divider />
-								<Space h={32} />
-								<Text className={meemTheme.tExtraSmallLabel}>
-									DISPLAY SETTINGS
-								</Text>
-
 								<div>
-									<Space h={16} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -286,7 +156,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 								</Button>
 
 								{customExtensionSettings()}
-								<Space h={32} />
+								<Space h={40} />
 								<Text className={meemTheme.tExtraSmallLabel}>
 									PERMISSIONS
 								</Text>
