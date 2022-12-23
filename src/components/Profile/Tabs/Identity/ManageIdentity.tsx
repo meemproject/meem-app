@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
+import { useAuth0 } from '@auth0/auth0-react'
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Text,
 	Button,
 	Space,
@@ -13,227 +13,35 @@ import {
 	Grid
 } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import {
+	useMeemUser,
+	useMeemApollo,
+	useSDK,
+	IDENTITY_PROVIDERS_QUERY
+} from '@meemproject/react'
+import type { UserIdentity } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
-import router from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
-import request from 'superagent'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
-import { GetIdentityIntegrationsQuery } from '../../../../../generated/graphql'
-import { IDENTITY_INTEGRATIONS_QUERY } from '../../../../graphql/id'
-import {
-	AvailableIdentityIntegration,
-	IdentityIntegration,
-	identityIntegrationFromApi
-} from '../../../../model/identity/identity'
-import IdentityContext from '../../IdentityProvider'
+import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
+import { colorVerified, useMeemTheme } from '../../../Styles/MeemTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
-import { ProfileLinkDiscordModal } from './ProfileLinkDiscordModal'
-import { ProfileLinkEmailModal } from './ProfileLinkEmailModal'
-import { ProfileLinkTwitterModal } from './ProfileLinkTwitterModal'
-
-const useStyles = createStyles(theme => ({
-	row: { display: 'flex', alignItems: 'center' },
-	header: {
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row',
-		paddingTop: 32,
-		borderBottomColor: 'rgba(0, 0, 0, 0.08)',
-		borderBottomWidth: '1px',
-		borderBottomStyle: 'solid',
-		paddingBottom: 32,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 32,
-			paddingBottom: 16,
-			paddingLeft: 8,
-			paddingTop: 16
-		}
-	},
-	headerLeftItems: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	headerArrow: {
-		marginRight: 32,
-		marginTop: 6,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 16,
-			marginLeft: 16
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 20
-		}
-	},
-	buttonSaveChanges: {
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24,
-		marginRight: 32
-	},
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	createClubLink: {
-		marginTop: 24,
-		a: {
-			color: 'rgba(255, 102, 81, 1)',
-			textDecoration: 'underline',
-			fontWeight: 'bold'
-		}
-	},
-	profileItem: {
-		display: 'flex',
-		alignItems: 'center',
-		marginBottom: 24,
-		fontSize: 16,
-		fontWeight: 600,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	profileIntegrationsHeader: {
-		fontSize: 16,
-		color: 'rgba(0, 0, 0, 0.5)',
-		fontWeight: 600,
-		marginTop: 32,
-		marginBottom: 12,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			fontWeight: 400
-		}
-	},
-	profileIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 24
-	},
-	enabledClubIntegrationItem: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'start',
-		fontWeight: 600,
-		marginBottom: 12,
-		cursor: 'pointer',
-		border: '1px solid rgba(0, 0, 0, 0.1)',
-		backgroundColor: '#FAFAFA',
-		borderRadius: 16,
-		padding: 16
-	},
-	profilePictureImage: {
-		imageRendering: 'pixelated'
-	},
-	profilePictureImageContainer: {
-		marginTop: 24,
-		width: 108,
-		height: 100,
-		position: 'relative'
-	},
-	profilePictureDeleteButton: {
-		position: 'absolute',
-		top: '0px',
-		right: '-100px',
-		cursor: 'pointer'
-	},
-	uploadOptions: { display: 'flex' },
-	emojiCanvas: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		marginTop: -12,
-		marginBottom: -12,
-		lineHeight: 1,
-		fontSize: 160,
-		zIndex: -1000
-	},
-	emojiCanvasCover: {
-		position: 'absolute',
-		top: 0,
-		left: 0,
-		width: 256,
-		height: 256,
-		marginTop: -12,
-		marginBottom: -12,
-		backgroundColor: 'white',
-		zIndex: -1
-	},
-	intItemHeader: {
-		display: 'flex',
-		alignItems: 'center'
-	},
-	profileNameEllipsis: {
-		textOverflow: 'ellipsis',
-		msTextOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden'
-	},
-	verifiedSectionTitle: {
-		fontSize: 18,
-		fontWeight: 600,
-		color: 'rgba(62, 162, 255, 1)',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16
-		}
-	},
-	identitySectionTitle: {
-		fontSize: 18,
-		marginBottom: 16,
-		fontWeight: 600,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 16,
-			marginBottom: 8
-		}
-	},
-	myClubsPrompt: { fontSize: 18, marginBottom: 16 },
-	profileHeaderText: {
-		fontWeight: 600,
-		fontSize: 20,
-		marginBottom: 32
-	},
-	textField: {
-		maxWidth: 800
-	}
-}))
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
 })
 
 export const ManageIdentityComponent: React.FC = () => {
-	const { classes } = useStyles()
+	const { classes: meemTheme } = useMeemTheme()
 
-	const wallet = useWallet()
-	const id = useContext(IdentityContext)
+	const { loginWithRedirect } = useAuth0()
+	const { sdk } = useSDK()
+	const { user: me } = useMeemUser()
+	const { anonClient } = useMeemApollo()
 
 	// Mutable identity data
 	const [displayName, setDisplayName] = useState('')
@@ -241,23 +49,16 @@ export const ManageIdentityComponent: React.FC = () => {
 	const [profilePicBase64, setProfilePicBase64] = useState<string>('')
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 
-	// Available integrations
-	const [availableIntegrations, setAvailableIntegrations] = useState<
-		AvailableIdentityIntegration[]
-	>([])
+	const [userIdentityCurrentlyEditing, setUserIdentityCurrentlyEditing] =
+		useState<UserIdentity>()
 
-	const [integrationCurrentlyEditing, setIntegrationCurrentlyEditing] =
-		useState<IdentityIntegration>()
+	// Fetch a list of available extensions.
+	const { data: inteData, loading: isLoadingAvailableExtensions } =
+		useQuery<GetIdentityProvidersQuery>(IDENTITY_PROVIDERS_QUERY, {
+			client: anonClient
+		})
 
-	// Fetch a list of available integrations.
-	const { data: inteData } = useQuery<GetIdentityIntegrationsQuery>(
-		IDENTITY_INTEGRATIONS_QUERY
-	)
-
-	// Discord-specific integration data
-	const [discordAuthCode, setIsDiscordAuthCode] = useState<string>()
-
-	// Club logo
+	// Agreement logo
 	const [
 		openFileSelector,
 		{ filesContent: rawProfilePicture, loading: isLoadingImage }
@@ -307,18 +108,11 @@ export const ManageIdentityComponent: React.FC = () => {
 	}, [rawProfilePicture])
 
 	useEffect(() => {
-		if (id.hasFetchedIdentity) {
-			setDisplayName(id.identity.displayName ?? '')
-			setProfilePicture(id.identity.profilePic ?? '')
+		if (me?.id) {
+			setDisplayName(me.displayName ?? '')
+			setProfilePicture(me.profilePicUrl ?? '')
 		}
-	}, [id.hasFetchedIdentity, id.identity.displayName, id.identity.profilePic])
-
-	useEffect(() => {
-		if (availableIntegrations.length === 0 && inteData) {
-			const integrations = identityIntegrationFromApi(inteData)
-			setAvailableIntegrations(integrations)
-		}
-	}, [availableIntegrations.length, inteData])
+	}, [me])
 
 	const deleteImage = () => {
 		setProfilePicture('')
@@ -327,10 +121,6 @@ export const ManageIdentityComponent: React.FC = () => {
 	// Modal visibility
 	const [isLinkedAccountModalOpen, setIsLinkedAccountModalOpen] =
 		useState(false)
-
-	const [isDiscordModalOpen, setIsDiscordModalOpen] = useState(false)
-	const [isTwitterModalOpen, setIsTwitterModalOpen] = useState(false)
-	const [isEmailModalOpen, setIsEmailModalOpen] = useState(false)
 
 	const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 	const openEmojiPicker = () => {
@@ -364,18 +154,24 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	useEffect(() => {
-		if (router.query.code && availableIntegrations.length > 0) {
-			// We have a discord auth code - create or update integration
-			availableIntegrations.forEach(inte => {
-				if (inte.name === 'Discord') {
-					setIntegrationCurrentlyEditing(inte)
-					setIsDiscordAuthCode(router.query.code as string)
-					setIsDiscordModalOpen(true)
-				}
-			})
-		}
-	}, [availableIntegrations])
+	// useEffect(() => {
+	// 	if (
+	// 		router.query.code &&
+	// 		availableExtensions.length > 0 &&
+	// 		!Cookies.get('authForDiscordRole')
+	// 	) {
+	// 		// We have a discord auth code
+
+	// 		// create or update extension
+	// 		// availableExtensions.forEach(inte => {
+	// 		// 	if (inte.name === 'Discord') {
+	// 		// 		setExtensionCurrentlyEditing(inte)
+	// 		// 		setIsDiscordAuthCode(router.query.code as string)
+	// 		// 		setIsDiscordModalOpen(true)
+	// 		// 	}
+	// 		// })
+	// 	}
+	// }, [availableExtensions])
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -384,21 +180,21 @@ export const ManageIdentityComponent: React.FC = () => {
 
 		// Save the change to the db
 		try {
-			const body = {
+			// log.debug(`saving changes with body = ${JSON.stringify(body)}`)
+
+			await sdk.id.updateUser({
 				displayName,
 				profilePicBase64
-			}
+			})
 
-			log.debug(`saving changes with body = ${JSON.stringify(body)}`)
-
-			await request
-				.post(
-					`${
-						process.env.NEXT_PUBLIC_API_URL
-					}${MeemAPI.v1.CreateOrUpdateMeemId.path()}`
-				)
-				.set('Authorization', `JWT ${wallet.jwt}`)
-				.send(body)
+			// await request
+			// 	.post(
+			// 		`${
+			// 			process.env.NEXT_PUBLIC_API_URL
+			// 		}${MeemAPI.v1.CreateOrUpdateMeemId.path()}`
+			// 	)
+			// 	.set('Authorization', `JWT ${wallet.jwt}`)
+			// 	.send(body)
 			setIsSavingChanges(false)
 		} catch (e) {
 			log.debug(e)
@@ -413,47 +209,30 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	const openIntegrationModal = (
-		integration: AvailableIdentityIntegration
-	) => {
-		setIntegrationCurrentlyEditing(integration)
-		if (integration.name) {
-			switch (integration.name) {
-				case 'Twitter':
-					setIsTwitterModalOpen(true)
-					break
-				case 'Discord':
-					// Discord is a special case due to OAuth
-					// eslint-disable-next-line no-case-declarations
-					const redirectUri = encodeURI(
-						`${window.location.origin}/profile`
-					)
+	const filteredAvilableExtensions =
+		inteData?.IdentityProviders.filter(ai => {
+			const connectedExtension = me?.UserIdentities?.find(
+				i => i.IdentityProviderId === ai.id
+			)
 
-					window.location.replace(
-						`https://discord.com/api/oauth2/authorize?response_type=code&client_id=967119580088660039&scope=identify&redirect_uri=${redirectUri}`
-					)
-					break
-				case 'Email':
-					setIsEmailModalOpen(true)
-					break
+			if (connectedExtension) {
+				return false
 			}
-		}
-	}
+
+			return true
+		}) ?? []
 
 	return (
 		<>
 			<Space h={12} />
-			<Text className={classes.profileHeaderText}>
-				Manage Identity
-			</Text>{' '}
-			<Text className={classes.identitySectionTitle}>
-				Profile Picture
-			</Text>
+			<Text className={meemTheme.tLargeBold}>Manage Identity</Text>
+			<Space h={32} />
+			<Text className={meemTheme.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
-				<div className={classes.uploadOptions}>
+				<div className={meemTheme.row}>
 					<Button
 						leftIcon={<Upload size={14} />}
-						className={classes.buttonUpload}
+						className={meemTheme.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
 						Upload
@@ -461,18 +240,25 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space w={'xs'} />
 					<Button
 						leftIcon={<Text>😈</Text>}
-						className={classes.buttonUpload}
+						className={meemTheme.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
 						Choose emoji
 					</Button>
 				</div>
 			)}
-			{isLoadingImage && <Loader color="red" variant="oval" />}
+			{isLoadingImage && <Loader color="blue" variant="oval" />}
 			{!isLoadingImage && profilePicture.length > 0 && (
-				<div className={classes.profilePictureImageContainer}>
+				<div
+					style={{
+						marginTop: 24,
+						width: 108,
+						height: 100,
+						position: 'relative'
+					}}
+				>
 					<Image
-						className={classes.profilePictureImage}
+						style={{ imageRendering: 'pixelated' }}
 						src={profilePicture}
 						width={200}
 						height={200}
@@ -481,7 +267,12 @@ export const ManageIdentityComponent: React.FC = () => {
 					/>
 					<a onClick={deleteImage}>
 						<Image
-							className={classes.profilePictureDeleteButton}
+							style={{
+								position: 'absolute',
+								top: '0px',
+								right: '-100px',
+								cursor: 'pointer'
+							}}
 							src="/delete.png"
 							width={24}
 							height={24}
@@ -490,23 +281,25 @@ export const ManageIdentityComponent: React.FC = () => {
 				</div>
 			)}
 			<Space h={profilePicture.length > 0 ? 148 : 32} />
-			<Text className={classes.identitySectionTitle}>Display Name</Text>
+			<Text className={meemTheme.tMediumBold}>Display Name</Text>
+			<Space h={16} />
 			<TextInput
 				radius="lg"
 				size="lg"
-				className={classes.textField}
+				style={{ maxWidth: 800 }}
 				value={displayName}
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
 			{/* Only show verified accounts section if the user has an existing identity */}
-			{!id.identity && (
+			{me?.id && (
 				<>
 					<Space h={48} />
 					<Divider />
 					<Space h={'xl'} />
-					<Text className={classes.identitySectionTitle}>
+					<Text className={meemTheme.tMediumBold}>
 						Verify Accounts
 					</Text>
+					<Space h={16} />
 
 					<Text>
 						Choose a Display Name or Profile Picture and save
@@ -515,143 +308,126 @@ export const ManageIdentityComponent: React.FC = () => {
 					</Text>
 				</>
 			)}
-			{id.identity.id && (
+			{me?.id && (
 				<>
 					<Space h={48} />
 					<Divider />
 					<Space h={'xl'} />
-					{id.identity.integrations &&
-						id.identity.integrations.length > 0 && (
-							<>
-								<div className={classes.row}>
-									<Image
-										src="/icon-verified.png"
-										width={18}
-										height={18}
-									/>
-									<Space w={8} />
-
-									<Text
-										className={classes.verifiedSectionTitle}
-									>
-										Verified
-									</Text>
-								</div>
-								<Space h={16} />
-								<Grid>
-									{id.identity.integrations.map(
-										integration => (
-											<Grid.Col
-												xs={6}
-												sm={4}
-												md={4}
-												lg={4}
-												xl={4}
-												key={integration.name}
-											>
-												<a
-													onClick={() => {
-														setIntegrationCurrentlyEditing(
-															integration
-														)
-														setIsLinkedAccountModalOpen(
-															true
-														)
-													}}
-												>
-													<div
-														className={
-															classes.profileIntegrationItem
-														}
-													>
-														<div
-															className={
-																classes.intItemHeader
-															}
-														>
-															<Image
-																src={`${integration.icon}`}
-																width={16}
-																height={16}
-																fit={'contain'}
-															/>
-															<Space w={8} />
-															{integration
-																.metadata
-																.twitterUsername && (
-																<Text>
-																	{`@${integration.metadata.twitterUsername}`}
-																</Text>
-															)}
-															{integration
-																.metadata
-																.discordUsername && (
-																<Text>
-																	{`${integration.metadata.discordUsername}`}
-																</Text>
-															)}
-															{integration
-																.metadata
-																.email && (
-																<Text>
-																	{`${integration.metadata.email}`}
-																</Text>
-															)}
-														</div>
-													</div>
-												</a>
-											</Grid.Col>
-										)
-									)}
-								</Grid>
-								<Space h={'xl'} />
-							</>
-						)}
-
-					<Text className={classes.identitySectionTitle}>
-						Verify Accounts
-					</Text>
-					{availableIntegrations.length === 0 && (
-						<Loader variant="oval" color="red" />
-					)}
-					{availableIntegrations.length > 0 && (
+					{me?.UserIdentities && me.UserIdentities.length > 0 && (
 						<>
-							<Grid>
-								{availableIntegrations.map(integration => (
+							<div className={meemTheme.centeredRow}>
+								<Image
+									src="/icon-verified.png"
+									width={18}
+									height={18}
+								/>
+								<Space w={8} />
+
+								<Text
+									style={{
+										color: colorVerified
+									}}
+									className={meemTheme.tMediumBold}
+								>
+									Verified
+								</Text>
+							</div>
+							<Space h={16} />
+							<Grid style={{ maxWidth: 800 }}>
+								{me.UserIdentities.map(userIdentity => (
 									<Grid.Col
 										xs={6}
 										sm={4}
 										md={4}
 										lg={4}
 										xl={4}
-										key={integration.name}
+										key={`verified-extension-${userIdentity.IdentityProvider?.name}`}
 									>
 										<a
 											onClick={() => {
-												openIntegrationModal(
-													integration
+												setUserIdentityCurrentlyEditing(
+													userIdentity
+												)
+												setIsLinkedAccountModalOpen(
+													true
 												)
 											}}
 										>
-											<div
-												className={
-													classes.profileIntegrationItem
-												}
-											>
+											<div className={meemTheme.gridItem}>
 												<div
 													className={
-														classes.intItemHeader
+														meemTheme.extensionGridItemHeader
 													}
 												>
 													<Image
-														src={`${integration.icon}`}
+														src={`${userIdentity.IdentityProvider?.icon}`}
 														width={16}
 														height={16}
 														fit={'contain'}
 													/>
 													<Space w={8} />
 													<Text>
-														{integration.name}
+														{userIdentity?.metadata
+															.username
+															? `@${userIdentity?.metadata.username}`
+															: userIdentity
+																	.IdentityProvider
+																	?.name}
+													</Text>
+												</div>
+											</div>
+										</a>
+									</Grid.Col>
+								))}
+							</Grid>
+							<Space h={'xl'} />
+						</>
+					)}
+
+					<Text className={meemTheme.tMediumBold}>
+						Verify Accounts
+					</Text>
+					<Space h={16} />
+					{isLoadingAvailableExtensions && (
+						<Loader variant="oval" color="blue" />
+					)}
+					{filteredAvilableExtensions.length > 0 && (
+						<>
+							<Grid style={{ maxWidth: 800 }}>
+								{filteredAvilableExtensions.map(extension => (
+									<Grid.Col
+										xs={6}
+										sm={4}
+										md={4}
+										lg={4}
+										xl={4}
+										key={extension.name}
+									>
+										<a
+											onClick={() => {
+												loginWithRedirect({
+													connection:
+														extension.connectionName,
+													redirectUri:
+														window.location.href
+												})
+											}}
+										>
+											<div className={meemTheme.gridItem}>
+												<div
+													className={
+														meemTheme.extensionGridItemHeader
+													}
+												>
+													<Image
+														src={`${extension.icon}`}
+														width={16}
+														height={16}
+														fit={'contain'}
+													/>
+													<Space w={8} />
+													<Text>
+														{extension.name}
 													</Text>
 												</div>
 											</div>
@@ -665,22 +441,22 @@ export const ManageIdentityComponent: React.FC = () => {
 			)}
 			<Space h={'xl'} />
 			<Button
-				className={classes.buttonSaveChanges}
+				className={meemTheme.buttonBlack}
 				loading={isSavingChanges}
 				onClick={saveChanges}
 			>
 				Save Changes
 			</Button>
 			<Space h={'xl'} />
-			<ProfileLinkTwitterModal
-				integration={integrationCurrentlyEditing}
+			{/* <ProfileLinkTwitterModal
+				extension={extensionCurrentlyEditing}
 				isOpened={isTwitterModalOpen}
 				onModalClosed={() => {
 					setIsTwitterModalOpen(false)
 				}}
 			/>
 			<ProfileLinkEmailModal
-				integrationId={integrationCurrentlyEditing?.id}
+				extensionId={extensionCurrentlyEditing?.id}
 				identity={id.identity}
 				isOpened={isEmailModalOpen}
 				onModalClosed={() => {
@@ -688,24 +464,24 @@ export const ManageIdentityComponent: React.FC = () => {
 				}}
 			/>
 			<ProfileLinkDiscordModal
-				integrationId={integrationCurrentlyEditing?.id}
+				extensionId={extensionCurrentlyEditing?.id}
 				discordAuthCode={discordAuthCode}
 				isOpened={isDiscordModalOpen}
 				onModalClosed={() => {
 					setIsDiscordModalOpen(false)
 				}}
-			/>
+			/> */}
 			<ManageLinkedAccountModal
-				integration={integrationCurrentlyEditing}
+				userIdentity={userIdentityCurrentlyEditing}
 				isOpened={isLinkedAccountModalOpen}
 				onModalClosed={() => {
 					setIsLinkedAccountModalOpen(false)
 				}}
 			/>
-			<div id="emojiCanvas" className={classes.emojiCanvas}>
+			<div id="emojiCanvas" className={meemTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
-			<div className={classes.emojiCanvasCover} />
+			<div className={meemTheme.emojiCanvasCover} />
 			<Modal
 				withCloseButton={false}
 				padding={8}

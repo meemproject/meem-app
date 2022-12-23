@@ -1,10 +1,11 @@
 import log from '@kengoldfarb/log'
-import { ERC20 } from '@meemproject/api/build/abis/ERC20'
-import erc20ABI from '@meemproject/api/build/abis/ERC20.json'
 import {
 	getERC165Contract,
 	getERC721Contract
 } from '@meemproject/meem-contracts'
+import type { IAuthContextState } from '@meemproject/react'
+import { ERC20 } from '@meemproject/sdk/build/abis/ERC20'
+import erc20ABI from '@meemproject/sdk/build/abis/ERC20.json'
 import { BigNumber, ethers } from 'ethers'
 
 // Convenience class for tokens and NFTs
@@ -24,7 +25,7 @@ export interface Token {
 
 export async function tokenFromContractAddress(
 	contractAddress: string,
-	wallet: any
+	wallet: IAuthContextState
 ): Promise<Token | undefined> {
 	if (
 		!wallet.web3Provider ||
@@ -40,11 +41,33 @@ export async function tokenFromContractAddress(
 		signer: wallet.signer
 	})
 
+	let baseUrl = ''
+
+	switch (wallet.chainId) {
+		case 5:
+			baseUrl = 'https://goerli.etherscan.io/address/'
+			break
+
+		case 80001:
+			baseUrl = 'https://mumbai.polygonscan.io/address/'
+			break
+
+		case 420:
+			baseUrl = 'https://goerli-optimism.etherscan.io/'
+			break
+
+		case 421613:
+			baseUrl = 'https://goerli.arbiscan.io/address/'
+			break
+
+		case 137:
+		default:
+			baseUrl = 'https://polygonscan.io/address/'
+			break
+	}
+
 	// URL
-	const tokenUrl =
-		process.env.NEXT_PUBLIC_CHAIN_ID === '4'
-			? `https://rinkeby.etherscan.io/address/${contractAddress}`
-			: `https://polygonscan.io/address/${contractAddress}`
+	const tokenUrl = `${baseUrl}${contractAddress}`
 
 	log.debug('set tokenurl')
 
@@ -79,7 +102,7 @@ export async function tokenFromContractAddress(
 			contractAddress,
 			erc20ABI,
 			wallet.web3Provider
-		) as ERC20
+		) as unknown as ERC20
 		symbol = await contractToCheck.symbol()
 		log.debug('get symbol')
 		name = await contractToCheck.name()

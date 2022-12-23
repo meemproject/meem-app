@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import {
-	createStyles,
 	Container,
 	Text,
 	Image,
@@ -17,189 +16,74 @@ import html2canvas from 'html2canvas'
 import Cookies from 'js-cookie'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
-import ClubClubContext from '../Detail/ClubClubProvider'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
 })
 
-const useStyles = createStyles(theme => ({
-	header: {
-		backgroundColor: 'rgba(160, 160, 160, 0.05)',
-		marginBottom: 60,
-		display: 'flex',
-		alignItems: 'end',
-		flexDirection: 'row',
-		paddingTop: 24,
-		paddingBottom: 24,
-		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 12,
-			paddingBottom: 12,
-			paddingLeft: 16
-		}
-	},
-	headerArrow: {
-		marginRight: 32,
-		cursor: 'pointer',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginRight: 16
-		}
-	},
-	headerPrompt: {
-		fontSize: 16,
-		fontWeight: 500,
-		color: 'rgba(0, 0, 0, 0.6)',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginBottom: 0
-		}
-	},
-	headerClubName: {
-		fontWeight: 600,
-		fontSize: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			fontSize: 20
-		}
-	},
-	namespaceTextInputContainer: {
-		position: 'relative'
-	},
-	namespaceTextInput: {
-		paddingLeft: 154,
-		paddingBottom: 3
-	},
-	namespaceTextInputUrlPrefix: {
-		position: 'absolute',
-		top: 8,
-		left: 24,
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	clubNamespaceHint: {
-		paddingLeft: 0,
-		paddingBottom: 16,
-		color: 'rgba(0, 0, 0, 0.5)'
-	},
-	clubDescriptionPrompt: { fontSize: 18, marginBottom: 0, fontWeight: 600 },
-	clubLogoPrompt: {
-		marginTop: 32,
-		fontSize: 18,
-		marginBottom: 8,
-		fontWeight: 600
-	},
-	clubLogoInfo: {
-		fontWeight: 500,
-		fontSize: 14,
-		maxWidth: 650,
-		color: 'rgba(45, 28, 28, 0.6)',
-		marginBottom: 16
-	},
-	buttonUpload: {
-		borderRadius: 24,
-		color: 'black',
-		borderColor: 'black',
-		backgroundColor: 'white',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[0]
-		}
-	},
-	buttonCreate: {
-		marginTop: 32,
-		marginBottom: 48,
-
-		backgroundColor: 'black',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated'
-	},
-	clubLogoImageContainer: {
-		marginTop: 32,
-		width: 108,
-		position: 'relative'
-	},
-	clubLogoDeleteButton: {
-		position: 'absolute',
-		top: '-12px',
-		right: '-105px',
-		cursor: 'pointer'
-	},
-	uploadOptions: { display: 'flex' },
-	emojiCanvas: {
-		position: 'absolute',
-		top: 40,
-		left: 0,
-		marginTop: -12,
-		marginBottom: -12,
-		lineHeight: 1,
-		fontSize: 24,
-		zIndex: -1000
-	}
-}))
-
 export const CreateComponent: React.FC = () => {
 	const router = useRouter()
-	const { classes } = useStyles()
+	const { classes: meemTheme } = useMeemTheme()
 
-	const clubclub = useContext(ClubClubContext)
-
-	const [clubName, setClubName] = useState(
-		router.query.clubname?.toString() ?? ''
+	const [agreementName, setAgreementName] = useState(
+		router.query.agreementname?.toString() ?? ''
 	)
 	const [defaultNamespace, setDefaultNamespace] = useState('')
-	const [clubNamespace, setClubNamespace] = useState('')
+	const [agreementNamespace, setAgreementNamespace] = useState('')
 
-	const [clubDescription, setClubDescription] = useState('')
+	const [agreementDescription, setAgreementDescription] = useState('')
 
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
 	const { web3Provider, accounts, isConnected, connectWallet } = useWallet()
 
 	useEffect(() => {
-		if (clubName === undefined || clubName.length === 0) {
-			const cookieName = Cookies.get(CookieKeys.clubName)
+		if (agreementName === undefined || agreementName.length === 0) {
+			const cookieName = Cookies.get(CookieKeys.agreementName)
 
 			if (cookieName === undefined) {
 				showNotification({
 					radius: 'lg',
-					title: 'Unable to create this club.',
+					title: 'Unable to create this community.',
 					message: `Some data is missing. Try again!`,
 					autoClose: 5000
 				})
 				router.push({ pathname: '/' })
 			} else {
-				setClubName(cookieName)
+				setAgreementName(cookieName)
 				const name = cookieName.replaceAll(' ', '-').toLowerCase()
 				setDefaultNamespace(name)
-				setClubNamespace(name)
-				Cookies.remove(CookieKeys.clubName)
+				setAgreementNamespace(name)
+				Cookies.remove(CookieKeys.agreementName)
 			}
 		}
-	}, [accounts.length, clubName, router])
+	}, [accounts.length, agreementName, router])
 
 	useEffect(() => {
 		if (
-			clubNamespace.length === 0 &&
+			agreementNamespace.length === 0 &&
 			defaultNamespace.length === 0 &&
-			clubName !== undefined
+			agreementName !== undefined
 		) {
-			const name = clubName.toString().replaceAll(' ', '-').toLowerCase()
+			const name = agreementName
+				.toString()
+				.replaceAll(' ', '-')
+				.toLowerCase()
 			setDefaultNamespace(name)
-			setClubNamespace(name)
+			setAgreementNamespace(name)
 		}
-	}, [clubName, clubNamespace.length, defaultNamespace.length])
+	}, [agreementName, agreementNamespace.length, defaultNamespace.length])
 
-	// Club logo
-	const [smallClubLogo, setSmallClubLogo] = useState('')
+	// Agreement logo
+	const [smallAgreementLogo, setSmallAgreementLogo] = useState('')
 	const [
 		openFileSelector,
-		{ filesContent: clubLogo, loading: isLoadingImage }
+		{ filesContent: agreementLogo, loading: isLoadingImage }
 	] = useFilePicker({
 		readAs: 'DataURL',
 		accept: 'image/*',
@@ -244,12 +128,12 @@ export const CreateComponent: React.FC = () => {
 
 			const canvas = await html2canvas(element as HTMLElement)
 			const image = canvas.toDataURL('image/png', 1.0)
-			const clubLogoBlob = base64StringToBlob(
+			const agreementLogoBlob = base64StringToBlob(
 				image.split(',')[1],
 				'image/png'
 			)
-			const file = await resizeFile(clubLogoBlob)
-			setSmallClubLogo(file as string)
+			const file = await resizeFile(agreementLogoBlob)
+			setSmallAgreementLogo(file as string)
 		} else {
 			log.debug('no emojiCanvas found')
 		}
@@ -261,98 +145,104 @@ export const CreateComponent: React.FC = () => {
 
 	useEffect(() => {
 		const createResizedFile = async () => {
-			const clubLogoBlob = base64StringToBlob(
-				clubLogo[0].content.split(',')[1],
+			const agreementLogoBlob = base64StringToBlob(
+				agreementLogo[0].content.split(',')[1],
 				'image/png'
 			)
-			const file = await resizeFile(clubLogoBlob)
-			setSmallClubLogo(file as string)
+			const file = await resizeFile(agreementLogoBlob)
+			setSmallAgreementLogo(file as string)
 		}
-		if (clubLogo.length > 0) {
+		if (agreementLogo.length > 0) {
 			log.debug('Found an image...')
-			log.debug(clubLogo[0].content)
+			log.debug(agreementLogo[0].content)
 
 			createResizedFile()
 		} else {
-			// log.debug('no current club image')
+			// log.debug('no current agreement image')
 		}
-	}, [clubLogo, clubclub.isMember, router])
+	}, [agreementLogo, router])
 
 	const deleteImage = () => {
-		setSmallClubLogo('')
+		setSmallAgreementLogo('')
 	}
 
-	const createClub = async () => {
+	const createAgreement = async () => {
 		if (!web3Provider || !isConnected) {
 			await connectWallet()
-			router.reload()
 			return
 		}
 
 		// Some basic validation
-		if (!clubName || clubName.length < 3 || clubName.length > 30) {
-			// Club name invalid
+		if (
+			!agreementName ||
+			agreementName.length < 3 ||
+			agreementName.length > 30
+		) {
+			// Agreement name invalid
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'You entered an invalid club name. Please choose a longer or shorter name.'
+					'You entered an invalid community name. Please choose a longer or shorter name.'
 			})
 			return
 		}
 
-		if (clubDescription.length < 3 || clubDescription.length > 140) {
-			// Club name invalid
+		if (
+			agreementDescription.length < 3 ||
+			agreementDescription.length > 140
+		) {
+			// Agreement name invalid
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
 				message:
-					'You entered an invalid club description. Please choose a longer or shorter description.'
+					'You entered an invalid community description. Please choose a longer or shorter description.'
 			})
 			return
 		}
 
-		if (smallClubLogo.length === 0) {
+		if (smallAgreementLogo.length === 0) {
 			showNotification({
 				radius: 'lg',
 				title: 'Oops!',
-				message: 'Please provide a club logo.'
+				message: 'Please provide a community logo.'
 			})
 		}
 
-		if (!clubclub.isMember) {
-			showNotification({
-				radius: 'lg',
-				title: 'No Club Club membership found.',
-				message: `Join Club Club to continue.`
-			})
-			router.push({ pathname: '/' })
-			return
-		}
-		Cookies.set(CookieKeys.clubName, clubName ?? '')
-		Cookies.set(CookieKeys.clubImage, smallClubLogo)
-		Cookies.set(CookieKeys.clubDescription, clubDescription)
-		Cookies.set(CookieKeys.clubSlug, clubNamespace)
+		Cookies.set(CookieKeys.agreementName, agreementName ?? '')
+		Cookies.set(CookieKeys.agreementImage, smallAgreementLogo)
+		Cookies.set(CookieKeys.agreementDescription, agreementDescription)
+		Cookies.set(CookieKeys.agreementSlug, agreementNamespace)
 		router.push({ pathname: `/create/permissions` })
 	}
 
 	return (
 		<>
-			<div className={classes.header}>
-				<a onClick={navigateHome}>
-					<ArrowLeft className={classes.headerArrow} size={32} />
-				</a>
-				<div>
-					<Text className={classes.headerPrompt}>Create a club</Text>
-					<Text className={classes.headerClubName}>{clubName}</Text>
+			<div className={meemTheme.pageHeader}>
+				<div className={meemTheme.centeredRow}>
+					<a onClick={navigateHome}>
+						<ArrowLeft
+							className={meemTheme.pageHeaderExitButton}
+							size={32}
+						/>
+					</a>
+					<div>
+						<Text className={meemTheme.tSmallBoldFaded}>
+							Create a community
+						</Text>
+						<Text className={meemTheme.tLargeBold}>
+							{agreementName}
+						</Text>
+					</div>
 				</div>
 			</div>
 
 			<Container>
-				{/* <Text className={classes.clubDescriptionPrompt}>
-					{`Set your club's URL.`}
+				{/* <Text className={meemTheme.tMediumBold}>
+					{`Set your agreement's URL.`}
 				</Text>
-				<Text size="sm" className={classes.clubNamespaceHint}>
+				<Text size="sm" className={classes.agreementNamespaceHint}>
 					{'Lowercase letters, numbers and dashes are allowed.'}
 				</Text>
 				<div className={classes.namespaceTextInputContainer}>
@@ -360,23 +250,24 @@ export const CreateComponent: React.FC = () => {
 						classNames={{ input: classes.namespaceTextInput }}
 						radius="lg"
 						size="md"
-						value={clubNamespace ?? ''}
+						value={agreementNamespace ?? ''}
 						onChange={event => {
-							setClubNamespace(
+							setAgreementNamespace(
 								event.target.value.replaceAll(' ', '').toLowerCase()
 							)
 						}}
 					/>
 					<Text
 						className={classes.namespaceTextInputUrlPrefix}
-					>{`https://clubs.link/`}</Text>
+					>{`https://app.meem.wtf/`}</Text>
 				</div>
 
 				<Space h={'md'} /> */}
-				<Text className={classes.clubDescriptionPrompt}>
+				<Space h={32} />
+				<Text className={meemTheme.tMediumBold}>
 					In a sentence, describe what your members do together.
 				</Text>
-				<Space h={8} />
+				<Space h={16} />
 
 				<Textarea
 					radius="lg"
@@ -386,23 +277,30 @@ export const CreateComponent: React.FC = () => {
 					maxRows={4}
 					maxLength={140}
 					onChange={event =>
-						setClubDescription(event.currentTarget.value)
+						setAgreementDescription(event.currentTarget.value)
 					}
 				/>
 
-				<Text className={classes.clubLogoPrompt}>
-					Upload an icon for your club.
+				<Space h={40} />
+				<Text className={meemTheme.tMediumBold}>
+					Upload an icon to represent your community.
 				</Text>
-				<Text className={classes.clubLogoInfo}>
-					This will be your club’s membership token. You can change it
-					anytime. Icons should be square and either JPG or PNG files.
-					Note that all uploads will be rendered at 24x24 px.
+				<Space h={8} />
+				<Text
+					className={meemTheme.tExtraSmallFaded}
+					style={{ maxWidth: 650 }}
+				>
+					This will be your community’s membership token. You can
+					change it anytime. Icons should be square and either JPG or
+					PNG files. Note that all uploads will be rendered at 24x24
+					px.
 				</Text>
-				{smallClubLogo.length === 0 && !isLoadingImage && (
-					<div className={classes.uploadOptions}>
+				<Space h={16} />
+				{smallAgreementLogo.length === 0 && !isLoadingImage && (
+					<div className={meemTheme.row}>
 						<Button
 							leftIcon={<Upload size={14} />}
-							className={classes.buttonUpload}
+							className={meemTheme.buttonWhite}
 							onClick={() => openFileSelector()}
 						>
 							Upload
@@ -410,26 +308,28 @@ export const CreateComponent: React.FC = () => {
 						<Space w={'xs'} />
 						<Button
 							leftIcon={<Text>😈</Text>}
-							className={classes.buttonUpload}
+							className={meemTheme.buttonWhite}
 							onClick={() => openEmojiPicker()}
 						>
 							Choose emoji
 						</Button>
 					</div>
 				)}
-				{isLoadingImage && <Loader color="red" variant="oval" />}
-				{!isLoadingImage && smallClubLogo.length > 0 && (
-					<div className={classes.clubLogoImageContainer}>
+				{isLoadingImage && <Loader color="blue" variant="oval" />}
+				{!isLoadingImage && smallAgreementLogo.length > 0 && (
+					<div className={meemTheme.imageAgreementLogoContainer}>
 						<Image
-							className={classes.clubLogoImage}
-							src={smallClubLogo}
+							className={meemTheme.imageAgreementLogo}
+							src={smallAgreementLogo}
 							width={200}
 							height={200}
 							fit={'cover'}
 						/>
 						<a onClick={deleteImage}>
 							<Image
-								className={classes.clubLogoDeleteButton}
+								className={
+									meemTheme.imageAgreementLogoDeleteButton
+								}
 								src="delete.png"
 								width={24}
 								height={24}
@@ -437,20 +337,22 @@ export const CreateComponent: React.FC = () => {
 						</a>
 					</div>
 				)}
+				<Space h={smallAgreementLogo.length > 0 ? 148 : 40} />
 				<Button
 					onClick={() => {
-						createClub()
+						createAgreement()
 					}}
 					disabled={
-						clubDescription.length === 0 ||
-						smallClubLogo.length === 0
+						agreementDescription.length === 0 ||
+						smallAgreementLogo.length === 0
 					}
-					className={classes.buttonCreate}
+					className={meemTheme.buttonBlack}
 				>
 					Continue
 				</Button>
+				<Space h={64} />
 			</Container>
-			<div id="emojiCanvas" className={classes.emojiCanvas}>
+			<div id="emojiCanvas" className={meemTheme.emojiCanvas}>
 				{chosenEmoji && <>{chosenEmoji.emoji}</>}
 			</div>
 

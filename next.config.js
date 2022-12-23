@@ -69,6 +69,9 @@ const config = {
       config.resolve.alias['react'] = path.resolve(__dirname, '.', 'node_modules', 'react');
       config.resolve.alias['react-dom'] = path.resolve(__dirname, '.', 'node_modules', 'react-dom');
       config.resolve.alias['luxon'] = path.resolve(__dirname, '.', 'node_modules', 'luxon');
+      config.resolve.alias['@meemproject/react'] = path.resolve(__dirname, '.', 'node_modules', '@meemproject/react');
+      config.resolve.alias['@meemproject/sdk'] = path.resolve(__dirname, '.', 'node_modules', '@meemproject/sdk');
+      config.resolve.alias['@auth0/auth0-react'] = path.resolve(__dirname, '.', 'node_modules', '@auth0/auth0-react');
     }
 
     // When all the Sentry configuration env variables are available/configured

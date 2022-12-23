@@ -1,66 +1,23 @@
-import {
-	ApolloClient,
-	InMemoryCache,
-	ApolloProvider,
-	HttpLink,
-	split
-} from '@apollo/client'
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
-import { getMainDefinition } from '@apollo/client/utilities'
 import log, { LogLevel } from '@kengoldfarb/log'
-import { MantineProvider } from '@mantine/core'
+import {
+	// eslint-disable-next-line import/named
+	ColorScheme,
+	ColorSchemeProvider,
+	MantineProvider
+} from '@mantine/core'
+import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
-import { WalletProvider, SocketProvider } from '@meemproject/react'
-import { createClient } from 'graphql-ws'
+import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { App } from '../components/App'
-import { ClubClubProvider } from '../components/Detail/ClubClubProvider'
 import '@fontsource/inter'
-import { IdentityProvider } from '../components/Profile/IdentityProvider'
+// import { CustomApolloProvider } from '../providers/ApolloProvider'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
 
-	const httpLink = new HttpLink({
-		uri: process.env.NEXT_PUBLIC_GRAPHQL_API_URL
-	})
-
-	const wsLink =
-		typeof window !== 'undefined'
-			? new GraphQLWsLink(
-					createClient({
-						url: process.env.NEXT_PUBLIC_GRAPHQL_API_WS_URL ?? ''
-					})
-			  )
-			: null
-
-	// The split function takes three parameters:
-	//
-	// * A function that's called for each operation to execute
-	// * The Link to use for an operation if the function returns a "truthy" value
-	// * The Link to use for an operation if the function returns a "falsy" value
-	const splitLink =
-		typeof window !== 'undefined' && wsLink != null
-			? split(
-					({ query }) => {
-						const definition = getMainDefinition(query)
-						return (
-							definition.kind === 'OperationDefinition' &&
-							definition.operation === 'subscription'
-						)
-					},
-					wsLink,
-					httpLink
-			  )
-			: httpLink
-
-	const client = new ApolloClient({
-		link: splitLink,
-		cache: new InMemoryCache()
-	})
-
-	React.useEffect(() => {
+	useEffect(() => {
 		const jssStyles = document.querySelector('#jss-server-side')
 		if (jssStyles) {
 			jssStyles.parentElement?.removeChild(jssStyles)
@@ -83,53 +40,60 @@ function MyApp(props: AppProps) {
 		rpcs['137'] = [process.env.NEXT_PUBLIC_MATIC_RPC_URL]
 	}
 
+	const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+		key: 'mantine-color-scheme',
+		defaultValue: 'light',
+		getInitialValueInEffect: true
+	})
+	const toggleColorScheme = (value?: ColorScheme) =>
+		setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
+
 	return (
-		<MantineProvider
-			withGlobalStyles
-			withNormalizeCSS
-			theme={{
-				fontFamily: 'Inter, sans-serif',
-				spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
-				breakpoints: {
-					xs: 500,
-					sm: 800,
-					md: 1000,
-					lg: 1200,
-					xl: 1400
-				},
-				colors: {
-					brand: [
-						'#FAF3F2',
-						'#F0D3D0',
-						'#ECB2AA',
-						'#F18E81',
-						'#FF6651',
-						'#EA5844',
-						'#D44E3C',
-						'#B94B3C',
-						'#9B4C41',
-						'#844B43'
-					]
-				},
-				primaryColor: 'brand'
-			}}
+		<ColorSchemeProvider
+			colorScheme={colorScheme}
+			toggleColorScheme={toggleColorScheme}
 		>
-			<SocketProvider wsUrl={process.env.NEXT_PUBLIC_WS_URL ?? ''}>
-				<ApolloProvider client={client}>
-					<WalletProvider rpcs={rpcs}>
-						<NotificationsProvider>
-							<ClubClubProvider>
-								<IdentityProvider>
-									<App>
-										<Component {...pageProps} />
-									</App>
-								</IdentityProvider>
-							</ClubClubProvider>
-						</NotificationsProvider>
-					</WalletProvider>
-				</ApolloProvider>
-			</SocketProvider>
-		</MantineProvider>
+			<MantineProvider
+				withGlobalStyles
+				withNormalizeCSS
+				theme={{
+					fontFamily: 'Inter, sans-serif',
+					spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
+					lineHeight: 1,
+					breakpoints: {
+						xs: 500,
+						sm: 800,
+						md: 1000,
+						lg: 1200,
+						xl: 1400
+					},
+					colors: {
+						brand: [
+							'#F0F2FA',
+							'#CBD3F2',
+							'#A2B2F3',
+							'#748FFC',
+							'#617CEA',
+							'#546ED6',
+							'#4B62C1',
+							'#495CA8',
+							'#4B588F',
+							'#49537A'
+						]
+					},
+					colorScheme,
+					primaryColor: 'brand'
+				}}
+			>
+				<MeemProvider>
+					<NotificationsProvider>
+						<App>
+							<Component {...pageProps} />
+						</App>
+					</NotificationsProvider>
+				</MeemProvider>
+			</MantineProvider>
+		</ColorSchemeProvider>
 	)
 }
 export default MyApp

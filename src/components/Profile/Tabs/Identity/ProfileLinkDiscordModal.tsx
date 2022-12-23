@@ -1,114 +1,44 @@
 import log from '@kengoldfarb/log'
-import {
-	createStyles,
-	Text,
-	Space,
-	Modal,
-	Divider,
-	Loader
-} from '@mantine/core'
+import { Text, Space, Modal, Divider, Loader } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
-import { MeemAPI } from '@meemproject/api'
-import { useWallet } from '@meemproject/react'
+import { useSDK, useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect } from 'react'
-import request from 'superagent'
 import { AlertCircle, Check } from 'tabler-icons-react'
-
-const useStyles = createStyles(theme => ({
-	header: {
-		display: 'flex',
-		alignItems: 'start',
-		flexDirection: 'row',
-		paddingTop: 8,
-		paddingBottom: 8,
-		position: 'relative'
-	},
-	modalTitle: {
-		fontWeight: 600,
-		fontSize: 18
-	},
-	headerTitle: {
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		flexDirection: 'row'
-	},
-	headerClubName: {
-		fontSize: 16,
-		marginLeft: 16
-	},
-	clubLogoImage: {
-		imageRendering: 'pixelated',
-		width: 40,
-		height: 40,
-		minHeight: 40,
-		minWidth: 40
-	},
-	stepsContainer: {
-		border: '1px solid rgba(204, 204, 204, 1)',
-		borderRadius: 16,
-		padding: 16
-	},
-	buttonConfirm: {
-		paddingTop: 8,
-		paddingLeft: 16,
-		paddingBottom: 8,
-		paddingRight: 16,
-		color: 'white',
-		backgroundColor: 'black',
-		cursor: 'pointer',
-		'&:hover': {
-			backgroundColor: theme.colors.gray[8]
-		},
-		borderRadius: 24
-	},
-	stepDescription: {
-		fontSize: 14
-	},
-	currentTwitterVerification: {
-		fontWeight: 600
-	},
-	isVerifiedSection: {
-		paddingLeft: 8,
-		paddingRight: 8
-	}
-}))
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
-	integrationId?: string
+	extensionId?: string
 	discordAuthCode?: string
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const ProfileLinkDiscordModal: React.FC<IProps> = ({
-	integrationId,
+	extensionId,
 	discordAuthCode,
 	isOpened,
 	onModalClosed
 }) => {
-	const { classes } = useStyles()
+	const { classes: meemTheme } = useMeemTheme()
 	const wallet = useWallet()
+
+	const { sdk } = useSDK()
 
 	useEffect(() => {
 		async function authenticateWithDiscord() {
 			try {
-				await request
-					.post(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
-							integrationId: integrationId ?? ''
-						})}`
-					)
-					.set('Authorization', `JWT ${wallet.jwt}`)
-					.send({
-						visibility: 'mutual-club-members',
-						metadata: {
-							discordAuthCode,
-							redirectUri: `${window.location.origin}/profile`
-						}
-					})
+				await sdk.id.updateUserIdentity({
+					// TODO: Fix this
+					// @ts-ignore
+					identityIntegrationId: extensionId ?? '',
+					visibility: MeemAPI.IUserIdentityVisibility.TokenHolders,
+					metadata: {
+						discordAuthCode,
+						redirectUri: `${window.location.origin}/profile`
+					}
+				})
+
 				showNotification({
 					title: 'Success!',
 					autoClose: 5000,
@@ -122,7 +52,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				showNotification({
 					title: 'Verification failed',
 					autoClose: 5000,
-					color: 'red',
+					color: colorBlue,
 					icon: <AlertCircle />,
 					message: `Please try again or get in touch!`
 				})
@@ -131,10 +61,10 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 			}
 		}
 
-		if (isOpened && discordAuthCode && integrationId) {
+		if (isOpened && discordAuthCode && extensionId) {
 			authenticateWithDiscord()
 		}
-	}, [discordAuthCode, integrationId, isOpened, onModalClosed, wallet])
+	}, [discordAuthCode, extensionId, isOpened, onModalClosed, sdk.id, wallet])
 
 	return (
 		<>
@@ -148,7 +78,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				title={
-					<Text className={classes.modalTitle}>
+					<Text className={meemTheme.tMediumBold}>
 						Connect your Discord account
 					</Text>
 				}
@@ -161,12 +91,14 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 
 				<Space h={24} />
 
-				<div className={classes.stepsContainer}>
+				<div className={meemTheme.modalStepsContainer}>
 					<Space h={8} />
-					<Text>Saving Discord information to your profile...</Text>
+					<Text className={meemTheme.tMedium}>
+						Saving Discord information to your profile...
+					</Text>
 					<Space h={8} />
 
-					<Loader variant="oval" color="red" />
+					<Loader variant="oval" color="blue" />
 				</div>
 			</Modal>
 		</>
