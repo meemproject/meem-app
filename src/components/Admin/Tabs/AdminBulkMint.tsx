@@ -145,12 +145,12 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 				<Text className={meemTheme.tLargeBold}>Airdrops</Text>
 				<Space h={32} />
 
-				<Text className={meemTheme.tMediumBold}>
+				<Text className={meemTheme.tSmallBold}>
 					Invite others to your community by airdropping them a token.
 					They will automatically become a community member.
 				</Text>
 				<Space h={16} />
-				<Text className={meemTheme.tMediumFaded}>
+				<Text className={meemTheme.tSmallFaded}>
 					Add a line break between each address or ENS name.
 				</Text>
 				<Space h={24} />

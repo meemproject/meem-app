@@ -132,8 +132,8 @@ export const AgreementAdminComponent: React.FC = () => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
 							<Image
-								width={56}
-								height={56}
+								width={80}
+								height={80}
 								radius={8}
 								className={meemTheme.imageAgreementLogo}
 								src={agreement.image}

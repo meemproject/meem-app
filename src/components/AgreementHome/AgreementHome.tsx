@@ -98,13 +98,13 @@ export const AgreementDetailComponent: React.FC = () => {
 									</>
 								)}
 
+								<AgreementBlankSlateWidget
+									agreement={agreement}
+								/>
 								<AgreementExtensionLinksWidget
 									agreement={agreement}
 								/>
 								<AgreementAddAppsWidget agreement={agreement} />
-								<AgreementBlankSlateWidget
-									agreement={agreement}
-								/>
 
 								<Space h={64} />
 							</div>

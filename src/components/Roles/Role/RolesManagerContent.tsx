@@ -256,6 +256,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 									<div className={meemTheme.row}>
 										<Text
+											className={meemTheme.tSmall}
 											style={{ wordBreak: 'break-word' }}
 										>
 											{role?.tokenAddress}
@@ -297,11 +298,13 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 									{role?.isAdminRole && (
 										<div>
-											<Text>
+											<Text className={meemTheme.tSmall}>
 												{`This is a default role and is currently the only
 							role that has contract management capabilities.`}
 											</Text>
-											<Text>{`The
+											<Text
+												className={meemTheme.tSmall}
+											>{`The
 							role cannot be deleted and members with this role
 							cannot transfer their token to another wallet.`}</Text>
 										</div>

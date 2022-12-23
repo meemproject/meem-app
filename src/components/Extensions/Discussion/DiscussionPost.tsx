@@ -35,6 +35,7 @@ import {
 	Message,
 	Share
 } from 'tabler-icons-react'
+import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -45,6 +46,7 @@ import {
 	colorLightestGrey,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { DiscussionCommentComponent } from './DiscussionComment'
 import { rowToDiscussionComment, rowToDiscussionPost } from './DiscussionHome'
 interface IProps {
@@ -99,7 +101,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const [commentCount, setCommentCount] = useState(0)
 	const { accounts, chainId, me, loginState } = useAuth()
 	const { sdk } = useSDK()
-	const { agreement } = useAgreement()
+	const { agreement, error, isLoadingAgreement } = useAgreement()
 	const router = useRouter()
 
 	const { colorScheme } = useMantineColorScheme()
@@ -120,10 +122,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 		content
 	})
 
-	const agreementExtension =
-		agreement?.rawAgreement?.AgreementExtensions.find(
-			ae => ae.Extension?.slug === 'discussion'
-		)
+	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	const handleReactionSubmit = useCallback(
 		async (options: {
@@ -484,252 +483,289 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 	return (
 		<div>
-			<Space h={48} />
-			{!hasFetchedPost && (
-				<Center>
-					<Loader color="red" variant="oval" />
-				</Center>
-			)}
-			{hasFetchedPost && post && (
-				<Container>
-					<div className={meemTheme.row}>
-						<div>
-							<Center>
-								<a
-									style={{ cursor: 'pointer' }}
-									onClick={e =>
-										handleReactionSubmit({
-											e,
-											reaction: 'upvote'
-										})
-									}
-								>
-									<ChevronUp />
-								</a>
-							</Center>
-
-							<Space h={16} />
-							<Center>{votes ?? 0}</Center>
-							<Space h={16} />
-							<Center>
-								<a
-									style={{ cursor: 'pointer' }}
-									onClick={e =>
-										handleReactionSubmit({
-											e,
-											reaction: 'downvote'
-										})
-									}
-								>
-									<ChevronDown />
-								</a>
-							</Center>
-						</div>
-						<Space w={16} />
-						<div style={{ width: '100%' }}>
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
+			{extensionIsReady(
+				isLoadingAgreement,
+				agreement,
+				agreementExtension
+			) && (
+				<div>
+					<Space h={48} />
+					{!hasFetchedPost && (
+						<Center>
+							<Loader color="red" variant="oval" />
+						</Center>
+					)}
+					{hasFetchedPost && post && (
+						<Container>
 							<div className={meemTheme.row}>
-								<Space w={16} />
-								{post?.attachment && (
-									<>
-										<Image
-											src={post?.attachment}
-											height={80}
-											width={80}
-											radius={4}
-										/>
-										<Space w={16} />
-									</>
-								)}
 								<div>
-									<div className={meemTheme.centeredRow}>
-										<Image
-											src={
-												post?.profilePicUrl ??
-												`/exampleclub.png`
+									<Center>
+										<a
+											style={{ cursor: 'pointer' }}
+											onClick={e =>
+												handleReactionSubmit({
+													e,
+													reaction: 'upvote'
+												})
 											}
-											height={32}
-											width={32}
-											radius={16}
-										/>
-										<Space w={8} />
-										<div>
-											<Text
-												className={
-													meemTheme.tExtraSmallBold
-												}
-											>
-												{post?.displayName ??
-													post?.walletAddress}
-											</Text>
-											<Text
-												className={
-													meemTheme.tExtraExtraSmall
-												}
-											>
-												{post?.createdAt
-													? DateTime.fromSeconds(
-															post.createdAt
-													  ).toRelative()
-													: ''}
-											</Text>
-										</div>
-									</div>
-									<Space h={24} />
-
-									<Text className={meemTheme.tMediumBold}>
-										{post?.title}
-									</Text>
-									{post?.tags && (
-										<>
-											<Space h={12} />
-
-											{post?.tags.map(tag => (
-												<Badge
-													style={{ marginRight: 4 }}
-													key={tag}
-													size={'xs'}
-													gradient={{
-														from: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														to: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														deg: 35
-													}}
-													classNames={{
-														inner: meemTheme.tBadgeTextSmall
-													}}
-													variant={'gradient'}
-												>
-													{tag}
-												</Badge>
-											))}
-										</>
-									)}
-									<Space h={24} />
-									<Text
-										className={meemTheme.tSmall}
-										dangerouslySetInnerHTML={{
-											// TODO: Sanitize html. Possible XSS vulnerability
-											__html: post?.body ?? ''
-										}}
-									/>
-									<Space h={16} />
-
-									<div className={meemTheme.centeredRow}>
-										<div
-											className={meemTheme.row}
-											style={{ marginTop: 16 }}
 										>
-											<div
-												className={
-													meemTheme.centeredRow
-												}
-											>
-												<Message
-													width={20}
-													height={20}
+											<ChevronUp />
+										</a>
+									</Center>
+
+									<Space h={16} />
+									<Center>{votes ?? 0}</Center>
+									<Space h={16} />
+									<Center>
+										<a
+											style={{ cursor: 'pointer' }}
+											onClick={e =>
+												handleReactionSubmit({
+													e,
+													reaction: 'downvote'
+												})
+											}
+										>
+											<ChevronDown />
+										</a>
+									</Center>
+								</div>
+								<Space w={16} />
+								<div style={{ width: '100%' }}>
+									<div className={meemTheme.row}>
+										<Space w={16} />
+										{post?.attachment && (
+											<>
+												<Image
+													src={post?.attachment}
+													height={80}
+													width={80}
+													radius={4}
 												/>
-												<Space w={4} />
-												<Text
-													className={
-														meemTheme.tExtraSmall
-													}
-												>
-													{`${commentCount} ${
-														commentCount === 1
-															? 'Comment'
-															: 'Comments'
-													}
-												`}
-												</Text>
-											</div>
-											<Space w={16} />
+												<Space w={16} />
+											</>
+										)}
+										<div>
 											<div
 												className={
 													meemTheme.centeredRow
 												}
-												style={{ cursor: 'pointer' }}
 											>
-												<Share width={20} height={20} />
-												<Space w={4} />
-												<Text
-													className={
-														meemTheme.tExtraSmall
+												<Image
+													src={
+														post?.profilePicUrl ??
+														`/exampleclub.png`
 													}
-												>
-													Share
-												</Text>
+													height={32}
+													width={32}
+													radius={16}
+												/>
+												<Space w={8} />
+												<div>
+													<Text
+														className={
+															meemTheme.tExtraSmallBold
+														}
+													>
+														{post?.displayName ??
+															post?.walletAddress}
+													</Text>
+													<Text
+														className={
+															meemTheme.tExtraExtraSmall
+														}
+													>
+														{post?.createdAt
+															? DateTime.fromSeconds(
+																	post.createdAt
+															  ).toRelative()
+															: ''}
+													</Text>
+												</div>
 											</div>
-											<Space w={16} />
+											<Space h={24} />
+
+											<Text
+												className={
+													meemTheme.tMediumBold
+												}
+											>
+												{post?.title}
+											</Text>
+											{post?.tags && (
+												<>
+													<Space h={12} />
+
+													{post?.tags.map(tag => (
+														<Badge
+															style={{
+																marginRight: 4
+															}}
+															key={tag}
+															size={'xs'}
+															gradient={{
+																from: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																to: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																deg: 35
+															}}
+															classNames={{
+																inner: meemTheme.tBadgeTextSmall
+															}}
+															variant={'gradient'}
+														>
+															{tag}
+														</Badge>
+													))}
+												</>
+											)}
+											<Space h={24} />
+											<Text
+												className={meemTheme.tSmall}
+												dangerouslySetInnerHTML={{
+													// TODO: Sanitize html. Possible XSS vulnerability
+													__html: post?.body ?? ''
+												}}
+											/>
+											<Space h={16} />
+
+											<div
+												className={
+													meemTheme.centeredRow
+												}
+											>
+												<div
+													className={meemTheme.row}
+													style={{
+														marginTop: 16
+													}}
+												>
+													<div
+														className={
+															meemTheme.centeredRow
+														}
+													>
+														<Message
+															width={20}
+															height={20}
+														/>
+														<Space w={4} />
+														<Text
+															className={
+																meemTheme.tExtraSmall
+															}
+														>
+															{`${commentCount} ${
+																commentCount ===
+																1
+																	? 'Comment'
+																	: 'Comments'
+															}
+												`}
+														</Text>
+													</div>
+													<Space w={16} />
+													<div
+														className={
+															meemTheme.centeredRow
+														}
+														style={{
+															cursor: 'pointer'
+														}}
+													>
+														<Share
+															width={20}
+															height={20}
+														/>
+														<Space w={4} />
+														<Text
+															className={
+																meemTheme.tExtraSmall
+															}
+														>
+															Share
+														</Text>
+													</div>
+													<Space w={16} />
+												</div>
+											</div>
 										</div>
 									</div>
+
+									<Space h={20} />
 								</div>
 							</div>
+						</Container>
+					)}
+					<Space h={24} />
+					<Divider
+						size={8}
+						color={isDarkTheme ? colorBlack : colorLightestGrey}
+					/>
+					<Space h={48} />
 
-							<Space h={20} />
-						</div>
-					</div>
-				</Container>
+					<Container>
+						{editor && (
+							<div className={meemTheme.fRichTextEditorContainer}>
+								<RichTextEditor
+									editor={editor}
+									classNames={{
+										toolbar:
+											meemTheme.fRichTextEditorToolbar,
+										root: meemTheme.fRichTextEditorToolbar
+									}}
+								>
+									<RichTextEditor.Toolbar>
+										<RichTextEditor.ControlsGroup>
+											<RichTextEditor.Bold />
+											<RichTextEditor.Italic />
+											<RichTextEditor.Underline />
+											<RichTextEditor.Strikethrough />
+											<RichTextEditor.ClearFormatting />
+											<RichTextEditor.BulletList />
+											<RichTextEditor.OrderedList />
+										</RichTextEditor.ControlsGroup>
+									</RichTextEditor.Toolbar>
+									<Divider />
+									<RichTextEditor.Content />
+								</RichTextEditor>
+								<Space h={16} />
+								<div className={meemTheme.rowEndAlign}>
+									<Button
+										className={meemTheme.buttonBlack}
+										style={{
+											marginBottom: 16,
+											marginRight: 16
+										}}
+										loading={isLoading}
+										disabled={isLoading}
+										onClick={handleCommentSubmit}
+									>
+										Comment
+									</Button>
+								</div>
+							</div>
+						)}
+						<Space h={24} />
+						{comments &&
+							comments.map(comment => (
+								<DiscussionCommentComponent
+									key={comment.id}
+									comment={comment}
+									reactions={reactions}
+									agreementExtension={agreementExtension}
+									onReaction={() =>
+										setHasFetchedReactions(false)
+									}
+								/>
+							))}
+					</Container>
+				</div>
 			)}
-			<Space h={24} />
-			<Divider
-				size={8}
-				color={isDarkTheme ? colorBlack : colorLightestGrey}
-			/>
-			<Space h={48} />
-
-			<Container>
-				{editor && (
-					<div className={meemTheme.fRichTextEditorContainer}>
-						<RichTextEditor
-							editor={editor}
-							classNames={{
-								toolbar: meemTheme.fRichTextEditorToolbar,
-								root: meemTheme.fRichTextEditorToolbar
-							}}
-						>
-							<RichTextEditor.Toolbar>
-								<RichTextEditor.ControlsGroup>
-									<RichTextEditor.Bold />
-									<RichTextEditor.Italic />
-									<RichTextEditor.Underline />
-									<RichTextEditor.Strikethrough />
-									<RichTextEditor.ClearFormatting />
-									<RichTextEditor.BulletList />
-									<RichTextEditor.OrderedList />
-								</RichTextEditor.ControlsGroup>
-							</RichTextEditor.Toolbar>
-							<Divider />
-							<RichTextEditor.Content />
-						</RichTextEditor>
-						<Space h={16} />
-						<div className={meemTheme.rowEndAlign}>
-							<Button
-								className={meemTheme.buttonBlack}
-								style={{ marginBottom: 16, marginRight: 16 }}
-								loading={isLoading}
-								disabled={isLoading}
-								onClick={handleCommentSubmit}
-							>
-								Comment
-							</Button>
-						</div>
-					</div>
-				)}
-				<Space h={24} />
-				{comments &&
-					comments.map(comment => (
-						<DiscussionCommentComponent
-							key={comment.id}
-							comment={comment}
-							reactions={reactions}
-							agreementExtension={agreementExtension}
-							onReaction={() => setHasFetchedReactions(false)}
-						/>
-					))}
-			</Container>
 		</div>
 	)
 }

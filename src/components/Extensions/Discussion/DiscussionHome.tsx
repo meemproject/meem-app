@@ -4,9 +4,7 @@ import {
 	Container,
 	Text,
 	TextInput,
-	Image,
 	Space,
-	Loader,
 	Center,
 	Button
 } from '@mantine/core'
@@ -15,11 +13,16 @@ import Gun from 'gun/gun'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
-import { Agreement } from '../../../model/agreement/agreements'
+import {
+	Agreement,
+	extensionFromSlug
+} from '../../../model/agreement/agreements'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { IReactions } from './DiscussionPost'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 import 'gun/sea'
@@ -86,31 +89,9 @@ export const DiscussionHome: React.FC = () => {
 	const { sdk } = useSDK()
 	const { chainId, loginState } = useAuth()
 
-	const { agreement, isLoadingAgreement, error } = useAgreement()
+	const { agreement, isLoadingAgreement } = useAgreement()
 
-	// const posts: DiscussionPost[] = [
-	// 	{
-	// 		id: '1',
-	// 		title: 'Test post one',
-	// 		tags: ['funny', 'crazy'],
-	// 		agreementSlug: agreement?.slug ?? '',
-	// 		content: 'This is just a small test post.',
-	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	},
-	// 	{
-	// 		id: '2',
-	// 		title: 'Test post two',
-	// 		tags: ['funny', 'crazy'],
-	// 		agreementSlug: agreement?.slug ?? '',
-	// 		content: 'And another test post',
-	// 		user: agreement && agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	}
-	// ]
-
-	const agreementExtension =
-		agreement?.rawAgreement?.AgreementExtensions.find(
-			ae => ae.Extension?.slug === 'discussion'
-		)
+	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	// useEffect(() => {
 	// 	const fetchData = async () => {
@@ -415,68 +396,36 @@ export const DiscussionHome: React.FC = () => {
 
 	return (
 		<>
-			{isLoadingAgreement && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Loader color="blue" variant="oval" />
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && !error && !agreement?.name && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>Sorry, that community does not exist!</Text>
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && error && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							There was an error loading this community. Please
-							let us know!
-						</Text>
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && agreement?.name && (
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
+			{extensionIsReady(
+				isLoadingAgreement,
+				agreement,
+				agreementExtension
+			) && (
 				<>
+					<ExtensionPageHeader extensionSlug={'discussions'} />
+
 					<Container>
-						<Space h={48} />
-
-						<Center>
-							<Image
-								className={meemTheme.imagePixelated}
-								height={100}
-								width={100}
-								src={agreement.image}
-							/>
-						</Center>
-
 						<Space h={24} />
-						<Center>
-							<Text className={meemTheme.tLargeBold}>
-								{agreement.name}
-							</Text>
-						</Center>
-						<Space h={8} />
-
-						<Center>
-							<Text className={meemTheme.tMedium}>
-								{agreement.description}
-							</Text>
-						</Center>
-						<Space h={24} />
+						{posts.length === 0 && (
+							<>
+								<Center>
+									<Text className={meemTheme.tSmall}>
+										There are no posts yet in your
+										community. Be the first one to say
+										something!
+									</Text>
+								</Center>
+								<Space h={24} />
+							</>
+						)}
 
 						<Center>
 							<Button
 								className={meemTheme.buttonBlack}
 								onClick={() => {
 									router.push({
-										pathname: `/${agreement.slug}/e/discussion/submit`
+										pathname: `/${agreement?.slug}/e/discussions/submit`
 									})
 								}}
 							>
@@ -484,26 +433,29 @@ export const DiscussionHome: React.FC = () => {
 							</Button>
 						</Center>
 						<Space h={48} />
-						<div className={meemTheme.centeredRow}>
-							<TextInput
-								radius={20}
-								classNames={{
-									input: meemTheme.fTextField
-								}}
-								icon={<Search />}
-								placeholder={'Search discussions'}
-								className={meemTheme.fullWidth}
-								size={'lg'}
-								onChange={event => {
-									log.debug(event.target.value)
-									// TODO
-								}}
-							/>
-							<Space w={16} />
-							<Button className={meemTheme.buttonBlack}>
-								Sort
-							</Button>
-						</div>
+						{posts.length > 0 && (
+							<div className={meemTheme.centeredRow}>
+								<TextInput
+									radius={20}
+									classNames={{
+										input: meemTheme.fTextField
+									}}
+									icon={<Search />}
+									placeholder={'Search discussions'}
+									className={meemTheme.fullWidth}
+									size={'lg'}
+									onChange={event => {
+										log.debug(event.target.value)
+										// TODO
+									}}
+								/>
+								<Space w={16} />
+								<Button className={meemTheme.buttonBlack}>
+									Sort
+								</Button>
+							</div>
+						)}
+
 						<Space h={32} />
 						{posts.map(post => (
 							<DiscussionPostPreview
