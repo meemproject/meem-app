@@ -230,9 +230,11 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 												meemTheme.tExtraExtraSmall
 											}
 										>
-											{DateTime.fromSeconds(
-												post.createdAt
-											).toRelative()}
+											{typeof post.createdAt === 'number'
+												? DateTime.fromSeconds(
+														post.createdAt
+												  ).toRelative()
+												: ''}
 										</Text>
 									</div>
 								</div>

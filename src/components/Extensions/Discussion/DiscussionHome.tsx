@@ -365,9 +365,33 @@ export const DiscussionHome: React.FC = () => {
 				chainId,
 				authSig,
 				path,
-				cb: data => {
-					console.log('DATA!!!')
-					console.log({ data })
+				cb: items => {
+					// console.log('DATA!!!')
+					// console.log({ data })
+					const newPosts: DiscussionPost[] = []
+
+					Object.keys(items).forEach(k => {
+						const item = items[k]
+						if (typeof item.data === 'object') {
+							newPosts.push(
+								rowToDiscussionPost({
+									row: { id: k, ...item },
+									agreement
+								})
+							)
+						}
+					})
+					// .filter(
+					// 	(item: Record<string, any>) =>
+					// 		typeof item.data === 'object'
+					// )
+					// .map(item =>
+					// 	rowToDiscussionPost({ row: item, agreement })
+					// )
+
+					console.log({ newPosts })
+
+					setPosts(newPosts)
 				}
 			})
 

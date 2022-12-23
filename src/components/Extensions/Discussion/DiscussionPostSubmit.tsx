@@ -165,6 +165,8 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				return
 			}
 
+			const now = Math.floor(new Date().getTime() / 1000)
+
 			const result = await sdk.storage.encryptAndWrite({
 				authSig,
 				path: `meem/${agreement.id}/extensions/discussion/postsssssss`,
@@ -181,7 +183,9 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 					attachment:
 						postAttachment && postAttachment.length > 0
 							? postAttachment
-							: null
+							: null,
+					createdAt: now,
+					updatedAt: now
 				},
 				chainId: wallet.chainId,
 				accessControlConditions: [
