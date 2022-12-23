@@ -2,8 +2,6 @@
 import log from '@kengoldfarb/log'
 import {
 	Container,
-	Loader,
-	Image,
 	Text,
 	Space,
 	Center,
@@ -13,19 +11,19 @@ import {
 	Select,
 	SelectItem
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const DiscussionSettings: React.FC = () => {
 	// Default settings
 	const router = useRouter()
 	const { classes: meemTheme } = useMeemTheme()
-	const { agreement, isLoadingAgreement, error } = useAgreement()
+	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
@@ -69,12 +67,6 @@ export const DiscussionSettings: React.FC = () => {
 			log.debug(`Set ${items.length} roles as dropdown options`)
 		}
 	}, [agreement, hasSetRoleSelectItems, roleSelectItems])
-
-	/*
-	TODO:
-	Add your extension's name, which shows up as the page title.
-	 */
-	const extensionName = 'Discussions'
 
 	/*
 	TODO
@@ -261,327 +253,129 @@ export const DiscussionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-	const navigateToAgreementHome = () => {
-		router.push({
-			pathname: `/${agreement?.slug}`
-		})
-	}
-
-	const navigateToAllExtensions = () => {
-		router.push({
-			pathname: `/${agreement?.slug}/admin`,
-			query: { tab: 'extensions' }
-		})
-	}
-
 	const disableExtension = async () => {
 		setIsDisablingExtension(true)
 		setIsDisablingExtension(false)
 	}
 
 	return (
-		<div>
-			{agreement && !agreement?.isCurrentUserAgreementAdmin && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							Sorry, you do not have permission to view this page.
-							Contact the agreement owner for help.
-						</Text>
-					</Center>
-				</Container>
-			)}
+		<>
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
+			{extensionIsReady(
+				isLoadingAgreement,
+				agreement,
+				agreementExtension
+			) && (
+				<>
+					{!agreement?.isCurrentUserAgreementAdmin && (
+						<Container>
+							<Space h={120} />
+							<Center>
+								<Text>
+									Sorry, you do not have permission to view
+									this page. Contact the community owner for
+									help.
+								</Text>
+							</Center>
+						</Container>
+					)}
 
-			{agreement && agreement?.isCurrentUserAgreementAdmin && (
-				<div>
-					{!isLoadingAgreement &&
-						agreement?.name &&
-						!agreementExtension && (
-							<Container>
-								<Space h={120} />
-								<Center>
-									<Text>
-										This extension is not enabled for this
-										club.
-									</Text>
-								</Center>
-								{agreement.isCurrentUserAgreementOwner ||
-									(agreement.isCurrentUserAgreementAdmin && (
-										<>
-											<Space h={16} />{' '}
-											<Button
-												className={meemTheme.buttonGrey}
-												onClick={() => {
-													router.push({
-														pathname: `${agreement.slug}/admin`,
-														query: {
-															tab: 'extensions'
-														}
-													})
-												}}
-											>
-												Enable this extension
-											</Button>
-										</>
-									))}
-							</Container>
-						)}
-					{!isLoadingAgreement &&
-						agreement?.name &&
-						agreementExtension &&
-						!agreementExtension.isInitialized && (
-							<Container>
-								<Space h={120} />
-								<Center>
-									<Text>
-										{`${agreementExtension.Extension?.name} is being set up. Please wait...`}
-									</Text>
-								</Center>
-								<Space h={24} />
-								<Center>
-									<Loader variant="oval" color="blue" />
-								</Center>
-							</Container>
-						)}
+					{agreement?.isCurrentUserAgreementAdmin && (
+						<div>
+							<ExtensionPageHeader
+								extensionSlug={'discussions'}
+							/>
 
-					{!isLoadingAgreement &&
-						agreement?.name &&
-						agreementExtension &&
-						agreementExtension.isInitialized && (
-							<div>
-								<div className={meemTheme.pageHeader}>
+							<Container>
+								<Space h={16} />
+
+								<Text className={meemTheme.tExtraSmallLabel}>
+									DISPLAY SETTINGS
+								</Text>
+
+								<div>
+									<Space h={16} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
-										<ArrowLeft
-											className={meemTheme.clickable}
-											onClick={() => {
-												navigateToAllExtensions()
-											}}
-										/>
-										<Space w={24} />
-										<Image
-											radius={8}
-											height={80}
-											width={80}
-											className={meemTheme.imagePixelated}
-											src={agreement?.image}
-										/>
-										{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
-										<div
-											className={
-												meemTheme.pageHeaderTitleContainer
+										<Switch
+											color={'green'}
+											label={'Display dashboard widget'}
+											checked={
+												shouldDisplayDashboardWidget
 											}
-										>
-											<Text
-												className={meemTheme.tLargeBold}
-											>
-												{agreement.name}
-											</Text>
-											<Space h={8} />
-											<div className={meemTheme.row}>
-												<Text
-													className={
-														meemTheme.tExtraSmallFaded
-													}
-												>{`${window.location.origin}/${agreement.slug}`}</Text>
-												<Image
-													className={
-														meemTheme.copyIcon
-													}
-													src="/copy.png"
-													height={20}
-													onClick={() => {
-														navigator.clipboard.writeText(
-															`${window.location.origin}/${agreement.slug}`
-														)
-														showNotification({
-															radius: 'lg',
-															title: 'Community URL copied',
-															autoClose: 2000,
-															color: colorGreen,
-															icon: <Check />,
-
-															message: `This community's URL was copied to your clipboard.`
-														})
-													}}
-													width={20}
-												/>
-											</div>
-										</div>
-									</div>
-									<a
-										className={
-											meemTheme.pageHeaderExitButton
-										}
-										onClick={navigateToAgreementHome}
-									>
-										<Image
-											src="/delete.png"
-											width={24}
-											height={24}
-										/>
-									</a>
-								</div>
-
-								<Container>
-									<Space h={16} />
-									<div
-										className={meemTheme.spacedRow}
-										style={{ marginBottom: 32 }}
-									>
-										<div>
-											<Text
-												className={
-													meemTheme.tExtraSmallLabel
+											onChange={value => {
+												if (value) {
+													setShouldDisplayDashboardWidget(
+														value.currentTarget
+															.checked
+													)
 												}
-											>
-												SETTINGS
-											</Text>
-											<Space h={4} />
-											<div
-												className={
-													meemTheme.centeredRow
-												}
-											>
-												<Text
-													className={
-														meemTheme.tLargeBold
-													}
-												>
-													{extensionName}
-												</Text>
-											</div>
-										</div>
-										<Button
-											disabled={isSavingChanges}
-											loading={isSavingChanges}
-											onClick={() => {
-												saveChanges()
 											}}
-											className={meemTheme.buttonBlack}
-										>
-											Save Changes
-										</Button>
+										/>
 									</div>
+									<Space h={16} />
 									<Divider />
-									<Space h={32} />
-									<Text
-										className={meemTheme.tExtraSmallLabel}
+								</div>
+								<div>
+									<Space h={4} />
+									<div
+										className={meemTheme.spacedRowCentered}
 									>
-										DISPLAY SETTINGS
-									</Text>
-
-									<div>
-										<Space h={16} />
-										<div
-											className={
-												meemTheme.spacedRowCentered
+										<Switch
+											color={'green'}
+											label={
+												'Hide widget if viewer is not a community member'
 											}
-										>
-											<Switch
-												color={'green'}
-												label={
-													'Display dashboard widget'
+											checked={isPrivateExtension}
+											onChange={value => {
+												if (value) {
+													setIsPrivateExtension(
+														value.currentTarget
+															.checked
+													)
 												}
-												checked={
-													shouldDisplayDashboardWidget
-												}
-												onChange={value => {
-													if (value) {
-														setShouldDisplayDashboardWidget(
-															value.currentTarget
-																.checked
-														)
-													}
-												}}
-											/>
-										</div>
-										<Space h={16} />
-										<Divider />
-									</div>
-									<div>
-										<Space h={4} />
-										<div
-											className={
-												meemTheme.spacedRowCentered
-											}
-										>
-											<Switch
-												color={'green'}
-												label={
-													'Hide widget if viewer is not a community member'
-												}
-												checked={isPrivateExtension}
-												onChange={value => {
-													if (value) {
-														setIsPrivateExtension(
-															value.currentTarget
-																.checked
-														)
-													}
-												}}
-											/>
-										</div>
-										<Space h={16} />
-										<Divider />
+											}}
+										/>
 									</div>
 									<Space h={16} />
+									<Divider />
+								</div>
+								<Space h={16} />
 
-									<Button
-										disabled={isDisablingExtension}
-										loading={isDisablingExtension}
-										className={meemTheme.buttonBlue}
-										onClick={disableExtension}
-									>
-										Disable extension
-									</Button>
+								<Button
+									disabled={isDisablingExtension}
+									loading={isDisablingExtension}
+									className={meemTheme.buttonBlue}
+									onClick={disableExtension}
+								>
+									Disable extension
+								</Button>
 
-									{customExtensionSettings()}
-									<Space h={32} />
-									<Text
-										className={meemTheme.tExtraSmallLabel}
-									>
-										PERMISSIONS
-									</Text>
-									<Space h={16} />
+								{customExtensionSettings()}
+								<Space h={32} />
+								<Text className={meemTheme.tExtraSmallLabel}>
+									PERMISSIONS
+								</Text>
+								<Space h={16} />
 
-									{customExtensionPermissions()}
-									<Space h={48} />
-									<Button
-										disabled={isSavingChanges}
-										loading={isSavingChanges}
-										onClick={() => {
-											saveChanges()
-										}}
-										className={meemTheme.buttonBlack}
-									>
-										Save Changes
-									</Button>
-								</Container>
-							</div>
-						)}
-				</div>
-			)}
-			{isLoadingAgreement && (
-				<>
-					<Space h={120} />
-					<Center>
-						<Loader variant="oval" color="blue" />
-					</Center>
+								{customExtensionPermissions()}
+								<Space h={48} />
+								<Button
+									disabled={isSavingChanges}
+									loading={isSavingChanges}
+									onClick={() => {
+										saveChanges()
+									}}
+									className={meemTheme.buttonBlack}
+								>
+									Save Changes
+								</Button>
+							</Container>
+						</div>
+					)}
 				</>
 			)}
-			{!isLoadingAgreement && error && (
-				<>
-					<Space h={120} />
-					<Center>
-						<Text className={meemTheme.tSmall}>
-							{`Error loading ${extensionName} settings!`}
-						</Text>
-					</Center>
-				</>
-			)}
-		</div>
+		</>
 	)
 }

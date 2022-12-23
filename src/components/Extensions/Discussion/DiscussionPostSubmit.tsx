@@ -28,6 +28,7 @@ import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 
 interface IProps {
 	agreementSlug?: string
@@ -38,7 +39,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { agreement } = useAgreement()
+	const { agreement, isLoadingAgreement } = useAgreement()
+
+	const agreementExtension = extensionFromSlug('discussions', agreement)
+
 	const { me } = useAuth()
 
 	const { sdk } = useSDK()
@@ -138,11 +142,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 
 			const authSig = await sdk.id.getLitAuthSig()
 
-			const agreementExtension = extensionFromSlug(
-				'discussions',
-				agreement
-			)
-
 			if (!agreementExtension) {
 				showNotification({
 					title: 'Something went wrong!',
@@ -201,180 +200,197 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 
 	return (
 		<>
-			<div className={meemTheme.pageHeader}>
-				<div className={meemTheme.row}>
-					<a
-						style={{ marginTop: 34 }}
-						onClick={() => {
-							router.push({
-								pathname: `/${agreementSlug}/e/discussions`
-							})
-						}}
-					>
-						<ArrowLeft className={meemTheme.backArrow} size={32} />
-					</a>
-					<Space w={16} />
-					<div>
-						<Text className={meemTheme.tSmallBoldFaded}>
-							{agreementSlug}
-						</Text>
-						<Space h={16} />
-						<Text className={meemTheme.tLargeBold}>
-							New discussion
-						</Text>
-					</div>
-				</div>
-				<Button
-					style={{ marginRight: 32 }}
-					className={meemTheme.buttonBlack}
-					loading={isLoading}
-					disabled={
-						postTitle.length === 0 ||
-						editor?.getHTML().length === 0 ||
-						// postAttachment.length === 0 ||
-						isLoading
-					}
-					onClick={(e: any) => {
-						e.preventDefault()
-						createPost()
-					}}
-				>
-					Post
-				</Button>
-			</div>
-
-			<Container>
-				<Space h={24} />
-
-				<Text className={meemTheme.tMediumBold}>
-					{`What’s your post called?`}
-				</Text>
-				<Space h={16} />
-
-				<TextInput
-					radius="lg"
-					size="md"
-					value={postTitle}
-					maxLength={30}
-					onChange={event => setPostTitle(event.currentTarget.value)}
-				/>
-
-				<Space h={32} />
-
-				<Text className={meemTheme.tMediumBold}>
-					Compose and edit your post here
-				</Text>
-				<Space h={16} />
-
-				{editor && (
-					<div className={meemTheme.fRichTextEditorContainer}>
-						<RichTextEditor
-							editor={editor}
-							classNames={{
-								toolbar: meemTheme.fRichTextEditorToolbar,
-								root: meemTheme.fRichTextEditorToolbar
+			<ExtensionBlankSlate extensionSlug={'discussions'} />
+			{extensionIsReady(
+				isLoadingAgreement,
+				agreement,
+				agreementExtension
+			) && (
+				<>
+					<div className={meemTheme.pageHeader}>
+						<div className={meemTheme.row}>
+							<a
+								style={{ marginTop: 34 }}
+								onClick={() => {
+									router.push({
+										pathname: `/${agreementSlug}/e/discussions`
+									})
+								}}
+							>
+								<ArrowLeft
+									className={meemTheme.backArrow}
+									size={32}
+								/>
+							</a>
+							<Space w={16} />
+							<div>
+								<Text className={meemTheme.tSmallBoldFaded}>
+									{agreementSlug}
+								</Text>
+								<Space h={16} />
+								<Text className={meemTheme.tLargeBold}>
+									New discussion
+								</Text>
+							</div>
+						</div>
+						<Button
+							style={{ marginRight: 32 }}
+							className={meemTheme.buttonBlack}
+							loading={isLoading}
+							disabled={
+								postTitle.length === 0 ||
+								editor?.getHTML().length === 0 ||
+								// postAttachment.length === 0 ||
+								isLoading
+							}
+							onClick={(e: any) => {
+								e.preventDefault()
+								createPost()
 							}}
 						>
-							<RichTextEditor.Toolbar>
-								<RichTextEditor.ControlsGroup>
-									<RichTextEditor.Bold />
-									<RichTextEditor.Italic />
-									<RichTextEditor.Underline />
-									<RichTextEditor.Strikethrough />
-									<RichTextEditor.ClearFormatting />
-									<RichTextEditor.Highlight />
-									<RichTextEditor.Code />
-								</RichTextEditor.ControlsGroup>
-							</RichTextEditor.Toolbar>
-							<Divider />
-							<RichTextEditor.Content />
-						</RichTextEditor>
-					</div>
-				)}
-				<Space h={32} />
-
-				<Text className={meemTheme.tMediumBold}>
-					{`Set a featured image for your post. (Optional)`}
-				</Text>
-				<Space h={4} />
-				<Text className={meemTheme.tSmallFaded}>
-					Recommended size is 1000px x 1000px. Please upload either
-					JPG or PNG files.
-				</Text>
-				<Space h={16} />
-
-				{postAttachment.length === 0 && !isLoadingImage && (
-					<div className={meemTheme.row}>
-						<Button
-							leftIcon={<Upload size={14} />}
-							className={meemTheme.buttonBlack}
-							onClick={() => openFileSelector()}
-						>
-							Upload
+							Post
 						</Button>
 					</div>
-				)}
-				{isLoadingImage && <Loader />}
-				{!isLoadingImage && postAttachment.length > 0 && (
-					<div
-						className={meemTheme.boxBorderedRounded}
-						style={{ position: 'relative', maxWidth: 400 }}
-					>
-						<Image src={postAttachment} fit={'cover'} />
-						<a onClick={deleteImage}>
-							<Image
-								style={{
-									top: 8,
-									right: 8,
-									position: 'absolute',
-									cursor: 'pointer'
-								}}
-								src="/delete.png"
-								width={24}
-								height={24}
-							/>
-						</a>
-					</div>
-				)}
 
-				<Space h={postAttachment ? 32 : 32} />
+					<Container>
+						<Space h={24} />
 
-				<Text className={meemTheme.tMediumBold}>
-					{`Add tags (Optional)`}
-				</Text>
-				<Space h={4} />
+						<Text className={meemTheme.tMediumBold}>
+							{`What’s your post called?`}
+						</Text>
+						<Space h={16} />
 
-				<Text className={meemTheme.tSmallFaded}>
-					{`Leave a space between tags.`}
-				</Text>
-				<Space h={16} />
+						<TextInput
+							radius="lg"
+							size="md"
+							value={postTitle}
+							maxLength={30}
+							onChange={event =>
+								setPostTitle(event.currentTarget.value)
+							}
+						/>
 
-				<TextInput
-					radius="lg"
-					size="md"
-					value={postTags}
-					maxLength={30}
-					onChange={event => setPostTags(event.currentTarget.value)}
-				/>
+						<Space h={32} />
 
-				<Space h={40} />
+						<Text className={meemTheme.tMediumBold}>
+							Compose and edit your post here
+						</Text>
+						<Space h={16} />
 
-				<Button
-					onClick={() => {
-						createPost()
-					}}
-					loading={isLoading}
-					disabled={
-						postTitle.length === 0 ||
-						editor?.getHTML().length === 0 ||
-						// postAttachment.length === 0 ||
-						isLoading
-					}
-					className={meemTheme.buttonBlack}
-				>
-					Post
-				</Button>
-			</Container>
+						{editor && (
+							<div className={meemTheme.fRichTextEditorContainer}>
+								<RichTextEditor
+									editor={editor}
+									classNames={{
+										toolbar:
+											meemTheme.fRichTextEditorToolbar,
+										root: meemTheme.fRichTextEditorToolbar
+									}}
+								>
+									<RichTextEditor.Toolbar>
+										<RichTextEditor.ControlsGroup>
+											<RichTextEditor.Bold />
+											<RichTextEditor.Italic />
+											<RichTextEditor.Underline />
+											<RichTextEditor.Strikethrough />
+											<RichTextEditor.ClearFormatting />
+											<RichTextEditor.Highlight />
+											<RichTextEditor.Code />
+										</RichTextEditor.ControlsGroup>
+									</RichTextEditor.Toolbar>
+									<Divider />
+									<RichTextEditor.Content />
+								</RichTextEditor>
+							</div>
+						)}
+						<Space h={32} />
+
+						<Text className={meemTheme.tMediumBold}>
+							{`Set a featured image for your post. (Optional)`}
+						</Text>
+						<Space h={4} />
+						<Text className={meemTheme.tSmallFaded}>
+							Recommended size is 1000px x 1000px. Please upload
+							either JPG or PNG files.
+						</Text>
+						<Space h={16} />
+
+						{postAttachment.length === 0 && !isLoadingImage && (
+							<div className={meemTheme.row}>
+								<Button
+									leftIcon={<Upload size={14} />}
+									className={meemTheme.buttonBlack}
+									onClick={() => openFileSelector()}
+								>
+									Upload
+								</Button>
+							</div>
+						)}
+						{isLoadingImage && <Loader />}
+						{!isLoadingImage && postAttachment.length > 0 && (
+							<div
+								className={meemTheme.boxBorderedRounded}
+								style={{ position: 'relative', maxWidth: 400 }}
+							>
+								<Image src={postAttachment} fit={'cover'} />
+								<a onClick={deleteImage}>
+									<Image
+										style={{
+											top: 8,
+											right: 8,
+											position: 'absolute',
+											cursor: 'pointer'
+										}}
+										src="/delete.png"
+										width={24}
+										height={24}
+									/>
+								</a>
+							</div>
+						)}
+
+						<Space h={postAttachment ? 32 : 32} />
+
+						<Text className={meemTheme.tMediumBold}>
+							{`Add tags (Optional)`}
+						</Text>
+						<Space h={4} />
+
+						<Text className={meemTheme.tSmallFaded}>
+							{`Leave a space between tags.`}
+						</Text>
+						<Space h={16} />
+
+						<TextInput
+							radius="lg"
+							size="md"
+							value={postTags}
+							maxLength={30}
+							onChange={event =>
+								setPostTags(event.currentTarget.value)
+							}
+						/>
+
+						<Space h={40} />
+
+						<Button
+							onClick={() => {
+								createPost()
+							}}
+							loading={isLoading}
+							disabled={
+								postTitle.length === 0 ||
+								editor?.getHTML().length === 0 ||
+								// postAttachment.length === 0 ||
+								isLoading
+							}
+							className={meemTheme.buttonBlack}
+						>
+							Post
+						</Button>
+					</Container>
+				</>
+			)}
 		</>
 	)
 }
