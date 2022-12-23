@@ -188,7 +188,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													<>
 														<Space w={8} />
 														<Loader
-															color="red"
+															color="blue"
 															variant="oval"
 															size={16}
 														/>
