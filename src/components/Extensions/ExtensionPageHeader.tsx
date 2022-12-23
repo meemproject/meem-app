@@ -9,9 +9,13 @@ import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	extensionSlug: string
+	isSubPage?: boolean
 }
 
-export const ExtensionPageHeader: React.FC<IProps> = ({ extensionSlug }) => {
+export const ExtensionPageHeader: React.FC<IProps> = ({
+	extensionSlug,
+	isSubPage
+}) => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	const { agreement } = useAgreement()
@@ -39,7 +43,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({ extensionSlug }) => {
 		<>
 			<div className={meemTheme.pageHeader}>
 				<div className={meemTheme.spacedRowCentered}>
-					{isSettingsPage && (
+					{(isSettingsPage || isSubPage) && (
 						<>
 							<a
 								onClick={() => {
@@ -56,6 +60,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({ extensionSlug }) => {
 							<Space w={24} />
 						</>
 					)}
+
 					<Image
 						radius={8}
 						height={80}
@@ -84,17 +89,19 @@ export const ExtensionPageHeader: React.FC<IProps> = ({ extensionSlug }) => {
 					</div>
 				</div>
 				<div className={meemTheme.centeredRow}>
-					{!isSettingsPage && (
-						<Button
-							leftIcon={<Settings />}
-							onClick={() => {
-								navigateToExtensionSettings()
-							}}
-							className={meemTheme.buttonWhite}
-						>
-							Settings
-						</Button>
-					)}
+					{!isSettingsPage &&
+						(agreement?.isCurrentUserAgreementAdmin ||
+							agreement?.isCurrentUserAgreementOwner) && (
+							<Button
+								leftIcon={<Settings />}
+								onClick={() => {
+									navigateToExtensionSettings()
+								}}
+								className={meemTheme.buttonWhite}
+							>
+								Settings
+							</Button>
+						)}
 					<Space w={16} />
 					<a
 						className={meemTheme.pageHeaderExitButton}
