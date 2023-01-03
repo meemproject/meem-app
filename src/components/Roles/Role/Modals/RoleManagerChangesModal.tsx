@@ -109,7 +109,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						agreementRoleId: role?.id,
 						name: role.name,
 						metadata: {
-							meem_metadata_type: 'Meem_AgreementContract',
+							meem_metadata_type: 'Meem_AgreementRoleContract',
 							meem_metadata_version: '20221116',
 							permissions: permissionsArray,
 							members: membersArray,
@@ -137,7 +137,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					await sdk.agreement.createAgreementRole({
 						name: role.name,
 						metadata: {
-							meem_metadata_type: 'Meem_AgreementContract',
+							meem_metadata_type: 'Meem_AgreementRoleContract',
 							meem_metadata_version: '20221116',
 							permissions: permissionsArray,
 							members: membersArray,

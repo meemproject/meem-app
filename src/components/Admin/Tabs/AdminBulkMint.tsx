@@ -101,7 +101,7 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 					name: agreement?.name ?? '',
 					description: agreement?.description,
 					image: agreement?.image,
-					agreement_metadata_version: 'MeemAgreement_Token_20220718'
+					meem_metadata_version: 'MeemAgreement_Token_20221116'
 				}
 			})
 		})

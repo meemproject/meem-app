@@ -218,8 +218,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 							  ]
 							: [],
 					tokenMetadata: {
-						agreement_metadata_version:
-							'MeemAgreement_Token_20220718',
+						meem_metadata_version: 'MeemAgreement_Token_20221116',
 						description: `Membership token for ${agreement.name}`,
 						name: `${agreement.name} membership token`,
 						image: agreement.image,
