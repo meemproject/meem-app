@@ -203,7 +203,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
 							<a
-								style={{ marginTop: 34 }}
+								style={{ marginTop: 35 }}
 								onClick={() => {
 									router.push({
 										pathname: `/${agreementSlug}/e/discussions`
@@ -218,7 +218,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							<Space w={16} />
 							<div>
 								<Text className={meemTheme.tSmallBoldFaded}>
-									{agreementSlug}
+									{agreement?.name}
 								</Text>
 								<Space h={16} />
 								<Text className={meemTheme.tLargeBold}>

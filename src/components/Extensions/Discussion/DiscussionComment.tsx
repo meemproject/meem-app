@@ -127,7 +127,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 		<div>
 			<div className={meemTheme.centeredRow}>
 				<Image
-					src={comment.profilePicUrl ?? `/exampleclub.png`}
+					src={comment.profilePicUrl ?? `/meem-icon.png`}
 					height={32}
 					width={32}
 					radius={16}

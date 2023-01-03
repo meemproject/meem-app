@@ -10,8 +10,9 @@ import {
 import { useAuth, useSDK } from '@meemproject/react'
 import { DateTime } from 'luxon'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
-import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
+import { ChevronDown, ChevronUp, Message } from 'tabler-icons-react'
 import { AgreementExtensions } from '../../../../generated/graphql'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { quickTruncate } from '../../../utils/truncated_wallet'
@@ -37,6 +38,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 	const { agreement } = useAgreement()
 
 	const [isLoading, setIsLoading] = useState(false)
+	const router = useRouter()
 
 	log.debug({ isLoading, commentCount })
 
@@ -110,8 +112,15 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 
 	return (
 		<div className={meemTheme.greyContentBox} style={{ marginBottom: 16 }}>
-			<Link href={`/${agreement?.slug}/e/discussions/${post.id}`}>
-				<a>
+			<>
+				<div
+					className={meemTheme.clickable}
+					onClick={() => {
+						router.push({
+							pathname: `/${agreement?.slug}/e/discussions/${post.id}`
+						})
+					}}
+				>
 					<div className={meemTheme.row}>
 						<div>
 							<Center>
@@ -163,7 +172,6 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 									<Text className={meemTheme.tSmallBold}>
 										{post.title}
 									</Text>
-									<Space h={8} />
 									<Text
 										className={meemTheme.tExtraSmall}
 										dangerouslySetInnerHTML={{
@@ -175,39 +183,44 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 									{post.tags && (
 										<>
 											{post.tags.map(tag => (
-												<Badge
-													style={{ marginRight: 4 }}
-													key={tag}
-													size={'xs'}
-													gradient={{
-														from: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														to: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														deg: 35
-													}}
-													classNames={{
-														inner: meemTheme.tBadgeTextSmall
-													}}
-													variant={'gradient'}
-												>
-													{tag}
-												</Badge>
+												<>
+													{tag.length > 0 && (
+														<Badge
+															style={{
+																marginRight: 4
+															}}
+															key={tag}
+															size={'xs'}
+															gradient={{
+																from: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																to: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																deg: 35
+															}}
+															classNames={{
+																inner: meemTheme.tBadgeTextSmall
+															}}
+															variant={'gradient'}
+														>
+															{tag}
+														</Badge>
+													)}
+												</>
 											))}
 										</>
 									)}
 								</div>
 							</div>
 
-							<Space h={20} />
 							<div className={meemTheme.spacedRowCentered}>
 								<div className={meemTheme.centeredRow}>
 									<Image
 										src={
 											post.profilePicUrl ??
-											`/exampleclub.png`
+											`/meem-icon.png`
 										}
 										height={32}
 										width={32}
@@ -261,7 +274,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 										</div>
 									</Link>
 									<Space w={16} />
-									<div
+									{/* <div
 										className={meemTheme.centeredRow}
 										style={{ cursor: 'pointer' }}
 									>
@@ -271,13 +284,13 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 											Share
 										</Text>
 									</div>
-									<Space w={16} />
+									<Space w={16} /> */}
 								</div>
 							</div>
 						</div>
 					</div>
-				</a>
-			</Link>
+				</div>
+			</>
 		</div>
 	)
 }
