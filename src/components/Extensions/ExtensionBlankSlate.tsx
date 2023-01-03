@@ -72,25 +72,25 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 					</Center>
 					{(agreement.isCurrentUserAgreementOwner ||
 						agreement.isCurrentUserAgreementAdmin) && (
-						<>
-							<Space h={24} />{' '}
-							<Center>
-								<Button
-									className={meemTheme.buttonGrey}
-									onClick={() => {
-										router.push({
-											pathname: `${agreement.slug}/admin`,
-											query: {
-												tab: 'extensions'
-											}
-										})
-									}}
-								>
-									Enable this extension
-								</Button>
-							</Center>
-						</>
-					)}
+							<>
+								<Space h={24} />{' '}
+								<Center>
+									<Button
+										className={meemTheme.buttonGrey}
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement.slug}/admin`,
+												query: {
+													tab: 'extensions'
+												}
+											})
+										}}
+									>
+										Enable this extension
+									</Button>
+								</Center>
+							</>
+						)}
 				</Container>
 			)}
 			{!isLoadingAgreement &&

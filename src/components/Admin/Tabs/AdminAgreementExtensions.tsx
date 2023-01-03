@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	Text,
 	Image,
@@ -12,7 +13,7 @@ import {
 	Center,
 	Modal
 } from '@mantine/core'
-import { useSDK } from '@meemproject/react'
+import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -29,13 +30,16 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const { sdk } = useSDK()
+	const { anonClient } = useMeemApollo()
 
 	// Fetch a list of available extensions.
 	const {
 		loading,
 		error,
 		data: availableExtensionsData
-	} = useQuery<GetExtensionsQuery>(GET_EXTENSIONS)
+	} = useQuery<GetExtensionsQuery>(GET_EXTENSIONS, {
+		client: anonClient
+	})
 
 	// Lists of extensions
 	const [searchedExtensions, setSearchedExtensions] = useState<Extension[]>(
@@ -100,6 +104,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		router.push(`/${agreement.slug}/e/${slug}`)
 	}
 
+	log.debug('EXTENSIONS YO', availableExtensionsData)
+
 	return (
 		<>
 			<div>
@@ -163,21 +169,20 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												}
 											>
 												<Image
-													src={`/${
-														isDarkTheme
+													src={`/${isDarkTheme
 															? `${(
-																	extension
-																		.Extension
-																		?.icon ??
-																	''
-															  ).replace(
-																	'.png',
-																	'-white.png'
-															  )}`
-															: extension
+																extension
 																	.Extension
-																	?.icon
-													}`}
+																	?.icon ??
+																''
+															).replace(
+																'.png',
+																'-white.png'
+															)}`
+															: extension
+																.Extension
+																?.icon
+														}`}
 													width={16}
 													height={16}
 													fit={'contain'}
@@ -353,14 +358,13 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												}
 											>
 												<Image
-													src={`/${
-														isDarkTheme
+													src={`/${isDarkTheme
 															? `${extension.icon?.replace(
-																	'.png',
-																	'-white.png'
-															  )}`
+																'.png',
+																'-white.png'
+															)}`
 															: extension.icon
-													}`}
+														}`}
 													width={16}
 													height={16}
 													fit={'contain'}
@@ -403,7 +407,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 					padding={'lg'}
 					withCloseButton={false}
 					opened={isEnablingExtension}
-					onClose={() => {}}
+					onClose={() => { }}
 				>
 					<Center>
 						<Text className={meemTheme.tLargeBold}>
