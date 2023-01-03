@@ -568,19 +568,6 @@ export const GET_ALL_AGREEMENTS = gql`
 			splits
 			mintPermissions
 			symbol
-			# AgreementWallets {
-			# 	role
-			# 	Wallet {
-			# 		ens
-			# 		address
-			# 	}
-			# }
-			# AgreementTokens {
-			# 	Wallet {
-			# 		address
-			# 		ens
-			# 	}
-			# }
 		}
 	}
 `
