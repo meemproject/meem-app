@@ -132,7 +132,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			const { e, reaction } = options
 			e.preventDefault()
 			try {
-				if (!router.query.postId) {
+				if (!postId) {
 					log.crit('No postId found')
 					return
 				}
@@ -148,17 +148,14 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 				const authSig = await sdk.id.getLitAuthSig()
 
-				const tableName =
-					agreementExtension?.metadata?.storage?.tableland?.reactions
-						.tablelandTableName
+				const createdAt = Math.floor(new Date().getTime() / 1000)
 
 				await sdk.storage.encryptAndWrite({
 					chainId,
-					tableName,
+					path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/reactions`,
 					authSig,
 					writeColumns: {
-						refId: post?.id,
-						refTable: 'posts'
+						createdAt
 					},
 					data: {
 						reaction,
@@ -179,12 +176,12 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			}
 			setIsLoading(false)
 		},
-		[agreement, sdk, router, chainId, me, agreementExtension, post]
+		[agreement, sdk, chainId, me, postId]
 	)
 
 	const handleCommentSubmit = useCallback(async () => {
 		try {
-			if (!router.query.postId) {
+			if (!postId) {
 				log.crit('No postId found')
 				return
 			}
@@ -200,16 +197,14 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 			const authSig = await sdk.id.getLitAuthSig()
 
-			const tableName =
-				agreementExtension?.metadata?.storage?.tableland?.comments
-					.tablelandTableName
+			const createdAt = Math.floor(new Date().getTime() / 1000)
 
 			await sdk.storage.encryptAndWrite({
 				chainId,
-				tableName,
+				path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/comments`,
 				authSig,
 				writeColumns: {
-					refId: router.query.postId
+					createdAt
 				},
 				data: {
 					body: editor?.getHTML(),
@@ -245,229 +240,277 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}, [
-		chainId,
-		router,
-		editor,
-		agreement,
-		sdk,
-		accounts,
-		me,
-		agreementExtension
-	])
+	}, [chainId, editor, agreement, sdk, accounts, me, postId])
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (
-				hasFetchedPost ||
-				!chainId ||
-				loginState !== LoginState.LoggedIn ||
-				!sdk.id.hasInitialized
-			) {
-				return
-			}
-			const authSig = await sdk.id.getLitAuthSig()
-
-			// Fetch Post
-			if (
-				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.posts
-			) {
-				const tableName =
-					agreementExtension.metadata?.storage?.tableland?.posts
-						.tablelandTableName
-
-				const rows = await sdk.storage.read({
-					chainId,
-					tableName,
-					authSig,
-					where: {
-						id: router.query.postId
-					}
-				})
-
-				const newPost: DiscussionPost = rowToDiscussionPost({
-					row: rows[0],
-					agreement
-				})
-
-				setPost(newPost)
-			}
-			setHasFetchedPost(true)
+		if (!sdk.id.hasInitialized || !chainId) {
+			return
 		}
 
-		fetchData()
+		const path = `meem/${agreement?.id}/extensions/discussion/posts/${postId}`
+
+		const authSig = sdk.id.getLitAuthSig()
+
+		const handlePostData = (items: any) => {
+			Object.keys(items).forEach(k => {
+				const item = items[k]
+				if (/^#/.test(k)) {
+					setPost(rowToDiscussionPost({ row: item, agreement }))
+					setHasFetchedPost(true)
+				}
+			})
+		}
+
+		sdk.storage.on({
+			chainId,
+			authSig,
+			path,
+			cb: handlePostData
+		})
+
+		const handleCommentsData = (items: any) => {
+			const newComments: DiscussionComment[] = []
+			Object.keys(items).forEach(k => {
+				const item = items[k]
+				newComments.push(
+					rowToDiscussionComment({ row: item, agreement })
+				)
+			})
+
+			newComments.sort((a, b) => {
+				return b.createdAt - a.createdAt
+			})
+
+			setComments(newComments)
+		}
+
+		const commentsPath = `meem/${agreement?.id}/extensions/discussion/posts/${postId}/comments`
+		sdk.storage.on({
+			chainId,
+			authSig,
+			path: commentsPath,
+			cb: handleCommentsData
+		})
+
+		const handleReactionsData = (items: any) => {
+			console.log('REACTIONS', items)
+		}
+
+		const reactionsPath = `meem/${agreement?.id}/extensions/discussion/posts/${postId}/reactions`
+		sdk.storage.on({
+			chainId,
+			authSig,
+			path: reactionsPath,
+			cb: handleReactionsData
+		})
+
+		return () => {
+			sdk.storage.off(path, handlePostData)
+			sdk.storage.off(commentsPath, handleCommentsData)
+		}
 	}, [
 		hasFetchedPost,
 		agreement,
 		chainId,
 		sdk,
-		router.query.postId,
+		postId,
 		loginState,
 		agreementExtension
 	])
 
-	useEffect(() => {
-		const fetchData = async () => {
-			if (
-				hasFetchedComments ||
-				!post ||
-				!chainId ||
-				loginState !== LoginState.LoggedIn ||
-				!sdk.id.hasInitialized
-			) {
-				return
-			}
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		if (
+	// 			hasFetchedPost ||
+	// 			!chainId ||
+	// 			loginState !== LoginState.LoggedIn ||
+	// 			!sdk.id.hasInitialized
+	// 		) {
+	// 			return
+	// 		}
+	// 		const authSig = await sdk.id.getLitAuthSig()
 
-			const authSig = await sdk.id.getLitAuthSig()
+	// 		const newPost: DiscussionPost = rowToDiscussionPost({
+	// 			row: rows[0],
+	// 			agreement
+	// 		})
 
-			// Fetch Comments
-			if (
-				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.comments
-			) {
-				const commentsTableName =
-					agreementExtension.metadata?.storage?.tableland?.comments
-						.tablelandTableName
+	// 		setPost(newPost)
+	// 		setHasFetchedPost(true)
+	// 	}
 
-				const [count, rows] = await Promise.all([
-					sdk.storage.count({
-						chainId,
-						tableName: commentsTableName,
-						where: {
-							refId: post.id
-						}
-					}),
-					sdk.storage.read({
-						chainId,
-						tableName: commentsTableName,
-						authSig,
-						where: {
-							refId: post.id
-						}
-					})
-				])
+	// 	fetchData()
+	// }, [
+	// 	hasFetchedPost,
+	// 	agreement,
+	// 	chainId,
+	// 	sdk,
+	// 	postId,
+	// 	loginState,
+	// 	agreementExtension
+	// ])
 
-				const newComments: DiscussionComment[] = rows.map(row =>
-					rowToDiscussionComment({
-						row,
-						agreement
-					})
-				)
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		if (
+	// 			hasFetchedComments ||
+	// 			!post ||
+	// 			!chainId ||
+	// 			loginState !== LoginState.LoggedIn ||
+	// 			!sdk.id.hasInitialized
+	// 		) {
+	// 			return
+	// 		}
 
-				setComments(newComments ?? [])
+	// 		const authSig = await sdk.id.getLitAuthSig()
 
-				setCommentCount(count)
-			}
+	// 		// Fetch Comments
+	// 		if (
+	// 			agreementExtension &&
+	// 			agreementExtension.metadata?.storage?.tableland?.comments
+	// 		) {
+	// 			const commentsTableName =
+	// 				agreementExtension.metadata?.storage?.tableland?.comments
+	// 					.tablelandTableName
 
-			setHasFetchedComments(true)
-		}
+	// 			const [count, rows] = await Promise.all([
+	// 				sdk.storage.count({
+	// 					chainId,
+	// 					tableName: commentsTableName,
+	// 					where: {
+	// 						refId: post.id
+	// 					}
+	// 				}),
+	// 				sdk.storage.read({
+	// 					chainId,
+	// 					tableName: commentsTableName,
+	// 					authSig,
+	// 					where: {
+	// 						refId: post.id
+	// 					}
+	// 				})
+	// 			])
 
-		fetchData()
-	}, [
-		hasFetchedComments,
-		agreement,
-		chainId,
-		sdk,
-		post,
-		loginState,
-		agreementExtension
-	])
+	// 			const newComments: DiscussionComment[] = rows.map(row =>
+	// 				rowToDiscussionComment({
+	// 					row,
+	// 					agreement
+	// 				})
+	// 			)
 
-	useEffect(() => {
-		const fetchData = async () => {
-			if (
-				hasFetchedReactions ||
-				!post ||
-				!comments ||
-				!chainId ||
-				loginState !== LoginState.LoggedIn ||
-				!sdk.id.hasInitialized
-			) {
-				return
-			}
+	// 			setComments(newComments ?? [])
 
-			const authSig = await sdk.id.getLitAuthSig()
+	// 			setCommentCount(count)
+	// 		}
 
-			const refIds = [post.id, ...comments.map(c => c.id)]
+	// 		setHasFetchedComments(true)
+	// 	}
 
-			// Fetch Reactions
-			if (
-				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.reactions
-			) {
-				const reactionsTableName =
-					agreementExtension.metadata?.storage?.tableland?.reactions
-						.tablelandTableName
+	// 	fetchData()
+	// }, [
+	// 	hasFetchedComments,
+	// 	agreement,
+	// 	chainId,
+	// 	sdk,
+	// 	post,
+	// 	loginState,
+	// 	agreementExtension
+	// ])
 
-				const rows = await sdk.storage.read({
-					chainId,
-					tableName: reactionsTableName,
-					authSig,
-					where: {
-						refId: refIds
-					}
-				})
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		if (
+	// 			hasFetchedReactions ||
+	// 			!post ||
+	// 			!comments ||
+	// 			!chainId ||
+	// 			loginState !== LoginState.LoggedIn ||
+	// 			!sdk.id.hasInitialized
+	// 		) {
+	// 			return
+	// 		}
 
-				const newReactions: IReactions = { posts: {}, comments: {} }
-				rows.forEach(row => {
-					if (row.data?.reaction) {
-						const table = row.refTable as string
-						if (newReactions[table]) {
-							if (!newReactions[table][row.refId]) {
-								newReactions[table][row.refId] = {
-									counts: {},
-									walletAddresses: {}
-								}
-							}
+	// 		const authSig = await sdk.id.getLitAuthSig()
 
-							// Ignore additional reactions from a wallet
-							if (
-								newReactions[table][row.refId].walletAddresses[
-									row.data.walletAddress
-								]
-							) {
-								return
-							}
+	// 		const refIds = [post.id, ...comments.map(c => c.id)]
 
-							if (
-								!newReactions[table][row.refId].counts[
-									row.data.reaction
-								]
-							) {
-								newReactions[table][row.refId].counts[
-									row.data.reaction
-								] = 1
-							} else {
-								newReactions[table][row.refId].counts[
-									row.data.reaction
-								]++
-							}
+	// 		// Fetch Reactions
+	// 		if (
+	// 			agreementExtension &&
+	// 			agreementExtension.metadata?.storage?.tableland?.reactions
+	// 		) {
+	// 			const reactionsTableName =
+	// 				agreementExtension.metadata?.storage?.tableland?.reactions
+	// 					.tablelandTableName
 
-							newReactions[table][row.refId].walletAddresses[
-								row.data.walletAddress
-							] = true
-						}
-					}
-				})
+	// 			const rows = await sdk.storage.read({
+	// 				chainId,
+	// 				tableName: reactionsTableName,
+	// 				authSig,
+	// 				where: {
+	// 					refId: refIds
+	// 				}
+	// 			})
 
-				setReactions(newReactions)
-			}
+	// 			const newReactions: IReactions = { posts: {}, comments: {} }
+	// 			rows.forEach(row => {
+	// 				if (row.data?.reaction) {
+	// 					const table = row.refTable as string
+	// 					if (newReactions[table]) {
+	// 						if (!newReactions[table][row.refId]) {
+	// 							newReactions[table][row.refId] = {
+	// 								counts: {},
+	// 								walletAddresses: {}
+	// 							}
+	// 						}
 
-			setHasFetchedReactions(true)
-		}
+	// 						// Ignore additional reactions from a wallet
+	// 						if (
+	// 							newReactions[table][row.refId].walletAddresses[
+	// 								row.data.walletAddress
+	// 							]
+	// 						) {
+	// 							return
+	// 						}
 
-		fetchData()
-	}, [
-		hasFetchedReactions,
-		agreement,
-		chainId,
-		sdk,
-		post,
-		comments,
-		loginState,
-		agreementExtension
-	])
+	// 						if (
+	// 							!newReactions[table][row.refId].counts[
+	// 								row.data.reaction
+	// 							]
+	// 						) {
+	// 							newReactions[table][row.refId].counts[
+	// 								row.data.reaction
+	// 							] = 1
+	// 						} else {
+	// 							newReactions[table][row.refId].counts[
+	// 								row.data.reaction
+	// 							]++
+	// 						}
+
+	// 						newReactions[table][row.refId].walletAddresses[
+	// 							row.data.walletAddress
+	// 						] = true
+	// 					}
+	// 				}
+	// 			})
+
+	// 			setReactions(newReactions)
+	// 		}
+
+	// 		setHasFetchedReactions(true)
+	// 	}
+
+	// 	fetchData()
+	// }, [
+	// 	hasFetchedReactions,
+	// 	agreement,
+	// 	chainId,
+	// 	sdk,
+	// 	post,
+	// 	comments,
+	// 	loginState,
+	// 	agreementExtension
+	// ])
 
 	const upVotes =
 		(post &&

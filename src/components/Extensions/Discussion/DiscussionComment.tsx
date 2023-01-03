@@ -138,7 +138,10 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 						{comment.displayName ?? comment.walletAddress}
 					</Text>
 					<Text className={meemTheme.tExtraExtraSmall}>
-						{DateTime.fromSeconds(comment.createdAt).toRelative()}
+						{comment.createdAt &&
+							DateTime.fromSeconds(
+								comment.createdAt
+							).toRelative()}
 					</Text>
 				</div>
 			</div>

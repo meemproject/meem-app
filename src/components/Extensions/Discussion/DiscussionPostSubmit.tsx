@@ -152,24 +152,11 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				return
 			}
 
-			const postTable =
-				agreementExtension.metadata.storage?.tableland?.posts
-
-			if (!postTable) {
-				showNotification({
-					title: 'Something went wrong!',
-					message:
-						'Unable to find Posts table. Please reload and try again'
-				})
-				setIsLoading(false)
-				return
-			}
-
 			const now = Math.floor(new Date().getTime() / 1000)
 
-			const result = await sdk.storage.encryptAndWrite({
+			const { id } = await sdk.storage.encryptAndWrite({
 				authSig,
-				path: `meem/${agreement.id}/extensions/discussion/postsssssss`,
+				path: `meem/${agreement.id}/extensions/discussion/posts`,
 				data: {
 					title: postTitle,
 					body: editor?.getHTML(),
@@ -195,9 +182,9 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				]
 			})
 
-			console.log({ result })
-
-			// TODO: Redirect?
+			router.push({
+				pathname: `/${agreement.slug}/e/discussions/${id}`
+			})
 		} catch (e) {
 			log.crit(e)
 		}

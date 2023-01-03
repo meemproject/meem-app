@@ -275,70 +275,11 @@ export const DiscussionHome: React.FC = () => {
 
 	useEffect(() => {
 		const run = async () => {
-			if (!sdk.id.hasInitialized) {
+			if (!sdk.id.hasInitialized || !chainId) {
 				return
 			}
-			console.log('!!!!!!!!!!!!!!!!!!!!!!! FETCHING DATA FROM GUN...hmmm')
-			const gun = sdk.storage.getGunInstance()
 
-			// const obj = JSON.stringify({
-			// 	some: 'testdata'
-			// })
-
-			// const hash = await Gun.SEA.work(obj, null, null, {
-			// 	name: 'SHA-256'
-			// })
-
-			// const i = gun.get('test/items').get(`#${hash}`).put(obj)
-
-			// gun.get('test/list').get(`#${hash}`).put(obj)
-
-			// gun.get('test/list')
-			// 	.map()
-			// 	.once(data => {
-			// 		console.log('test/list data', data)
-			// 	})
-
-			// console.log({ hash })
-
-			// gun.get('test1').set('item1')
-			// gun.get('test1').set('item2')
-			// gun.get('test1').set('item3')
-
-			// const t = gun.get('test3').put('something')
-			// gun.get('test1').set(t)
-
-			// gun.get('test1').once(data => {
-			// 	console.log('test1 data', data)
-			// })
-			// console.log('got gun instance')
-			// if (typeof window !== 'undefined') {
-			// 	window.gun = gun
-			// }
-			// console.log({ gun })
-
-			// console.log('PUT ITEM')
-
-			// const item = gun.put({ test: 'this' })
-			// gun.get('test').set(item)
-
-			// gun.get('test2').put('testing', ack => {
-			// 	console.log('test2 ack', ack)
-			// })
-
-			// gun.get('test2').once(data => {
-			// 	console.log('test2 data', data)
-			// })
-
-			// gun.get('test')
-			// 	.map()
-			// 	.once(data => {
-			// 		console.log('RECEIVE test DATA!!!!!!!!!!!')
-			// 		console.log({ data })
-			// 	})
-
-			// gun.get(`meem-${agreement?.id}-extensions-discussion-posts`).once(
-			const path = `meem/${agreement?.id}/extensions/discussion/postsssssss`
+			const path = `meem/${agreement?.id}/extensions/discussion/posts`
 
 			const authSig = sdk.id.getLitAuthSig()
 
