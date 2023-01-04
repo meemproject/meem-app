@@ -419,6 +419,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 					updatedAt
 					visibility
 				}
+				id
 				metadata
 				isInitialized
 				Extension {

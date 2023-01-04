@@ -2,7 +2,8 @@ import {
 	guild,
 	CreateGuildResponse,
 	Chain as GuildChain,
-	GetGuildByIdResponse
+	GetGuildByIdResponse,
+	GetGuildResponse
 } from '@guildxyz/sdk'
 import log from '@kengoldfarb/log'
 import {
@@ -12,12 +13,20 @@ import {
 	Center,
 	Button,
 	Divider,
-	Switch
+	Switch,
+	List,
+	Card,
+	Group,
+	Stack,
+	Title,
+	Anchor
 } from '@mantine/core'
 import { useSDK, useWallet } from '@meemproject/react'
 import { Bytes } from 'ethers'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
+import { Settings } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
@@ -27,6 +36,7 @@ import { ExtensionPageHeader } from '../ExtensionPageHeader'
 export const GuildExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
+	const router = useRouter()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('guild', agreement)
 
@@ -41,34 +51,41 @@ export const GuildExtensionSettings: React.FC = () => {
 	const [isCreatingGuild, setIsCreatingGuild] = useState(false)
 
 	const [agreementGuild, setAgreementGuild] = useState<
-		CreateGuildResponse | GetGuildByIdResponse | undefined
+		GetGuildResponse | undefined
 	>()
 
 	const wallet = useWallet()
 	const { sdk } = useSDK()
 
-	const fetchGuild = async (guildId: number) => {
-		if (!agreementExtension) {
-			return
-		}
-		setIsFetchingGuild(true)
+	const fetchGuild = useCallback(
+		async (guildId: number) => {
+			if (!agreementExtension) {
+				return
+			}
+			setIsFetchingGuild(true)
 
-		try {
-			const guildResponse = await guild.get(guildId)
-			log.debug(guildResponse)
-			setAgreementGuild(guildResponse)
-		} catch (e) {
-			log.crit(e)
-		}
+			log.debug('FETCHING GUILD', guildId)
 
-		setIsFetchingGuild(false)
-	}
+			try {
+				const guildResponse = await guild.get(guildId)
+				log.debug(guildResponse)
+				setAgreementGuild(guildResponse as GetGuildResponse)
+			} catch (e) {
+				log.crit(e)
+			}
+
+			setIsFetchingGuild(false)
+		},
+		[agreementExtension]
+	)
 
 	useEffect(() => {
 		if (!wallet || wallet.accounts.length < 1 || !agreementExtension) {
 			setIsFetchingGuild(false)
 			return
 		}
+
+		log.debug('AGREEMENT EXT', agreementExtension)
 
 		if (agreementExtension.metadata?.guildId) {
 			fetchGuild(agreementExtension.metadata?.guildId)
@@ -100,26 +117,32 @@ export const GuildExtensionSettings: React.FC = () => {
 		}
 	}
 
-	const updateAgreementExtension = async (params: { guildId?: number }) => {
-		setIsUpdatingExtension(true)
-		const currentMetadata = agreementExtension?.metadata
+	const updateAgreementExtension = useCallback(
+		async (params: { guildId?: number; test?: string }) => {
+			setIsUpdatingExtension(true)
+			const currentMetadata = agreementExtension?.metadata
 
-		try {
-			await sdk.agreementExtension.updateAgreementExtension({
-				agreementId: agreement?.id ?? '',
-				agreementExtensionId: agreementExtension?.id,
-				metadata: {
-					guildId: params.guildId
-						? params.guildId
-						: currentMetadata?.guildId
-				}
-			})
-		} catch (e) {
-			log.crit(e)
-		}
+			log.debug('UPDATING GUILD EXT', params, agreementExtension)
 
-		setIsUpdatingExtension(false)
-	}
+			try {
+				await sdk.agreementExtension.updateAgreementExtension({
+					agreementId: agreement?.id ?? '',
+					agreementExtensionId: agreementExtension?.id,
+					metadata: {
+						guildId: params.guildId
+							? params.guildId
+							: currentMetadata?.guildId,
+						test: params.test ? params.test : currentMetadata?.test
+					}
+				})
+			} catch (e) {
+				log.crit(e)
+			}
+
+			setIsUpdatingExtension(false)
+		},
+		[agreement, agreementExtension]
+	)
 
 	const createGuild = useCallback(async () => {
 		try {
@@ -167,11 +190,12 @@ export const GuildExtensionSettings: React.FC = () => {
 					]
 				}
 			)
-			setAgreementGuild(myGuild)
-			setIsCreatingGuild(false)
-			updateAgreementExtension({
+			log.debug('GUILD CREATED', myGuild)
+			await fetchGuild(myGuild.id)
+			await updateAgreementExtension({
 				guildId: myGuild.id
 			})
+			setIsCreatingGuild(false)
 		} catch (err) {
 			setIsCreatingGuild(false)
 			log.crit(err)
@@ -182,6 +206,36 @@ export const GuildExtensionSettings: React.FC = () => {
 TODO
 Add your custom extension settings layout here.
  */
+
+	const roleComponent = (props: { name: string; tokenAddress: string }) => {
+		const isAgreementRole = agreement?.address === props.tokenAddress
+		return (
+			<Card shadow="sm" p="lg" radius="md" withBorder>
+				<Group>
+					<Stack spacing="xs">
+						<Text weight="bold">{props.name}</Text>
+						<Text fz="sm">
+							{isAgreementRole ? `Member Role` : `Agreement Role`}
+						</Text>
+					</Stack>
+					{isAgreementRole && (
+						<Button
+							ml="auto"
+							onClick={() => {
+								router.push({
+									pathname: `/${agreement.slug}/members`
+								})
+							}}
+							className={meemTheme.buttonBlack}
+						>
+							Manage Members
+						</Button>
+					)}
+				</Group>
+			</Card>
+		)
+	}
+
 	const customExtensionSettings = () => (
 		<>
 			<Space h={40} />
@@ -189,10 +243,32 @@ Add your custom extension settings layout here.
 			<Space h={16} />
 			{agreementGuild ? (
 				<>
-					<Text>{agreementGuild.name}</Text>
-					<Link
-						href={`https://guild.xyz/${agreementGuild.urlName}`}
-					>{`https://guild.xyz/${agreementGuild.urlName}`}</Link>
+					<Group>
+						<Title order={4}>{agreementGuild.name}</Title>
+						<Button
+							ml="auto"
+							component="a"
+							leftIcon={<Settings />}
+							className={meemTheme.buttonBlack}
+							href={`https://guild.xyz/${agreementGuild.urlName}`}
+							target="_blank"
+						>
+							Manage Guild
+						</Button>
+					</Group>
+					<Divider mt={'md'} />
+					<Title order={5} mt={'xl'}>
+						Synced Roles
+					</Title>
+					<List mt={'sm'}>
+						{agreementGuild.roles.map(r =>
+							// TODO: make sure only one required token and chain matches
+							roleComponent({
+								name: r.name,
+								tokenAddress: r.requirements[0].address
+							})
+						)}
+					</List>
 				</>
 			) : (
 				<Button
@@ -200,7 +276,7 @@ Add your custom extension settings layout here.
 						createGuild()
 					}}
 				>
-					Create Guild
+					Create a New Guild
 				</Button>
 			)}
 			<Space h={8} />
@@ -270,83 +346,9 @@ Use this function to save any specific settings you have created for this extens
 								<ExtensionPageHeader extensionSlug={'guild'} />
 
 								<Container>
-									<div>
-										<div
-											className={meemTheme.spacedRowCentered}
-										>
-											<Switch
-												color={'green'}
-												label={'Display dashboard widget'}
-												checked={
-													shouldDisplayDashboardWidget
-												}
-												onChange={value => {
-													if (value) {
-														setShouldDisplayDashboardWidget(
-															value.currentTarget
-																.checked
-														)
-													}
-												}}
-											/>
-										</div>
-										<Space h={16} />
-										<Divider />
-									</div>
-									<div>
-										<Space h={4} />
-										<div
-											className={meemTheme.spacedRowCentered}
-										>
-											<Switch
-												color={'green'}
-												label={
-													'Hide widget if viewer is not a community member'
-												}
-												checked={isPrivateExtension}
-												onChange={value => {
-													if (value) {
-														setIsPrivateExtension(
-															value.currentTarget
-																.checked
-														)
-													}
-												}}
-											/>
-										</div>
-										<Space h={16} />
-										<Divider />
-									</div>
 									<Space h={16} />
-
-									<Button
-										disabled={isDisablingExtension}
-										loading={isDisablingExtension}
-										className={meemTheme.buttonBlue}
-										onClick={disableExtension}
-									>
-										Disable extension
-									</Button>
 
 									{customExtensionSettings()}
-									<Space h={40} />
-									<Text className={meemTheme.tExtraSmallLabel}>
-										PERMISSIONS
-									</Text>
-									<Space h={16} />
-
-									{customExtensionPermissions()}
-									<Space h={48} />
-									<Button
-										disabled={isSavingChanges}
-										loading={isSavingChanges}
-										onClick={() => {
-											saveChanges()
-										}}
-										className={meemTheme.buttonBlack}
-									>
-										Save Changes
-									</Button>
 								</Container>
 							</div>
 						)}
