@@ -181,55 +181,6 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 				}
 
 				const data = {
-					shouldMintTokens: true,
-					metadata: {
-						agreement_type: 'meem-agreement',
-						agreement_version: 'MeemAgreement_Contract_20220718',
-						name: agreement.name,
-						description: agreement.description,
-						image: agreement.image,
-						associations: [],
-						external_url: `https://app.meem.wtf/${agreement.slug}`,
-						application_instructions: applicationInstructions
-					},
-					name: agreement.name ?? '',
-					admins: agreement.adminAddresses,
-					minters: agreement.adminAddresses,
-					maxSupply: !isNaN(
-						agreement.membershipSettings?.membershipQuantity ?? 0
-					)
-						? `${agreement.membershipSettings?.membershipQuantity}`
-						: '0',
-					mintPermissions,
-					splits:
-						agreement.membershipSettings &&
-						agreement.membershipSettings.membershipFundsAddress
-							.length > 0
-							? [
-									{
-										toAddress: agreement.membershipSettings
-											? agreement.membershipSettings
-													.membershipFundsAddress
-											: wallet.accounts[0],
-										// Amount in basis points 10000 == 100%
-										amount: 10000,
-										lockedBy: MeemAPI.zeroAddress
-									}
-							  ]
-							: [],
-					tokenMetadata: {
-						meem_metadata_version: 'MeemAgreement_Token_20221116',
-						description: `Membership token for ${agreement.name}`,
-						name: `${agreement.name} membership token`,
-						image: agreement.image,
-						associations: [],
-						external_url: `https://app.meem.wtf/${agreement.slug}`
-					}
-				}
-
-				log.debug(data)
-
-				const { txId } = await sdk.agreement.reInitialize({
 					agreementId: agreement.id,
 					metadata: {
 						meem_metadata_type: 'Meem_AgreementContract',
@@ -266,7 +217,10 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 									}
 							  ]
 							: []
-				})
+				}
+
+				log.debug(data)
+				const { txId } = await sdk.agreement.reInitialize(data)
 
 				log.debug(`Reinitializing agreement w/ txId: ${txId}`)
 			} catch (e) {
@@ -404,7 +358,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					<Space h={24} />
 
 					<Text
-						className={meemTheme.tSmallBold}
+						className={meemTheme.tSmall}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>
