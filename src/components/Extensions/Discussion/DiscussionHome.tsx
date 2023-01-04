@@ -27,6 +27,7 @@ import { IReactions } from './DiscussionPost'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 import 'gun/sea'
 import 'gun/lib/open'
+import { useDiscussions } from './DiscussionProvider'
 
 export function rowToDiscussionPost(options: {
 	row: {
@@ -35,6 +36,7 @@ export function rowToDiscussionPost(options: {
 	agreement?: Agreement
 }): DiscussionPost {
 	const { row, agreement } = options
+	console.log({ row })
 	return {
 		id: row.id,
 		title: row.data.title,
@@ -47,7 +49,8 @@ export function rowToDiscussionPost(options: {
 		profilePicUrl: row.data.profilePicUrl,
 		createdAt: row.createdAt,
 		updatedAt: row.updatedAt,
-		attachment: row.data.attachment
+		attachment: row.data.attachment,
+		comments: row.comments
 	}
 }
 
@@ -56,8 +59,13 @@ export function rowToDiscussionComment(options: {
 		[columnName: string]: any
 	}
 	agreement?: Agreement
-}): DiscussionComment {
+}): DiscussionComment | undefined {
 	const { row, agreement } = options
+
+	if (!row || !row.data) {
+		return
+	}
+
 	return {
 		id: row.id,
 		agreementSlug: agreement?.slug ?? '',
@@ -88,45 +96,11 @@ export const DiscussionHome: React.FC = () => {
 
 	const { sdk } = useSDK()
 	const { chainId, loginState } = useAuth()
+	const { privateKey } = useDiscussions()
 
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
-
-	// useEffect(() => {
-	// 	const fetchData = async () => {
-	// 		if (hasFetchdData || !chainId || !sdk.id.hasInitialized) {
-	// 			return
-	// 		}
-
-	// 		if (
-	// 			agreementExtension &&
-	// 			agreementExtension.metadata?.storage?.tableland?.posts
-	// 		) {
-	// 			const authSig = await sdk.id.getLitAuthSig()
-
-	// 			const tableName =
-	// 				agreementExtension.metadata?.storage?.tableland?.posts
-	// 					.tablelandTableName
-
-	// 			const rows = await sdk.storage.read({
-	// 				chainId,
-	// 				tableName,
-	// 				authSig
-	// 			})
-
-	// 			const newPosts: DiscussionPost[] = rows.map(row =>
-	// 				rowToDiscussionPost({ row, agreement })
-	// 			)
-
-	// 			setPosts(newPosts)
-
-	// 			setHasFetchedData(true)
-	// 		}
-	// 	}
-
-	// 	fetchData()
-	// }, [hasFetchdData, agreement, chainId, sdk, agreementExtension])
 
 	// useEffect(() => {
 	// 	const fetchData = async () => {
@@ -275,21 +249,19 @@ export const DiscussionHome: React.FC = () => {
 
 	useEffect(() => {
 		const run = async () => {
-			if (!sdk.id.hasInitialized || !chainId) {
+			if (!sdk.id.hasInitialized || !chainId || !privateKey) {
 				return
 			}
 
 			const path = `meem/${agreement?.id}/extensions/discussion/posts`
 
-			const authSig = sdk.id.getLitAuthSig()
-
 			sdk.storage.on({
 				chainId,
-				authSig,
+				privateKey,
 				path,
 				cb: items => {
-					// console.log('DATA!!!')
-					// console.log({ data })
+					console.log('DATA!!!')
+					console.log({ items })
 					const newPosts: DiscussionPost[] = []
 
 					Object.keys(items).forEach(k => {
@@ -297,7 +269,7 @@ export const DiscussionHome: React.FC = () => {
 						if (typeof item.data === 'object') {
 							newPosts.push(
 								rowToDiscussionPost({
-									row: { id: k, ...item },
+									row: { ...item, id: k },
 									agreement
 								})
 							)
@@ -333,7 +305,7 @@ export const DiscussionHome: React.FC = () => {
 			console.log('!!!!!!!!!!!!!!!!!!!!!!! END DATA FROM GUN')
 		}
 		run()
-	}, [sdk, agreement, chainId])
+	}, [sdk, agreement, chainId, privateKey])
 
 	return (
 		<>

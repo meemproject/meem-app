@@ -32,9 +32,9 @@ import {
 } from '../../Styles/MeemTheme'
 import { IReactions } from './DiscussionPost'
 interface IProps {
-	comment: DiscussionComment
+	comment?: DiscussionComment
 	reactions: IReactions
-	onReaction: () => void
+	onReaction?: () => void
 	agreementExtension: AgreementExtensions | undefined
 }
 
@@ -71,7 +71,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 	const [isReplying] = useState(false)
 	const [isCommentRepliesHidden, setIsCommentRepliesHidden] = useState(false)
 
-	log.debug({ isLoading })
+	console.log({ comment })
 
 	const handleReactionSubmit = useCallback(
 		async (options: {
@@ -113,8 +113,9 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 					]
 				})
 
-				// Re-fetch
-				onReaction()
+				if (onReaction) {
+					onReaction()
+				}
 			} catch (err) {
 				log.crit(err)
 			}
@@ -122,6 +123,10 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 		},
 		[sdk, chainId, me, agreementExtension, agreement, onReaction, comment]
 	)
+
+	if (!comment) {
+		return null
+	}
 
 	return (
 		<div>

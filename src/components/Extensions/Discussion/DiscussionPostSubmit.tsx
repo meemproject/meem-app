@@ -29,6 +29,7 @@ import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { useDiscussions } from './DiscussionProvider'
 
 interface IProps {
 	agreementSlug?: string
@@ -39,6 +40,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { publicKey, privateKey } = useDiscussions()
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
@@ -140,8 +142,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 
 			setIsLoading(true)
 
-			const authSig = await sdk.id.getLitAuthSig()
-
 			if (!agreementExtension) {
 				showNotification({
 					title: 'Something went wrong!',
@@ -155,7 +155,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 			const now = Math.floor(new Date().getTime() / 1000)
 
 			const { id } = await sdk.storage.encryptAndWrite({
-				authSig,
 				path: `meem/${agreement.id}/extensions/discussion/posts`,
 				data: {
 					title: postTitle,
@@ -174,22 +173,27 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 					createdAt: now,
 					updatedAt: now
 				},
-				chainId: wallet.chainId,
-				accessControlConditions: [
-					{
-						contractAddress: agreement.address
-					}
-				]
+				key: publicKey
+				// chainId: wallet.chainId,
+				// accessControlConditions: [
+				// 	{
+				// 		contractAddress: agreement.address
+				// 	}
+				// ]
 			})
 
-			router.push({
-				pathname: `/${agreement.slug}/e/discussions/${id}`
-			})
+			console.log('ENCRYPTED', { id })
+
+			// router.push({
+			// 	pathname: `/${agreement.slug}/e/discussions/${id}`
+			// })
 		} catch (e) {
 			log.crit(e)
 		}
 		setIsLoading(false)
 	}
+
+	console.log({ publicKey, privateKey })
 
 	return (
 		<>

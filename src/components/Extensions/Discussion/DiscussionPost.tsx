@@ -50,6 +50,7 @@ import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { DiscussionCommentComponent } from './DiscussionComment'
 import { rowToDiscussionComment, rowToDiscussionPost } from './DiscussionHome'
+import { useDiscussions } from './DiscussionProvider'
 interface IProps {
 	postId: string
 }
@@ -89,8 +90,6 @@ export interface IReactions {
 export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const [hasFetchedPost, setHasFetchedPost] = useState(false)
-	const [hasFetchedComments, setHasFetchedComments] = useState(false)
-	const [hasFetchedReactions, setHasFetchedReactions] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [isSubmittingReaction, setIsSubmittingReaction] = useState(false)
 	const [post, setPost] = useState<DiscussionPost>()
@@ -104,6 +103,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const { sdk } = useSDK()
 	const { agreement, error, isLoadingAgreement } = useAgreement()
 	const router = useRouter()
+	const { publicKey, privateKey } = useDiscussions()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -145,16 +145,19 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					log.crit('No agreement found')
 					return
 				}
+				if (!publicKey) {
+					log.crit('No publicKey found')
+					return
+				}
 				setIsLoading(true)
 
-				const authSig = await sdk.id.getLitAuthSig()
-
 				const createdAt = Math.floor(new Date().getTime() / 1000)
+				const gun = sdk.storage.getGunInstance()
 
-				await sdk.storage.encryptAndWrite({
+				const { item } = await sdk.storage.encryptAndWrite({
 					chainId,
 					path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/reactions`,
-					authSig,
+					publicKey,
 					writeColumns: {
 						createdAt
 					},
@@ -170,14 +173,17 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					]
 				})
 
-				// Re-fetch
-				setHasFetchedReactions(false)
+				gun.get(
+					`meem/${agreement.id}/extensions/discussion/posts/${postId}`
+				)
+					.get('reactions')
+					.set(item)
 			} catch (err) {
 				log.crit(err)
 			}
 			setIsLoading(false)
 		},
-		[agreement, sdk, chainId, me, postId]
+		[agreement, sdk, chainId, me, postId, publicKey]
 	)
 
 	const handleCommentSubmit = useCallback(async () => {
@@ -194,19 +200,22 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				log.crit('No agreement found')
 				return
 			}
+			if (!publicKey) {
+				log.crit('No publicKey found')
+				return
+			}
 			setIsLoading(true)
 
-			const authSig = await sdk.id.getLitAuthSig()
-
 			const createdAt = Math.floor(new Date().getTime() / 1000)
+			const gun = sdk.storage.getGunInstance()
 
-			await sdk.storage.encryptAndWrite({
+			const { item } = await sdk.storage.encryptAndWrite({
 				chainId,
 				path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/comments`,
-				authSig,
 				writeColumns: {
 					createdAt
 				},
+				publicKey,
 				data: {
 					body: editor?.getHTML(),
 					walletAddress: accounts[0],
@@ -223,6 +232,14 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				]
 			})
 
+			console.log('encrypt item', item)
+
+			gun.get(
+				`meem/${agreement.id}/extensions/discussion/posts/${postId}`
+			)
+				.get('comments')
+				.set(item)
+
 			editor?.commands.clearContent()
 
 			showNotification({
@@ -234,81 +251,89 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				message:
 					'Your comment has been submitted. Reloading comments...'
 			})
-
-			// Re-fetch
-			setHasFetchedComments(false)
 		} catch (e) {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}, [chainId, editor, agreement, sdk, accounts, me, postId])
+	}, [chainId, editor, agreement, sdk, accounts, me, postId, publicKey])
 
 	useEffect(() => {
-		if (!sdk.id.hasInitialized || !chainId) {
+		if (!sdk.id.hasInitialized || !chainId || !privateKey) {
 			return
 		}
 
 		const path = `meem/${agreement?.id}/extensions/discussion/posts/${postId}`
 
-		const authSig = sdk.id.getLitAuthSig()
-
 		const handlePostData = (items: any) => {
+			let builtItem: Record<string, any> = {}
 			Object.keys(items).forEach(k => {
+				console.log('items', { items })
 				const item = items[k]
 				if (/^#/.test(k)) {
-					setPost(rowToDiscussionPost({ row: item, agreement }))
-					setHasFetchedPost(true)
+					// setPost(rowToDiscussionPost({ row: item, agreement }))
+					builtItem = { ...builtItem, ...item }
+				} else {
+					builtItem = {
+						[k]: item,
+						...builtItem
+					}
 				}
 			})
+			console.log('builtItem', { builtItem })
+			setPost(rowToDiscussionPost({ row: builtItem, agreement }))
+			setHasFetchedPost(true)
 		}
 
 		sdk.storage.on({
 			chainId,
-			authSig,
+			privateKey,
 			path,
 			cb: handlePostData
 		})
 
-		const handleCommentsData = (items: any) => {
-			const newComments: DiscussionComment[] = []
-			Object.keys(items).forEach(k => {
-				const item = items[k]
-				newComments.push(
-					rowToDiscussionComment({ row: item, agreement })
-				)
-			})
+		// const handleCommentsData = (items: any) => {
+		// 	console.log('handleCommentsData')
+		// 	const newComments: DiscussionComment[] = []
+		// 	Object.keys(items).forEach(k => {
+		// 		const item = items[k]
+		// 		newComments.push(
+		// 			rowToDiscussionComment({ row: item, agreement })
+		// 		)
+		// 	})
 
-			newComments.sort((a, b) => {
-				return b.createdAt - a.createdAt
-			})
+		// 	newComments.sort((a, b) => {
+		// 		return b.createdAt - a.createdAt
+		// 	})
 
-			setComments(newComments)
-		}
+		// 	setComments(newComments)
+		// }
 
-		const commentsPath = `meem/${agreement?.id}/extensions/discussion/posts/${postId}/comments`
-		sdk.storage.on({
-			chainId,
-			authSig,
-			path: commentsPath,
-			cb: handleCommentsData
-		})
+		// const commentsPath = `meem/${agreement?.id}/extensions/discussion/posts/${postId}/comments`
+		// sdk.storage.on({
+		// 	chainId,
+		// 	privateKey,
+		// 	path: commentsPath,
+		// 	cb: handleCommentsData
+		// })
 
-		const handleReactionsData = (items: any) => {
-			console.log('REACTIONS', items)
-		}
+		// const handleReactionsData = (items: any) => {
+		// 	console.log('REACTIONS', items)
+		// 	// setReactions
+		// }
 
-		const reactionsPath = `meem/${agreement?.id}/extensions/discussion/posts/${postId}/reactions`
-		sdk.storage.on({
-			chainId,
-			authSig,
-			path: reactionsPath,
-			cb: handleReactionsData
-		})
+		// const reactionsPath = `meem/${agreement?.id}/extensions/discussion/posts/${postId}/reactions`
+		// sdk.storage.on({
+		// 	chainId,
+		// 	privateKey,
+		// 	path: reactionsPath,
+		// 	cb: handleReactionsData
+		// })
 
-		return () => {
-			sdk.storage.off(path, handlePostData)
-			sdk.storage.off(commentsPath, handleCommentsData)
-		}
+		// return () => {
+		// 	sdk.storage.off(path, handlePostData)
+		// 	sdk.storage.off(commentsPath, handleCommentsData)
+		// 	sdk.storage.off(reactionsPath, handleReactionsData)
+		// }
 	}, [
 		hasFetchedPost,
 		agreement,
@@ -316,7 +341,8 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 		sdk,
 		postId,
 		loginState,
-		agreementExtension
+		agreementExtension,
+		privateKey
 	])
 
 	// useEffect(() => {
@@ -524,6 +550,8 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			reactions.posts[post.id].counts.downvote) ??
 		0
 	const votes = upVotes - downVotes
+
+	console.log({ post, comments: post?.comments })
 
 	return (
 		<div>
@@ -814,16 +842,17 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 							</div>
 						)}
 						<Space h={24} />
-						{comments &&
-							comments.map(comment => (
+						{post?.comments &&
+							Object.values(post.comments).map(comment => (
 								<DiscussionCommentComponent
 									key={comment.id}
-									comment={comment}
+									// comment={comment}
+									comment={rowToDiscussionComment({
+										row: comment,
+										agreement
+									})}
 									reactions={reactions}
 									agreementExtension={agreementExtension}
-									onReaction={() =>
-										setHasFetchedReactions(false)
-									}
 								/>
 							))}
 					</Container>
