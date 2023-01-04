@@ -1,9 +1,12 @@
 import {
 	guild,
+	user as guildUser,
 	CreateGuildResponse,
 	Chain as GuildChain,
 	GetGuildByIdResponse,
-	GetGuildResponse
+	GetGuildResponse,
+	role as guildRole,
+	CreateRoleParams
 } from '@guildxyz/sdk'
 import log from '@kengoldfarb/log'
 import {
@@ -19,10 +22,14 @@ import {
 	Group,
 	Stack,
 	Title,
-	Anchor
+	Anchor,
+	UnstyledButton,
+	Select,
+	SelectItem
 } from '@mantine/core'
 import { useSDK, useWallet } from '@meemproject/react'
 import { Bytes } from 'ethers'
+import { DeleteCircledOutline } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -32,6 +39,13 @@ import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
+
+interface ISyncedGuildRole {
+	name: string
+	tokenAddress: string
+	guildRoleId?: number
+	agreementRoleId?: string
+}
 
 export const GuildExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -52,6 +66,20 @@ export const GuildExtensionSettings: React.FC = () => {
 
 	const [agreementGuild, setAgreementGuild] = useState<
 		GetGuildResponse | undefined
+	>()
+	const [userGuilds, setUserGuilds] = useState<
+		| {
+			id: number
+			name: string
+			roles: { requirements: { address: string }[] }[]
+		}[]
+		| undefined
+	>()
+	const [syncedRoles, setSyncedRoles] = useState<ISyncedGuildRole[]>([])
+	const [unsyncedRoles, setUnsyncedRoles] = useState<any[]>([])
+
+	const [userSelectedGuildId, setUserSelectedGuildId] = useState<
+		string | null
 	>()
 
 	const wallet = useWallet()
@@ -79,6 +107,42 @@ export const GuildExtensionSettings: React.FC = () => {
 		[agreementExtension]
 	)
 
+	const fetchUserGuilds = useCallback(async () => {
+		if (!agreementExtension) {
+			return
+		}
+
+		setIsFetchingGuild(true)
+
+		log.debug('FETCHING USER GUILDS')
+
+		try {
+			const userGuildsResponse = await guildUser.getMemberships(
+				wallet.accounts[0]
+			)
+			const userAdminGuilds =
+				userGuildsResponse?.filter(
+					g =>
+						(
+							g as unknown as {
+								guildId: number
+								isAdmin: boolean
+							}
+						).isAdmin
+				) ?? []
+			const guildsData = await Promise.all(
+				userAdminGuilds.map(async g => {
+					return guild.get(g.guildId)
+				})
+			)
+			setUserGuilds(guildsData)
+		} catch (e) {
+			log.crit(e)
+		}
+
+		setIsFetchingGuild(false)
+	}, [agreementExtension])
+
 	useEffect(() => {
 		if (!wallet || wallet.accounts.length < 1 || !agreementExtension) {
 			setIsFetchingGuild(false)
@@ -89,6 +153,8 @@ export const GuildExtensionSettings: React.FC = () => {
 
 		if (agreementExtension.metadata?.guildId) {
 			fetchGuild(agreementExtension.metadata?.guildId)
+		} else {
+			fetchUserGuilds()
 		}
 	}, [wallet, agreementExtension])
 
@@ -116,33 +182,6 @@ export const GuildExtensionSettings: React.FC = () => {
 				return 'POLYGON'
 		}
 	}
-
-	const updateAgreementExtension = useCallback(
-		async (params: { guildId?: number; test?: string }) => {
-			setIsUpdatingExtension(true)
-			const currentMetadata = agreementExtension?.metadata
-
-			log.debug('UPDATING GUILD EXT', params, agreementExtension)
-
-			try {
-				await sdk.agreementExtension.updateAgreementExtension({
-					agreementId: agreement?.id ?? '',
-					agreementExtensionId: agreementExtension?.id,
-					metadata: {
-						guildId: params.guildId
-							? params.guildId
-							: currentMetadata?.guildId,
-						test: params.test ? params.test : currentMetadata?.test
-					}
-				})
-			} catch (e) {
-				log.crit(e)
-			}
-
-			setIsUpdatingExtension(false)
-		},
-		[agreement, agreementExtension]
-	)
 
 	const createGuild = useCallback(async () => {
 		try {
@@ -192,9 +231,17 @@ export const GuildExtensionSettings: React.FC = () => {
 			)
 			log.debug('GUILD CREATED', myGuild)
 			await fetchGuild(myGuild.id)
-			await updateAgreementExtension({
-				guildId: myGuild.id
-			})
+			try {
+				await sdk.agreementExtension.updateAgreementExtension({
+					agreementId: agreement?.id ?? '',
+					agreementExtensionId: agreementExtension?.id,
+					metadata: {
+						guildId: myGuild.id
+					}
+				})
+			} catch (e) {
+				log.crit(e)
+			}
 			setIsCreatingGuild(false)
 		} catch (err) {
 			setIsCreatingGuild(false)
@@ -202,35 +249,318 @@ export const GuildExtensionSettings: React.FC = () => {
 		}
 	}, [agreement, agreementGuild])
 
+	const unsyncGuild = useCallback(async () => {
+		try {
+			if (!wallet.signer || wallet.accounts.length < 1) {
+				throw new Error("Can't sign the guild transaction.")
+			}
+
+			if (!agreement?.name || !agreement.address) {
+				throw new Error('No agreement name or addre')
+			}
+
+			setIsSavingChanges(true)
+
+			log.debug('UNSYNC THE GUILD')
+
+			try {
+				await sdk.agreementExtension.updateAgreementExtension({
+					agreementId: agreement?.id ?? '',
+					agreementExtensionId: agreementExtension?.id,
+					metadata: {}
+				})
+			} catch (e) {
+				log.crit(e)
+			}
+			setAgreementGuild(undefined)
+			setIsSavingChanges(false)
+		} catch (err) {
+			setIsSavingChanges(false)
+			log.crit(err)
+		}
+	}, [agreement, agreementExtension])
+
+	const syncGuild = useCallback(
+		async (guildId: number) => {
+			try {
+				if (!wallet.signer || wallet.accounts.length < 1) {
+					throw new Error("Can't sign the guild transaction.")
+				}
+
+				if (!agreement?.name || !agreement.address) {
+					throw new Error('No agreement name or addre')
+				}
+
+				setIsSavingChanges(true)
+
+				log.debug('SYNC THE GUILD')
+
+				try {
+					await sdk.agreementExtension.updateAgreementExtension({
+						agreementId: agreement?.id ?? '',
+						agreementExtensionId: agreementExtension?.id,
+						metadata: {
+							guildId
+						}
+					})
+				} catch (e) {
+					log.crit(e)
+				}
+				setIsSavingChanges(false)
+			} catch (err) {
+				setIsSavingChanges(false)
+				log.crit(err)
+			}
+		},
+		[agreement, agreementExtension]
+	)
+
+	const syncRole = useCallback(
+		async (tokenAddress: string) => {
+			if (!agreement || !agreementGuild) {
+				return
+			}
+
+			const agreementRole = agreement.roles?.find(
+				ar => ar.tokenAddress === tokenAddress
+			)
+
+			if (!agreementRole || !agreementRole.tokenAddress) {
+				return
+			}
+
+			try {
+				if (!wallet.signer || wallet.accounts.length < 1) {
+					throw new Error("Can't sign the guild transaction.")
+				}
+
+				if (!agreement?.name || !agreement.address) {
+					throw new Error('No agreement name or addre')
+				}
+
+				setIsSavingChanges(true)
+
+				log.debug('SYNC THE ROLE')
+
+				const sign = (signableMessage: string | Bytes) =>
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					wallet.signer!.signMessage(signableMessage)
+
+				try {
+					const guildRoleData: CreateRoleParams = {
+						guildId: agreementGuild.id,
+						name: agreementRole.name,
+						logic: 'AND',
+						requirements: [
+							{
+								type: 'ERC721',
+								chain: wallet.chainId
+									? getGuildChain(wallet.chainId)
+									: 'ETHEREUM',
+								address: agreementRole.tokenAddress,
+								data: {
+									minAmount: 1
+								}
+							}
+						]
+					}
+					await guildRole.create(
+						wallet.accounts[0], // You have to insert your own wallet here
+						sign,
+						guildRoleData
+					)
+				} catch (e) {
+					log.crit(e)
+				}
+				fetchGuild(agreementGuild.id)
+				setIsSavingChanges(false)
+			} catch (err) {
+				setIsSavingChanges(false)
+				log.crit(err)
+			}
+		},
+		[agreement, agreementGuild]
+	)
+
+	const deleteGuildRole = useCallback(
+		async (roleId: number) => {
+			if (!agreement || !agreementGuild) {
+				return
+			}
+
+			// const agreementRole = agreement.roles?.find(
+			// 	ar => ar.tokenAddress === tokenAddress
+			// )
+
+			// if (!agreementRole || !agreementRole.tokenAddress) {
+			// 	return
+			// }
+
+			try {
+				if (!wallet.signer || wallet.accounts.length < 1) {
+					throw new Error("Can't sign the guild transaction.")
+				}
+
+				if (!agreement?.name || !agreement.address) {
+					throw new Error('No agreement name or addre')
+				}
+
+				setIsSavingChanges(true)
+
+				log.debug('DELETE THE ROLE')
+
+				const sign = (signableMessage: string | Bytes) =>
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					wallet.signer!.signMessage(signableMessage)
+
+				try {
+					await guildRole.delete(
+						roleId,
+						wallet.accounts[0], // You have to insert your own wallet here
+						sign
+					)
+				} catch (e) {
+					log.crit(e)
+				}
+				fetchGuild(agreementGuild.id)
+				setIsSavingChanges(false)
+			} catch (err) {
+				setIsSavingChanges(false)
+				log.crit(err)
+			}
+		},
+		[agreement, agreementGuild]
+	)
+
+	useEffect(() => {
+		if (!agreementGuild) {
+			return
+		}
+
+		const syncedRolesData: ISyncedGuildRole[] = []
+
+		agreementGuild.roles?.forEach(r => {
+			let syncedRole: ISyncedGuildRole | undefined
+
+			r.requirements.forEach(req => {
+				if (req.address === agreement?.address) {
+					syncedRole = {
+						name: r.name,
+						guildRoleId: r.id,
+						tokenAddress: agreement?.address
+					}
+				} else {
+					agreement?.roles?.forEach(ar => {
+						if (ar.tokenAddress === req.address) {
+							syncedRole = {
+								name: r.name,
+								guildRoleId: r.id,
+								tokenAddress: ar.tokenAddress,
+								agreementRoleId: ar.id
+							}
+						}
+					})
+				}
+			})
+
+			if (syncedRole) {
+				syncedRolesData.push(syncedRole)
+			}
+		})
+
+		setSyncedRoles(syncedRolesData)
+
+		const unsyncedRolesData = agreement?.roles?.filter(ar => {
+			log.debug('AGREEMENT ROLE', ar)
+			const guildRoleIndex = agreementGuild.roles?.findIndex(gr => {
+				const reqMatchIndex = gr.requirements.findIndex(req => {
+					return ar.tokenAddress === req.address
+				})
+				return reqMatchIndex > -1
+			})
+			return !guildRoleIndex || guildRoleIndex < 0
+		})
+
+		setUnsyncedRoles(unsyncedRolesData ?? [])
+	}, [agreementGuild])
+
 	/*
 TODO
 Add your custom extension settings layout here.
- */
+*/
 
-	const roleComponent = (props: { name: string; tokenAddress: string }) => {
-		const isAgreementRole = agreement?.address === props.tokenAddress
+	const roleComponent = (props: {
+		name: string
+		tokenAddress: string
+		agreementRoleId?: string
+		guildRoleId?: number
+	}) => {
+		const isAgreementMemberRole = agreement?.address === props.tokenAddress
 		return (
-			<Card shadow="sm" p="lg" radius="md" withBorder>
+			<Card shadow="sm" p="lg" radius="md" withBorder mt="sm">
 				<Group>
-					<Stack spacing="xs">
+					<Stack spacing={8}>
 						<Text weight="bold">{props.name}</Text>
 						<Text fz="sm">
-							{isAgreementRole ? `Member Role` : `Agreement Role`}
+							{isAgreementMemberRole
+								? `Member Role`
+								: `Agreement Role`}
 						</Text>
 					</Stack>
-					{isAgreementRole && (
-						<Button
-							ml="auto"
-							onClick={() => {
-								router.push({
-									pathname: `/${agreement.slug}/members`
-								})
-							}}
-							className={meemTheme.buttonBlack}
-						>
-							Manage Members
-						</Button>
-					)}
+					<Group ml="auto">
+						{isAgreementMemberRole ? (
+							<Button
+								onClick={() => {
+									router.push({
+										pathname: `/${agreement.slug}/members`
+									})
+								}}
+								className={meemTheme.buttonBlack}
+							>
+								Manage Members
+							</Button>
+						) : props.guildRoleId ? (
+							<>
+								{props.agreementRoleId && (
+									<Button
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement.slug}/roles`,
+												query: {
+													role: `%2F${props.agreementRoleId}`
+												}
+											})
+										}}
+										className={meemTheme.buttonBlack}
+									>
+										Manage Members
+									</Button>
+								)}
+								<Button
+									leftIcon={<DeleteCircledOutline />}
+									style={{ backgroundColor: 'red' }}
+									ml="auto"
+									onClick={() => {
+										if (props.guildRoleId)
+											deleteGuildRole(props.guildRoleId)
+									}}
+									className={meemTheme.buttonBlack}
+								>
+									Delete Guild Role
+								</Button>
+							</>
+						) : (
+							<Button
+								ml="auto"
+								onClick={() => {
+									syncRole(props.tokenAddress)
+								}}
+								className={meemTheme.buttonBlack}
+							>
+								Sync Role
+							</Button>
+						)}
+					</Group>
 				</Group>
 			</Card>
 		)
@@ -244,7 +574,18 @@ Add your custom extension settings layout here.
 			{agreementGuild ? (
 				<>
 					<Group>
-						<Title order={4}>{agreementGuild.name}</Title>
+						<Stack spacing="xs">
+							<Title order={4}>{agreementGuild.name}</Title>
+							<UnstyledButton
+								style={{ color: 'red' }}
+								fz="sm"
+								onClick={() => {
+									unsyncGuild()
+								}}
+							>
+								Unsync Guild
+							</UnstyledButton>
+						</Stack>
 						<Button
 							ml="auto"
 							component="a"
@@ -260,33 +601,102 @@ Add your custom extension settings layout here.
 					<Title order={5} mt={'xl'}>
 						Synced Roles
 					</Title>
+					<Text>
+						{`Once you've synced your roles, `}
+						<Anchor
+							weight={'bold'}
+							href={`https://guild.xyz/${agreementGuild.urlName}`}
+							target="_blank"
+						>
+							go to your Guild page
+						</Anchor>
+						{` to manage rewards and additional access controls.`}
+					</Text>
 					<List mt={'sm'}>
-						{agreementGuild.roles.map(r =>
+						{syncedRoles.map(r =>
 							// TODO: make sure only one required token and chain matches
-							roleComponent({
-								name: r.name,
-								tokenAddress: r.requirements[0].address
-							})
+							roleComponent(r)
 						)}
 					</List>
+					<Title order={5} mt={'xl'}>
+						Unsynced Roles
+					</Title>
+					{unsyncedRoles.length === 0 ? (
+						<Stack mt="5">
+							<Text>{`You don't have any roles to sync.`}</Text>
+							<Button mr="auto" className={meemTheme.buttonBlack}>
+								Manage Roles
+							</Button>
+						</Stack>
+					) : (
+						<List mt={'sm'}>
+							{unsyncedRoles.map(r =>
+								// TODO: make sure only one required token and chain matches
+								roleComponent({
+									name: r.name,
+									tokenAddress: r.tokenAddress
+								})
+							)}
+						</List>
+					)}
 				</>
 			) : (
-				<Button
-					onClick={() => {
-						createGuild()
-					}}
-				>
-					Create a New Guild
-				</Button>
+				<>
+					<Title order={5} mt={'xl'}>
+						Guilds
+					</Title>
+					{userGuilds && (
+						<Select
+							mt="sm"
+							data={userGuilds.map(g => {
+								return {
+									value: `${g.id}`,
+									label: g.name
+								} as SelectItem
+							})}
+							size={'md'}
+							radius={'sm'}
+							onChange={value => {
+								if (value) {
+									setUserSelectedGuildId(
+										value === '' ? null : value
+									)
+								}
+							}}
+							placeholder="Select a Guild"
+							value={userSelectedGuildId}
+						/>
+					)}
+					<Button
+						mt="lg"
+						disabled={!userSelectedGuildId}
+						onClick={() => {
+							if (userSelectedGuildId) {
+								syncGuild(parseInt(userSelectedGuildId, 10))
+							}
+						}}
+					>
+						Sync Guild
+					</Button>
+					<Divider mt="lg" />
+					<Button
+						mt="lg"
+						onClick={() => {
+							createGuild()
+						}}
+					>
+						Create a New Guild
+					</Button>
+				</>
 			)}
 			<Space h={8} />
 		</>
 	)
 
 	/*
-			TODO
-			Add your custom extension permissions layout here.
-			*/
+		TODO
+		Add your custom extension permissions layout here.
+		*/
 	const customExtensionPermissions = () => (
 		<>This extension does not provide any permissions.</>
 	)
@@ -294,14 +704,14 @@ Add your custom extension settings layout here.
 	/*
 TODO
 Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
- */
+*/
 
 	const saveCustomChanges = async () => { }
 
 	/*
-			Boilerplate area - please don't edit the below code!
+		Boilerplate area - please don't edit the below code!
 ===============================================================
- */
+*/
 
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
