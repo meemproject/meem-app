@@ -10,6 +10,7 @@ import {
 } from '@mantine/core'
 import { RichTextEditor } from '@mantine/tiptap'
 import { useAuth, useSDK } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -127,7 +128,11 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 		<div>
 			<div className={meemTheme.centeredRow}>
 				<Image
-					src={comment.profilePicUrl ?? `/meem-icon.png`}
+					src={
+						comment.profilePicUrl
+							? normalizeImageUrl(comment.profilePicUrl)
+							: `/meem-icon.png`
+					}
 					height={32}
 					width={32}
 					radius={16}

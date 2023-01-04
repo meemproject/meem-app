@@ -17,6 +17,7 @@ import {
 import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
 import { LoginState, useAuth, useSDK } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -563,8 +564,11 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												>
 													<Image
 														src={
-															post?.profilePicUrl ??
-															`/meem-icon.png`
+															post?.profilePicUrl
+																? normalizeImageUrl(
+																		post.profilePicUrl
+																  )
+																: `/meem-icon.png`
 														}
 														height={32}
 														width={32}

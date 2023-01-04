@@ -20,6 +20,7 @@ import {
 	IDENTITY_PROVIDERS_QUERY
 } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
@@ -154,25 +155,6 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	// useEffect(() => {
-	// 	if (
-	// 		router.query.code &&
-	// 		availableExtensions.length > 0 &&
-	// 		!Cookies.get('authForDiscordRole')
-	// 	) {
-	// 		// We have a discord auth code
-
-	// 		// create or update extension
-	// 		// availableExtensions.forEach(inte => {
-	// 		// 	if (inte.name === 'Discord') {
-	// 		// 		setExtensionCurrentlyEditing(inte)
-	// 		// 		setIsDiscordAuthCode(router.query.code as string)
-	// 		// 		setIsDiscordModalOpen(true)
-	// 		// 	}
-	// 		// })
-	// 	}
-	// }, [availableExtensions])
-
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const saveChanges = async () => {
@@ -180,21 +162,11 @@ export const ManageIdentityComponent: React.FC = () => {
 
 		// Save the change to the db
 		try {
-			// log.debug(`saving changes with body = ${JSON.stringify(body)}`)
-
 			await sdk.id.updateUser({
 				displayName,
 				profilePicBase64
 			})
 
-			// await request
-			// 	.post(
-			// 		`${
-			// 			process.env.NEXT_PUBLIC_API_URL
-			// 		}${MeemAPI.v1.CreateOrUpdateMeemId.path()}`
-			// 	)
-			// 	.set('Authorization', `JWT ${wallet.jwt}`)
-			// 	.send(body)
 			setIsSavingChanges(false)
 		} catch (e) {
 			log.debug(e)
@@ -229,22 +201,25 @@ export const ManageIdentityComponent: React.FC = () => {
 			<Space h={32} />
 			<Text className={meemTheme.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
-				<div className={meemTheme.row}>
-					<Button
-						leftIcon={<Upload size={14} />}
-						className={meemTheme.buttonWhite}
-						onClick={() => openFileSelector()}
-					>
-						Upload
-					</Button>
-					<Space w={'xs'} />
-					<Button
-						leftIcon={<Text>😈</Text>}
-						className={meemTheme.buttonWhite}
-						onClick={() => openEmojiPicker()}
-					>
-						Choose emoji
-					</Button>
+				<div>
+					<Space h={16} />
+					<div className={meemTheme.row}>
+						<Button
+							leftIcon={<Upload size={14} />}
+							className={meemTheme.buttonWhite}
+							onClick={() => openFileSelector()}
+						>
+							Upload
+						</Button>
+						<Space w={'xs'} />
+						<Button
+							leftIcon={<Text>😈</Text>}
+							className={meemTheme.buttonWhite}
+							onClick={() => openEmojiPicker()}
+						>
+							Choose emoji
+						</Button>
+					</div>
 				</div>
 			)}
 			{isLoadingImage && <Loader color="blue" variant="oval" />}
@@ -259,7 +234,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				>
 					<Image
 						style={{ imageRendering: 'pixelated' }}
-						src={profilePicture}
+						src={normalizeImageUrl(profilePicture)}
 						width={200}
 						height={200}
 						radius={128}

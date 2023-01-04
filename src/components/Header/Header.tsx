@@ -18,6 +18,7 @@ import {
 	useAuth,
 	useMeemUser
 } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import { QuestionMarkCircle } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -152,7 +153,13 @@ export function HeaderMenu() {
 									{(user || !isMeLoading) && (
 										<Group spacing={7}>
 											<Avatar
-												src={user?.profilePicUrl ?? ''}
+												src={
+													user?.profilePicUrl
+														? normalizeImageUrl(
+																user.profilePicUrl
+														  )
+														: ''
+												}
 												alt={'Profile photo'}
 												radius="xl"
 												size={24}
