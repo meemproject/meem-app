@@ -1,5 +1,6 @@
 // import { AgreementMember } from '../../agreement'
 import { DiscussionComment } from './discussionComment'
+import { DiscussionReaction } from './discussionReaction'
 
 // export interface DiscussionPost {
 // 	id: string
@@ -20,6 +21,7 @@ export interface DiscussionPost {
 	body: string
 	attachment?: string
 	comments?: DiscussionComment[]
+	reactions?: DiscussionReaction[]
 	votes?: number
 	userId: string
 	displayName?: string

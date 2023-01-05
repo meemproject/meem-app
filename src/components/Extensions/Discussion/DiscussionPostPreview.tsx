@@ -5,110 +5,110 @@ import {
 	Text,
 	Image,
 	Badge,
-	useMantineColorScheme
+	useMantineColorScheme,
+	Button,
+	Tooltip
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import { DateTime } from 'luxon'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Message } from 'tabler-icons-react'
-import { AgreementExtensions } from '../../../../generated/graphql'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
-import { IReactions } from './DiscussionPost'
+import { calculateVotes } from './DiscussionHome'
+import { useDiscussions } from './DiscussionProvider'
 interface IProps {
 	post: DiscussionPost
-	reactions: IReactions
-	agreementExtension: AgreementExtensions | undefined
-	onReaction: () => void
-	commentCount?: number
+	onReaction?: () => void
 }
 
 export const DiscussionPostPreview: React.FC<IProps> = ({
 	post,
-	reactions,
-	agreementExtension,
-	onReaction,
-	commentCount
+	onReaction
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement } = useAgreement()
 
 	const [isLoading, setIsLoading] = useState(false)
-	const router = useRouter()
+	const [votes, setVotes] = useState(0)
+	const [canReact, setCanReact] = useState(false)
 
-	log.debug({ isLoading, commentCount })
+	const router = useRouter()
+	const { privateKey } = useDiscussions()
 
 	const { sdk } = useSDK()
-	const { chainId, me } = useAuth()
+	const { me } = useAuth()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
 	const handleReactionSubmit = useCallback(
-		async (options: {
-			e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-			reaction: string
-		}) => {
-			const { e, reaction } = options
-			e.preventDefault()
+		async (options: { reaction: string }) => {
+			const { reaction } = options
 			try {
-				if (!chainId) {
-					log.crit('No chainId found')
+				if (!post.id) {
+					log.crit('No postId found')
+					return
+				}
+				if (!agreement) {
+					log.crit('No agreement found')
+					return
+				}
+				if (!privateKey) {
+					log.crit('No privateKey found')
 					return
 				}
 				setIsLoading(true)
 
-				const authSig = await sdk.id.getLitAuthSig()
+				const createdAt = Math.floor(new Date().getTime() / 1000)
+				const gun = sdk.storage.getGunInstance()
 
-				const tableName =
-					agreementExtension?.metadata?.storage?.tableland?.reactions
-						.tablelandTableName
-
-				await sdk.storage.encryptAndWrite({
-					chainId,
-					tableName,
-					authSig,
+				const { item } = await sdk.storage.encryptAndWrite({
+					path: `meem/${agreement.id}/extensions/discussion/posts/${post.id}/reactions`,
+					key: privateKey,
 					writeColumns: {
-						refId: post.id,
-						refTable: 'posts'
+						createdAt
 					},
 					data: {
 						reaction,
 						userId: me?.user.id,
 						walletAddress: me?.address
-					},
-					accessControlConditions: [
-						{
-							contractAddress: agreement?.address
-						}
-					]
+					}
 				})
 
-				// Re-fetch
-				onReaction()
+				gun.get(
+					`meem/${agreement.id}/extensions/discussion/posts/${post.id}`
+				)
+					// @ts-ignore
+					.get('reactions')
+					// @ts-ignore
+					.set(item)
+
+				if (onReaction) {
+					onReaction()
+				}
 			} catch (err) {
 				log.crit(err)
 			}
 			setIsLoading(false)
 		},
-		[sdk, chainId, me, agreementExtension, agreement, onReaction, post]
+		[agreement, sdk, me, post.id, privateKey, onReaction]
 	)
 
-	const upVotes =
-		(post &&
-			reactions.posts[post.id] &&
-			reactions.posts[post.id].counts.upvote) ??
-		0
-	const downVotes =
-		(post &&
-			reactions.posts[post.id] &&
-			reactions.posts[post.id].counts.downvote) ??
-		0
-	const votes = upVotes - downVotes
+	useEffect(() => {
+		const { votes: v, userVotes } = calculateVotes(post)
+		setVotes(v)
+
+		if (me && userVotes[me.user.id]) {
+			setCanReact(false)
+		} else {
+			setCanReact(true)
+		}
+	}, [post, me])
 
 	return (
 		<div className={meemTheme.greyContentBox} style={{ marginBottom: 16 }}>
@@ -124,34 +124,66 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 					<div className={meemTheme.row}>
 						<div>
 							<Center>
-								<a
-									style={{ cursor: 'pointer' }}
-									onClick={e =>
-										handleReactionSubmit({
-											e,
-											reaction: 'upvote'
-										})
-									}
+								<Tooltip
+									label="You have already reacted to this post."
+									disabled={canReact}
 								>
-									<ChevronUp />
-								</a>
+									<span>
+										<Button
+											variant="subtle"
+											loading={isLoading}
+											disabled={isLoading || !canReact}
+											style={{ cursor: 'pointer' }}
+											onClick={(
+												e: React.MouseEvent<
+													HTMLButtonElement,
+													MouseEvent
+												>
+											) => {
+												e.preventDefault()
+												e.stopPropagation()
+												handleReactionSubmit({
+													reaction: 'upvote'
+												})
+											}}
+										>
+											<ChevronUp />
+										</Button>
+									</span>
+								</Tooltip>
 							</Center>
 
 							<Space h={16} />
 							<Center>{votes ?? 0}</Center>
 							<Space h={16} />
 							<Center>
-								<a
-									style={{ cursor: 'pointer' }}
-									onClick={e =>
-										handleReactionSubmit({
-											e,
-											reaction: 'downvote'
-										})
-									}
+								<Tooltip
+									label="You have already reacted to this post."
+									disabled={canReact}
 								>
-									<ChevronDown />
-								</a>
+									<span>
+										<Button
+											variant="subtle"
+											loading={isLoading}
+											disabled={isLoading || !canReact}
+											style={{ cursor: 'pointer' }}
+											onClick={(
+												e: React.MouseEvent<
+													HTMLButtonElement,
+													MouseEvent
+												>
+											) => {
+												e.preventDefault()
+												e.stopPropagation()
+												handleReactionSubmit({
+													reaction: 'downvote'
+												})
+											}}
+										>
+											<ChevronDown />
+										</Button>
+									</span>
+								</Tooltip>
 							</Center>
 						</div>
 						<Space w={16} />
@@ -180,38 +212,36 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 										}}
 									/>
 									<Space h={12} />
-									{post.tags && (
-										<>
-											{post.tags.map(tag => (
-												<>
-													{tag.length > 0 && (
-														<Badge
-															style={{
-																marginRight: 4
-															}}
-															key={tag}
-															size={'xs'}
-															gradient={{
-																from: isDarkTheme
-																	? colorDarkerGrey
-																	: '#DCDCDC',
-																to: isDarkTheme
-																	? colorDarkerGrey
-																	: '#DCDCDC',
-																deg: 35
-															}}
-															classNames={{
-																inner: meemTheme.tBadgeTextSmall
-															}}
-															variant={'gradient'}
-														>
-															{tag}
-														</Badge>
-													)}
-												</>
-											))}
-										</>
-									)}
+									{post.tags &&
+										post.tags.map(tag => {
+											if (tag.length > 0) {
+												return (
+													<Badge
+														style={{
+															marginRight: 4
+														}}
+														key={`post-tag-${post.id}-${tag}`}
+														size={'xs'}
+														gradient={{
+															from: isDarkTheme
+																? colorDarkerGrey
+																: '#DCDCDC',
+															to: isDarkTheme
+																? colorDarkerGrey
+																: '#DCDCDC',
+															deg: 35
+														}}
+														classNames={{
+															inner: meemTheme.tBadgeTextSmall
+														}}
+														variant={'gradient'}
+													>
+														{tag}
+													</Badge>
+												)
+											}
+											return null
+										})}
 								</div>
 							</div>
 
@@ -243,9 +273,11 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 												meemTheme.tExtraExtraSmall
 											}
 										>
-											{DateTime.fromSeconds(
-												post.createdAt
-											).toRelative()}
+											{typeof post.createdAt === 'number'
+												? DateTime.fromSeconds(
+														post.createdAt
+												  ).toRelative()
+												: ''}
 										</Text>
 									</div>
 								</div>
@@ -267,7 +299,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 													meemTheme.tExtraSmall
 												}
 											>
-												{commentCount ?? 0}
+												{post.comments?.length ?? 0}
 											</Text>
 										</div>
 									</Link>
