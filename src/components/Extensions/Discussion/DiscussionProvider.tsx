@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { ApolloError, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { useWallet, useSDK } from '@meemproject/react'
 import React, {
@@ -14,7 +12,6 @@ import React, {
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 
 const defaultState: {
-	publicKey?: JsonWebKey
 	privateKey?: JsonWebKey
 } = {}
 
@@ -34,7 +31,6 @@ export const DiscussionsProvider: FC<IDiscussionsProviderProps> = ({
 	const { chainId } = useWallet()
 
 	const [hasFetchedKeys, setHasFetchedKeys] = useState(false)
-	const [publicKey, setPublicKey] = useState<JsonWebKey>()
 	const [privateKey, setPrivateKey] = useState<JsonWebKey>()
 
 	useEffect(() => {
@@ -44,7 +40,6 @@ export const DiscussionsProvider: FC<IDiscussionsProviderProps> = ({
 				!agreement ||
 				!chainId ||
 				privateKey ||
-				publicKey ||
 				hasFetchedKeys
 			) {
 				return
@@ -52,24 +47,18 @@ export const DiscussionsProvider: FC<IDiscussionsProviderProps> = ({
 
 			setHasFetchedKeys(true)
 
-			const path = `meem/${agreement?.id}/e/discussions/keys/t2`
-
-			const authSig = sdk.id.getLitAuthSig()
+			const path = `meem/${agreement?.id}/e/discussions/keys/v2`
 
 			const gun = sdk.storage.getGunInstance()
 
 			gun.get(path).once(async (items: any) => {
 				if (!items) {
-					const { publicKey: pub, privateKey: priv } =
-						await sdk.storage.generateKeyPair()
+					const key = await sdk.storage.generateAESKey()
 
 					await sdk.storage.encryptWithLitAndWrite({
 						chainId,
 						path,
-						data: { privateKey: priv },
-						writeColumns: {
-							publicKey: pub
-						},
+						data: { key },
 						accessControlConditions: [
 							{
 								contractAddress: agreement.address
@@ -77,14 +66,12 @@ export const DiscussionsProvider: FC<IDiscussionsProviderProps> = ({
 						]
 					})
 
-					setPublicKey(pub)
-					setPrivateKey(priv)
+					setPrivateKey(key)
 				}
 			})
 
 			sdk.storage.on({
 				chainId,
-				authSig,
 				path,
 				cb: (items: any) => {
 					const keys = Object.keys(items)
@@ -92,25 +79,23 @@ export const DiscussionsProvider: FC<IDiscussionsProviderProps> = ({
 						keys &&
 						keys[0] &&
 						items[keys[0]] &&
-						items[keys[0]].publicKey &&
-						items[keys[0]].data.privateKey
+						items[keys[0]].data &&
+						items[keys[0]].data.key
 					) {
-						setPublicKey(items[keys[0]].publicKey)
-						setPrivateKey(items[keys[0]].data.privateKey)
+						setPrivateKey(items[keys[0]].data.key)
 						log.debug('Discussions keys set')
 					}
 				}
 			})
 		}
 		run()
-	}, [sdk, agreement, chainId, privateKey, publicKey, hasFetchedKeys])
+	}, [sdk, agreement, chainId, privateKey, hasFetchedKeys])
 
 	const value = useMemo(
 		() => ({
-			publicKey,
 			privateKey
 		}),
-		[publicKey, privateKey]
+		[privateKey]
 	)
 	return <DiscussionsContext.Provider value={value} {...props} />
 }

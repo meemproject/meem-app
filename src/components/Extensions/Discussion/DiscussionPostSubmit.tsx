@@ -22,7 +22,7 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
@@ -40,7 +40,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { publicKey, privateKey } = useDiscussions()
+	const { privateKey } = useDiscussions()
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
@@ -100,7 +100,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 		setPostAttachment('')
 	}
 
-	const createPost = async () => {
+	const createPost = useCallback(async () => {
 		try {
 			if (
 				!wallet.web3Provider ||
@@ -142,11 +142,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 
 			setIsLoading(true)
 
-			if (!agreementExtension) {
+			if (!privateKey) {
 				showNotification({
 					title: 'Something went wrong!',
-					message:
-						'Unable to find extension information. Please reload and try again'
+					message: 'Unable to encrypt data'
 				})
 				setIsLoading(false)
 				return
@@ -169,31 +168,33 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 					attachment:
 						postAttachment && postAttachment.length > 0
 							? postAttachment
-							: null,
-					createdAt: now,
-					updatedAt: now
+							: null
 				},
-				key: publicKey
-				// chainId: wallet.chainId,
-				// accessControlConditions: [
-				// 	{
-				// 		contractAddress: agreement.address
-				// 	}
-				// ]
+				writeColumns: {
+					createdAt: now
+				},
+				key: privateKey
 			})
 
-			console.log('ENCRYPTED', { id })
-
-			// router.push({
-			// 	pathname: `/${agreement.slug}/e/discussions/${id}`
-			// })
+			router.push({
+				pathname: `/${agreement.slug}/e/discussions/${id}`
+			})
 		} catch (e) {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}
-
-	console.log({ publicKey, privateKey })
+	}, [
+		agreement,
+		me,
+		editor,
+		postAttachment,
+		postTags,
+		postTitle,
+		privateKey,
+		router,
+		sdk.storage,
+		wallet
+	])
 
 	return (
 		<>
@@ -378,7 +379,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							disabled={
 								postTitle.length === 0 ||
 								editor?.getHTML().length === 0 ||
-								// postAttachment.length === 0 ||
 								isLoading
 							}
 							className={meemTheme.buttonBlack}

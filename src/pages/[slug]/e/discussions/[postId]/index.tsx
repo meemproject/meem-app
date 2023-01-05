@@ -23,52 +23,53 @@ export interface DiscussionPostPropViewModel {
 }
 
 interface IProps {
-	post: DiscussionPostPropViewModel
+	agreement: DiscussionPostPropViewModel
 }
 
-const DiscussionPostPage: NextPage<IProps> = ({ post }) => {
+const DiscussionPostPage: NextPage<IProps> = ({ agreement }) => {
 	const router = useRouter()
 
 	const postId: string =
 		router.query.postId === undefined ? '' : `${router.query.postId}`
 	const agreementSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
+
 	return (
 		<>
 			<Head>
 				<title>
-					{post === undefined || post.isError
+					{agreement === undefined || agreement.isError
 						? 'Not found'
-						: `${post.responseBody.Agreements[0].name} | Discussion | Meem`}
+						: `${agreement.responseBody.Agreements[0].name} | Discussion | Meem`}
 				</title>
 				<meta
 					name="title"
 					content={
-						post === undefined || post.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Discussion | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Discussion | Meem`
 					}
 				/>
-				{/* <meta name="description" content={post.description} /> */}
+				{/* <meta name="description" content={agreement.description} /> */}
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://app.meem.wtf/" />
 				<meta
 					property="og:title"
 					content={
-						post === undefined || post.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Discussion | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Discussion | Meem`
 					}
 				/>
-				{/* <meta property="og:description" content={post.description} /> */}
+				{/* <meta property="og:description" content={agreement.description} /> */}
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://app.meem.wtf/" />
 				<meta
 					property="twitter:title"
 					content={
-						post === undefined || post.isError
+						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${post.responseBody.Agreements[0].name} | Discussion | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Discussion | Meem`
 					}
 				/>
 				<meta
@@ -148,7 +149,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
 		return { props: {} }
 	} catch (e) {
-		log.debug(e)
+		log.crit(e)
 		agreement = {
 			isError: true,
 			responseBody: null,
