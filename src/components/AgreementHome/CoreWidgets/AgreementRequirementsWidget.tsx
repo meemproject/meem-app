@@ -143,16 +143,16 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 															title="Follow these
 														instructions to
 														apply:"
-															color="blue"
-															radius="lg"
+															color={'blue'}
+															radius="md"
 														>
 															<Text
-																style={{
-																	color: colorBlue
-																}}
 																className={
 																	meemTheme.tExtraSmall
 																}
+																style={{
+																	color: 'black'
+																}}
 															>
 																<Space h={4} />
 																{`${req.applicationInstructions}`}

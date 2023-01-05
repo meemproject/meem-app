@@ -294,7 +294,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				</Center>
 				<Space h={16} />
 				<Center>
-					<Text className={meemTheme.tLargeBold}>
+					<Text
+						className={meemTheme.tLargeBold}
+						style={{ textAlign: 'center' }}
+					>
 						{agreement.name}
 					</Text>
 				</Center>
