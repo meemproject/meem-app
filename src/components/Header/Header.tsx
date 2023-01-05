@@ -164,10 +164,9 @@ export function HeaderMenu() {
 												size={24}
 											/>
 											<Text
-												weight={500}
-												size="sm"
-												sx={{ lineHeight: 1 }}
-												mr={3}
+												className={
+													meemTheme.tExtraSmallBold
+												}
 											>
 												{displayName}
 											</Text>
@@ -202,7 +201,7 @@ export function HeaderMenu() {
 									onClick={async () => {
 										await disconnectWallet()
 									}}
-									color="blue"
+									style={{ color: colorDarkBlue }}
 									icon={<Logout size={14} />}
 								>
 									{isConnected ? 'Disconnect' : 'Sign Out'}

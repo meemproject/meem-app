@@ -442,7 +442,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 				<Space h={64} />
 
 				<Divider />
-				<Space h={64} />
+				<Space h={56} />
 
 				<Text className={meemTheme.tLargeBold}>Membership</Text>
 				<Space h={32} />

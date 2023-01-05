@@ -146,6 +146,18 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 	invisibleContainer: { display: 'none' },
 	visibleContainer: { display: 'block' },
+	visibleDesktopOnly: {
+		display: 'block',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
+	},
+	visibleMobileOnly: {
+		display: 'none',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'block'
+		}
+	},
 
 	// Grids and items
 	boxBorderedRounded: {

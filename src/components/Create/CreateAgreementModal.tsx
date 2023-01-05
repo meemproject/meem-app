@@ -333,9 +333,93 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 		finishAgreementCreation
 	])
 
+	const modalContents = (
+		<>
+			<div className={meemTheme.modalHeader}>
+				<Loader color="blue" variant="oval" />
+				<Space h={16} />
+				<Text
+					className={meemTheme.tLargeBold}
+				>{`Creating your community...`}</Text>
+				<Space h={32} />
+				<div className={meemTheme.rowResponsive}>
+					<div>
+						{Cookies.get(CookieKeys.agreementImage) && (
+							<>
+								<Center>
+									<Image
+										height={120}
+										width={120}
+										fit={'cover'}
+										className={meemTheme.imageAgreementLogo}
+										src={Cookies.get(
+											CookieKeys.agreementImage
+										)}
+									/>
+								</Center>
+								<Space h={48} />
+							</>
+						)}
+
+						<Text
+							className={meemTheme.tLargeBold}
+							style={{ textAlign: 'center' }}
+						>
+							{Cookies.get(CookieKeys.agreementName)}
+						</Text>
+						<Space h={24} />
+
+						<Text
+							className={meemTheme.tExtraSmall}
+							style={{ textAlign: 'center' }}
+						>
+							This could take a few minutes.
+						</Text>
+						<Space h={16} />
+
+						<Text
+							className={meemTheme.tExtraSmall}
+							style={{ textAlign: 'center' }}
+						>{`Please don’t refresh or close this window until this step is complete.`}</Text>
+					</div>
+					<Space w={32} />
+					<Space h={48} />
+					<Stepper
+						active={activeStep}
+						onStepClick={() => {}}
+						breakpoint="sm"
+						orientation="vertical"
+					>
+						<Stepper.Step
+							label="Queued"
+							description="Community creation has been queued."
+						></Stepper.Step>
+						<Stepper.Step
+							label="Deploying community"
+							description="Your community's smart contract is being deployed to the blockchain"
+						></Stepper.Step>
+						<Stepper.Step
+							label="Initializing community"
+							description="Setting up your community's smart contract"
+						></Stepper.Step>
+						<Stepper.Step
+							label="Minting tokens"
+							description="Minting membership tokens for your community"
+						></Stepper.Step>
+						<Stepper.Completed>
+							{/** TODO: Show a message when complete before redirecting? */}
+						</Stepper.Completed>
+					</Stepper>
+				</div>
+			</div>
+			<Space h={8} />
+		</>
+	)
+
 	return (
 		<>
 			<Modal
+				className={meemTheme.visibleDesktopOnly}
 				centered
 				closeOnClickOutside={false}
 				closeOnEscape={false}
@@ -347,85 +431,22 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				opened={isOpened}
 				onClose={() => closeModal()}
 			>
-				<div className={meemTheme.modalHeader}>
-					<Loader color="blue" variant="oval" />
-					<Space h={16} />
-					<Text
-						className={meemTheme.tLargeBold}
-					>{`We're creating your community!`}</Text>
-					<Space h={32} />
-					<div className={meemTheme.row}>
-						<div>
-							{Cookies.get(CookieKeys.agreementImage) && (
-								<>
-									<Center>
-										<Image
-											height={120}
-											width={120}
-											fit={'cover'}
-											className={
-												meemTheme.imageAgreementLogo
-											}
-											src={Cookies.get(
-												CookieKeys.agreementImage
-											)}
-										/>
-									</Center>
-									<Space h={48} />
-								</>
-							)}
-
-							<Text
-								className={meemTheme.tLargeBold}
-								style={{ textAlign: 'center' }}
-							>
-								{Cookies.get(CookieKeys.agreementName)}
-							</Text>
-							<Space h={24} />
-
-							<Text
-								className={meemTheme.tExtraSmall}
-								style={{ textAlign: 'center' }}
-							>
-								This could take a few minutes.
-							</Text>
-							<Space h={16} />
-
-							<Text
-								className={meemTheme.tExtraSmall}
-								style={{ textAlign: 'center' }}
-							>{`Please don’t refresh or close this window until this step is complete.`}</Text>
-						</div>
-						<Space w={32} />
-						<Stepper
-							active={activeStep}
-							onStepClick={() => {}}
-							breakpoint="sm"
-							orientation="vertical"
-						>
-							<Stepper.Step
-								label="Queued"
-								description="Community creation has been queued."
-							></Stepper.Step>
-							<Stepper.Step
-								label="Deploying community"
-								description="Your community's smart contract is being deployed to the blockchain"
-							></Stepper.Step>
-							<Stepper.Step
-								label="Initializing community"
-								description="Setting up your community's smart contract"
-							></Stepper.Step>
-							<Stepper.Step
-								label="Minting tokens"
-								description="Minting membership tokens for your community"
-							></Stepper.Step>
-							<Stepper.Completed>
-								{/** TODO: Show a message when complete before redirecting? */}
-							</Stepper.Completed>
-						</Stepper>
-					</div>
-				</div>
-				<Space h={8} />
+				{modalContents}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				centered
+				closeOnClickOutside={false}
+				closeOnEscape={false}
+				withCloseButton={false}
+				radius={16}
+				fullScreen={true}
+				overlayBlur={8}
+				padding={'lg'}
+				opened={isOpened}
+				onClose={() => closeModal()}
+			>
+				{modalContents}
 			</Modal>
 		</>
 	)
