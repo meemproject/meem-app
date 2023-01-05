@@ -25,8 +25,6 @@ import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 import { useDiscussions } from './DiscussionProvider'
-import 'gun/sea'
-import 'gun/lib/open'
 
 export function calculateVotes(
 	postOrComment?: DiscussionPost | DiscussionComment
