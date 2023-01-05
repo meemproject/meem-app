@@ -28,11 +28,11 @@ const MAuthenticate: React.FC = () => {
 
 				Cookies.set('redirectPath', JSON.stringify(router.asPath ?? ''))
 
-				router.push({
-					pathname: router.query.return
-						? (router.query.return as string)
-						: '/'
-				})
+				if (router.query.return) {
+					router.push({
+						pathname: router.query.return.toString()
+					})
+				}
 			}
 		} catch (e) {
 			showNotification({
