@@ -34,7 +34,7 @@ import {
 	MoonStars
 } from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { colorBlue, colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
 
 export function HeaderMenu() {
@@ -59,10 +59,6 @@ export function HeaderMenu() {
 
 	const navigateToMyAgreements = () => {
 		router.push({ pathname: '/profile', query: { tab: 'myCommunities' } })
-	}
-
-	const handlePoweredByMeem = () => {
-		window.open('https://meem.wtf')
 	}
 
 	const handleTwitter = () => {
@@ -104,7 +100,10 @@ export function HeaderMenu() {
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: window.location.pathname
+					return:
+						window.location.pathname.length > 5
+							? window.location.pathname
+							: '/'
 				}
 			})
 		}
@@ -216,7 +215,7 @@ export function HeaderMenu() {
 							className={meemTheme.tExtraSmallBold}
 							style={{
 								marginBottom: 4,
-								marginRight: 16,
+								marginRight: 24,
 								color: colorDarkBlue,
 								cursor: 'pointer'
 							}}
@@ -236,19 +235,19 @@ export function HeaderMenu() {
 					<ActionIcon
 						className={meemTheme.iconDarkThemeToggle}
 						radius={16}
-						variant="outline"
-						color={'black'}
+						variant="light"
+						color={colorDarkBlue}
 						onClick={() => toggleColorScheme()}
 						title="Toggle color scheme"
 					>
 						{isDarkTheme ? (
-							<Sun size={18} />
+							<Sun size={18} color={colorDarkBlue} />
 						) : (
-							<MoonStars size={18} />
+							<MoonStars size={18} color={colorDarkBlue} />
 						)}
 					</ActionIcon>
 
-					<Menu offset={15} radius={8} shadow={'lg'}>
+					<Menu offset={10} radius={8} shadow={'lg'}>
 						<Menu.Target>
 							<UnstyledButton>
 								<Dots
@@ -257,16 +256,6 @@ export function HeaderMenu() {
 							</UnstyledButton>
 						</Menu.Target>
 						<Menu.Dropdown>
-							<Menu.Item
-								onClick={handlePoweredByMeem}
-								className={meemTheme.tExtraSmallBold}
-							>
-								Powered by{' '}
-								<span style={{ textDecoration: 'underline' }}>
-									Meem
-								</span>
-							</Menu.Item>
-
 							<Menu.Item
 								onClick={() => {
 									setIsAgreementsFAQModalOpen(true)
@@ -326,7 +315,7 @@ export function HeaderMenu() {
 								onClick={handleShareFeedback}
 								className={meemTheme.tExtraSmallBold}
 								style={{
-									color: colorBlue,
+									color: colorDarkBlue,
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
