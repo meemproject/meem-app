@@ -2208,6 +2208,18 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
+"@meemproject/meem-contracts@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.14.0.tgz#46a7d34b22a8ca8541e584f0904deb71dd330af1"
+  integrity sha512-gQIsABETCyHm4SM4HN9kL7mENQMB/e6jt5uRM9yc0Vfe2kbuHvgmn8aD+Jb59cCCOYoa3Nq1eie5p3cKV05Utg==
+  dependencies:
+    "@kengoldfarb/log" "^1.0.5"
+    "@openzeppelin/contracts" "^4.7.3"
+    ethers "^5.6.4"
+    keccak256 "^1.0.6"
+    merkletreejs "^0.2.32"
+    superagent "^8.0.0"
+
 "@meemproject/meem-contracts@^0.14.1":
   version "0.14.1"
   resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.14.1.tgz#2c103b455e97613632e9675fcad2818933bebf9c"
@@ -2220,10 +2232,10 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.14.1.tgz#3105558f3af8792d0be8f33f398f061eaac50835"
-  integrity sha512-+H0wdKKD15rervBTNmqGsA15boiDgxMtGgA8qODPuydpyFZ+j4IGOJOdUw8VYsDuBxrujkwha6UB61PtOjIUoA==
+"@meemproject/react@0.14.1-pre-4d75e8c.0":
+  version "0.14.1-pre-4d75e8c.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.14.1-pre-4d75e8c.0.tgz#4b5f0b841dbbfddbbcdfe058fecd5bb7654c7ba1"
+  integrity sha512-uOLtH66PwuEBZvdIf6iDYj10z7+NXBZpSq+0iq0fVDb7Hs1yjoVA+7nG3zdYVzJ/Sb/H33aHe5sr1ThMF5lI/g==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@auth0/auth0-react" "^1.12.0"
@@ -2234,9 +2246,9 @@
     "@mantine/hooks" "^5.7.2"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/meem-contracts" "^0.14.1"
-    "@meemproject/sdk" "^0.14.1"
-    "@meemproject/utils" "^0.14.1"
+    "@meemproject/meem-contracts" "^0.14.0"
+    "@meemproject/sdk" "^0.14.1-pre-4d75e8c.0"
+    "@meemproject/utils" "^0.14.0"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -2251,7 +2263,37 @@
     swr "^1.3.0"
     web3modal "^1.9.9"
 
-"@meemproject/sdk@^0.14.1":
+"@meemproject/sdk@0.14.1-pre-4d75e8c.0":
+  version "0.14.1-pre-4d75e8c.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.14.1-pre-4d75e8c.0.tgz#74060aabe05ceed03118d1303fe4d33bf6a90e44"
+  integrity sha512-yuZrTsNb/sJsiyOIdM8mFGMR0OBOk194/SbIxX2RzquSmlqPZANB4Jz+5Ol38FKEvHSoAVUsVsaLv9WHAMWGWQ==
+  dependencies:
+    "@apollo/client" "^3.7.1"
+    "@kengoldfarb/log" "^1.0.5"
+    "@lit-protocol/constants" "^2.0.35"
+    "@lit-protocol/lit-node-client" "^2.0.35"
+    "@meemproject/meem-contracts" "^0.14.0"
+    "@meemproject/utils" "^0.14.0"
+    "@tableland/sdk" "^3.1.5"
+    "@typechain/ethers-v5" "^10.0.0"
+    "@types/js-cookie" "^3.0.1"
+    "@types/luxon" "^2.3.1"
+    cross-fetch "^3.1.5"
+    ethers "^5.6.4"
+    graphql "^16.6.0"
+    gun "https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c"
+    js-cookie "^3.0.1"
+    luxon "^3.0.1"
+    siwe "^1.1.6"
+    slug "^8.2.2"
+    superagent "^7.1.2"
+    swr "^1.3.0"
+    tsnd "^1.0.2"
+    typechain "^8.0.0"
+    typed-emitter "^2.1.0"
+    uuid "^9.0.0"
+
+"@meemproject/sdk@^0.14.1-pre-4d75e8c.0":
   version "0.14.1"
   resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.14.1.tgz#b9c323a7d8434471da04aba94762ecb6c48941b3"
   integrity sha512-voo06FH88qEwA0De90tmR5lHqKGJ2vHBxVPj/qnNCl3GEtbpARNia8HVVcTyJnVznYnteMLwREgpkaAT7fXLoA==
@@ -2280,6 +2322,15 @@
     typechain "^8.0.0"
     typed-emitter "^2.1.0"
     uuid "^9.0.0"
+
+"@meemproject/utils@^0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.14.0.tgz#fd2a9338751e37eb38f9946c93eed8f1b6e78d14"
+  integrity sha512-LWXmn/LlJ5mISsCMSTHWbEIXUqQSrQ1W/hc0Bol0mPxARAAGDoD8kYJn6s0Q3IGI/nndSJQzq7HcTi0WSN0eWw==
+  dependencies:
+    "@kengoldfarb/log" "^1.0.5"
+    "@meemproject/meem-contracts" "^0.14.0"
+    ethers "^5.6.4"
 
 "@meemproject/utils@^0.14.1":
   version "0.14.1"
@@ -10033,9 +10084,9 @@ growl@1.10.5:
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.10.5.tgz#f2735dc2283674fa67478b10181059355c369e5e"
   integrity sha512-qBr4OuELkhPenW6goKVXiv47US3clb3/IbuWF9KNKEijAy9oeHxU9IgzjvJhHkUzhaj7rOUD7+YGWqUjLp5oSA==
 
-"gun@https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c":
+"gun@git+https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c":
   version "0.2020.1239"
-  resolved "https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c"
+  resolved "git+https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c"
   dependencies:
     ws "^7.2.1"
   optionalDependencies:
