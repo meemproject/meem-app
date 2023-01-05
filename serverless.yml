@@ -3,6 +3,10 @@
 meem-web:
   component: "@sls-next/serverless-component@3.6.0"
   inputs:
+    runtime:
+        defaultLambda: "nodejs16.x"
+        apiLambda: "nodejs16.x"
+        imageLambda: "nodejs16.x"
     # build:
     #   cmd: echo
     #   args: ['"Skipping nextjs build"']
