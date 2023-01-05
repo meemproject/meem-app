@@ -67,6 +67,7 @@
 		"ethers": "^5.6.4",
 		"graphql": "^15.7.2",
 		"graphql-ws": "^5.8.2",
+		"gun": "https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c",
 		"html2canvas": "^1.4.1",
 		"iconoir-react": "4.9.1",
 		"js-cookie": "^3.0.1",
