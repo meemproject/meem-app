@@ -167,6 +167,7 @@ export function HeaderMenu() {
 												className={
 													meemTheme.tExtraSmallBold
 												}
+												style={{ color: colorDarkBlue }}
 											>
 												{displayName}
 											</Text>

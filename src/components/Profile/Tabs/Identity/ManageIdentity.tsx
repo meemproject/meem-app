@@ -237,15 +237,15 @@ export const ManageIdentityComponent: React.FC = () => {
 						src={normalizeImageUrl(profilePicture)}
 						width={200}
 						height={200}
-						radius={128}
+						radius={24}
 						fit={'cover'}
 					/>
 					<a onClick={deleteImage}>
 						<Image
 							style={{
 								position: 'absolute',
-								top: '0px',
-								right: '-100px',
+								top: '10px',
+								right: '-85px',
 								cursor: 'pointer'
 							}}
 							src="/delete.png"

@@ -130,9 +130,9 @@ export const ProfileComponent: React.FC = () => {
 							{user.profilePicUrl && (
 								<>
 									<Image
-										radius={32}
-										height={64}
-										width={64}
+										radius={8}
+										height={80}
+										width={80}
 										fit={'cover'}
 										className={meemTheme.imageAgreementLogo}
 										src={normalizeImageUrl(
@@ -143,9 +143,12 @@ export const ProfileComponent: React.FC = () => {
 							)}
 
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
-							<div className={meemTheme.pageHeaderTitleContainer}>
+							<div
+								className={meemTheme.pageHeaderTitleContainer}
+								style={{ paddingBottom: 4 }}
+							>
 								<Text className={meemTheme.tLargeBold}>
-									{user.displayName ?? 'My Meem Profile'}
+									{'My Meem Profile'}
 								</Text>
 								<Space h={8} />
 								<div className={meemTheme.row}>

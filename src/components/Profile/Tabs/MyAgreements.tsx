@@ -132,8 +132,8 @@ export const MyAgreementsComponent: React.FC = () => {
 								xs={6}
 								sm={6}
 								md={6}
-								lg={4}
-								xl={4}
+								lg={6}
+								xl={6}
 								key={agreement.address}
 							>
 								<div
@@ -153,7 +153,7 @@ export const MyAgreementsComponent: React.FC = () => {
 											src={agreement.image ?? ''}
 											width={40}
 											height={40}
-											radius={8}
+											radius={4}
 											fit={'cover'}
 										/>
 										<Space w="xs" />
@@ -165,6 +165,15 @@ export const MyAgreementsComponent: React.FC = () => {
 												{agreement.name}
 											</Text>
 											<Space h={8} />
+
+											<Text
+												className={
+													meemTheme.tExtraSmall
+												}
+											>
+												{agreement.description}
+											</Text>
+											<Space h={16} />
 											<div className={meemTheme.row}>
 												<Badge
 													gradient={{
