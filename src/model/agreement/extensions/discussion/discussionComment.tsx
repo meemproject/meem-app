@@ -1,3 +1,5 @@
+import { DiscussionReaction } from './discussionReaction'
+
 export interface DiscussionComment {
 	id: string
 	body: string
@@ -8,4 +10,6 @@ export interface DiscussionComment {
 	agreementSlug: string
 	createdAt: number
 	updatedAt: number
+	comments?: DiscussionComment[]
+	reactions?: DiscussionReaction[]
 }

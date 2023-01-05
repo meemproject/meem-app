@@ -22,13 +22,14 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { useDiscussions } from './DiscussionProvider'
 
 interface IProps {
 	agreementSlug?: string
@@ -39,6 +40,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { privateKey } = useDiscussions()
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
@@ -98,7 +100,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 		setPostAttachment('')
 	}
 
-	const createPost = async () => {
+	const createPost = useCallback(async () => {
 		try {
 			if (
 				!wallet.web3Provider ||
@@ -140,34 +142,19 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 
 			setIsLoading(true)
 
-			const authSig = await sdk.id.getLitAuthSig()
-
-			if (!agreementExtension) {
+			if (!privateKey) {
 				showNotification({
 					title: 'Something went wrong!',
-					message:
-						'Unable to find extension information. Please reload and try again'
+					message: 'Unable to encrypt data'
 				})
 				setIsLoading(false)
 				return
 			}
 
-			const postTable =
-				agreementExtension.metadata.storage?.tableland?.posts
+			const now = Math.floor(new Date().getTime() / 1000)
 
-			if (!postTable) {
-				showNotification({
-					title: 'Something went wrong!',
-					message:
-						'Unable to find Posts table. Please reload and try again'
-				})
-				setIsLoading(false)
-				return
-			}
-
-			await sdk.storage.encryptAndWrite({
-				authSig,
-				tableName: postTable.tablelandTableName,
+			const { id } = await sdk.storage.encryptAndWrite({
+				path: `meem/${agreement.id}/extensions/discussion/posts`,
 				data: {
 					title: postTitle,
 					body: editor?.getHTML(),
@@ -183,20 +170,31 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							? postAttachment
 							: null
 				},
-				chainId: wallet.chainId,
-				accessControlConditions: [
-					{
-						contractAddress: agreement.address
-					}
-				]
+				writeColumns: {
+					createdAt: now
+				},
+				key: privateKey
 			})
 
-			// TODO: Redirect?
+			router.push({
+				pathname: `/${agreement.slug}/e/discussions/${id}`
+			})
 		} catch (e) {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}
+	}, [
+		agreement,
+		me,
+		editor,
+		postAttachment,
+		postTags,
+		postTitle,
+		privateKey,
+		router,
+		sdk.storage,
+		wallet
+	])
 
 	return (
 		<>
@@ -210,7 +208,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
 							<a
-								style={{ marginTop: 34 }}
+								style={{ marginTop: 35 }}
 								onClick={() => {
 									router.push({
 										pathname: `/${agreementSlug}/e/discussions`
@@ -225,7 +223,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							<Space w={16} />
 							<div>
 								<Text className={meemTheme.tSmallBoldFaded}>
-									{agreementSlug}
+									{agreement?.name}
 								</Text>
 								<Space h={16} />
 								<Text className={meemTheme.tLargeBold}>
@@ -381,7 +379,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							disabled={
 								postTitle.length === 0 ||
 								editor?.getHTML().length === 0 ||
-								// postAttachment.length === 0 ||
 								isLoading
 							}
 							className={meemTheme.buttonBlack}

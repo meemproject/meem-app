@@ -21,7 +21,7 @@ jobs:
       - run: yarn s3-sync-storybook
   test:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
     steps:
       - checkout
       - run: yarn install --frozen-lockfile
@@ -29,7 +29,7 @@ jobs:
       - run: yarn build
   release:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
     steps:
       - checkout
       - run: yarn install --frozen-lockfile
@@ -38,7 +38,7 @@ jobs:
       - run: yarn run release
   deploy_dev:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
     steps:
       - checkout
       - run: yarn install --frozen-lockfile
@@ -49,7 +49,7 @@ jobs:
             yarn sls
   deploy_stage:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
     steps:
       - checkout
       - run: yarn install --frozen-lockfile
@@ -60,7 +60,7 @@ jobs:
             yarn sls
   deploy_prod:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:16
     steps:
       - checkout
       - run: yarn install --frozen-lockfile

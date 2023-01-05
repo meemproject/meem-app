@@ -91,7 +91,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		setIsEnablingExtension(true)
 		await sdk.agreementExtension.createAgreementExtension({
 			agreementId: agreement?.id ?? '',
-			extensionId: extension.id
+			extensionId: extension.id,
+			isInitialized: true
 		})
 		setIsEnablingExtension(false)
 	}
@@ -193,7 +194,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													<>
 														<Space w={8} />
 														<Loader
-															color="red"
+															color="blue"
 															variant="oval"
 															size={16}
 														/>

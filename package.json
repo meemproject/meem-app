@@ -1,6 +1,6 @@
 {
 	"name": "@meemproject/meem-web",
-	"version": "1.7.3",
+	"version": "1.8.0",
 	"private": true,
 	"author": "Meem Project",
 	"contributors": [
@@ -39,7 +39,6 @@
 		"@emotion/react": "^11.10.0",
 		"@emotion/server": "^11.10.0",
 		"@fontsource/inter": "^4.5.10",
-		"@guildxyz/sdk": "^1.1.1",
 		"@kengoldfarb/log": "^1.0.5",
 		"@mantine/core": "5.8.0",
 		"@mantine/dates": "5.8.0",
@@ -47,9 +46,9 @@
 		"@mantine/next": "5.8.0",
 		"@mantine/notifications": "5.8.0",
 		"@mantine/tiptap": "^5.8.0",
-		"@meemproject/meem-contracts": "^0.13.5",
-		"@meemproject/react": "^0.13.5",
-		"@meemproject/sdk": "^0.13.5",
+		"@meemproject/meem-contracts": "^0.14.1",
+		"@meemproject/react": "^0.14.1",
+		"@meemproject/sdk": "^0.14.1",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@tableland/sdk": "^3.1.5",
 		"@tabler/icons": "^1.114.0",
