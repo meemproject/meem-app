@@ -15,6 +15,7 @@ export const colorBlue = '#9ED3FD'
 export const colorLightBlue = '#f3faff'
 export const colorDarkBlue = '#6895f7'
 export const colorYellow = '#F9FF15'
+export const colorRed = '#FF6651'
 
 // Utility colors
 export const colorGreen = '#1DAD4E'

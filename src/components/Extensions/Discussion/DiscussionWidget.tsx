@@ -99,16 +99,20 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					</div>
 					{agreementExtension?.isInitialized && (
 						<div className={meemTheme.centeredRow}>
-							<Button
-								className={meemTheme.buttonBlue}
-								onClick={() => {
-									router.push({
-										pathname: `/${agreement.slug}/e/discussions`
-									})
-								}}
-							>
-								View All
-							</Button>
+							{posts.length > 0 && (
+								<>
+									<Button
+										className={meemTheme.buttonBlue}
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement.slug}/e/discussions`
+											})
+										}}
+									>
+										View All
+									</Button>
+								</>
+							)}
 
 							{agreement.isCurrentUserAgreementAdmin && (
 								<div className={meemTheme.row}>
@@ -134,9 +138,43 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 				)}
 				{hasFetchdData && agreementExtension?.isInitialized && (
 					<>
-						{posts.map(post => (
-							<DiscussionPostPreview key={post.id} post={post} />
-						))}
+						{posts.length > 0 && (
+							<>
+								{posts.map(post => (
+									<DiscussionPostPreview
+										key={post.id}
+										post={post}
+									/>
+								))}
+							</>
+						)}
+						{posts.length == 0 && (
+							<>
+								<Center>
+									<Text className={meemTheme.tSmallBold}>
+										There are no discussions yet.
+									</Text>
+								</Center>
+								{agreement.isCurrentUserAgreementMember && (
+									<>
+										<Space h={12} />
+										<Center>
+											<Button
+												onClick={() => {
+													router.push({
+														pathname: `/${agreement.slug}/e/discussions/submit`
+													})
+												}}
+												className={meemTheme.buttonBlue}
+											>
+												+ Create a discussion
+											</Button>
+										</Center>
+										<Space h={8} />
+									</>
+								)}
+							</>
+						)}
 					</>
 				)}
 				{!agreementExtension?.isInitialized && (

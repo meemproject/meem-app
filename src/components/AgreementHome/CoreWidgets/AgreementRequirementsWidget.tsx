@@ -1,7 +1,8 @@
 import log from '@kengoldfarb/log'
-import { Text, Space, Alert, Loader } from '@mantine/core'
+import { Text, Space, Loader } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
+import Linkify from 'linkify-react'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { CircleCheck, CircleX, Settings } from 'tabler-icons-react'
@@ -10,7 +11,12 @@ import {
 	MembershipReqType
 } from '../../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../../model/token/token'
-import { colorGreen, colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	colorGreen,
+	colorBlue,
+	useMeemTheme,
+	colorRed
+} from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 	onMeetsAllReqsChanged: (changed: boolean) => void
@@ -138,26 +144,30 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 												</Text>
 												{req.applicationInstructions && (
 													<>
-														<Space h={8} />
-														<Alert
-															title="Follow these
-														instructions to
-														apply:"
-															color={'blue'}
-															radius="md"
+														<Space h={16} />
+														<Text
+															className={
+																meemTheme.tExtraSmallBold
+															}
 														>
-															<Text
-																className={
-																	meemTheme.tExtraSmall
-																}
-																style={{
-																	color: 'black'
-																}}
-															>
-																<Space h={4} />
+															Follow these
+															instructions to
+															apply:
+														</Text>
+														<Space h={8} />
+														<Text
+															className={
+																meemTheme.tExtraSmall
+															}
+															style={{
+																color: 'black'
+															}}
+														>
+															<Space h={4} />
+															<Linkify>
 																{`${req.applicationInstructions}`}
-															</Text>
-														</Alert>
+															</Linkify>
+														</Text>
 														<Space h={8} />
 													</>
 												)}
@@ -329,6 +339,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 			areRequirementsParsed,
 			checkEligibility,
 			meemTheme.tExtraSmall,
+			meemTheme.tExtraSmallBold,
 			meemTheme.tLink,
 			wallet
 		]
@@ -386,7 +397,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									{!requirement.meetsRequirement && (
 										<CircleX
 											style={{ width: 24 }}
-											color={colorBlue}
+											color={colorRed}
 										/>
 									)}
 									<Space w={12} />
