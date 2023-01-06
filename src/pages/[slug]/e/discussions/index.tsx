@@ -8,6 +8,7 @@ import React from 'react'
 import { AgreementProvider } from '../../../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../../../components/App'
 import { DiscussionHome } from '../../../../components/Extensions/Discussion/DiscussionHome'
+import { DiscussionsProvider } from '../../../../components/Extensions/Discussion/DiscussionProvider'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
@@ -95,7 +96,9 @@ const AgreementDetailPage: NextPage<IProps> = ({ agreement }) => {
 			</Head>
 			<HeaderMenu />
 			<AgreementProvider slug={agreementSlug}>
-				<DiscussionHome />
+				<DiscussionsProvider>
+					<DiscussionHome />
+				</DiscussionsProvider>
 			</AgreementProvider>
 			<Space h={64} />
 			<MeemFooter />

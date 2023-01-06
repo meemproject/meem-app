@@ -1,5 +1,5 @@
-import { Text, Button, Space, Center } from '@mantine/core'
-import { useAuth, useSDK } from '@meemproject/react'
+import { Text, Button, Space, Center, Loader } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Settings } from 'tabler-icons-react'
@@ -11,6 +11,7 @@ import { DiscussionPost } from '../../../model/agreement/extensions/discussion/d
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
+import { useDiscussions } from './DiscussionProvider'
 interface IProps {
 	agreement: Agreement
 }
@@ -24,65 +25,62 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	const router = useRouter()
 
 	const { sdk } = useSDK()
-	const { chainId } = useAuth()
+	const { privateKey } = useDiscussions()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchdData || !chainId || !sdk.id.hasInitialized) {
+			if (hasFetchdData || !sdk.id.hasInitialized || !privateKey) {
 				return
 			}
 
-			if (
-				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.posts
-			) {
-				const authSig = await sdk.id.getLitAuthSig()
+			const path = `meem/${agreement?.id}/extensions/discussion/posts`
 
-				const tableName =
-					agreementExtension.metadata?.storage?.tableland?.posts
-						.tablelandTableName
+			sdk.storage.on({
+				privateKey,
+				path,
+				cb: (items: any) => {
+					const newPosts: DiscussionPost[] = []
 
-				const rows = await sdk.storage.read({
-					chainId,
-					tableName,
-					authSig,
-					limit: 2
-				})
+					Object.keys(items).forEach(k => {
+						const item = items[k]
+						if (typeof item.data === 'object') {
+							const p = rowToDiscussionPost({
+								row: { ...item, id: k },
+								agreement
+							})
+							if (p && p.title && p.body) {
+								newPosts.push(p)
+							}
+						}
+					})
 
-				const newPosts: DiscussionPost[] = rows.map(row => {
-					return rowToDiscussionPost({ row, agreement })
-				})
+					newPosts.sort((a, b) => {
+						if (!a.createdAt) {
+							return 1
+						}
+						if (!b.createdAt) {
+							return -1
+						}
+						if (a.createdAt > b.createdAt) {
+							return -1
+						}
+						if (a.createdAt < b.createdAt) {
+							return 1
+						}
+						return 0
+					})
 
-				setPosts(newPosts)
+					setPosts(newPosts.slice(0, 3))
+				}
+			})
 
-				setHasFetchedData(true)
-			}
+			setHasFetchedData(true)
 		}
 
 		fetchData()
-	}, [hasFetchdData, agreement, chainId, sdk, agreementExtension])
-
-	// const posts: DiscussionPost[] = [
-	// 	{
-	// 		id: '1',
-	// 		title: 'Test post one',
-	// 		agreementSlug: agreement.slug ?? '',
-	// 		tags: ['funny', 'crazy'],
-	// 		content: 'This is just a small test post.',
-	// 		user: agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	},
-	// 	{
-	// 		id: '2',
-	// 		title: 'Test post two',
-	// 		agreementSlug: agreement.slug ?? '',
-
-	// 		tags: ['funny', 'crazy'],
-	// 		content: 'And another test post',
-	// 		user: agreement.members ? agreement.members[0] : { wallet: '' }
-	// 	}
-	// ]
+	}, [hasFetchdData, agreement, sdk, privateKey])
 
 	return (
 		<>
@@ -93,7 +91,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 							Discussions
 						</Text>
 						<Space w={6} />
-						{agreementExtension?.isInitialized && (
+						{hasFetchdData && agreementExtension?.isInitialized && (
 							<Text className={meemTheme.tMedium}>
 								{`(${posts.length})`}
 							</Text>
@@ -101,16 +99,20 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					</div>
 					{agreementExtension?.isInitialized && (
 						<div className={meemTheme.centeredRow}>
-							<Button
-								className={meemTheme.buttonBlue}
-								onClick={() => {
-									router.push({
-										pathname: `/${agreement.slug}/e/discussions`
-									})
-								}}
-							>
-								View All
-							</Button>
+							{posts.length > 0 && (
+								<>
+									<Button
+										className={meemTheme.buttonBlue}
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement.slug}/e/discussions`
+											})
+										}}
+									>
+										View All
+									</Button>
+								</>
+							)}
 
 							{agreement.isCurrentUserAgreementAdmin && (
 								<div className={meemTheme.row}>
@@ -129,17 +131,53 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					)}
 				</div>
 				<Space h={24} />
-				{agreementExtension?.isInitialized && (
+				{!hasFetchdData && agreementExtension?.isInitialized && (
 					<>
-						{posts.map(post => (
-							<DiscussionPostPreview
-								key={post.id}
-								post={post}
-								reactions={{ comments: {}, posts: {} }}
-								agreementExtension={agreementExtension}
-								onReaction={() => {}}
-							/>
-						))}
+						<Center>
+							<Loader />
+						</Center>
+						<Space h={8} />
+					</>
+				)}
+				{hasFetchdData && agreementExtension?.isInitialized && (
+					<>
+						{posts.length > 0 && (
+							<>
+								{posts.map(post => (
+									<DiscussionPostPreview
+										key={post.id}
+										post={post}
+									/>
+								))}
+							</>
+						)}
+						{posts.length == 0 && (
+							<>
+								<Center>
+									<Text className={meemTheme.tSmallBold}>
+										There are no discussions yet.
+									</Text>
+								</Center>
+								{agreement.isCurrentUserAgreementMember && (
+									<>
+										<Space h={12} />
+										<Center>
+											<Button
+												onClick={() => {
+													router.push({
+														pathname: `/${agreement.slug}/e/discussions/submit`
+													})
+												}}
+												className={meemTheme.buttonBlue}
+											>
+												+ Create a discussion
+											</Button>
+										</Center>
+										<Space h={8} />
+									</>
+								)}
+							</>
+						)}
 					</>
 				)}
 				{!agreementExtension?.isInitialized && (

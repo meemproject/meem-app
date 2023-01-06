@@ -1,21 +1,23 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
 import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
 import {
 	Agreement,
 	AgreementAdminRole
 } from '../../../model/agreement/agreements'
-import { colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	agreement: Agreement
@@ -157,12 +159,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 					}
 
 					if (shouldShowUpgrade && cuts.length === 0) {
-						showNotification({
-							title: 'Community agreement contract upgraded!',
-							color: 'green',
-							icon: <Check />,
-							message: `This community's agreement contract has been upgraded to the latest version.`
-						})
+						showSuccessNotification(
+							'Community agreement contract upgraded!',
+							`This community's agreement contract has been upgraded to the latest version.`
+						)
 						setShouldShowUpgrade(false)
 						setIsUpgradingAgreement(false)
 					}
@@ -200,15 +200,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 					height={20}
 					onClick={() => {
 						navigator.clipboard.writeText(agreement.address ?? '')
-						showNotification({
-							radius: 'lg',
-							title: 'Address copied',
-							autoClose: 2000,
-							color: 'green',
-							icon: <Check />,
-
-							message: `This community's agreement contract address was copied to your clipboard.`
-						})
+						showSuccessNotification(
+							'Address copied',
+							`This community's agreement contract address was copied to your clipboard.`
+						)
 					}}
 					width={20}
 				/>
@@ -289,11 +284,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 							await tx.wait()
 						} else {
-							showNotification({
-								title: 'Oops!',
-								color: colorBlue,
-								message: `There are no changes to save.`
-							})
+							showErrorNotification(
+								'Oops!',
+								`There are no changes to save.`
+							)
 						}
 					} catch (e) {
 						log.debug(e)
@@ -341,11 +335,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 								log.debug(`Upgrade agreement w/ txId: ${txId}`)
 							} catch (e) {
 								log.crit(e)
-								showNotification({
-									title: 'Error upgrading agreement contract',
-									color: colorBlue,
-									message: `Something went wrong during the upgrade.`
-								})
+								showErrorNotification(
+									'Error upgrading agreement contract',
+									`Something went wrong during the upgrade.`
+								)
 								setIsUpgradingAgreement(false)
 							}
 						}}
@@ -376,15 +369,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 								navigator.clipboard.writeText(
 									agreement.gnosisSafeAddress ?? ''
 								)
-								showNotification({
-									radius: 'lg',
-									title: 'Address copied',
-									autoClose: 2000,
-									color: 'green',
-									icon: <Check />,
-
-									message: `This community's treasury address was copied to your clipboard.`
-								})
+								showSuccessNotification(
+									'Address copied',
+									`This community's treasury address was copied to your clipboard.`
+								)
 							}}
 							width={20}
 						/>
@@ -436,13 +424,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 						} catch (e) {
 							log.crit(e)
 							setIsCreatingSafe(false)
-							showNotification({
-								radius: 'lg',
-								title: 'Wallet creation failed.',
-								message:
-									'We were unable to create a treasury for your community. Please refresh the page and try again.',
-								color: colorBlue
-							})
+							showErrorNotification(
+								'Wallet creation failed.',
+								'We were unable to create a treasury for your community. Please refresh the page and try again.'
+							)
 						}
 					}}
 				>

@@ -10,7 +10,6 @@ import {
 	Button,
 	Divider
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
 import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
@@ -22,13 +21,15 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
+import { showErrorNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { useDiscussions } from './DiscussionProvider'
 
 interface IProps {
 	agreementSlug?: string
@@ -39,6 +40,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const { privateKey } = useDiscussions()
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
@@ -98,7 +100,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 		setPostAttachment('')
 	}
 
-	const createPost = async () => {
+	const createPost = useCallback(async () => {
 		try {
 			if (
 				!wallet.web3Provider ||
@@ -117,11 +119,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 			// Some basic validation
 			if (!postTitle || postTitle.length < 3 || postTitle.length > 140) {
 				// Agreement name invalid
-				showNotification({
-					title: 'Oops!',
-					message:
-						'You entered an invalid post title. Please choose a longer or shorter post title.'
-				})
+				showErrorNotification(
+					'Oops!',
+					'You entered an invalid post title. Please choose a longer or shorter post title.'
+				)
 				return
 			}
 
@@ -130,44 +131,28 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				(editor && editor?.getHTML().length > 3000)
 			) {
 				// Agreement name invalid
-				showNotification({
-					title: 'Oops!',
-					message:
-						'You entered an invalid post body. Please type a longer or shorter post body.'
-				})
+				showErrorNotification(
+					'Oops!',
+					'You entered an invalid post body. Please type a longer or shorter post body.'
+				)
 				return
 			}
 
 			setIsLoading(true)
 
-			const authSig = await sdk.id.getLitAuthSig()
-
-			if (!agreementExtension) {
-				showNotification({
-					title: 'Something went wrong!',
-					message:
-						'Unable to find extension information. Please reload and try again'
-				})
+			if (!privateKey) {
+				showErrorNotification(
+					'Something went wrong!',
+					'Unable to encrypt data'
+				)
 				setIsLoading(false)
 				return
 			}
 
-			const postTable =
-				agreementExtension.metadata.storage?.tableland?.posts
+			const now = Math.floor(new Date().getTime() / 1000)
 
-			if (!postTable) {
-				showNotification({
-					title: 'Something went wrong!',
-					message:
-						'Unable to find Posts table. Please reload and try again'
-				})
-				setIsLoading(false)
-				return
-			}
-
-			await sdk.storage.encryptAndWrite({
-				authSig,
-				tableName: postTable.tablelandTableName,
+			const { id } = await sdk.storage.encryptAndWrite({
+				path: `meem/${agreement.id}/extensions/discussion/posts`,
 				data: {
 					title: postTitle,
 					body: editor?.getHTML(),
@@ -183,20 +168,31 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							? postAttachment
 							: null
 				},
-				chainId: wallet.chainId,
-				accessControlConditions: [
-					{
-						contractAddress: agreement.address
-					}
-				]
+				writeColumns: {
+					createdAt: now
+				},
+				key: privateKey
 			})
 
-			// TODO: Redirect?
+			router.push({
+				pathname: `/${agreement.slug}/e/discussions/${id}`
+			})
 		} catch (e) {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}
+	}, [
+		agreement,
+		me,
+		editor,
+		postAttachment,
+		postTags,
+		postTitle,
+		privateKey,
+		router,
+		sdk.storage,
+		wallet
+	])
 
 	return (
 		<>
@@ -381,7 +377,6 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							disabled={
 								postTitle.length === 0 ||
 								editor?.getHTML().length === 0 ||
-								// postAttachment.length === 0 ||
 								isLoading
 							}
 							className={meemTheme.buttonBlack}

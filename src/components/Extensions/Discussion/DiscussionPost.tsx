@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/no-named-as-default */
 import log from '@kengoldfarb/log'
 import {
@@ -12,11 +10,12 @@ import {
 	Container,
 	Divider,
 	Button,
-	Loader
+	Loader,
+	Tooltip
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
-import { LoginState, useAuth, useSDK } from '@meemproject/react'
+import { useAuth, useSDK } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -26,84 +25,40 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { DateTime } from 'luxon'
-import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import {
-	Check,
-	ChevronDown,
-	ChevronUp,
-	Message,
-	Share
-} from 'tabler-icons-react'
+import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
-import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
+import { showSuccessNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
 	colorBlack,
 	colorDarkerGrey,
-	colorGreen,
 	colorLightestGrey,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { DiscussionCommentComponent } from './DiscussionComment'
-import { rowToDiscussionComment, rowToDiscussionPost } from './DiscussionHome'
-interface IProps {
+import { calculateVotes, rowToDiscussionPost } from './DiscussionHome'
+import { useDiscussions } from './DiscussionProvider'
+
+export interface IProps {
 	postId: string
-}
-
-export interface IReactions {
-	posts: {
-		[postId: string]: {
-			counts: { [reaction: string]: number }
-			walletAddresses: {
-				[walletAddress: string]: boolean
-			}
-		}
-	}
-	comments: {
-		[commentId: string]: {
-			counts: {
-				[reaction: string]: number
-			}
-			walletAddresses: {
-				[walletAddress: string]: boolean
-			}
-		}
-	}
-
-	[tableName: string]: {
-		[refId: string]: {
-			counts: {
-				[reaction: string]: number
-			}
-			walletAddresses: {
-				[walletAddress: string]: boolean
-			}
-		}
-	}
 }
 
 export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const [hasFetchedPost, setHasFetchedPost] = useState(false)
-	const [hasFetchedComments, setHasFetchedComments] = useState(false)
-	const [hasFetchedReactions, setHasFetchedReactions] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
-	const [isSubmittingReaction, setIsSubmittingReaction] = useState(false)
+	const [canReact, setCanReact] = useState(false)
 	const [post, setPost] = useState<DiscussionPost>()
-	const [comments, setComments] = useState<DiscussionComment[]>()
-	const [reactions, setReactions] = useState<IReactions>({
-		posts: {},
-		comments: {}
-	})
+	const [votes, setVotes] = useState(0)
 	const [commentCount, setCommentCount] = useState(0)
 	const { accounts, chainId, me, loginState } = useAuth()
 	const { sdk } = useSDK()
-	const { agreement, error, isLoadingAgreement } = useAgreement()
-	const router = useRouter()
+	const { agreement, isLoadingAgreement } = useAgreement()
+	const { privateKey } = useDiscussions()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -126,14 +81,11 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 
 	const handleReactionSubmit = useCallback(
-		async (options: {
-			e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-			reaction: string
-		}) => {
-			const { e, reaction } = options
-			e.preventDefault()
+		async (options: { reaction: string }) => {
+			const { reaction } = options
+
 			try {
-				if (!router.query.postId) {
+				if (!postId) {
 					log.crit('No postId found')
 					return
 				}
@@ -145,73 +97,68 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					log.crit('No agreement found')
 					return
 				}
+				if (!privateKey) {
+					log.crit('No privateKey found')
+					return
+				}
 				setIsLoading(true)
 
-				const authSig = await sdk.id.getLitAuthSig()
+				const createdAt = Math.floor(new Date().getTime() / 1000)
+				const gun = sdk.storage.getGunInstance()
 
-				const tableName =
-					agreementExtension?.metadata?.storage?.tableland?.reactions
-						.tablelandTableName
-
-				await sdk.storage.encryptAndWrite({
-					chainId,
-					tableName,
-					authSig,
+				const { item } = await sdk.storage.encryptAndWrite({
+					path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/reactions`,
+					key: privateKey,
 					writeColumns: {
-						refId: post?.id,
-						refTable: 'posts'
+						createdAt
 					},
 					data: {
 						reaction,
 						userId: me?.user.id,
 						walletAddress: me?.address
-					},
-					accessControlConditions: [
-						{
-							contractAddress: agreement.address
-						}
-					]
+					}
 				})
 
-				// Re-fetch
-				setHasFetchedReactions(false)
+				gun.get(
+					`meem/${agreement.id}/extensions/discussion/posts/${postId}`
+				)
+					// @ts-ignore
+					.get('reactions')
+					// @ts-ignore
+					.set(item)
 			} catch (err) {
 				log.crit(err)
 			}
 			setIsLoading(false)
 		},
-		[agreement, sdk, router, chainId, me, agreementExtension, post]
+		[agreement, sdk, chainId, me, postId, privateKey]
 	)
 
 	const handleCommentSubmit = useCallback(async () => {
 		try {
-			if (!router.query.postId) {
+			if (!postId) {
 				log.crit('No postId found')
-				return
-			}
-			if (!chainId) {
-				log.crit('No chainId found')
 				return
 			}
 			if (!agreement) {
 				log.crit('No agreement found')
 				return
 			}
+			if (!privateKey) {
+				log.crit('No privateKey found')
+				return
+			}
 			setIsLoading(true)
 
-			const authSig = await sdk.id.getLitAuthSig()
+			const createdAt = Math.floor(new Date().getTime() / 1000)
+			const gun = sdk.storage.getGunInstance()
 
-			const tableName =
-				agreementExtension?.metadata?.storage?.tableland?.comments
-					.tablelandTableName
-
-			await sdk.storage.encryptAndWrite({
-				chainId,
-				tableName,
-				authSig,
+			const { item } = await sdk.storage.encryptAndWrite({
+				path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/comments`,
 				writeColumns: {
-					refId: router.query.postId
+					createdAt
 				},
+				key: privateKey,
 				data: {
 					body: editor?.getHTML(),
 					walletAddress: accounts[0],
@@ -220,267 +167,83 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					profilePicUrl: me?.user.profilePicUrl,
 					ens: me?.user.DefaultWallet.ens,
 					agreementSlug: agreement?.slug
-				},
-				accessControlConditions: [
-					{
-						contractAddress: agreement.address
-					}
-				]
+				}
 			})
+
+			gun.get(
+				`meem/${agreement.id}/extensions/discussion/posts/${postId}`
+			)
+				// @ts-ignore
+				.get('comments')
+				// @ts-ignore
+				.set(item)
 
 			editor?.commands.clearContent()
 
-			showNotification({
-				radius: 'lg',
-				title: 'Comment Submitted!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color="green" />,
-				message:
-					'Your comment has been submitted. Reloading comments...'
-			})
-
-			// Re-fetch
-			setHasFetchedComments(false)
+			showSuccessNotification(
+				'Comment Submitted!',
+				'Your comment has been submitted.'
+			)
 		} catch (e) {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}, [
-		chainId,
-		router,
-		editor,
-		agreement,
-		sdk,
-		accounts,
-		me,
-		agreementExtension
-	])
+	}, [editor, agreement, sdk, accounts, me, postId, privateKey])
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (
-				hasFetchedPost ||
-				!chainId ||
-				loginState !== LoginState.LoggedIn ||
-				!sdk.id.hasInitialized
-			) {
-				return
-			}
-			const authSig = await sdk.id.getLitAuthSig()
+		if (!sdk.id.hasInitialized || !chainId || !privateKey) {
+			return
+		}
 
-			// Fetch Post
-			if (
-				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.posts
-			) {
-				const tableName =
-					agreementExtension.metadata?.storage?.tableland?.posts
-						.tablelandTableName
+		const path = `meem/${agreement?.id}/extensions/discussion/posts/${postId}`
 
-				const rows = await sdk.storage.read({
-					chainId,
-					tableName,
-					authSig,
-					where: {
-						id: router.query.postId
+		const handlePostData = (items: any) => {
+			let builtItem: Record<string, any> = {}
+			Object.keys(items).forEach(k => {
+				const item = items[k]
+				if (/^#/.test(k)) {
+					builtItem = { ...builtItem, ...item }
+				} else {
+					builtItem = {
+						[k]: item,
+						...builtItem
 					}
-				})
+				}
+			})
 
-				const newPost: DiscussionPost = rowToDiscussionPost({
-					row: rows[0],
-					agreement
-				})
-
-				setPost(newPost)
-			}
+			setPost(rowToDiscussionPost({ row: builtItem, agreement }))
 			setHasFetchedPost(true)
 		}
 
-		fetchData()
+		sdk.storage.on({
+			chainId,
+			privateKey,
+			path,
+			cb: handlePostData
+		})
 	}, [
 		hasFetchedPost,
 		agreement,
 		chainId,
 		sdk,
-		router.query.postId,
+		postId,
 		loginState,
-		agreementExtension
+		agreementExtension,
+		privateKey
 	])
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (
-				hasFetchedComments ||
-				!post ||
-				!chainId ||
-				loginState !== LoginState.LoggedIn ||
-				!sdk.id.hasInitialized
-			) {
-				return
-			}
+		const { votes: v, userVotes } = calculateVotes(post)
+		setVotes(v)
 
-			const authSig = await sdk.id.getLitAuthSig()
-
-			// Fetch Comments
-			if (
-				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.comments
-			) {
-				const commentsTableName =
-					agreementExtension.metadata?.storage?.tableland?.comments
-						.tablelandTableName
-
-				const [count, rows] = await Promise.all([
-					sdk.storage.count({
-						chainId,
-						tableName: commentsTableName,
-						where: {
-							refId: post.id
-						}
-					}),
-					sdk.storage.read({
-						chainId,
-						tableName: commentsTableName,
-						authSig,
-						where: {
-							refId: post.id
-						}
-					})
-				])
-
-				const newComments: DiscussionComment[] = rows.map(row =>
-					rowToDiscussionComment({
-						row,
-						agreement
-					})
-				)
-
-				setComments(newComments ?? [])
-
-				setCommentCount(count)
-			}
-
-			setHasFetchedComments(true)
+		if (me && userVotes[me.user.id]) {
+			setCanReact(false)
+		} else {
+			setCanReact(true)
 		}
 
-		fetchData()
-	}, [
-		hasFetchedComments,
-		agreement,
-		chainId,
-		sdk,
-		post,
-		loginState,
-		agreementExtension
-	])
-
-	useEffect(() => {
-		const fetchData = async () => {
-			if (
-				hasFetchedReactions ||
-				!post ||
-				!comments ||
-				!chainId ||
-				loginState !== LoginState.LoggedIn ||
-				!sdk.id.hasInitialized
-			) {
-				return
-			}
-
-			const authSig = await sdk.id.getLitAuthSig()
-
-			const refIds = [post.id, ...comments.map(c => c.id)]
-
-			// Fetch Reactions
-			if (
-				agreementExtension &&
-				agreementExtension.metadata?.storage?.tableland?.reactions
-			) {
-				const reactionsTableName =
-					agreementExtension.metadata?.storage?.tableland?.reactions
-						.tablelandTableName
-
-				const rows = await sdk.storage.read({
-					chainId,
-					tableName: reactionsTableName,
-					authSig,
-					where: {
-						refId: refIds
-					}
-				})
-
-				const newReactions: IReactions = { posts: {}, comments: {} }
-				rows.forEach(row => {
-					if (row.data?.reaction) {
-						const table = row.refTable as string
-						if (newReactions[table]) {
-							if (!newReactions[table][row.refId]) {
-								newReactions[table][row.refId] = {
-									counts: {},
-									walletAddresses: {}
-								}
-							}
-
-							// Ignore additional reactions from a wallet
-							if (
-								newReactions[table][row.refId].walletAddresses[
-									row.data.walletAddress
-								]
-							) {
-								return
-							}
-
-							if (
-								!newReactions[table][row.refId].counts[
-									row.data.reaction
-								]
-							) {
-								newReactions[table][row.refId].counts[
-									row.data.reaction
-								] = 1
-							} else {
-								newReactions[table][row.refId].counts[
-									row.data.reaction
-								]++
-							}
-
-							newReactions[table][row.refId].walletAddresses[
-								row.data.walletAddress
-							] = true
-						}
-					}
-				})
-
-				setReactions(newReactions)
-			}
-
-			setHasFetchedReactions(true)
-		}
-
-		fetchData()
-	}, [
-		hasFetchedReactions,
-		agreement,
-		chainId,
-		sdk,
-		post,
-		comments,
-		loginState,
-		agreementExtension
-	])
-
-	const upVotes =
-		(post &&
-			reactions.posts[post.id] &&
-			reactions.posts[post.id].counts.upvote) ??
-		0
-	const downVotes =
-		(post &&
-			reactions.posts[post.id] &&
-			reactions.posts[post.id].counts.downvote) ??
-		0
-	const votes = upVotes - downVotes
+		setCommentCount(post?.comments ? Object.keys(post?.comments).length : 0)
+	}, [post, me])
 
 	return (
 		<div>
@@ -510,34 +273,68 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 								<div className={meemTheme.row}>
 									<div>
 										<Center>
-											<a
-												style={{ cursor: 'pointer' }}
-												onClick={e =>
-													handleReactionSubmit({
-														e,
-														reaction: 'upvote'
-													})
-												}
+											<Tooltip
+												label="You have already reacted to this post."
+												disabled={canReact}
 											>
-												<ChevronUp />
-											</a>
+												<span>
+													<Button
+														variant="subtle"
+														loading={isLoading}
+														disabled={
+															isLoading ||
+															!canReact
+														}
+														style={{
+															cursor: 'pointer'
+														}}
+														onClick={() =>
+															handleReactionSubmit(
+																{
+																	reaction:
+																		'upvote'
+																}
+															)
+														}
+													>
+														<ChevronUp />
+													</Button>
+												</span>
+											</Tooltip>
 										</Center>
 
 										<Space h={16} />
 										<Center>{votes ?? 0}</Center>
 										<Space h={16} />
 										<Center>
-											<a
-												style={{ cursor: 'pointer' }}
-												onClick={e =>
-													handleReactionSubmit({
-														e,
-														reaction: 'downvote'
-													})
-												}
+											<Tooltip
+												label="You have already reacted to this post."
+												disabled={canReact}
 											>
-												<ChevronDown />
-											</a>
+												<span>
+													<Button
+														variant="subtle"
+														loading={isLoading}
+														disabled={
+															isLoading ||
+															!canReact
+														}
+														style={{
+															cursor: 'pointer'
+														}}
+														onClick={() =>
+															handleReactionSubmit(
+																{
+																	reaction:
+																		'downvote'
+																}
+															)
+														}
+													>
+														<ChevronDown />
+													</Button>
+												</span>
+											</Tooltip>
 										</Center>
 									</div>
 									<Space w={16} />
@@ -563,8 +360,11 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												>
 													<Image
 														src={
-															post?.profilePicUrl ??
-															`/meem-icon.png`
+															post?.profilePicUrl
+																? normalizeImageUrl(
+																		post.profilePicUrl
+																  )
+																: `/meem-icon.png`
 														}
 														height={32}
 														width={32}
@@ -602,45 +402,38 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												>
 													{post?.title}
 												</Text>
-												{post.tags && (
-													<>
-														{post.tags.map(tag => (
-															<>
-																{tag.length >
-																	0 && (
-																	<Badge
-																		style={{
-																			marginRight: 4
-																		}}
-																		key={
-																			tag
-																		}
-																		size={
-																			'xs'
-																		}
-																		gradient={{
-																			from: isDarkTheme
-																				? colorDarkerGrey
-																				: '#DCDCDC',
-																			to: isDarkTheme
-																				? colorDarkerGrey
-																				: '#DCDCDC',
-																			deg: 35
-																		}}
-																		classNames={{
-																			inner: meemTheme.tBadgeTextSmall
-																		}}
-																		variant={
-																			'gradient'
-																		}
-																	>
-																		{tag}
-																	</Badge>
-																)}
-															</>
-														))}
-													</>
-												)}
+												{post.tags &&
+													post.tags.map(tag => {
+														if (tag.length > 0) {
+															return (
+																<Badge
+																	style={{
+																		marginRight: 4
+																	}}
+																	key={`tag-${post.id}-${tag}`}
+																	size={'xs'}
+																	gradient={{
+																		from: isDarkTheme
+																			? colorDarkerGrey
+																			: '#DCDCDC',
+																		to: isDarkTheme
+																			? colorDarkerGrey
+																			: '#DCDCDC',
+																		deg: 35
+																	}}
+																	classNames={{
+																		inner: meemTheme.tBadgeTextSmall
+																	}}
+																	variant={
+																		'gradient'
+																	}
+																>
+																	{tag}
+																</Badge>
+															)
+														}
+														return null
+													})}
 												<Space h={16} />
 												<Text
 													className={meemTheme.tSmall}
@@ -771,16 +564,12 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 							</div>
 						)}
 						<Space h={24} />
-						{comments &&
-							comments.map(comment => (
+						{post?.comments &&
+							Object.values(post.comments).map(comment => (
 								<DiscussionCommentComponent
-									key={comment.id}
+									key={`comment-${comment.id}`}
 									comment={comment}
-									reactions={reactions}
-									agreementExtension={agreementExtension}
-									onReaction={() =>
-										setHasFetchedReactions(false)
-									}
+									path={`meem/${agreement?.id}/extensions/discussion/posts/${postId}`}
 								/>
 							))}
 					</Container>

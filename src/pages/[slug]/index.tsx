@@ -5,9 +5,10 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { AgreementDetailComponent } from '../../components/AgreementHome/AgreementHome'
+import { AgreementHome } from '../../components/AgreementHome/AgreementHome'
 import { AgreementProvider } from '../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../components/App'
+import { DiscussionsProvider } from '../../components/Extensions/Discussion/DiscussionProvider'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../graphql/agreements'
@@ -95,7 +96,9 @@ const AgreementDetailPage: NextPage<IProps> = ({ agreement }) => {
 			</Head>
 			<HeaderMenu />
 			<AgreementProvider slug={agreementSlug}>
-				<AgreementDetailComponent />
+				<DiscussionsProvider>
+					<AgreementHome />
+				</DiscussionsProvider>
 			</AgreementProvider>
 			<Space h={64} />
 			<MeemFooter />

@@ -9,7 +9,6 @@ import {
 	TextInput,
 	Textarea
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
@@ -22,6 +21,7 @@ import {
 	Agreement
 } from '../../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../../model/token/token'
+import { showErrorNotification } from '../../../utils/notifications'
 import { colorBlue, colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
@@ -223,23 +223,19 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 		}
 
 		if (isApprovedAddressesInvalid) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			)
 			setIsSavingChanges(false)
 			return
 		}
 
 		if (isTokenRequirementInvalid) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'It looks like you provided an invalid token address or quantity. Check what you entered and try again.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'It looks like you provided an invalid token address or quantity. Check what you entered and try again.'
+			)
 			setIsSavingChanges(false)
 			return
 		}
@@ -272,11 +268,7 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 			if (isMembershipSettingsSame) {
 				log.debug('no changes, nothing to save. Tell user.')
 				setIsSavingChanges(false)
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message: 'There are no changes to save.'
-				})
+				showErrorNotification('Oops!', 'There are no changes to save.')
 				return
 			}
 
@@ -718,12 +710,10 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 								setIsCheckingRequirement(true)
 
 								if (currentRequirement?.tokenMinQuantity <= 0) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'Please enter a quantity greater than 0.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'Please enter a quantity greater than 0.'
+									)
 									setIsCheckingRequirement(false)
 
 									return
@@ -737,12 +727,10 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 								)
 
 								if (!token) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'That token is not valid. Check the contract address and try again.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'That token is not valid. Check the contract address and try again.'
+									)
 									setIsCheckingRequirement(false)
 									return
 								} else {
@@ -778,12 +766,10 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 										)
 									}
 									if (doesApplicantsListContainAdmin) {
-										showNotification({
-											radius: 'lg',
-											title: 'Oops!',
-											message:
-												'You cannot add an administrator as an approved address. Manage admins in the Roles tab instead.'
-										})
+										showErrorNotification(
+											'Oops!',
+											'You cannot add an administrator as an approved address. Manage admins in the Roles tab instead.'
+										)
 										return
 									}
 
@@ -793,12 +779,10 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 										currentRequirement?.tokenMinQuantity ===
 										0
 									) {
-										showNotification({
-											radius: 'lg',
-											title: 'Oops!',
-											message:
-												'Please enter a minimum token quantity.'
-										})
+										showErrorNotification(
+											'Oops!',
+											'Please enter a minimum token quantity.'
+										)
 										return
 									}
 									break

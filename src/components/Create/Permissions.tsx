@@ -1,9 +1,9 @@
 import { Container, Text } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
+import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { AgreementCreationMembershipSettings } from './AgreementCreationMembershipSettings'
 
@@ -17,12 +17,10 @@ export const CreatePermissionsComponent: React.FC = () => {
 		if (Cookies.get(CookieKeys.agreementName) != null) {
 			setAgreementName(Cookies.get(CookieKeys.agreementName) ?? '')
 		} else {
-			showNotification({
-				radius: 'lg',
-				title: 'Unable to create this community.',
-				message: `Some data is missing. Try again!`,
-				autoClose: 5000
-			})
+			showErrorNotification(
+				'Unable to create this community.',
+				`Some data is missing. Try again!`
+			)
 			router.push({ pathname: '/' })
 		}
 	}, [agreementName, router])

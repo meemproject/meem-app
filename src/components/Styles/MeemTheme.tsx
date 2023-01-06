@@ -15,6 +15,10 @@ export const colorBlue = '#9ED3FD'
 export const colorLightBlue = '#f3faff'
 export const colorDarkBlue = '#6895f7'
 export const colorYellow = '#F9FF15'
+export const colorDarkYellow = '#e0e810'
+export const colorRed = '#FF6651'
+export const colorAsh = '#BFCDD8'
+export const colorAshLight = '#F4F7F8'
 
 // Utility colors
 export const colorGreen = '#1DAD4E'
@@ -54,6 +58,23 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorDarkBlue
 		},
+		borderRadius: 24
+	},
+	buttonYellow: {
+		color: colorBlack,
+		backgroundColor: colorYellow,
+		'&:hover': {
+			backgroundColor: colorDarkYellow
+		},
+		borderRadius: 24
+	},
+	buttonYellowBordered: {
+		color: colorYellow,
+		backgroundColor: 'transparent',
+		'&:hover': {
+			backgroundColor: colorDarkerGrey
+		},
+		border: `2px solid ${colorYellow}`,
 		borderRadius: 24
 	},
 	buttonWhite: {
@@ -146,6 +167,18 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 	invisibleContainer: { display: 'none' },
 	visibleContainer: { display: 'block' },
+	visibleDesktopOnly: {
+		display: 'block',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'none'
+		}
+	},
+	visibleMobileOnly: {
+		display: 'none',
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			display: 'block'
+		}
+	},
 
 	// Grids and items
 	boxBorderedRounded: {
@@ -157,13 +190,28 @@ export const useMeemTheme = createStyles(theme => ({
 		fontSize: 16,
 		fontWeight: 600,
 		cursor: 'pointer',
-		border: `1px solid ${
-			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
-		}`,
-		backgroundColor:
-			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
-		borderRadius: 16,
-		padding: 16
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 12,
+		width: '100%',
+		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
+		padding: 24
+	},
+	gridItemCenteredAsh: {
+		fontSize: 16,
+		fontWeight: 600,
+		cursor: 'pointer',
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 12,
+		width: '100%',
+		backgroundColor: colorAsh,
+		alignItems: 'center',
+		padding: 24
 	},
 	gridItemCentered: {
 		border: `1px solid ${
@@ -485,6 +533,26 @@ export const useMeemTheme = createStyles(theme => ({
 			marginBottom: 0
 		}
 	},
+	widgetAsh: {
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 16,
+		width: '100%',
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkerGrey : colorAshLight,
+		padding: 24,
+		marginBottom: 48,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			borderRadius: 0,
+			boxShadow: 'none',
+			marginBottom: 0,
+			borderBottom: `8px solid ${
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+			}`
+		}
+	},
 	widgetLight: {
 		boxShadow:
 			theme.colorScheme === 'dark'
@@ -681,6 +749,17 @@ export const useMeemTheme = createStyles(theme => ({
 		cursor: 'pointer',
 		color: colorBlue,
 		fontWeight: 600
+	},
+	tLinkified: {
+		fontWeight: 500,
+		fontSize: '14px',
+		lineHeight: 1.4,
+		a: {
+			textDecoration: 'underline',
+			cursor: 'pointer',
+			color: colorDarkBlue,
+			fontWeight: 600
+		}
 	},
 
 	tEllipsis: {
