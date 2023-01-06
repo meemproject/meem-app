@@ -5,6 +5,7 @@ import {
 	Image,
 	Space,
 	Loader,
+	Center,
 	Grid,
 	Badge,
 	useMantineColorScheme
@@ -151,30 +152,28 @@ export const MyAgreementsComponent: React.FC = () => {
 											className={
 												meemTheme.imageAgreementLogo
 											}
+											style={{
+												width: '56px',
+												height: '56px'
+											}}
 											src={agreement.image ?? ''}
-											width={40}
-											height={40}
-											radius={4}
+											radius={8}
 											fit={'cover'}
 										/>
-										<Space w="xs" />
+										<Space w={20} />
 
 										<div className={meemTheme.tEllipsis}>
 											<Text
+												style={{
+													fontWeight: 500,
+													fontSize: 18
+												}}
 												className={meemTheme.tEllipsis}
 											>
 												{agreement.name}
 											</Text>
-											<Space h={8} />
 
-											<Text
-												className={
-													meemTheme.tExtraSmall
-												}
-											>
-												{agreement.description}
-											</Text>
-											<Space h={16} />
+											<Space h={20} />
 											<div className={meemTheme.row}>
 												<Badge
 													gradient={{
@@ -211,6 +210,32 @@ export const MyAgreementsComponent: React.FC = () => {
 								</div>
 							</Grid.Col>
 						))}
+						<Grid.Col
+							xs={6}
+							sm={6}
+							md={6}
+							lg={6}
+							xl={6}
+							key={'create-new-agreement'}
+						>
+							<div
+								className={meemTheme.gridItemCenteredAsh}
+								onClick={() => {
+									navigateToCreate()
+								}}
+							>
+								<Space h={16} />
+								<Center>
+									<Text
+										className={meemTheme.tMedium}
+										style={{ color: 'black' }}
+									>
+										+ Launch a new community
+									</Text>
+								</Center>
+								<Space h={16} />
+							</div>
+						</Grid.Col>
 					</Grid>
 
 					<Space h={60} />
