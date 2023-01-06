@@ -293,6 +293,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 						className={meemTheme.imagePixelated}
 						height={150}
 						width={150}
+						radius={16}
 						src={agreement.image}
 					/>
 				</Center>
