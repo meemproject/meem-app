@@ -347,6 +347,8 @@ export default async function agreementFromAgreement(
 	agreementData: Agreements
 ): Promise<Agreement> {
 	if (agreementData != null && agreementData) {
+		// Start time
+		const startTime = Date.now()
 		// Parse the contract URI
 		// const metadata = agreementMetadataFromContractUri(agreementData.contractURI)
 
@@ -760,6 +762,10 @@ export default async function agreementFromAgreement(
 		log.debug(`current user is agreement owner = ${iAmAgreementOwner}`)
 
 		log.debug(`current user is agreement admin = ${iAmAgreementAdmin}`)
+
+		const endTime = Date.now()
+		const timeTaken = endTime - startTime
+		log.debug(`club model processing took ${timeTaken}ms`)
 
 		return {
 			id: agreementData.id,

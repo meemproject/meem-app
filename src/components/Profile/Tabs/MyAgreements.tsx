@@ -92,7 +92,13 @@ export const MyAgreementsComponent: React.FC = () => {
 		)
 
 		if (possibleAgreement.name) {
-			agreements.push(possibleAgreement)
+			const alreadyAdded =
+				agreements.filter(
+					agreement => agreement.id === possibleAgreement.id
+				).length > 0
+			if (!alreadyAdded) {
+				agreements.push(possibleAgreement)
+			}
 		}
 	})
 

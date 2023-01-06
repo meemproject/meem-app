@@ -11,7 +11,7 @@ import React from 'react'
 import { Check } from 'tabler-icons-react'
 import { AgreementMember } from '../../../../model/agreement/agreements'
 import { quickTruncate } from '../../../../utils/truncated_wallet'
-import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	member: AgreementMember
@@ -183,8 +183,8 @@ export const AgreementMemberCard: React.FC<IProps> = ({ member }) => {
 							<Badge
 								variant="gradient"
 								gradient={{
-									from: colorBlue,
-									to: colorBlue,
+									from: colorDarkBlue,
+									to: colorDarkBlue,
 									deg: 35
 								}}
 								classNames={{

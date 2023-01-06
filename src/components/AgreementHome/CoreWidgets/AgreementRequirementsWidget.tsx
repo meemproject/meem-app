@@ -157,11 +157,8 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 														<Space h={8} />
 														<Text
 															className={
-																meemTheme.tExtraSmall
+																meemTheme.tLinkified
 															}
-															style={{
-																color: 'black'
-															}}
 														>
 															<Space h={4} />
 															<Linkify>
@@ -335,14 +332,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 
 			setRequirementsParsed(true)
 		},
-		[
-			areRequirementsParsed,
-			checkEligibility,
-			meemTheme.tExtraSmall,
-			meemTheme.tExtraSmallBold,
-			meemTheme.tLink,
-			wallet
-		]
+		[areRequirementsParsed, checkEligibility, meemTheme, wallet]
 	)
 
 	useEffect(() => {

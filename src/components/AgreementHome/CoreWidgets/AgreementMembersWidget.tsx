@@ -88,7 +88,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 								pathname: `/${agreement.slug}/members`
 							})
 						}}
-						className={meemTheme.buttonBlue}
+						className={meemTheme.buttonBlack}
 					>
 						View All
 					</Button>

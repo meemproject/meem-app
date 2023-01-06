@@ -713,6 +713,17 @@ export const useMeemTheme = createStyles(theme => ({
 		color: colorBlue,
 		fontWeight: 600
 	},
+	tLinkified: {
+		fontWeight: 500,
+		fontSize: '14px',
+		lineHeight: 1.4,
+		a: {
+			textDecoration: 'underline',
+			cursor: 'pointer',
+			color: colorDarkBlue,
+			fontWeight: 600
+		}
+	},
 
 	tEllipsis: {
 		textOverflow: 'ellipsis',
