@@ -25,7 +25,8 @@ import {
 	Anchor,
 	UnstyledButton,
 	Select,
-	SelectItem
+	SelectItem,
+	Loader
 } from '@mantine/core'
 import { useSDK, useWallet } from '@meemproject/react'
 import { Bytes } from 'ethers'
@@ -87,7 +88,7 @@ export const GuildExtensionSettings: React.FC = () => {
 
 	const fetchGuild = useCallback(
 		async (guildId: number) => {
-			if (!agreementExtension) {
+			if (isFetchingGuild || !agreementExtension) {
 				return
 			}
 			setIsFetchingGuild(true)
@@ -108,7 +109,7 @@ export const GuildExtensionSettings: React.FC = () => {
 	)
 
 	const fetchUserGuilds = useCallback(async () => {
-		if (!agreementExtension) {
+		if (isFetchingGuild || !agreementExtension) {
 			return
 		}
 
@@ -149,14 +150,12 @@ export const GuildExtensionSettings: React.FC = () => {
 			return
 		}
 
-		log.debug('AGREEMENT EXT', agreementExtension)
-
-		if (agreementExtension.metadata?.guildId) {
+		if (agreementExtension.metadata?.guildId && !agreementGuild) {
 			fetchGuild(agreementExtension.metadata?.guildId)
-		} else {
+		} else if (!userGuilds) {
 			fetchUserGuilds()
 		}
-	}, [wallet, agreementExtension])
+	}, [wallet, agreementExtension, agreementGuild])
 
 	const getGuildChain = (chainId: number): GuildChain => {
 		switch (chainId) {
@@ -229,7 +228,7 @@ export const GuildExtensionSettings: React.FC = () => {
 					]
 				}
 			)
-			log.debug('GUILD CREATED', myGuild)
+
 			await fetchGuild(myGuild.id)
 			try {
 				await sdk.agreementExtension.updateAgreementExtension({
@@ -261,8 +260,6 @@ export const GuildExtensionSettings: React.FC = () => {
 
 			setIsSavingChanges(true)
 
-			log.debug('UNSYNC THE GUILD')
-
 			try {
 				await sdk.agreementExtension.updateAgreementExtension({
 					agreementId: agreement?.id ?? '',
@@ -293,12 +290,16 @@ export const GuildExtensionSettings: React.FC = () => {
 
 				setIsSavingChanges(true)
 
-				log.debug('SYNC THE GUILD')
-
 				try {
+					const selectedGuildData = await guild.get(guildId)
+
 					await sdk.agreementExtension.updateAgreementExtension({
 						agreementId: agreement?.id ?? '',
 						agreementExtensionId: agreementExtension?.id,
+						externalLink: {
+							label: `${selectedGuildData.name}`,
+							url: `https://guild.xyz/${selectedGuildData.urlName}`
+						},
 						metadata: {
 							guildId
 						}
@@ -339,8 +340,6 @@ export const GuildExtensionSettings: React.FC = () => {
 				}
 
 				setIsSavingChanges(true)
-
-				log.debug('SYNC THE ROLE')
 
 				const sign = (signableMessage: string | Bytes) =>
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -407,8 +406,6 @@ export const GuildExtensionSettings: React.FC = () => {
 
 				setIsSavingChanges(true)
 
-				log.debug('DELETE THE ROLE')
-
 				const sign = (signableMessage: string | Bytes) =>
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					wallet.signer!.signMessage(signableMessage)
@@ -471,7 +468,6 @@ export const GuildExtensionSettings: React.FC = () => {
 		setSyncedRoles(syncedRolesData)
 
 		const unsyncedRolesData = agreement?.roles?.filter(ar => {
-			log.debug('AGREEMENT ROLE', ar)
 			const guildRoleIndex = agreementGuild.roles?.findIndex(gr => {
 				const reqMatchIndex = gr.requirements.findIndex(req => {
 					return ar.tokenAddress === req.address
@@ -724,11 +720,6 @@ Use this function to save any specific settings you have created for this extens
 		setIsDisablingExtension(false)
 	}
 
-	log.debug('IS ADMIN', {
-		isLoadingAgreement,
-		agreementExtension
-	})
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'guild'} />
@@ -758,7 +749,11 @@ Use this function to save any specific settings you have created for this extens
 								<Container>
 									<Space h={16} />
 
-									{customExtensionSettings()}
+									{isSavingChanges ? (
+										<Loader />
+									) : (
+										customExtensionSettings()
+									)}
 								</Container>
 							</div>
 						)}
