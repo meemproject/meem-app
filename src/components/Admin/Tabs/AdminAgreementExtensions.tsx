@@ -87,7 +87,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		setIsEnablingExtension(true)
 		await sdk.agreementExtension.createAgreementExtension({
 			agreementId: agreement?.id ?? '',
-			extensionId: extension.id
+			extensionId: extension.id,
+			isInitialized: true
 		})
 		setIsEnablingExtension(false)
 	}

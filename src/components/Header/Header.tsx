@@ -85,7 +85,9 @@ export function HeaderMenu() {
 	if (!user?.displayName || user?.displayName.length === 0) {
 		displayName =
 			user?.DefaultWallet?.ens ??
-			quickTruncate(user?.DefaultWallet?.address ?? accounts[0]) ??
+			quickTruncate(
+				user?.DefaultWallet?.address ?? (accounts && accounts[0])
+			) ??
 			'0x...'
 	}
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme()
