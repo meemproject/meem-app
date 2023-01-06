@@ -1,9 +1,7 @@
 import {
 	guild,
 	user as guildUser,
-	CreateGuildResponse,
 	Chain as GuildChain,
-	GetGuildByIdResponse,
 	GetGuildResponse,
 	role as guildRole,
 	CreateRoleParams
@@ -16,7 +14,6 @@ import {
 	Center,
 	Button,
 	Divider,
-	Switch,
 	List,
 	Card,
 	Group,
@@ -25,13 +22,12 @@ import {
 	Anchor,
 	UnstyledButton,
 	Select,
-	SelectItem,
 	Loader
 } from '@mantine/core'
 import { useSDK, useWallet } from '@meemproject/react'
+// eslint-disable-next-line import/named
 import { Bytes } from 'ethers'
 import { DeleteCircledOutline } from 'iconoir-react'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Settings } from 'tabler-icons-react'
@@ -56,14 +52,8 @@ export const GuildExtensionSettings: React.FC = () => {
 	const agreementExtension = extensionFromSlug('guild', agreement)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
-	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
-		useState(false)
-	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
 
 	const [isFetchingGuild, setIsFetchingGuild] = useState(true)
-	const [isUpdatingExtension, setIsUpdatingExtension] = useState(true)
-	const [isCreatingGuild, setIsCreatingGuild] = useState(false)
 
 	const [agreementGuild, setAgreementGuild] = useState<
 		GetGuildResponse | undefined
@@ -192,7 +182,7 @@ export const GuildExtensionSettings: React.FC = () => {
 				throw new Error('No agreement name or addre')
 			}
 
-			setIsCreatingGuild(true)
+			setIsSavingChanges(true)
 
 			const sign = (signableMessage: string | Bytes) =>
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -241,9 +231,9 @@ export const GuildExtensionSettings: React.FC = () => {
 			} catch (e) {
 				log.crit(e)
 			}
-			setIsCreatingGuild(false)
+			setIsSavingChanges(false)
 		} catch (err) {
-			setIsCreatingGuild(false)
+			setIsSavingChanges(false)
 			log.crit(err)
 		}
 	}, [agreement, agreementGuild])
@@ -520,6 +510,7 @@ Add your custom extension settings layout here.
 								{props.agreementRoleId && (
 									<Button
 										onClick={() => {
+											if (!agreement) return
 											router.push({
 												pathname: `/${agreement.slug}/roles`,
 												query: {
@@ -648,7 +639,7 @@ Add your custom extension settings layout here.
 								return {
 									value: `${g.id}`,
 									label: g.name
-								} as SelectItem
+								}
 							})}
 							size={'md'}
 							radius={'sm'}
@@ -693,9 +684,9 @@ Add your custom extension settings layout here.
 		TODO
 		Add your custom extension permissions layout here.
 		*/
-	const customExtensionPermissions = () => (
-		<>This extension does not provide any permissions.</>
-	)
+	// const customExtensionPermissions = () => (
+	// 	<>This extension does not provide any permissions.</>
+	// )
 
 	/*
 TODO
@@ -709,16 +700,16 @@ Use this function to save any specific settings you have created for this extens
 ===============================================================
 */
 
-	const saveChanges = async () => {
-		setIsSavingChanges(true)
-		await saveCustomChanges()
-		setIsSavingChanges(false)
-	}
+	// const saveChanges = async () => {
+	// 	setIsSavingChanges(true)
+	// 	await saveCustomChanges()
+	// 	setIsSavingChanges(false)
+	// }
 
-	const disableExtension = async () => {
-		setIsDisablingExtension(true)
-		setIsDisablingExtension(false)
-	}
+	// const disableExtension = async () => {
+	// 	setIsDisablingExtension(true)
+	// 	setIsDisablingExtension(false)
+	// }
 
 	return (
 		<div>
