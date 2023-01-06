@@ -22,7 +22,11 @@ import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
 import { quickTruncate } from '../../../utils/truncated_wallet'
-import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	colorGreen,
+	colorLightGrey,
+	useMeemTheme
+} from '../../Styles/MeemTheme'
 import { JoinLeaveAgreementModal } from '../JoinLeaveAgreementModal'
 interface IProps {
 	agreement: Agreement
@@ -307,68 +311,12 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 						{agreement.description}
 					</Text>
 				</Center>
-
-				<Space h={32} />
-				<Center>
-					<div className={meemTheme.row} style={{ flexWrap: 'wrap' }}>
-						<Button
-							style={{
-								margin:
-									agreement.extensions &&
-									agreement.extensions?.length > 0
-										? 3
-										: 0
-							}}
-							className={meemTheme.buttonWhite}
-							onClick={() => {
-								setIsQrModalOpened(true)
-							}}
-						>
-							<QrCode />
-							<Space w={4} />
-							<Text>Scan</Text>
-						</Button>
-
-						{agreement.extensions
-							?.filter(
-								ext => ext.AgreementExtensionLinks.length > 0
-							)
-							.map(extension => (
-								<>
-									<Button
-										style={{
-											margin: 3
-										}}
-										className={meemTheme.buttonWhite}
-										onClick={() => {
-											if (
-												extension
-													.AgreementExtensionLinks[0]
-											) {
-												window.open(
-													extension
-														.AgreementExtensionLinks[0]
-														.url
-												)
-											}
-										}}
-									>
-										<Image
-											width={20}
-											height={20}
-											src={extension.Extension?.icon}
-										/>
-									</Button>
-								</>
-							))}
-					</div>
-				</Center>
-				<Space h={16} />
+				<Space h={24} />
 
 				<Center>
 					{agreement.isCurrentUserAgreementMember && (
 						<Button
-							className={meemTheme.buttonDarkGrey}
+							className={meemTheme.buttonYellowBordered}
 							disabled={isLeavingAgreement}
 							loading={isLeavingAgreement}
 							onClick={() => {
@@ -380,7 +328,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					)}
 					{!agreement.isCurrentUserAgreementMember && (
 						<Button
-							className={meemTheme.buttonWhite}
+							className={meemTheme.buttonYellow}
 							disabled={isJoiningAgreement || !meetsReqs}
 							loading={isJoiningAgreement}
 							onClick={() => {
@@ -388,11 +336,112 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							}}
 						>
 							{meetsReqs
-								? 'Join Community'
+								? `Join ${
+										agreement.membershipSettings
+											?.costToJoin &&
+										agreement.membershipSettings
+											?.costToJoin > 0
+											? `(${agreement.membershipSettings.costToJoin} MATIC)`
+											: ''
+								  }`
 								: 'Requirements Not Met'}
 						</Button>
 					)}
 				</Center>
+				{(agreement.isCurrentUserAgreementAdmin ||
+					!agreement.isCurrentUserAgreementMember) &&
+					agreement.membershipSettings?.membershipQuantity &&
+					agreement.membershipSettings.membershipQuantity > 0 && (
+						<>
+							<Space h={8} />
+							<Center>
+								<Text
+									className={meemTheme.tExtraSmall}
+									style={{ color: colorLightGrey }}
+								>{`${agreement.members?.length} of ${agreement.membershipSettings.membershipQuantity}`}</Text>
+							</Center>
+						</>
+					)}
+				<Space h={16} />
+
+				<Center>
+					<Button
+						style={{
+							margin:
+								agreement.extensions &&
+								agreement.extensions?.length > 0
+									? 3
+									: 0
+						}}
+						className={
+							agreement.isCurrentUserAgreementMember
+								? meemTheme.buttonYellow
+								: meemTheme.buttonYellowBordered
+						}
+						onClick={() => {
+							setIsQrModalOpened(true)
+						}}
+					>
+						<QrCode />
+						<Space w={4} />
+						<Text>Scan Code</Text>
+					</Button>
+				</Center>
+				{agreement.extensions &&
+					agreement.extensions?.filter(
+						ext => ext.AgreementExtensionLinks.length > 0
+					).length > 0 && (
+						<>
+							<Center>
+								<div
+									className={meemTheme.row}
+									style={{ flexWrap: 'wrap' }}
+								>
+									{agreement.extensions
+										?.filter(
+											ext =>
+												ext.AgreementExtensionLinks
+													.length > 0
+										)
+										.map(extension => (
+											<>
+												<Button
+													style={{
+														margin: 3
+													}}
+													className={
+														meemTheme.buttonWhite
+													}
+													onClick={() => {
+														if (
+															extension
+																.AgreementExtensionLinks[0]
+														) {
+															window.open(
+																extension
+																	.AgreementExtensionLinks[0]
+																	.url
+															)
+														}
+													}}
+												>
+													<Image
+														width={20}
+														height={20}
+														src={
+															extension.Extension
+																?.icon
+														}
+													/>
+												</Button>
+											</>
+										))}
+								</div>
+							</Center>
+							<Space h={16} />
+						</>
+					)}
+
 				<Space h={32} />
 				<Center>
 					<Text className={meemTheme.tExtraSmallLabel}>

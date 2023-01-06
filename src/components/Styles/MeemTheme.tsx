@@ -15,6 +15,7 @@ export const colorBlue = '#9ED3FD'
 export const colorLightBlue = '#f3faff'
 export const colorDarkBlue = '#6895f7'
 export const colorYellow = '#F9FF15'
+export const colorDarkYellow = '#e0e810'
 export const colorRed = '#FF6651'
 
 // Utility colors
@@ -55,6 +56,23 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorDarkBlue
 		},
+		borderRadius: 24
+	},
+	buttonYellow: {
+		color: colorBlack,
+		backgroundColor: colorYellow,
+		'&:hover': {
+			backgroundColor: colorDarkYellow
+		},
+		borderRadius: 24
+	},
+	buttonYellowBordered: {
+		color: colorYellow,
+		backgroundColor: 'transparent',
+		'&:hover': {
+			backgroundColor: colorDarkerGrey
+		},
+		border: `2px solid ${colorYellow}`,
 		borderRadius: 24
 	},
 	buttonWhite: {
