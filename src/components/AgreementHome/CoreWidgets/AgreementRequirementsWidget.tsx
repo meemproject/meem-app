@@ -343,7 +343,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 
 	return (
 		<>
-			<div className={meemTheme.widgetLight}>
+			<div className={meemTheme.widgetAsh}>
 				<div className={meemTheme.spacedRowCentered}>
 					<Text className={meemTheme.tMediumBold}>Requirements</Text>
 					<div className={meemTheme.centeredRow}>

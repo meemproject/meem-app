@@ -75,7 +75,7 @@ export const MyAgreementsComponent: React.FC = () => {
 	}, [error, router])
 
 	const navigateToCreate = () => {
-		router.push({ pathname: '/' })
+		router.push({ pathname: '/create' })
 	}
 
 	const navigateToAgreement = (agreement: string) => {

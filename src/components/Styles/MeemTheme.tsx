@@ -18,6 +18,7 @@ export const colorYellow = '#F9FF15'
 export const colorDarkYellow = '#e0e810'
 export const colorRed = '#FF6651'
 export const colorAsh = '#BFCDD8'
+export const colorAshLight = '#F4F7F8'
 
 // Utility colors
 export const colorGreen = '#1DAD4E'
@@ -530,6 +531,26 @@ export const useMeemTheme = createStyles(theme => ({
 			borderRadius: 0,
 			boxShadow: '',
 			marginBottom: 0
+		}
+	},
+	widgetAsh: {
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 16,
+		width: '100%',
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkerGrey : colorAshLight,
+		padding: 24,
+		marginBottom: 48,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			borderRadius: 0,
+			boxShadow: 'none',
+			marginBottom: 0,
+			borderBottom: `8px solid ${
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+			}`
 		}
 	},
 	widgetLight: {

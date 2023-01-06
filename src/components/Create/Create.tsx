@@ -7,7 +7,8 @@ import {
 	Button,
 	Textarea,
 	Space,
-	Modal
+	Modal,
+	TextInput
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
@@ -34,49 +35,11 @@ export const CreateComponent: React.FC = () => {
 	const [agreementName, setAgreementName] = useState(
 		router.query.agreementname?.toString() ?? ''
 	)
-	const [defaultNamespace, setDefaultNamespace] = useState('')
-	const [agreementNamespace, setAgreementNamespace] = useState('')
 
 	const [agreementDescription, setAgreementDescription] = useState('')
 
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
-	const { web3Provider, accounts, isConnected, connectWallet } = useWallet()
-
-	useEffect(() => {
-		if (agreementName === undefined || agreementName.length === 0) {
-			const cookieName = Cookies.get(CookieKeys.agreementName)
-
-			if (cookieName === undefined) {
-				showErrorNotification(
-					'Unable to create this community.',
-					`Some data is missing. Try again!`
-				)
-				router.push({ pathname: '/' })
-			} else {
-				setAgreementName(cookieName)
-				const name = cookieName.replaceAll(' ', '-').toLowerCase()
-				setDefaultNamespace(name)
-				setAgreementNamespace(name)
-				Cookies.remove(CookieKeys.agreementName)
-			}
-		}
-	}, [accounts.length, agreementName, router])
-
-	useEffect(() => {
-		if (
-			agreementNamespace.length === 0 &&
-			defaultNamespace.length === 0 &&
-			agreementName !== undefined
-		) {
-			const name = agreementName
-				.toString()
-				.replaceAll(' ', '-')
-				.toLowerCase()
-			setDefaultNamespace(name)
-			setAgreementNamespace(name)
-		}
-	}, [agreementName, agreementNamespace.length, defaultNamespace.length])
-
+	const { web3Provider, isConnected, connectWallet } = useWallet()
 	// Agreement logo
 	const [smallAgreementLogo, setSmallAgreementLogo] = useState('')
 	const [
@@ -200,10 +163,15 @@ export const CreateComponent: React.FC = () => {
 			showErrorNotification('Oops!', 'Please provide a community logo.')
 		}
 
+		const agreementSlug = agreementName
+			.toString()
+			.replaceAll(' ', '-')
+			.toLowerCase()
+
 		Cookies.set(CookieKeys.agreementName, agreementName ?? '')
 		Cookies.set(CookieKeys.agreementImage, smallAgreementLogo)
 		Cookies.set(CookieKeys.agreementDescription, agreementDescription)
-		Cookies.set(CookieKeys.agreementSlug, agreementNamespace)
+		Cookies.set(CookieKeys.agreementSlug, agreementSlug)
 		router.push({ pathname: `/create/permissions` })
 	}
 
@@ -229,31 +197,20 @@ export const CreateComponent: React.FC = () => {
 			</div>
 
 			<Container>
-				{/* <Text className={meemTheme.tMediumBold}>
-					{`Set your agreement's URL.`}
+				<Text className={meemTheme.tMediumBold}>
+					{`Community name`}
 				</Text>
-				<Text size="sm" className={classes.agreementNamespaceHint}>
-					{'Lowercase letters, numbers and dashes are allowed.'}
-				</Text>
-				<div className={classes.namespaceTextInputContainer}>
-					<TextInput
-						classNames={{ input: classes.namespaceTextInput }}
-						radius="lg"
-						size="md"
-						value={agreementNamespace ?? ''}
-						onChange={event => {
-							setAgreementNamespace(
-								event.target.value.replaceAll(' ', '').toLowerCase()
-							)
-						}}
-					/>
-					<Text
-						className={classes.namespaceTextInputUrlPrefix}
-					>{`https://app.meem.wtf/`}</Text>
-				</div>
+				<Space h={12} />
+				<TextInput
+					radius="lg"
+					size="md"
+					value={agreementName ?? ''}
+					onChange={event => {
+						setAgreementName(event.target.value)
+					}}
+				/>
 
-				<Space h={'md'} /> */}
-				<Space h={32} />
+				<Space h={40} />
 				<Text className={meemTheme.tMediumBold}>
 					In a sentence, describe what your members do together.
 				</Text>
