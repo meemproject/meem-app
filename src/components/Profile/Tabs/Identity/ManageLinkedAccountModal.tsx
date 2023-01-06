@@ -1,12 +1,11 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Radio, Button } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useSDK } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
-import { AlertCircle } from 'tabler-icons-react'
-import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import { showErrorNotification } from '../../../../utils/notifications'
+import { useMeemTheme } from '../../../Styles/MeemTheme'
 interface IProps {
 	userIdentity?: UserIdentity
 	isOpened: boolean
@@ -58,13 +57,10 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 			log.debug(e)
 			setIsSavingChanges(false)
 
-			showNotification({
-				title: 'Oops!',
-				autoClose: 5000,
-				color: colorBlue,
-				icon: <AlertCircle />,
-				message: `Unable to save changes to this account.`
-			})
+			showErrorNotification(
+				'Oops!',
+				`Unable to save changes to this account.`
+			)
 			return
 		}
 	}

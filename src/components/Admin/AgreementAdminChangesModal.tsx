@@ -2,7 +2,6 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import {
 	useSDK,
 	useSockets,
@@ -11,7 +10,6 @@ import {
 } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
 import {
 	GetAgreementSubscriptionSubscription // eslint-disable-next-line import/namespace
@@ -21,8 +19,12 @@ import {
 	Agreement,
 	MembershipRequirementToMeemPermission
 } from '../../model/agreement/agreements'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement
@@ -168,23 +170,19 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					}
 
 					if (!agreement.id) {
-						showNotification({
-							radius: 'lg',
-							title: 'Error saving community settings',
-							message: `Please get in touch!`,
-							color: colorBlue
-						})
+						showErrorNotification(
+							'Error saving community settings',
+							`Please get in touch!`
+						)
 						closeModal()
 						return
 					}
 
 					if (mintPermissions.length === 0) {
-						showNotification({
-							radius: 'lg',
-							title: 'Oops!',
-							message: `This community has invalid membership requirements. Please double-check your entries and try again.`,
-							color: colorBlue
-						})
+						showErrorNotification(
+							'Oops!',
+							`This community has invalid membership requirements. Please double-check your entries and try again.`
+						)
 						closeModal()
 						return
 					}
@@ -237,11 +235,10 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.debug(`Reinitializing agreement w/ txId: ${txId}`)
 				} catch (e) {
 					log.debug(e)
-					showNotification({
-						radius: 'lg',
-						title: 'Error saving community settings',
-						message: `Please get in touch!`
-					})
+					showErrorNotification(
+						'Error saving community settings',
+						`Please get in touch!`
+					)
 					closeModal()
 				}
 			}
@@ -256,15 +253,10 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.debug('changes detected on the agreement.')
 					closeModal()
 
-					showNotification({
-						radius: 'lg',
-						title: 'Success!',
-						autoClose: 5000,
-						color: colorGreen,
-						icon: <Check color="green" />,
-
-						message: `${agreementData.Agreements[0].name} has been updated.`
-					})
+					showSuccessNotification(
+						'Success!',
+						`${agreementData.Agreements[0].name} has been updated.`
+					)
 				}
 			}
 		}
@@ -302,21 +294,15 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.crit(err.detail.code)
 
 					if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
-						showNotification({
-							radius: 'lg',
-							title: 'Transaction limit exceeded',
-							message:
-								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
-							color: colorBlue
-						})
+						showErrorNotification(
+							'Transaction limit exceeded',
+							'You have used all the transactions available to you today. Get in touch or wait until tomorrow.'
+						)
 					} else {
-						showNotification({
-							radius: 'lg',
-							title: 'Error saving changes',
-							message:
-								'An error occurred while saving changes. Please try again.',
-							color: colorBlue
-						})
+						showErrorNotification(
+							'Error saving changes',
+							'An error occurred while saving changes. Please try again.'
+						)
 					}
 
 					closeModal()

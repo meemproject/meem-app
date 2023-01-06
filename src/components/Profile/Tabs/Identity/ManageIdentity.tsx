@@ -12,7 +12,6 @@ import {
 	TextInput,
 	Grid
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import {
 	useMeemUser,
 	useMeemApollo,
@@ -29,6 +28,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
+import { showErrorNotification } from '../../../../utils/notifications'
 import { colorVerified, useMeemTheme } from '../../../Styles/MeemTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -171,12 +171,10 @@ export const ManageIdentityComponent: React.FC = () => {
 		} catch (e) {
 			log.debug(e)
 			setIsSavingChanges(false)
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'Unable to save changes to your profile. Please get in touch!'
-			})
+			showErrorNotification(
+				'Oops!',
+				'Unable to save changes to your profile. Please get in touch!'
+			)
 			return
 		}
 	}

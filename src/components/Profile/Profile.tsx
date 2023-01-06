@@ -12,12 +12,14 @@ import {
 	Navbar,
 	NavLink
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { LoginState, useAuth, useSDK, useMeemUser } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Check, X } from 'tabler-icons-react'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../utils/notifications'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
@@ -79,14 +81,10 @@ export const ProfileComponent: React.FC = () => {
 			} catch (e) {
 				log.crit(e)
 
-				showNotification({
-					title: 'Error connecting account',
-					autoClose: 2000,
-					color: 'red',
-					icon: <X />,
-
-					message: `Please try again.`
-				})
+				showErrorNotification(
+					'Error connecting account',
+					`Please try again.`
+				)
 			}
 		}
 
@@ -178,14 +176,10 @@ export const ProfileComponent: React.FC = () => {
 																?.address
 														}`
 													)
-													showNotification({
-														title: 'Wallet info copied',
-														autoClose: 2000,
-														color: 'green',
-														icon: <Check />,
-
-														message: `Wallet info was copied to your clipboard.`
-													})
+													showSuccessNotification(
+														'Wallet info copied',
+														`Wallet info was copied to your clipboard.`
+													)
 												}}
 												width={20}
 											/>

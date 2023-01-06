@@ -1,11 +1,13 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Loader } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useSDK, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect } from 'react'
-import { AlertCircle, Check } from 'tabler-icons-react'
-import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../../utils/notifications'
+import { useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	extensionId?: string
@@ -39,23 +41,17 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 					}
 				})
 
-				showNotification({
-					title: 'Success!',
-					autoClose: 5000,
-					color: 'green',
-					icon: <Check color="green" />,
-					message: `This Discord account is now linked!`
-				})
+				showSuccessNotification(
+					'Success!',
+					`This Discord account is now linked!`
+				)
 				onModalClosed()
 			} catch (e) {
 				log.debug(e)
-				showNotification({
-					title: 'Verification failed',
-					autoClose: 5000,
-					color: colorBlue,
-					icon: <AlertCircle />,
-					message: `Please try again or get in touch!`
-				})
+				showErrorNotification(
+					'Verification failed',
+					`Please try again or get in touch!`
+				)
 				onModalClosed()
 				return
 			}

@@ -18,19 +18,18 @@ import {
 	// eslint-disable-next-line import/named
 	AutocompleteItem
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { LoginState, useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { forwardRef, useEffect, useRef, useState } from 'react'
-import { X } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
 import { GetAgreementsAutocompleteQuery } from '../../../generated/graphql'
 import { GET_AGREEMENTS_AUTOCOMPLETE } from '../../graphql/agreements'
 import { CookieKeys } from '../../utils/cookies'
+import { showErrorNotification } from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
 import { MeemFAQModal } from '../Header/MeemFAQModal'
-import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface ItemProps extends SelectItemProps {
 	color: MantineColor
@@ -175,12 +174,10 @@ export function HomeComponent() {
 				autocompleteFormValue.length < 3 ||
 				autocompleteFormValue.length > 50
 			) {
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message: `That agreement name is too long or short. Choose something else.`,
-					color: colorBlue
-				})
+				showErrorNotification(
+					'Oops!',
+					`That agreement name is too long or short. Choose something else.`
+				)
 			} else {
 				router.push({
 					pathname: `/create`,
@@ -204,14 +201,10 @@ export function HomeComponent() {
 			} catch (e) {
 				log.crit(e)
 
-				showNotification({
-					title: 'Error connecting account',
-					autoClose: 2000,
-					color: 'red',
-					icon: <X />,
-
-					message: `Please try again.`
-				})
+				showErrorNotification(
+					'Error connecting account',
+					`Please try again.`
+				)
 			}
 		}
 

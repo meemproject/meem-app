@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useSDK, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { AlertCircle, Check } from 'tabler-icons-react'
 import {
 	Agreement,
 	AgreementMember,
 	AgreementRole
 } from '../../../../model/agreement/agreements'
-import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../../utils/notifications'
+import { useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement
@@ -54,14 +56,10 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		function onRoleChangesSaved() {
 			log.debug('role changes saved')
 
-			showNotification({
-				radius: 'lg',
-				title: 'Role saved!',
-				autoClose: 5000,
-				color: 'green',
-				icon: <Check color="green" />,
-				message: `This role has been saved. Please wait...`
-			})
+			showSuccessNotification(
+				'Role saved!',
+				`This role has been saved. Please wait...`
+			)
 			if (agreement) {
 				if (router.query.createRole) {
 					router.push({
@@ -121,13 +119,10 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					onRoleChangesSaved()
 				} catch (e) {
 					log.debug(e)
-					showNotification({
-						title: 'Error',
-						autoClose: 5000,
-						color: colorBlue,
-						icon: <AlertCircle />,
-						message: `Unable to save role. Please let us know!`
-					})
+					showErrorNotification(
+						'Error',
+						`Unable to save role. Please let us know!`
+					)
 					setIsSavingChanges(false)
 					return
 				}
@@ -151,13 +146,10 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					onRoleChangesSaved()
 				} catch (e) {
 					log.debug(e)
-					showNotification({
-						title: 'Error',
-						autoClose: 5000,
-						color: colorBlue,
-						icon: <AlertCircle />,
-						message: `Unable to save role. Please let us know!`
-					})
+					showErrorNotification(
+						'Error',
+						`Unable to save role. Please let us know!`
+					)
 					setIsSavingChanges(false)
 					closeModal()
 					return

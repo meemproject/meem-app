@@ -1,10 +1,10 @@
 import log from '@kengoldfarb/log'
 import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
+import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 const MAuthenticate: React.FC = () => {
@@ -35,12 +35,10 @@ const MAuthenticate: React.FC = () => {
 				}
 			}
 		} catch (e) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'Unable to sign into Meem with your wallet. Please get in touch!'
-			})
+			showErrorNotification(
+				'Oops!',
+				'Unable to sign into Meem with your wallet. Please get in touch!'
+			)
 			log.crit(e)
 		}
 		setIsLoading(false)

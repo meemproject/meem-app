@@ -9,7 +9,6 @@ import {
 	Space,
 	Modal
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
@@ -21,6 +20,7 @@ import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
+import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -47,12 +47,10 @@ export const CreateComponent: React.FC = () => {
 			const cookieName = Cookies.get(CookieKeys.agreementName)
 
 			if (cookieName === undefined) {
-				showNotification({
-					radius: 'lg',
-					title: 'Unable to create this community.',
-					message: `Some data is missing. Try again!`,
-					autoClose: 5000
-				})
+				showErrorNotification(
+					'Unable to create this community.',
+					`Some data is missing. Try again!`
+				)
 				router.push({ pathname: '/' })
 			} else {
 				setAgreementName(cookieName)
@@ -179,12 +177,10 @@ export const CreateComponent: React.FC = () => {
 			agreementName.length > 30
 		) {
 			// Agreement name invalid
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'You entered an invalid community name. Please choose a longer or shorter name.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'You entered an invalid community name. Please choose a longer or shorter name.'
+			)
 			return
 		}
 
@@ -193,21 +189,15 @@ export const CreateComponent: React.FC = () => {
 			agreementDescription.length > 140
 		) {
 			// Agreement name invalid
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'You entered an invalid community description. Please choose a longer or shorter description.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'You entered an invalid community description. Please choose a longer or shorter description.'
+			)
 			return
 		}
 
 		if (smallAgreementLogo.length === 0) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'Please provide a community logo.'
-			})
+			showErrorNotification('Oops!', 'Please provide a community logo.')
 		}
 
 		Cookies.set(CookieKeys.agreementName, agreementName ?? '')

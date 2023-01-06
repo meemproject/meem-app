@@ -9,14 +9,12 @@ import {
 	Stepper,
 	Center
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
 import { GetTransactionsSubscription } from '../../../generated/graphql'
 import { SUB_TRANSACTIONS } from '../../graphql/transactions'
 import {
@@ -24,8 +22,12 @@ import {
 	MembershipRequirementToMeemPermission
 } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	membershipSettings?: MembershipSettings
 	isOpened: boolean
@@ -71,12 +73,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 	useEffect(() => {
 		if (error) {
 			log.crit(error)
-			showNotification({
-				radius: 'lg',
-				title: 'Error Fetching Data',
-				message: 'Please reload and try again.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error Fetching Data',
+				'Please reload and try again.'
+			)
 		}
 	}, [error])
 
@@ -98,15 +98,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			Cookies.remove(CookieKeys.agreementExternalUrl)
 
 			// Route to the created agreement detail page
-			showNotification({
-				radius: 'lg',
-				title: 'Success!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color="green" />,
-
-				message: `Your community has been created.`
-			})
+			showSuccessNotification(
+				'Success!',
+				`Your community has been created.`
+			)
 
 			router.push({
 				pathname: `/${slug}`
@@ -120,12 +115,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 		log.debug('creating agreement...')
 		if (!wallet.web3Provider || !wallet.chainId) {
 			log.debug('no web3 provider, returning.')
-			showNotification({
-				radius: 'lg',
-				title: 'Error creating community',
-				message: 'Please connect your wallet first.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error creating community',
+				'Please connect your wallet first.'
+			)
 			closeModal()
 			setHasStartedCreating(false)
 			return
@@ -133,13 +126,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 
 		if (!membershipSettings) {
 			log.debug('no membership settings found, returning.')
-			showNotification({
-				radius: 'lg',
-				title: 'Error creating community',
-				message:
-					'An error occurred while creating this community. Please try again.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error creating community',
+				'An error occurred while creating this community. Please try again.'
+			)
 
 			closeModal()
 			setHasStartedCreating(false)
@@ -191,12 +181,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			})
 
 			if (mintPermissions.length === 0) {
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message: `This community has invalid membership requirements. Please double-check your entries and try again.`,
-					color: colorBlue
-				})
+				showErrorNotification(
+					'Oops!',
+					`This community has invalid membership requirements. Please double-check your entries and try again.`
+				)
 				closeModal()
 				setHasStartedCreating(false)
 				return
@@ -265,13 +253,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			}
 		} catch (e) {
 			log.crit(e)
-			showNotification({
-				radius: 'lg',
-				title: 'Error creating community',
-				message:
-					'An error occurred while creating this community. Please try again.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error creating community',
+				'An error occurred while creating this community. Please try again.'
+			)
 
 			closeModal()
 			setHasStartedCreating(false)
@@ -315,12 +300,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				finishAgreementCreation(cutTransaction.Agreements[0].slug)
 			} else {
 				// TODO: Handle edge case error
-				showNotification({
-					radius: 'lg',
-					title: 'Error creating community',
-					message: 'Please try again.',
-					color: colorBlue
-				})
+				showErrorNotification(
+					'Error creating community',
+					'Please try again.'
+				)
 			}
 		}
 

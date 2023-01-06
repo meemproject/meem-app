@@ -6,10 +6,9 @@ import {
 	Text,
 	useMantineColorScheme
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import React from 'react'
-import { Check } from 'tabler-icons-react'
 import { AgreementMember } from '../../../../model/agreement/agreements'
+import { showSuccessNotification } from '../../../../utils/notifications'
 import { quickTruncate } from '../../../../utils/truncated_wallet'
 import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 
@@ -70,15 +69,10 @@ export const AgreementMemberCard: React.FC<IProps> = ({ member }) => {
 								navigator.clipboard.writeText(
 									member.ens ? member.ens : member.wallet
 								)
-								showNotification({
-									radius: 'lg',
-									title: 'Address copied',
-									autoClose: 2000,
-									color: 'green',
-									icon: <Check />,
-
-									message: `This member's address was copied to your clipboard.`
-								})
+								showSuccessNotification(
+									'Address copied',
+									`This member's address was copied to your clipboard.`
+								)
 							}}
 						/>
 					</div>

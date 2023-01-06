@@ -1,6 +1,5 @@
 import log from '@kengoldfarb/log'
 import { Text, Image, Loader, Button, Space, Modal } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
@@ -9,6 +8,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Agreement } from '../../../model/agreement/agreements'
+import { showErrorNotification } from '../../../utils/notifications'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
@@ -124,11 +124,10 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 		// Some basic validation
 
 		if (smallAgreementLogo.length === 0) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'Please provide an image for your community.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'Please provide an image for your community.'
+			)
 		}
 
 		// 'save changes' modal for execution agreement settings updates
@@ -142,11 +141,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 		if (oldAgreement === JSON.stringify(newAgreement)) {
 			log.debug('no changes, nothing to save. Tell user.')
 			setIsSavingChanges(false)
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'There are no changes to save.'
-			})
+			showErrorNotification('Oops!', 'There are no changes to save.')
 			return
 		} else {
 			setNewAgreementData(newAgreement)

@@ -9,7 +9,7 @@ import {
 	Modal,
 	Divider
 } from '@mantine/core'
-import { cleanNotifications, showNotification } from '@mantine/notifications'
+import { cleanNotifications } from '@mantine/notifications'
 import { LoginState, useSDK, useWallet } from '@meemproject/react'
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
@@ -17,16 +17,16 @@ import { QrCode } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import QRCode from 'react-qr-code'
-import { Check, Settings } from 'tabler-icons-react'
+import { Settings } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
-import { quickTruncate } from '../../../utils/truncated_wallet'
 import {
-	colorGreen,
-	colorLightGrey,
-	useMeemTheme
-} from '../../Styles/MeemTheme'
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
+import { quickTruncate } from '../../../utils/truncated_wallet'
+import { colorLightGrey, useMeemTheme } from '../../Styles/MeemTheme'
 import { JoinLeaveAgreementModal } from '../JoinLeaveAgreementModal'
 interface IProps {
 	agreement: Agreement
@@ -151,11 +151,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					log.debug(`Minting w/ transaction id: ${txId}`)
 				} else {
 					setIsJoiningAgreement(false)
-					showNotification({
-						radius: 'lg',
-						title: 'Error joining this community.',
-						message: `Please get in touch!`
-					})
+					showErrorNotification(
+						'Error joining this community.',
+						`Please get in touch!`
+					)
 				}
 			}
 		} catch (e) {
@@ -165,17 +164,15 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			)
 			log.debug(error.code)
 			if (error.code === 'TX_LIMIT_EXCEEDED') {
-				showNotification({
-					radius: 'lg',
-					title: 'Transaction limit exceeded',
-					message: `Come back tomorrow or get in touch!`
-				})
+				showErrorNotification(
+					'Transaction limit exceeded',
+					`Come back tomorrow or get in touch!`
+				)
 			} else {
-				showNotification({
-					radius: 'lg',
-					title: 'Error joining this community.',
-					message: `Please get in touch!`
-				})
+				showErrorNotification(
+					'Error joining this community.',
+					`Please get in touch!`
+				)
 			}
 			setIsJoiningAgreement(false)
 		}
@@ -183,11 +180,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 	const leaveAgreement = async () => {
 		if (!wallet.web3Provider || !wallet.isConnected) {
-			showNotification({
-				radius: 'lg',
-				title: 'Unable to leave this community.',
-				message: `Did you connect your wallet?`
-			})
+			showErrorNotification(
+				'Unable to leave this community.',
+				`Did you connect your wallet?`
+			)
 			return
 		}
 
@@ -195,11 +191,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			agreement?.isCurrentUserAgreementAdmin &&
 			agreement?.admins?.length === 1
 		) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: `You cannot leave this community because you are the only administrator.`
-			})
+			showErrorNotification(
+				'Oops!',
+				`You cannot leave this community because you are the only administrator.`
+			)
 			return
 		}
 
@@ -229,11 +224,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			}
 		} catch (e) {
 			setIsLeavingAgreement(false)
-			showNotification({
-				radius: 'lg',
-				title: 'Error leaving this community.',
-				message: `Did you cancel the transaction?`
-			})
+			showErrorNotification(
+				'Error leaving this community.',
+				`Did you cancel the transaction?`
+			)
 		}
 	}
 
@@ -243,13 +237,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				log.debug('current user has joined the agreement!')
 				setIsJoiningAgreement(false)
 
-				showNotification({
-					radius: 'lg',
-					title: `Welcome to ${agreement.name}!`,
-					color: colorGreen,
-					autoClose: 5000,
-					message: `You now have access to this community.`
-				})
+				showSuccessNotification(
+					`Welcome to ${agreement.name}!`,
+					`You now have access to this community.`
+				)
 			}
 		}
 
@@ -260,13 +251,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				setIsLeavingAgreement(false)
 
 				cleanNotifications()
-				showNotification({
-					radius: 'lg',
-					title: 'Successfully left the community.',
-					color: colorGreen,
-					autoClose: 5000,
-					message: `You'll be missed!`
-				})
+				showSuccessNotification(
+					'Successfully left the community.',
+					`You'll be missed!`
+				)
 			}
 		}
 
@@ -462,15 +450,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 								navigator.clipboard.writeText(
 									`${window.location.origin}/${agreement.slug}`
 								)
-								showNotification({
-									radius: 'lg',
-									title: 'Community agreement contract address copied!',
-									autoClose: 2000,
-									color: colorGreen,
-									icon: <Check />,
-
-									message: `This community's agreement contract address was copied to your clipboard.`
-								})
+								showSuccessNotification(
+									'Community agreement contract address copied!',
+									`This community's agreement contract address was copied to your clipboard.`
+								)
 							}}
 							width={20}
 						/>
