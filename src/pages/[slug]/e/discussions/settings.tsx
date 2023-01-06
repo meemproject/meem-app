@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { AgreementProvider } from '../../../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../../../components/App'
+import { DiscussionsProvider } from '../../../../components/Extensions/Discussion/DiscussionProvider'
 import { DiscussionSettings } from '../../../../components/Extensions/Discussion/DiscussionSettings'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
@@ -95,7 +96,9 @@ const DiscussionSettingsPage: NextPage<IProps> = ({ agreement }) => {
 			</Head>
 			<HeaderMenu />
 			<AgreementProvider slug={agreementSlug}>
-				<DiscussionSettings />
+				<DiscussionsProvider>
+					<DiscussionSettings />
+				</DiscussionsProvider>
 			</AgreementProvider>
 			<Space h={64} />
 			<MeemFooter />

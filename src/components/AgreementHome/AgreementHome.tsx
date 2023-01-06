@@ -11,7 +11,7 @@ import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
 import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
 
-export const AgreementDetailComponent: React.FC = () => {
+export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const { classes: meemTheme } = useMeemTheme()
 
@@ -68,35 +68,29 @@ export const AgreementDetailComponent: React.FC = () => {
 								<AgreementMembersWidget agreement={agreement} />
 							</div>
 							<div className={meemTheme.pageRightColumn}>
-								{agreement.extensions && (
-									<>
-										{agreement.extensions
-											// As of MVP, we only support one widget per extension, so we can
-											// safely make the assumption that if the extension doesn't have a
-											// widget, it's either a link extension or its contents are private.
-											.filter(
-												ext =>
-													ext.AgreementExtensionWidgets &&
-													ext
-														.AgreementExtensionWidgets[0]
-											)
-											.map(extension => (
-												// TODO: Developers, make sure you import your extension's widget
-												// TODO: here, checking against the slug you chose for your extension.
-												<>
-													{extension.Extension
-														?.slug ===
-														'discussion' && (
-														<DiscussionWidget
-															agreement={
-																agreement
-															}
-														/>
-													)}
-												</>
-											))}
-									</>
-								)}
+								{agreement.extensions &&
+									agreement.extensions
+										// As of MVP, we only support one widget per extension, so we can
+										// safely make the assumption that if the extension doesn't have a
+										// widget, it's either a link extension or its contents are private.
+										.filter(
+											ext =>
+												ext.AgreementExtensionWidgets &&
+												ext.AgreementExtensionWidgets[0]
+										)
+										.map(extension => (
+											// TODO: Developers, make sure you import your extension's widget
+											// TODO: here, checking against the slug you chose for your extension.
+											<>
+												{extension.Extension?.slug ===
+													'discussions' && (
+													<DiscussionWidget
+														key="discussion-widget"
+														agreement={agreement}
+													/>
+												)}
+											</>
+										))}
 
 								<AgreementBlankSlateWidget
 									agreement={agreement}

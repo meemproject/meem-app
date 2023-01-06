@@ -6,10 +6,12 @@ import {
 	Image,
 	useMantineColorScheme,
 	Divider,
-	Button
+	Button,
+	Tooltip
 } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
-import { useAuth, useSDK } from '@meemproject/react'
+import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -19,35 +21,38 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { DateTime } from 'luxon'
-import React, { useCallback, useState } from 'react'
-import { ChevronUp } from 'tabler-icons-react'
-import { AgreementExtensions } from '../../../../generated/graphql'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Check, ChevronUp } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
+	colorBlue,
 	colorDarkGrey,
+	colorGreen,
 	colorLightGrey,
-	// colorPink,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
-import { IReactions } from './DiscussionPost'
+import { calculateVotes } from './DiscussionHome'
+import { useDiscussions } from './DiscussionProvider'
 interface IProps {
-	comment: DiscussionComment
-	reactions: IReactions
-	onReaction: () => void
-	agreementExtension: AgreementExtensions | undefined
+	comment?: DiscussionComment
+	onReaction?: () => void
+	path: string
 }
 
 export const DiscussionCommentComponent: React.FC<IProps> = ({
 	comment,
-	reactions,
-	agreementExtension,
-	onReaction
+	onReaction,
+	path
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()
-	const { chainId, me } = useAuth()
+	const { me } = useAuth()
 	const { agreement } = useAgreement()
+	const { privateKey } = useDiscussions()
+	const [votes, setVotes] = useState(0)
+	const [canReact, setCanReact] = useState(false)
+	const { accounts } = useWallet()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -68,60 +73,133 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 	})
 
 	const [isLoading, setIsLoading] = useState(false)
-	const [isReplying] = useState(false)
+	const [isReplying, setIsReplying] = useState(false)
 	const [isCommentRepliesHidden, setIsCommentRepliesHidden] = useState(false)
 
-	log.debug({ isLoading })
-
 	const handleReactionSubmit = useCallback(
-		async (options: {
-			e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-			reaction: string
-		}) => {
-			const { e, reaction } = options
-			e.preventDefault()
+		async (options: { reaction: string }) => {
+			const { reaction } = options
 			try {
-				if (!chainId) {
-					log.crit('No chainId found')
+				if (!agreement) {
+					log.crit('No agreement found')
+					return
+				}
+				if (!comment) {
+					log.crit('No comment found')
+					return
+				}
+				if (!privateKey) {
+					log.crit('No privateKey found')
 					return
 				}
 				setIsLoading(true)
 
-				const authSig = await sdk.id.getLitAuthSig()
+				const createdAt = Math.floor(new Date().getTime() / 1000)
+				const gun = sdk.storage.getGunInstance()
 
-				const tableName =
-					agreementExtension?.metadata?.storage?.tableland?.reactions
-						.tablelandTableName
-
-				await sdk.storage.encryptAndWrite({
-					chainId,
-					tableName,
-					authSig,
+				const { item } = await sdk.storage.encryptAndWrite({
+					path: `${path}/comments/${comment.id}/reactions`,
+					key: privateKey,
 					writeColumns: {
-						refId: comment.id,
-						refTable: 'comments'
+						createdAt
 					},
 					data: {
 						reaction,
 						userId: me?.user.id,
 						walletAddress: me?.address
-					},
-					accessControlConditions: [
-						{
-							contractAddress: agreement?.address
-						}
-					]
+					}
 				})
 
-				// Re-fetch
-				onReaction()
+				gun.get(`${path}/comments/${comment.id}`)
+					// @ts-ignore
+					.get('reactions')
+					// @ts-ignore
+					.set(item)
+
+				if (onReaction) {
+					onReaction()
+				}
 			} catch (err) {
 				log.crit(err)
 			}
 			setIsLoading(false)
 		},
-		[sdk, chainId, me, agreementExtension, agreement, onReaction, comment]
+		[sdk, me, agreement, onReaction, privateKey, path, comment]
 	)
+
+	const handleCommentSubmit = useCallback(async () => {
+		try {
+			if (!path) {
+				log.crit('No path found')
+				return
+			}
+			if (!agreement) {
+				log.crit('No agreement found')
+				return
+			}
+			if (!comment) {
+				log.crit('No comment found')
+				return
+			}
+			if (!privateKey) {
+				log.crit('No privateKey found')
+				return
+			}
+			setIsLoading(true)
+
+			const createdAt = Math.floor(new Date().getTime() / 1000)
+			const gun = sdk.storage.getGunInstance()
+
+			const { item } = await sdk.storage.encryptAndWrite({
+				path: `${path}/comments/${comment.id}/comments`,
+				writeColumns: {
+					createdAt
+				},
+				key: privateKey,
+				data: {
+					body: editor?.getHTML(),
+					walletAddress: accounts[0],
+					userId: me?.user.id,
+					displayName: me?.user.displayName,
+					profilePicUrl: me?.user.profilePicUrl,
+					ens: me?.user.DefaultWallet.ens,
+					agreementSlug: agreement?.slug
+				}
+			})
+
+			// @ts-ignore
+			gun.get(`${path}/comments/${comment.id}`).get('comments').set(item)
+
+			editor?.commands.clearContent()
+
+			showNotification({
+				radius: 'lg',
+				title: 'Comment Submitted!',
+				autoClose: 5000,
+				color: colorGreen,
+				icon: <Check color="green" />,
+				message: 'Your comment has been submitted.'
+			})
+		} catch (e) {
+			log.crit(e)
+		}
+		setIsLoading(false)
+	}, [editor, agreement, sdk, accounts, me, path, privateKey, comment])
+
+	useEffect(() => {
+		const { votes: v, userVotes } = calculateVotes(comment)
+		setVotes(v)
+
+		if (me && userVotes[me.user.id]) {
+			setCanReact(false)
+		} else {
+			setCanReact(true)
+		}
+	}, [comment, me])
+
+	if (!comment) {
+		return null
+	}
 
 	return (
 		<div>
@@ -138,7 +216,10 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 						{comment.displayName ?? comment.walletAddress}
 					</Text>
 					<Text className={meemTheme.tExtraExtraSmall}>
-						{DateTime.fromSeconds(comment.createdAt).toRelative()}
+						{comment.createdAt &&
+							DateTime.fromSeconds(
+								comment.createdAt
+							).toRelative()}
 					</Text>
 				</div>
 			</div>
@@ -169,26 +250,33 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 					/>
 					<Space h={16} />
 					<div className={meemTheme.centeredRow}>
-						<a
-							style={{ cursor: 'pointer' }}
-							onClick={e =>
-								handleReactionSubmit({
-									e,
-									reaction: 'upvote'
-								})
-							}
+						<Tooltip
+							label="You have already reacted to this post."
+							disabled={canReact}
 						>
-							<ChevronUp />
-						</a>
+							<span>
+								<Button
+									variant="subtle"
+									style={{ cursor: 'pointer' }}
+									disabled={isLoading || !canReact}
+									loading={isLoading}
+									onClick={() =>
+										handleReactionSubmit({
+											reaction: 'upvote'
+										})
+									}
+								>
+									<ChevronUp />
+								</Button>
+							</span>
+						</Tooltip>
 						<Space w={4} />
 
 						<Text
 							className={meemTheme.tExtraExtraSmall}
 							style={{ fontWeight: '700' }}
 						>
-							{(reactions.comments[comment.id] &&
-								reactions.comments[comment.id].counts.upvote) ??
-								0}
+							{votes}
 						</Text>
 						<Space w={20} />
 						<Image
@@ -200,15 +288,15 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 						/>
 						<Space w={8} />
 
-						{/* <Text
-							className={clubsTheme.tExtraExtraSmall}
+						<Text
+							className={meemTheme.tExtraExtraSmall}
 							style={{ cursor: 'pointer' }}
 							onClick={() => {
 								setIsReplying(!isReplying)
 							}}
 						>
 							Reply
-						</Text> */}
+						</Text>
 					</div>
 					{isReplying && editor && (
 						<>
@@ -244,6 +332,9 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 											marginBottom: 16,
 											marginRight: 16
 										}}
+										onClick={handleCommentSubmit}
+										loading={isLoading}
+										disabled={isLoading}
 									>
 										Reply
 									</Button>
@@ -251,22 +342,23 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 							</div>
 						</>
 					)}
-					{/* <Space h={16} />
+					<Space h={16} />
 
-					{comment.replies && !isCommentRepliesHidden && (
+					{comment.comments && !isCommentRepliesHidden && (
 						<>
-							{comment.replies?.map(reply => (
+							{comment.comments?.map(reply => (
 								<>
 									<DiscussionCommentComponent
 										key={reply.id}
 										comment={reply}
+										path={`${path}/comments/${comment.id}`}
 									/>
 									<Space h={16} />
 								</>
 							))}
 						</>
 					)}
-					{comment.replies && isCommentRepliesHidden && (
+					{comment.comments && isCommentRepliesHidden && (
 						<Text
 							onClick={() => {
 								setIsCommentRepliesHidden(
@@ -274,9 +366,9 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 								)
 							}}
 							className={meemTheme.tExtraSmall}
-							style={{ color: colorPink, cursor: 'pointer' }}
-						>{`${comment.replies?.length} replies hidden`}</Text>
-					)} */}
+							style={{ color: colorBlue, cursor: 'pointer' }}
+						>{`${comment.comments?.length} replies hidden`}</Text>
+					)}
 				</div>
 			</div>
 		</div>

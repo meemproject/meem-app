@@ -8,6 +8,7 @@ import React from 'react'
 import { AgreementProvider } from '../../../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../../../components/App'
 import { DiscussionPostSubmit } from '../../../../components/Extensions/Discussion/DiscussionPostSubmit'
+import { DiscussionsProvider } from '../../../../components/Extensions/Discussion/DiscussionProvider'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
@@ -28,6 +29,7 @@ const DiscussionPostSubmitPage: NextPage<IProps> = ({ agreement }) => {
 
 	const agreementSlug =
 		router.query.slug === undefined ? '' : `${router.query.slug}`
+
 	return (
 		<>
 			<Head>
@@ -95,7 +97,9 @@ const DiscussionPostSubmitPage: NextPage<IProps> = ({ agreement }) => {
 			</Head>
 			<HeaderMenu />
 			<AgreementProvider slug={agreementSlug}>
-				<DiscussionPostSubmit agreementSlug={agreementSlug} />
+				<DiscussionsProvider>
+					<DiscussionPostSubmit agreementSlug={agreementSlug} />
+				</DiscussionsProvider>
 			</AgreementProvider>
 			<Space h={64} />
 			<MeemFooter />
