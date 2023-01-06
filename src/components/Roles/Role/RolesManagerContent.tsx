@@ -12,10 +12,8 @@ import {
 	Center,
 	Radio
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useMeemApollo } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
 import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
 import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/agreements'
 import {
@@ -24,6 +22,10 @@ import {
 	AgreementRole,
 	AgreementRolePermission
 } from '../../../model/agreement/agreements'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
@@ -163,11 +165,10 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	// Save any changes to the role
 	const saveChanges = () => {
 		if (!roleMembers || roleMembers.length === 0) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: `Please add at least one member to this role!`
-			})
+			showErrorNotification(
+				'Oops!',
+				`Please add at least one member to this role!`
+			)
 			return
 		}
 
@@ -273,15 +274,10 @@ export const RolesManagerContent: React.FC<IProps> = ({
 												navigator.clipboard.writeText(
 													agreement.address ?? ''
 												)
-												showNotification({
-													radius: 'lg',
-													title: 'Address copied',
-													autoClose: 2000,
-													color: 'green',
-													icon: <Check />,
-
-													message: `This role's contract address was copied to your clipboard.`
-												})
+												showSuccessNotification(
+													'Address copied',
+													`This role's contract address was copied to your clipboard.`
+												)
 											}}
 											width={20}
 										/>

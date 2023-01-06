@@ -10,7 +10,6 @@ import {
 	Center
 } from '@mantine/core'
 import { Calendar, TimeInput } from '@mantine/dates'
-import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
@@ -19,6 +18,7 @@ import {
 	MembershipSettings,
 	Agreement
 } from '../../../model/agreement/agreements'
+import { showErrorNotification } from '../../../utils/notifications'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
@@ -136,11 +136,7 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 			if (isMembershipSettingsSame) {
 				log.debug('no changes, nothing to save. Tell user.')
 				setIsSavingChanges(false)
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message: 'There are no changes to save.'
-				})
+				showErrorNotification('Oops!', 'There are no changes to save.')
 				return
 			}
 
@@ -249,7 +245,8 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 					Memberships are available starting{' '}
 					<a onClick={openMembershipStartTimingModal}>
 						<span className={meemTheme.fBlueSelectableSpan}>
-							{membershipStartDate === undefined
+							{membershipStartDate === undefined ||
+							membershipStartDate.getUTCMilliseconds() === 0
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
 										membershipStartDate.getMinutes() > 9
@@ -261,7 +258,8 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 					until{' '}
 					<a onClick={openMembershipTimingEndModal}>
 						<span className={meemTheme.fBlueSelectableSpan}>
-							{membershipEndDate === undefined
+							{membershipEndDate === undefined ||
+							membershipEndDate.getUTCMilliseconds() === 0
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
 										membershipEndDate.getMinutes() > 9
@@ -315,12 +313,10 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 									event.target.value
 								)
 								if (isNaN(potentialNumber)) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'Please enter a number, not text.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'Please enter a number, not text.'
+									)
 									setCostToJoin(0)
 									return
 								}
@@ -363,12 +359,10 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 
 								setIsCheckingRequirement(false)
 								if (!isValid) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'Please enter a valid wallet address.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'Please enter a valid wallet address.'
+									)
 									return
 								}
 							}
@@ -446,21 +440,17 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 					<Button
 						onClick={() => {
 							if (membershipQuantity > 10000000) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'Total memberships is too large. Choose unlimited instead.'
-								})
+								showErrorNotification(
+									'Oops!',
+									'Total memberships is too large. Choose unlimited instead.'
+								)
 								return
 							}
 							if (membershipQuantity < 0) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'How can you have negative total memberships?!'
-								})
+								showErrorNotification(
+									'Oops!',
+									'How can you have negative total memberships?!'
+								)
 								return
 							}
 							setMembershipQuantityModalOpened(false)
@@ -553,12 +543,10 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 								membershipStartDate.getTime() >
 									membershipEndDate.getTime()
 							) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'Please choose a start date or time earlier than the end date.'
-								})
+								showErrorNotification(
+									'Oops!',
+									'Please choose a start date or time earlier than the end date.'
+								)
 								return
 							}
 							setMembershipTimingStartModalOpened(false)
@@ -651,12 +639,10 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 								membershipStartDate.getTime() >
 									membershipEndDate.getTime()
 							) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'Please choose an end date or time later than the start date.'
-								})
+								showErrorNotification(
+									'Oops!',
+									'Please choose an end date or time later than the start date.'
+								)
 								return
 							}
 							setMembershipTimingEndModalOpened(false)

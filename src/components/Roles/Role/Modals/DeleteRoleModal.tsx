@@ -1,17 +1,19 @@
 /* eslint-disable no-unused-vars */
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Divider, Button } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useSDK } from '@meemproject/react'
 import router from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
-import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import {
 	Agreement,
 	AgreementRole
 } from '../../../../model/agreement/agreements'
-import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../../utils/notifications'
+import { useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -41,23 +43,18 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 			try {
 				// TODO: Deleting a role not supported in the SDK yet.
 
-				showNotification({
-					title: 'Deleted role',
-					autoClose: 5000,
-					icon: <CircleCheck />,
-					message: `Redirecting you. Please wait...`
-				})
+				showSuccessNotification(
+					'Deleted role',
+					`Redirecting you. Please wait...`
+				)
 
 				router.reload()
 			} catch (e) {
 				log.debug(e)
-				showNotification({
-					title: 'Error',
-					autoClose: 5000,
-					color: colorBlue,
-					icon: <AlertCircle />,
-					message: `Unable to delete this role. Please let us know!`
-				})
+				showErrorNotification(
+					'Error',
+					`Unable to delete this role. Please let us know!`
+				)
 				setIsDeletingRole(false)
 				return
 			}
