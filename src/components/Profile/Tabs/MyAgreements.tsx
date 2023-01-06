@@ -5,6 +5,7 @@ import {
 	Image,
 	Space,
 	Loader,
+	Center,
 	Grid,
 	Badge,
 	useMantineColorScheme
@@ -13,10 +14,7 @@ import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import {
-	Agreements,
-	MyAgreementsSubscriptionSubscription
-} from '../../../../generated/graphql'
+import { MyAgreementsSubscriptionSubscription } from '../../../../generated/graphql'
 import { SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
 import {
 	Agreement,
@@ -34,7 +32,7 @@ export const MyAgreementsComponent: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { userClient } = useMeemApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -57,7 +55,7 @@ export const MyAgreementsComponent: React.FC = () => {
 					wallet.accounts[0] &&
 					wallet.accounts[0].toLowerCase()
 			},
-			client: userClient
+			client: mutualMembersClient
 		}
 	)
 
@@ -77,7 +75,7 @@ export const MyAgreementsComponent: React.FC = () => {
 	}, [error, router])
 
 	const navigateToCreate = () => {
-		router.push({ pathname: '/' })
+		router.push({ pathname: '/create' })
 	}
 
 	const navigateToAgreement = (agreement: string) => {
@@ -86,13 +84,17 @@ export const MyAgreementsComponent: React.FC = () => {
 
 	const agreements: Agreement[] = []
 
-	agreementData?.AgreementTokens.forEach(meem => {
-		const possibleAgreement = agreementSummaryFromAgreement(
-			meem.Agreement as Agreements
-		)
+	agreementData?.Agreements.forEach(agr => {
+		const possibleAgreement = agreementSummaryFromAgreement(agr)
 
 		if (possibleAgreement.name) {
-			agreements.push(possibleAgreement)
+			const alreadyAdded =
+				agreements.filter(
+					agreement => agreement.id === possibleAgreement.id
+				).length > 0
+			if (!alreadyAdded) {
+				agreements.push(possibleAgreement)
+			}
 		}
 	})
 
@@ -132,8 +134,8 @@ export const MyAgreementsComponent: React.FC = () => {
 								xs={6}
 								sm={6}
 								md={6}
-								lg={4}
-								xl={4}
+								lg={6}
+								xl={6}
 								key={agreement.address}
 							>
 								<div
@@ -150,21 +152,28 @@ export const MyAgreementsComponent: React.FC = () => {
 											className={
 												meemTheme.imageAgreementLogo
 											}
+											style={{
+												width: '56px',
+												height: '56px'
+											}}
 											src={agreement.image ?? ''}
-											width={40}
-											height={40}
 											radius={8}
 											fit={'cover'}
 										/>
-										<Space w="xs" />
+										<Space w={20} />
 
 										<div className={meemTheme.tEllipsis}>
 											<Text
+												style={{
+													fontWeight: 500,
+													fontSize: 18
+												}}
 												className={meemTheme.tEllipsis}
 											>
 												{agreement.name}
 											</Text>
-											<Space h={8} />
+
+											<Space h={20} />
 											<div className={meemTheme.row}>
 												<Badge
 													gradient={{
@@ -193,7 +202,7 @@ export const MyAgreementsComponent: React.FC = () => {
 														</>
 													}
 												>
-													{agreement.memberCount}
+													{agreement.members?.length}
 												</Badge>
 											</div>
 										</div>
@@ -201,6 +210,32 @@ export const MyAgreementsComponent: React.FC = () => {
 								</div>
 							</Grid.Col>
 						))}
+						<Grid.Col
+							xs={6}
+							sm={6}
+							md={6}
+							lg={6}
+							xl={6}
+							key={'create-new-agreement'}
+						>
+							<div
+								className={meemTheme.gridItemCenteredAsh}
+								onClick={() => {
+									navigateToCreate()
+								}}
+							>
+								<Space h={16} />
+								<Center>
+									<Text
+										className={meemTheme.tMedium}
+										style={{ color: 'black' }}
+									>
+										+ Launch a new community
+									</Text>
+								</Center>
+								<Space h={16} />
+							</div>
+						</Grid.Col>
 					</Grid>
 
 					<Space h={60} />

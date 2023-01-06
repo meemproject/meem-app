@@ -9,14 +9,12 @@ import {
 	Stepper,
 	Center
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
 import { GetTransactionsSubscription } from '../../../generated/graphql'
 import { SUB_TRANSACTIONS } from '../../graphql/transactions'
 import {
@@ -24,8 +22,12 @@ import {
 	MembershipRequirementToMeemPermission
 } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	membershipSettings?: MembershipSettings
 	isOpened: boolean
@@ -71,12 +73,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 	useEffect(() => {
 		if (error) {
 			log.crit(error)
-			showNotification({
-				radius: 'lg',
-				title: 'Error Fetching Data',
-				message: 'Please reload and try again.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error Fetching Data',
+				'Please reload and try again.'
+			)
 		}
 	}, [error])
 
@@ -98,15 +98,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			Cookies.remove(CookieKeys.agreementExternalUrl)
 
 			// Route to the created agreement detail page
-			showNotification({
-				radius: 'lg',
-				title: 'Success!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color="green" />,
-
-				message: `Your community has been created.`
-			})
+			showSuccessNotification(
+				'Success!',
+				`Your community has been created.`
+			)
 
 			router.push({
 				pathname: `/${slug}`
@@ -120,12 +115,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 		log.debug('creating agreement...')
 		if (!wallet.web3Provider || !wallet.chainId) {
 			log.debug('no web3 provider, returning.')
-			showNotification({
-				radius: 'lg',
-				title: 'Error creating community',
-				message: 'Please connect your wallet first.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error creating community',
+				'Please connect your wallet first.'
+			)
 			closeModal()
 			setHasStartedCreating(false)
 			return
@@ -133,13 +126,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 
 		if (!membershipSettings) {
 			log.debug('no membership settings found, returning.')
-			showNotification({
-				radius: 'lg',
-				title: 'Error creating community',
-				message:
-					'An error occurred while creating this community. Please try again.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error creating community',
+				'An error occurred while creating this community. Please try again.'
+			)
 
 			closeModal()
 			setHasStartedCreating(false)
@@ -191,12 +181,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			})
 
 			if (mintPermissions.length === 0) {
-				showNotification({
-					radius: 'lg',
-					title: 'Oops!',
-					message: `This community has invalid membership requirements. Please double-check your entries and try again.`,
-					color: colorBlue
-				})
+				showErrorNotification(
+					'Oops!',
+					`This community has invalid membership requirements. Please double-check your entries and try again.`
+				)
 				closeModal()
 				setHasStartedCreating(false)
 				return
@@ -265,13 +253,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			}
 		} catch (e) {
 			log.crit(e)
-			showNotification({
-				radius: 'lg',
-				title: 'Error creating community',
-				message:
-					'An error occurred while creating this community. Please try again.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Error creating community',
+				'An error occurred while creating this community. Please try again.'
+			)
 
 			closeModal()
 			setHasStartedCreating(false)
@@ -315,12 +300,10 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				finishAgreementCreation(cutTransaction.Agreements[0].slug)
 			} else {
 				// TODO: Handle edge case error
-				showNotification({
-					radius: 'lg',
-					title: 'Error creating community',
-					message: 'Please try again.',
-					color: colorBlue
-				})
+				showErrorNotification(
+					'Error creating community',
+					'Please try again.'
+				)
 			}
 		}
 
@@ -333,9 +316,93 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 		finishAgreementCreation
 	])
 
+	const modalContents = (
+		<>
+			<div className={meemTheme.modalHeader}>
+				<Loader color="blue" variant="oval" />
+				<Space h={16} />
+				<Text
+					className={meemTheme.tLargeBold}
+				>{`Creating your community...`}</Text>
+				<Space h={32} />
+				<div className={meemTheme.rowResponsive}>
+					<div>
+						{Cookies.get(CookieKeys.agreementImage) && (
+							<>
+								<Center>
+									<Image
+										height={120}
+										width={120}
+										fit={'cover'}
+										className={meemTheme.imageAgreementLogo}
+										src={Cookies.get(
+											CookieKeys.agreementImage
+										)}
+									/>
+								</Center>
+								<Space h={48} />
+							</>
+						)}
+
+						<Text
+							className={meemTheme.tLargeBold}
+							style={{ textAlign: 'center' }}
+						>
+							{Cookies.get(CookieKeys.agreementName)}
+						</Text>
+						<Space h={24} />
+
+						<Text
+							className={meemTheme.tExtraSmall}
+							style={{ textAlign: 'center' }}
+						>
+							This could take a few minutes.
+						</Text>
+						<Space h={16} />
+
+						<Text
+							className={meemTheme.tExtraSmall}
+							style={{ textAlign: 'center' }}
+						>{`Please don’t refresh or close this window until this step is complete.`}</Text>
+					</div>
+					<Space w={32} />
+					<Space h={48} />
+					<Stepper
+						active={activeStep}
+						onStepClick={() => {}}
+						breakpoint="sm"
+						orientation="vertical"
+					>
+						<Stepper.Step
+							label="Queued"
+							description="Community creation has been queued."
+						></Stepper.Step>
+						<Stepper.Step
+							label="Deploying community"
+							description="Your community's smart contract is being deployed to the blockchain"
+						></Stepper.Step>
+						<Stepper.Step
+							label="Initializing community"
+							description="Setting up your community's smart contract"
+						></Stepper.Step>
+						<Stepper.Step
+							label="Minting tokens"
+							description="Minting membership tokens for your community"
+						></Stepper.Step>
+						<Stepper.Completed>
+							{/** TODO: Show a message when complete before redirecting? */}
+						</Stepper.Completed>
+					</Stepper>
+				</div>
+			</div>
+			<Space h={8} />
+		</>
+	)
+
 	return (
 		<>
 			<Modal
+				className={meemTheme.visibleDesktopOnly}
 				centered
 				closeOnClickOutside={false}
 				closeOnEscape={false}
@@ -347,85 +414,22 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				opened={isOpened}
 				onClose={() => closeModal()}
 			>
-				<div className={meemTheme.modalHeader}>
-					<Loader color="blue" variant="oval" />
-					<Space h={16} />
-					<Text
-						className={meemTheme.tLargeBold}
-					>{`We're creating your community!`}</Text>
-					<Space h={32} />
-					<div className={meemTheme.row}>
-						<div>
-							{Cookies.get(CookieKeys.agreementImage) && (
-								<>
-									<Center>
-										<Image
-											height={120}
-											width={120}
-											fit={'cover'}
-											className={
-												meemTheme.imageAgreementLogo
-											}
-											src={Cookies.get(
-												CookieKeys.agreementImage
-											)}
-										/>
-									</Center>
-									<Space h={48} />
-								</>
-							)}
-
-							<Text
-								className={meemTheme.tLargeBold}
-								style={{ textAlign: 'center' }}
-							>
-								{Cookies.get(CookieKeys.agreementName)}
-							</Text>
-							<Space h={24} />
-
-							<Text
-								className={meemTheme.tExtraSmall}
-								style={{ textAlign: 'center' }}
-							>
-								This could take a few minutes.
-							</Text>
-							<Space h={16} />
-
-							<Text
-								className={meemTheme.tExtraSmall}
-								style={{ textAlign: 'center' }}
-							>{`Please don’t refresh or close this window until this step is complete.`}</Text>
-						</div>
-						<Space w={32} />
-						<Stepper
-							active={activeStep}
-							onStepClick={() => {}}
-							breakpoint="sm"
-							orientation="vertical"
-						>
-							<Stepper.Step
-								label="Queued"
-								description="Community creation has been queued."
-							></Stepper.Step>
-							<Stepper.Step
-								label="Deploying community"
-								description="Your community's smart contract is being deployed to the blockchain"
-							></Stepper.Step>
-							<Stepper.Step
-								label="Initializing community"
-								description="Setting up your community's smart contract"
-							></Stepper.Step>
-							<Stepper.Step
-								label="Minting tokens"
-								description="Minting membership tokens for your community"
-							></Stepper.Step>
-							<Stepper.Completed>
-								{/** TODO: Show a message when complete before redirecting? */}
-							</Stepper.Completed>
-						</Stepper>
-					</div>
-				</div>
-				<Space h={8} />
+				{modalContents}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				centered
+				closeOnClickOutside={false}
+				closeOnEscape={false}
+				withCloseButton={false}
+				radius={16}
+				fullScreen={true}
+				overlayBlur={8}
+				padding={'lg'}
+				opened={isOpened}
+				onClose={() => closeModal()}
+			>
+				{modalContents}
 			</Modal>
 		</>
 	)

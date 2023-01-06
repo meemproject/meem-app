@@ -72,7 +72,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 
 	return (
 		<>
-			<div className={meemTheme.widgetLight}>
+			<div className={meemTheme.widgetAsh}>
 				<div className={meemTheme.spacedRowCentered}>
 					<div className={meemTheme.centeredRow}>
 						<Text className={meemTheme.tMediumBold}>Members</Text>
@@ -88,7 +88,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 								pathname: `/${agreement.slug}/members`
 							})
 						}}
-						className={meemTheme.buttonBlue}
+						className={meemTheme.buttonBlack}
 					>
 						View All
 					</Button>

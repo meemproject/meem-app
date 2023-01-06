@@ -11,13 +11,13 @@ import {
 	Center,
 	useMantineColorScheme
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import {
 	Agreement,
 	AgreementMember
 } from '../../../../model/agreement/agreements'
+import { showErrorNotification } from '../../../../utils/notifications'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
@@ -268,11 +268,10 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 								onMembersSaved(chosenMembers)
 								onModalClosed()
 							} else {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message: `Please choose at least one member!`
-								})
+								showErrorNotification(
+									'Oops!',
+									`Please choose at least one member!`
+								)
 							}
 						}}
 					>

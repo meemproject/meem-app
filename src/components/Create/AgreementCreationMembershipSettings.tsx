@@ -12,7 +12,6 @@ import {
 	Divider
 } from '@mantine/core'
 import { Calendar, TimeInput } from '@mantine/dates'
-import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
@@ -25,6 +24,7 @@ import {
 	Agreement
 } from '../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../model/token/token'
+import { showErrorNotification } from '../../utils/notifications'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { colorWhite, useMeemTheme } from '../Styles/MeemTheme'
 import { CreateAgreementModal } from './CreateAgreementModal'
@@ -253,11 +253,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 
 	const saveChanges = async () => {
 		if (agreementAdmins.length === 0) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'At least one community administrator is required.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'At least one community administrator is required.'
+			)
 			return
 		}
 
@@ -290,12 +289,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 		)
 
 		if (!isAdminListValid) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'One or more community administrator addresses are invalid. Check what you entered and try again.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'One or more community administrator addresses are invalid. Check what you entered and try again.'
+			)
 			setIsSavingChanges(false)
 			return
 		}
@@ -350,23 +347,19 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 		)
 
 		if (isApprovedAddressesInvalid) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'One or more approved wallet addresses are invalid. Check what you entered and try again.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'One or more approved wallet addresses are invalid. Check what you entered and try again.'
+			)
 			setIsSavingChanges(false)
 			return
 		}
 
 		if (isTokenRequirementInvalid) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'It looks like you provided an invalid token address or quantity for a requirement. Check what you entered and try again.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'It looks like you provided an invalid token address or quantity for a requirement. Check what you entered and try again.'
+			)
 			setIsSavingChanges(false)
 			return
 		}
@@ -442,7 +435,7 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 				<Space h={64} />
 
 				<Divider />
-				<Space h={64} />
+				<Space h={56} />
 
 				<Text className={meemTheme.tLargeBold}>Membership</Text>
 				<Space h={32} />
@@ -908,12 +901,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 								setIsCheckingRequirement(true)
 
 								if (reqCurrentlyEditing.tokenMinQuantity <= 0) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'Please enter a quantity greater than 0.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'Please enter a quantity greater than 0.'
+									)
 									setIsCheckingRequirement(false)
 
 									return
@@ -927,12 +918,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 								)
 
 								if (!token) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'That token is not valid. Check the contract address and try again.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'That token is not valid. Check the contract address and try again.'
+									)
 									setIsCheckingRequirement(false)
 									return
 								} else {
@@ -960,12 +949,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 									})
 
 									if (doesApplicantsListContainAdmin) {
-										showNotification({
-											radius: 'lg',
-											title: 'Oops!',
-											message:
-												'You cannot add a community administrator as an approved address.'
-										})
+										showErrorNotification(
+											'Oops!',
+											'You cannot add a community administrator as an approved address.'
+										)
 										return
 									}
 									break
@@ -974,12 +961,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 										reqCurrentlyEditing.tokenMinQuantity ===
 										0
 									) {
-										showNotification({
-											radius: 'lg',
-											title: 'Oops!',
-											message:
-												'Please enter a minimum token quantity.'
-										})
+										showErrorNotification(
+											'Oops!',
+											'Please enter a minimum token quantity.'
+										)
 										return
 									}
 									break
@@ -1093,12 +1078,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 									event.target.value
 								)
 								if (isNaN(potentialNumber)) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'Please enter a number, not text.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'Please enter a number, not text.'
+									)
 									setCostToJoin(0)
 									return
 								}
@@ -1140,12 +1123,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 
 								setIsCheckingRequirement(false)
 								if (!isValid) {
-									showNotification({
-										radius: 'lg',
-										title: 'Oops!',
-										message:
-											'Please enter a valid wallet address.'
-									})
+									showErrorNotification(
+										'Oops!',
+										'Please enter a valid wallet address.'
+									)
 									return
 								}
 							}
@@ -1223,21 +1204,17 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 					<Button
 						onClick={() => {
 							if (membershipQuantity > 10000000) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'Total memberships is too large. Choose unlimited instead.'
-								})
+								showErrorNotification(
+									'Oops!',
+									'Total memberships is too large. Choose unlimited instead.'
+								)
 								return
 							}
 							if (membershipQuantity < 0) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'How can you have negative total memberships?!'
-								})
+								showErrorNotification(
+									'Oops!',
+									'How can you have negative total memberships?!'
+								)
 								return
 							}
 							setMembershipQuantityModalOpened(false)
@@ -1330,12 +1307,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 								membershipStartDate.getTime() >
 									membershipEndDate.getTime()
 							) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'Please choose a start date or time earlier than the end date.'
-								})
+								showErrorNotification(
+									'Oops!',
+									'Please choose a start date or time earlier than the end date.'
+								)
 								return
 							}
 							setMembershipTimingStartModalOpened(false)
@@ -1428,12 +1403,10 @@ export const AgreementCreationMembershipSettings: React.FC<IProps> = ({
 								membershipStartDate.getTime() >
 									membershipEndDate.getTime()
 							) {
-								showNotification({
-									radius: 'lg',
-									title: 'Oops!',
-									message:
-										'Please choose an end date or time later than the start date.'
-								})
+								showErrorNotification(
+									'Oops!',
+									'Please choose an end date or time later than the start date.'
+								)
 								return
 							}
 							setMembershipTimingEndModalOpened(false)

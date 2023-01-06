@@ -2,7 +2,6 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import {
 	useSDK,
 	useSockets,
@@ -11,7 +10,6 @@ import {
 } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Check } from 'tabler-icons-react'
 // eslint-disable-next-line import/namespace
 import {
 	GetAgreementSubscriptionSubscription // eslint-disable-next-line import/namespace
@@ -21,8 +19,12 @@ import {
 	Agreement,
 	MembershipRequirementToMeemPermission
 } from '../../model/agreement/agreements'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
-import { colorGreen, colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement
@@ -92,192 +94,153 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 				return
 			}
 
-			setIsSavingChanges(true)
+			if (!isSavingChanges) {
+				setIsSavingChanges(true)
 
-			log.debug(`reinitialize...`)
+				log.debug(`reinitialize...`)
 
-			try {
-				// const agreementSymbol = (agreement.name ?? '').split(' ')[0].toUpperCase()
+				try {
+					// const agreementSymbol = (agreement.name ?? '').split(' ')[0].toUpperCase()
 
-				const applicationInstructions: string[] = []
-				if (agreement.membershipSettings) {
-					agreement.membershipSettings.requirements.forEach(
-						requirement => {
-							if (
-								requirement.applicationInstructions &&
-								requirement.applicationInstructions?.length > 0
-							) {
-								applicationInstructions.push(
+					const applicationInstructions: string[] = []
+					if (agreement.membershipSettings) {
+						agreement.membershipSettings.requirements.forEach(
+							requirement => {
+								if (
+									requirement.applicationInstructions &&
 									requirement.applicationInstructions
-								)
+										?.length > 0
+								) {
+									applicationInstructions.push(
+										requirement.applicationInstructions
+									)
+								}
 							}
+						)
+					}
+
+					let membershipStartUnix = -1
+					let membershipEndUnix = -1
+					if (agreement.membershipSettings) {
+						if (agreement.membershipSettings.membershipStartDate) {
+							membershipStartUnix = Math.floor(
+								new Date(
+									agreement.membershipSettings.membershipStartDate
+								).getTime() / 1000
+							)
+							log.debug(membershipStartUnix)
 						}
-					)
-				}
+						if (agreement.membershipSettings.membershipEndDate) {
+							membershipEndUnix = Math.floor(
+								new Date(
+									agreement.membershipSettings.membershipEndDate
+								).getTime() / 1000
+							)
+							log.debug(membershipEndUnix)
+						}
+					}
 
-				let membershipStartUnix = -1
-				let membershipEndUnix = -1
-				if (agreement.membershipSettings) {
-					if (agreement.membershipSettings.membershipStartDate) {
-						membershipStartUnix = Math.floor(
-							new Date(
-								agreement.membershipSettings.membershipStartDate
-							).getTime() / 1000
+					let mintPermissions: MeemAPI.IMeemPermission[] = []
+					if (agreement && agreement.membershipSettings) {
+						mintPermissions =
+							agreement.membershipSettings.requirements.map(
+								mr => {
+									return MembershipRequirementToMeemPermission(
+										{
+											...mr,
+											costEth:
+												agreement.membershipSettings
+													?.costToJoin,
+											mintStartTimestamp: agreement
+												.membershipSettings
+												?.membershipStartDate
+												? agreement.membershipSettings?.membershipStartDate.getTime() /
+												  1000
+												: 0,
+											mintEndTimestamp: agreement
+												.membershipSettings
+												?.membershipEndDate
+												? agreement.membershipSettings?.membershipEndDate.getTime() /
+												  1000
+												: 0
+										}
+									)
+								}
+							)
+					}
+
+					if (!agreement.id) {
+						showErrorNotification(
+							'Error saving community settings',
+							`Please get in touch!`
 						)
-						log.debug(membershipStartUnix)
+						closeModal()
+						return
 					}
-					if (agreement.membershipSettings.membershipEndDate) {
-						membershipEndUnix = Math.floor(
-							new Date(
-								agreement.membershipSettings.membershipEndDate
-							).getTime() / 1000
+
+					if (mintPermissions.length === 0) {
+						showErrorNotification(
+							'Oops!',
+							`This community has invalid membership requirements. Please double-check your entries and try again.`
 						)
-						log.debug(membershipEndUnix)
+						closeModal()
+						return
 					}
-				}
 
-				let mintPermissions: MeemAPI.IMeemPermission[] = []
-				if (agreement && agreement.membershipSettings) {
-					mintPermissions =
-						agreement.membershipSettings.requirements.map(mr => {
-							return MembershipRequirementToMeemPermission({
-								...mr,
-								costEth:
-									agreement.membershipSettings?.costToJoin,
-								mintStartTimestamp: agreement.membershipSettings
-									?.membershipStartDate
-									? agreement.membershipSettings?.membershipStartDate.getTime() /
-									  1000
-									: 0,
-								mintEndTimestamp: agreement.membershipSettings
-									?.membershipEndDate
-									? agreement.membershipSettings?.membershipEndDate.getTime() /
-									  1000
-									: 0
-							})
-						})
-				}
-
-				if (!agreement.id) {
-					showNotification({
-						radius: 'lg',
-						title: 'Error saving community settings',
-						message: `Please get in touch!`,
-						color: colorBlue
-					})
-					closeModal()
-					return
-				}
-
-				if (mintPermissions.length === 0) {
-					showNotification({
-						radius: 'lg',
-						title: 'Oops!',
-						message: `This community has invalid membership requirements. Please double-check your entries and try again.`,
-						color: colorBlue
-					})
-					closeModal()
-					return
-				}
-
-				const data = {
-					shouldMintTokens: true,
-					metadata: {
-						agreement_type: 'meem-agreement',
-						agreement_version: 'MeemAgreement_Contract_20220718',
-						name: agreement.name,
-						description: agreement.description,
-						image: agreement.image,
-						associations: [],
-						external_url: `https://app.meem.wtf/${agreement.slug}`,
-						application_instructions: applicationInstructions
-					},
-					name: agreement.name ?? '',
-					admins: agreement.adminAddresses,
-					minters: agreement.adminAddresses,
-					maxSupply: !isNaN(
-						agreement.membershipSettings?.membershipQuantity ?? 0
-					)
-						? `${agreement.membershipSettings?.membershipQuantity}`
-						: '0',
-					mintPermissions,
-					splits:
-						agreement.membershipSettings &&
-						agreement.membershipSettings.membershipFundsAddress
-							.length > 0
-							? [
-									{
-										toAddress: agreement.membershipSettings
-											? agreement.membershipSettings
-													.membershipFundsAddress
-											: wallet.accounts[0],
-										// Amount in basis points 10000 == 100%
-										amount: 10000,
-										lockedBy: MeemAPI.zeroAddress
-									}
-							  ]
-							: [],
-					tokenMetadata: {
-						agreement_metadata_version:
-							'MeemAgreement_Token_20220718',
-						description: `Membership token for ${agreement.name}`,
-						name: `${agreement.name} membership token`,
-						image: agreement.image,
-						associations: [],
-						external_url: `https://app.meem.wtf/${agreement.slug}`
+					const data = {
+						agreementId: agreement.id,
+						metadata: {
+							meem_metadata_type: 'Meem_AgreementContract',
+							meem_metadata_version: '20221116',
+							name: agreement.name,
+							description: agreement.description,
+							image: agreement.image,
+							associations: [],
+							external_url: `https://app.meem.wtf/${agreement.slug}`,
+							application_instructions: applicationInstructions
+						},
+						name: agreement.name ?? '',
+						admins: agreement.adminAddresses,
+						minters: agreement.adminAddresses,
+						maxSupply: !isNaN(
+							agreement.membershipSettings?.membershipQuantity ??
+								0
+						)
+							? `${agreement.membershipSettings?.membershipQuantity}`
+							: '0',
+						mintPermissions,
+						splits:
+							agreement.membershipSettings &&
+							agreement.membershipSettings.membershipFundsAddress
+								.length > 0
+								? [
+										{
+											toAddress:
+												agreement.membershipSettings
+													? agreement
+															.membershipSettings
+															.membershipFundsAddress
+													: wallet.accounts[0],
+											// Amount in basis points 10000 == 100%
+											amount: 10000,
+											lockedBy: MeemAPI.zeroAddress
+										}
+								  ]
+								: []
 					}
-				}
 
-				log.debug(data)
+					log.debug(data)
+					const { txId } = await sdk.agreement.reInitialize(data)
 
-				const { txId } = await sdk.agreement.reInitialize({
-					agreementId: agreement.id,
-					metadata: {
-						meem_metadata_type: 'Meem_AgreementContract',
-						meem_metadata_version: '20221116',
-						name: agreement.name,
-						description: agreement.description,
-						image: agreement.image,
-						associations: [],
-						external_url: `https://app.meem.wtf/${agreement.slug}`,
-						application_instructions: applicationInstructions
-					},
-					name: agreement.name ?? '',
-					admins: agreement.adminAddresses,
-					minters: agreement.adminAddresses,
-					maxSupply: !isNaN(
-						agreement.membershipSettings?.membershipQuantity ?? 0
+					log.debug(`Reinitializing agreement w/ txId: ${txId}`)
+				} catch (e) {
+					log.debug(e)
+					showErrorNotification(
+						'Error saving community settings',
+						`Please get in touch!`
 					)
-						? `${agreement.membershipSettings?.membershipQuantity}`
-						: '0',
-					mintPermissions,
-					splits:
-						agreement.membershipSettings &&
-						agreement.membershipSettings.membershipFundsAddress
-							.length > 0
-							? [
-									{
-										toAddress: agreement.membershipSettings
-											? agreement.membershipSettings
-													.membershipFundsAddress
-											: wallet.accounts[0],
-										// Amount in basis points 10000 == 100%
-										amount: 10000,
-										lockedBy: MeemAPI.zeroAddress
-									}
-							  ]
-							: []
-				})
-
-				log.debug(`Reinitializing agreement w/ txId: ${txId}`)
-			} catch (e) {
-				log.debug(e)
-				showNotification({
-					radius: 'lg',
-					title: 'Error saving community settings',
-					message: `Please get in touch!`
-				})
-				closeModal()
+					closeModal()
+				}
 			}
 		}
 		function compareAgreementData() {
@@ -290,15 +253,10 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.debug('changes detected on the agreement.')
 					closeModal()
 
-					showNotification({
-						radius: 'lg',
-						title: 'Success!',
-						autoClose: 5000,
-						color: colorGreen,
-						icon: <Check color="green" />,
-
-						message: `${agreementData.Agreements[0].name} has been updated.`
-					})
+					showSuccessNotification(
+						'Success!',
+						`${agreementData.Agreements[0].name} has been updated.`
+					)
 				}
 			}
 		}
@@ -336,21 +294,15 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.crit(err.detail.code)
 
 					if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
-						showNotification({
-							radius: 'lg',
-							title: 'Transaction limit exceeded',
-							message:
-								'You have used all the transactions available to you today. Get in touch or wait until tomorrow.',
-							color: colorBlue
-						})
+						showErrorNotification(
+							'Transaction limit exceeded',
+							'You have used all the transactions available to you today. Get in touch or wait until tomorrow.'
+						)
 					} else {
-						showNotification({
-							radius: 'lg',
-							title: 'Error saving changes',
-							message:
-								'An error occurred while saving changes. Please try again.',
-							color: colorBlue
-						})
+						showErrorNotification(
+							'Error saving changes',
+							'An error occurred while saving changes. Please try again.'
+						)
 					}
 
 					closeModal()
@@ -405,7 +357,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					<Space h={24} />
 
 					<Text
-						className={meemTheme.tSmallBold}
+						className={meemTheme.tSmall}
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>

@@ -10,7 +10,6 @@ import {
 	Button,
 	Divider
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
 import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
@@ -26,6 +25,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
+import { showErrorNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
@@ -119,11 +119,10 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 			// Some basic validation
 			if (!postTitle || postTitle.length < 3 || postTitle.length > 140) {
 				// Agreement name invalid
-				showNotification({
-					title: 'Oops!',
-					message:
-						'You entered an invalid post title. Please choose a longer or shorter post title.'
-				})
+				showErrorNotification(
+					'Oops!',
+					'You entered an invalid post title. Please choose a longer or shorter post title.'
+				)
 				return
 			}
 
@@ -132,21 +131,20 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				(editor && editor?.getHTML().length > 3000)
 			) {
 				// Agreement name invalid
-				showNotification({
-					title: 'Oops!',
-					message:
-						'You entered an invalid post body. Please type a longer or shorter post body.'
-				})
+				showErrorNotification(
+					'Oops!',
+					'You entered an invalid post body. Please type a longer or shorter post body.'
+				)
 				return
 			}
 
 			setIsLoading(true)
 
 			if (!privateKey) {
-				showNotification({
-					title: 'Something went wrong!',
-					message: 'Unable to encrypt data'
-				})
+				showErrorNotification(
+					'Something went wrong!',
+					'Unable to encrypt data'
+				)
 				setIsLoading(false)
 				return
 			}

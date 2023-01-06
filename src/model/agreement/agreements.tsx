@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-loop-func */
 import log from '@kengoldfarb/log'
 import { MeemAPI, normalizeImageUrl } from '@meemproject/sdk'
@@ -177,7 +178,7 @@ export function MembershipRequirementToMeemPermission(
 	}
 }
 
-export function agreementRolesToAgreementRoles(
+export function rawRolesToAgreementRoles(
 	agreementRoles: AgreementRoles[]
 ): AgreementRole[] {
 	const roles: AgreementRole[] = []
@@ -267,16 +268,17 @@ export interface MembershipRequirement {
 }
 
 // The agreement's basic metadata, doesn't require async
-export function agreementSummaryFromAgreement(
-	agreementData?: Agreements
-): Agreement {
+export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
 	// Count members accurately
 	const members: AgreementMember[] = []
 
 	// Parse members
 	if (agreementData) {
-		if (agreementData.AgreementTokens) {
+		if (agreementData.AgreementTokense) {
 			for (const agreementToken of agreementData.AgreementTokens) {
+				log.debug(
+					`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
+				)
 				if (
 					agreementToken.Wallet?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&
@@ -346,6 +348,8 @@ export default async function agreementFromAgreement(
 	agreementData: Agreements
 ): Promise<Agreement> {
 	if (agreementData != null && agreementData) {
+		// Start time
+		const startTime = Date.now()
 		// Parse the contract URI
 		// const metadata = agreementMetadataFromContractUri(agreementData.contractURI)
 
@@ -356,8 +360,8 @@ export default async function agreementFromAgreement(
 
 		// Raw admin addresses stored on contract, used to filter out admin-only mintPermissions
 		const adminRawAddresses: string[] = []
-		let isAgreementAdmin = false
-		let isAgreementOwner = false
+		let iAmAgreementAdmin = false
+		let iAmAgreementOwner = false
 		let isAgreementControlledByMeemApi = false
 
 		// Agreement members and admins
@@ -374,7 +378,7 @@ export default async function agreementFromAgreement(
 		let agreementRoles: AgreementRole[] = []
 		const currentUserAgreementPermissions: string[] = []
 		if (agreementData.AgreementRoles) {
-			agreementRoles = agreementRolesToAgreementRoles(
+			agreementRoles = rawRolesToAgreementRoles(
 				agreementData.AgreementRoles
 			)
 		}
@@ -393,6 +397,14 @@ export default async function agreementFromAgreement(
 				}
 			}
 		}
+
+		// Setup for parsing members - identify the admin role ownerId
+		let adminRoleOwnerId = ''
+		agreementData.AgreementRoles.forEach(role => {
+			if (role.isAdminRole) {
+				adminRoleOwnerId = role.OwnerId
+			}
+		})
 
 		// Parse members
 		if (agreementData.AgreementTokens) {
@@ -436,10 +448,6 @@ export default async function agreementFromAgreement(
 								walletAddress?.toLowerCase() ===
 									agreementToken.Wallet?.address.toLowerCase()
 
-							// Does this member have a contract role?
-							const memberAgreementWallet =
-								agreementToken?.Agreement?.AgreementWallets[0]
-
 							// Logic specific to the current user
 							if (isCurrentUser) {
 								isAgreementMember = true
@@ -448,36 +456,32 @@ export default async function agreementFromAgreement(
 								log.debug(
 									`agreement ownerId ${agreementData.OwnerId}`
 								)
-								isAgreementOwner =
+								iAmAgreementOwner =
 									agreementToken.OwnerId ===
 									agreementData.OwnerId
 
 								// Is the current user an admin?
-								if (memberAgreementWallet) {
+								if (iAmAgreementOwner) {
+									iAmAgreementAdmin = true
+								} else {
 									if (
-										memberAgreementWallet.role.toLowerCase() ===
-										AgreementAdminRole.toLowerCase()
+										agreementToken.OwnerId ===
+										adminRoleOwnerId
 									) {
-										isAgreementAdmin = true
+										log.debug(
+											`current user is a club admin`
+										)
+										iAmAgreementAdmin = true
 									}
-								} else if (isAgreementOwner) {
-									isAgreementAdmin = true
 								}
-
-								isMemberAnAdmin = isAgreementAdmin
 							}
 
 							// Is this member an admin
-							if (memberAgreementWallet) {
-								if (
-									memberAgreementWallet.role.toLowerCase() ===
-									AgreementAdminRole.toLowerCase()
-								) {
-									isMemberAnAdmin = true
-									adminRawAddresses.push(
-										agreementToken.Wallet.address ?? ''
-									)
-								}
+							if (agreementToken.OwnerId === adminRoleOwnerId) {
+								isMemberAnAdmin = true
+								adminRawAddresses.push(
+									agreementToken.Wallet.address ?? ''
+								)
 							}
 
 							// Is this member the agreement owner?
@@ -486,40 +490,37 @@ export default async function agreementFromAgreement(
 
 							// Roles + permissions logic
 							let memberRoles: AgreementRole[] = []
-							if (agreementToken.Agreement?.AgreementRoles) {
-								// Convert member roles
-								memberRoles = agreementRolesToAgreementRoles(
-									agreementToken.Agreement?.AgreementRoles
-								)
+							if (
+								agreementRoles &&
+								agreementData.AgreementRoleTokens
+							) {
+								// Find raw member roles
+								const rawMemberRoles:
+									| AgreementRoles[]
+									| undefined = []
+								agreementData.AgreementRoles.forEach(role => {
+									let memberHasRole = false
+									agreementData.AgreementRoleTokens.forEach(
+										roleToken => {
+											if (
+												roleToken.OwnerId ===
+												agreementToken.Wallet?.id
+											) {
+												memberHasRole = true
+											}
+										}
+									)
+									if (memberHasRole) {
+										log.debug(
+											`member ${agreementToken.Wallet?.address} has role ${role.name}`
+										)
+										rawMemberRoles.push(role)
+									}
+								})
 
-								// Set the current user's available permissions, if they exist
-								// agreementToken.Agreement.AgreementRoles.forEach(
-								// 	agreementMemberRole => {
-								// 		// Current member logic
-								// 		if (
-								// 			agreementToken.Wallet &&
-								// 			agreementToken.Wallet.address.toLowerCase() ===
-								// 				walletAddress.toLowerCase()
-								// 		) {
-								// 			// Set the current user's available permissions
-								// 			if (
-								// 				agreementMemberRole.AgreementRolePermissions
-								// 			) {
-								// 				agreementMemberRole.AgreementRolePermissions.forEach(
-								// 					permission => {
-								// 						if (
-								// 							permission.RolePermissionId
-								// 						) {
-								// 							currentUserAgreementPermissions.push(
-								// 								permission.RolePermissionId
-								// 							)
-								// 						}
-								// 					}
-								// 				)
-								// 			}
-								// 		}
-								// 	}
-								// )
+								// Convert member roles
+								memberRoles =
+									rawRolesToAgreementRoles(rawMemberRoles)
 							}
 
 							// Agreement member metadata + extensions
@@ -762,9 +763,13 @@ export default async function agreementFromAgreement(
 			log.debug(`Agreement is NOT controlled by meem API`)
 		}
 
-		log.debug(`current user is agreement owner = ${isAgreementOwner}`)
+		log.debug(`current user is agreement owner = ${iAmAgreementOwner}`)
 
-		log.debug(`current user is agreement admin = ${isAgreementAdmin}`)
+		log.debug(`current user is agreement admin = ${iAmAgreementAdmin}`)
+
+		const endTime = Date.now()
+		const timeTaken = endTime - startTime
+		log.debug(`club model processing took ${timeTaken}ms`)
 
 		return {
 			id: agreementData.id,
@@ -772,8 +777,8 @@ export default async function agreementFromAgreement(
 			address: agreementData.address,
 			adminAddresses: adminRawAddresses,
 			admins,
-			isCurrentUserAgreementAdmin: isAgreementAdmin,
-			isCurrentUserAgreementOwner: isAgreementOwner,
+			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
+			isCurrentUserAgreementOwner: iAmAgreementOwner,
 			agreementOwner,
 			slug: agreementData.slug,
 			gnosisSafeAddress: agreementData.gnosisSafeAddress,

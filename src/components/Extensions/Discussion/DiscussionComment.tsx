@@ -9,9 +9,9 @@ import {
 	Button,
 	Tooltip
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
 import { useAuth, useSDK, useWallet } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -22,13 +22,13 @@ import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { DateTime } from 'luxon'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Check, ChevronUp } from 'tabler-icons-react'
+import { ChevronUp } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
+import { showSuccessNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
 	colorBlue,
 	colorDarkGrey,
-	colorGreen,
 	colorLightGrey,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -172,14 +172,10 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 
 			editor?.commands.clearContent()
 
-			showNotification({
-				radius: 'lg',
-				title: 'Comment Submitted!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color="green" />,
-				message: 'Your comment has been submitted.'
-			})
+			showSuccessNotification(
+				'Comment Submitted!',
+				'Your comment has been submitted.'
+			)
 		} catch (e) {
 			log.crit(e)
 		}
@@ -205,7 +201,11 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 		<div>
 			<div className={meemTheme.centeredRow}>
 				<Image
-					src={comment.profilePicUrl ?? `/meem-icon.png`}
+					src={
+						comment.profilePicUrl
+							? normalizeImageUrl(comment.profilePicUrl)
+							: `/meem-icon.png`
+					}
 					height={32}
 					width={32}
 					radius={16}

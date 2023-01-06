@@ -7,9 +7,9 @@ import {
 	Button,
 	Textarea,
 	Space,
-	Modal
+	Modal,
+	TextInput
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
@@ -21,6 +21,7 @@ import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { CookieKeys } from '../../utils/cookies'
+import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -34,51 +35,11 @@ export const CreateComponent: React.FC = () => {
 	const [agreementName, setAgreementName] = useState(
 		router.query.agreementname?.toString() ?? ''
 	)
-	const [defaultNamespace, setDefaultNamespace] = useState('')
-	const [agreementNamespace, setAgreementNamespace] = useState('')
 
 	const [agreementDescription, setAgreementDescription] = useState('')
 
 	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
-	const { web3Provider, accounts, isConnected, connectWallet } = useWallet()
-
-	useEffect(() => {
-		if (agreementName === undefined || agreementName.length === 0) {
-			const cookieName = Cookies.get(CookieKeys.agreementName)
-
-			if (cookieName === undefined) {
-				showNotification({
-					radius: 'lg',
-					title: 'Unable to create this community.',
-					message: `Some data is missing. Try again!`,
-					autoClose: 5000
-				})
-				router.push({ pathname: '/' })
-			} else {
-				setAgreementName(cookieName)
-				const name = cookieName.replaceAll(' ', '-').toLowerCase()
-				setDefaultNamespace(name)
-				setAgreementNamespace(name)
-				Cookies.remove(CookieKeys.agreementName)
-			}
-		}
-	}, [accounts.length, agreementName, router])
-
-	useEffect(() => {
-		if (
-			agreementNamespace.length === 0 &&
-			defaultNamespace.length === 0 &&
-			agreementName !== undefined
-		) {
-			const name = agreementName
-				.toString()
-				.replaceAll(' ', '-')
-				.toLowerCase()
-			setDefaultNamespace(name)
-			setAgreementNamespace(name)
-		}
-	}, [agreementName, agreementNamespace.length, defaultNamespace.length])
-
+	const { web3Provider, isConnected, connectWallet } = useWallet()
 	// Agreement logo
 	const [smallAgreementLogo, setSmallAgreementLogo] = useState('')
 	const [
@@ -179,12 +140,10 @@ export const CreateComponent: React.FC = () => {
 			agreementName.length > 30
 		) {
 			// Agreement name invalid
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'You entered an invalid community name. Please choose a longer or shorter name.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'You entered an invalid community name. Please choose a longer or shorter name.'
+			)
 			return
 		}
 
@@ -193,27 +152,26 @@ export const CreateComponent: React.FC = () => {
 			agreementDescription.length > 140
 		) {
 			// Agreement name invalid
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'You entered an invalid community description. Please choose a longer or shorter description.'
-			})
+			showErrorNotification(
+				'Oops!',
+				'You entered an invalid community description. Please choose a longer or shorter description.'
+			)
 			return
 		}
 
 		if (smallAgreementLogo.length === 0) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'Please provide a community logo.'
-			})
+			showErrorNotification('Oops!', 'Please provide a community logo.')
 		}
+
+		const agreementSlug = agreementName
+			.toString()
+			.replaceAll(' ', '-')
+			.toLowerCase()
 
 		Cookies.set(CookieKeys.agreementName, agreementName ?? '')
 		Cookies.set(CookieKeys.agreementImage, smallAgreementLogo)
 		Cookies.set(CookieKeys.agreementDescription, agreementDescription)
-		Cookies.set(CookieKeys.agreementSlug, agreementNamespace)
+		Cookies.set(CookieKeys.agreementSlug, agreementSlug)
 		router.push({ pathname: `/create/permissions` })
 	}
 
@@ -239,31 +197,20 @@ export const CreateComponent: React.FC = () => {
 			</div>
 
 			<Container>
-				{/* <Text className={meemTheme.tMediumBold}>
-					{`Set your agreement's URL.`}
+				<Text className={meemTheme.tMediumBold}>
+					{`Community name`}
 				</Text>
-				<Text size="sm" className={classes.agreementNamespaceHint}>
-					{'Lowercase letters, numbers and dashes are allowed.'}
-				</Text>
-				<div className={classes.namespaceTextInputContainer}>
-					<TextInput
-						classNames={{ input: classes.namespaceTextInput }}
-						radius="lg"
-						size="md"
-						value={agreementNamespace ?? ''}
-						onChange={event => {
-							setAgreementNamespace(
-								event.target.value.replaceAll(' ', '').toLowerCase()
-							)
-						}}
-					/>
-					<Text
-						className={classes.namespaceTextInputUrlPrefix}
-					>{`https://app.meem.wtf/`}</Text>
-				</div>
+				<Space h={12} />
+				<TextInput
+					radius="lg"
+					size="md"
+					value={agreementName ?? ''}
+					onChange={event => {
+						setAgreementName(event.target.value)
+					}}
+				/>
 
-				<Space h={'md'} /> */}
-				<Space h={32} />
+				<Space h={40} />
 				<Text className={meemTheme.tMediumBold}>
 					In a sentence, describe what your members do together.
 				</Text>
