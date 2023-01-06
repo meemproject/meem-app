@@ -60,10 +60,10 @@ export const GuildExtensionSettings: React.FC = () => {
 	>()
 	const [userGuilds, setUserGuilds] = useState<
 		| {
-			id: number
-			name: string
-			roles: { requirements: { address: string }[] }[]
-		}[]
+				id: number
+				name: string
+				roles: { requirements: { address: string }[] }[]
+		  }[]
 		| undefined
 	>()
 	const [syncedRoles, setSyncedRoles] = useState<ISyncedGuildRole[]>([])
@@ -95,7 +95,7 @@ export const GuildExtensionSettings: React.FC = () => {
 
 			setIsFetchingGuild(false)
 		},
-		[agreementExtension]
+		[agreementExtension, isFetchingGuild]
 	)
 
 	const fetchUserGuilds = useCallback(async () => {
@@ -132,7 +132,7 @@ export const GuildExtensionSettings: React.FC = () => {
 		}
 
 		setIsFetchingGuild(false)
-	}, [agreementExtension])
+	}, [agreementExtension, isFetchingGuild, wallet])
 
 	useEffect(() => {
 		if (!wallet || wallet.accounts.length < 1 || !agreementExtension) {
@@ -145,7 +145,14 @@ export const GuildExtensionSettings: React.FC = () => {
 		} else if (!userGuilds) {
 			fetchUserGuilds()
 		}
-	}, [wallet, agreementExtension, agreementGuild])
+	}, [
+		wallet,
+		agreementExtension,
+		agreementGuild,
+		userGuilds,
+		fetchGuild,
+		fetchUserGuilds
+	])
 
 	const getGuildChain = (chainId: number): GuildChain => {
 		switch (chainId) {
@@ -236,7 +243,7 @@ export const GuildExtensionSettings: React.FC = () => {
 			setIsSavingChanges(false)
 			log.crit(err)
 		}
-	}, [agreement, agreementGuild])
+	}, [agreement, agreementExtension, fetchGuild, sdk, wallet])
 
 	const unsyncGuild = useCallback(async () => {
 		try {
@@ -265,7 +272,7 @@ export const GuildExtensionSettings: React.FC = () => {
 			setIsSavingChanges(false)
 			log.crit(err)
 		}
-	}, [agreement, agreementExtension])
+	}, [agreement, agreementExtension, sdk, wallet])
 
 	const syncGuild = useCallback(
 		async (guildId: number) => {
@@ -303,7 +310,7 @@ export const GuildExtensionSettings: React.FC = () => {
 				log.crit(err)
 			}
 		},
-		[agreement, agreementExtension]
+		[agreement, agreementExtension, sdk, wallet]
 	)
 
 	const syncRole = useCallback(
@@ -368,7 +375,7 @@ export const GuildExtensionSettings: React.FC = () => {
 				log.crit(err)
 			}
 		},
-		[agreement, agreementGuild]
+		[agreement, agreementGuild, fetchGuild, wallet]
 	)
 
 	const deleteGuildRole = useCallback(
@@ -416,7 +423,7 @@ export const GuildExtensionSettings: React.FC = () => {
 				log.crit(err)
 			}
 		},
-		[agreement, agreementGuild]
+		[agreement, agreementGuild, fetchGuild, wallet]
 	)
 
 	useEffect(() => {
@@ -468,7 +475,7 @@ export const GuildExtensionSettings: React.FC = () => {
 		})
 
 		setUnsyncedRoles(unsyncedRolesData ?? [])
-	}, [agreementGuild])
+	}, [agreementGuild, agreement])
 
 	/*
 TODO
@@ -693,7 +700,7 @@ TODO
 Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
 */
 
-	const saveCustomChanges = async () => { }
+	// const saveCustomChanges = async () => {}
 
 	/*
 		Boilerplate area - please don't edit the below code!
@@ -719,37 +726,37 @@ Use this function to save any specific settings you have created for this extens
 				agreement,
 				agreementExtension
 			) && (
-					<>
-						{!agreement?.isCurrentUserAgreementAdmin && (
+				<>
+					{!agreement?.isCurrentUserAgreementAdmin && (
+						<Container>
+							<Space h={120} />
+							<Center>
+								<Text>
+									Sorry, you do not have permission to view
+									this page. Contact the community owner for
+									help.
+								</Text>
+							</Center>
+						</Container>
+					)}
+
+					{agreement?.isCurrentUserAgreementAdmin && (
+						<div>
+							<ExtensionPageHeader extensionSlug={'guild'} />
+
 							<Container>
-								<Space h={120} />
-								<Center>
-									<Text>
-										Sorry, you do not have permission to view
-										this page. Contact the community owner for
-										help.
-									</Text>
-								</Center>
+								<Space h={16} />
+
+								{isSavingChanges ? (
+									<Loader />
+								) : (
+									customExtensionSettings()
+								)}
 							</Container>
-						)}
-
-						{agreement?.isCurrentUserAgreementAdmin && (
-							<div>
-								<ExtensionPageHeader extensionSlug={'guild'} />
-
-								<Container>
-									<Space h={16} />
-
-									{isSavingChanges ? (
-										<Loader />
-									) : (
-										customExtensionSettings()
-									)}
-								</Container>
-							</div>
-						)}
-					</>
-				)}
+						</div>
+					)}
+				</>
+			)}
 		</div>
 	)
 }

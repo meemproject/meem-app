@@ -178,6 +178,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		role,
 		isExistingRole,
 		roleMembers,
+		roleName,
 		router,
 		sdk.agreement
 	])

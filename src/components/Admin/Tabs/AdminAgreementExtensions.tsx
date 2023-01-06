@@ -170,20 +170,21 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												}
 											>
 												<Image
-													src={`/${isDarkTheme
+													src={`/${
+														isDarkTheme
 															? `${(
-																extension
-																	.Extension
-																	?.icon ??
-																''
-															).replace(
-																'.png',
-																'-white.png'
-															)}`
+																	extension
+																		.Extension
+																		?.icon ??
+																	''
+															  ).replace(
+																	'.png',
+																	'-white.png'
+															  )}`
 															: extension
-																.Extension
-																?.icon
-														}`}
+																	.Extension
+																	?.icon
+													}`}
 													width={16}
 													height={16}
 													fit={'contain'}
@@ -359,13 +360,14 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												}
 											>
 												<Image
-													src={`/${isDarkTheme
+													src={`/${
+														isDarkTheme
 															? `${extension.icon?.replace(
-																'.png',
-																'-white.png'
-															)}`
+																	'.png',
+																	'-white.png'
+															  )}`
 															: extension.icon
-														}`}
+													}`}
 													width={16}
 													height={16}
 													fit={'contain'}
@@ -408,7 +410,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 					padding={'lg'}
 					withCloseButton={false}
 					opened={isEnablingExtension}
-					onClose={() => { }}
+					onClose={() => {}}
 				>
 					<Center>
 						<Text className={meemTheme.tLargeBold}>

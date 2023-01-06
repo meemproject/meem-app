@@ -279,10 +279,10 @@ export function agreementSummaryFromAgreement(
 			for (const agreementToken of agreementData.AgreementTokens) {
 				if (
 					agreementToken.Wallet?.address.toLowerCase() !==
-					MeemAPI.zeroAddress.toLowerCase() &&
+						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
 					agreementToken.Wallet?.address.toLowerCase() !==
-					'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
+						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
 					if (agreementToken.Wallet) {
 						let hasAlreadyBeenAdded = false
@@ -385,7 +385,7 @@ export default async function agreementFromAgreement(
 				// Check to see if the agreement is controlled by the meem api
 				if (
 					agreementWallet.Wallet?.address.toLowerCase() ===
-					process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase() &&
+						process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS?.toString().toLowerCase() &&
 					agreementWallet.role === AgreementAdminRole
 				) {
 					isAgreementControlledByMeemApi = true
@@ -400,10 +400,10 @@ export default async function agreementFromAgreement(
 				if (
 					// Filter out 0xfurnace + zero address
 					agreementToken.Wallet?.address.toLowerCase() !==
-					MeemAPI.zeroAddress.toLowerCase() &&
+						MeemAPI.zeroAddress.toLowerCase() &&
 					// 0xfurnace address
 					agreementToken.Wallet?.address.toLowerCase() !==
-					'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
+						'0x6b6e7fb5cd1773e9060a458080a53ddb8390d4eb'
 				) {
 					if (agreementToken.Wallet) {
 						// Filter duplicate tokens
@@ -434,7 +434,7 @@ export default async function agreementFromAgreement(
 							const isCurrentUser =
 								walletAddress &&
 								walletAddress?.toLowerCase() ===
-								agreementToken.Wallet?.address.toLowerCase()
+									agreementToken.Wallet?.address.toLowerCase()
 
 							// Does this member have a contract role?
 							const memberAgreementWallet =
@@ -525,7 +525,7 @@ export default async function agreementFromAgreement(
 							// Agreement member metadata + extensions
 							const memberIdentity =
 								agreementToken.Wallet.Users &&
-									agreementToken.Wallet.Users.length > 0
+								agreementToken.Wallet.Users.length > 0
 									? agreementToken.Wallet.Users[0]
 									: undefined
 
@@ -544,8 +544,8 @@ export default async function agreementFromAgreement(
 									: '',
 								profilePicture: memberIdentity?.profilePicUrl
 									? normalizeImageUrl(
-										memberIdentity?.profilePicUrl
-									)
+											memberIdentity?.profilePicUrl
+									  )
 									: '',
 								twitterUsername,
 								discordUsername,
@@ -624,7 +624,7 @@ export default async function agreementFromAgreement(
 					// Filter out the admin-exclusive permissions
 					if (
 						permission.permission ===
-						MeemAPI.Permission.Addresses &&
+							MeemAPI.Permission.Addresses &&
 						permission.addresses.length === 1 &&
 						adminRawAddresses.includes(
 							permission.addresses[0].toLowerCase()
@@ -707,9 +707,9 @@ export default async function agreementFromAgreement(
 							applicationInstructions: agreementData.metadata
 								.application_instructions
 								? agreementData.metadata
-									.application_instructions.length > 0
+										.application_instructions.length > 0
 									? agreementData.metadata
-										.application_instructions[0]
+											.application_instructions[0]
 									: undefined
 								: undefined,
 							approvedAddresses,
