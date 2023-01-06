@@ -1,3 +1,5 @@
+## [1.9.1](https://github.com/meemproject/clubs-web/compare/v1.9.0...v1.9.1) (2023-01-06)
+
 # [1.9.0](https://github.com/meemproject/clubs-web/compare/v1.8.1...v1.9.0) (2023-01-06)
 
 
