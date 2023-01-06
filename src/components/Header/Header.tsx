@@ -27,7 +27,6 @@ import {
 	ChevronDown,
 	Dots,
 	BrandDiscord,
-	BrandTwitter,
 	MessageCircle,
 	Mail,
 	Sun,
@@ -59,10 +58,6 @@ export function HeaderMenu() {
 
 	const navigateToMyAgreements = () => {
 		router.push({ pathname: '/profile', query: { tab: 'myCommunities' } })
-	}
-
-	const handleTwitter = () => {
-		window.open('https://twitter.com/0xmeem')
 	}
 
 	const handleDiscord = () => {
@@ -275,23 +270,12 @@ export function HeaderMenu() {
 									/>
 								}
 							>
-								{`What's this?`}
+								{`What can I do here?`}
 							</Menu.Item>
 							<Space h={4} />
 							<Divider />
 							<Space h={4} />
 
-							<Menu.Item
-								onClick={handleTwitter}
-								style={{
-									marginBottom: '-2px',
-									marginTop: '-2px'
-								}}
-								className={meemTheme.tExtraSmallBold}
-								icon={<BrandTwitter size={20} />}
-							>
-								Twitter
-							</Menu.Item>
 							<Menu.Item
 								onClick={handleDiscord}
 								style={{
@@ -301,7 +285,7 @@ export function HeaderMenu() {
 								className={meemTheme.tExtraSmallBold}
 								icon={<BrandDiscord size={20} />}
 							>
-								Discord
+								Our community
 							</Menu.Item>
 							<Menu.Item
 								onClick={handleContactUs}

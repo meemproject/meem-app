@@ -274,7 +274,7 @@ export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
 
 	// Parse members
 	if (agreementData) {
-		if (agreementData.AgreementTokens) {
+		if (agreementData.AgreementTokense) {
 			for (const agreementToken of agreementData.AgreementTokens) {
 				log.debug(
 					`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
@@ -490,7 +490,10 @@ export default async function agreementFromAgreement(
 
 							// Roles + permissions logic
 							let memberRoles: AgreementRole[] = []
-							if (agreementRoles) {
+							if (
+								agreementRoles &&
+								agreementData.AgreementRoleTokens
+							) {
 								// Find raw member roles
 								const rawMemberRoles:
 									| AgreementRoles[]

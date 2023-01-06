@@ -337,11 +337,9 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 						</Button>
 					)}
 				</Center>
-				{((agreement.isCurrentUserAgreementAdmin &&
-					agreement.membershipSettings?.membershipQuantity &&
-					agreement.membershipSettings.membershipQuantity > 0) ||
-					!agreement.isCurrentUserAgreementMember) &&
-					agreement.membershipSettings?.membershipQuantity &&
+				{!agreement.isCurrentUserAgreementMember &&
+					agreement.membershipSettings?.membershipQuantity !==
+						undefined &&
 					agreement.membershipSettings.membershipQuantity > 0 && (
 						<>
 							<Space h={8} />

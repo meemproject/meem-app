@@ -184,11 +184,6 @@ export const SUB_AGREEMENT = gql`
 					isTransferrable
 				}
 			}
-			AgreementRoleTokens {
-				OwnerId
-				AgreementRoleId
-				id
-			}
 		}
 	}
 `
