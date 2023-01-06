@@ -418,46 +418,36 @@ export const SUB_MY_AGREEMENTS = gql`
 		$walletAddress: String
 		$chainId: Int
 	) {
-		AgreementTokens(
+		Agreements(
 			where: {
-				AgreementId: { _is_null: false }
-				Wallet: { address: { _ilike: $walletAddress } }
-				Agreement: { chainId: { _eq: $chainId } }
+				AgreementTokens: {
+					Wallet: { address: { _ilike: $walletAddress } }
+				}
+				chainId: { _eq: $chainId }
 			}
-			order_by: {
-				Agreement: { AgreementTokens_aggregate: { count: desc } }
-			}
+			order_by: { AgreementTokens_aggregate: { count: desc } }
 		) {
-			tokenId
-			AgreementId
-			Agreement {
-				id
-				slug
-				address
-				createdAt
-				name
-				metadata
-				splits
-				gnosisSafeAddress
-				mintPermissions
-				symbol
-				AgreementWallets {
-					role
-					Wallet {
-						ens
-						address
-					}
+			id
+			slug
+			address
+			createdAt
+			name
+			metadata
+			splits
+			gnosisSafeAddress
+			mintPermissions
+			symbol
+			AgreementWallets {
+				role
+				Wallet {
+					ens
+					address
 				}
-				AgreementTokens_aggregate {
-					aggregate {
-						count
-					}
-				}
-				AgreementTokens {
-					Wallet {
-						address
-						ens
-					}
+			}
+			AgreementTokens {
+				Wallet {
+					address
+					ens
 				}
 			}
 		}

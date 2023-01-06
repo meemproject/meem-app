@@ -268,9 +268,7 @@ export interface MembershipRequirement {
 }
 
 // The agreement's basic metadata, doesn't require async
-export function agreementSummaryFromAgreement(
-	agreementData?: Agreements
-): Agreement {
+export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
 	// Count members accurately
 	const members: AgreementMember[] = []
 
@@ -278,6 +276,9 @@ export function agreementSummaryFromAgreement(
 	if (agreementData) {
 		if (agreementData.AgreementTokens) {
 			for (const agreementToken of agreementData.AgreementTokens) {
+				log.debug(
+					`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
+				)
 				if (
 					agreementToken.Wallet?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&

@@ -13,10 +13,7 @@ import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import {
-	Agreements,
-	MyAgreementsSubscriptionSubscription
-} from '../../../../generated/graphql'
+import { MyAgreementsSubscriptionSubscription } from '../../../../generated/graphql'
 import { SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
 import {
 	Agreement,
@@ -34,7 +31,7 @@ export const MyAgreementsComponent: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
-	const { userClient } = useMeemApollo()
+	const { mutualMembersClient } = useMeemApollo()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -57,7 +54,7 @@ export const MyAgreementsComponent: React.FC = () => {
 					wallet.accounts[0] &&
 					wallet.accounts[0].toLowerCase()
 			},
-			client: userClient
+			client: mutualMembersClient
 		}
 	)
 
@@ -86,10 +83,8 @@ export const MyAgreementsComponent: React.FC = () => {
 
 	const agreements: Agreement[] = []
 
-	agreementData?.AgreementTokens.forEach(meem => {
-		const possibleAgreement = agreementSummaryFromAgreement(
-			meem.Agreement as Agreements
-		)
+	agreementData?.Agreements.forEach(agr => {
+		const possibleAgreement = agreementSummaryFromAgreement(agr)
 
 		if (possibleAgreement.name) {
 			const alreadyAdded =
@@ -208,7 +203,7 @@ export const MyAgreementsComponent: React.FC = () => {
 														</>
 													}
 												>
-													{agreement.memberCount}
+													{agreement.members?.length}
 												</Badge>
 											</div>
 										</div>
