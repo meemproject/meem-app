@@ -115,6 +115,7 @@ export function HeaderMenu() {
 		<Header className={meemTheme.siteHeader} height={56}>
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
+					<Space w={8} />
 					<a onClick={navigateHome} className={meemTheme.clickable}>
 						<Image
 							src={

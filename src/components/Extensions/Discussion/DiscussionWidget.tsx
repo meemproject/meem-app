@@ -132,9 +132,12 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 				</div>
 				<Space h={24} />
 				{!hasFetchdData && agreementExtension?.isInitialized && (
-					<Center>
-						<Loader />
-					</Center>
+					<>
+						<Center>
+							<Loader />
+						</Center>
+						<Space h={8} />
+					</>
 				)}
 				{hasFetchdData && agreementExtension?.isInitialized && (
 					<>

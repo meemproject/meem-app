@@ -208,23 +208,30 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 											<HoverCard.Target>
 												<div
 													className={
-														meemTheme.gridItemCentered
+														meemTheme.gridItem
 													}
-													style={{ minHeight: 70 }}
+													style={{
+														minHeight: 60,
+														display: 'flex',
+														alignItems: 'center'
+													}}
 												>
-													{member.profilePicture && (
-														<Image
-															style={{
-																marginRight: 10
-															}}
-															src={
-																member.profilePicture
-															}
-															radius={16}
-															height={32}
-															width={32}
-														/>
-													)}
+													<Image
+														style={{
+															marginRight: 10
+														}}
+														src={
+															member.profilePicture &&
+															member
+																.profilePicture
+																.length > 0
+																? member.profilePicture
+																: '/member-placeholder.png'
+														}
+														radius={4}
+														height={32}
+														width={32}
+													/>
 
 													<Text
 														styles={{
