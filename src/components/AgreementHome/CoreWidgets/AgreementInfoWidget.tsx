@@ -71,6 +71,19 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
+		if (
+			agreement.members &&
+			agreement.membershipSettings &&
+			agreement.members?.length >=
+				agreement.membershipSettings?.membershipQuantity
+		) {
+			showErrorNotification(
+				`This community is full!`,
+				`Please contact a community owner or admin.`
+			)
+			return
+		}
+
 		setIsJoiningAgreement(true)
 		try {
 			if (
@@ -170,8 +183,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				)
 			} else {
 				showErrorNotification(
-					'Error joining this community.',
-					`Please get in touch!`
+					'Unable to join this community.',
+					`Make sure you meet all of the community's requirements!`
 				)
 			}
 			setIsJoiningAgreement(false)
