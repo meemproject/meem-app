@@ -174,13 +174,13 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				key: privateKey
 			})
 
-			router.push({
+			await router.push({
 				pathname: `/${agreement.slug}/e/discussions/${id}`
 			})
 		} catch (e) {
 			log.crit(e)
+			setIsLoading(false)
 		}
-		setIsLoading(false)
 	}, [
 		agreement,
 		me,
@@ -260,7 +260,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 							radius="lg"
 							size="md"
 							value={postTitle}
-							maxLength={30}
+							maxLength={140}
 							onChange={event =>
 								setPostTitle(event.currentTarget.value)
 							}
