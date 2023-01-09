@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
 import { Text, Button, Textarea, Space } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useSDK } from '@meemproject/react'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
-import { AlertCircle, Check } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
-import { colorGreen, colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	agreement: Agreement
@@ -38,23 +40,16 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 		setIsSavingChanges(true)
 
 		if (airdropAddresses.length === 0) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'You must add at least one address.',
-				color: colorBlue
-			})
+			showErrorNotification('Oops!', 'You must add at least one address.')
 			setIsSavingChanges(false)
 			return
 		}
 
 		if (airdropAddresses.length > 15) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message: 'You can only airdrop to up to 15 addresses at once.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Oops!',
+				'You can only airdrop to up to 15 addresses at once.'
+			)
 			setIsSavingChanges(false)
 			return
 		}
@@ -82,13 +77,10 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 		)
 
 		if (!isListValid) {
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'One or more addresses are not valid. Double check what you entered and try again.',
-				color: colorBlue
-			})
+			showErrorNotification(
+				'Oops!',
+				'One or more addresses are not valid. Double check what you entered and try again.'
+			)
 			setIsSavingChanges(false)
 			return
 		}
@@ -101,7 +93,8 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 					name: agreement?.name ?? '',
 					description: agreement?.description,
 					image: agreement?.image,
-					agreement_metadata_version: 'MeemAgreement_Token_20220718'
+					meem_metadata_type: 'Meem_AgreementToken',
+					meem_metadata_version: '20221116'
 				}
 			})
 		})
@@ -113,25 +106,19 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 				tokens: airdrops
 			})
 
-			showNotification({
-				title: 'Success!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color="green" />,
-				message: `Airdrops sent! The wallets you provided should have access to this agreement in a few minutes.`
-			})
+			showSuccessNotification(
+				'Success!',
+				`Airdrops sent! The wallets you provided should have access to this agreement in a few minutes.`
+			)
 			setAirdropAddressesString('')
 			setAirdropAddresses([])
 			setIsSavingChanges(false)
 		} catch (e) {
 			log.debug(e)
-			showNotification({
-				title: 'Airdrop send failed.',
-				autoClose: 5000,
-				color: colorBlue,
-				icon: <AlertCircle />,
-				message: `Please try again or get in touch!`
-			})
+			showSuccessNotification(
+				'Airdrop send failed.',
+				`Please try again or get in touch!`
+			)
 			setIsSavingChanges(false)
 			return
 		}

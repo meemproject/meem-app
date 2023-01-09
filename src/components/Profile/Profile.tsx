@@ -12,11 +12,14 @@ import {
 	Navbar,
 	NavLink
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { LoginState, useAuth, useSDK, useMeemUser } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Check, X } from 'tabler-icons-react'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../utils/notifications'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
@@ -33,7 +36,7 @@ export const ProfileComponent: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useAuth()
-	const { isMeLoading, isGetMeError } = useAuth()
+	const { isGetMeError } = useAuth()
 	const { user } = useMeemUser()
 	const { sdk } = useSDK()
 
@@ -78,14 +81,10 @@ export const ProfileComponent: React.FC = () => {
 			} catch (e) {
 				log.crit(e)
 
-				showNotification({
-					title: 'Error connecting account',
-					autoClose: 2000,
-					color: 'red',
-					icon: <X />,
-
-					message: `Please try again.`
-				})
+				showErrorNotification(
+					'Error connecting account',
+					`Please try again.`
+				)
 			}
 		}
 
@@ -101,21 +100,9 @@ export const ProfileComponent: React.FC = () => {
 		sdk.id
 	])
 
-	const isLoggedIn = wallet.loginState === LoginState.LoggedIn
-
 	return (
 		<>
-			{!isLoggedIn && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							Connect your wallet to access your Meem profile.
-						</Text>
-					</Center>
-				</Container>
-			)}
-			{isMeLoading && (
+			{!user && !isGetMeError && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -123,7 +110,7 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{isGetMeError && (
+			{!user && isGetMeError && (
 				<Container>
 					<Space h={120} />
 					<Center>
@@ -134,27 +121,32 @@ export const ProfileComponent: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{isLoggedIn && user && (
+			{user && (
 				<>
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
 							{user.profilePicUrl && (
 								<>
 									<Image
-										radius={32}
-										height={64}
-										width={64}
+										radius={8}
+										height={80}
+										width={80}
 										fit={'cover'}
 										className={meemTheme.imageAgreementLogo}
-										src={user.profilePicUrl}
+										src={normalizeImageUrl(
+											user.profilePicUrl
+										)}
 									/>
 								</>
 							)}
 
 							{/* <Text className={classes.headerProfileName}>{profileName}</Text> */}
-							<div className={meemTheme.pageHeaderTitleContainer}>
+							<div
+								className={meemTheme.pageHeaderTitleContainer}
+								style={{ paddingBottom: 4 }}
+							>
 								<Text className={meemTheme.tLargeBold}>
-									{user.displayName ?? 'My Meem Profile'}
+									{'My Meem Profile'}
 								</Text>
 								<Space h={8} />
 								<div className={meemTheme.row}>
@@ -184,14 +176,10 @@ export const ProfileComponent: React.FC = () => {
 																?.address
 														}`
 													)
-													showNotification({
-														title: 'Wallet info copied',
-														autoClose: 2000,
-														color: 'green',
-														icon: <Check />,
-
-														message: `Wallet info was copied to your clipboard.`
-													})
+													showSuccessNotification(
+														'Wallet info copied',
+														`Wallet info was copied to your clipboard.`
+													)
 												}}
 												width={20}
 											/>

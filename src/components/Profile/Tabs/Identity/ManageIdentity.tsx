@@ -12,7 +12,6 @@ import {
 	TextInput,
 	Grid
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import {
 	useMeemUser,
 	useMeemApollo,
@@ -20,6 +19,7 @@ import {
 	IDENTITY_PROVIDERS_QUERY
 } from '@meemproject/react'
 import type { UserIdentity } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
@@ -28,6 +28,7 @@ import Resizer from 'react-image-file-resizer'
 import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
+import { showErrorNotification } from '../../../../utils/notifications'
 import { colorVerified, useMeemTheme } from '../../../Styles/MeemTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -154,25 +155,6 @@ export const ManageIdentityComponent: React.FC = () => {
 		}
 	}
 
-	// useEffect(() => {
-	// 	if (
-	// 		router.query.code &&
-	// 		availableExtensions.length > 0 &&
-	// 		!Cookies.get('authForDiscordRole')
-	// 	) {
-	// 		// We have a discord auth code
-
-	// 		// create or update extension
-	// 		// availableExtensions.forEach(inte => {
-	// 		// 	if (inte.name === 'Discord') {
-	// 		// 		setExtensionCurrentlyEditing(inte)
-	// 		// 		setIsDiscordAuthCode(router.query.code as string)
-	// 		// 		setIsDiscordModalOpen(true)
-	// 		// 	}
-	// 		// })
-	// 	}
-	// }, [availableExtensions])
-
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const saveChanges = async () => {
@@ -180,31 +162,19 @@ export const ManageIdentityComponent: React.FC = () => {
 
 		// Save the change to the db
 		try {
-			// log.debug(`saving changes with body = ${JSON.stringify(body)}`)
-
 			await sdk.id.updateUser({
 				displayName,
 				profilePicBase64
 			})
 
-			// await request
-			// 	.post(
-			// 		`${
-			// 			process.env.NEXT_PUBLIC_API_URL
-			// 		}${MeemAPI.v1.CreateOrUpdateMeemId.path()}`
-			// 	)
-			// 	.set('Authorization', `JWT ${wallet.jwt}`)
-			// 	.send(body)
 			setIsSavingChanges(false)
 		} catch (e) {
 			log.debug(e)
 			setIsSavingChanges(false)
-			showNotification({
-				radius: 'lg',
-				title: 'Oops!',
-				message:
-					'Unable to save changes to your profile. Please get in touch!'
-			})
+			showErrorNotification(
+				'Oops!',
+				'Unable to save changes to your profile. Please get in touch!'
+			)
 			return
 		}
 	}
@@ -229,22 +199,25 @@ export const ManageIdentityComponent: React.FC = () => {
 			<Space h={32} />
 			<Text className={meemTheme.tMediumBold}>Profile Picture</Text>
 			{profilePicture.length === 0 && !isLoadingImage && (
-				<div className={meemTheme.row}>
-					<Button
-						leftIcon={<Upload size={14} />}
-						className={meemTheme.buttonWhite}
-						onClick={() => openFileSelector()}
-					>
-						Upload
-					</Button>
-					<Space w={'xs'} />
-					<Button
-						leftIcon={<Text>😈</Text>}
-						className={meemTheme.buttonWhite}
-						onClick={() => openEmojiPicker()}
-					>
-						Choose emoji
-					</Button>
+				<div>
+					<Space h={16} />
+					<div className={meemTheme.row}>
+						<Button
+							leftIcon={<Upload size={14} />}
+							className={meemTheme.buttonWhite}
+							onClick={() => openFileSelector()}
+						>
+							Upload
+						</Button>
+						<Space w={'xs'} />
+						<Button
+							leftIcon={<Text>😈</Text>}
+							className={meemTheme.buttonWhite}
+							onClick={() => openEmojiPicker()}
+						>
+							Choose emoji
+						</Button>
+					</div>
 				</div>
 			)}
 			{isLoadingImage && <Loader color="blue" variant="oval" />}
@@ -259,18 +232,18 @@ export const ManageIdentityComponent: React.FC = () => {
 				>
 					<Image
 						style={{ imageRendering: 'pixelated' }}
-						src={profilePicture}
+						src={normalizeImageUrl(profilePicture)}
 						width={200}
 						height={200}
-						radius={128}
+						radius={24}
 						fit={'cover'}
 					/>
 					<a onClick={deleteImage}>
 						<Image
 							style={{
 								position: 'absolute',
-								top: '0px',
-								right: '-100px',
+								top: '10px',
+								right: '-85px',
 								cursor: 'pointer'
 							}}
 							src="/delete.png"

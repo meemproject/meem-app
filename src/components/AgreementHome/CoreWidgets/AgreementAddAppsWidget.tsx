@@ -20,6 +20,8 @@ export const AgreementAddAppsWidget: React.FC<IProps> = ({ agreement }) => {
 					ext => ext.AgreementExtensionWidgets.length > 0
 				).length !== 0 && (
 					<>
+						<Space h={24} />
+
 						<Center>
 							<Button
 								className={meemTheme.buttonGrey}

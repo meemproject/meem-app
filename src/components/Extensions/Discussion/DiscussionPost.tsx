@@ -13,9 +13,9 @@ import {
 	Loader,
 	Tooltip
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { RichTextEditor } from '@mantine/tiptap'
 import { useAuth, useSDK } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -26,20 +26,14 @@ import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { DateTime } from 'luxon'
 import React, { useCallback, useEffect, useState } from 'react'
-import {
-	Check,
-	ChevronDown,
-	ChevronUp,
-	Message,
-	Share
-} from 'tabler-icons-react'
+import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
+import { showSuccessNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
 	colorBlack,
 	colorDarkerGrey,
-	colorGreen,
 	colorLightestGrey,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -186,14 +180,10 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 			editor?.commands.clearContent()
 
-			showNotification({
-				radius: 'lg',
-				title: 'Comment Submitted!',
-				autoClose: 5000,
-				color: colorGreen,
-				icon: <Check color="green" />,
-				message: 'Your comment has been submitted.'
-			})
+			showSuccessNotification(
+				'Comment Submitted!',
+				'Your comment has been submitted.'
+			)
 		} catch (e) {
 			log.crit(e)
 		}
@@ -370,8 +360,11 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												>
 													<Image
 														src={
-															post?.profilePicUrl ??
-															`/meem-icon.png`
+															post?.profilePicUrl
+																? normalizeImageUrl(
+																		post.profilePicUrl
+																  )
+																: `/meem-icon.png`
 														}
 														height={32}
 														width={32}

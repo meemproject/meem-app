@@ -12,16 +12,16 @@ import {
 	MediaQuery,
 	Burger
 } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
 import { useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Check, Plus } from 'tabler-icons-react'
+import { ArrowLeft, Plus } from 'tabler-icons-react'
 import {
 	Agreement,
 	AgreementRole,
 	emptyRole
 } from '../../model/agreement/agreements'
+import { showSuccessNotification } from '../../utils/notifications'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
@@ -162,15 +162,10 @@ export const RolesManager: React.FC = () => {
 											navigator.clipboard.writeText(
 												`${window.location.origin}/${agreement.slug}`
 											)
-											showNotification({
-												radius: 'lg',
-												title: 'Community URL copied',
-												autoClose: 2000,
-												color: 'green',
-												icon: <Check />,
-
-												message: `This community's URL was copied to your clipboard.`
-											})
+											showSuccessNotification(
+												'Community URL copied',
+												`This community's URL was copied to your clipboard.`
+											)
 										}}
 										width={20}
 									/>

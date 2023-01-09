@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import log from '@kengoldfarb/log'
-import { Text, Space, Modal, Divider, Button } from '@mantine/core'
-import { showNotification } from '@mantine/notifications'
-import { makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { Text, Space, Modal, Button } from '@mantine/core'
 import router from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useState } from 'react'
-import { AlertCircle, CircleCheck } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
-import { colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -33,23 +34,19 @@ export const DeleteAgreementModal: React.FC<IProps> = ({
 			try {
 				// TODO: Actually delete the agreement here
 
-				showNotification({
-					title: 'Deleted community',
-					autoClose: 5000,
-					icon: <CircleCheck />,
-					message: `Redirecting you. Please wait...`
-				})
+				showSuccessNotification(
+					'Deleted community',
+					`Redirecting you. Please wait...`
+				)
 
 				router.push('/')
 			} catch (e) {
 				log.debug(e)
-				showNotification({
-					title: 'Error',
-					autoClose: 5000,
-					color: colorBlue,
-					icon: <AlertCircle />,
-					message: `Unable to delete this community. Please let us know!`
-				})
+				showErrorNotification(
+					'Error',
+					`Unable to delete this community. Please let us know!`
+				)
+
 				setIsDeletingAgreement(false)
 				return
 			}
