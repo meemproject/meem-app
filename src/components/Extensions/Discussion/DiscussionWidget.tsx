@@ -134,7 +134,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 				{!hasFetchdData && agreementExtension?.isInitialized && (
 					<>
 						<Center>
-							<Loader />
+							<Loader variant="oval" color="blue" />
 						</Center>
 						<Space h={8} />
 					</>

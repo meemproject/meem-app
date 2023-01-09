@@ -6,7 +6,8 @@ import {
 	TextInput,
 	Space,
 	Center,
-	Button
+	Button,
+	Loader
 } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
@@ -263,72 +264,89 @@ export const DiscussionHome: React.FC = () => {
 				isLoadingAgreement,
 				agreement,
 				agreementExtension
-			) &&
-				hasInitialized && (
-					<>
-						<ExtensionPageHeader extensionSlug={'discussions'} />
+			) && (
+				<>
+					{!hasInitialized && (
+						<>
+							<Container>
+								<Space h={120} />
+								<Center>
+									<Loader color="blue" variant="oval" />
+								</Center>
+							</Container>
+						</>
+					)}
+					{hasInitialized && (
+						<>
+							<ExtensionPageHeader
+								extensionSlug={'discussions'}
+							/>
 
-						<Container>
-							<Space h={24} />
-							{posts.length === 0 && (
-								<>
-									<Center>
-										<Text className={meemTheme.tSmall}>
-											There are no posts yet in your
-											community. Be the first one to say
-											something!
-										</Text>
-									</Center>
-									<Space h={24} />
-								</>
-							)}
+							<Container>
+								<Space h={24} />
+								{posts.length === 0 && (
+									<>
+										<Center>
+											<Text className={meemTheme.tSmall}>
+												There are no posts yet in your
+												community. Be the first one to
+												say something!
+											</Text>
+										</Center>
+										<Space h={24} />
+									</>
+								)}
 
-							<Center>
-								<Button
-									className={meemTheme.buttonBlack}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement?.slug}/e/discussions/submit`
-										})
-									}}
-								>
-									+ Start a discussion
-								</Button>
-							</Center>
-							<Space h={48} />
-							{posts.length > 0 && (
-								<div className={meemTheme.centeredRow}>
-									<TextInput
-										radius={20}
-										classNames={{
-											input: meemTheme.fTextField
+								<Center>
+									<Button
+										className={meemTheme.buttonBlack}
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement?.slug}/e/discussions/submit`
+											})
 										}}
-										icon={<Search />}
-										placeholder={'Search discussions'}
-										className={meemTheme.fullWidth}
-										size={'lg'}
-										onChange={event => {
-											log.debug(event.target.value)
-											// TODO
-										}}
-									/>
-									<Space w={16} />
-									<Button className={meemTheme.buttonBlack}>
-										Sort
+									>
+										+ Start a discussion
 									</Button>
-								</div>
-							)}
+								</Center>
+								<Space h={48} />
+								{posts.length > 0 && (
+									<div className={meemTheme.centeredRow}>
+										<TextInput
+											radius={20}
+											classNames={{
+												input: meemTheme.fTextField
+											}}
+											icon={<Search />}
+											placeholder={'Search discussions'}
+											className={meemTheme.fullWidth}
+											size={'lg'}
+											onChange={event => {
+												log.debug(event.target.value)
+												// TODO
+											}}
+										/>
+										<Space w={16} />
+										<Button
+											className={meemTheme.buttonBlack}
+										>
+											Sort
+										</Button>
+									</div>
+								)}
 
-							<Space h={32} />
-							{posts.map(post => (
-								<DiscussionPostPreview
-									key={`post-${post.id}`}
-									post={post}
-								/>
-							))}
-						</Container>
-					</>
-				)}
+								<Space h={32} />
+								{posts.map(post => (
+									<DiscussionPostPreview
+										key={`post-${post.id}`}
+										post={post}
+									/>
+								))}
+							</Container>
+						</>
+					)}
+				</>
+			)}
 		</>
 	)
 }

@@ -6,10 +6,10 @@ import {
 	Image,
 	Badge,
 	useMantineColorScheme,
-	Button,
 	Tooltip
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
+import { normalizeImageUrl } from '@meemproject/sdk'
 import { DateTime } from 'luxon'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -129,26 +129,18 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 									disabled={canReact}
 								>
 									<span>
-										<Button
-											variant="subtle"
-											loading={isLoading}
-											disabled={isLoading || !canReact}
+										<ChevronUp
 											style={{ cursor: 'pointer' }}
-											onClick={(
-												e: React.MouseEvent<
-													HTMLButtonElement,
-													MouseEvent
-												>
-											) => {
-												e.preventDefault()
-												e.stopPropagation()
-												handleReactionSubmit({
-													reaction: 'upvote'
-												})
+											onClick={() => {
+												if (canReact && !isLoading) {
+													handleReactionSubmit({
+														reaction: 'upvote'
+													})
+												}
 											}}
 										>
 											<ChevronUp />
-										</Button>
+										</ChevronUp>
 									</span>
 								</Tooltip>
 							</Center>
@@ -162,26 +154,18 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 									disabled={canReact}
 								>
 									<span>
-										<Button
-											variant="subtle"
-											loading={isLoading}
-											disabled={isLoading || !canReact}
+										<ChevronDown
 											style={{ cursor: 'pointer' }}
-											onClick={(
-												e: React.MouseEvent<
-													HTMLButtonElement,
-													MouseEvent
-												>
-											) => {
-												e.preventDefault()
-												e.stopPropagation()
-												handleReactionSubmit({
-													reaction: 'downvote'
-												})
+											onClick={() => {
+												if (canReact && !isLoading) {
+													handleReactionSubmit({
+														reaction: 'downvote'
+													})
+												}
 											}}
 										>
 											<ChevronDown />
-										</Button>
+										</ChevronDown>
 									</span>
 								</Tooltip>
 							</Center>
@@ -211,37 +195,40 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 											__html: post.body
 										}}
 									/>
-									<Space h={12} />
 									{post.tags &&
+										post.tags.length > 0 &&
 										post.tags.map(tag => {
-											if (tag.length > 0) {
-												return (
-													<Badge
-														style={{
-															marginRight: 4
-														}}
-														key={`post-tag-${post.id}-${tag}`}
-														size={'xs'}
-														gradient={{
-															from: isDarkTheme
-																? colorDarkerGrey
-																: '#DCDCDC',
-															to: isDarkTheme
-																? colorDarkerGrey
-																: '#DCDCDC',
-															deg: 35
-														}}
-														classNames={{
-															inner: meemTheme.tBadgeTextSmall
-														}}
-														variant={'gradient'}
-													>
-														{tag}
-													</Badge>
-												)
-											}
+											return (
+												<Badge
+													style={{
+														marginRight: 4
+													}}
+													key={`post-tag-${post.id}-${tag}`}
+													size={'xs'}
+													gradient={{
+														from: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
+														to: isDarkTheme
+															? colorDarkerGrey
+															: '#DCDCDC',
+														deg: 35
+													}}
+													classNames={{
+														inner: meemTheme.tBadgeTextSmall
+													}}
+													variant={'gradient'}
+												>
+													{tag.length > 0
+														? tag
+														: 'UNTAGGED'}
+												</Badge>
+											)
+
 											return null
 										})}
+
+									<Space h={12} />
 								</div>
 							</div>
 
@@ -249,8 +236,11 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 								<div className={meemTheme.centeredRow}>
 									<Image
 										src={
-											post.profilePicUrl ??
-											`/meem-icon.png`
+											post?.profilePicUrl
+												? normalizeImageUrl(
+														post.profilePicUrl
+												  )
+												: `/meem-icon.png`
 										}
 										height={32}
 										width={32}
@@ -286,7 +276,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 									style={{ marginTop: 16 }}
 								>
 									<Link
-										href={`/${post.agreementSlug}/e/discussions/post1`}
+										href={`/${post.agreementSlug}/e/discussions/${post.id}`}
 									>
 										<div
 											className={meemTheme.centeredRow}

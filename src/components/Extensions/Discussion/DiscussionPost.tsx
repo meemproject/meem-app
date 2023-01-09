@@ -278,27 +278,24 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												disabled={canReact}
 											>
 												<span>
-													<Button
-														variant="subtle"
-														loading={isLoading}
-														disabled={
-															isLoading ||
-															!canReact
-														}
+													<ChevronUp
 														style={{
 															cursor: 'pointer'
 														}}
-														onClick={() =>
-															handleReactionSubmit(
-																{
-																	reaction:
-																		'upvote'
-																}
-															)
-														}
-													>
-														<ChevronUp />
-													</Button>
+														onClick={() => {
+															if (
+																canReact &&
+																!isLoading
+															) {
+																handleReactionSubmit(
+																	{
+																		reaction:
+																			'upvote'
+																	}
+																)
+															}
+														}}
+													></ChevronUp>
 												</span>
 											</Tooltip>
 										</Center>
@@ -312,27 +309,24 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												disabled={canReact}
 											>
 												<span>
-													<Button
-														variant="subtle"
-														loading={isLoading}
-														disabled={
-															isLoading ||
-															!canReact
-														}
+													<ChevronDown
 														style={{
 															cursor: 'pointer'
 														}}
-														onClick={() =>
-															handleReactionSubmit(
-																{
-																	reaction:
-																		'downvote'
-																}
-															)
-														}
-													>
-														<ChevronDown />
-													</Button>
+														onClick={() => {
+															if (
+																canReact &&
+																!isLoading
+															) {
+																handleReactionSubmit(
+																	{
+																		reaction:
+																			'downvote'
+																	}
+																)
+															}
+														}}
+													></ChevronDown>
 												</span>
 											</Tooltip>
 										</Center>
@@ -393,7 +387,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 														</Text>
 													</div>
 												</div>
-												<Space h={24} />
+												<Space h={16} />
 
 												<Text
 													className={
@@ -402,39 +396,40 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												>
 													{post?.title}
 												</Text>
+												<Space h={4} />
 												{post.tags &&
 													post.tags.map(tag => {
-														if (tag.length > 0) {
-															return (
-																<Badge
-																	style={{
-																		marginRight: 4
-																	}}
-																	key={`tag-${post.id}-${tag}`}
-																	size={'xs'}
-																	gradient={{
-																		from: isDarkTheme
-																			? colorDarkerGrey
-																			: '#DCDCDC',
-																		to: isDarkTheme
-																			? colorDarkerGrey
-																			: '#DCDCDC',
-																		deg: 35
-																	}}
-																	classNames={{
-																		inner: meemTheme.tBadgeTextSmall
-																	}}
-																	variant={
-																		'gradient'
-																	}
-																>
-																	{tag}
-																</Badge>
-															)
-														}
+														return (
+															<Badge
+																style={{
+																	marginRight: 4
+																}}
+																key={`post-tag-${post.id}-${tag}`}
+																size={'xs'}
+																gradient={{
+																	from: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	to: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	deg: 35
+																}}
+																classNames={{
+																	inner: meemTheme.tBadgeTextSmall
+																}}
+																variant={
+																	'gradient'
+																}
+															>
+																{tag.length > 0
+																	? tag
+																	: 'UNTAGGED'}
+															</Badge>
+														)
 														return null
 													})}
-												<Space h={16} />
+												<Space h={8} />
 												<Text
 													className={meemTheme.tSmall}
 													dangerouslySetInnerHTML={{
@@ -453,7 +448,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 															meemTheme.row
 														}
 														style={{
-															marginTop: 16
+															marginTop: 4
 														}}
 													>
 														<div

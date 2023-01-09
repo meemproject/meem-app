@@ -27,7 +27,7 @@ import { DiscussionComment } from '../../../model/agreement/extensions/discussio
 import { showSuccessNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
-	colorBlue,
+	colorDarkBlue,
 	colorDarkGrey,
 	colorLightGrey,
 	useMeemTheme
@@ -240,7 +240,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 				/>
 				<Space w={16} />
 				<div style={{ width: '100%' }}>
-					<Space h={16} />
+					<Space h={8} />
 
 					<Text
 						className={meemTheme.tExtraSmall}
@@ -248,26 +248,23 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 							__html: comment.body
 						}}
 					/>
-					<Space h={16} />
+					<Space h={8} />
 					<div className={meemTheme.centeredRow}>
 						<Tooltip
 							label="You have already reacted to this post."
 							disabled={canReact}
 						>
 							<span>
-								<Button
-									variant="subtle"
+								<ChevronUp
 									style={{ cursor: 'pointer' }}
-									disabled={isLoading || !canReact}
-									loading={isLoading}
-									onClick={() =>
-										handleReactionSubmit({
-											reaction: 'upvote'
-										})
-									}
-								>
-									<ChevronUp />
-								</Button>
+									onClick={() => {
+										if (canReact && !isLoading) {
+											handleReactionSubmit({
+												reaction: 'upvote'
+											})
+										}
+									}}
+								/>
 							</span>
 						</Tooltip>
 						<Space w={4} />
@@ -342,10 +339,11 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 							</div>
 						</>
 					)}
-					<Space h={16} />
 
 					{comment.comments && !isCommentRepliesHidden && (
 						<>
+							<Space h={16} />
+
 							{comment.comments?.map(reply => (
 								<>
 									<DiscussionCommentComponent
@@ -359,15 +357,22 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 						</>
 					)}
 					{comment.comments && isCommentRepliesHidden && (
-						<Text
-							onClick={() => {
-								setIsCommentRepliesHidden(
-									!isCommentRepliesHidden
-								)
-							}}
-							className={meemTheme.tExtraSmall}
-							style={{ color: colorBlue, cursor: 'pointer' }}
-						>{`${comment.comments?.length} replies hidden`}</Text>
+						<>
+							<Space h={16} />
+							<Text
+								onClick={() => {
+									setIsCommentRepliesHidden(
+										!isCommentRepliesHidden
+									)
+								}}
+								className={meemTheme.tExtraSmall}
+								style={{
+									color: colorDarkBlue,
+									cursor: 'pointer'
+								}}
+							>{`${comment.comments?.length} replies hidden`}</Text>
+							<Space h={16} />
+						</>
 					)}
 				</div>
 			</div>
