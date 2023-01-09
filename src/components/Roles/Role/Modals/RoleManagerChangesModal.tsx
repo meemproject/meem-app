@@ -30,6 +30,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 	onModalClosed,
 	agreement,
 	role,
+	roleName,
 	isExistingRole,
 	roleMembers
 }) => {
@@ -109,10 +110,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						metadata: {
 							meem_metadata_type: 'Meem_AgreementRoleContract',
 							meem_metadata_version: '20221116',
-							permissions: permissionsArray,
-							members: membersArray,
-							isTokenBasedRole: true,
-							isTokenTransferrable: role.isTransferrable ?? false
+							name: role.name,
+							description: '',
+							meem_agreement_address: agreement.address
 						}
 					})
 
@@ -134,10 +134,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						metadata: {
 							meem_metadata_type: 'Meem_AgreementRoleContract',
 							meem_metadata_version: '20221116',
-							permissions: permissionsArray,
-							members: membersArray,
-							isTokenBasedRole: true,
-							isTokenTransferrable: role.isTransferrable ?? false
+							name: roleName ?? '',
+							description: '',
+							meem_agreement_address: agreement.address
 						},
 						maxSupply: '0',
 						agreementId: agreement.id ?? ''
@@ -171,6 +170,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		role,
 		isExistingRole,
 		roleMembers,
+		roleName,
 		router,
 		sdk.agreement
 	])
