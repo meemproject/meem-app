@@ -2,7 +2,7 @@ import { Text, Button, Space, Center, Loader } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Settings } from 'tabler-icons-react'
+import { Plus, Settings } from 'tabler-icons-react'
 import {
 	Agreement,
 	extensionFromSlug
@@ -99,6 +99,20 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					</div>
 					{agreementExtension?.isInitialized && (
 						<div className={meemTheme.centeredRow}>
+							<>
+								<Button
+									className={meemTheme.buttonBlue}
+									onClick={() => {
+										router.push({
+											pathname: `/${agreement.slug}/e/discussions/create`
+										})
+									}}
+								>
+									<Plus />
+								</Button>
+							</>
+							<Space w={8} />
+
 							{posts.length > 0 && (
 								<>
 									<Button
