@@ -231,6 +231,10 @@ export const GuildExtensionSettings: React.FC = () => {
 				await sdk.agreementExtension.updateAgreementExtension({
 					agreementId: agreement?.id ?? '',
 					agreementExtensionId: agreementExtension?.id,
+					externalLink: {
+						label: `${myGuild.name}`,
+						url: `https://guild.xyz/${myGuild.urlName}`
+					},
 					metadata: {
 						guildId: myGuild.id
 					}
@@ -261,6 +265,7 @@ export const GuildExtensionSettings: React.FC = () => {
 				await sdk.agreementExtension.updateAgreementExtension({
 					agreementId: agreement?.id ?? '',
 					agreementExtensionId: agreementExtension?.id,
+					externalLink: null,
 					metadata: {}
 				})
 			} catch (e) {
