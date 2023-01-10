@@ -268,13 +268,13 @@ export interface MembershipRequirement {
 }
 
 // The agreement's basic metadata, doesn't require async
-export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
+export function agreementSummaryFromDb(agreementData?: any): Agreement {
 	// Count members accurately
 	const members: AgreementMember[] = []
 
 	// Parse members
 	if (agreementData) {
-		if (agreementData.AgreementTokense) {
+		if (agreementData.AgreementTokens) {
 			for (const agreementToken of agreementData.AgreementTokens) {
 				log.debug(
 					`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
@@ -342,7 +342,7 @@ export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
 	}
 }
 
-export default async function agreementFromAgreement(
+export default async function agreementFromDb(
 	wallet: any,
 	walletAddress: string,
 	agreementData: Agreements

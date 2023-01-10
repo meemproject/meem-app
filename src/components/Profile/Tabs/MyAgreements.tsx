@@ -18,7 +18,7 @@ import { MyAgreementsSubscriptionSubscription } from '../../../../generated/grap
 import { SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
 import {
 	Agreement,
-	agreementSummaryFromAgreement
+	agreementSummaryFromDb
 } from '../../../model/agreement/agreements'
 import { hostnameToChainId } from '../../App'
 import {
@@ -85,7 +85,7 @@ export const MyAgreementsComponent: React.FC = () => {
 	const agreements: Agreement[] = []
 
 	agreementData?.Agreements.forEach(agr => {
-		const possibleAgreement = agreementSummaryFromAgreement(agr)
+		const possibleAgreement = agreementSummaryFromDb(agr)
 
 		if (possibleAgreement.name) {
 			const alreadyAdded =
