@@ -75,10 +75,10 @@ export const ManageIdentityComponent: React.FC = () => {
 		new Promise(resolve => {
 			Resizer.imageFileResizer(
 				file,
-				256,
-				256,
-				'PNG',
-				100,
+				512,
+				512,
+				'JPEG',
+				95,
 				0,
 				uri => {
 					resolve(uri)

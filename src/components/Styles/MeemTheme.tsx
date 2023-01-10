@@ -625,7 +625,6 @@ export const useMeemTheme = createStyles(theme => ({
 		zIndex: -1
 	},
 	imageAgreementLogo: {
-		imageRendering: 'pixelated',
 		width: 80,
 		height: 80,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -647,9 +646,7 @@ export const useMeemTheme = createStyles(theme => ({
 		right: '-105px',
 		cursor: 'pointer'
 	},
-	imagePixelated: {
-		imageRendering: 'pixelated'
-	},
+	imagePixelated: {},
 
 	// Misc
 	backArrow: {

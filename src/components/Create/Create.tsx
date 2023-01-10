@@ -57,10 +57,10 @@ export const CreateComponent: React.FC = () => {
 		new Promise(resolve => {
 			Resizer.imageFileResizer(
 				file,
-				24,
-				24,
-				'PNG',
-				100,
+				512,
+				512,
+				'JPEG',
+				95,
 				0,
 				uri => {
 					resolve(uri)

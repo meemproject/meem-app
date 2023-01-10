@@ -152,16 +152,18 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 												agreement.membershipSettings
 													?.costToJoin,
 											mintStartTimestamp: agreement
-												.membershipSettings
+												?.membershipSettings
 												?.membershipStartDate
-												? agreement.membershipSettings?.membershipStartDate.getTime() /
-												  1000
+												? new Date(
+														agreement.membershipSettings.membershipStartDate
+												  ).getTime() / 1000
 												: 0,
 											mintEndTimestamp: agreement
-												.membershipSettings
+												?.membershipSettings
 												?.membershipEndDate
-												? agreement.membershipSettings?.membershipEndDate.getTime() /
-												  1000
+												? new Date(
+														agreement.membershipSettings.membershipEndDate
+												  ).getTime() / 1000
 												: 0
 										}
 									)
@@ -235,11 +237,12 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.debug(`Reinitializing agreement w/ txId: ${txId}`)
 				} catch (e) {
 					log.debug(e)
+					closeModal()
+
 					showErrorNotification(
 						'Error saving community settings',
 						`Please get in touch!`
 					)
-					closeModal()
 				}
 			}
 		}
@@ -361,7 +364,6 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 						style={{ textAlign: 'center' }}
 					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 				</div>
-				<Space h={16} />
 			</Modal>
 		</>
 	)
