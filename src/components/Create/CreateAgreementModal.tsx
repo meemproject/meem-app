@@ -1,14 +1,6 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import {
-	Text,
-	Image,
-	Space,
-	Modal,
-	Loader,
-	Stepper,
-	Center
-} from '@mantine/core'
+import { Text, Space, Modal, Loader, Stepper } from '@mantine/core'
 import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
@@ -113,6 +105,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 
 	const create = useCallback(async () => {
 		log.debug('creating agreement...')
+
 		if (!wallet.web3Provider || !wallet.chainId) {
 			log.debug('no web3 provider, returning.')
 			showErrorNotification(
@@ -327,23 +320,6 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				<Space h={32} />
 				<div className={meemTheme.rowResponsive}>
 					<div>
-						{Cookies.get(CookieKeys.agreementImage) && (
-							<>
-								<Center>
-									<Image
-										height={120}
-										width={120}
-										fit={'cover'}
-										className={meemTheme.imageAgreementLogo}
-										src={Cookies.get(
-											CookieKeys.agreementImage
-										)}
-									/>
-								</Center>
-								<Space h={48} />
-							</>
-						)}
-
 						<Text
 							className={meemTheme.tLargeBold}
 							style={{ textAlign: 'center' }}

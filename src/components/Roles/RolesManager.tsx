@@ -128,12 +128,17 @@ export const RolesManager: React.FC = () => {
 				<>
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
-							<Image
-								width={80}
-								height={80}
-								className={meemTheme.imageAgreementLogo}
-								src={agreement.image}
-							/>
+							{agreement.image && (
+								<div className={meemTheme.pageHeaderImage}>
+									<Image
+										width={80}
+										height={80}
+										radius={8}
+										className={meemTheme.imageAgreementLogo}
+										src={agreement.image}
+									/>
+								</div>
+							)}
 							<div className={meemTheme.pageHeaderTitleContainer}>
 								<Text className={meemTheme.tLargeBold}>
 									{agreement.name}

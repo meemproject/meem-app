@@ -148,19 +148,23 @@ export const MyAgreementsComponent: React.FC = () => {
 									}}
 								>
 									<div className={meemTheme.row}>
-										<Image
-											className={
-												meemTheme.imageAgreementLogo
-											}
-											style={{
-												width: '56px',
-												height: '56px'
-											}}
-											src={agreement.image ?? ''}
-											radius={8}
-											fit={'cover'}
-										/>
-										<Space w={20} />
+										{agreement.image && (
+											<>
+												<Image
+													className={
+														meemTheme.imageAgreementLogo
+													}
+													style={{
+														width: '56px',
+														height: '56px'
+													}}
+													src={agreement.image}
+													radius={8}
+													fit={'cover'}
+												/>
+												<Space w={20} />
+											</>
+										)}
 
 										<div className={meemTheme.tEllipsis}>
 											<Text
@@ -168,7 +172,6 @@ export const MyAgreementsComponent: React.FC = () => {
 													fontWeight: 500,
 													fontSize: 18
 												}}
-												className={meemTheme.tEllipsis}
 											>
 												{agreement.name}
 											</Text>

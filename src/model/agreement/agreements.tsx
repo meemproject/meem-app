@@ -398,14 +398,6 @@ export default async function agreementFromDb(
 			}
 		}
 
-		// Setup for parsing members - identify the admin role ownerId
-		let adminRoleOwnerId = ''
-		agreementData.AgreementRoles.forEach(role => {
-			if (role.isAdminRole) {
-				adminRoleOwnerId = role.OwnerId
-			}
-		})
-
 		// Parse members
 		if (agreementData.AgreementTokens) {
 			for (const agreementToken of agreementData.AgreementTokens) {
@@ -464,25 +456,43 @@ export default async function agreementFromDb(
 								if (iAmAgreementOwner) {
 									iAmAgreementAdmin = true
 								} else {
-									if (
-										agreementToken.OwnerId ===
-										adminRoleOwnerId
-									) {
-										log.debug(
-											`current user is a club admin`
-										)
-										iAmAgreementAdmin = true
-									}
+									agreementData.AgreementRoles.forEach(
+										role => {
+											if (role.isAdminRole) {
+												role.AgreementRoleTokens.forEach(
+													token => {
+														if (
+															agreementToken.OwnerId ===
+															token.OwnerId
+														) {
+															iAmAgreementAdmin =
+																true
+														}
+													}
+												)
+											}
+										}
+									)
 								}
 							}
 
 							// Is this member an admin
-							if (agreementToken.OwnerId === adminRoleOwnerId) {
-								isMemberAnAdmin = true
-								adminRawAddresses.push(
-									agreementToken.Wallet.address ?? ''
-								)
-							}
+							agreementData.AgreementRoles.forEach(role => {
+								if (role.isAdminRole) {
+									role.AgreementRoleTokens?.forEach(token => {
+										if (
+											agreementToken.OwnerId ===
+											token.OwnerId
+										) {
+											isMemberAnAdmin = true
+											adminRawAddresses.push(
+												agreementToken?.Wallet
+													?.address ?? ''
+											)
+										}
+									})
+								}
+							})
 
 							// Is this member the agreement owner?
 							isMemberTheAgreementOwner =
