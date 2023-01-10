@@ -193,7 +193,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						<Space h={24} />
 						<Center>
 							<Text className={meemTheme.tSmall}>
-								{`This community somehow has no members. This may or may not be a rip in the space-time continuum.`}
+								{`Members are being set up. Come back later!`}
 							</Text>
 						</Center>
 						<Space h={24} />

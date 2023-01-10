@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
@@ -381,14 +383,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 						</div>
 					)}
 
-					<Tabs color="dark" defaultValue="permissions">
+					<Tabs color="dark" defaultValue="members">
 						<Tabs.List>
-							<Tabs.Tab
+							{/* <Tabs.Tab
 								style={{ fontWeight: 700 }}
 								value="permissions"
 							>
 								Permissions
-							</Tabs.Tab>
+							</Tabs.Tab> */}
 							<Tabs.Tab
 								style={{ fontWeight: 700 }}
 								value="members"
@@ -397,7 +399,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 							</Tabs.Tab>
 						</Tabs.List>
 
-						<Tabs.Panel value="permissions" pt="xs">
+						{/* <Tabs.Panel value="permissions" pt="xs">
 							{!isLoadingPermissions && (
 								<RolesManagerPermissions
 									role={role}
@@ -415,7 +417,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									<Loader />
 								</Center>
 							)}
-						</Tabs.Panel>
+						</Tabs.Panel> */}
 
 						<Tabs.Panel value="members" pt="xs">
 							<RolesManagerMembers

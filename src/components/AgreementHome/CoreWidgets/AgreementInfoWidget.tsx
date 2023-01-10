@@ -71,6 +71,24 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
+		const membershipQuantityIsFinite =
+			agreement.membershipSettings?.membershipQuantity &&
+			agreement.membershipSettings.membershipQuantity > 0
+
+		if (
+			agreement.members &&
+			agreement.membershipSettings &&
+			agreement.members?.length >=
+				agreement.membershipSettings?.membershipQuantity &&
+			membershipQuantityIsFinite
+		) {
+			showErrorNotification(
+				`This community is full!`,
+				`Please contact a community owner or admin.`
+			)
+			return
+		}
+
 		setIsJoiningAgreement(true)
 		try {
 			if (
@@ -170,8 +188,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				)
 			} else {
 				showErrorNotification(
-					'Error joining this community.',
-					`Please get in touch!`
+					'Unable to join this community.',
+					`Make sure you meet all of the community's requirements!`
 				)
 			}
 			setIsJoiningAgreement(false)
@@ -272,19 +290,47 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		router.push({ pathname: `/${agreement.slug}/admin` })
 	}
 
+	const navigateToAgreementDetailsAdmin = () => {
+		router.push({
+			pathname: `/${agreement.slug}/admin`,
+			query: { tab: 'icon' }
+		})
+	}
+
 	return (
 		<>
 			<div className={meemTheme.widgetDark}>
-				<Space h={8} />
-				<Center>
-					<Image
-						className={meemTheme.imagePixelated}
-						height={150}
-						width={150}
-						radius={16}
-						src={agreement.image}
-					/>
-				</Center>
+				{agreement.image && (
+					<>
+						<Space h={8} />
+						<Center>
+							<Image
+								height={150}
+								width={150}
+								radius={16}
+								src={agreement.image}
+							/>
+						</Center>
+					</>
+				)}
+				{agreement.isCurrentUserAgreementAdmin && !agreement.image && (
+					<>
+						<Space h={8} />
+						<Center>
+							<Image
+								onClick={() => {
+									navigateToAgreementDetailsAdmin()
+								}}
+								className={meemTheme.clickable}
+								height={150}
+								width={150}
+								radius={16}
+								src={'/community-no-icon.png'}
+							/>
+						</Center>
+					</>
+				)}
+
 				<Space h={16} />
 				<Center>
 					<Text

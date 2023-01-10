@@ -115,7 +115,11 @@ export const useMeemTheme = createStyles(theme => ({
 	fRichTextEditorToolbar: {
 		border: 'none',
 		borderRadius: 24,
+		lineHeight: 1.4,
 		marginBottom: 10
+	},
+	fRichTextEditorContent: {
+		lineHeight: 1.4
 	},
 
 	// Layout
@@ -344,10 +348,11 @@ export const useMeemTheme = createStyles(theme => ({
 			paddingTop: 16
 		}
 	},
-	pageHeaderTitleContainer: {
-		marginLeft: 32,
+	pageHeaderTitleContainer: {},
+	pageHeaderImage: {
+		marginRight: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
+			marginRight: 16
 		}
 	},
 	pageHeaderExitButton: {
@@ -522,10 +527,7 @@ export const useMeemTheme = createStyles(theme => ({
 		padding: 24,
 		width: '100%',
 		borderRadius: 16,
-		boxShadow:
-			theme.colorScheme === 'dark'
-				? ''
-				: '0px 4px 30px rgba(0, 0, 0, 0.1)',
+
 		marginBottom: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
@@ -534,10 +536,6 @@ export const useMeemTheme = createStyles(theme => ({
 		}
 	},
 	widgetAsh: {
-		boxShadow:
-			theme.colorScheme === 'dark'
-				? ''
-				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
 		borderRadius: 16,
 		width: '100%',
 		backgroundColor:
@@ -605,7 +603,7 @@ export const useMeemTheme = createStyles(theme => ({
 		marginTop: -12,
 		marginBottom: -12,
 		lineHeight: 1,
-		fontSize: 24,
+		fontSize: 120,
 		zIndex: -1000
 	},
 	emojiCanvasCover: {
@@ -621,7 +619,6 @@ export const useMeemTheme = createStyles(theme => ({
 		zIndex: -1
 	},
 	imageAgreementLogo: {
-		imageRendering: 'pixelated',
 		width: 80,
 		height: 80,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -643,9 +640,7 @@ export const useMeemTheme = createStyles(theme => ({
 		right: '-105px',
 		cursor: 'pointer'
 	},
-	imagePixelated: {
-		imageRendering: 'pixelated'
-	},
+	imagePixelated: {},
 
 	// Misc
 	backArrow: {

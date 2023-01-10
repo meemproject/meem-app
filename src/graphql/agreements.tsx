@@ -269,6 +269,9 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 				isAdminRole
 				address
 				metadata
+				AgreementRoleTokens {
+					OwnerId
+				}
 				Agreement {
 					isTransferrable
 				}
