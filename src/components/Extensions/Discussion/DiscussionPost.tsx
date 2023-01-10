@@ -28,6 +28,7 @@ import { DateTime } from 'luxon'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
+import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { showSuccessNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -233,6 +234,19 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	])
 
 	useEffect(() => {
+		function countComments(comments: DiscussionComment[]): number {
+			let count = 0
+
+			comments.forEach(comment => {
+				count = count + 1
+				if (comment.comments && comment.comments.length > 0) {
+					const childComments = countComments(comment.comments)
+					count = count + childComments
+				}
+			})
+
+			return count
+		}
 		const { votes: v, userVotes } = calculateVotes(post)
 		setVotes(v)
 
@@ -242,7 +256,9 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			setCanReact(true)
 		}
 
-		setCommentCount(post?.comments ? Object.keys(post?.comments).length : 0)
+		if (post && post.comments) {
+			setCommentCount(countComments(post.comments ?? []))
+		}
 	}, [post, me])
 
 	return (

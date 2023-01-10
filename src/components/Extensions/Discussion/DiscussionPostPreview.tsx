@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Message } from 'tabler-icons-react'
+import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -35,6 +36,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [votes, setVotes] = useState(0)
+	const [commentCount, setCommentCount] = useState(0)
 	const [canReact, setCanReact] = useState(false)
 
 	const router = useRouter()
@@ -100,6 +102,19 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 	)
 
 	useEffect(() => {
+		function countComments(comments: DiscussionComment[]): number {
+			let count = 0
+
+			comments.forEach(comment => {
+				count = count + 1
+				if (comment.comments && comment.comments.length > 0) {
+					const childComments = countComments(comment.comments)
+					count = count + childComments
+				}
+			})
+
+			return count
+		}
 		const { votes: v, userVotes } = calculateVotes(post)
 		setVotes(v)
 
@@ -107,6 +122,10 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 			setCanReact(false)
 		} else {
 			setCanReact(true)
+		}
+
+		if (post && post.comments) {
+			setCommentCount(countComments(post.comments ?? []))
 		}
 	}, [post, me])
 
@@ -289,7 +308,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 													meemTheme.tExtraSmall
 												}
 											>
-												{post.comments?.length ?? 0}
+												{commentCount}
 											</Text>
 										</div>
 									</Link>
