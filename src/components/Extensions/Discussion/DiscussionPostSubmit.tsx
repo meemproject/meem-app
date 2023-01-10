@@ -20,8 +20,10 @@ import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { base64StringToBlob } from 'blob-util'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
+import Resizer from 'react-image-file-resizer'
 import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
@@ -83,12 +85,31 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 	})
 
 	useEffect(() => {
+		const resizeFile = (file: any) =>
+			new Promise(resolve => {
+				Resizer.imageFileResizer(
+					file,
+					512,
+					512,
+					'JPEG',
+					95,
+					0,
+					uri => {
+						resolve(uri)
+					},
+					'base64'
+				)
+			})
 		const createResizedFile = async () => {
-			setPostAttachment(rawPostAttachment[0].content)
+			const agreementLogoBlob = base64StringToBlob(
+				rawPostAttachment[0].content.split(',')[1],
+				'image/png'
+			)
+			const file = await resizeFile(agreementLogoBlob)
+			setPostAttachment(file as string)
 		}
 		if (rawPostAttachment.length > 0) {
 			log.debug('Found an image...')
-			log.debug(rawPostAttachment[0].content)
 
 			createResizedFile()
 		} else {
