@@ -280,7 +280,9 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 									classNames={{
 										toolbar:
 											meemTheme.fRichTextEditorToolbar,
-										root: meemTheme.fRichTextEditorToolbar
+										root: meemTheme.fRichTextEditorToolbar,
+										content:
+											meemTheme.fRichTextEditorContent
 									}}
 								>
 									<RichTextEditor.Toolbar>

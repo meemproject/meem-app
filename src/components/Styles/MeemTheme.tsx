@@ -115,7 +115,11 @@ export const useMeemTheme = createStyles(theme => ({
 	fRichTextEditorToolbar: {
 		border: 'none',
 		borderRadius: 24,
+		lineHeight: 1.4,
 		marginBottom: 10
+	},
+	fRichTextEditorContent: {
+		lineHeight: 1.4
 	},
 
 	// Layout
