@@ -86,6 +86,7 @@ export const RolesManager: React.FC = () => {
 			} else if (router.query.createRole) {
 				newTabs.push({ name: 'Add Role', associatedRole: emptyRole() })
 				displayedTab = newTabs[newTabs.length - 1]
+				setIsAddingNewRole(true)
 			}
 
 			setCurrentTab(displayedTab)
@@ -252,7 +253,7 @@ export const RolesManager: React.FC = () => {
 									<Plus
 										className={meemTheme.clickable}
 										onClick={() => {
-											addRole()
+											if (!isAddingNewRole) addRole()
 										}}
 									/>
 								</div>
@@ -260,14 +261,15 @@ export const RolesManager: React.FC = () => {
 
 								{tabs.map(tab => (
 									<NavLink
-										key={tab.name}
+										key={tab.associatedRole?.id}
 										style={{ marginLeft: 8 }}
 										className={
 											meemTheme.pagePanelLayoutNavItem
 										}
 										active={
 											currentTab &&
-											currentTab.name === tab.name
+											currentTab.associatedRole?.id ===
+												tab.associatedRole?.id
 										}
 										label={tab.name}
 										onClick={() => {
@@ -282,11 +284,13 @@ export const RolesManager: React.FC = () => {
 									className={meemTheme.pagePanelLayoutContent}
 								>
 									{tabs.map(tab => (
-										<div key={tab.name}>
+										<div key={tab.associatedRole?.id}>
 											<div
 												className={
 													currentTab &&
-													currentTab.name === tab.name
+													currentTab.associatedRole
+														?.id ===
+														tab.associatedRole?.id
 														? meemTheme.visibleContainer
 														: meemTheme.invisibleContainer
 												}

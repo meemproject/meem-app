@@ -23,13 +23,16 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const permissionItem = (permission: AgreementRolePermission) => (
+	const permissionItem = (
+		permission: AgreementRolePermission,
+		isContractAdminPermission: boolean
+	) => (
 		<div key={permission.id}>
 			<Space h={4} />
 			<div className={meemTheme.centeredRow}>
 				<Switch
 					disabled={permission.locked}
-					checked={permission.enabled}
+					checked={permission.enabled || isContractAdminPermission}
 					label={permission.name}
 					onChange={value => {
 						if (value && role) {
@@ -86,7 +89,12 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 							.filter(permission =>
 								permission.id.includes('admin')
 							)
-							.map(permission => permissionItem(permission))}
+							.map(permission =>
+								permissionItem(
+									permission,
+									role.isAdminRole ?? false
+								)
+							)}
 					</>
 				)}
 				<Space h={32} />
@@ -101,7 +109,9 @@ export const RolesManagerPermissions: React.FC<IProps> = ({
 							.filter(
 								permission => !permission.id.includes('admin')
 							)
-							.map(permission => permissionItem(permission))}
+							.map(permission =>
+								permissionItem(permission, false)
+							)}
 					</>
 				)}
 				<Space h={40} />
