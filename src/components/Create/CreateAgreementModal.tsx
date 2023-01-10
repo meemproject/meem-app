@@ -339,7 +339,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 						<Text
 							className={meemTheme.tExtraSmall}
 							style={{ textAlign: 'center' }}
-						>{`Please don’t refresh or close this window until this step is complete.`}</Text>
+						>{`Please don’t refresh or close this window until this step is complete. This might take a few minutes.`}</Text>
 					</div>
 					<Space w={32} />
 					<Space h={48} />

@@ -362,7 +362,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					<Text
 						className={meemTheme.tSmall}
 						style={{ textAlign: 'center' }}
-					>{`Please don’t refresh or close this window until this step is complete.`}</Text>
+					>{`Please don’t refresh or close this window until this step is complete. This might take a few minutes.`}</Text>
 				</div>
 			</Modal>
 		</>
