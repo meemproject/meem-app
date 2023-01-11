@@ -15,19 +15,19 @@ import { DiscussionReaction } from './discussionReaction'
 // }
 
 export interface DiscussionPost {
-	id: string
-	title: string
-	tags?: string[]
-	body: string
-	attachment?: string
-	comments?: DiscussionComment[]
-	reactions?: DiscussionReaction[]
-	votes?: number
-	userId: string
-	displayName?: string
-	profilePicUrl?: string
-	walletAddress: string
 	agreementSlug: string
+	attachment?: string
+	body: string
+	comments?: DiscussionComment[]
 	createdAt: number
+	displayName?: string
+	id: string
+	profilePicUrl?: string
+	reactions?: DiscussionReaction[]
+	tags?: string[]
+	title: string
 	updatedAt: number
+	userId: string
+	votes?: number
+	walletAddress: string
 }

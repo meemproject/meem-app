@@ -32,26 +32,26 @@ export interface Extension {
 }
 
 export interface AgreementRolePermission {
-	id: string
-	name?: string
 	description?: string
 	enabled?: boolean
+	id: string
 	locked?: boolean
+	name?: string
 }
 
 export interface AgreementRole {
-	id: string
-	name: string
-	isAdminRole?: boolean
-	isTransferrable?: boolean
-	tokenAddress?: string
-	permissions: AgreementRolePermission[]
-	rolesExtensionData?: any
+	guildDiscordServerIcon?: string
+	guildDiscordServerId?: string
+	guildDiscordServerName?: string
 	guildRoleId?: string
 	guildRoleName?: string
-	guildDiscordServerName?: string
-	guildDiscordServerId?: string
-	guildDiscordServerIcon?: string
+	id: string
+	isAdminRole?: boolean
+	isTransferrable?: boolean
+	name: string
+	permissions: AgreementRolePermission[]
+	rolesExtensionData?: any
+	tokenAddress?: string
 }
 
 export function emptyRole(): AgreementRole {
@@ -70,48 +70,48 @@ export function emptyRole(): AgreementRole {
 }
 
 export interface AgreementMember {
-	displayName?: string
-	wallet: string
-	ens?: string
-	profilePicture?: string
-	twitterUsername?: string
-	discordUsername?: string
 	discordUserId?: string
+	discordUsername?: string
+	displayName?: string
 	emailAddress?: string
-	roles?: AgreementRole[]
-	isAgreementOwner?: boolean
+	ens?: string
 	isAgreementAdmin?: boolean
+	isAgreementOwner?: boolean
 	isMeemApi?: boolean
+	profilePicture?: string
+	roles?: AgreementRole[]
+	twitterUsername?: string
+	wallet: string
 
 	// Convenience bool for roles
 	chosen?: boolean
 }
 export interface Agreement {
-	id?: string
-	name?: string
 	address?: string
-	slug?: string
-	description?: string
-	image?: string
 	adminAddresses?: string[]
-	membershipSettings?: MembershipSettings
-	slotsLeft?: number
-	agreementOwner?: AgreementMember
 	admins?: AgreementMember[]
-	members?: AgreementMember[]
-	roles?: AgreementRole[]
-	memberRolesMap?: Map<string, AgreementMember[]>
-	membershipToken?: string
+	agreementOwner?: AgreementMember
 	currentUserAgreementPermissions?: string[]
-	isCurrentUserAgreementMember?: boolean
-	isCurrentUserAgreementAdmin?: boolean
-	isCurrentUserAgreementOwner?: boolean
-	isAgreementControlledByMeemApi?: boolean
-	isValid?: boolean
-	rawAgreement?: Agreements
+	description?: string
 	extensions?: AgreementExtensions[]
 	gnosisSafeAddress?: string | null
+	id?: string
+	image?: string
+	isAgreementControlledByMeemApi?: boolean
+	isCurrentUserAgreementAdmin?: boolean
+	isCurrentUserAgreementMember?: boolean
+	isCurrentUserAgreementOwner?: boolean
+	isValid?: boolean
 	memberCount?: number
+	memberRolesMap?: Map<string, AgreementMember[]>
+	members?: AgreementMember[]
+	membershipSettings?: MembershipSettings
+	membershipToken?: string
+	name?: string
+	rawAgreement?: Agreements
+	roles?: AgreementRole[]
+	slotsLeft?: number
+	slug?: string
 }
 
 export const extensionFromSlug = (slug: string, agreement?: Agreement) => {
@@ -122,12 +122,12 @@ export const extensionFromSlug = (slug: string, agreement?: Agreement) => {
 }
 
 export interface MembershipSettings {
-	requirements: MembershipRequirement[]
 	costToJoin: number
+	membershipEndDate?: Date
 	membershipFundsAddress: string
 	membershipQuantity: number
 	membershipStartDate?: Date
-	membershipEndDate?: Date
+	requirements: MembershipRequirement[]
 	// The agreement admins set when the agreement is created
 	agreementAdminsAtAgreementCreation?: string[]
 }
