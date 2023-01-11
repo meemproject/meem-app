@@ -140,8 +140,8 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				/>
 				<Space h={24} />
 				<Button
-					loading={isCheckingName}
-					disabled={isCheckingName}
+					loading={isCheckingName || isAgreementCreationModalOpened}
+					disabled={isCheckingName || isAgreementCreationModalOpened}
 					className={meemTheme.buttonBlack}
 					onClick={() => {
 						checkName()

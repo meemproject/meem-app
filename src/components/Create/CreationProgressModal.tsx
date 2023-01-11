@@ -270,7 +270,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 						<Text
 							className={meemTheme.tExtraSmall}
 							style={{ textAlign: 'center' }}
-						>{`Please don’t refresh or close this window until this step is complete. This might take a few minutes.`}</Text>
+						>{`Please don’t refresh or close this window until this step is complete.`}</Text>
 					</div>
 					<Space w={32} />
 					<Space h={48} />
@@ -305,11 +305,11 @@ export const CreationProgressModal: React.FC<IProps> = ({
 							}
 						></Stepper.Step>
 						<Stepper.Step
-							label="Minting tokens"
+							label="Setting up memberships"
 							description={
 								<Text
 									className={meemTheme.tExtraSmall}
-								>{`Minting membership tokens for your community`}</Text>
+								>{`Configuring memberships for your community`}</Text>
 							}
 						></Stepper.Step>
 						<Stepper.Completed>
