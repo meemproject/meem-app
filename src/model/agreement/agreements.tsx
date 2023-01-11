@@ -101,6 +101,7 @@ export interface Agreement {
 	isCurrentUserAgreementAdmin?: boolean
 	isCurrentUserAgreementMember?: boolean
 	isCurrentUserAgreementOwner?: boolean
+	isLaunched?: boolean
 	isValid?: boolean
 	memberCount?: number
 	memberRolesMap?: Map<string, AgreementMember[]>
@@ -309,20 +310,19 @@ export function agreementSummaryFromDb(agreementData?: any): Agreement {
 
 	if (agreementData) {
 		return {
-			id: agreementData.id,
-			name: agreementData.name,
 			address: agreementData.address,
-			admins: [],
 			adminAddresses: [],
-			isCurrentUserAgreementAdmin: false,
-			slug: agreementData.slug,
+			admins: [],
 			description: agreementData.metadata.description,
+			extensions: [],
+			id: agreementData.id,
 			image: agreementData.metadata.image,
+			isCurrentUserAgreementAdmin: false,
 			isCurrentUserAgreementMember: true,
-			membershipToken: '',
+			isLaunched: true,
+			isValid: agreementData.mintPermissions !== undefined,
+			memberCount: members.length,
 			members,
-
-			slotsLeft: 0,
 			membershipSettings: {
 				requirements: [],
 				costToJoin: 0,
@@ -332,10 +332,11 @@ export function agreementSummaryFromDb(agreementData?: any): Agreement {
 				membershipQuantity: 0,
 				agreementAdminsAtAgreementCreation: []
 			},
-			isValid: agreementData.mintPermissions !== undefined,
+			membershipToken: '',
+			name: agreementData.name,
 			rawAgreement: agreementData,
-			extensions: [],
-			memberCount: members.length
+			slotsLeft: 0,
+			slug: agreementData.slug
 		}
 	} else {
 		return {}
@@ -789,6 +790,7 @@ export default async function agreementFromDb(
 			admins,
 			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
 			isCurrentUserAgreementOwner: iAmAgreementOwner,
+			isLaunched: true,
 			agreementOwner,
 			slug: agreementData.slug,
 			gnosisSafeAddress: agreementData.gnosisSafeAddress,
