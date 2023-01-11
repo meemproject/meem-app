@@ -9,10 +9,11 @@ import {
 	Button,
 	Loader
 } from '@mantine/core'
+import { useDebouncedValue } from '@mantine/hooks'
 import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { Search } from 'tabler-icons-react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { ChevronDown, ChevronUp, Search } from 'tabler-icons-react'
 import {
 	Agreement,
 	extensionFromSlug
@@ -196,7 +197,11 @@ export const DiscussionHome: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
+	const [filteredPosts, setFilteredPosts] = useState<DiscussionPost[]>([])
+	const [sortOrder, setSortOrder] = useState(1)
 	const [hasInitialized, setHasInitialized] = useState(false)
+	const [searchVal, setSearchVal] = useState('')
+	const [debouncedSearchVal] = useDebouncedValue(searchVal, 200)
 
 	const { sdk } = useSDK()
 	const { privateKey } = useDiscussions()
@@ -204,6 +209,31 @@ export const DiscussionHome: React.FC = () => {
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
+
+	const sortPosts = useCallback(
+		(postsToSort: DiscussionPost[]) => {
+			const newPosts = [...postsToSort]
+
+			newPosts.sort((a, b) => {
+				if (!a.createdAt) {
+					return sortOrder
+				}
+				if (!b.createdAt) {
+					return -sortOrder
+				}
+				if (a.createdAt > b.createdAt) {
+					return -sortOrder
+				}
+				if (a.createdAt < b.createdAt) {
+					return sortOrder
+				}
+				return 0
+			})
+
+			return newPosts
+		},
+		[sortOrder]
+	)
 
 	useEffect(() => {
 		const run = async () => {
@@ -217,7 +247,7 @@ export const DiscussionHome: React.FC = () => {
 				privateKey,
 				path,
 				cb: (items: any) => {
-					const newPosts: DiscussionPost[] = []
+					let newPosts: DiscussionPost[] = []
 
 					Object.keys(items).forEach(k => {
 						const item = items[k]
@@ -232,21 +262,7 @@ export const DiscussionHome: React.FC = () => {
 						}
 					})
 
-					newPosts.sort((a, b) => {
-						if (!a.createdAt) {
-							return 1
-						}
-						if (!b.createdAt) {
-							return -1
-						}
-						if (a.createdAt > b.createdAt) {
-							return -1
-						}
-						if (a.createdAt < b.createdAt) {
-							return 1
-						}
-						return 0
-					})
+					newPosts = sortPosts(newPosts)
 
 					setPosts(newPosts)
 				}
@@ -255,7 +271,26 @@ export const DiscussionHome: React.FC = () => {
 			setHasInitialized(true)
 		}
 		run()
-	}, [sdk, agreement, privateKey])
+	}, [sdk, agreement, privateKey, sortPosts])
+
+	useEffect(() => {
+		const newPosts = posts.filter(p => {
+			if (
+				debouncedSearchVal.length === 0 ||
+				p.body.indexOf(debouncedSearchVal) > -1 ||
+				p.title.indexOf(debouncedSearchVal) > -1 ||
+				(p.displayName &&
+					p.displayName.indexOf(debouncedSearchVal) > -1) ||
+				p.walletAddress.indexOf(debouncedSearchVal) > -1
+			) {
+				return true
+			}
+
+			return false
+		})
+
+		setFilteredPosts(newPosts)
+	}, [debouncedSearchVal, posts])
 
 	return (
 		<>
@@ -324,11 +359,22 @@ export const DiscussionHome: React.FC = () => {
 											onChange={event => {
 												log.debug(event.target.value)
 												// TODO
+												setSearchVal(event.target.value)
 											}}
 										/>
 										<Space w={16} />
 										<Button
 											className={meemTheme.buttonBlack}
+											onClick={() =>
+												setSortOrder(-sortOrder)
+											}
+											rightIcon={
+												sortOrder === 1 ? (
+													<ChevronDown />
+												) : (
+													<ChevronUp />
+												)
+											}
 										>
 											Sort
 										</Button>
@@ -336,7 +382,7 @@ export const DiscussionHome: React.FC = () => {
 								)}
 
 								<Space h={32} />
-								{posts.map(post => (
+								{filteredPosts.map(post => (
 									<DiscussionPostPreview
 										key={`post-${post.id}`}
 										post={post}
