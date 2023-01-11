@@ -277,9 +277,9 @@ export function agreementSummaryFromDb(agreementData?: any): Agreement {
 	if (agreementData) {
 		if (agreementData.AgreementTokens) {
 			for (const agreementToken of agreementData.AgreementTokens) {
-				log.debug(
-					`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
-				)
+				// log.debug(
+				// 	`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
+				// )
 				if (
 					agreementToken.Wallet?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&

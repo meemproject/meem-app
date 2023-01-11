@@ -13,7 +13,7 @@ import {
 import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MyAgreementsSubscriptionSubscription } from '../../../../generated/graphql'
 import { SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
 import {
@@ -21,6 +21,7 @@ import {
 	agreementSummaryFromDb
 } from '../../../model/agreement/agreements'
 import { hostnameToChainId } from '../../App'
+import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
 	colorBlack,
 	colorDarkerGrey,
@@ -36,6 +37,8 @@ export const MyAgreementsComponent: React.FC = () => {
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	const [isCreationModalOpen, setIsCreationModalOpen] = useState(false)
 
 	const {
 		loading,
@@ -73,10 +76,6 @@ export const MyAgreementsComponent: React.FC = () => {
 			})
 		}
 	}, [error, router])
-
-	const navigateToCreate = () => {
-		router.push({ pathname: '/create' })
-	}
 
 	const navigateToAgreement = (agreement: string) => {
 		router.push({ pathname: `/${agreement}` })
@@ -118,7 +117,13 @@ export const MyAgreementsComponent: React.FC = () => {
 					</Text>
 					<Space h={16} />
 					<Text className={meemTheme.tLink}>
-						<a onClick={navigateToCreate}>Start a new one?</a>
+						<a
+							onClick={() => {
+								setIsCreationModalOpen(true)
+							}}
+						>
+							Start a new one?
+						</a>
 					</Text>
 				</>
 			)}
@@ -224,7 +229,7 @@ export const MyAgreementsComponent: React.FC = () => {
 							<div
 								className={meemTheme.gridItemCenteredAsh}
 								onClick={() => {
-									navigateToCreate()
+									setIsCreationModalOpen(true)
 								}}
 							>
 								<Space h={16} />
@@ -242,6 +247,12 @@ export const MyAgreementsComponent: React.FC = () => {
 					</Grid>
 
 					<Space h={60} />
+					<CreateAgreementModal
+						isOpened={isCreationModalOpen}
+						onModalClosed={function (): void {
+							setIsCreationModalOpen(false)
+						}}
+					/>
 				</>
 			)}
 		</>
