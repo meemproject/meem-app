@@ -1,6 +1,10 @@
+import { useQuery } from '@apollo/client'
 import { Button, Center, Space, Text } from '@mantine/core'
+import { useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+import { GetExtensionsQuery } from '../../../../generated/graphql'
+import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
 import { colorBlack, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
@@ -13,73 +17,21 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({ agreement }) => {
 
 	useEffect(() => {}, [agreement])
 
-	const shouldShowBlankSlate =
-		!agreement.extensions ||
-		agreement.extensions?.filter(
-			ext => ext.AgreementExtensionWidgets.length > 0
-		)?.length === 0
+	const { anonClient } = useMeemApollo()
+
+	// Fetch a list of available extensions.
+	const {
+		loading,
+		error,
+		data: availableExtensionsData
+	} = useQuery<GetExtensionsQuery>(GET_EXTENSIONS, {
+		client: anonClient
+	})
 
 	return (
-		<div>
-			{shouldShowBlankSlate && (
-				<>
-					<>
-						{agreement?.isCurrentUserAgreementAdmin && (
-							<div className={meemTheme.widgetLight}>
-								<Center>
-									<Text
-										className={meemTheme.tLargeBold}
-										color={colorBlack}
-									>
-										{`Let's get started`}
-									</Text>
-								</Center>
-								<Space h={16} />
-								<Center>
-									<Text
-										className={meemTheme.tSmall}
-										color={colorBlack}
-									>
-										{`There's nothing for your community members to do yet. Add your first extension to enable your members to talk, organize events and much more.`}
-									</Text>
-								</Center>
-								<Space h={24} />
-								<Center>
-									<Button
-										className={meemTheme.buttonAsh}
-										onClick={() => {
-											router.push({
-												pathname: `${agreement.slug}/admin`,
-												query: { tab: 'extensions' }
-											})
-										}}
-									>
-										+ Add an extension
-									</Button>
-								</Center>
-							</div>
-						)}
-					</>
-					<>
-						{!agreement?.isCurrentUserAgreementAdmin && (
-							<div className={meemTheme.widgetLight}>
-								<Center>
-									<Text className={meemTheme.tMediumBold}>
-										Under construction
-									</Text>
-								</Center>
-								<Space h={16} />
-								<Center>
-									<Text className={meemTheme.tSmall}>
-										This community does not have any content
-										yet. Check back later!
-									</Text>
-								</Center>
-							</div>
-						)}
-					</>
-				</>
-			)}
+		<div className={meemTheme.widgetLight}>
+			<Text className={meemTheme.tMediumBold}>Add extensions</Text>
+			<Space h={8} />
 		</div>
 	)
 }

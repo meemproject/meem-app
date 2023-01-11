@@ -7,7 +7,7 @@ import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
-import { AgreementAddAppsWidget } from './CoreWidgets/AgreementAddAppsWidget'
+import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
 import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
 import { AgreementExtensionLinksWidget } from './CoreWidgets/AgreementExtensionLinksWidget'
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
@@ -32,7 +32,7 @@ export const AgreementHome: React.FC = () => {
 		try {
 			await sdk.agreement.updateAgreement({
 				isLaunched: true,
-				agreementId: agreement?.id
+				agreementId: agreement ? agreement?.id : ''
 			})
 		} catch (e) {
 			log.debug(e)
@@ -157,11 +157,12 @@ export const AgreementHome: React.FC = () => {
 										/>
 									)}
 
-									{agreement.slug !== 'meem' && (
-										<AgreementBlankSlateWidget
-											agreement={agreement}
-										/>
-									)}
+									{agreement.slug !== 'meem' &&
+										!agreement.isLaunched && (
+											<AgreementBlankSlateWidget
+												agreement={agreement}
+											/>
+										)}
 
 									{agreement.extensions &&
 										agreement.extensions
@@ -194,9 +195,13 @@ export const AgreementHome: React.FC = () => {
 									<AgreementExtensionLinksWidget
 										agreement={agreement}
 									/>
-									<AgreementAddAppsWidget
-										agreement={agreement}
-									/>
+									{agreement.isLaunched && (
+										<>
+											<AgreementAddMoreExtensionsWidget
+												agreement={agreement}
+											/>
+										</>
+									)}
 
 									<Space h={64} />
 								</div>
