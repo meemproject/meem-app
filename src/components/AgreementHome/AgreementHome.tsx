@@ -10,6 +10,7 @@ import { AgreementExtensionLinksWidget } from './CoreWidgets/AgreementExtensionL
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
 import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
+import { MeemCreateCommunityWidget } from './CoreWidgets/MeemCreateCommunityWidget'
 
 export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
@@ -118,6 +119,18 @@ export const AgreementHome: React.FC = () => {
 									/>
 								</div>
 								<div className={meemTheme.pageRightColumn}>
+									{agreement.slug === 'meem' && (
+										<MeemCreateCommunityWidget
+											agreement={agreement}
+										/>
+									)}
+
+									{agreement.slug !== 'meem' && (
+										<AgreementBlankSlateWidget
+											agreement={agreement}
+										/>
+									)}
+
 									{agreement.extensions &&
 										agreement.extensions
 											// As of MVP, we only support one widget per extension, so we can
@@ -146,9 +159,6 @@ export const AgreementHome: React.FC = () => {
 												</>
 											))}
 
-									<AgreementBlankSlateWidget
-										agreement={agreement}
-									/>
 									<AgreementExtensionLinksWidget
 										agreement={agreement}
 									/>
