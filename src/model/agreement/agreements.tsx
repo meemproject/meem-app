@@ -269,9 +269,14 @@ export interface MembershipRequirement {
 }
 
 // The agreement's basic metadata, doesn't require async
-export function agreementSummaryFromDb(agreementData?: any): Agreement {
+export function agreementSummaryFromDb(
+	agreementData?: any,
+	walletAddress?: string
+): Agreement {
 	// Count members accurately
 	const members: AgreementMember[] = []
+
+	let iAmAgreementAdmin = false
 
 	// Parse members
 	if (agreementData) {
@@ -301,6 +306,39 @@ export function agreementSummaryFromDb(agreementData?: any): Agreement {
 								wallet: agreementToken.Wallet.address,
 								ens: agreementToken.Wallet.ens ?? undefined
 							})
+							const isCurrentUser =
+								walletAddress &&
+								walletAddress?.toLowerCase() ===
+									agreementToken.Wallet?.address.toLowerCase()
+
+							if (isCurrentUser) {
+								const iAmAgreementOwner =
+									agreementToken.OwnerId ===
+									agreementData.OwnerId
+
+								// Is the current user an admin?
+								if (iAmAgreementOwner) {
+									iAmAgreementAdmin = true
+								} else {
+									agreementData.AgreementRoles.forEach(
+										(role: any) => {
+											if (role.isAdminRole) {
+												role.AgreementRoleTokens.forEach(
+													(token: any) => {
+														if (
+															agreementToken.OwnerId ===
+															token.OwnerId
+														) {
+															iAmAgreementAdmin =
+																true
+														}
+													}
+												)
+											}
+										}
+									)
+								}
+							}
 						}
 					}
 				}
@@ -317,9 +355,9 @@ export function agreementSummaryFromDb(agreementData?: any): Agreement {
 			extensions: [],
 			id: agreementData.id,
 			image: agreementData.metadata.image,
-			isCurrentUserAgreementAdmin: false,
+			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
 			isCurrentUserAgreementMember: true,
-			isLaunched: true,
+			isLaunched: agreementData.isLaunched,
 			isValid: agreementData.mintPermissions !== undefined,
 			memberCount: members.length,
 			members,
@@ -790,7 +828,7 @@ export default async function agreementFromDb(
 			admins,
 			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
 			isCurrentUserAgreementOwner: iAmAgreementOwner,
-			isLaunched: true,
+			isLaunched: agreementData.isLaunched,
 			agreementOwner,
 			slug: agreementData.slug,
 			gnosisSafeAddress: agreementData.gnosisSafeAddress,

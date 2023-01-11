@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import log from '@kengoldfarb/log'
 import { Container, Text, Space, Loader, Center, Button } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
+import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
@@ -16,8 +19,30 @@ export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const { classes: meemTheme } = useMeemTheme()
 
+	const { sdk } = useSDK()
+
 	const [doesMeetAllRequirements, setDoesMeetAllRequirements] =
 		useState(false)
+
+	const [isLaunching, setIsLaunching] = useState(false)
+
+	const launchCommunity = async () => {
+		setIsLaunching(true)
+
+		try {
+			await sdk.agreement.updateAgreement({
+				isLaunched: true,
+				agreementId: agreement?.id
+			})
+		} catch (e) {
+			log.debug(e)
+			setIsLaunching(false)
+			showErrorNotification(
+				'Oops!',
+				'Unable to launch this community. Please let us know!'
+			)
+		}
+	}
 
 	return (
 		<>
@@ -89,7 +114,14 @@ export const AgreementHome: React.FC = () => {
 								<Space h={24} />
 
 								<Center>
-									<Button className={meemTheme.buttonBlack}>
+									<Button
+										className={meemTheme.buttonBlack}
+										loading={isLaunching}
+										disabled={isLaunching}
+										onClick={() => {
+											launchCommunity()
+										}}
+									>
 										Launch
 									</Button>
 								</Center>
