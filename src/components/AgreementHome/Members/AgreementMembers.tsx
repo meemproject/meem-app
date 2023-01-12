@@ -121,15 +121,17 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 				<>
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
-							<Image
-								width={80}
-								height={80}
-								radius={16}
-								fit="cover"
-								className={meemTheme.imageAgreementLogo}
-								src={agreement.image}
-							/>
-							<Space w={24} />
+							{agreement.image && (
+								<div className={meemTheme.pageHeaderImage}>
+									<Image
+										width={80}
+										height={80}
+										radius={8}
+										className={meemTheme.imageAgreementLogo}
+										src={agreement.image}
+									/>
+								</div>
+							)}
 							<div>
 								<Text
 									className={meemTheme.tLargeBold}

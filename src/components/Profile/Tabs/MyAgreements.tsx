@@ -13,14 +13,15 @@ import {
 import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MyAgreementsSubscriptionSubscription } from '../../../../generated/graphql'
 import { SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
 import {
 	Agreement,
-	agreementSummaryFromAgreement
+	agreementSummaryFromDb
 } from '../../../model/agreement/agreements'
 import { hostnameToChainId } from '../../App'
+import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
 	colorBlack,
 	colorDarkerGrey,
@@ -36,6 +37,8 @@ export const MyAgreementsComponent: React.FC = () => {
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	const [isCreationModalOpen, setIsCreationModalOpen] = useState(false)
 
 	const {
 		loading,
@@ -74,10 +77,6 @@ export const MyAgreementsComponent: React.FC = () => {
 		}
 	}, [error, router])
 
-	const navigateToCreate = () => {
-		router.push({ pathname: '/create' })
-	}
-
 	const navigateToAgreement = (agreement: string) => {
 		router.push({ pathname: `/${agreement}` })
 	}
@@ -85,7 +84,10 @@ export const MyAgreementsComponent: React.FC = () => {
 	const agreements: Agreement[] = []
 
 	agreementData?.Agreements.forEach(agr => {
-		const possibleAgreement = agreementSummaryFromAgreement(agr)
+		const possibleAgreement = agreementSummaryFromDb(
+			agr,
+			wallet.accounts[0]
+		)
 
 		if (possibleAgreement.name) {
 			const alreadyAdded =
@@ -118,7 +120,13 @@ export const MyAgreementsComponent: React.FC = () => {
 					</Text>
 					<Space h={16} />
 					<Text className={meemTheme.tLink}>
-						<a onClick={navigateToCreate}>Start a new one?</a>
+						<a
+							onClick={() => {
+								setIsCreationModalOpen(true)
+							}}
+						>
+							Start a new one?
+						</a>
 					</Text>
 				</>
 			)}
@@ -148,19 +156,23 @@ export const MyAgreementsComponent: React.FC = () => {
 									}}
 								>
 									<div className={meemTheme.row}>
-										<Image
-											className={
-												meemTheme.imageAgreementLogo
-											}
-											style={{
-												width: '56px',
-												height: '56px'
-											}}
-											src={agreement.image ?? ''}
-											radius={8}
-											fit={'cover'}
-										/>
-										<Space w={20} />
+										{agreement.image && (
+											<>
+												<Image
+													className={
+														meemTheme.imageAgreementLogo
+													}
+													style={{
+														width: '56px',
+														height: '56px'
+													}}
+													src={agreement.image}
+													radius={8}
+													fit={'cover'}
+												/>
+												<Space w={20} />
+											</>
+										)}
 
 										<div className={meemTheme.tEllipsis}>
 											<Text
@@ -168,7 +180,6 @@ export const MyAgreementsComponent: React.FC = () => {
 													fontWeight: 500,
 													fontSize: 18
 												}}
-												className={meemTheme.tEllipsis}
 											>
 												{agreement.name}
 											</Text>
@@ -204,6 +215,31 @@ export const MyAgreementsComponent: React.FC = () => {
 												>
 													{agreement.members?.length}
 												</Badge>
+												{!agreement.isLaunched &&
+													agreement.isCurrentUserAgreementAdmin && (
+														<>
+															<Space w={8} />
+															<Badge
+																gradient={{
+																	from: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	to: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	deg: 35
+																}}
+																classNames={{
+																	inner: meemTheme.tBadgeText
+																}}
+																variant={
+																	'gradient'
+																}
+															>
+																Draft
+															</Badge>
+														</>
+													)}
 											</div>
 										</div>
 									</div>
@@ -221,7 +257,7 @@ export const MyAgreementsComponent: React.FC = () => {
 							<div
 								className={meemTheme.gridItemCenteredAsh}
 								onClick={() => {
-									navigateToCreate()
+									setIsCreationModalOpen(true)
 								}}
 							>
 								<Space h={16} />
@@ -239,6 +275,12 @@ export const MyAgreementsComponent: React.FC = () => {
 					</Grid>
 
 					<Space h={60} />
+					<CreateAgreementModal
+						isOpened={isCreationModalOpen}
+						onModalClosed={function (): void {
+							setIsCreationModalOpen(false)
+						}}
+					/>
 				</>
 			)}
 		</>

@@ -10,7 +10,8 @@ import {
 	Space,
 	Loader,
 	useMantineColorScheme,
-	ActionIcon
+	ActionIcon,
+	Button
 } from '@mantine/core'
 import {
 	LoginModal,
@@ -43,8 +44,15 @@ export function HeaderMenu() {
 	const { classes: meemTheme, cx } = useMeemTheme()
 	const router = useRouter()
 
-	const { loginState, disconnectWallet, isConnected, isMeLoading, accounts } =
-		useAuth()
+	const {
+		loginState,
+		disconnectWallet,
+		isConnected,
+		isMeLoading,
+		accounts,
+		walletType,
+		magic
+	} = useAuth()
 
 	const { user } = useMeemUser()
 
@@ -124,6 +132,16 @@ export function HeaderMenu() {
 				</div>
 
 				<div className={meemTheme.siteHeaderRightItems}>
+					{walletType === 'magic' && (
+						<Button
+							className={meemTheme.buttonAsh}
+							onClick={() => {
+								magic?.connect.showWallet()
+							}}
+						>
+							Show Wallet
+						</Button>
+					)}
 					{(loginState === LoginState.LoggedIn || isConnected) && (
 						<Menu
 							radius={8}
@@ -220,9 +238,12 @@ export function HeaderMenu() {
 						>
 							<a
 								onClick={() => {
-									// id.login(false)
-									// loginWithRedirect()
-									setIsJoinAgreementsModalOpen(true)
+									router.push({
+										pathname: '/authenticate',
+										query: {
+											return: `/${window.location.pathname}`
+										}
+									})
 								}}
 							>
 								Join Meem

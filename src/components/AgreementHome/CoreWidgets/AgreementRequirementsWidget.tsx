@@ -1,5 +1,5 @@
 import log from '@kengoldfarb/log'
-import { Text, Space, Loader } from '@mantine/core'
+import { Text, Space, Loader, Center, Button } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
 import Linkify from 'linkify-react'
@@ -40,6 +40,13 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 		RequirementString[]
 	>([])
 	const [areRequirementsParsed, setRequirementsParsed] = useState(false)
+
+	const navigateToAgreementRequirementsSettings = () => {
+		router.push({
+			pathname: `/${agreement.slug}/admin`,
+			query: { tab: 'membershiprequirements' }
+		})
+	}
 
 	const checkEligibility = useCallback(
 		(
@@ -347,22 +354,23 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 				<div className={meemTheme.spacedRowCentered}>
 					<Text className={meemTheme.tMediumBold}>Requirements</Text>
 					<div className={meemTheme.centeredRow}>
-						{agreement.isCurrentUserAgreementAdmin && (
-							<div className={meemTheme.row}>
-								<Space w={8} />
-								<Settings
-									className={meemTheme.clickable}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement.slug}/admin`,
-											query: {
-												tab: 'membershiprequirements'
-											}
-										})
-									}}
-								/>
-							</div>
-						)}
+						{agreement.isCurrentUserAgreementAdmin &&
+							agreement.isLaunched && (
+								<div className={meemTheme.row}>
+									<Space w={8} />
+									<Settings
+										className={meemTheme.clickable}
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement.slug}/admin`,
+												query: {
+													tab: 'membershiprequirements'
+												}
+											})
+										}}
+									/>
+								</div>
+							)}
 					</div>
 				</div>
 
@@ -401,6 +409,21 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 								<Space h={8} />
 							</div>
 						))}
+					</>
+				)}
+				{!agreement.isLaunched && (
+					<>
+						<Space h={16} />
+						<Center>
+							<Button
+								className={meemTheme.buttonAsh}
+								onClick={() => {
+									navigateToAgreementRequirementsSettings()
+								}}
+							>
+								Edit requirements
+							</Button>
+						</Center>
 					</>
 				)}
 			</div>

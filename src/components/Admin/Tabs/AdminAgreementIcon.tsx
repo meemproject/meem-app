@@ -52,10 +52,10 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 		new Promise(resolve => {
 			Resizer.imageFileResizer(
 				file,
-				24,
-				24,
-				'PNG',
-				100,
+				512,
+				512,
+				'JPEG',
+				95,
 				0,
 				uri => {
 					resolve(uri)
@@ -75,7 +75,6 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 		}
 		if (agreementLogo.length > 0) {
 			log.debug('Found an image...')
-			log.debug(agreementLogo[0].content)
 
 			createResizedFile()
 		} else {
@@ -171,7 +170,6 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 			>
 				This will be your community’s membership token. You can change
 				it anytime. Icons should be square and either JPG or PNG files.
-				Note that all uploads will be rendered at 24x24 pixels.
 			</Text>
 
 			<Space h={16} />

@@ -10,7 +10,12 @@ import {
 	Divider
 } from '@mantine/core'
 import { cleanNotifications } from '@mantine/notifications'
-import { LoginState, useSDK, useWallet } from '@meemproject/react'
+import {
+	LoginState,
+	useMeemApollo,
+	useSDK,
+	useWallet
+} from '@meemproject/react'
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
@@ -43,6 +48,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	const wallet = useWallet()
 	const { sdk } = useSDK()
 
+	const { anonClient } = useMeemApollo()
+
 	const [isJoiningAgreement, setIsJoiningAgreement] = useState(false)
 	const [isLeavingAgreement, setIsLeavingAgreement] = useState(false)
 
@@ -51,7 +58,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		{
 			variables: {
 				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
-			}
+			},
+			client: anonClient
 		}
 	)
 
@@ -68,6 +76,24 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					return: `/${agreement?.slug}`
 				}
 			})
+			return
+		}
+
+		const membershipQuantityIsFinite =
+			agreement.membershipSettings?.membershipQuantity &&
+			agreement.membershipSettings.membershipQuantity > 0
+
+		if (
+			agreement.members &&
+			agreement.membershipSettings &&
+			agreement.members?.length >=
+				agreement.membershipSettings?.membershipQuantity &&
+			membershipQuantityIsFinite
+		) {
+			showErrorNotification(
+				`This community is full!`,
+				`Please contact a community owner or admin.`
+			)
 			return
 		}
 
@@ -170,8 +196,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				)
 			} else {
 				showErrorNotification(
-					'Error joining this community.',
-					`Please get in touch!`
+					'Unable to join this community.',
+					`Make sure you meet all of the community's requirements!`
 				)
 			}
 			setIsJoiningAgreement(false)
@@ -213,7 +239,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			const agreementContract = new Contract(
 				agreement?.address ?? '',
 				bundleData?.Bundles[0].abi,
-				wallet.signer
+				wallet.web3Provider.getSigner()
 			)
 			if (agreement && agreement.membershipToken) {
 				const tx = await agreementContract?.burn(
@@ -272,19 +298,54 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		router.push({ pathname: `/${agreement.slug}/admin` })
 	}
 
+	const navigateToAgreementIconSettings = () => {
+		router.push({
+			pathname: `/${agreement.slug}/admin`,
+			query: { tab: 'icon' }
+		})
+	}
+
+	const navigateToAgreementDetailsSettings = () => {
+		router.push({
+			pathname: `/${agreement.slug}/admin`,
+			query: { tab: 'details' }
+		})
+	}
+
 	return (
 		<>
 			<div className={meemTheme.widgetDark}>
-				<Space h={8} />
-				<Center>
-					<Image
-						className={meemTheme.imagePixelated}
-						height={150}
-						width={150}
-						radius={16}
-						src={agreement.image}
-					/>
-				</Center>
+				{agreement.image && (
+					<>
+						<Space h={8} />
+						<Center>
+							<Image
+								height={150}
+								width={150}
+								radius={16}
+								src={agreement.image}
+							/>
+						</Center>
+					</>
+				)}
+				{agreement.isCurrentUserAgreementAdmin && !agreement.image && (
+					<>
+						<Space h={8} />
+						<Center>
+							<Image
+								onClick={() => {
+									navigateToAgreementIconSettings()
+								}}
+								className={meemTheme.clickable}
+								height={150}
+								width={150}
+								radius={16}
+								src={'/community-no-icon.png'}
+							/>
+						</Center>
+					</>
+				)}
+
 				<Space h={16} />
 				<Center>
 					<Text
@@ -295,170 +356,196 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					</Text>
 				</Center>
 				<Space h={16} />
-				<Center>
-					<Text className={meemTheme.tSmall}>
-						{agreement.description}
-					</Text>
-				</Center>
-				<Space h={24} />
+				{!agreement.isLaunched && (
+					<>
+						<Space h={16} />
+						<Center>
+							<Button
+								className={meemTheme.buttonAsh}
+								onClick={() => {
+									navigateToAgreementDetailsSettings()
+								}}
+							>
+								Edit info
+							</Button>
+						</Center>
+						<Space h={16} />
+					</>
+				)}
+				{agreement.isLaunched && (
+					<>
+						<Center>
+							<Text className={meemTheme.tSmall}>
+								{agreement.description}
+							</Text>
+						</Center>
+						<Space h={24} />
 
-				<Center>
-					{agreement.isCurrentUserAgreementMember && (
-						<Button
-							className={meemTheme.buttonYellowBordered}
-							disabled={isLeavingAgreement}
-							loading={isLeavingAgreement}
-							onClick={() => {
-								leaveAgreement()
-							}}
-						>
-							Leave Community
-						</Button>
-					)}
-					{!agreement.isCurrentUserAgreementMember && (
-						<Button
-							className={meemTheme.buttonYellow}
-							disabled={isJoiningAgreement || !meetsReqs}
-							loading={isJoiningAgreement}
-							onClick={() => {
-								joinAgreement()
-							}}
-						>
-							{meetsReqs
-								? `Join ${
-										agreement.membershipSettings
-											?.costToJoin &&
-										agreement.membershipSettings
-											?.costToJoin > 0
-											? `(${agreement.membershipSettings.costToJoin} MATIC)`
-											: ''
-								  }`
-								: 'Requirements Not Met'}
-						</Button>
-					)}
-				</Center>
-				{!agreement.isCurrentUserAgreementMember &&
-					agreement.membershipSettings?.membershipQuantity !==
-						undefined &&
-					agreement.membershipSettings.membershipQuantity > 0 && (
-						<>
-							<Space h={8} />
-							<Center>
-								<Text
-									className={meemTheme.tExtraSmall}
-									style={{ color: colorLightGrey }}
-								>{`${agreement.members?.length} of ${agreement.membershipSettings.membershipQuantity}`}</Text>
-							</Center>
-						</>
-					)}
-				<Space h={16} />
-
-				<Center>
-					<Button
-						style={{
-							margin:
-								agreement.extensions &&
-								agreement.extensions?.length > 0
-									? 3
-									: 0
-						}}
-						className={
-							agreement.isCurrentUserAgreementMember
-								? meemTheme.buttonYellow
-								: meemTheme.buttonYellowBordered
-						}
-						onClick={() => {
-							setIsQrModalOpened(true)
-						}}
-					>
-						<QrCode />
-						<Space w={4} />
-						<Text>Scan Code</Text>
-					</Button>
-				</Center>
-				{agreement.extensions &&
-					agreement.extensions?.filter(
-						ext => ext.AgreementExtensionLinks.length > 0
-					).length > 0 && (
-						<>
-							<Center>
-								<div
-									className={meemTheme.row}
-									style={{ flexWrap: 'wrap' }}
+						<Center>
+							{agreement.isCurrentUserAgreementMember && (
+								<Button
+									className={meemTheme.buttonYellowBordered}
+									disabled={isLeavingAgreement}
+									loading={isLeavingAgreement}
+									onClick={() => {
+										leaveAgreement()
+									}}
 								>
-									{agreement.extensions
-										?.filter(
-											ext =>
-												ext.AgreementExtensionLinks
-													.length > 0
-										)
-										.map(extension => (
-											<>
-												<Button
-													style={{
-														margin: 3
-													}}
-													className={
-														meemTheme.buttonWhite
-													}
-													onClick={() => {
-														if (
-															extension
-																.AgreementExtensionLinks[0]
-														) {
-															window.open(
-																extension
-																	.AgreementExtensionLinks[0]
-																	.url
-															)
-														}
-													}}
-												>
-													<Image
-														width={20}
-														height={20}
-														src={
-															extension.Extension
-																?.icon
-														}
-													/>
-												</Button>
-											</>
-										))}
-								</div>
-							</Center>
-							<Space h={16} />
-						</>
-					)}
+									Leave Community
+								</Button>
+							)}
+							{!agreement.isCurrentUserAgreementMember && (
+								<Button
+									className={meemTheme.buttonYellow}
+									disabled={isJoiningAgreement || !meetsReqs}
+									loading={isJoiningAgreement}
+									onClick={() => {
+										joinAgreement()
+									}}
+								>
+									{meetsReqs
+										? `Join ${
+												agreement.membershipSettings
+													?.costToJoin &&
+												agreement.membershipSettings
+													?.costToJoin > 0
+													? `(${agreement.membershipSettings.costToJoin} MATIC)`
+													: ''
+										  }`
+										: 'Requirements Not Met'}
+								</Button>
+							)}
+						</Center>
+						{!agreement.isCurrentUserAgreementMember &&
+							agreement.membershipSettings?.membershipQuantity !==
+								undefined &&
+							agreement.membershipSettings.membershipQuantity >
+								0 && (
+								<>
+									<Space h={8} />
+									<Center>
+										<Text
+											className={meemTheme.tExtraSmall}
+											style={{ color: colorLightGrey }}
+										>{`${agreement.members?.length} of ${agreement.membershipSettings.membershipQuantity}`}</Text>
+									</Center>
+								</>
+							)}
+						<Space h={16} />
 
-				<Space h={32} />
-				<Center>
-					<Text className={meemTheme.tExtraSmallLabel}>
-						Contract Address
-					</Text>
-				</Center>
-				<Space h={8} />
-				<Center>
-					<div className={meemTheme.row}>
-						<Text>{quickTruncate(agreement.address ?? '')}</Text>
-						<Space w={4} />
-						<Image
-							className={meemTheme.copyIcon}
-							src="/copy.png"
-							height={20}
-							onClick={() => {
-								navigator.clipboard.writeText(
-									`${window.location.origin}/${agreement.slug}`
-								)
-								showSuccessNotification(
-									'Community agreement contract address copied!',
-									`This community's agreement contract address was copied to your clipboard.`
-								)
-							}}
-							width={20}
-						/>
-					</div>
-				</Center>
+						<Center>
+							<Button
+								style={{
+									margin:
+										agreement.extensions &&
+										agreement.extensions?.length > 0
+											? 3
+											: 0
+								}}
+								className={
+									agreement.isCurrentUserAgreementMember
+										? meemTheme.buttonYellow
+										: meemTheme.buttonYellowBordered
+								}
+								onClick={() => {
+									setIsQrModalOpened(true)
+								}}
+							>
+								<QrCode />
+								<Space w={4} />
+								<Text>Scan Code</Text>
+							</Button>
+						</Center>
+						{agreement.extensions &&
+							agreement.extensions?.filter(
+								ext => ext.AgreementExtensionLinks.length > 0
+							).length > 0 && (
+								<>
+									<Center>
+										<div
+											className={meemTheme.row}
+											style={{ flexWrap: 'wrap' }}
+										>
+											{agreement.extensions
+												?.filter(
+													ext =>
+														ext
+															.AgreementExtensionLinks
+															.length > 0
+												)
+												.map(extension => (
+													<>
+														<Button
+															style={{
+																margin: 3
+															}}
+															className={
+																meemTheme.buttonWhite
+															}
+															onClick={() => {
+																if (
+																	extension
+																		.AgreementExtensionLinks[0]
+																) {
+																	window.open(
+																		extension
+																			.AgreementExtensionLinks[0]
+																			.url
+																	)
+																}
+															}}
+														>
+															<Image
+																width={20}
+																height={20}
+																src={
+																	extension
+																		.Extension
+																		?.icon
+																}
+															/>
+														</Button>
+													</>
+												))}
+										</div>
+									</Center>
+									<Space h={16} />
+								</>
+							)}
+
+						<Space h={32} />
+						<Center>
+							<Text className={meemTheme.tExtraSmallLabel}>
+								Contract Address
+							</Text>
+						</Center>
+						<Space h={8} />
+						<Center>
+							<div className={meemTheme.row}>
+								<Text>
+									{quickTruncate(agreement.address ?? '')}
+								</Text>
+								<Space w={4} />
+								<Image
+									className={meemTheme.copyIcon}
+									src="/copy.png"
+									height={20}
+									onClick={() => {
+										navigator.clipboard.writeText(
+											`${window.location.origin}/${agreement.slug}`
+										)
+										showSuccessNotification(
+											'Community agreement contract address copied!',
+											`This community's agreement contract address was copied to your clipboard.`
+										)
+									}}
+									width={20}
+								/>
+							</div>
+						</Center>
+					</>
+				)}
+
 				{agreement.isCurrentUserAgreementAdmin && (
 					<div
 						style={{

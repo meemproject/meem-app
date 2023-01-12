@@ -28,6 +28,7 @@ import { DateTime } from 'luxon'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
+import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { showSuccessNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -233,6 +234,19 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	])
 
 	useEffect(() => {
+		function countComments(comments: DiscussionComment[]): number {
+			let count = 0
+
+			comments.forEach(comment => {
+				count = count + 1
+				if (comment.comments && comment.comments.length > 0) {
+					const childComments = countComments(comment.comments)
+					count = count + childComments
+				}
+			})
+
+			return count
+		}
 		const { votes: v, userVotes } = calculateVotes(post)
 		setVotes(v)
 
@@ -242,7 +256,9 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			setCanReact(true)
 		}
 
-		setCommentCount(post?.comments ? Object.keys(post?.comments).length : 0)
+		if (post && post.comments) {
+			setCommentCount(countComments(post.comments ?? []))
+		}
 	}, [post, me])
 
 	return (
@@ -278,27 +294,24 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												disabled={canReact}
 											>
 												<span>
-													<Button
-														variant="subtle"
-														loading={isLoading}
-														disabled={
-															isLoading ||
-															!canReact
-														}
+													<ChevronUp
 														style={{
 															cursor: 'pointer'
 														}}
-														onClick={() =>
-															handleReactionSubmit(
-																{
-																	reaction:
-																		'upvote'
-																}
-															)
-														}
-													>
-														<ChevronUp />
-													</Button>
+														onClick={() => {
+															if (
+																canReact &&
+																!isLoading
+															) {
+																handleReactionSubmit(
+																	{
+																		reaction:
+																			'upvote'
+																	}
+																)
+															}
+														}}
+													></ChevronUp>
 												</span>
 											</Tooltip>
 										</Center>
@@ -312,27 +325,24 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												disabled={canReact}
 											>
 												<span>
-													<Button
-														variant="subtle"
-														loading={isLoading}
-														disabled={
-															isLoading ||
-															!canReact
-														}
+													<ChevronDown
 														style={{
 															cursor: 'pointer'
 														}}
-														onClick={() =>
-															handleReactionSubmit(
-																{
-																	reaction:
-																		'downvote'
-																}
-															)
-														}
-													>
-														<ChevronDown />
-													</Button>
+														onClick={() => {
+															if (
+																canReact &&
+																!isLoading
+															) {
+																handleReactionSubmit(
+																	{
+																		reaction:
+																			'downvote'
+																	}
+																)
+															}
+														}}
+													></ChevronDown>
 												</span>
 											</Tooltip>
 										</Center>
@@ -393,7 +403,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 														</Text>
 													</div>
 												</div>
-												<Space h={24} />
+												<Space h={16} />
 
 												<Text
 													className={
@@ -402,39 +412,40 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												>
 													{post?.title}
 												</Text>
+												<Space h={4} />
 												{post.tags &&
 													post.tags.map(tag => {
-														if (tag.length > 0) {
-															return (
-																<Badge
-																	style={{
-																		marginRight: 4
-																	}}
-																	key={`tag-${post.id}-${tag}`}
-																	size={'xs'}
-																	gradient={{
-																		from: isDarkTheme
-																			? colorDarkerGrey
-																			: '#DCDCDC',
-																		to: isDarkTheme
-																			? colorDarkerGrey
-																			: '#DCDCDC',
-																		deg: 35
-																	}}
-																	classNames={{
-																		inner: meemTheme.tBadgeTextSmall
-																	}}
-																	variant={
-																		'gradient'
-																	}
-																>
-																	{tag}
-																</Badge>
-															)
-														}
+														return (
+															<Badge
+																style={{
+																	marginRight: 4
+																}}
+																key={`post-tag-${post.id}-${tag}`}
+																size={'xs'}
+																gradient={{
+																	from: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	to: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	deg: 35
+																}}
+																classNames={{
+																	inner: meemTheme.tBadgeTextSmall
+																}}
+																variant={
+																	'gradient'
+																}
+															>
+																{tag.length > 0
+																	? tag
+																	: 'UNTAGGED'}
+															</Badge>
+														)
 														return null
 													})}
-												<Space h={16} />
+												<Space h={8} />
 												<Text
 													className={meemTheme.tSmall}
 													dangerouslySetInnerHTML={{
@@ -453,7 +464,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 															meemTheme.row
 														}
 														style={{
-															marginTop: 16
+															marginTop: 4
 														}}
 													>
 														<div
@@ -529,7 +540,9 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 									classNames={{
 										toolbar:
 											meemTheme.fRichTextEditorToolbar,
-										root: meemTheme.fRichTextEditorToolbar
+										root: meemTheme.fRichTextEditorToolbar,
+										content:
+											meemTheme.fRichTextEditorContent
 									}}
 								>
 									<RichTextEditor.Toolbar>

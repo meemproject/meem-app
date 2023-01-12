@@ -5,7 +5,8 @@ import {
 	Center,
 	Button,
 	Divider,
-	Switch
+	Switch,
+	TextInput
 } from '@mantine/core'
 import React, { useState } from 'react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
@@ -27,6 +28,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 		useState(false)
 
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
+	const [linkUrl, setAgreementName] = useState('')
 
 	/*
 	/*
@@ -47,7 +49,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'examplelink'} />
-			{extensionIsReady(
+			{!extensionIsReady(
 				isLoadingAgreement,
 				agreement,
 				agreementExtension
@@ -74,6 +76,31 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 
 							<Container>
 								<div>
+									<Text
+										className={meemTheme.tExtraSmallLabel}
+									>
+										{`Link URL`.toUpperCase()}
+									</Text>
+									<Space h={12} />
+									<TextInput
+										radius="lg"
+										size="md"
+										value={linkUrl ?? ''}
+										onChange={(event: {
+											target: {
+												value: React.SetStateAction<string>
+											}
+										}) => {
+											setAgreementName(event.target.value)
+										}}
+									/>
+									<Space h={40} />
+									<Text
+										className={meemTheme.tExtraSmallLabel}
+									>
+										LINK DISPLAY SETTINGS
+									</Text>
+									<Space h={8} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -95,7 +122,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 									<Divider />
 								</div>
 								<div>
-									<Space h={16} />
+									<Space h={4} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -149,7 +176,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 								<Button
 									disabled={isDisablingExtension}
 									loading={isDisablingExtension}
-									className={meemTheme.buttonBlue}
+									className={meemTheme.buttonAsh}
 									onClick={disableExtension}
 								>
 									Disable extension

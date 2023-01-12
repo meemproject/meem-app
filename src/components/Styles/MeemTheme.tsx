@@ -35,6 +35,14 @@ export const useMeemTheme = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
+	buttonAsh: {
+		backgroundColor: colorAsh,
+		'&:hover': {
+			backgroundColor: colorAshLight
+		},
+		color: colorBlack,
+		borderRadius: 24
+	},
 	buttonGrey: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey,
@@ -115,7 +123,11 @@ export const useMeemTheme = createStyles(theme => ({
 	fRichTextEditorToolbar: {
 		border: 'none',
 		borderRadius: 24,
+		lineHeight: 1.4,
 		marginBottom: 10
+	},
+	fRichTextEditorContent: {
+		lineHeight: 1.4
 	},
 
 	// Layout
@@ -344,10 +356,11 @@ export const useMeemTheme = createStyles(theme => ({
 			paddingTop: 16
 		}
 	},
-	pageHeaderTitleContainer: {
-		marginLeft: 32,
+	pageHeaderTitleContainer: {},
+	pageHeaderImage: {
+		marginRight: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
+			marginRight: 16
 		}
 	},
 	pageHeaderExitButton: {
@@ -522,10 +535,7 @@ export const useMeemTheme = createStyles(theme => ({
 		padding: 24,
 		width: '100%',
 		borderRadius: 16,
-		boxShadow:
-			theme.colorScheme === 'dark'
-				? ''
-				: '0px 4px 30px rgba(0, 0, 0, 0.1)',
+
 		marginBottom: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
@@ -534,10 +544,6 @@ export const useMeemTheme = createStyles(theme => ({
 		}
 	},
 	widgetAsh: {
-		boxShadow:
-			theme.colorScheme === 'dark'
-				? ''
-				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
 		borderRadius: 16,
 		width: '100%',
 		backgroundColor:
@@ -605,7 +611,7 @@ export const useMeemTheme = createStyles(theme => ({
 		marginTop: -12,
 		marginBottom: -12,
 		lineHeight: 1,
-		fontSize: 24,
+		fontSize: 120,
 		zIndex: -1000
 	},
 	emojiCanvasCover: {
@@ -621,7 +627,6 @@ export const useMeemTheme = createStyles(theme => ({
 		zIndex: -1
 	},
 	imageAgreementLogo: {
-		imageRendering: 'pixelated',
 		width: 80,
 		height: 80,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -643,9 +648,7 @@ export const useMeemTheme = createStyles(theme => ({
 		right: '-105px',
 		cursor: 'pointer'
 	},
-	imagePixelated: {
-		imageRendering: 'pixelated'
-	},
+	imagePixelated: {},
 
 	// Misc
 	backArrow: {
@@ -658,6 +661,11 @@ export const useMeemTheme = createStyles(theme => ({
 	badge: {
 		paddingLeft: 8,
 		paddingRight: 8
+	},
+	communityLaunchHeader: {
+		background:
+			'linear-gradient(117deg, rgba(227,255,191,1) 0%, rgba(229,255,183,0.8477984943977591) 3%, rgba(247,254,113,0.8534007352941176) 31%, rgba(177,220,255,0.8505996148459384) 66%, rgba(133,139,33,0.4724483543417367) 100%)',
+		width: '100%'
 	},
 	iconDarkThemeToggle: {
 		marginTop: -4,

@@ -32,6 +32,13 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 
 	const [filteredMembers, setFilteredMembers] = useState<AgreementMember[]>()
 
+	const navigateToAgreementAirdropSettings = () => {
+		router.push({
+			pathname: `/${agreement.slug}/admin`,
+			query: { tab: 'airdrops' }
+		})
+	}
+
 	useEffect(() => {
 		if (!filteredMembers && agreement) {
 			setMembers(agreement.members ? agreement.members.slice(0, 10) : [])
@@ -82,16 +89,18 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						})`}</Text>
 					</div>
 
-					<Button
-						onClick={() => {
-							router.push({
-								pathname: `/${agreement.slug}/members`
-							})
-						}}
-						className={meemTheme.buttonBlack}
-					>
-						View All
-					</Button>
+					{agreement.isLaunched && (
+						<Button
+							onClick={() => {
+								router.push({
+									pathname: `/${agreement.slug}/members`
+								})
+							}}
+							className={meemTheme.buttonBlack}
+						>
+							View All
+						</Button>
+					)}
 				</div>
 				<Space h={24} />
 
@@ -193,7 +202,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						<Space h={24} />
 						<Center>
 							<Text className={meemTheme.tSmall}>
-								{`This community somehow has no members. This may or may not be a rip in the space-time continuum.`}
+								{`Members are being set up. Come back later!`}
 							</Text>
 						</Center>
 						<Space h={24} />
@@ -213,6 +222,21 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 							<Space h={24} />
 						</>
 					)}
+				{members.length > 0 && !agreement.isLaunched && (
+					<>
+						<Space h={24} />
+						<Center>
+							<Button
+								className={meemTheme.buttonAsh}
+								onClick={() => {
+									navigateToAgreementAirdropSettings()
+								}}
+							>
+								Invite members
+							</Button>
+						</Center>
+					</>
+				)}
 			</div>
 		</>
 	)

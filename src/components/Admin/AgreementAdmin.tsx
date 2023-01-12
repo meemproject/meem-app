@@ -37,8 +37,8 @@ enum Tab {
 	MembershipSettings,
 	MembershipRequirements,
 	Roles,
-	AgreementDetails,
-	AgreementIcon,
+	Details,
+	Icon,
 	Extensions,
 	Airdrops,
 	DeleteAgreement
@@ -80,11 +80,11 @@ export const AgreementAdminComponent: React.FC = () => {
 				setCurrentTab(Tab.Airdrops)
 				break
 
-			case 'agreementdetails':
-				setCurrentTab(Tab.AgreementDetails)
+			case 'details':
+				setCurrentTab(Tab.Details)
 				break
-			case 'agreementicon':
-				setCurrentTab(Tab.AgreementIcon)
+			case 'icon':
+				setCurrentTab(Tab.Icon)
 				break
 			case 'contractmanagement':
 				setCurrentTab(Tab.ContractManagement)
@@ -130,13 +130,18 @@ export const AgreementAdminComponent: React.FC = () => {
 				<>
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
-							<Image
-								width={80}
-								height={80}
-								radius={8}
-								className={meemTheme.imageAgreementLogo}
-								src={agreement.image}
-							/>
+							{agreement.image && (
+								<div className={meemTheme.pageHeaderImage}>
+									<Image
+										width={80}
+										height={80}
+										radius={8}
+										className={meemTheme.imageAgreementLogo}
+										src={agreement.image}
+									/>
+								</div>
+							)}
+
 							{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
 							<div className={meemTheme.pageHeaderTitleContainer}>
 								<Text className={meemTheme.tLargeBold}>
@@ -340,15 +345,10 @@ export const AgreementAdminComponent: React.FC = () => {
 											className={
 												meemTheme.pagePanelLayoutNavItem
 											}
-											active={
-												currentTab ===
-												Tab.AgreementDetails
-											}
+											active={currentTab === Tab.Details}
 											label={'Community Details'}
 											onClick={() => {
-												setCurrentTab(
-													Tab.AgreementDetails
-												)
+												setCurrentTab(Tab.Details)
 												setMobileNavBarVisible(false)
 											}}
 										/>
@@ -356,12 +356,10 @@ export const AgreementAdminComponent: React.FC = () => {
 											className={
 												meemTheme.pagePanelLayoutNavItem
 											}
-											active={
-												currentTab === Tab.AgreementIcon
-											}
+											active={currentTab === Tab.Icon}
 											label={'Community Icon'}
 											onClick={() => {
-												setCurrentTab(Tab.AgreementIcon)
+												setCurrentTab(Tab.Icon)
 												setMobileNavBarVisible(false)
 											}}
 										/>
@@ -394,7 +392,7 @@ export const AgreementAdminComponent: React.FC = () => {
 												agreement={agreement}
 											/>
 										)}
-									{currentTab === Tab.AgreementDetails &&
+									{currentTab === Tab.Details &&
 										userHasPermissionEditProfile(
 											agreement
 										) && (
@@ -402,7 +400,7 @@ export const AgreementAdminComponent: React.FC = () => {
 												agreement={agreement}
 											/>
 										)}
-									{currentTab === Tab.AgreementIcon &&
+									{currentTab === Tab.Icon &&
 										userHasPermissionEditProfile(
 											agreement
 										) && (

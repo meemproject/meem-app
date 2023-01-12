@@ -5,7 +5,8 @@ import {
 	Space,
 	Badge,
 	Menu,
-	useMantineColorScheme
+	useMantineColorScheme,
+	Center
 } from '@mantine/core'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
@@ -54,7 +55,7 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 
 				<Space h={32} />
 			</div>
-			{agreement.roles && (
+			{agreement.roles && agreement.roles.length > 0 && (
 				<>
 					{agreement.roles.map(role => (
 						<div
@@ -170,13 +171,27 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 							</div>
 						</div>
 					))}
+					<Space h={32} />
+					<Button
+						className={meemTheme.buttonBlack}
+						onClick={createRole}
+					>
+						+ Create Role
+					</Button>
+				</>
+			)}
+			{agreement.roles && agreement.roles.length === 0 && (
+				<>
+					<Space h={32} />
+					<Center>
+						<Text className={meemTheme.tMedium}>
+							Community member roles are being set up. Come back
+							later!
+						</Text>
+					</Center>
 				</>
 			)}
 
-			<Space h={32} />
-			<Button className={meemTheme.buttonBlack} onClick={createRole}>
-				+ Create Role
-			</Button>
 			<Space h={64} />
 			<DeleteRoleModal
 				role={roleToDelete}

@@ -2,7 +2,7 @@ import { Text, Button, Space, Center, Loader } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Settings } from 'tabler-icons-react'
+import { Plus, Settings } from 'tabler-icons-react'
 import {
 	Agreement,
 	extensionFromSlug
@@ -99,10 +99,24 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					</div>
 					{agreementExtension?.isInitialized && (
 						<div className={meemTheme.centeredRow}>
+							<>
+								<Button
+									className={meemTheme.buttonAsh}
+									onClick={() => {
+										router.push({
+											pathname: `/${agreement.slug}/e/discussions/submit`
+										})
+									}}
+								>
+									<Plus />
+								</Button>
+							</>
+							<Space w={8} />
+
 							{posts.length > 0 && (
 								<>
 									<Button
-										className={meemTheme.buttonBlue}
+										className={meemTheme.buttonAsh}
 										onClick={() => {
 											router.push({
 												pathname: `/${agreement.slug}/e/discussions`
@@ -134,7 +148,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 				{!hasFetchdData && agreementExtension?.isInitialized && (
 					<>
 						<Center>
-							<Loader />
+							<Loader variant="oval" color="blue" />
 						</Center>
 						<Space h={8} />
 					</>
@@ -168,7 +182,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 														pathname: `/${agreement.slug}/e/discussions/submit`
 													})
 												}}
-												className={meemTheme.buttonBlue}
+												className={meemTheme.buttonAsh}
 											>
 												+ Create a discussion
 											</Button>
