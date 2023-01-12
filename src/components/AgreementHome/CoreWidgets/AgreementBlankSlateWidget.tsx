@@ -25,7 +25,7 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({ agreement }) => {
 				<>
 					<>
 						{agreement?.isCurrentUserAgreementAdmin && (
-							<div className={meemTheme.widgetMeem}>
+							<div className={meemTheme.widgetLight}>
 								<Center>
 									<Text
 										className={meemTheme.tLargeBold}
@@ -46,7 +46,7 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({ agreement }) => {
 								<Space h={24} />
 								<Center>
 									<Button
-										className={meemTheme.buttonBlue}
+										className={meemTheme.buttonAsh}
 										onClick={() => {
 											router.push({
 												pathname: `${agreement.slug}/admin`,

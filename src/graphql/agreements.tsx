@@ -22,6 +22,16 @@ export const MEEM_CONTRACT_PARTS = gql`
 	}
 `
 
+export const GET_AGREEMENT_EXISTS = gql`
+	query GetAgreementExists($slug: String, $chainId: Int) {
+		Agreements(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
+			slug
+		}
+	}
+`
+
 export const GET_IS_MEMBER_OF_AGREEMENT = gql`
 	query GetIsMemberOfAgreement(
 		$walletAddress: String

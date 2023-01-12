@@ -1,412 +1,162 @@
-import { useSubscription } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Space, Modal, Loader, Stepper } from '@mantine/core'
-import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
-import { ethers } from 'ethers'
-import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
-import { GetTransactionsSubscription } from '../../../generated/graphql'
-import { SUB_TRANSACTIONS } from '../../graphql/transactions'
-import {
-	MembershipSettings,
-	MembershipRequirementToMeemPermission
-} from '../../model/agreement/agreements'
-import { CookieKeys } from '../../utils/cookies'
-import {
-	showErrorNotification,
-	showSuccessNotification
-} from '../../utils/notifications'
+import { Text, Space, Modal, Button, TextInput } from '@mantine/core'
+import { useMeemApollo, useWallet } from '@meemproject/react'
+import React, { useEffect, useState } from 'react'
+import { GetAgreementExistsQuery } from '../../../generated/graphql'
+import { GET_AGREEMENT_EXISTS } from '../../graphql/agreements'
+import { showErrorNotification } from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
 import { useMeemTheme } from '../Styles/MeemTheme'
+import { CreationProgressModal } from './CreationProgressModal'
+
 interface IProps {
-	membershipSettings?: MembershipSettings
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const CreateAgreementModal: React.FC<IProps> = ({
 	isOpened,
-	onModalClosed,
-	membershipSettings
+	onModalClosed
 }) => {
-	const router = useRouter()
+	const { classes: meemTheme } = useMeemTheme()
 
-	const { sdk } = useSDK()
+	const { web3Provider, isConnected, connectWallet, chainId } = useWallet()
 
-	const wallet = useWallet()
+	const [shouldCheckAgreementName, setShouldCheckAgreementName] =
+		useState(false)
+
+	const [agreementName, setAgreementName] = useState('')
+
+	const [isAgreementCreationModalOpened, setIsAgreementCreationModalOpened] =
+		useState(false)
 
 	const { anonClient } = useMeemApollo()
 
-	const { classes: meemTheme } = useMeemTheme()
-
-	const [activeStep, setActiveStep] = useState(1)
-
-	const [hasStartedCreating, setHasStartedCreating] = useState(false)
-
-	const [transactionIds, setTransactionIds] = useState<string[]>([])
-
-	const [transactionState, setTransactionState] = useState<{
-		deployContractTxId?: string
-		cutTxId?: string
-		mintTxId?: string
-	}>({})
-
-	const { error, data: transactions } =
-		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
+	const { data: agreementData, loading: isCheckingName } =
+		useQuery<GetAgreementExistsQuery>(GET_AGREEMENT_EXISTS, {
+			client: anonClient,
 			variables: {
-				transactionIds
-			},
-			// @ts-ignore
-			client: anonClient
-		})
-
-	useEffect(() => {
-		if (error) {
-			log.crit(error)
-			showErrorNotification(
-				'Error Fetching Data',
-				'Please reload and try again.'
-			)
-		}
-	}, [error])
-
-	const closeModal = useCallback(() => {
-		onModalClosed()
-
-		setHasStartedCreating(false)
-	}, [onModalClosed])
-
-	const finishAgreementCreation = useCallback(
-		async (slug: string) => {
-			// Successfully created agreement
-			log.debug('agreement creation complete')
-
-			// Remove all metadata cookies!
-			Cookies.remove(CookieKeys.agreementName)
-			Cookies.remove(CookieKeys.agreementDescription)
-			Cookies.remove(CookieKeys.agreementImage)
-			Cookies.remove(CookieKeys.agreementExternalUrl)
-
-			// Route to the created agreement detail page
-			showSuccessNotification(
-				'Success!',
-				`Your community has been created.`
-			)
-
-			router.push({
-				pathname: `/${slug}`
-			})
-			Cookies.remove(CookieKeys.agreementSlug)
-		},
-		[router]
-	)
-
-	const create = useCallback(async () => {
-		log.debug('creating agreement...')
-
-		if (!wallet.web3Provider || !wallet.chainId) {
-			log.debug('no web3 provider, returning.')
-			showErrorNotification(
-				'Error creating community',
-				'Please connect your wallet first.'
-			)
-			closeModal()
-			setHasStartedCreating(false)
-			return
-		}
-
-		if (!membershipSettings) {
-			log.debug('no membership settings found, returning.')
-			showErrorNotification(
-				'Error creating community',
-				'An error occurred while creating this community. Please try again.'
-			)
-
-			closeModal()
-			setHasStartedCreating(false)
-			return
-		}
-
-		try {
-			const splits =
-				membershipSettings.membershipFundsAddress.length > 0 &&
-				membershipSettings.costToJoin > 0
-					? [
-							{
-								amount: 10000,
-								toAddress:
-									membershipSettings.membershipFundsAddress,
-								lockedBy: MeemAPI.zeroAddress
-							}
-					  ]
-					: []
-
-			const mintPermissions: MeemAPI.IMeemPermission[] =
-				membershipSettings.requirements.map(mr => {
-					return MembershipRequirementToMeemPermission({
-						...mr,
-						costEth: membershipSettings.costToJoin,
-						mintStartTimestamp:
-							membershipSettings.membershipStartDate
-								? membershipSettings.membershipStartDate.getTime() /
-								  1000
-								: 0,
-						mintEndTimestamp: membershipSettings.membershipEndDate
-							? membershipSettings.membershipEndDate.getTime() /
-							  1000
-							: 0
-					})
-				})
-
-			// Setup application instructions for agreement
-			const applicationInstructions: string[] = []
-			membershipSettings.requirements.forEach(requirement => {
-				if (
-					requirement.applicationInstructions &&
-					requirement.applicationInstructions?.length > 0
-				) {
-					applicationInstructions.push(
-						requirement.applicationInstructions
-					)
-				}
-			})
-
-			if (mintPermissions.length === 0) {
-				showErrorNotification(
-					'Oops!',
-					`This community has invalid membership requirements. Please double-check your entries and try again.`
-				)
-				closeModal()
-				setHasStartedCreating(false)
-				return
-			}
-
-			const data = {
-				shouldMintTokens: true,
-				metadata: {
-					meem_metadata_type: 'Meem_AgreementContract',
-					meem_metadata_version: '20221116',
-					name: Cookies.get(CookieKeys.agreementName),
-					description: Cookies.get(CookieKeys.agreementDescription),
-					image: Cookies.get(CookieKeys.agreementImage),
-					associations: [],
-					external_url: '',
-					application_instructions: applicationInstructions
-				},
-				shouldCreateAdminRole: true,
-				name: Cookies.get(CookieKeys.agreementName) ?? '',
-				admins: membershipSettings.agreementAdminsAtAgreementCreation,
-				minters: membershipSettings.agreementAdminsAtAgreementCreation,
-				maxSupply: ethers.BigNumber.from(
-					membershipSettings.membershipQuantity
-				).toHexString(),
-				mintPermissions,
-				splits,
-				tokenMetadata: {
-					meem_metadata_type: 'Meem_AgreementToken',
-					meem_metadata_version: '20221116',
-					description: `Membership token for ${Cookies.get(
-						CookieKeys.agreementName
-					)}`,
-					name: `${Cookies.get(
-						CookieKeys.agreementName
-					)} membership token`,
-					image: Cookies.get(CookieKeys.agreementImage),
-					associations: [],
-					external_url: ''
-				},
+				slug: agreementName
+					.toString()
+					.replaceAll(' ', '-')
+					.toLowerCase(),
 				chainId:
-					wallet.chainId ??
+					chainId ??
 					hostnameToChainId(
 						global.window ? global.window.location.host : ''
 					)
-			}
+			},
+			skip: !shouldCheckAgreementName || !isOpened
+		})
 
-			const response = await sdk.agreement.createAgreement({
-				...data
-			})
+	const checkName = async () => {
+		if (!web3Provider || !isConnected) {
+			await connectWallet()
+			return
+		}
 
-			if (response) {
-				setTransactionState({
-					deployContractTxId: response.deployContractTxId,
-					cutTxId: response.cutTxId,
-					mintTxId: response.mintTxId
-				})
-
-				const tIds = [response.deployContractTxId, response.cutTxId]
-				if (response.mintTxId) {
-					tIds.push(response.mintTxId)
-				}
-
-				setTransactionIds(tIds)
-
-				log.debug('finish fetcher')
-			}
-		} catch (e) {
-			log.crit(e)
+		// Some basic validation
+		if (
+			!agreementName ||
+			agreementName.length < 3 ||
+			agreementName.length > 30
+		) {
+			// Agreement name invalid
 			showErrorNotification(
-				'Error creating community',
-				'An error occurred while creating this community. Please try again.'
+				'Oops!',
+				'You entered an invalid community name. Please choose a longer or shorter name.'
 			)
-
-			closeModal()
-			setHasStartedCreating(false)
+			return
 		}
-	}, [closeModal, membershipSettings, wallet, sdk.agreement])
+
+		// Check the agreement name
+		try {
+			setShouldCheckAgreementName(true)
+		} catch (e) {
+			log.debug(e)
+
+			showErrorNotification(
+				'Oops!',
+				`There was an error creating your community. Please let us know!`
+			)
+			return
+		}
+	}
 
 	useEffect(() => {
-		// Create the agreement
-		if (isOpened && !hasStartedCreating) {
-			setHasStartedCreating(true)
-			create()
-		}
-	}, [hasStartedCreating, isOpened, create])
-
-	useEffect(() => {
-		let newActiveStep = 1
-		const deployTransaction = transactions?.Transactions.find(
-			(t: { id: string | undefined }) =>
-				t.id === transactionState?.deployContractTxId
-		)
-		const cutTransaction = transactions?.Transactions.find(
-			(t: { id: string | undefined }) =>
-				t.id === transactionState?.cutTxId
-		)
-		const mintTransaction = transactions?.Transactions.find(
-			(t: { id: string | undefined }) =>
-				t.id === transactionState?.mintTxId
-		)
-
-		if (deployTransaction?.status === MeemAPI.TransactionStatus.Success) {
-			newActiveStep = 2
-		}
-
-		if (cutTransaction?.status === MeemAPI.TransactionStatus.Success) {
-			newActiveStep = 3
-		}
-
-		if (mintTransaction?.status === MeemAPI.TransactionStatus.Success) {
-			newActiveStep = 4
-			if (cutTransaction?.Agreements[0]) {
-				finishAgreementCreation(cutTransaction.Agreements[0].slug)
+		if (agreementData && shouldCheckAgreementName) {
+			setShouldCheckAgreementName(false)
+			if (agreementData.Agreements.length === 0) {
+				// No collisions
+				log.debug(
+					'no naming collisions, proceeding to create new agreement'
+				)
+				setIsAgreementCreationModalOpened(true)
 			} else {
-				// TODO: Handle edge case error
+				log.debug('agreement already exists...')
 				showErrorNotification(
-					'Error creating community',
-					'Please try again.'
+					'Oops!',
+					`A community by that name already exists. Choose a different name.`
 				)
 			}
 		}
-
-		setActiveStep(newActiveStep)
-	}, [
-		transactionState,
-		setActiveStep,
-		transactions,
-		router,
-		finishAgreementCreation
-	])
-
-	const modalContents = (
-		<>
-			<div className={meemTheme.modalHeader}>
-				<Loader color="blue" variant="oval" />
-				<Space h={16} />
-				<Text
-					className={meemTheme.tLargeBold}
-				>{`Creating your community...`}</Text>
-				<Space h={32} />
-				<div className={meemTheme.rowResponsive}>
-					<div>
-						<Text
-							className={meemTheme.tLargeBold}
-							style={{ textAlign: 'center' }}
-						>
-							{Cookies.get(CookieKeys.agreementName)}
-						</Text>
-						<Space h={24} />
-
-						<Text
-							className={meemTheme.tExtraSmall}
-							style={{ textAlign: 'center' }}
-						>
-							This could take a few minutes.
-						</Text>
-						<Space h={16} />
-
-						<Text
-							className={meemTheme.tExtraSmall}
-							style={{ textAlign: 'center' }}
-						>{`Please don’t refresh or close this window until this step is complete. This might take a few minutes.`}</Text>
-					</div>
-					<Space w={32} />
-					<Space h={48} />
-					<Stepper
-						active={activeStep}
-						onStepClick={() => {}}
-						breakpoint="sm"
-						orientation="vertical"
-					>
-						<Stepper.Step
-							label="Queued"
-							description="Community creation has been queued."
-						></Stepper.Step>
-						<Stepper.Step
-							label="Deploying community"
-							description="Your community's smart contract is being deployed to the blockchain"
-						></Stepper.Step>
-						<Stepper.Step
-							label="Initializing community"
-							description="Setting up your community's smart contract"
-						></Stepper.Step>
-						<Stepper.Step
-							label="Minting tokens"
-							description="Minting membership tokens for your community"
-						></Stepper.Step>
-						<Stepper.Completed>
-							{/** TODO: Show a message when complete before redirecting? */}
-						</Stepper.Completed>
-					</Stepper>
-				</div>
-			</div>
-			<Space h={8} />
-		</>
-	)
+	}, [agreementData, shouldCheckAgreementName])
 
 	return (
 		<>
 			<Modal
-				className={meemTheme.visibleDesktopOnly}
 				centered
 				closeOnClickOutside={false}
 				closeOnEscape={false}
-				withCloseButton={false}
+				withCloseButton={true}
 				radius={16}
-				size={'60%'}
 				overlayBlur={8}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal()}
+				size={'50%'}
+				padding={'sm'}
+				opened={isOpened && !isAgreementCreationModalOpened}
+				title={
+					<Text className={meemTheme.tMediumBold}>
+						Create Your Community
+					</Text>
+				}
+				onClose={() => {
+					onModalClosed()
+				}}
 			>
-				{modalContents}
+				<Text className={meemTheme.tExtraSmallLabel}>
+					{`What is your community called?`.toUpperCase()}
+				</Text>
+				<Space h={12} />
+				<TextInput
+					radius="lg"
+					size="md"
+					value={agreementName ?? ''}
+					onChange={(event: {
+						target: { value: React.SetStateAction<string> }
+					}) => {
+						setAgreementName(event.target.value)
+					}}
+				/>
+				<Space h={24} />
+				<Button
+					loading={isCheckingName || isAgreementCreationModalOpened}
+					disabled={isCheckingName || isAgreementCreationModalOpened}
+					className={meemTheme.buttonBlack}
+					onClick={() => {
+						checkName()
+					}}
+				>
+					Next
+				</Button>
 			</Modal>
-			<Modal
-				className={meemTheme.visibleMobileOnly}
-				centered
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				withCloseButton={false}
-				radius={16}
-				fullScreen={true}
-				overlayBlur={8}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal()}
-			>
-				{modalContents}
-			</Modal>
+			<CreationProgressModal
+				agreementName={agreementName}
+				isOpened={isAgreementCreationModalOpened}
+				onModalClosed={() => {
+					setIsAgreementCreationModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }
