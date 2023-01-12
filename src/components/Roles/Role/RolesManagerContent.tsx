@@ -52,6 +52,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [isExistingRole, setIsExistingRole] = useState(false)
 	const [roleName, setRoleName] = useState('')
 
+	// Used to determine what has changed on the role if it's been edited.
+	// Used by RoleManagerChangesModal.
+	const [hasParsedPermissions, setHasParsedPermissions] = useState(false)
+	const [originalRoleName, setOriginalRoleName] = useState('')
+	const [originalRoleMembers, setOriginalRoleMembers] = useState<
+		AgreementMember[]
+	>([])
+
 	const [isTokenTransferrable, setIsTokenTransferrable] =
 		useState('non-transferrable')
 
@@ -71,10 +79,12 @@ export const RolesManagerContent: React.FC<IProps> = ({
 			log.debug(JSON.stringify(error))
 		}
 
+		// Only do this once!
 		async function parsePermissions(
 			theRole: AgreementRole,
 			allPermissions: GetAvailablePermissionQuery
 		) {
+			setHasParsedPermissions(true)
 			const permissionedRole = theRole
 
 			// This is a new role, set default permissions
@@ -141,7 +151,16 @@ export const RolesManagerContent: React.FC<IProps> = ({
 					: []
 			if (initialRoleMembers) {
 				setRoleMembers(initialRoleMembers)
+
+				// The role members list before any potential changes
+				setOriginalRoleMembers(initialRoleMembers)
+				log.debug(
+					`role ${theRole?.name} has ${initialRoleMembers.length} members`
+				)
 			}
+
+			// The role name before any potential changes
+			setOriginalRoleName(theRole.name)
 
 			// Set the role itself
 			setRole(permissionedRole)
@@ -149,7 +168,12 @@ export const RolesManagerContent: React.FC<IProps> = ({
 			// Stop loading
 			setIsLoadingPermissons(false)
 		}
-		if (initialRole && !role && availablePermissions) {
+		if (
+			initialRole &&
+			!role &&
+			availablePermissions &&
+			!hasParsedPermissions
+		) {
 			parsePermissions(initialRole, availablePermissions)
 		}
 
@@ -157,7 +181,15 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		if (role?.isTransferrable) {
 			setIsTokenTransferrable('transferrable')
 		}
-	}, [availablePermissions, agreement, error, initialRole, role])
+	}, [
+		availablePermissions,
+		originalRoleName,
+		agreement,
+		error,
+		initialRole,
+		role,
+		hasParsedPermissions
+	])
 
 	const updateRole = (newRole: AgreementRole) => {
 		setRole(newRole)
@@ -445,6 +477,8 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				}}
 				role={role}
 				isExistingRole={isExistingRole}
+				hasRoleNameChanged={originalRoleName === role?.name}
+				originalRoleMembers={originalRoleMembers}
 				roleMembers={roleMembers}
 				agreement={agreement}
 			/>
