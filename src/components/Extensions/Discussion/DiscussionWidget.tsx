@@ -182,7 +182,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 														pathname: `/${agreement.slug}/e/discussions/submit`
 													})
 												}}
-												className={meemTheme.buttonBlue}
+												className={meemTheme.buttonAsh}
 											>
 												+ Create a discussion
 											</Button>

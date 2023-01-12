@@ -149,7 +149,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 								<Button
 									disabled={isDisablingExtension}
 									loading={isDisablingExtension}
-									className={meemTheme.buttonBlue}
+									className={meemTheme.buttonAsh}
 									onClick={disableExtension}
 								>
 									Disable extension

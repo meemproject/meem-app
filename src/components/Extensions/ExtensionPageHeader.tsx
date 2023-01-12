@@ -50,13 +50,20 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 		<>
 			<div className={meemTheme.pageHeader}>
 				<div className={meemTheme.spacedRowCentered}>
-					{!hasNoWidget && (isSettingsPage || isSubPage) && (
+					{(hasNoWidget || isSettingsPage || isSubPage) && (
 						<>
 							<a
 								onClick={() => {
-									router.push({
-										pathname: `/${agreement?.slug}/e/${extensionSlug}`
-									})
+									if (hasNoWidget) {
+										router.push({
+											pathname: `/${agreement?.slug}/admin`,
+											query: { tab: 'extensions' }
+										})
+									} else {
+										router.push({
+											pathname: `/${agreement?.slug}/e/${extensionSlug}`
+										})
+									}
 								}}
 							>
 								<ArrowLeft
@@ -101,6 +108,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 				</div>
 				<div className={meemTheme.centeredRow}>
 					{!isSettingsPage &&
+						hasNoWidget &&
 						(agreement?.isCurrentUserAgreementAdmin ||
 							agreement?.isCurrentUserAgreementOwner) && (
 							<Button
