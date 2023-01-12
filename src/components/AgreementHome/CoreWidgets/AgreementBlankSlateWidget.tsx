@@ -1,83 +1,138 @@
-import { Button, Center, Space, Text } from '@mantine/core'
-import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import { useQuery } from '@apollo/client'
+import { Center, Grid, Loader, Space, Text, Image } from '@mantine/core'
+import { useMeemApollo } from '@meemproject/react'
+import React, { useEffect, useState } from 'react'
+import { GetExtensionsQuery } from '../../../../generated/graphql'
+import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
-import { colorBlack, useMeemTheme } from '../../Styles/MeemTheme'
+import { colorAshLight, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
+	onChosenExtensionsChanged: (chosenExtensions: string[]) => void
 }
 
-export const AgreementBlankSlateWidget: React.FC<IProps> = ({ agreement }) => {
+export const AgreementBlankSlateWidget: React.FC<IProps> = ({
+	agreement,
+	onChosenExtensionsChanged
+}) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 
 	useEffect(() => {}, [agreement])
 
-	const shouldShowBlankSlate =
-		!agreement.extensions ||
-		agreement.extensions?.filter(
-			ext => ext.AgreementExtensionWidgets.length > 0
-		)?.length === 0
+	const { anonClient } = useMeemApollo()
+
+	const [chosenExtensions, setChosenExtensions] = useState<string[]>([])
+
+	const toggleExtensionSelected = (extension: any) => {
+		if (chosenExtensions.includes(extension.id)) {
+			const newExtensionsList = [...chosenExtensions]
+			const index = newExtensionsList.indexOf(extension.id) // <-- Not supported in <IE9
+			if (index !== -1) {
+				newExtensionsList.splice(index, 1)
+			}
+			setChosenExtensions(newExtensionsList)
+			onChosenExtensionsChanged(newExtensionsList)
+		} else {
+			const newExtensionsList = [...chosenExtensions]
+			newExtensionsList.push(extension.id)
+			setChosenExtensions(newExtensionsList)
+			onChosenExtensionsChanged(newExtensionsList)
+		}
+	}
+
+	// Fetch a list of available extensions.
+	const { loading, data: availableExtensionsData } =
+		useQuery<GetExtensionsQuery>(GET_EXTENSIONS, {
+			client: anonClient
+		})
 
 	return (
-		<div>
-			{shouldShowBlankSlate && (
+		<div className={meemTheme.widgetLight}>
+			<Text className={meemTheme.tMediumBold}>Add extensions</Text>
+			{loading && (
 				<>
-					<>
-						{agreement?.isCurrentUserAgreementAdmin && (
-							<div className={meemTheme.widgetLight}>
-								<Center>
-									<Text
-										className={meemTheme.tLargeBold}
-										color={colorBlack}
-									>
-										{`Let's get started`}
-									</Text>
-								</Center>
-								<Space h={16} />
-								<Center>
-									<Text
-										className={meemTheme.tSmall}
-										color={colorBlack}
-									>
-										{`There's nothing for your community members to do yet. Add your first extension to enable your members to talk, organize events and much more.`}
-									</Text>
-								</Center>
-								<Space h={24} />
-								<Center>
-									<Button
-										className={meemTheme.buttonAsh}
-										onClick={() => {
-											router.push({
-												pathname: `${agreement.slug}/admin`,
-												query: { tab: 'extensions' }
-											})
+					<Space h={32} />
+					<Center>
+						<Loader variant="oval" color="blue" />
+					</Center>
+					<Space h={24} />
+				</>
+			)}
+			{!loading && availableExtensionsData && (
+				<>
+					<Space h={24} />
+					<Grid>
+						{availableExtensionsData.Extensions.map(extension => (
+							<Grid.Col
+								xs={4}
+								sm={4}
+								md={4}
+								lg={4}
+								xl={4}
+								key={extension.id}
+							>
+								<div
+									className={meemTheme.gridItemCenteredAsh}
+									style={{
+										height: '150px',
+										backgroundColor: colorAshLight,
+										boxShadow: 'none',
+										position: 'relative'
+									}}
+									onClick={() => {
+										toggleExtensionSelected(extension)
+									}}
+								>
+									<Center>
+										<Image
+											src={extension.icon}
+											height={16}
+											width={16}
+										/>
+									</Center>
+									<Space h={12} />
+									<Center>
+										<Text className={meemTheme.tSmallBold}>
+											{extension.name}
+										</Text>
+									</Center>
+									<Space h={4} />
+									<Center>
+										<Text
+											className={meemTheme.tExtraSmall}
+											style={{
+												display: '-webkit-box',
+												WebkitLineClamp: '3',
+												WebkitBoxOrient: 'vertical',
+												overflow: 'hidden',
+												textAlign: 'center'
+											}}
+										>
+											{extension.description}
+										</Text>
+									</Center>
+									<div
+										style={{
+											position: 'absolute',
+											top: 8,
+											left: 8
 										}}
 									>
-										+ Add an extension
-									</Button>
-								</Center>
-							</div>
-						)}
-					</>
-					<>
-						{!agreement?.isCurrentUserAgreementAdmin && (
-							<div className={meemTheme.widgetLight}>
-								<Center>
-									<Text className={meemTheme.tMediumBold}>
-										Under construction
-									</Text>
-								</Center>
-								<Space h={16} />
-								<Center>
-									<Text className={meemTheme.tSmall}>
-										This community does not have any content
-										yet. Check back later!
-									</Text>
-								</Center>
-							</div>
-						)}
-					</>
+										{chosenExtensions.includes(
+											extension.id
+										) && (
+											<Image
+												width={18}
+												height={18}
+												src={'/check.png'}
+											/>
+										)}
+									</div>
+								</div>
+							</Grid.Col>
+						))}
+					</Grid>
+					<Space h={16} />
 				</>
 			)}
 		</div>

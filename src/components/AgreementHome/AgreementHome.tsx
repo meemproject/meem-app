@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import log from '@kengoldfarb/log'
 import { Container, Text, Space, Loader, Center, Button } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
+import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
-import { AgreementAddAppsWidget } from './CoreWidgets/AgreementAddAppsWidget'
+import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
 import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
 import { AgreementExtensionLinksWidget } from './CoreWidgets/AgreementExtensionLinksWidget'
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
@@ -16,8 +19,42 @@ export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const { classes: meemTheme } = useMeemTheme()
 
+	const { sdk } = useSDK()
+
 	const [doesMeetAllRequirements, setDoesMeetAllRequirements] =
 		useState(false)
+
+	const [isLaunching, setIsLaunching] = useState(false)
+
+	const [chosenExtensions, setChosenExtensions] = useState<string[]>([])
+
+	const launchCommunity = async () => {
+		setIsLaunching(true)
+
+		try {
+			const agreementId = agreement && agreement.id ? agreement.id : ''
+			for (const ext of chosenExtensions) {
+				log.debug(`enabling extension by id ${ext}`)
+				await sdk.agreementExtension.createAgreementExtension({
+					agreementId,
+					extensionId: ext,
+					isInitialized: true
+				})
+			}
+			log.debug(`launching agreement...`)
+			await sdk.agreement.updateAgreement({
+				isLaunched: true,
+				agreementId
+			})
+		} catch (e) {
+			log.debug(e)
+			setIsLaunching(false)
+			showErrorNotification(
+				'Oops!',
+				'Unable to launch this community. Please let us know!'
+			)
+		}
+	}
 
 	return (
 		<>
@@ -89,7 +126,14 @@ export const AgreementHome: React.FC = () => {
 								<Space h={24} />
 
 								<Center>
-									<Button className={meemTheme.buttonBlack}>
+									<Button
+										className={meemTheme.buttonBlack}
+										loading={isLaunching}
+										disabled={isLaunching}
+										onClick={() => {
+											launchCommunity()
+										}}
+									>
 										Launch
 									</Button>
 								</Center>
@@ -125,11 +169,17 @@ export const AgreementHome: React.FC = () => {
 										/>
 									)}
 
-									{agreement.slug !== 'meem' && (
-										<AgreementBlankSlateWidget
-											agreement={agreement}
-										/>
-									)}
+									{agreement.slug !== 'meem' &&
+										!agreement.isLaunched && (
+											<AgreementBlankSlateWidget
+												onChosenExtensionsChanged={extensions => {
+													setChosenExtensions(
+														extensions
+													)
+												}}
+												agreement={agreement}
+											/>
+										)}
 
 									{agreement.extensions &&
 										agreement.extensions
@@ -162,9 +212,13 @@ export const AgreementHome: React.FC = () => {
 									<AgreementExtensionLinksWidget
 										agreement={agreement}
 									/>
-									<AgreementAddAppsWidget
-										agreement={agreement}
-									/>
+									{agreement.isLaunched && (
+										<>
+											<AgreementAddMoreExtensionsWidget
+												agreement={agreement}
+											/>
+										</>
+									)}
 
 									<Space h={64} />
 								</div>

@@ -346,7 +346,7 @@ export const DiscussionSettings: React.FC = () => {
 								<Button
 									disabled={isDisablingExtension}
 									loading={isDisablingExtension}
-									className={meemTheme.buttonBlue}
+									className={meemTheme.buttonAsh}
 									onClick={disableExtension}
 								>
 									Disable extension

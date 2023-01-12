@@ -84,7 +84,10 @@ export const MyAgreementsComponent: React.FC = () => {
 	const agreements: Agreement[] = []
 
 	agreementData?.Agreements.forEach(agr => {
-		const possibleAgreement = agreementSummaryFromDb(agr)
+		const possibleAgreement = agreementSummaryFromDb(
+			agr,
+			wallet.accounts[0]
+		)
 
 		if (possibleAgreement.name) {
 			const alreadyAdded =
@@ -212,6 +215,31 @@ export const MyAgreementsComponent: React.FC = () => {
 												>
 													{agreement.members?.length}
 												</Badge>
+												{!agreement.isLaunched &&
+													agreement.isCurrentUserAgreementAdmin && (
+														<>
+															<Space w={8} />
+															<Badge
+																gradient={{
+																	from: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	to: isDarkTheme
+																		? colorDarkerGrey
+																		: '#DCDCDC',
+																	deg: 35
+																}}
+																classNames={{
+																	inner: meemTheme.tBadgeText
+																}}
+																variant={
+																	'gradient'
+																}
+															>
+																Draft
+															</Badge>
+														</>
+													)}
 											</div>
 										</div>
 									</div>

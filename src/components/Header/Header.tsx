@@ -134,6 +134,7 @@ export function HeaderMenu() {
 				<div className={meemTheme.siteHeaderRightItems}>
 					{walletType === 'magic' && (
 						<Button
+							className={meemTheme.buttonAsh}
 							onClick={() => {
 								magic?.connect.showWallet()
 							}}
