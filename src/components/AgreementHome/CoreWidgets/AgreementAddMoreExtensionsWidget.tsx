@@ -23,13 +23,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 				<>
 					{agreement.isCurrentUserAgreementAdmin && (
 						<>
-							<Center>
-								<Text className={meemTheme.tSmall}>
-									{`There's nothing for your community members to do yet. Add your first extension to enable your members to talk, organize events and much more.`}
-								</Text>
-							</Center>
-
-							<Space h={24} />
+							<Space h={32} />
 
 							<Center>
 								<Button

@@ -26,10 +26,21 @@ export const AgreementHome: React.FC = () => {
 
 	const [isLaunching, setIsLaunching] = useState(false)
 
+	const [chosenExtensions, setChosenExtensions] = useState<string[]>([])
+
 	const launchCommunity = async () => {
 		setIsLaunching(true)
 
 		try {
+			for (const ext of chosenExtensions) {
+				log.debug(`enabling extension by id ${ext}`)
+				await sdk.agreementExtension.createAgreementExtension({
+					agreementId: agreement?.id ?? '',
+					extensionId: ext,
+					isInitialized: true
+				})
+			}
+			log.debug(`launching agreement...`)
 			await sdk.agreement.updateAgreement({
 				isLaunched: true,
 				agreementId: agreement ? agreement?.id : ''
@@ -160,6 +171,11 @@ export const AgreementHome: React.FC = () => {
 									{agreement.slug !== 'meem' &&
 										!agreement.isLaunched && (
 											<AgreementBlankSlateWidget
+												onChosenExtensionsChanged={extensions => {
+													setChosenExtensions(
+														extensions
+													)
+												}}
 												agreement={agreement}
 											/>
 										)}
