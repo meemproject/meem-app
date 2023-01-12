@@ -32,10 +32,11 @@ export const AgreementHome: React.FC = () => {
 		setIsLaunching(true)
 
 		try {
+			const agreementId = agreement && agreement.id ? agreement.id : ''
 			for (const ext of chosenExtensions) {
 				log.debug(`enabling extension by id ${ext}`)
 				await sdk.agreementExtension.createAgreementExtension({
-					agreementId: agreement?.id ?? '',
+					agreementId,
 					extensionId: ext,
 					isInitialized: true
 				})
@@ -43,7 +44,7 @@ export const AgreementHome: React.FC = () => {
 			log.debug(`launching agreement...`)
 			await sdk.agreement.updateAgreement({
 				isLaunched: true,
-				agreementId: agreement ? agreement?.id : ''
+				agreementId
 			})
 		} catch (e) {
 			log.debug(e)
