@@ -39,16 +39,23 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 	const isSettingsPage =
 		(window && window.location.pathname.includes('settings')) ?? false
 
+	// Hide the back arrow for extensions with no widgets - presumably they
+	// have no homepage either (i.e. are link extensions)
+	const hasNoWidget =
+		agreement &&
+		agreementExtension &&
+		agreementExtension.AgreementExtensionWidgets.length === 0
+
 	return (
 		<>
 			<div className={meemTheme.pageHeader}>
 				<div className={meemTheme.spacedRowCentered}>
-					{(isSettingsPage || isSubPage) && (
+					{!hasNoWidget && (isSettingsPage || isSubPage) && (
 						<>
 							<a
 								onClick={() => {
 									router.push({
-										pathname: `/${agreement?.slug}/e/discussions`
+										pathname: `/${agreement?.slug}/e/${extensionSlug}`
 									})
 								}}
 							>
@@ -61,13 +68,17 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 						</>
 					)}
 
-					<Image
-						radius={8}
-						height={80}
-						width={80}
-						className={meemTheme.imagePixelated}
-						src={agreement?.image}
-					/>
+					{agreement?.image && (
+						<>
+							<Image
+								radius={8}
+								height={80}
+								width={80}
+								src={agreement?.image}
+							/>
+							<Space w={24} />
+						</>
+					)}
 					{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
 					<div className={meemTheme.pageHeaderTitleContainer}>
 						<Text className={meemTheme.tLargeBold}>
