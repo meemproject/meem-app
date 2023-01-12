@@ -10,7 +10,12 @@ import {
 	Divider
 } from '@mantine/core'
 import { cleanNotifications } from '@mantine/notifications'
-import { LoginState, useSDK, useWallet } from '@meemproject/react'
+import {
+	LoginState,
+	useMeemApollo,
+	useSDK,
+	useWallet
+} from '@meemproject/react'
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
@@ -43,6 +48,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	const wallet = useWallet()
 	const { sdk } = useSDK()
 
+	const { anonClient } = useMeemApollo()
+
 	const [isJoiningAgreement, setIsJoiningAgreement] = useState(false)
 	const [isLeavingAgreement, setIsLeavingAgreement] = useState(false)
 
@@ -51,7 +58,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		{
 			variables: {
 				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
-			}
+			},
+			client: anonClient
 		}
 	)
 
@@ -231,7 +239,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			const agreementContract = new Contract(
 				agreement?.address ?? '',
 				bundleData?.Bundles[0].abi,
-				wallet.signer
+				wallet.web3Provider.getSigner()
 			)
 			if (agreement && agreement.membershipToken) {
 				const tx = await agreementContract?.burn(
