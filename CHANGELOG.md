@@ -1,3 +1,25 @@
+# [1.10.0](https://github.com/meemproject/clubs-web/compare/v1.9.1...v1.10.0) (2023-01-12)
+
+
+### Bug Fixes
+
+* button colors on discussion widget ([bb4824e](https://github.com/meemproject/clubs-web/commit/bb4824e))
+* Hide the back arrow on settings if the extension has no widget + redirect to /guild/settings when necessary ([fb9bc2a](https://github.com/meemproject/clubs-web/commit/fb9bc2a))
+* Sort models alphabetically ([a5ed818](https://github.com/meemproject/clubs-web/commit/a5ed818))
+* UI tweaks to progress / creation modals ([6937dad](https://github.com/meemproject/clubs-web/commit/6937dad))
+
+
+### Features
+
+* Add 'isLaunched' property and use it to conditionally show onboarding-related UI ([bbe2914](https://github.com/meemproject/clubs-web/commit/bbe2914))
+* basic sort/search ([cd3d358](https://github.com/meemproject/clubs-web/commit/cd3d358))
+* choose extensions to enable when onboarding ([c37e6fe](https://github.com/meemproject/clubs-web/commit/c37e6fe))
+* implement isLaunched and the 'launch' api request ([ce4d391](https://github.com/meemproject/clubs-web/commit/ce4d391))
+* link extensions settings now includes url field, plus general ext. related bug fixes ([25b0e1a](https://github.com/meemproject/clubs-web/commit/25b0e1a))
+* magic link support ([3490787](https://github.com/meemproject/clubs-web/commit/3490787))
+* New community creation flow ([3747815](https://github.com/meemproject/clubs-web/commit/3747815))
+* Show community create widget when you're a member of the meem community ([67af651](https://github.com/meemproject/clubs-web/commit/67af651))
+
 ## [1.9.1](https://github.com/meemproject/clubs-web/compare/v1.9.0...v1.9.1) (2023-01-06)
 
 # [1.9.0](https://github.com/meemproject/clubs-web/compare/v1.8.1...v1.9.0) (2023-01-06)
