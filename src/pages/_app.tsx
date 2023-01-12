@@ -10,7 +10,7 @@ import { NotificationsProvider } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import React, { useEffect } from 'react'
-import { App } from '../components/App'
+import { App, hostnameToChainId } from '../components/App'
 import '@fontsource/inter'
 // import { CustomApolloProvider } from '../providers/ApolloProvider'
 
@@ -47,6 +47,16 @@ function MyApp(props: AppProps) {
 	})
 	const toggleColorScheme = (value?: ColorScheme) =>
 		setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
+
+	let chainId
+
+	if (process.env.NEXT_PUBLIC_CHAIN_ID) {
+		chainId = +process.env.NEXT_PUBLIC_CHAIN_ID
+	} else if (typeof window !== 'undefined') {
+		chainId = hostnameToChainId(window.location.hostname)
+	} else {
+		chainId = 5
+	}
 
 	return (
 		<ColorSchemeProvider
@@ -85,7 +95,10 @@ function MyApp(props: AppProps) {
 					primaryColor: 'brand'
 				}}
 			>
-				<MeemProvider>
+				<MeemProvider
+					chainId={chainId}
+					magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
+				>
 					<NotificationsProvider>
 						<App>
 							<Component {...pageProps} />
