@@ -92,7 +92,10 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 									</Center>
 									<Space h={12} />
 									<Center>
-										<Text className={meemTheme.tSmallBold}>
+										<Text
+											className={meemTheme.tSmallBold}
+											color={'black'}
+										>
 											{extension.name}
 										</Text>
 									</Center>
@@ -100,6 +103,7 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 									<Center>
 										<Text
 											className={meemTheme.tExtraSmall}
+											color={'black'}
 											style={{
 												display: '-webkit-box',
 												WebkitLineClamp: '3',
