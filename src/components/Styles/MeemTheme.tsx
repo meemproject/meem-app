@@ -12,12 +12,15 @@ export const colorLightGrey = '#F2F2F2'
 export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
 export const colorBlue = '#9ED3FD'
+export const colorBlueHover = '#82c5fc'
 export const colorLightBlue = '#f3faff'
 export const colorDarkBlue = '#6895f7'
 export const colorYellow = '#F9FF15'
 export const colorDarkYellow = '#e0e810'
+export const colorDarkerYellow = '#4d4f08'
 export const colorRed = '#FF6651'
 export const colorAsh = '#BFCDD8'
+export const colorAshHover = '#b0c1cf'
 export const colorAshLight = '#F4F7F8'
 
 // Utility colors
@@ -33,12 +36,24 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorDarkGrey
 		},
+		'&:loading': {
+			backgroundColor: colorDarkGrey
+		},
+		'&:disabled': {
+			backgroundColor: colorDarkGrey
+		},
 		borderRadius: 24
 	},
 	buttonAsh: {
 		backgroundColor: colorAsh,
 		'&:hover': {
-			backgroundColor: colorAshLight
+			backgroundColor: colorAshHover
+		},
+		'&:loading': {
+			backgroundColor: colorAshHover
+		},
+		'&:disabled': {
+			backgroundColor: colorAshHover
 		},
 		color: colorBlack,
 		borderRadius: 24
@@ -49,12 +64,24 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorLightGrey
 		},
+		'&:loading': {
+			backgroundColor: colorLightGrey
+		},
+		'&:disabled': {
+			backgroundColor: colorLightGrey
+		},
 		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
 		borderRadius: 24
 	},
 	buttonDarkGrey: {
 		backgroundColor: colorDarkGrey,
 		'&:hover': {
+			backgroundColor: colorDarkerGrey
+		},
+		'&:loading': {
+			backgroundColor: colorDarkerGrey
+		},
+		'&:disabled': {
 			backgroundColor: colorDarkerGrey
 		},
 		color: colorWhite,
@@ -64,7 +91,13 @@ export const useMeemTheme = createStyles(theme => ({
 		color: colorBlack,
 		backgroundColor: colorBlue,
 		'&:hover': {
-			backgroundColor: colorDarkBlue
+			backgroundColor: colorBlueHover
+		},
+		'&:loading': {
+			backgroundColor: colorBlueHover
+		},
+		'&:disabled': {
+			backgroundColor: colorBlueHover
 		},
 		borderRadius: 24
 	},
@@ -74,12 +107,24 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorDarkYellow
 		},
+		'&:loading': {
+			backgroundColor: colorDarkYellow
+		},
+		'&:disabled': {
+			backgroundColor: colorDarkYellow
+		},
 		borderRadius: 24
 	},
 	buttonYellowBordered: {
 		color: colorYellow,
 		backgroundColor: 'transparent',
 		'&:hover': {
+			backgroundColor: colorDarkerGrey
+		},
+		'&:loading': {
+			backgroundColor: colorDarkerGrey
+		},
+		'&:disabled': {
 			backgroundColor: colorDarkerGrey
 		},
 		border: `2px solid ${colorYellow}`,
@@ -91,6 +136,12 @@ export const useMeemTheme = createStyles(theme => ({
 		borderColor: colorBlack,
 		backgroundColor: colorWhite,
 		'&:hover': {
+			backgroundColor: colorLightGrey
+		},
+		'&:loading': {
+			backgroundColor: colorLightGrey
+		},
+		'&:disabled': {
 			backgroundColor: colorLightGrey
 		}
 	},
@@ -415,7 +466,7 @@ export const useMeemTheme = createStyles(theme => ({
 	pageResponsiveContainer: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 64,
+		marginTop: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			flexDirection: 'column',
 			marginTop: 0

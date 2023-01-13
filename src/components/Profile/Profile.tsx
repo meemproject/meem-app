@@ -137,6 +137,7 @@ export const ProfileComponent: React.FC = () => {
 											user.profilePicUrl
 										)}
 									/>
+									<Space w={24} />
 								</>
 							)}
 
