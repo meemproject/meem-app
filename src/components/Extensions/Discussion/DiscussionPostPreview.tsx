@@ -273,9 +273,11 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 											}
 										>
 											{post.displayName ??
-												quickTruncate(
-													post.walletAddress
-												)}
+											post.walletAddress
+												? quickTruncate(
+														post.walletAddress
+												  )
+												: `Community Member`}
 										</Text>
 										<Text
 											className={

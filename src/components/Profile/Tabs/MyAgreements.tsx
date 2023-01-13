@@ -25,7 +25,9 @@ import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
 	colorBlack,
 	colorDarkerGrey,
+	colorDarkerYellow,
 	colorWhite,
+	colorYellow,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 
@@ -222,11 +224,11 @@ export const MyAgreementsComponent: React.FC = () => {
 															<Badge
 																gradient={{
 																	from: isDarkTheme
-																		? colorDarkerGrey
-																		: '#DCDCDC',
+																		? colorDarkerYellow
+																		: colorYellow,
 																	to: isDarkTheme
-																		? colorDarkerGrey
-																		: '#DCDCDC',
+																		? colorDarkerYellow
+																		: colorYellow,
 																	deg: 35
 																}}
 																classNames={{
