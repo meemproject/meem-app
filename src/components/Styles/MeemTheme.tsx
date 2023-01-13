@@ -466,7 +466,7 @@ export const useMeemTheme = createStyles(theme => ({
 	pageResponsiveContainer: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 64,
+		marginTop: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			flexDirection: 'column',
 			marginTop: 0
