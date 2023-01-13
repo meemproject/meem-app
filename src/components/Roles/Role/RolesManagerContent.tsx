@@ -17,7 +17,6 @@ import {
 import { useMeemApollo } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
 import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
-import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/agreements'
 import {
 	Agreement,
 	AgreementMember,
@@ -68,43 +67,39 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
 		useState(false)
 
-	const { data: availablePermissions, error } =
-		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS, {
-			client: anonClient
-		})
+	// const { data: availablePermissions, error } =
+	// 	useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS, {
+	// 		client: anonClient
+	// 	})
 
 	// Set initial role + parse permissions (updated later when changes are made in subcomponents)
 	useEffect(() => {
-		if (error) {
-			log.debug(JSON.stringify(error))
-		}
+		// if (error) {
+		// 	log.debug(JSON.stringify(error))
+		// }
 
-		// Only do this once!
-		async function parsePermissions(
-			theRole: AgreementRole,
-			allPermissions: GetAvailablePermissionQuery
-		) {
-			setHasParsedPermissions(true)
+		async function setUpRole(theRole: AgreementRole) {
 			const permissionedRole = theRole
 
 			// This is a new role, set default permissions
 			if (permissionedRole.id === 'addRole') {
 				setIsExistingRole(false)
 
-				const convertedPermissions: AgreementRolePermission[] = []
-				if (allPermissions.RolePermissions) {
-					allPermissions.RolePermissions.forEach(permission => {
-						const convertedPermission: AgreementRolePermission = {
-							id: permission.id,
-							description: permission.description,
-							name: permission.name,
-							enabled: false,
-							locked: permission.id.includes('admin')
-						}
-						convertedPermissions.push(convertedPermission)
-					})
-				}
-				permissionedRole.permissions = convertedPermissions
+				// Update Jan 13 2023 - we don't use permissions here
+				// const convertedPermissions: AgreementRolePermission[] = []
+				// if (allPermissions.RolePermissions) {
+				// 	allPermissions.RolePermissions.forEach(permission => {
+				// 		const convertedPermission: AgreementRolePermission = {
+				// 			id: permission.id,
+				// 			description: permission.description,
+				// 			name: permission.name,
+				// 			enabled: false,
+				// 			locked: permission.id.includes('admin')
+				// 		}
+				// 		convertedPermissions.push(convertedPermission)
+				// 	})
+				// }
+				// permissionedRole.permissions = convertedPermissions
 				setRoleMembers([])
 			} else {
 				// This is an existing role, determine what permissions are enabled
@@ -112,33 +107,34 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				// them with the avilable permissions
 				setIsExistingRole(true)
 
-				const convertedPermissions: AgreementRolePermission[] = []
-				if (allPermissions.RolePermissions) {
-					allPermissions.RolePermissions.forEach(permission => {
-						let isPermissionEnabled = false
-						if (agreement && agreement.roles) {
-							agreement.roles.forEach(agreementRole => {
-								if (agreementRole.id === theRole.id) {
-									agreementRole.permissions.forEach(rp => {
-										if (rp.id === permission.id) {
-											isPermissionEnabled = true
-										}
-									})
-								}
-							})
-						}
+				// Update Jan 13 2023 - we don't use permissions here
+				// const convertedPermissions: AgreementRolePermission[] = []
+				// if (allPermissions.RolePermissions) {
+				// 	allPermissions.RolePermissions.forEach(permission => {
+				// 		let isPermissionEnabled = false
+				// 		if (agreement && agreement.roles) {
+				// 			agreement.roles.forEach(agreementRole => {
+				// 				if (agreementRole.id === theRole.id) {
+				// 					agreementRole.permissions.forEach(rp => {
+				// 						if (rp.id === permission.id) {
+				// 							isPermissionEnabled = true
+				// 						}
+				// 					})
+				// 				}
+				// 			})
+				// 		}
 
-						const convertedPermission: AgreementRolePermission = {
-							id: permission.id,
-							description: permission.description,
-							name: permission.name,
-							enabled: isPermissionEnabled,
-							locked: permission.id.includes('admin')
-						}
-						convertedPermissions.push(convertedPermission)
-					})
-				}
-				permissionedRole.permissions = convertedPermissions
+				// 		const convertedPermission: AgreementRolePermission = {
+				// 			id: permission.id,
+				// 			description: permission.description,
+				// 			name: permission.name,
+				// 			enabled: isPermissionEnabled,
+				// 			locked: permission.id.includes('admin')
+				// 		}
+				// 		convertedPermissions.push(convertedPermission)
+				// 	})
+				// }
+				// permissionedRole.permissions = convertedPermissions
 			}
 
 			// Role name
@@ -154,9 +150,6 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 				// The role members list before any potential changes
 				setOriginalRoleMembers(initialRoleMembers)
-				log.debug(
-					`role ${theRole?.name} has ${initialRoleMembers.length} members`
-				)
 			}
 
 			// The role name before any potential changes
@@ -168,28 +161,15 @@ export const RolesManagerContent: React.FC<IProps> = ({
 			// Stop loading
 			setIsLoadingPermissons(false)
 		}
-		if (
-			initialRole &&
-			!role &&
-			availablePermissions &&
-			!hasParsedPermissions
-		) {
-			parsePermissions(initialRole, availablePermissions)
+		if (initialRole && !role && !hasParsedPermissions) {
+			setUpRole(initialRole)
 		}
 
 		// Set 'token transferrable' setting
 		if (role?.isTransferrable) {
 			setIsTokenTransferrable('transferrable')
 		}
-	}, [
-		availablePermissions,
-		originalRoleName,
-		agreement,
-		error,
-		initialRole,
-		role,
-		hasParsedPermissions
-	])
+	}, [originalRoleName, agreement, initialRole, role, hasParsedPermissions])
 
 	const updateRole = (newRole: AgreementRole) => {
 		setRole(newRole)
