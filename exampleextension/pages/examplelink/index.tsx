@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { AgreementProvider } from '../../../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../../../components/App'
-import { ExampleLinkExtensionSettings } from '../../../../components/Extensions/ExampleLink/ExampleLinkExtensionSettings'
+import { ExampleExtensionSettings } from '../../../../components/Extensions/Example/ExampleExtensionSettings'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
@@ -36,14 +36,14 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 				<title>
 					{agreement === undefined || agreement.isError
 						? 'Not found'
-						: `${agreement.responseBody.Agreements[0].name} | Example Link Extension Settings | Meem`}
+						: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`}
 				</title>
 				<meta
 					name="title"
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Example Link Extension Settings | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`
 					}
 				/>
 				<meta name="description" content={agreement.description} />
@@ -54,7 +54,7 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Example Link Extension Settings | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -68,7 +68,7 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Example Link Extension Settings | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Example Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -97,7 +97,7 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 			</Head>
 			<HeaderMenu />
 			<AgreementProvider slug={agreementSlug}>
-				<ExampleLinkExtensionSettings />
+				<ExampleExtensionSettings />
 			</AgreementProvider>
 			<Space h={64} />
 			<MeemFooter />
