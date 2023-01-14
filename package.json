@@ -26,7 +26,8 @@
 		"localPackageLink": "echo 'Cleaning up...' && rm -rf node_modules && rm -rf .next && yarn && yarn link @meemproject/metadata @meemproject/sdk @meemproject/react @meemproject/utils @meemproject/meem-contracts",
 		"localPackageUnlink": "echo 'Cleaning up...' && rm -rf node_modules && rm -rf .next && yarn unlink @meemproject/metadata @meemproject/sdk @meemproject/react @meemproject/utils @meemproject/meem-contracts && yarn",
 		"apollo": "apollo",
-		"codegen": "graphql-codegen -r dotenv/config --config codegen.js"
+		"codegen": "graphql-codegen -r dotenv/config --config codegen.js",
+		"createExtension": "./create_extension.sh"
 	},
 	"resolutions": {
 		"graphql": "^15.7.2",

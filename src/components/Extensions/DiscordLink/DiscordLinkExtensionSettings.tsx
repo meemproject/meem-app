@@ -15,11 +15,11 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const TwitterLinkExtensionSettings: React.FC = () => {
+export const DiscordLinkExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('example', agreement)
+	const agreementExtension = extensionFromSlug('discord', agreement)
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
@@ -48,7 +48,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'examplelink'} />
+			<ExtensionBlankSlate extensionSlug={'discordlink'} />
 			{!extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -71,7 +71,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
 							<ExtensionPageHeader
-								extensionSlug={'examplelink'}
+								extensionSlug={'discordlink'}
 							/>
 
 							<Container>

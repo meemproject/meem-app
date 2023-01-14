@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { AgreementProvider } from '../../../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../../../components/App'
-import { ExampleExtensionSettings } from '../../../../components/Extensions/Example/ExampleExtensionSettings'
+import { ExampleLinkExtensionSettings } from '../../../../components/Extensions/ExampleLink/ExampleLinkExtensionSettings'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
@@ -97,7 +97,7 @@ const AgreementExampleExtensionSettingsPage: NextPage<IProps> = ({
 			</Head>
 			<HeaderMenu />
 			<AgreementProvider slug={agreementSlug}>
-				<ExampleExtensionSettings />
+				<ExampleLinkExtensionSettings />
 			</AgreementProvider>
 			<Space h={64} />
 			<MeemFooter />

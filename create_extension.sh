@@ -58,8 +58,14 @@ then
 
     # Rename variables within extension files
     perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleExtensionHome.tsx
+    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleExtensionHome.tsx
+
     perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleExtensionSettings.tsx
+    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleExtensionSettings.tsx
+
     perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleWidget.tsx
+    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleWidget.tsx
+    
     perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/pages/[slug]/e/example/index.tsx
     perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/pages/[slug]/e/example/index.tsx
     perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/pages/[slug]/e/example/settings.tsx
@@ -85,6 +91,10 @@ then
      
     # Rename variables within extension files
     perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/ExampleLink/ExampleLinkExtensionSettings.tsx
+    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/ExampleLink/ExampleLinkExtensionSettings.tsx
+    perl -pi -e "s/ExampleLinkExtensionSettings/${extUpperCamelCase}LinkExtensionSettings/g" $PWD/src/pages/[slug]/e/examplelink/index.tsx
+    perl -pi -e "s/ExampleLink/${extUpperCamelCase}Link/g" $PWD/src/pages/[slug]/e/examplelink/index.tsx
+    perl -pi -e "s/Example Extension Settings/${extensionName} Settings/g" $PWD/src/pages/[slug]/e/examplelink/index.tsx
 
     # Rename directories
     mv $PWD/src/components/Extensions/ExampleLink/ExampleLinkExtensionSettings.tsx $PWD/src/components/Extensions/ExampleLink/${extUpperCamelCase}LinkExtensionSettings.tsx
