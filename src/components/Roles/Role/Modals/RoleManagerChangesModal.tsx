@@ -256,7 +256,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							})
 							await sdk.agreement.bulkMintAgreementRoleTokens({
 								agreementId: agreement?.id ?? '',
-								agreementRoleId: '',
+								agreementRoleId: role.id,
 								tokens: addressesToMint
 							})
 						}
@@ -291,7 +291,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							)
 							await sdk.agreement.bulkBurnAgreementRoleTokens({
 								agreementId: agreement?.id ?? '',
-								agreementRoleId: '',
+								agreementRoleId: role.id,
 								tokenIds: roleTokenIdsToBurn
 							})
 						}
