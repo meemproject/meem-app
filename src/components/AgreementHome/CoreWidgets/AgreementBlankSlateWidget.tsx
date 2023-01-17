@@ -1,11 +1,23 @@
 import { useQuery } from '@apollo/client'
-import { Center, Grid, Loader, Space, Text, Image } from '@mantine/core'
+import {
+	Center,
+	Grid,
+	Loader,
+	Space,
+	Text,
+	Image,
+	useMantineColorScheme
+} from '@mantine/core'
 import { useMeemApollo } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
-import { colorAshLight, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	colorAshLight,
+	colorDarkGrey,
+	useMeemTheme
+} from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 	onChosenExtensionsChanged: (chosenExtensions: string[]) => void
@@ -46,6 +58,9 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 			client: anonClient
 		})
 
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
+
 	return (
 		<div className={meemTheme.widgetLight}>
 			<Text className={meemTheme.tMediumBold}>Add extensions</Text>
@@ -75,7 +90,9 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 									className={meemTheme.gridItemCenteredAsh}
 									style={{
 										height: '150px',
-										backgroundColor: colorAshLight,
+										backgroundColor: isDarkTheme
+											? colorDarkGrey
+											: colorAshLight,
 										boxShadow: 'none',
 										position: 'relative'
 									}}
@@ -85,17 +102,21 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 								>
 									<Center>
 										<Image
-											src={extension.icon}
+											src={`/${
+												isDarkTheme
+													? `${extension.icon?.replace(
+															'.png',
+															'-white.png'
+													  )}`
+													: extension.icon
+											}`}
+											fit={'contain'}
 											height={16}
-											width={16}
 										/>
 									</Center>
 									<Space h={12} />
 									<Center>
-										<Text
-											className={meemTheme.tSmallBold}
-											color={'black'}
-										>
+										<Text className={meemTheme.tSmallBold}>
 											{extension.name}
 										</Text>
 									</Center>
@@ -103,7 +124,6 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 									<Center>
 										<Text
 											className={meemTheme.tExtraSmall}
-											color={'black'}
 											style={{
 												display: '-webkit-box',
 												WebkitLineClamp: '3',

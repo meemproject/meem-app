@@ -7,6 +7,7 @@ import { DateTime } from 'luxon'
 import {
 	AgreementExtensions,
 	AgreementRoles,
+	AgreementRoleTokens,
 	Agreements
 } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
@@ -46,6 +47,7 @@ export interface AgreementRole {
 	name: string
 	rolesExtensionData?: any
 	tokenAddress?: string
+	tokens?: AgreementRoleTokens[]
 }
 
 export function emptyRole(): AgreementRole {
@@ -66,6 +68,7 @@ export interface AgreementMember {
 	isAgreementAdmin?: boolean
 	isAgreementOwner?: boolean
 	isMeemApi?: boolean
+	ownerId?: string
 	profilePicture?: string
 	roles?: AgreementRole[]
 	twitterUsername?: string
@@ -180,6 +183,7 @@ export function rawRolesToAgreementRoles(
 			rolesExtensionData: metadata,
 			tokenAddress: rawRole.address ?? '',
 			isTransferrable: rawRole.Agreement?.isTransferrable ?? false,
+			tokens: rawRole.AgreementRoleTokens,
 			name: rawRole.name
 		}
 		roles.push(agreementRole)
@@ -253,7 +257,8 @@ export function agreementSummaryFromDb(
 						if (!hasAlreadyBeenAdded) {
 							members.push({
 								wallet: agreementToken.Wallet.address,
-								ens: agreementToken.Wallet.ens ?? undefined
+								ens: agreementToken.Wallet.ens ?? undefined,
+								ownerId: agreementToken.OwnerId
 							})
 							const isCurrentUser =
 								walletAddress &&
@@ -500,8 +505,10 @@ export default async function agreementFromDb(
 									agreementData.AgreementRoleTokens.forEach(
 										roleToken => {
 											if (
+												roleToken.AgreementRoleId ===
+													role.id &&
 												roleToken.OwnerId ===
-												agreementToken.Wallet?.id
+													agreementToken.OwnerId
 											) {
 												memberHasRole = true
 											}
@@ -545,6 +552,7 @@ export default async function agreementFromDb(
 											memberIdentity?.profilePicUrl
 									  )
 									: '',
+								ownerId: agreementToken.OwnerId,
 								twitterUsername,
 								discordUsername,
 								discordUserId,
@@ -595,9 +603,9 @@ export default async function agreementFromDb(
 			}
 		})
 
-		// memberRolesMap.forEach((value, key) => {
-		// 	log.debug(`members for role ${key} = ${JSON.stringify(value)}`)
-		// })
+		memberRolesMap.forEach((value, key) => {
+			log.debug(`members for role ${key} = ${value.length}`)
+		})
 
 		let membershipStartDate: Date | undefined
 		let membershipEndDate: Date | undefined
