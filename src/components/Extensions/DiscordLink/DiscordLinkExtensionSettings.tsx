@@ -34,15 +34,25 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 		useState(true)
 
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
-	const [isLinkUrlSetup, setIsLinkUrlSetup] = useState(false)
+	const [isExistingDataSetup, setIsExistingDataSetup] = useState(false)
 	const [linkUrl, setLinkUrl] = useState('')
 
 	useEffect(() => {
-		if (!isLinkUrlSetup && agreementExtension) {
-			setIsLinkUrlSetup(true)
+		if (!isExistingDataSetup && agreementExtension) {
+			setIsExistingDataSetup(true)
 			setLinkUrl(agreementExtension.AgreementExtensionLinks[0].url)
+			setShouldDisplayInSidebar(
+				agreementExtension.metadata.sidebarVisible
+			)
+			setShouldDisplayInFavoriteLinks(
+				agreementExtension.metadata.favoriteLinksVisible
+			)
+			setIsPrivateExtension(
+				agreementExtension.AgreementExtensionLinks[0].visibility ===
+					MeemAPI.AgreementExtensionVisibility.TokenHolders
+			)
 		}
-	}, [agreementExtension, isLinkUrlSetup])
+	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
 		if (

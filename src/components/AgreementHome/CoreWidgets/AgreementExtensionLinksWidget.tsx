@@ -58,14 +58,14 @@ export const AgreementExtensionLinksWidget: React.FC<IProps> = ({
 
 	return (
 		<>
-			{/* TODO: show all links, not just the first one... */}
 			{agreement.extensions && agreement.extensions.length > 0 && (
 				<Grid>
 					{agreement.extensions
 						.filter(
 							ext =>
 								ext.AgreementExtensionLinks[0] &&
-								ext.AgreementExtensionLinks[0].url
+								ext.AgreementExtensionLinks[0].url &&
+								ext.metadata.favoriteLinksVisible
 						)
 						.map(extension => (
 							<Grid.Col
