@@ -245,14 +245,20 @@ export const AgreementHome: React.FC = () => {
 							<div className={meemTheme.communityLaunchHeader}>
 								<Space h={40} />
 								<Center>
-									<Text className={meemTheme.tMediumBold}>
+									<Text
+										className={meemTheme.tMediumBold}
+										color={'black'}
+									>
 										Customize your community
 									</Text>
 								</Center>
 								<Space h={8} />
 
 								<Center>
-									<Text className={meemTheme.tMedium}>
+									<Text
+										className={meemTheme.tMedium}
+										color={'black'}
+									>
 										Add details, connect tools and tweak
 										settings to build out your member
 										experience.
