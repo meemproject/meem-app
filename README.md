@@ -1,10 +1,10 @@
-## The Clubs Web App
+## The Meem Web App
 
-Hello there and welcome! If you're reading this, you've discovered the front end for the [Clubs app](https://clubs.link)! The Clubs app is open source and released under the MIT license. In addition, we have gone to some lengths to make it as extensible as possible.
+Hello there and welcome! If you're reading this, you've discovered the front end for the [Meem app](https://app.meem.wtf)! The Meem app is open source and released under the MIT license. In addition, we have gone to some lengths to make it as extensible as possible.
 
 ### Our stack
 
-The Clubs web app uses the following main external dependencies (among others):
+The Meem web app uses the following main external dependencies (among others):
 
 -   [NextJS](https://nextjs.org/)
 -   [Mantine](https://mantine.dev/) (UI components library)
@@ -15,7 +15,7 @@ The Clubs web app uses the following main external dependencies (among others):
 
 ### Supported chains
 
-The Meem SDK (and Clubs) currently supports the following Ethereum chains:
+The Meem SDK currently supports the following Ethereum chains:
 
 -   Polygon (primary)
 -   Optimism
@@ -36,7 +36,7 @@ The Meem SDK (and Clubs) currently supports the following Ethereum chains:
 
 ### Project structure
 
-The Clubs web app is currently structured as follows:
+The Meem web app is currently structured as follows:
 
 -   The `components` folder contains React Functional Components that make up the contents of Clubs pages.
 -   Within the `components` folder, you'll find distinct subfolders for the `Home`, `ClubHome`, `Admin`, `Roles`, `Profile`, `Create`, `Authenticate`, `Extensions` and other page content.
