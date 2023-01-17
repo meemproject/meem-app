@@ -8,36 +8,68 @@ import {
 	Switch,
 	TextInput
 } from '@mantine/core'
-import React, { useState } from 'react'
+import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
+import React, { useEffect, useState } from 'react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const ExampleLinkExtensionSettings: React.FC = () => {
-	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('example', agreement)
+	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
-	const [shouldDisplayInSidebar, setShouldDisplayInSidebar] = useState(false)
+	const [shouldDisplayInSidebar, setShouldDisplayInSidebar] = useState(true)
 	const [shouldDisplayInFavoriteLinks, setShouldDisplayInFavoriteLinks] =
-		useState(false)
+		useState(true)
 
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
-	const [linkUrl, setAgreementName] = useState('')
+	const [isLinkUrlSetup, setIsLinkUrlSetup] = useState(false)
+	const [linkUrl, setLinkUrl] = useState('')
 
-	/*
-	/*
-	Boilerplate area - please don't edit the below code!
-	===============================================================
-	 */
+	useEffect(() => {
+		if (!isLinkUrlSetup && agreementExtension) {
+			setIsLinkUrlSetup(true)
+			setLinkUrl(agreementExtension.AgreementExtensionLinks[0].url)
+		}
+	}, [agreementExtension, isLinkUrlSetup])
 
 	const saveChanges = async () => {
+		if (
+			linkUrl.length === 0 ||
+			linkUrl.length > 100
+		) {
+			showErrorNotification('Oops!', 'Please enter a valid URL.')
+			return
+		}
+
 		setIsSavingChanges(true)
+		await sdk.sdk.agreementExtension.updateAgreementExtension({
+			agreementId: agreement?.id ?? '',
+			agreementExtensionId: agreementExtension?.id,
+			metadata: {
+				sidebarVisible: shouldDisplayInSidebar,
+				favoriteLinksVisible: shouldDisplayInFavoriteLinks
+			},
+			externalLink: {
+				url: linkUrl,
+				isEnabled: true,
+				visibility: isPrivateExtension
+					? MeemAPI.AgreementExtensionVisibility.TokenHolders
+					: MeemAPI.AgreementExtensionVisibility.Anyone
+			}
+		})
+		showSuccessNotification('Success!', 'This extension has been updated.')
 		setIsSavingChanges(false)
 	}
 
@@ -91,7 +123,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 												value: React.SetStateAction<string>
 											}
 										}) => {
-											setAgreementName(event.target.value)
+											setLinkUrl(event.target.value)
 										}}
 									/>
 									<Space h={40} />

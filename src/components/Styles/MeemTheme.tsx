@@ -619,7 +619,7 @@ export const useMeemTheme = createStyles(theme => ({
 		width: '100%',
 		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		padding: 24,
-		marginBottom: 48,
+		marginBottom: 36,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',

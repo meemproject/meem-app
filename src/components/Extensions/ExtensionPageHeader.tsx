@@ -96,13 +96,18 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 							<Image
 								className={meemTheme.copyIcon}
 								src={`/${agreementExtension?.Extension?.icon}`}
-								height={16}
 								width={16}
 							/>
 							<Space w={8} />
 							<Text className={meemTheme.tMedium}>{`${
 								agreementExtension?.Extension?.name
-							} ${isSettingsPage ? ' Settings' : ''}`}</Text>
+							} ${
+								isSettingsPage
+									? ' Settings'
+									: hasNoWidget
+									? 'Link Settings'
+									: ''
+							}`}</Text>
 						</div>
 					</div>
 				</div>
