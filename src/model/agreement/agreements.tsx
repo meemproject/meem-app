@@ -40,16 +40,10 @@ export interface AgreementRolePermission {
 }
 
 export interface AgreementRole {
-	guildDiscordServerIcon?: string
-	guildDiscordServerId?: string
-	guildDiscordServerName?: string
-	guildRoleId?: string
-	guildRoleName?: string
 	id: string
 	isAdminRole?: boolean
 	isTransferrable?: boolean
 	name: string
-	permissions: AgreementRolePermission[]
 	rolesExtensionData?: any
 	tokenAddress?: string
 }
@@ -59,13 +53,7 @@ export function emptyRole(): AgreementRole {
 		id: 'addRole',
 		isAdminRole: false,
 		name: '',
-		permissions: [],
-		rolesExtensionData: '',
-		guildRoleId: '',
-		guildRoleName: '',
-		guildDiscordServerId: '',
-		guildDiscordServerIcon: '',
-		guildDiscordServerName: ''
+		rolesExtensionData: ''
 	}
 }
 
@@ -91,7 +79,6 @@ export interface Agreement {
 	adminAddresses?: string[]
 	admins?: AgreementMember[]
 	agreementOwner?: AgreementMember
-	currentUserAgreementPermissions?: string[]
 	description?: string
 	extensions?: AgreementExtensions[]
 	gnosisSafeAddress?: string | null
@@ -184,40 +171,8 @@ export function rawRolesToAgreementRoles(
 ): AgreementRole[] {
 	const roles: AgreementRole[] = []
 	agreementRoles.forEach(rawRole => {
-		const permissions: AgreementRolePermission[] = []
-		// if (rawRole.AgreementRolePermissions) {
-		// 	rawRole.AgreementRolePermissions.forEach(rolePermission => {
-		// 		const rp: AgreementRolePermission = {
-		// 			id: rolePermission.RolePermissionId ?? ''
-		// 		}
-		// 		permissions.push(rp)
-		// 	})
-		// }
-
 		// Roles discord extension metadata
 		const metadata = rawRole.metadata
-
-		let guildDiscordServerIcon = ''
-		let guildDiscordServerId = ''
-		let guildDiscordServerName = ''
-		let guildRoleName = ''
-		let guildRoleId = ''
-
-		if (metadata && metadata.length > 0 && metadata[0].discordServerData) {
-			const data = metadata[0].discordServerData
-			guildDiscordServerIcon = data.serverIcon
-			guildDiscordServerId = data.serverId
-			guildDiscordServerName = data.serverName
-
-			if (data.roles && data.roles.length > 0) {
-				data.roles.forEach((role: any) => {
-					if (role.name === rawRole.name) {
-						guildRoleName = role.name
-						guildRoleId = role.id
-					}
-				})
-			}
-		}
 
 		const agreementRole: AgreementRole = {
 			id: rawRole.id,
@@ -225,13 +180,7 @@ export function rawRolesToAgreementRoles(
 			rolesExtensionData: metadata,
 			tokenAddress: rawRole.address ?? '',
 			isTransferrable: rawRole.Agreement?.isTransferrable ?? false,
-			name: rawRole.name,
-			guildDiscordServerIcon,
-			guildDiscordServerId,
-			guildDiscordServerName,
-			guildRoleId,
-			guildRoleName,
-			permissions
+			name: rawRole.name
 		}
 		roles.push(agreementRole)
 	})
@@ -415,7 +364,6 @@ export default async function agreementFromDb(
 
 		// Parse roles
 		let agreementRoles: AgreementRole[] = []
-		const currentUserAgreementPermissions: string[] = []
 		if (agreementData.AgreementRoles) {
 			agreementRoles = rawRolesToAgreementRoles(
 				agreementData.AgreementRoles
@@ -835,7 +783,6 @@ export default async function agreementFromDb(
 			description: agreementData.metadata.description,
 			image: agreementData.metadata.image,
 			roles: agreementRoles,
-			currentUserAgreementPermissions,
 			memberRolesMap,
 			isCurrentUserAgreementMember: isAgreementMember,
 			isAgreementControlledByMeemApi,
