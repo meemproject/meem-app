@@ -21,10 +21,10 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const ExampleLinkExtensionSettings: React.FC = () => {
+export const TwitterLinkExtensionSettings: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('example', agreement)
+	const agreementExtension = extensionFromSlug('twitter', agreement)
 	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -59,10 +59,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (
-			linkUrl.length === 0 ||
-			linkUrl.length > 100
-		) {
+		if (linkUrl.length === 0 || linkUrl.length > 100) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -94,7 +91,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'example'} />
+			<ExtensionBlankSlate extensionSlug={'twitter'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -116,9 +113,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader
-								extensionSlug={'example'}
-							/>
+							<ExtensionPageHeader extensionSlug={'twitter'} />
 
 							<Container>
 								<div>
