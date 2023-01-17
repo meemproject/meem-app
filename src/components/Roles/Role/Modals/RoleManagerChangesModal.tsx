@@ -132,12 +132,12 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					return
 				}
 
-				const permissionsArray: string[] = []
-				role.permissions.forEach(permission => {
-					if (permission.enabled) {
-						permissionsArray.push(permission.id)
-					}
-				})
+				// const permissionsArray: string[] = []
+				// // role.permissions.forEach(permission => {
+				// // 	if (permission.enabled) {
+				// // 		permissionsArray.push(permission.id)
+				// // 	}
+				// // })
 
 				if (isExistingRole) {
 					// Save the updates to the existing role
@@ -256,14 +256,45 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							})
 							await sdk.agreement.bulkMintAgreementRoleTokens({
 								agreementId: agreement?.id ?? '',
-								agreementRoleId: '',
+								agreementRoleId: role.id,
 								tokens: addressesToMint
 							})
 						}
 
-						log.debug(
-							`Burning ${toBurn.length} existing role members`
-						)
+						if (toBurn.length > 0) {
+							log.debug(
+								`Burning ${toBurn.length} existing role members`
+							)
+
+							const roleTokenIdsToBurn: any[] = []
+							toBurn.forEach(member => {
+								let tokenId = ''
+
+								agreement.rawAgreement?.AgreementRoleTokens.forEach(
+									token => {
+										if (
+											token.AgreementRoleId === role.id &&
+											token.OwnerId === member.ownerId
+										) {
+											tokenId = token.OwnerId
+										}
+									}
+								)
+
+								if (tokenId.length > 0) {
+									roleTokenIdsToBurn.push(tokenId)
+								}
+							})
+
+							log.debug(
+								`Found ${roleTokenIdsToBurn.length} matching role token ids to burn`
+							)
+							await sdk.agreement.bulkBurnAgreementRoleTokens({
+								agreementId: agreement?.id ?? '',
+								agreementRoleId: role.id,
+								tokenIds: roleTokenIdsToBurn
+							})
+						}
 
 						log.debug(
 							'All operations complete. Awaiting DB changes...'

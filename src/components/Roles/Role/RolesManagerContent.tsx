@@ -30,7 +30,6 @@ import {
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
-import { RolesManagerPermissions } from './RolesManagerPermissions'
 interface IProps {
 	agreement: Agreement
 	initialRole?: AgreementRole
@@ -245,10 +244,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 								if (event.target.value) {
 									const newRole: AgreementRole = {
 										name: event.target.value,
-										id: role ? role.id : '',
-										permissions: role
-											? role.permissions
-											: []
+										id: role ? role.id : ''
 									}
 									updateRole(newRole)
 								}
@@ -347,31 +343,13 @@ export const RolesManagerContent: React.FC<IProps> = ({
 																role?.name ??
 																'',
 															id: role?.id ?? '',
-															permissions:
-																role?.permissions ??
-																[],
 															isTransferrable:
 																isTokenTransferrable ===
 																'transferrable',
 															isAdminRole:
 																role?.isAdminRole,
 															rolesExtensionData:
-																role?.rolesExtensionData,
-															guildDiscordServerId:
-																role?.guildDiscordServerId ??
-																'',
-															guildDiscordServerIcon:
-																role?.guildDiscordServerIcon ??
-																'',
-															guildDiscordServerName:
-																role?.guildDiscordServerName ??
-																'',
-															guildRoleId:
-																role?.guildRoleId ??
-																'',
-															guildRoleName:
-																role?.guildRoleName ??
-																''
+																role?.rolesExtensionData
 														}
 													updateRole(newRole)
 												}}

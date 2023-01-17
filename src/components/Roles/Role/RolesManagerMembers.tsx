@@ -203,26 +203,22 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 										<AgreementMemberCard member={member} />
 									</HoverCard>
 
-									{!role?.isAdminRole &&
-										!member.isAgreementOwner && (
-											<>
-												<CircleMinus
-													className={
-														meemTheme.clickable
-													}
-													onClick={() => {
-														removeMember(member)
-													}}
-												/>
-											</>
-										)}
-									{(role?.name === 'Token Holder' ||
-										(role?.isAdminRole &&
-											member.isAgreementOwner)) && (
+									{!member.isAgreementOwner && (
 										<>
-											<Lock />
+											<CircleMinus
+												className={meemTheme.clickable}
+												onClick={() => {
+													removeMember(member)
+												}}
+											/>
 										</>
 									)}
+									{role?.isAdminRole &&
+										member.isAgreementOwner && (
+											<>
+												<Lock />
+											</>
+										)}
 								</div>
 								<Space h={16} />
 								<Divider />

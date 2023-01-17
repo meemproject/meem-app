@@ -1,4 +1,11 @@
-import { Image, Text, Space, Grid, Center } from '@mantine/core'
+import {
+	Image,
+	Text,
+	Space,
+	Grid,
+	Center,
+	useMantineColorScheme
+} from '@mantine/core'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Settings } from 'tabler-icons-react'
@@ -18,6 +25,9 @@ export const AgreementExtensionLinksWidget: React.FC<IProps> = ({
 
 	const router = useRouter()
 
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
+
 	const extensionLink = (extension: AgreementExtensions) => (
 		<div className={meemTheme.widgetLight} style={{ position: 'relative' }}>
 			<div
@@ -28,7 +38,14 @@ export const AgreementExtensionLinksWidget: React.FC<IProps> = ({
 			>
 				<Center>
 					<Image
-						src={extension.Extension?.icon}
+						src={`/${
+							isDarkTheme
+								? `${(extension.Extension?.icon ?? '').replace(
+										'.png',
+										'-white.png'
+								  )}`
+								: extension.Extension?.icon
+						}`}
 						fit="contain"
 						width={20}
 					/>
