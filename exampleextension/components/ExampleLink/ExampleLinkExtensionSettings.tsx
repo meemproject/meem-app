@@ -48,8 +48,8 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'examplelink'} />
-			{!extensionIsReady(
+			<ExtensionBlankSlate extensionSlug={'example'} />
+			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
 				agreementExtension
@@ -71,7 +71,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
 							<ExtensionPageHeader
-								extensionSlug={'examplelink'}
+								extensionSlug={'example'}
 							/>
 
 							<Container>

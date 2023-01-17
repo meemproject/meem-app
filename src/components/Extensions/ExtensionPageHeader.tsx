@@ -108,7 +108,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 				</div>
 				<div className={meemTheme.centeredRow}>
 					{!isSettingsPage &&
-						hasNoWidget &&
+						!hasNoWidget &&
 						(agreement?.isCurrentUserAgreementAdmin ||
 							agreement?.isCurrentUserAgreementOwner) && (
 							<Button

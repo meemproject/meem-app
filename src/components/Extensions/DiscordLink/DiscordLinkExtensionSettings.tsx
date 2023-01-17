@@ -48,8 +48,8 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'discordlink'} />
-			{!extensionIsReady(
+			<ExtensionBlankSlate extensionSlug={'discord'} />
+			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
 				agreementExtension
@@ -70,9 +70,7 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader
-								extensionSlug={'discordlink'}
-							/>
+							<ExtensionPageHeader extensionSlug={'discord'} />
 
 							<Container>
 								<div>

@@ -18,7 +18,10 @@ import { MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ExternalLink, Settings } from 'tabler-icons-react'
-import { GetExtensionsQuery } from '../../../../generated/graphql'
+import {
+	AgreementExtensions,
+	GetExtensionsQuery
+} from '../../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { colorGrey, useMeemTheme } from '../../Styles/MeemTheme'
@@ -97,8 +100,20 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		setIsEnablingExtension(false)
 	}
 
-	const navigateToExtensionSettings = (slug: string) => {
-		router.push(`/${agreement.slug}/e/${slug}/settings`)
+	const navigateToExtensionSettings = (extension: AgreementExtensions) => {
+		if (extension.Extension) {
+			if (extension.AgreementExtensionWidgets.length > 0) {
+				router.push(
+					`/${agreement.slug}/e/${
+						extension.Extension?.slug ?? ''
+					}/settings`
+				)
+			} else {
+				router.push(
+					`/${agreement.slug}/e/${extension.Extension?.slug ?? ''}`
+				)
+			}
+		}
 	}
 
 	const navigateToExtensionHome = (slug: string) => {
@@ -233,39 +248,47 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													height: 46
 												}}
 											>
-												<a
-													onClick={() => {
-														navigateToExtensionHome(
-															extension.Extension
-																?.slug ?? ''
-														)
-													}}
-												>
-													<div
-														className={
-															meemTheme.row
-														}
-														style={{
-															cursor: 'pointer',
-															padding: 12
-														}}
-													>
-														<ExternalLink
-															size={20}
-														/>
-														<Space w={4} />
-														<Text
-															className={
-																meemTheme.tExtraSmall
-															}
+												{extension
+													.AgreementExtensionWidgets
+													.length > 0 && (
+													<>
+														<a
+															onClick={() => {
+																navigateToExtensionHome(
+																	extension
+																		.Extension
+																		?.slug ??
+																		''
+																)
+															}}
 														>
-															Homepage
-														</Text>
-													</div>
-												</a>
-												<Space w={4} />
-												<Divider orientation="vertical" />
-												<Space w={4} />
+															<div
+																className={
+																	meemTheme.row
+																}
+																style={{
+																	cursor: 'pointer',
+																	padding: 12
+																}}
+															>
+																<ExternalLink
+																	size={20}
+																/>
+																<Space w={4} />
+																<Text
+																	className={
+																		meemTheme.tExtraSmall
+																	}
+																>
+																	Homepage
+																</Text>
+															</div>
+														</a>
+														<Space w={4} />
+														<Divider orientation="vertical" />
+														<Space w={4} />
+													</>
+												)}
 
 												<a
 													onClick={() => {
@@ -274,8 +297,6 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 														) {
 															navigateToExtensionSettings(
 																extension
-																	.Extension
-																	?.slug ?? ''
 															)
 														}
 													}}
