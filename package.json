@@ -26,7 +26,8 @@
 		"localPackageLink": "echo 'Cleaning up...' && rm -rf node_modules && rm -rf .next && yarn && yarn link @meemproject/metadata @meemproject/sdk @meemproject/react @meemproject/utils @meemproject/meem-contracts",
 		"localPackageUnlink": "echo 'Cleaning up...' && rm -rf node_modules && rm -rf .next && yarn unlink @meemproject/metadata @meemproject/sdk @meemproject/react @meemproject/utils @meemproject/meem-contracts && yarn",
 		"apollo": "apollo",
-		"codegen": "graphql-codegen -r dotenv/config --config codegen.js"
+		"codegen": "graphql-codegen -r dotenv/config --config codegen.js",
+		"createExtension": "./create_extension.sh"
 	},
 	"resolutions": {
 		"graphql": "^15.7.2",
@@ -48,9 +49,9 @@
 		"@mantine/next": "5.8.0",
 		"@mantine/notifications": "5.8.0",
 		"@mantine/tiptap": "^5.8.0",
-		"@meemproject/meem-contracts": "^0.16.0",
-		"@meemproject/react": "^0.16.0",
-		"@meemproject/sdk": "^0.16.0",
+		"@meemproject/meem-contracts": "^0.17.0",
+		"@meemproject/react": "^0.17.0",
+		"@meemproject/sdk": "^0.17.0",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@tableland/sdk": "^3.1.5",
 		"@tabler/icons": "^1.114.0",

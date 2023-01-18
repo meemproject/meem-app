@@ -108,7 +108,7 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 
 			showSuccessNotification(
 				'Success!',
-				`Airdrops sent! The wallets you provided should have access to this agreement in a few minutes.`
+				`Airdrops sent! The wallets you provided should have access to this community in a moment.`
 			)
 			setAirdropAddressesString('')
 			setAirdropAddresses([])

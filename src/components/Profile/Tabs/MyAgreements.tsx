@@ -5,6 +5,7 @@ import {
 	Image,
 	Space,
 	Loader,
+	Button,
 	Center,
 	Grid,
 	Badge,
@@ -25,7 +26,9 @@ import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
 	colorBlack,
 	colorDarkerGrey,
+	colorDarkerYellow,
 	colorWhite,
+	colorYellow,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 
@@ -115,19 +118,18 @@ export const MyAgreementsComponent: React.FC = () => {
 						My Communities
 					</Text>
 					<Space h={32} />
-					<Text className={meemTheme.tMediumBold}>
+					<Text className={meemTheme.tMedium}>
 						{`You haven't joined any communities!`}
 					</Text>
 					<Space h={16} />
-					<Text className={meemTheme.tLink}>
-						<a
-							onClick={() => {
-								setIsCreationModalOpen(true)
-							}}
-						>
-							Start a new one?
-						</a>
-					</Text>
+					<Button
+						className={meemTheme.buttonBlue}
+						onClick={() => {
+							setIsCreationModalOpen(true)
+						}}
+					>
+						Start a new one?
+					</Button>
 				</>
 			)}
 			{agreements.length > 0 && !loading && (
@@ -222,11 +224,11 @@ export const MyAgreementsComponent: React.FC = () => {
 															<Badge
 																gradient={{
 																	from: isDarkTheme
-																		? colorDarkerGrey
-																		: '#DCDCDC',
+																		? colorDarkerYellow
+																		: colorYellow,
 																	to: isDarkTheme
-																		? colorDarkerGrey
-																		: '#DCDCDC',
+																		? colorDarkerYellow
+																		: colorYellow,
 																	deg: 35
 																}}
 																classNames={{

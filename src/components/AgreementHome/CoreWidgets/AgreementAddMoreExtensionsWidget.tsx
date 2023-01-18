@@ -17,46 +17,105 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 
 	return (
 		<div>
-			{agreement.extensions?.filter(
-				ext => ext.AgreementExtensionWidgets.length > 0
-			).length !== 0 && (
+			{agreement.isLaunched && (
 				<>
 					{agreement.isCurrentUserAgreementAdmin && (
 						<>
-							<Space h={32} />
+							{agreement.extensions?.filter(
+								ext => ext.AgreementExtensionWidgets.length > 0
+							).length === 0 && (
+								<div className={meemTheme.widgetMeem}>
+									<Center>
+										<Text
+											className={meemTheme.tLargeBold}
+											style={{ color: 'black' }}
+										>
+											Get started
+										</Text>
+									</Center>
+									<Space h={16} />
+									<Center>
+										<Text
+											className={meemTheme.tSmall}
+											style={{ color: 'black' }}
+										>
+											Your community does not have any
+											extensions yet. Extensions are apps
+											you can add which enable
+											functionality for your community,
+											such as discussions, events and
+											more.
+										</Text>
+									</Center>
+									<Space h={32} />
 
-							<Center>
-								<Button
-									className={meemTheme.buttonGrey}
-									onClick={() => {
-										router.push({
-											pathname: `${agreement.slug}/admin`,
-											query: { tab: 'extensions' }
-										})
-									}}
-								>
-									+ Add an extension
-								</Button>
-							</Center>
-							<Space h={32} />
+									<Center>
+										<Button
+											className={meemTheme.buttonBlue}
+											onClick={() => {
+												router.push({
+													pathname: `${agreement.slug}/admin`,
+													query: { tab: 'extensions' }
+												})
+											}}
+										>
+											+ Add your first extension
+										</Button>
+									</Center>
+									<Space h={8} />
+								</div>
+							)}
+
+							{agreement.extensions &&
+								agreement.extensions?.filter(
+									ext =>
+										ext.AgreementExtensionWidgets.length > 0
+								).length > 0 && (
+									<>
+										<Space h={32} />
+
+										<Center>
+											<Button
+												className={meemTheme.buttonGrey}
+												onClick={() => {
+													router.push({
+														pathname: `${agreement.slug}/admin`,
+														query: {
+															tab: 'extensions'
+														}
+													})
+												}}
+											>
+												+ Add an extension
+											</Button>
+										</Center>
+										<Space h={32} />
+									</>
+								)}
 						</>
 					)}
 
 					{!agreement.isCurrentUserAgreementAdmin && (
-						<div className={meemTheme.widgetLight}>
-							<Center>
-								<Text className={meemTheme.tMediumBold}>
-									Under construction
-								</Text>
-							</Center>
-							<Space h={16} />
-							<Center>
-								<Text className={meemTheme.tSmall}>
-									This community does not have any content
-									yet. Check back later!
-								</Text>
-							</Center>
-						</div>
+						<>
+							{agreement.extensions?.filter(
+								ext => ext.AgreementExtensionWidgets.length > 0
+							).length === 0 && (
+								<div className={meemTheme.widgetLight}>
+									<Center>
+										<Text className={meemTheme.tMediumBold}>
+											Under construction
+										</Text>
+									</Center>
+									<Space h={16} />
+									<Center>
+										<Text className={meemTheme.tSmall}>
+											This community does not have any
+											content yet. Check back later!
+										</Text>
+									</Center>
+								</div>
+							)}
+						</>
 					)}
 				</>
 			)}

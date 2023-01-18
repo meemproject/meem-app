@@ -99,22 +99,21 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					</div>
 					{agreementExtension?.isInitialized && (
 						<div className={meemTheme.centeredRow}>
-							<>
-								<Button
-									className={meemTheme.buttonAsh}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement.slug}/e/discussions/submit`
-										})
-									}}
-								>
-									<Plus />
-								</Button>
-							</>
-							<Space w={8} />
-
 							{posts.length > 0 && (
 								<>
+									<>
+										<Button
+											className={meemTheme.buttonAsh}
+											onClick={() => {
+												router.push({
+													pathname: `/${agreement.slug}/e/discussions/submit`
+												})
+											}}
+										>
+											<Plus />
+										</Button>
+									</>
+									<Space w={8} />
 									<Button
 										className={meemTheme.buttonAsh}
 										onClick={() => {

@@ -458,7 +458,15 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 						</Center>
 						{agreement.extensions &&
 							agreement.extensions?.filter(
-								ext => ext.AgreementExtensionLinks.length > 0
+								ext =>
+									ext.AgreementExtensionLinks.length > 0 &&
+									ext.metadata.sidebarVisible
+							).length > 0 && <Space h={12} />}
+						{agreement.extensions &&
+							agreement.extensions?.filter(
+								ext =>
+									ext.AgreementExtensionLinks.length > 0 &&
+									ext.metadata.sidebarVisible
 							).length > 0 && (
 								<>
 									<Center>
@@ -471,7 +479,9 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 													ext =>
 														ext
 															.AgreementExtensionLinks
-															.length > 0
+															.length > 0 &&
+														ext.metadata
+															.sidebarVisible
 												)
 												.map(extension => (
 													<>
@@ -497,7 +507,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 														>
 															<Image
 																width={20}
-																height={20}
 																src={
 																	extension
 																		.Extension
@@ -509,7 +518,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 												))}
 										</div>
 									</Center>
-									<Space h={16} />
 								</>
 							)}
 

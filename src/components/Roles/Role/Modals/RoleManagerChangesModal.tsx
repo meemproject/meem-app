@@ -30,7 +30,8 @@ interface IProps {
 	isExistingRole?: boolean
 	role?: AgreementRole
 	roleMembers?: AgreementMember[]
-	roleName?: string
+	originalRoleMembers?: AgreementMember[]
+	haveRoleSettingsChanged?: boolean
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -40,9 +41,10 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 	onModalClosed,
 	agreement,
 	role,
-	roleName,
 	isExistingRole,
-	roleMembers
+	haveRoleSettingsChanged,
+	roleMembers,
+	originalRoleMembers
 }) => {
 	const wallet = useWallet()
 
@@ -130,39 +132,173 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					return
 				}
 
-				const permissionsArray: string[] = []
-				role.permissions.forEach(permission => {
-					if (permission.enabled) {
-						permissionsArray.push(permission.id)
-					}
-				})
-
-				const membersArray: string[] = []
-				if (roleMembers && roleMembers.length > 0) {
-					roleMembers.forEach(member => {
-						membersArray.push(member.wallet)
-					})
-				}
+				// const permissionsArray: string[] = []
+				// // role.permissions.forEach(permission => {
+				// // 	if (permission.enabled) {
+				// // 		permissionsArray.push(permission.id)
+				// // 	}
+				// // })
 
 				if (isExistingRole) {
 					// Save the updates to the existing role
 					try {
-						await sdk.agreement.reInitializeAgreementRole({
-							agreementId: agreement?.id ?? '',
-							agreementRoleId: role?.id,
-							name: role.name,
-							metadata: {
-								meem_metadata_type:
-									'Meem_AgreementRoleContract',
-								meem_metadata_version: '20221116',
+						if (haveRoleSettingsChanged) {
+							log.debug(
+								'role settings have been changed, calling reinitialize...'
+							)
+							await sdk.agreement.reInitializeAgreementRole({
+								agreementId: agreement?.id ?? '',
+								agreementRoleId: role?.id,
 								name: role.name,
-								description: '',
-								meem_agreement_address: agreement.address
+								isTransferLocked: role?.isTransferrable,
+								metadata: {
+									meem_metadata_type:
+										'Meem_AgreementRoleContract',
+									meem_metadata_version: '20221116',
+									name: role.name,
+									description: '',
+									meem_agreement_address: agreement.address
+								}
+							})
+						} else {
+							log.debug(
+								'role name not changed, skipping reinitialize...'
+							)
+						}
+
+						// What tokens need to be minted or burned?
+						const toMint: AgreementMember[] = []
+						const toBurn: AgreementMember[] = []
+						log.debug(
+							`modal - original role members = ${originalRoleMembers?.length}`
+						)
+						log.debug(
+							`modal - role members = ${roleMembers?.length}`
+						)
+						if (
+							JSON.stringify(originalRoleMembers) ===
+							JSON.stringify(roleMembers)
+						) {
+							log.debug('the list of members has not changed.')
+							if (!haveRoleSettingsChanged) {
+								// Nothing has actually changed, so just close the modal.
+								showErrorNotification(
+									'Oops!',
+									`You did not make any changes to this role before saving it.`
+								)
+								closeModal()
 							}
-						})
+						} else {
+							log.debug(
+								`roleMembers size = ${roleMembers?.length}`
+							)
+							log.debug(
+								`originalRoleMembers size = ${originalRoleMembers?.length}`
+							)
+							roleMembers?.forEach(member => {
+								// Check to see if original role members includes this member
+								const matchingOriginalRoleMembers =
+									originalRoleMembers?.filter(
+										m => m.wallet === member.wallet
+									)
+
+								// New member added. Add this member to 'toMint'
+								if (
+									matchingOriginalRoleMembers &&
+									matchingOriginalRoleMembers?.length === 0
+								) {
+									log.debug(
+										`new member to mint: ${member.wallet} | ${member.ens} | ${member.displayName}`
+									)
+									toMint.push(member)
+								}
+							})
+
+							originalRoleMembers?.forEach(member => {
+								// Check to see if new role members includes this member
+								const matchingNewRoleMembers =
+									roleMembers?.filter(
+										m => m.wallet === member.wallet
+									)
+
+								// New member to burn. Add this member to 'toBurn'
+								if (
+									matchingNewRoleMembers &&
+									matchingNewRoleMembers?.length === 0
+								) {
+									log.debug(
+										`new member to burn >:D : ${member.wallet} | ${member.ens} | ${member.displayName}`
+									)
+									toBurn.push(member)
+								}
+							})
+						}
+
+						// Minting
+						if (toMint.length > 0) {
+							log.debug(
+								`Minting ${toMint.length} new role members`
+							)
+
+							const addressesToMint: any[] = []
+							toMint.forEach(member => {
+								addressesToMint.push({
+									metadata: {
+										meem_metadata_type:
+											'Meem_AgreementRoleContract',
+										meem_metadata_version: '20221116',
+										name: role.name,
+										description: '',
+										meem_agreement_address:
+											agreement.address
+									},
+									to: member.wallet
+								})
+							})
+							await sdk.agreement.bulkMintAgreementRoleTokens({
+								agreementId: agreement?.id ?? '',
+								agreementRoleId: role.id,
+								tokens: addressesToMint
+							})
+						}
+
+						if (toBurn.length > 0) {
+							log.debug(
+								`Burning ${toBurn.length} existing role members`
+							)
+
+							const roleTokenIdsToBurn: any[] = []
+							toBurn.forEach(member => {
+								let tokenId = ''
+
+								agreement.rawAgreement?.AgreementRoleTokens.forEach(
+									token => {
+										if (
+											token.AgreementRoleId === role.id &&
+											token.OwnerId === member.ownerId
+										) {
+											tokenId = token.OwnerId
+										}
+									}
+								)
+
+								if (tokenId.length > 0) {
+									roleTokenIdsToBurn.push(tokenId)
+								}
+							})
+
+							log.debug(
+								`Found ${roleTokenIdsToBurn.length} matching role token ids to burn`
+							)
+							await sdk.agreement.bulkBurnAgreementRoleTokens({
+								agreementId: agreement?.id ?? '',
+								agreementRoleId: role.id,
+								tokenIds: roleTokenIdsToBurn
+							})
+						}
 
 						log.debug(
-							'ReinitializeAgreementRole complete. Awaiting DB changes...'
+							'All operations complete. Awaiting DB changes...'
 						)
 					} catch (e) {
 						log.debug(e)
@@ -175,6 +311,17 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					}
 				} else {
 					// Create a new role
+
+					const membersArray: string[] = []
+					if (roleMembers && roleMembers.length > 0) {
+						roleMembers.forEach(member => {
+							membersArray.push(member.wallet)
+						})
+					}
+
+					log.debug(
+						`creating new role ${role.name} with ${membersArray.length} members`
+					)
 					try {
 						await sdk.agreement.createAgreementRole({
 							name: role.name,
@@ -182,12 +329,14 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 								meem_metadata_type:
 									'Meem_AgreementRoleContract',
 								meem_metadata_version: '20221116',
-								name: roleName ?? '',
+								name: role.name ?? '',
 								description: '',
 								meem_agreement_address: agreement.address
 							},
+							members: membersArray,
 							maxSupply: '0',
-							agreementId: agreement.id ?? ''
+							agreementId: agreement.id ?? '',
+							shouldMintTokens: true
 						})
 
 						log.debug(
@@ -287,7 +436,6 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		role,
 		isExistingRole,
 		roleMembers,
-		roleName,
 		router,
 		sdk.agreement,
 		hasSubscribedToSockets,
@@ -295,7 +443,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		connect,
 		agreementData,
 		loading,
-		error
+		error,
+		haveRoleSettingsChanged,
+		originalRoleMembers
 	])
 
 	return (

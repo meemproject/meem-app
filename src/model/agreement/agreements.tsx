@@ -7,6 +7,7 @@ import { DateTime } from 'luxon'
 import {
 	AgreementExtensions,
 	AgreementRoles,
+	AgreementRoleTokens,
 	Agreements
 } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
@@ -40,18 +41,13 @@ export interface AgreementRolePermission {
 }
 
 export interface AgreementRole {
-	guildDiscordServerIcon?: string
-	guildDiscordServerId?: string
-	guildDiscordServerName?: string
-	guildRoleId?: string
-	guildRoleName?: string
 	id: string
 	isAdminRole?: boolean
 	isTransferrable?: boolean
 	name: string
-	permissions: AgreementRolePermission[]
 	rolesExtensionData?: any
 	tokenAddress?: string
+	tokens?: AgreementRoleTokens[]
 }
 
 export function emptyRole(): AgreementRole {
@@ -59,13 +55,7 @@ export function emptyRole(): AgreementRole {
 		id: 'addRole',
 		isAdminRole: false,
 		name: '',
-		permissions: [],
-		rolesExtensionData: '',
-		guildRoleId: '',
-		guildRoleName: '',
-		guildDiscordServerId: '',
-		guildDiscordServerIcon: '',
-		guildDiscordServerName: ''
+		rolesExtensionData: ''
 	}
 }
 
@@ -78,6 +68,7 @@ export interface AgreementMember {
 	isAgreementAdmin?: boolean
 	isAgreementOwner?: boolean
 	isMeemApi?: boolean
+	ownerId?: string
 	profilePicture?: string
 	roles?: AgreementRole[]
 	twitterUsername?: string
@@ -91,7 +82,6 @@ export interface Agreement {
 	adminAddresses?: string[]
 	admins?: AgreementMember[]
 	agreementOwner?: AgreementMember
-	currentUserAgreementPermissions?: string[]
 	description?: string
 	extensions?: AgreementExtensions[]
 	gnosisSafeAddress?: string | null
@@ -184,40 +174,8 @@ export function rawRolesToAgreementRoles(
 ): AgreementRole[] {
 	const roles: AgreementRole[] = []
 	agreementRoles.forEach(rawRole => {
-		const permissions: AgreementRolePermission[] = []
-		// if (rawRole.AgreementRolePermissions) {
-		// 	rawRole.AgreementRolePermissions.forEach(rolePermission => {
-		// 		const rp: AgreementRolePermission = {
-		// 			id: rolePermission.RolePermissionId ?? ''
-		// 		}
-		// 		permissions.push(rp)
-		// 	})
-		// }
-
 		// Roles discord extension metadata
 		const metadata = rawRole.metadata
-
-		let guildDiscordServerIcon = ''
-		let guildDiscordServerId = ''
-		let guildDiscordServerName = ''
-		let guildRoleName = ''
-		let guildRoleId = ''
-
-		if (metadata && metadata.length > 0 && metadata[0].discordServerData) {
-			const data = metadata[0].discordServerData
-			guildDiscordServerIcon = data.serverIcon
-			guildDiscordServerId = data.serverId
-			guildDiscordServerName = data.serverName
-
-			if (data.roles && data.roles.length > 0) {
-				data.roles.forEach((role: any) => {
-					if (role.name === rawRole.name) {
-						guildRoleName = role.name
-						guildRoleId = role.id
-					}
-				})
-			}
-		}
 
 		const agreementRole: AgreementRole = {
 			id: rawRole.id,
@@ -225,13 +183,8 @@ export function rawRolesToAgreementRoles(
 			rolesExtensionData: metadata,
 			tokenAddress: rawRole.address ?? '',
 			isTransferrable: rawRole.Agreement?.isTransferrable ?? false,
-			name: rawRole.name,
-			guildDiscordServerIcon,
-			guildDiscordServerId,
-			guildDiscordServerName,
-			guildRoleId,
-			guildRoleName,
-			permissions
+			tokens: rawRole.AgreementRoleTokens,
+			name: rawRole.name
 		}
 		roles.push(agreementRole)
 	})
@@ -304,7 +257,8 @@ export function agreementSummaryFromDb(
 						if (!hasAlreadyBeenAdded) {
 							members.push({
 								wallet: agreementToken.Wallet.address,
-								ens: agreementToken.Wallet.ens ?? undefined
+								ens: agreementToken.Wallet.ens ?? undefined,
+								ownerId: agreementToken.OwnerId
 							})
 							const isCurrentUser =
 								walletAddress &&
@@ -415,7 +369,6 @@ export default async function agreementFromDb(
 
 		// Parse roles
 		let agreementRoles: AgreementRole[] = []
-		const currentUserAgreementPermissions: string[] = []
 		if (agreementData.AgreementRoles) {
 			agreementRoles = rawRolesToAgreementRoles(
 				agreementData.AgreementRoles
@@ -552,8 +505,10 @@ export default async function agreementFromDb(
 									agreementData.AgreementRoleTokens.forEach(
 										roleToken => {
 											if (
+												roleToken.AgreementRoleId ===
+													role.id &&
 												roleToken.OwnerId ===
-												agreementToken.Wallet?.id
+													agreementToken.OwnerId
 											) {
 												memberHasRole = true
 											}
@@ -597,6 +552,7 @@ export default async function agreementFromDb(
 											memberIdentity?.profilePicUrl
 									  )
 									: '',
+								ownerId: agreementToken.OwnerId,
 								twitterUsername,
 								discordUsername,
 								discordUserId,
@@ -647,9 +603,9 @@ export default async function agreementFromDb(
 			}
 		})
 
-		// memberRolesMap.forEach((value, key) => {
-		// 	log.debug(`members for role ${key} = ${JSON.stringify(value)}`)
-		// })
+		memberRolesMap.forEach((value, key) => {
+			log.debug(`members for role ${key} = ${value.length}`)
+		})
 
 		let membershipStartDate: Date | undefined
 		let membershipEndDate: Date | undefined
@@ -835,7 +791,6 @@ export default async function agreementFromDb(
 			description: agreementData.metadata.description,
 			image: agreementData.metadata.image,
 			roles: agreementRoles,
-			currentUserAgreementPermissions,
 			memberRolesMap,
 			isCurrentUserAgreementMember: isAgreementMember,
 			isAgreementControlledByMeemApi,

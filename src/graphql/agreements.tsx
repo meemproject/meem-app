@@ -319,6 +319,7 @@ export const SUB_AGREEMENTS = gql`
 					address
 					ens
 				}
+				OwnerId
 				tokenId
 				tokenURI
 				mintedAt
@@ -377,6 +378,7 @@ export const GET_MEMBERS_FOR_ROLE = gql`
 					Agreement: { AgreementRoles: { id: { _eq: $roleId } } }
 				}
 			) {
+				OwnerId
 				Wallet {
 					address
 					ens
@@ -412,6 +414,7 @@ export const GET_ALL_AGREEMENTS = gql`
 					address
 					ens
 				}
+				OwnerId
 				tokenId
 				tokenURI
 				mintedAt

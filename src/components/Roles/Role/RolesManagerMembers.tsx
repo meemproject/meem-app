@@ -72,12 +72,9 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 					newFiltered.push(member)
 				}
 			})
-			log.debug(
-				`found ${newFiltered.length} entries matching search term ${searchTerm}`
-			)
+
 			setFilteredMembers(newFiltered)
 		} else {
-			log.debug('no search term, resetting to all members')
 			setFilteredMembers(allMembers)
 		}
 	}
@@ -94,6 +91,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		const newMembers = members.filter(memb => memb.wallet !== member.wallet)
 		filterMembers(newMembers, currentSearchTerm)
 		setMembers(newMembers)
+		onMembersUpdated(newMembers)
 	}
 
 	const [isMembersModalOpen, setIsMembersModalOpen] = useState(false)
@@ -205,26 +203,22 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 										<AgreementMemberCard member={member} />
 									</HoverCard>
 
-									{!role?.isAdminRole &&
-										!member.isAgreementOwner && (
-											<>
-												<CircleMinus
-													className={
-														meemTheme.clickable
-													}
-													onClick={() => {
-														removeMember(member)
-													}}
-												/>
-											</>
-										)}
-									{(role?.name === 'Token Holder' ||
-										(role?.isAdminRole &&
-											member.isAgreementOwner)) && (
+									{!member.isAgreementOwner && (
 										<>
-											<Lock />
+											<CircleMinus
+												className={meemTheme.clickable}
+												onClick={() => {
+													removeMember(member)
+												}}
+											/>
 										</>
 									)}
+									{role?.isAdminRole &&
+										member.isAgreementOwner && (
+											<>
+												<Lock />
+											</>
+										)}
 								</div>
 								<Space h={16} />
 								<Divider />
