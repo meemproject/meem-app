@@ -126,7 +126,9 @@ export function HeaderMenu() {
 									? '/meem-logo-white.svg'
 									: '/meem-logo.svg'
 							}
+							fit={'contain'}
 							height={20}
+							width={80}
 						/>
 					</a>
 				</div>

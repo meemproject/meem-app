@@ -31,7 +31,7 @@ interface IProps {
 	role?: AgreementRole
 	roleMembers?: AgreementMember[]
 	originalRoleMembers?: AgreementMember[]
-	hasRoleNameChanged?: boolean
+	haveRoleSettingsChanged?: boolean
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -42,7 +42,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 	agreement,
 	role,
 	isExistingRole,
-	hasRoleNameChanged,
+	haveRoleSettingsChanged,
 	roleMembers,
 	originalRoleMembers
 }) => {
@@ -142,14 +142,15 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				if (isExistingRole) {
 					// Save the updates to the existing role
 					try {
-						if (hasRoleNameChanged) {
+						if (haveRoleSettingsChanged) {
 							log.debug(
-								'role name has been changed, calling reinitialize...'
+								'role settings have been changed, calling reinitialize...'
 							)
 							await sdk.agreement.reInitializeAgreementRole({
 								agreementId: agreement?.id ?? '',
 								agreementRoleId: role?.id,
 								name: role.name,
+								isTransferLocked: role?.isTransferrable,
 								metadata: {
 									meem_metadata_type:
 										'Meem_AgreementRoleContract',
@@ -179,7 +180,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							JSON.stringify(roleMembers)
 						) {
 							log.debug('the list of members has not changed.')
-							if (!hasRoleNameChanged) {
+							if (!haveRoleSettingsChanged) {
 								// Nothing has actually changed, so just close the modal.
 								showErrorNotification(
 									'Oops!',
@@ -442,7 +443,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		agreementData,
 		loading,
 		error,
-		hasRoleNameChanged,
+		haveRoleSettingsChanged,
 		originalRoleMembers
 	])
 
