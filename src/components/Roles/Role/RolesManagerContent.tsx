@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Text,
@@ -10,18 +7,13 @@ import {
 	Image,
 	Tabs,
 	Button,
-	Loader,
-	Center,
 	Radio
 } from '@mantine/core'
-import { useMeemApollo } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
-import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
 import {
 	Agreement,
 	AgreementMember,
-	AgreementRole,
-	AgreementRolePermission
+	AgreementRole
 } from '../../../model/agreement/agreements'
 import {
 	showErrorNotification,

@@ -17,7 +17,7 @@ import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { ExternalLink, Plus, Settings } from 'tabler-icons-react'
+import { ExternalLink, Settings } from 'tabler-icons-react'
 import {
 	AgreementExtensions,
 	GetExtensionsQuery
@@ -310,42 +310,15 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 															padding: 12
 														}}
 													>
-														{extension
-															.AgreementExtensionLinks
-															.length === 0 &&
-															extension
-																.AgreementExtensionWidgets
-																.length ===
-																0 && (
-																<Plus
-																	size={20}
-																/>
-															)}
-														{(extension
-															.AgreementExtensionLinks
-															.length > 0 ||
-															extension
-																.AgreementExtensionWidgets
-																.length >
-																0) && (
-															<Settings
-																size={20}
-															/>
-														)}
+														<Settings size={20} />
+
 														<Space w={4} />
 														<Text
 															className={
 																meemTheme.tExtraSmall
 															}
 														>
-															{extension
-																.AgreementExtensionLinks
-																.length === 0 &&
-															extension
-																.AgreementExtensionWidgets
-																.length === 0
-																? 'Add Link'
-																: 'Settings'}
+															{'Settings'}
 														</Text>
 													</div>
 												</a>
