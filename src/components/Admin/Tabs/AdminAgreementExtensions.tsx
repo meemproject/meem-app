@@ -56,8 +56,23 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		useState(false)
 
 	const filterExtensions = useCallback(
-		(available: Extension[]) => {
+		(all: Extension[]) => {
 			const search = currentSearchTerm
+
+			// Filter out extensions already enabled
+			const available: Extension[] = []
+			all.forEach(ext => {
+				let alreadyEnabled = false
+				agreement?.extensions?.forEach(enabledExt => {
+					if (ext.slug === enabledExt.Extension?.slug) {
+						alreadyEnabled = true
+					}
+				})
+				if (!alreadyEnabled) {
+					available.push(ext)
+				}
+			})
+
 			const filteredExtensions: Extension[] = []
 
 			if (currentSearchTerm.length > 0) {
@@ -71,7 +86,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 				setSearchedExtensions(available)
 			}
 		},
-		[currentSearchTerm]
+		[agreement?.extensions, currentSearchTerm]
 	)
 
 	useEffect(() => {
@@ -97,6 +112,10 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 			extensionId: extension.id,
 			isInitialized: true
 		})
+		// Required to avoid a race condition where the extension has not
+		// yet been enabled on the database
+		await new Promise(f => setTimeout(f, 2000))
+		setHasSetInitialSearchTerm(false)
 		setIsEnablingExtension(false)
 	}
 
@@ -331,87 +350,89 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 						<Space h={32} />
 					</>
 				)}
-				{!loading && availableExtensionsData && (
-					<>
-						<Text
-							className={meemTheme.tMediumBold}
-						>{`Available extensions (${searchedExtensions?.length})`}</Text>
-						<Space h={8} />
+				{!loading &&
+					availableExtensionsData &&
+					searchedExtensions.length > 0 && (
+						<>
+							<Text
+								className={meemTheme.tMediumBold}
+							>{`Available extensions (${searchedExtensions?.length})`}</Text>
+							<Space h={8} />
 
-						<TextInput
-							radius={16}
-							size={'md'}
-							onChange={event => {
-								if (event.target.value) {
-									setCurrentSearchTerm(event.target.value)
-									filterExtensions(
-										availableExtensionsData.Extensions
-									)
-								} else {
-									setSearchedExtensions(
-										availableExtensionsData.Extensions
-									)
-								}
-							}}
-							placeholder="Search Apps"
-						/>
-						<Space h={24} />
-						<Grid>
-							{searchedExtensions.map(extension => (
-								<Grid.Col
-									xs={8}
-									sm={8}
-									md={4}
-									lg={4}
-									xl={4}
-									key={extension.name}
-								>
-									<a
-										onClick={() => {
-											enableExtension(extension)
-										}}
+							<TextInput
+								radius={16}
+								size={'md'}
+								onChange={event => {
+									if (event.target.value) {
+										setCurrentSearchTerm(event.target.value)
+										filterExtensions(
+											availableExtensionsData.Extensions
+										)
+									} else {
+										setSearchedExtensions(
+											availableExtensionsData.Extensions
+										)
+									}
+								}}
+								placeholder="Search Apps"
+							/>
+							<Space h={24} />
+							<Grid>
+								{searchedExtensions.map(extension => (
+									<Grid.Col
+										xs={8}
+										sm={8}
+										md={4}
+										lg={4}
+										xl={4}
+										key={extension.name}
 									>
-										<div
-											className={
-												meemTheme.extensionGridItem
-											}
+										<a
+											onClick={() => {
+												enableExtension(extension)
+											}}
 										>
 											<div
 												className={
-													meemTheme.extensionGridItemHeader
+													meemTheme.extensionGridItem
 												}
 											>
-												<Image
-													src={`/${
-														isDarkTheme
-															? `${extension.icon?.replace(
-																	'.png',
-																	'-white.png'
-															  )}`
-															: extension.icon
-													}`}
-													width={16}
-													height={16}
-													fit={'contain'}
-												/>
-												<Space w={8} />
-												<Text>{`${extension.name}`}</Text>
+												<div
+													className={
+														meemTheme.extensionGridItemHeader
+													}
+												>
+													<Image
+														src={`/${
+															isDarkTheme
+																? `${extension.icon?.replace(
+																		'.png',
+																		'-white.png'
+																  )}`
+																: extension.icon
+														}`}
+														width={16}
+														height={16}
+														fit={'contain'}
+													/>
+													<Space w={8} />
+													<Text>{`${extension.name}`}</Text>
+												</div>
+												<Text
+													className={
+														meemTheme.tExtraSmall
+													}
+													style={{ marginTop: 6 }}
+												>
+													{extension.description}
+												</Text>
 											</div>
-											<Text
-												className={
-													meemTheme.tExtraSmall
-												}
-												style={{ marginTop: 6 }}
-											>
-												{extension.description}
-											</Text>
-										</div>
-									</a>
-								</Grid.Col>
-							))}
-						</Grid>
-					</>
-				)}
+										</a>
+									</Grid.Col>
+								))}
+							</Grid>
+						</>
+					)}
 				{loading && (
 					<>
 						<Loader color="blue" variant="oval" />
