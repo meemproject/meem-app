@@ -257,6 +257,11 @@ export const AgreementHome: React.FC = () => {
 								<Center>
 									<Text
 										className={meemTheme.tMedium}
+										style={{
+											paddingLeft: 16,
+											paddingRight: 16,
+											textAlign: 'center'
+										}}
 										color={'black'}
 									>
 										Add details, connect tools and tweak
