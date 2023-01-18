@@ -1,6 +1,6 @@
 ## The Meem Web App
 
-Hello there and welcome! If you're reading this, you've discovered the front end for the [Meem app](https://app.meem.wtf)! The Meem app is open source and released under the MIT license. In addition, we have gone to some lengths to make it as extensible as possible.
+Hello there and welcome! If you're reading this, you've discovered the front end for the [Meem app](https://app.meem.wtf)! The Meem app is open source and released under the MIT license. In addition, we have gone to some lengths to make it as extensible as possible. You can find full documentation on the Meem Protocol and more on our [GitBook site](https://docs.meem.wtf/meem-protocol/).
 
 ### Our stack
 
