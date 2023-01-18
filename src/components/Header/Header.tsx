@@ -131,6 +131,38 @@ export function HeaderMenu() {
 							width={80}
 						/>
 					</a>
+					<div className={meemTheme.visibleDesktopOnly}>
+						<div style={{ display: 'flex' }}>
+							<Space w={24} />
+							<a
+								style={{
+									textDecoration: 'none',
+									color: isDarkTheme ? 'white' : 'black'
+								}}
+								href="https://docs.meem.wtf/meem-protocol/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<Text className={meemTheme.tExtraSmallBold}>
+									Dev Docs
+								</Text>
+							</a>
+							<Space w={24} />
+							<a
+								style={{
+									textDecoration: 'none',
+									color: isDarkTheme ? 'white' : 'black'
+								}}
+								href="https://form.typeform.com/to/mICIQBrE"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<Text className={meemTheme.tExtraSmallBold}>
+									Partner with Us
+								</Text>
+							</a>
+						</div>
+					</div>
 				</div>
 
 				<div className={meemTheme.siteHeaderRightItems}>
