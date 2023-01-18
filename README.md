@@ -78,7 +78,7 @@ We have created a convenient starter script which auto-generates the required fi
 - Adding a light and dark mode icon (ideally 64x64px png or larger) to represent the extension (follow the pattern `integration-[extension-slug].png`, appending `-white` at the end for dark mode, e.g. `integration-discord.png` and `integration-discord-white.png`)
 - Requesting an entry in our extensions database with extension name, description and icon name
 - Creating a PR and having it be reviewed and approved.
-- 
+
 ### Extension etiquette and submission process
 
 -   The folders above are reserved for Extensions only. If you need to make use of other Meem features, please let us know how we can enable these in the SDK.
