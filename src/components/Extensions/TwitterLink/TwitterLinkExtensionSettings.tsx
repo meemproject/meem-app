@@ -5,37 +5,82 @@ import {
 	Center,
 	Button,
 	Divider,
-	Switch
+	Switch,
+	TextInput
 } from '@mantine/core'
-import React, { useState } from 'react'
+import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
+import React, { useEffect, useState } from 'react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const ExampleLinkExtensionSettings: React.FC = () => {
-	// Default extension settings / properties - leave these alone if possible!
+export const TwitterLinkExtensionSettings: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('example', agreement)
+	const agreementExtension = extensionFromSlug('twitter', agreement)
+	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
-	const [shouldDisplayInSidebar, setShouldDisplayInSidebar] = useState(false)
+	const [shouldDisplayInSidebar, setShouldDisplayInSidebar] = useState(true)
 	const [shouldDisplayInFavoriteLinks, setShouldDisplayInFavoriteLinks] =
-		useState(false)
+		useState(true)
 
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
+	const [isExistingDataSetup, setIsExistingDataSetup] = useState(false)
+	const [linkUrl, setLinkUrl] = useState('')
 
-	/*
-	/*
-	Boilerplate area - please don't edit the below code!
-	===============================================================
-	 */
+	useEffect(() => {
+		if (
+			!isExistingDataSetup &&
+			agreementExtension &&
+			agreementExtension.AgreementExtensionLinks[0]
+		) {
+			setIsExistingDataSetup(true)
+			setLinkUrl(agreementExtension.AgreementExtensionLinks[0].url)
+			setShouldDisplayInSidebar(
+				agreementExtension.metadata.sidebarVisible
+			)
+			setShouldDisplayInFavoriteLinks(
+				agreementExtension.metadata.favoriteLinksVisible
+			)
+			setIsPrivateExtension(
+				agreementExtension.AgreementExtensionLinks[0].visibility ===
+					MeemAPI.AgreementExtensionVisibility.TokenHolders
+			)
+		}
+	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
+		if (linkUrl.length === 0 || linkUrl.length > 100) {
+			showErrorNotification('Oops!', 'Please enter a valid URL.')
+			return
+		}
+
 		setIsSavingChanges(true)
+		await sdk.sdk.agreementExtension.updateAgreementExtension({
+			agreementId: agreement?.id ?? '',
+			agreementExtensionId: agreementExtension?.id,
+			metadata: {
+				sidebarVisible: shouldDisplayInSidebar,
+				favoriteLinksVisible: shouldDisplayInFavoriteLinks
+			},
+			externalLink: {
+				url: linkUrl,
+				isEnabled: true,
+				visibility: isPrivateExtension
+					? MeemAPI.AgreementExtensionVisibility.TokenHolders
+					: MeemAPI.AgreementExtensionVisibility.Anyone
+			}
+		})
+		showSuccessNotification('Success!', 'This extension has been updated.')
 		setIsSavingChanges(false)
 	}
 
@@ -46,7 +91,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'examplelink'} />
+			<ExtensionBlankSlate extensionSlug={'twitter'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -68,12 +113,35 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader
-								extensionSlug={'examplelink'}
-							/>
+							<ExtensionPageHeader extensionSlug={'twitter'} />
 
 							<Container>
 								<div>
+									<Text
+										className={meemTheme.tExtraSmallLabel}
+									>
+										{`Link URL`.toUpperCase()}
+									</Text>
+									<Space h={12} />
+									<TextInput
+										radius="lg"
+										size="md"
+										value={linkUrl ?? ''}
+										onChange={(event: {
+											target: {
+												value: React.SetStateAction<string>
+											}
+										}) => {
+											setLinkUrl(event.target.value)
+										}}
+									/>
+									<Space h={40} />
+									<Text
+										className={meemTheme.tExtraSmallLabel}
+									>
+										LINK DISPLAY SETTINGS
+									</Text>
+									<Space h={8} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -95,7 +163,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 									<Divider />
 								</div>
 								<div>
-									<Space h={16} />
+									<Space h={4} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -149,7 +217,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 								<Button
 									disabled={isDisablingExtension}
 									loading={isDisablingExtension}
-									className={meemTheme.buttonBlue}
+									className={meemTheme.buttonAsh}
 									onClick={disableExtension}
 								>
 									Disable extension

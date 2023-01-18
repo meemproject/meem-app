@@ -7,6 +7,7 @@ import {
 	Divider,
 	Switch
 } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -17,6 +18,7 @@ import { ExtensionPageHeader } from '../ExtensionPageHeader'
 export const ExampleExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
+	const { sdk } = useSDK()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('example', agreement)
 
@@ -52,7 +54,30 @@ export const ExampleExtensionSettings: React.FC = () => {
 	TODO
 	Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
 	 */
-	const saveCustomChanges = async () => {}
+	const saveCustomChanges = async () => {
+		await sdk.agreementExtension.updateAgreementExtension({
+			agreementId: agreement?.id ?? '',
+			agreementExtensionId: agreementExtension?.id
+			// ---------------------------------------------
+			// Include externalLink if you'd like to add or update
+			// an external link to your community home page.
+			// Setting this to null will remove an existing link.
+			// ---------------------------------------------
+			// externalLink: {
+			// 	url: '',
+			// 	label: ''
+			// },
+			// ---------------------------------------------
+			// Store/update non-sensitive metadata for configuring your extension.
+			// We also recommend versioning your extension so you can gracefully
+			// handle any future updates to metadata schema
+			// ---------------------------------------------
+			// metadata: {
+			// 	version: '1.0.0',
+			// 	customProperty: 'boop'
+			// }
+		})
+	}
 
 	/*
 	Boilerplate area - please don't edit the below code!
@@ -149,7 +174,7 @@ export const ExampleExtensionSettings: React.FC = () => {
 								<Button
 									disabled={isDisablingExtension}
 									loading={isDisablingExtension}
-									className={meemTheme.buttonBlue}
+									className={meemTheme.buttonAsh}
 									onClick={disableExtension}
 								>
 									Disable extension

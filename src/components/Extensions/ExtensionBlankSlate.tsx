@@ -79,7 +79,7 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 									className={meemTheme.buttonGrey}
 									onClick={() => {
 										router.push({
-											pathname: `${agreement.slug}/admin`,
+											pathname: `/${agreement.slug}/admin`,
 											query: {
 												tab: 'extensions'
 											}

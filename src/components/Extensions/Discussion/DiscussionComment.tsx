@@ -25,9 +25,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronUp } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { showSuccessNotification } from '../../../utils/notifications'
+import { quickTruncate } from '../../../utils/truncated_wallet'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
-	colorBlue,
+	colorDarkBlue,
 	colorDarkGrey,
 	colorLightGrey,
 	useMeemTheme
@@ -172,6 +173,8 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 
 			editor?.commands.clearContent()
 
+			setIsReplying(false)
+
 			showSuccessNotification(
 				'Comment Submitted!',
 				'Your comment has been submitted.'
@@ -213,7 +216,9 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 				<Space w={8} />
 				<div>
 					<Text className={meemTheme.tExtraSmallBold}>
-						{comment.displayName ?? comment.walletAddress}
+						{comment.displayName ?? comment.walletAddress
+							? quickTruncate(comment.walletAddress)
+							: `Community Member`}
 					</Text>
 					<Text className={meemTheme.tExtraExtraSmall}>
 						{comment.createdAt &&
@@ -232,42 +237,43 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 						cursor: 'pointer',
 						marginLeft: 14,
 						marginTop: 4,
+						marginBottom:
+							comment.comments && comment.comments.length === 0
+								? 16
+								: 0,
 						width: '4px',
 						backgroundColor: isDarkTheme
 							? colorDarkGrey
 							: colorLightGrey
 					}}
-				/>
+				></div>
 				<Space w={16} />
 				<div style={{ width: '100%' }}>
-					<Space h={16} />
+					<Space h={8} />
 
 					<Text
-						className={meemTheme.tExtraSmall}
+						className={meemTheme.tSmall}
 						dangerouslySetInnerHTML={{
 							__html: comment.body
 						}}
 					/>
-					<Space h={16} />
+					<Space h={8} />
 					<div className={meemTheme.centeredRow}>
 						<Tooltip
 							label="You have already reacted to this post."
 							disabled={canReact}
 						>
 							<span>
-								<Button
-									variant="subtle"
+								<ChevronUp
 									style={{ cursor: 'pointer' }}
-									disabled={isLoading || !canReact}
-									loading={isLoading}
-									onClick={() =>
-										handleReactionSubmit({
-											reaction: 'upvote'
-										})
-									}
-								>
-									<ChevronUp />
-								</Button>
+									onClick={() => {
+										if (canReact && !isLoading) {
+											handleReactionSubmit({
+												reaction: 'upvote'
+											})
+										}
+									}}
+								/>
 							</span>
 						</Tooltip>
 						<Space w={4} />
@@ -307,7 +313,9 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 									classNames={{
 										toolbar:
 											meemTheme.fRichTextEditorToolbar,
-										root: meemTheme.fRichTextEditorToolbar
+										root: meemTheme.fRichTextEditorToolbar,
+										content:
+											meemTheme.fRichTextEditorContent
 									}}
 								>
 									<RichTextEditor.Toolbar>
@@ -342,10 +350,11 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 							</div>
 						</>
 					)}
-					<Space h={16} />
 
 					{comment.comments && !isCommentRepliesHidden && (
 						<>
+							<Space h={16} />
+
 							{comment.comments?.map(reply => (
 								<>
 									<DiscussionCommentComponent
@@ -359,15 +368,22 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 						</>
 					)}
 					{comment.comments && isCommentRepliesHidden && (
-						<Text
-							onClick={() => {
-								setIsCommentRepliesHidden(
-									!isCommentRepliesHidden
-								)
-							}}
-							className={meemTheme.tExtraSmall}
-							style={{ color: colorBlue, cursor: 'pointer' }}
-						>{`${comment.comments?.length} replies hidden`}</Text>
+						<>
+							<Space h={16} />
+							<Text
+								onClick={() => {
+									setIsCommentRepliesHidden(
+										!isCommentRepliesHidden
+									)
+								}}
+								className={meemTheme.tExtraSmall}
+								style={{
+									color: colorDarkBlue,
+									cursor: 'pointer'
+								}}
+							>{`${comment.comments?.length} replies hidden`}</Text>
+							<Space h={16} />
+						</>
 					)}
 				</div>
 			</div>

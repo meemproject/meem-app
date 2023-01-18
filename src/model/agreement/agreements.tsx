@@ -7,6 +7,7 @@ import { DateTime } from 'luxon'
 import {
 	AgreementExtensions,
 	AgreementRoles,
+	AgreementRoleTokens,
 	Agreements
 } from '../../../generated/graphql'
 import { tokenFromContractAddress } from '../token/token'
@@ -32,26 +33,21 @@ export interface Extension {
 }
 
 export interface AgreementRolePermission {
-	id: string
-	name?: string
 	description?: string
 	enabled?: boolean
+	id: string
 	locked?: boolean
+	name?: string
 }
 
 export interface AgreementRole {
 	id: string
-	name: string
 	isAdminRole?: boolean
 	isTransferrable?: boolean
-	tokenAddress?: string
-	permissions: AgreementRolePermission[]
+	name: string
 	rolesExtensionData?: any
-	guildRoleId?: string
-	guildRoleName?: string
-	guildDiscordServerName?: string
-	guildDiscordServerId?: string
-	guildDiscordServerIcon?: string
+	tokenAddress?: string
+	tokens?: AgreementRoleTokens[]
 }
 
 export function emptyRole(): AgreementRole {
@@ -59,59 +55,54 @@ export function emptyRole(): AgreementRole {
 		id: 'addRole',
 		isAdminRole: false,
 		name: '',
-		permissions: [],
-		rolesExtensionData: '',
-		guildRoleId: '',
-		guildRoleName: '',
-		guildDiscordServerId: '',
-		guildDiscordServerIcon: '',
-		guildDiscordServerName: ''
+		rolesExtensionData: ''
 	}
 }
 
 export interface AgreementMember {
-	displayName?: string
-	wallet: string
-	ens?: string
-	profilePicture?: string
-	twitterUsername?: string
-	discordUsername?: string
 	discordUserId?: string
+	discordUsername?: string
+	displayName?: string
 	emailAddress?: string
-	roles?: AgreementRole[]
-	isAgreementOwner?: boolean
+	ens?: string
 	isAgreementAdmin?: boolean
+	isAgreementOwner?: boolean
 	isMeemApi?: boolean
+	ownerId?: string
+	profilePicture?: string
+	roles?: AgreementRole[]
+	twitterUsername?: string
+	wallet: string
 
 	// Convenience bool for roles
 	chosen?: boolean
 }
 export interface Agreement {
-	id?: string
-	name?: string
 	address?: string
-	slug?: string
-	description?: string
-	image?: string
 	adminAddresses?: string[]
-	membershipSettings?: MembershipSettings
-	slotsLeft?: number
-	agreementOwner?: AgreementMember
 	admins?: AgreementMember[]
-	members?: AgreementMember[]
-	roles?: AgreementRole[]
-	memberRolesMap?: Map<string, AgreementMember[]>
-	membershipToken?: string
-	currentUserAgreementPermissions?: string[]
-	isCurrentUserAgreementMember?: boolean
-	isCurrentUserAgreementAdmin?: boolean
-	isCurrentUserAgreementOwner?: boolean
-	isAgreementControlledByMeemApi?: boolean
-	isValid?: boolean
-	rawAgreement?: Agreements
+	agreementOwner?: AgreementMember
+	description?: string
 	extensions?: AgreementExtensions[]
 	gnosisSafeAddress?: string | null
+	id?: string
+	image?: string
+	isAgreementControlledByMeemApi?: boolean
+	isCurrentUserAgreementAdmin?: boolean
+	isCurrentUserAgreementMember?: boolean
+	isCurrentUserAgreementOwner?: boolean
+	isLaunched?: boolean
+	isValid?: boolean
 	memberCount?: number
+	memberRolesMap?: Map<string, AgreementMember[]>
+	members?: AgreementMember[]
+	membershipSettings?: MembershipSettings
+	membershipToken?: string
+	name?: string
+	rawAgreement?: Agreements
+	roles?: AgreementRole[]
+	slotsLeft?: number
+	slug?: string
 }
 
 export const extensionFromSlug = (slug: string, agreement?: Agreement) => {
@@ -122,12 +113,12 @@ export const extensionFromSlug = (slug: string, agreement?: Agreement) => {
 }
 
 export interface MembershipSettings {
-	requirements: MembershipRequirement[]
 	costToJoin: number
+	membershipEndDate?: Date
 	membershipFundsAddress: string
 	membershipQuantity: number
 	membershipStartDate?: Date
-	membershipEndDate?: Date
+	requirements: MembershipRequirement[]
 	// The agreement admins set when the agreement is created
 	agreementAdminsAtAgreementCreation?: string[]
 }
@@ -183,40 +174,8 @@ export function rawRolesToAgreementRoles(
 ): AgreementRole[] {
 	const roles: AgreementRole[] = []
 	agreementRoles.forEach(rawRole => {
-		const permissions: AgreementRolePermission[] = []
-		// if (rawRole.AgreementRolePermissions) {
-		// 	rawRole.AgreementRolePermissions.forEach(rolePermission => {
-		// 		const rp: AgreementRolePermission = {
-		// 			id: rolePermission.RolePermissionId ?? ''
-		// 		}
-		// 		permissions.push(rp)
-		// 	})
-		// }
-
 		// Roles discord extension metadata
 		const metadata = rawRole.metadata
-
-		let guildDiscordServerIcon = ''
-		let guildDiscordServerId = ''
-		let guildDiscordServerName = ''
-		let guildRoleName = ''
-		let guildRoleId = ''
-
-		if (metadata && metadata.length > 0 && metadata[0].discordServerData) {
-			const data = metadata[0].discordServerData
-			guildDiscordServerIcon = data.serverIcon
-			guildDiscordServerId = data.serverId
-			guildDiscordServerName = data.serverName
-
-			if (data.roles && data.roles.length > 0) {
-				data.roles.forEach((role: any) => {
-					if (role.name === rawRole.name) {
-						guildRoleName = role.name
-						guildRoleId = role.id
-					}
-				})
-			}
-		}
 
 		const agreementRole: AgreementRole = {
 			id: rawRole.id,
@@ -224,13 +183,8 @@ export function rawRolesToAgreementRoles(
 			rolesExtensionData: metadata,
 			tokenAddress: rawRole.address ?? '',
 			isTransferrable: rawRole.Agreement?.isTransferrable ?? false,
-			name: rawRole.name,
-			guildDiscordServerIcon,
-			guildDiscordServerId,
-			guildDiscordServerName,
-			guildRoleId,
-			guildRoleName,
-			permissions
+			tokens: rawRole.AgreementRoleTokens,
+			name: rawRole.name
 		}
 		roles.push(agreementRole)
 	})
@@ -268,17 +222,22 @@ export interface MembershipRequirement {
 }
 
 // The agreement's basic metadata, doesn't require async
-export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
+export function agreementSummaryFromDb(
+	agreementData?: any,
+	walletAddress?: string
+): Agreement {
 	// Count members accurately
 	const members: AgreementMember[] = []
 
+	let iAmAgreementAdmin = false
+
 	// Parse members
 	if (agreementData) {
-		if (agreementData.AgreementTokense) {
+		if (agreementData.AgreementTokens) {
 			for (const agreementToken of agreementData.AgreementTokens) {
-				log.debug(
-					`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
-				)
+				// log.debug(
+				// 	`slug ${agreementData.slug} | parsing token for ${agreementToken.Wallet?.address}`
+				// )
 				if (
 					agreementToken.Wallet?.address.toLowerCase() !==
 						MeemAPI.zeroAddress.toLowerCase() &&
@@ -298,8 +257,42 @@ export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
 						if (!hasAlreadyBeenAdded) {
 							members.push({
 								wallet: agreementToken.Wallet.address,
-								ens: agreementToken.Wallet.ens ?? undefined
+								ens: agreementToken.Wallet.ens ?? undefined,
+								ownerId: agreementToken.OwnerId
 							})
+							const isCurrentUser =
+								walletAddress &&
+								walletAddress?.toLowerCase() ===
+									agreementToken.Wallet?.address.toLowerCase()
+
+							if (isCurrentUser) {
+								const iAmAgreementOwner =
+									agreementToken.OwnerId ===
+									agreementData.OwnerId
+
+								// Is the current user an admin?
+								if (iAmAgreementOwner) {
+									iAmAgreementAdmin = true
+								} else {
+									agreementData.AgreementRoles.forEach(
+										(role: any) => {
+											if (role.isAdminRole) {
+												role.AgreementRoleTokens.forEach(
+													(token: any) => {
+														if (
+															agreementToken.OwnerId ===
+															token.OwnerId
+														) {
+															iAmAgreementAdmin =
+																true
+														}
+													}
+												)
+											}
+										}
+									)
+								}
+							}
 						}
 					}
 				}
@@ -309,20 +302,19 @@ export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
 
 	if (agreementData) {
 		return {
-			id: agreementData.id,
-			name: agreementData.name,
 			address: agreementData.address,
-			admins: [],
 			adminAddresses: [],
-			isCurrentUserAgreementAdmin: false,
-			slug: agreementData.slug,
+			admins: [],
 			description: agreementData.metadata.description,
+			extensions: [],
+			id: agreementData.id,
 			image: agreementData.metadata.image,
+			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
 			isCurrentUserAgreementMember: true,
-			membershipToken: '',
+			isLaunched: agreementData.isLaunched,
+			isValid: agreementData.mintPermissions !== undefined,
+			memberCount: members.length,
 			members,
-
-			slotsLeft: 0,
 			membershipSettings: {
 				requirements: [],
 				costToJoin: 0,
@@ -332,17 +324,18 @@ export function agreementSummaryFromAgreement(agreementData?: any): Agreement {
 				membershipQuantity: 0,
 				agreementAdminsAtAgreementCreation: []
 			},
-			isValid: agreementData.mintPermissions !== undefined,
+			membershipToken: '',
+			name: agreementData.name,
 			rawAgreement: agreementData,
-			extensions: [],
-			memberCount: members.length
+			slotsLeft: 0,
+			slug: agreementData.slug
 		}
 	} else {
 		return {}
 	}
 }
 
-export default async function agreementFromAgreement(
+export default async function agreementFromDb(
 	wallet: any,
 	walletAddress: string,
 	agreementData: Agreements
@@ -376,7 +369,6 @@ export default async function agreementFromAgreement(
 
 		// Parse roles
 		let agreementRoles: AgreementRole[] = []
-		const currentUserAgreementPermissions: string[] = []
 		if (agreementData.AgreementRoles) {
 			agreementRoles = rawRolesToAgreementRoles(
 				agreementData.AgreementRoles
@@ -397,14 +389,6 @@ export default async function agreementFromAgreement(
 				}
 			}
 		}
-
-		// Setup for parsing members - identify the admin role ownerId
-		let adminRoleOwnerId = ''
-		agreementData.AgreementRoles.forEach(role => {
-			if (role.isAdminRole) {
-				adminRoleOwnerId = role.OwnerId
-			}
-		})
 
 		// Parse members
 		if (agreementData.AgreementTokens) {
@@ -464,25 +448,43 @@ export default async function agreementFromAgreement(
 								if (iAmAgreementOwner) {
 									iAmAgreementAdmin = true
 								} else {
-									if (
-										agreementToken.OwnerId ===
-										adminRoleOwnerId
-									) {
-										log.debug(
-											`current user is a club admin`
-										)
-										iAmAgreementAdmin = true
-									}
+									agreementData.AgreementRoles.forEach(
+										role => {
+											if (role.isAdminRole) {
+												role.AgreementRoleTokens.forEach(
+													token => {
+														if (
+															agreementToken.OwnerId ===
+															token.OwnerId
+														) {
+															iAmAgreementAdmin =
+																true
+														}
+													}
+												)
+											}
+										}
+									)
 								}
 							}
 
 							// Is this member an admin
-							if (agreementToken.OwnerId === adminRoleOwnerId) {
-								isMemberAnAdmin = true
-								adminRawAddresses.push(
-									agreementToken.Wallet.address ?? ''
-								)
-							}
+							agreementData.AgreementRoles.forEach(role => {
+								if (role.isAdminRole) {
+									role.AgreementRoleTokens?.forEach(token => {
+										if (
+											agreementToken.OwnerId ===
+											token.OwnerId
+										) {
+											isMemberAnAdmin = true
+											adminRawAddresses.push(
+												agreementToken?.Wallet
+													?.address ?? ''
+											)
+										}
+									})
+								}
+							})
 
 							// Is this member the agreement owner?
 							isMemberTheAgreementOwner =
@@ -503,8 +505,10 @@ export default async function agreementFromAgreement(
 									agreementData.AgreementRoleTokens.forEach(
 										roleToken => {
 											if (
+												roleToken.AgreementRoleId ===
+													role.id &&
 												roleToken.OwnerId ===
-												agreementToken.Wallet?.id
+													agreementToken.OwnerId
 											) {
 												memberHasRole = true
 											}
@@ -548,6 +552,7 @@ export default async function agreementFromAgreement(
 											memberIdentity?.profilePicUrl
 									  )
 									: '',
+								ownerId: agreementToken.OwnerId,
 								twitterUsername,
 								discordUsername,
 								discordUserId,
@@ -598,9 +603,9 @@ export default async function agreementFromAgreement(
 			}
 		})
 
-		// memberRolesMap.forEach((value, key) => {
-		// 	log.debug(`members for role ${key} = ${JSON.stringify(value)}`)
-		// })
+		memberRolesMap.forEach((value, key) => {
+			log.debug(`members for role ${key} = ${value.length}`)
+		})
 
 		let membershipStartDate: Date | undefined
 		let membershipEndDate: Date | undefined
@@ -779,13 +784,13 @@ export default async function agreementFromAgreement(
 			admins,
 			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
 			isCurrentUserAgreementOwner: iAmAgreementOwner,
+			isLaunched: agreementData.isLaunched,
 			agreementOwner,
 			slug: agreementData.slug,
 			gnosisSafeAddress: agreementData.gnosisSafeAddress,
 			description: agreementData.metadata.description,
 			image: agreementData.metadata.image,
 			roles: agreementRoles,
-			currentUserAgreementPermissions,
 			memberRolesMap,
 			isCurrentUserAgreementMember: isAgreementMember,
 			isAgreementControlledByMeemApi,

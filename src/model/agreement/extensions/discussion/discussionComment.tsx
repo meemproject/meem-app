@@ -1,15 +1,15 @@
 import { DiscussionReaction } from './discussionReaction'
 
 export interface DiscussionComment {
-	id: string
-	body: string
-	userId: string
-	displayName?: string
-	profilePicUrl?: string
-	walletAddress: string
 	agreementSlug: string
-	createdAt: number
-	updatedAt: number
+	body: string
 	comments?: DiscussionComment[]
+	createdAt: number
+	displayName?: string
+	id: string
+	profilePicUrl?: string
 	reactions?: DiscussionReaction[]
+	updatedAt: number
+	userId: string
+	walletAddress: string
 }

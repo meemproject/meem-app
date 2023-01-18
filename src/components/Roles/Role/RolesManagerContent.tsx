@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
@@ -15,7 +17,6 @@ import {
 import { useMeemApollo } from '@meemproject/react'
 import React, { useEffect, useState } from 'react'
 import { GetAvailablePermissionQuery } from '../../../../generated/graphql'
-import { GET_AVAILABLE_PERMISSIONS } from '../../../graphql/agreements'
 import {
 	Agreement,
 	AgreementMember,
@@ -29,7 +30,6 @@ import {
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
-import { RolesManagerPermissions } from './RolesManagerPermissions'
 interface IProps {
 	agreement: Agreement
 	initialRole?: AgreementRole
@@ -44,118 +44,67 @@ export const RolesManagerContent: React.FC<IProps> = ({
 	const { classes: meemTheme } = useMeemTheme()
 
 	const [role, setRole] = useState<AgreementRole>()
+
+	const [originalRoleMembers, setOriginalRoleMembers] = useState<
+		AgreementMember[]
+	>([])
 	const [roleMembers, setRoleMembers] = useState<AgreementMember[]>([])
 
-	const [isLoadingPermissions, setIsLoadingPermissons] = useState(true)
 	const [isExistingRole, setIsExistingRole] = useState(false)
+
+	const [originalRoleName, setOriginalRoleName] = useState('')
 	const [roleName, setRoleName] = useState('')
 
+	const [isOriginalTokenTransferrable, setIsOriginalTokenTransferrable] =
+		useState('non-transferrable')
 	const [isTokenTransferrable, setIsTokenTransferrable] =
 		useState('non-transferrable')
-
-	const { anonClient } = useMeemApollo()
 
 	const [isSaveChangesModalOpened, setIsSaveChangesModalOpened] =
 		useState(false)
 
-	const { data: availablePermissions, error } =
-		useQuery<GetAvailablePermissionQuery>(GET_AVAILABLE_PERMISSIONS, {
-			client: anonClient
-		})
-
-	// Set initial role + parse permissions (updated later when changes are made in subcomponents)
+	// Set initial role (updated later w/ changes in subcomponents)
 	useEffect(() => {
-		if (error) {
-			log.debug(JSON.stringify(error))
-		}
-
-		async function parsePermissions(
-			theRole: AgreementRole,
-			allPermissions: GetAvailablePermissionQuery
-		) {
+		async function setUpRole(theRole: AgreementRole) {
 			const permissionedRole = theRole
 
 			// This is a new role, set default permissions
 			if (permissionedRole.id === 'addRole') {
 				setIsExistingRole(false)
-
-				const convertedPermissions: AgreementRolePermission[] = []
-				if (allPermissions.RolePermissions) {
-					allPermissions.RolePermissions.forEach(permission => {
-						const convertedPermission: AgreementRolePermission = {
-							id: permission.id,
-							description: permission.description,
-							name: permission.name,
-							enabled: false,
-							locked: permission.id.includes('admin')
-						}
-						convertedPermissions.push(convertedPermission)
-					})
-				}
-				permissionedRole.permissions = convertedPermissions
 				setRoleMembers([])
 			} else {
-				// This is an existing role, determine what permissions are enabled
-				// by looking at the permissions added at the agreement level and reconciling
-				// them with the avilable permissions
+				// This is an existing role, set current data
 				setIsExistingRole(true)
 
-				const convertedPermissions: AgreementRolePermission[] = []
-				if (allPermissions.RolePermissions) {
-					allPermissions.RolePermissions.forEach(permission => {
-						let isPermissionEnabled = false
-						if (agreement && agreement.roles) {
-							agreement.roles.forEach(agreementRole => {
-								if (agreementRole.id === theRole.id) {
-									agreementRole.permissions.forEach(rp => {
-										if (rp.id === permission.id) {
-											isPermissionEnabled = true
-										}
-									})
-								}
-							})
-						}
+				// Role name
+				setOriginalRoleName(theRole.name)
+				setRoleName(permissionedRole.name)
 
-						const convertedPermission: AgreementRolePermission = {
-							id: permission.id,
-							description: permission.description,
-							name: permission.name,
-							enabled: isPermissionEnabled,
-							locked: permission.id.includes('admin')
-						}
-						convertedPermissions.push(convertedPermission)
-					})
+				// Whether the role is transferrable
+				if (role?.isTransferrable) {
+					setIsTokenTransferrable('transferrable')
+					setIsOriginalTokenTransferrable('transferrable')
 				}
-				permissionedRole.permissions = convertedPermissions
-			}
 
-			// Role name
-			setRoleName(permissionedRole.name)
+				// Any existing role members
+				const initialRoleMembers: AgreementMember[] | undefined =
+					agreement.memberRolesMap
+						? agreement.memberRolesMap.get(permissionedRole.id)
+						: []
 
-			// Any existing role members
-			const initialRoleMembers: AgreementMember[] | undefined =
-				agreement.memberRolesMap
-					? agreement.memberRolesMap.get(permissionedRole.id)
-					: []
-			if (initialRoleMembers) {
-				setRoleMembers(initialRoleMembers)
+				if (initialRoleMembers) {
+					setOriginalRoleMembers(initialRoleMembers)
+					setRoleMembers(initialRoleMembers)
+				}
 			}
 
 			// Set the role itself
 			setRole(permissionedRole)
-
-			// Stop loading
-			setIsLoadingPermissons(false)
 		}
-		if (initialRole && !role && availablePermissions) {
-			parsePermissions(initialRole, availablePermissions)
+		if (initialRole && !role) {
+			setUpRole(initialRole)
 		}
-
-		// Set 'token transferrable' setting
-		if (role?.isTransferrable) {
-			setIsTokenTransferrable('transferrable')
-		}
-	}, [availablePermissions, agreement, error, initialRole, role])
+	}, [originalRoleName, agreement, initialRole, role])
 
 	const updateRole = (newRole: AgreementRole) => {
 		setRole(newRole)
@@ -181,223 +130,189 @@ export const RolesManagerContent: React.FC<IProps> = ({
 
 	return (
 		<>
-			{isLoadingPermissions && (
-				<div>
-					<Loader variant="oval" color="blue" />
-				</div>
-			)}
-
-			{!isLoadingPermissions && (
-				<div>
-					<Space h={16} />
-					<div
-						className={meemTheme.spacedRow}
-						style={{ marginBottom: 32 }}
+			<div>
+				<Space h={16} />
+				<div
+					className={meemTheme.spacedRow}
+					style={{ marginBottom: 32 }}
+				>
+					<Text className={meemTheme.tLargeBold}>
+						{role && role.name.length > 0 ? role.name : 'Add Role'}
+					</Text>
+					<Button
+						onClick={() => {
+							saveChanges()
+						}}
+						className={meemTheme.buttonBlack}
 					>
-						<Text className={meemTheme.tLargeBold}>
-							{role && role.name.length > 0
-								? role.name
-								: 'Add Role'}
-						</Text>
-						<Button
-							onClick={() => {
-								saveChanges()
-							}}
-							className={meemTheme.buttonBlack}
-						>
-							Save Changes
-						</Button>
-					</div>
+						Save Changes
+					</Button>
+				</div>
 
-					<div className={meemTheme.row}>
-						<Text className={meemTheme.tExtraSmallLabel}>
-							ROLE NAME
-						</Text>
-						<Space w={2} />
-						<Text color={'blue'}>*</Text>
-					</div>
-					<Space h={24} />
-					<TextInput
-						size={'lg'}
-						radius={20}
-						disabled={role?.isAdminRole}
-						classNames={{
-							input: meemTheme.fTextField
-						}}
-						value={roleName}
-						onChange={event => {
-							if (event) {
-								setRoleName(event.target.value)
-								if (event.target.value) {
-									const newRole: AgreementRole = {
-										name: event.target.value,
-										id: role ? role.id : '',
-										permissions: role
-											? role.permissions
-											: []
-									}
-									updateRole(newRole)
+				<div className={meemTheme.row}>
+					<Text className={meemTheme.tExtraSmallLabel}>
+						ROLE NAME
+					</Text>
+					<Space w={2} />
+					<Text color={'blue'}>*</Text>
+				</div>
+				<Space h={24} />
+				<TextInput
+					size={'lg'}
+					radius={20}
+					disabled={role?.isAdminRole}
+					classNames={{
+						input: meemTheme.fTextField
+					}}
+					value={roleName}
+					onChange={event => {
+						if (event) {
+							setRoleName(event.target.value)
+							if (event.target.value) {
+								const newRole: AgreementRole = {
+									name: event.target.value,
+									id: role ? role.id : ''
 								}
+								updateRole(newRole)
 							}
-						}}
-					/>
-					<Space h={40} />
+						}
+					}}
+				/>
+				<Space h={40} />
 
-					{role?.id !== 'addRole' && (
-						<div>
-							{role?.tokenAddress && (
-								<div>
+				{role?.id !== 'addRole' && (
+					<div>
+						{role?.tokenAddress && (
+							<div>
+								<Text className={meemTheme.tExtraSmallLabel}>
+									CONTRACT ADDRESS
+								</Text>
+
+								<Space h={24} />
+
+								<div className={meemTheme.row}>
 									<Text
-										className={meemTheme.tExtraSmallLabel}
+										className={meemTheme.tSmall}
+										style={{ wordBreak: 'break-word' }}
 									>
-										CONTRACT ADDRESS
+										{role?.tokenAddress}
 									</Text>
+									<Image
+										style={{
+											marginLeft: 4,
+											padding: 2,
+											cursor: 'pointer'
+										}}
+										src="/copy.png"
+										height={20}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												agreement.address ?? ''
+											)
+											showSuccessNotification(
+												'Address copied',
+												`This role's contract address was copied to your clipboard.`
+											)
+										}}
+										width={20}
+									/>
+								</div>
 
-									<Space h={24} />
+								<Space h={40} />
 
-									<div className={meemTheme.row}>
-										<Text
-											className={meemTheme.tSmall}
-											style={{ wordBreak: 'break-word' }}
-										>
-											{role?.tokenAddress}
-										</Text>
-										<Image
-											style={{
-												marginLeft: 4,
-												padding: 2,
-												cursor: 'pointer'
-											}}
-											src="/copy.png"
-											height={20}
-											onClick={() => {
-												navigator.clipboard.writeText(
-													agreement.address ?? ''
-												)
-												showSuccessNotification(
-													'Address copied',
-													`This role's contract address was copied to your clipboard.`
-												)
-											}}
-											width={20}
-										/>
-									</div>
+								<Text className={meemTheme.tExtraSmallLabel}>
+									TOKEN SETTINGS
+								</Text>
+								<Space h={24} />
 
-									<Space h={40} />
-
-									<Text
-										className={meemTheme.tExtraSmallLabel}
-									>
-										TOKEN SETTINGS
-									</Text>
-									<Space h={24} />
-
-									{role?.isAdminRole && (
-										<div>
-											<Text className={meemTheme.tSmall}>
-												{`This is a default role and is currently the only
+								{role?.isAdminRole && (
+									<div>
+										<Text className={meemTheme.tSmall}>
+											{`This is a default role and is currently the only
 							role that has contract management capabilities.`}
-											</Text>
-											<Text
-												className={meemTheme.tSmall}
-											>{`The
+										</Text>
+										<Text className={meemTheme.tSmall}>{`The
 							role cannot be deleted and members with this role
 							cannot transfer their token to another wallet.`}</Text>
-										</div>
-									)}
+									</div>
+								)}
 
-									{!role?.isAdminRole && (
-										<div>
-											<Text
-												className={meemTheme.tSmallBold}
-											>{`Can members with this role transfer their token to another wallet?`}</Text>
-											<Space h={4} />
+								{!role?.isAdminRole && (
+									<div>
+										<Text
+											className={meemTheme.tSmallBold}
+										>{`Can members with this role transfer their token to another wallet?`}</Text>
+										<Space h={4} />
 
-											<Radio.Group
-												orientation="vertical"
-												spacing={10}
-												size="sm"
-												color="dark"
-												value={isTokenTransferrable}
-												onChange={(value: any) => {
-													setIsTokenTransferrable(
-														value
-													)
+										<Radio.Group
+											orientation="vertical"
+											spacing={10}
+											size="sm"
+											color="dark"
+											value={isTokenTransferrable}
+											onChange={(value: any) => {
+												setIsTokenTransferrable(value)
+												const data = {
+													name: role?.name ?? '',
+													id: role?.id ?? '',
+													isTransferrable:
+														isTokenTransferrable ===
+														value,
+													tokenAddress:
+														role?.tokenAddress,
+													tokens: role?.tokens,
+													isAdminRole:
+														role?.isAdminRole,
+													rolesExtensionData:
+														role?.rolesExtensionData
+												}
+												log.debug(
+													`new role data: ${JSON.stringify(
+														data
+													)}}`
+												)
 
-													// Update the role's state in this component and all subcomponents
-													// TODO: there's got to be a better way to update a single element of an object and
-													// TODO: have it apply to useState, instead of recreating the entire object. surely?
-													const newRole: AgreementRole =
-														{
-															name:
-																role?.name ??
-																'',
-															id: role?.id ?? '',
-															permissions:
-																role?.permissions ??
-																[],
-															isTransferrable:
-																isTokenTransferrable ===
-																'transferrable',
-															isAdminRole:
-																role?.isAdminRole,
-															rolesExtensionData:
-																role?.rolesExtensionData,
-															guildDiscordServerId:
-																role?.guildDiscordServerId ??
-																'',
-															guildDiscordServerIcon:
-																role?.guildDiscordServerIcon ??
-																'',
-															guildDiscordServerName:
-																role?.guildDiscordServerName ??
-																'',
-															guildRoleId:
-																role?.guildRoleId ??
-																'',
-															guildRoleName:
-																role?.guildRoleName ??
-																''
-														}
-													updateRole(newRole)
-												}}
-												required
-											>
-												<Radio
-													value="non-transferrable"
-													label="No, this role cannot be transferred"
-												/>
-												<Radio
-													value="transferrable"
-													label="Yes, this role can be transferred to someone else"
-												/>
-											</Radio.Group>
-										</div>
-									)}
+												// Update the role's state in this component and all subcomponents
+												// TODO: there's got to be a better way to update a single element of an object and
+												// TODO: have it apply to useState, instead of recreating the entire object. surely?
+												const newRole: AgreementRole =
+													data
+												updateRole(newRole)
+											}}
+											required
+										>
+											<Radio
+												value="non-transferrable"
+												label="No, this role cannot be transferred"
+											/>
+											<Radio
+												value="transferrable"
+												label="Yes, this role can be transferred to someone else"
+											/>
+										</Radio.Group>
+									</div>
+								)}
 
-									<Space h={40} />
-								</div>
-							)}
-						</div>
-					)}
+								<Space h={40} />
+							</div>
+						)}
+					</div>
+				)}
 
-					<Tabs color="dark" defaultValue="permissions">
-						<Tabs.List>
-							<Tabs.Tab
+				<Tabs color="dark" defaultValue="members">
+					<Tabs.List>
+						{/* <Tabs.Tab
 								style={{ fontWeight: 700 }}
 								value="permissions"
 							>
 								Permissions
-							</Tabs.Tab>
-							<Tabs.Tab
-								style={{ fontWeight: 700 }}
-								value="members"
-							>
-								Members
-							</Tabs.Tab>
-						</Tabs.List>
+							</Tabs.Tab> */}
+						<Tabs.Tab style={{ fontWeight: 700 }} value="members">
+							Members
+						</Tabs.Tab>
+					</Tabs.List>
 
-						<Tabs.Panel value="permissions" pt="xs">
+					{/* <Tabs.Panel value="permissions" pt="xs">
 							{!isLoadingPermissions && (
 								<RolesManagerPermissions
 									role={role}
@@ -415,26 +330,25 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									<Loader />
 								</Center>
 							)}
-						</Tabs.Panel>
+						</Tabs.Panel> */}
 
-						<Tabs.Panel value="members" pt="xs">
-							<RolesManagerMembers
-								role={role}
-								agreement={agreement}
-								onMembersUpdated={members => {
-									log.debug(
-										`on members updated - members length = ${members.length}`
-									)
-									setRoleMembers(members)
-								}}
-								onSaveChanges={() => {
-									saveChanges()
-								}}
-							/>
-						</Tabs.Panel>
-					</Tabs>
-				</div>
-			)}
+					<Tabs.Panel value="members" pt="xs">
+						<RolesManagerMembers
+							role={role}
+							agreement={agreement}
+							onMembersUpdated={members => {
+								log.debug(
+									`on members updated - members length = ${members.length}`
+								)
+								setRoleMembers(members)
+							}}
+							onSaveChanges={() => {
+								saveChanges()
+							}}
+						/>
+					</Tabs.Panel>
+				</Tabs>
+			</div>
 
 			<RoleManagerChangesModal
 				isOpened={isSaveChangesModalOpened}
@@ -443,6 +357,11 @@ export const RolesManagerContent: React.FC<IProps> = ({
 				}}
 				role={role}
 				isExistingRole={isExistingRole}
+				haveRoleSettingsChanged={
+					originalRoleName !== role?.name ||
+					isOriginalTokenTransferrable != isTokenTransferrable
+				}
+				originalRoleMembers={originalRoleMembers}
 				roleMembers={roleMembers}
 				agreement={agreement}
 			/>

@@ -22,6 +22,16 @@ export const MEEM_CONTRACT_PARTS = gql`
 	}
 `
 
+export const GET_AGREEMENT_EXISTS = gql`
+	query GetAgreementExists($slug: String, $chainId: Int) {
+		Agreements(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
+			slug
+		}
+	}
+`
+
 export const GET_IS_MEMBER_OF_AGREEMENT = gql`
 	query GetIsMemberOfAgreement(
 		$walletAddress: String
@@ -117,6 +127,7 @@ export const SUB_AGREEMENT = gql`
 			metadata
 			createdAt
 			name
+			isLaunched
 			AgreementTokens {
 				Wallet {
 					address
@@ -201,6 +212,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 			metadata
 			createdAt
 			name
+			isLaunched
 			gnosisSafeAddress
 			OwnerId
 			AgreementTokens {
@@ -269,6 +281,9 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 				isAdminRole
 				address
 				metadata
+				AgreementRoleTokens {
+					OwnerId
+				}
 				Agreement {
 					isTransferrable
 				}
@@ -298,11 +313,13 @@ export const SUB_AGREEMENTS = gql`
 			createdAt
 			name
 			metadata
+			isLaunched
 			AgreementTokens {
 				Wallet {
 					address
 					ens
 				}
+				OwnerId
 				tokenId
 				tokenURI
 				mintedAt
@@ -361,6 +378,7 @@ export const GET_MEMBERS_FOR_ROLE = gql`
 					Agreement: { AgreementRoles: { id: { _eq: $roleId } } }
 				}
 			) {
+				OwnerId
 				Wallet {
 					address
 					ens
@@ -396,6 +414,7 @@ export const GET_ALL_AGREEMENTS = gql`
 					address
 					ens
 				}
+				OwnerId
 				tokenId
 				tokenURI
 				mintedAt
@@ -426,8 +445,10 @@ export const SUB_MY_AGREEMENTS = gql`
 			slug
 			address
 			createdAt
+			OwnerId
 			name
 			metadata
+			isLaunched
 			splits
 			gnosisSafeAddress
 			mintPermissions
@@ -439,11 +460,25 @@ export const SUB_MY_AGREEMENTS = gql`
 					address
 				}
 			}
+			AgreementRoles {
+				id
+				name
+				isAdminRole
+				address
+				metadata
+				AgreementRoleTokens {
+					OwnerId
+				}
+				Agreement {
+					isTransferrable
+				}
+			}
 			AgreementTokens {
 				Wallet {
 					address
 					ens
 				}
+				OwnerId
 			}
 		}
 	}

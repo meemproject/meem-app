@@ -12,12 +12,15 @@ export const colorLightGrey = '#F2F2F2'
 export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
 export const colorBlue = '#9ED3FD'
+export const colorBlueHover = '#82c5fc'
 export const colorLightBlue = '#f3faff'
 export const colorDarkBlue = '#6895f7'
 export const colorYellow = '#F9FF15'
 export const colorDarkYellow = '#e0e810'
+export const colorDarkerYellow = '#4d4f08'
 export const colorRed = '#FF6651'
 export const colorAsh = '#BFCDD8'
+export const colorAshHover = '#b0c1cf'
 export const colorAshLight = '#F4F7F8'
 
 // Utility colors
@@ -33,12 +36,38 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorDarkGrey
 		},
+		'&:loading': {
+			backgroundColor: colorDarkGrey
+		},
+		'&:disabled': {
+			backgroundColor: colorDarkGrey
+		},
+		borderRadius: 24
+	},
+	buttonAsh: {
+		backgroundColor: colorAsh,
+		'&:hover': {
+			backgroundColor: colorAshHover
+		},
+		'&:loading': {
+			backgroundColor: colorAshHover
+		},
+		'&:disabled': {
+			backgroundColor: colorAshHover
+		},
+		color: colorBlack,
 		borderRadius: 24
 	},
 	buttonGrey: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey,
 		'&:hover': {
+			backgroundColor: colorLightGrey
+		},
+		'&:loading': {
+			backgroundColor: colorLightGrey
+		},
+		'&:disabled': {
 			backgroundColor: colorLightGrey
 		},
 		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
@@ -49,6 +78,12 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorDarkerGrey
 		},
+		'&:loading': {
+			backgroundColor: colorDarkerGrey
+		},
+		'&:disabled': {
+			backgroundColor: colorDarkerGrey
+		},
 		color: colorWhite,
 		borderRadius: 24
 	},
@@ -56,7 +91,13 @@ export const useMeemTheme = createStyles(theme => ({
 		color: colorBlack,
 		backgroundColor: colorBlue,
 		'&:hover': {
-			backgroundColor: colorDarkBlue
+			backgroundColor: colorBlueHover
+		},
+		'&:loading': {
+			backgroundColor: colorBlueHover
+		},
+		'&:disabled': {
+			backgroundColor: colorBlueHover
 		},
 		borderRadius: 24
 	},
@@ -66,12 +107,24 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:hover': {
 			backgroundColor: colorDarkYellow
 		},
+		'&:loading': {
+			backgroundColor: colorDarkYellow
+		},
+		'&:disabled': {
+			backgroundColor: colorDarkYellow
+		},
 		borderRadius: 24
 	},
 	buttonYellowBordered: {
 		color: colorYellow,
 		backgroundColor: 'transparent',
 		'&:hover': {
+			backgroundColor: colorDarkerGrey
+		},
+		'&:loading': {
+			backgroundColor: colorDarkerGrey
+		},
+		'&:disabled': {
 			backgroundColor: colorDarkerGrey
 		},
 		border: `2px solid ${colorYellow}`,
@@ -83,6 +136,12 @@ export const useMeemTheme = createStyles(theme => ({
 		borderColor: colorBlack,
 		backgroundColor: colorWhite,
 		'&:hover': {
+			backgroundColor: colorLightGrey
+		},
+		'&:loading': {
+			backgroundColor: colorLightGrey
+		},
+		'&:disabled': {
 			backgroundColor: colorLightGrey
 		}
 	},
@@ -115,7 +174,11 @@ export const useMeemTheme = createStyles(theme => ({
 	fRichTextEditorToolbar: {
 		border: 'none',
 		borderRadius: 24,
+		lineHeight: 1.4,
 		marginBottom: 10
+	},
+	fRichTextEditorContent: {
+		lineHeight: 1.4
 	},
 
 	// Layout
@@ -344,10 +407,11 @@ export const useMeemTheme = createStyles(theme => ({
 			paddingTop: 16
 		}
 	},
-	pageHeaderTitleContainer: {
-		marginLeft: 32,
+	pageHeaderTitleContainer: {},
+	pageHeaderImage: {
+		marginRight: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			marginLeft: 16
+			marginRight: 16
 		}
 	},
 	pageHeaderExitButton: {
@@ -402,7 +466,7 @@ export const useMeemTheme = createStyles(theme => ({
 	pageResponsiveContainer: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 64,
+		marginTop: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			flexDirection: 'column',
 			marginTop: 0
@@ -522,10 +586,7 @@ export const useMeemTheme = createStyles(theme => ({
 		padding: 24,
 		width: '100%',
 		borderRadius: 16,
-		boxShadow:
-			theme.colorScheme === 'dark'
-				? ''
-				: '0px 4px 30px rgba(0, 0, 0, 0.1)',
+
 		marginBottom: 48,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
@@ -534,10 +595,6 @@ export const useMeemTheme = createStyles(theme => ({
 		}
 	},
 	widgetAsh: {
-		boxShadow:
-			theme.colorScheme === 'dark'
-				? ''
-				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
 		borderRadius: 16,
 		width: '100%',
 		backgroundColor:
@@ -562,7 +619,7 @@ export const useMeemTheme = createStyles(theme => ({
 		width: '100%',
 		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		padding: 24,
-		marginBottom: 48,
+		marginBottom: 36,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',
@@ -605,7 +662,7 @@ export const useMeemTheme = createStyles(theme => ({
 		marginTop: -12,
 		marginBottom: -12,
 		lineHeight: 1,
-		fontSize: 24,
+		fontSize: 120,
 		zIndex: -1000
 	},
 	emojiCanvasCover: {
@@ -621,7 +678,6 @@ export const useMeemTheme = createStyles(theme => ({
 		zIndex: -1
 	},
 	imageAgreementLogo: {
-		imageRendering: 'pixelated',
 		width: 80,
 		height: 80,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -643,9 +699,7 @@ export const useMeemTheme = createStyles(theme => ({
 		right: '-105px',
 		cursor: 'pointer'
 	},
-	imagePixelated: {
-		imageRendering: 'pixelated'
-	},
+	imagePixelated: {},
 
 	// Misc
 	backArrow: {
@@ -658,6 +712,11 @@ export const useMeemTheme = createStyles(theme => ({
 	badge: {
 		paddingLeft: 8,
 		paddingRight: 8
+	},
+	communityLaunchHeader: {
+		background:
+			'linear-gradient(117deg, rgba(227,255,191,1) 0%, rgba(229,255,183,0.8477984943977591) 3%, rgba(247,254,113,0.8534007352941176) 31%, rgba(177,220,255,0.8505996148459384) 66%, rgba(133,139,33,0.4724483543417367) 100%)',
+		width: '100%'
 	},
 	iconDarkThemeToggle: {
 		marginTop: -4,

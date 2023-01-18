@@ -22,9 +22,7 @@ import {
 	SUB_AGREEMENT_AS_MEMBER,
 	SUB_IS_MEMBER_OF_AGREEMENT
 } from '../../graphql/agreements'
-import agreementFromAgreement, {
-	Agreement
-} from '../../model/agreement/agreements'
+import agreementFromDb, { Agreement } from '../../model/agreement/agreements'
 import { hostnameToChainId } from '../App'
 
 const defaultState: {
@@ -152,7 +150,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 					return
 				}
 			}
-			const possibleAgreement = await agreementFromAgreement(
+			const possibleAgreement = await agreementFromDb(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
 				agreementData.Agreements[0] as Agreements

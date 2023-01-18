@@ -10,7 +10,8 @@ import {
 	Space,
 	Loader,
 	useMantineColorScheme,
-	ActionIcon
+	ActionIcon,
+	Button
 } from '@mantine/core'
 import {
 	LoginModal,
@@ -43,8 +44,15 @@ export function HeaderMenu() {
 	const { classes: meemTheme, cx } = useMeemTheme()
 	const router = useRouter()
 
-	const { loginState, disconnectWallet, isConnected, isMeLoading, accounts } =
-		useAuth()
+	const {
+		loginState,
+		disconnectWallet,
+		isConnected,
+		isMeLoading,
+		accounts,
+		walletType,
+		magic
+	} = useAuth()
 
 	const { user } = useMeemUser()
 
@@ -118,12 +126,56 @@ export function HeaderMenu() {
 									? '/meem-logo-white.svg'
 									: '/meem-logo.svg'
 							}
+							fit={'contain'}
 							height={20}
+							width={80}
 						/>
 					</a>
+					<div className={meemTheme.visibleDesktopOnly}>
+						<div style={{ display: 'flex' }}>
+							<Space w={24} />
+							<a
+								style={{
+									textDecoration: 'none',
+									color: isDarkTheme ? 'white' : 'black'
+								}}
+								href="https://docs.meem.wtf/meem-protocol/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<Text className={meemTheme.tExtraSmallBold}>
+									Dev Docs
+								</Text>
+							</a>
+							<Space w={24} />
+							<a
+								style={{
+									textDecoration: 'none',
+									color: isDarkTheme ? 'white' : 'black'
+								}}
+								href="https://form.typeform.com/to/mICIQBrE"
+								target="_blank"
+								rel="noreferrer"
+							>
+								<Text className={meemTheme.tExtraSmallBold}>
+									Partner with Us
+								</Text>
+							</a>
+						</div>
+					</div>
 				</div>
 
 				<div className={meemTheme.siteHeaderRightItems}>
+					{walletType === 'magic' && (
+						<Button
+							className={meemTheme.buttonAsh}
+							onClick={() => {
+								magic?.connect.showWallet()
+							}}
+						>
+							Show Wallet
+						</Button>
+					)}
 					{(loginState === LoginState.LoggedIn || isConnected) && (
 						<Menu
 							radius={8}
@@ -220,9 +272,12 @@ export function HeaderMenu() {
 						>
 							<a
 								onClick={() => {
-									// id.login(false)
-									// loginWithRedirect()
-									setIsJoinAgreementsModalOpen(true)
+									router.push({
+										pathname: '/authenticate',
+										query: {
+											return: `/${window.location.pathname}`
+										}
+									})
 								}}
 							>
 								Join Meem

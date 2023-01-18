@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	Text,
 	Image,
@@ -12,12 +13,15 @@ import {
 	Center,
 	Modal
 } from '@mantine/core'
-import { useSDK } from '@meemproject/react'
+import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { ExternalLink, Settings } from 'tabler-icons-react'
-import { GetExtensionsQuery } from '../../../../generated/graphql'
+import { ExternalLink, Plus, Settings } from 'tabler-icons-react'
+import {
+	AgreementExtensions,
+	GetExtensionsQuery
+} from '../../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { colorGrey, useMeemTheme } from '../../Styles/MeemTheme'
@@ -29,13 +33,16 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const { sdk } = useSDK()
+	const { anonClient } = useMeemApollo()
 
 	// Fetch a list of available extensions.
 	const {
 		loading,
 		error,
 		data: availableExtensionsData
-	} = useQuery<GetExtensionsQuery>(GET_EXTENSIONS)
+	} = useQuery<GetExtensionsQuery>(GET_EXTENSIONS, {
+		client: anonClient
+	})
 
 	// Lists of extensions
 	const [searchedExtensions, setSearchedExtensions] = useState<Extension[]>(
@@ -93,13 +100,27 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		setIsEnablingExtension(false)
 	}
 
-	const navigateToExtensionSettings = (slug: string) => {
-		router.push(`/${agreement.slug}/e/${slug}/settings`)
+	const navigateToExtensionSettings = (extension: AgreementExtensions) => {
+		if (extension.Extension) {
+			if (extension.AgreementExtensionWidgets.length > 0) {
+				router.push(
+					`/${agreement.slug}/e/${
+						extension.Extension?.slug ?? ''
+					}/settings`
+				)
+			} else {
+				router.push(
+					`/${agreement.slug}/e/${extension.Extension?.slug ?? ''}`
+				)
+			}
+		}
 	}
 
 	const navigateToExtensionHome = (slug: string) => {
 		router.push(`/${agreement.slug}/e/${slug}`)
 	}
+
+	log.debug('EXTENSIONS YO', availableExtensionsData)
 
 	return (
 		<>
@@ -227,39 +248,47 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													height: 46
 												}}
 											>
-												<a
-													onClick={() => {
-														navigateToExtensionHome(
-															extension.Extension
-																?.slug ?? ''
-														)
-													}}
-												>
-													<div
-														className={
-															meemTheme.row
-														}
-														style={{
-															cursor: 'pointer',
-															padding: 12
-														}}
-													>
-														<ExternalLink
-															size={20}
-														/>
-														<Space w={4} />
-														<Text
-															className={
-																meemTheme.tExtraSmall
-															}
+												{extension
+													.AgreementExtensionWidgets
+													.length > 0 && (
+													<>
+														<a
+															onClick={() => {
+																navigateToExtensionHome(
+																	extension
+																		.Extension
+																		?.slug ??
+																		''
+																)
+															}}
 														>
-															Homepage
-														</Text>
-													</div>
-												</a>
-												<Space w={4} />
-												<Divider orientation="vertical" />
-												<Space w={4} />
+															<div
+																className={
+																	meemTheme.row
+																}
+																style={{
+																	cursor: 'pointer',
+																	padding: 12
+																}}
+															>
+																<ExternalLink
+																	size={20}
+																/>
+																<Space w={4} />
+																<Text
+																	className={
+																		meemTheme.tExtraSmall
+																	}
+																>
+																	Homepage
+																</Text>
+															</div>
+														</a>
+														<Space w={4} />
+														<Divider orientation="vertical" />
+														<Space w={4} />
+													</>
+												)}
 
 												<a
 													onClick={() => {
@@ -268,8 +297,6 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 														) {
 															navigateToExtensionSettings(
 																extension
-																	.Extension
-																	?.slug ?? ''
 															)
 														}
 													}}
@@ -283,14 +310,42 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 															padding: 12
 														}}
 													>
-														<Settings size={20} />
+														{extension
+															.AgreementExtensionLinks
+															.length === 0 &&
+															extension
+																.AgreementExtensionWidgets
+																.length ===
+																0 && (
+																<Plus
+																	size={20}
+																/>
+															)}
+														{(extension
+															.AgreementExtensionLinks
+															.length > 0 ||
+															extension
+																.AgreementExtensionWidgets
+																.length >
+																0) && (
+															<Settings
+																size={20}
+															/>
+														)}
 														<Space w={4} />
 														<Text
 															className={
 																meemTheme.tExtraSmall
 															}
 														>
-															Settings
+															{extension
+																.AgreementExtensionLinks
+																.length === 0 &&
+															extension
+																.AgreementExtensionWidgets
+																.length === 0
+																? 'Add Link'
+																: 'Settings'}
 														</Text>
 													</div>
 												</a>

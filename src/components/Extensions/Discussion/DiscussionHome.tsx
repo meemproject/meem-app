@@ -6,12 +6,14 @@ import {
 	TextInput,
 	Space,
 	Center,
-	Button
+	Button,
+	Loader
 } from '@mantine/core'
+import { useDebouncedValue } from '@mantine/hooks'
 import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { Search } from 'tabler-icons-react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { ChevronDown, ChevronUp, Search } from 'tabler-icons-react'
 import {
 	Agreement,
 	extensionFromSlug
@@ -195,7 +197,11 @@ export const DiscussionHome: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
+	const [filteredPosts, setFilteredPosts] = useState<DiscussionPost[]>([])
+	const [sortOrder, setSortOrder] = useState(1)
 	const [hasInitialized, setHasInitialized] = useState(false)
+	const [searchVal, setSearchVal] = useState('')
+	const [debouncedSearchVal] = useDebouncedValue(searchVal, 200)
 
 	const { sdk } = useSDK()
 	const { privateKey } = useDiscussions()
@@ -203,6 +209,31 @@ export const DiscussionHome: React.FC = () => {
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
+
+	const sortPosts = useCallback(
+		(postsToSort: DiscussionPost[]) => {
+			const newPosts = [...postsToSort]
+
+			newPosts.sort((a, b) => {
+				if (!a.createdAt) {
+					return sortOrder
+				}
+				if (!b.createdAt) {
+					return -sortOrder
+				}
+				if (a.createdAt > b.createdAt) {
+					return -sortOrder
+				}
+				if (a.createdAt < b.createdAt) {
+					return sortOrder
+				}
+				return 0
+			})
+
+			return newPosts
+		},
+		[sortOrder]
+	)
 
 	useEffect(() => {
 		const run = async () => {
@@ -216,7 +247,7 @@ export const DiscussionHome: React.FC = () => {
 				privateKey,
 				path,
 				cb: (items: any) => {
-					const newPosts: DiscussionPost[] = []
+					let newPosts: DiscussionPost[] = []
 
 					Object.keys(items).forEach(k => {
 						const item = items[k]
@@ -231,21 +262,7 @@ export const DiscussionHome: React.FC = () => {
 						}
 					})
 
-					newPosts.sort((a, b) => {
-						if (!a.createdAt) {
-							return 1
-						}
-						if (!b.createdAt) {
-							return -1
-						}
-						if (a.createdAt > b.createdAt) {
-							return -1
-						}
-						if (a.createdAt < b.createdAt) {
-							return 1
-						}
-						return 0
-					})
+					newPosts = sortPosts(newPosts)
 
 					setPosts(newPosts)
 				}
@@ -254,7 +271,26 @@ export const DiscussionHome: React.FC = () => {
 			setHasInitialized(true)
 		}
 		run()
-	}, [sdk, agreement, privateKey])
+	}, [sdk, agreement, privateKey, sortPosts])
+
+	useEffect(() => {
+		const newPosts = posts.filter(p => {
+			if (
+				debouncedSearchVal.length === 0 ||
+				p.body.indexOf(debouncedSearchVal) > -1 ||
+				p.title.indexOf(debouncedSearchVal) > -1 ||
+				(p.displayName &&
+					p.displayName.indexOf(debouncedSearchVal) > -1) ||
+				p.walletAddress.indexOf(debouncedSearchVal) > -1
+			) {
+				return true
+			}
+
+			return false
+		})
+
+		setFilteredPosts(newPosts)
+	}, [debouncedSearchVal, posts])
 
 	return (
 		<>
@@ -263,72 +299,100 @@ export const DiscussionHome: React.FC = () => {
 				isLoadingAgreement,
 				agreement,
 				agreementExtension
-			) &&
-				hasInitialized && (
-					<>
-						<ExtensionPageHeader extensionSlug={'discussions'} />
+			) && (
+				<>
+					{!hasInitialized && (
+						<>
+							<Container>
+								<Space h={120} />
+								<Center>
+									<Loader color="blue" variant="oval" />
+								</Center>
+							</Container>
+						</>
+					)}
+					{hasInitialized && (
+						<>
+							<ExtensionPageHeader
+								extensionSlug={'discussions'}
+							/>
 
-						<Container>
-							<Space h={24} />
-							{posts.length === 0 && (
-								<>
-									<Center>
-										<Text className={meemTheme.tSmall}>
-											There are no posts yet in your
-											community. Be the first one to say
-											something!
-										</Text>
-									</Center>
-									<Space h={24} />
-								</>
-							)}
+							<Container>
+								<Space h={24} />
+								{posts.length === 0 && (
+									<>
+										<Center>
+											<Text className={meemTheme.tSmall}>
+												There are no posts yet in your
+												community. Be the first one to
+												say something!
+											</Text>
+										</Center>
+										<Space h={24} />
+									</>
+								)}
 
-							<Center>
-								<Button
-									className={meemTheme.buttonBlack}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement?.slug}/e/discussions/submit`
-										})
-									}}
-								>
-									+ Start a discussion
-								</Button>
-							</Center>
-							<Space h={48} />
-							{posts.length > 0 && (
-								<div className={meemTheme.centeredRow}>
-									<TextInput
-										radius={20}
-										classNames={{
-											input: meemTheme.fTextField
+								<Center>
+									<Button
+										className={meemTheme.buttonBlack}
+										onClick={() => {
+											router.push({
+												pathname: `/${agreement?.slug}/e/discussions/submit`
+											})
 										}}
-										icon={<Search />}
-										placeholder={'Search discussions'}
-										className={meemTheme.fullWidth}
-										size={'lg'}
-										onChange={event => {
-											log.debug(event.target.value)
-											// TODO
-										}}
-									/>
-									<Space w={16} />
-									<Button className={meemTheme.buttonBlack}>
-										Sort
+									>
+										+ Start a discussion
 									</Button>
-								</div>
-							)}
+								</Center>
+								<Space h={48} />
+								{posts.length > 0 && (
+									<div className={meemTheme.centeredRow}>
+										<TextInput
+											radius={20}
+											classNames={{
+												input: meemTheme.fTextField
+											}}
+											icon={<Search />}
+											placeholder={'Search discussions'}
+											className={meemTheme.fullWidth}
+											size={'lg'}
+											onChange={event => {
+												log.debug(event.target.value)
+												// TODO
+												setSearchVal(event.target.value)
+											}}
+										/>
+										<Space w={16} />
+										<Button
+											className={meemTheme.buttonBlack}
+											onClick={() =>
+												setSortOrder(-sortOrder)
+											}
+											rightIcon={
+												sortOrder === 1 ? (
+													<ChevronDown />
+												) : (
+													<ChevronUp />
+												)
+											}
+										>
+											Sort
+										</Button>
+									</div>
+								)}
 
-							<Space h={32} />
-							{posts.map(post => (
-								<DiscussionPostPreview
-									key={`post-${post.id}`}
-									post={post}
-								/>
-							))}
-						</Container>
-					</>
-				)}
+								<Space h={32} />
+								{filteredPosts.map(post => (
+									<DiscussionPostPreview
+										key={`post-${post.id}`}
+										post={post}
+									/>
+								))}
+							</Container>
+						</>
+					)}
+				</>
+			)}
 		</>
 	)
 }

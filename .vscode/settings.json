@@ -3,7 +3,7 @@
 	"git.ignoreLimitWarning": true,
 	"typescript.validate.enable": true,
 	"javascript.validate.enable": false,
-	"editor.formatOnSave": true,
+	"editor.formatOnSave": false,
 	"files.watcherExclude": {
 		"**/.git/objects/**": true,
 		"**/.git/subtree-cache/**": true,
@@ -24,7 +24,12 @@
 		"typescriptreact"
 	],
 	"eslint.options": {
-		"extensions": [".js", ".jsx", ".ts", ".tsx"]
+		"extensions": [
+			".js",
+			".jsx",
+			".ts",
+			".tsx"
+		]
 	},
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.preferences.importModuleSpecifier": "relative",
