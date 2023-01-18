@@ -35,13 +35,13 @@ const MAuthenticate: React.FC = () => {
 				}
 			}
 		} catch (e) {
+			setIsLoading(false)
 			showErrorNotification(
 				'Oops!',
 				'Unable to sign into Meem with your wallet. Please get in touch!'
 			)
 			log.crit(e)
 		}
-		setIsLoading(false)
 	}, [wallet, router, login])
 
 	const connectWallet = useCallback(async () => {
