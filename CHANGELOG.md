@@ -1,3 +1,26 @@
+# [1.11.0](https://github.com/meemproject/meem-app/compare/v1.10.0...v1.11.0) (2023-01-18)
+
+
+### Bug Fixes
+
+* a couple of bugs with RoleManager and navigation ([ccbf0e9](https://github.com/meemproject/meem-app/commit/ccbf0e9))
+* add role ids into mint and burn ([39538b1](https://github.com/meemproject/meem-app/commit/39538b1))
+* adding and removing role members ([1b07088](https://github.com/meemproject/meem-app/commit/1b07088))
+* crash when link extension is not set up yet ([d2e148f](https://github.com/meemproject/meem-app/commit/d2e148f))
+* Fix some dark mode colors ([b3d098e](https://github.com/meemproject/meem-app/commit/b3d098e))
+* loading indicator on auth screen disappears too early ([2ecd019](https://github.com/meemproject/meem-app/commit/2ecd019))
+* meem logo distortion on mobile, home layout padding fix ([0e4d2ea](https://github.com/meemproject/meem-app/commit/0e4d2ea))
+* mint tokens on role creation ([60829da](https://github.com/meemproject/meem-app/commit/60829da))
+* prevent flash of switch network screen ([18b6398](https://github.com/meemproject/meem-app/commit/18b6398))
+* Remove obsolete properties on agreement model ([d6cf1a7](https://github.com/meemproject/meem-app/commit/d6cf1a7))
+* some incorrect params in the example link extension / blank slate ([0fc41d2](https://github.com/meemproject/meem-app/commit/0fc41d2))
+
+
+### Features
+
+* Link Extension Settings, Discord Link now supported ([c08b482](https://github.com/meemproject/meem-app/commit/c08b482))
+* support sidebar and favorites section link visibility ([92180e3](https://github.com/meemproject/meem-app/commit/92180e3))
+
 # [1.10.0](https://github.com/meemproject/clubs-web/compare/v1.9.1...v1.10.0) (2023-01-12)
 
 
