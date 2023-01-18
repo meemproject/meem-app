@@ -43,6 +43,12 @@ export const RolesManager: React.FC = () => {
 	const [isAddingNewRole, setIsAddingNewRole] = useState(false)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
+	const navigateToAgreementHome = () => {
+		router.push({
+			pathname: `/${agreement?.slug}/`
+		})
+	}
+
 	const navigateToAgreementAdmin = () => {
 		router.push({
 			pathname: `/${agreement?.slug}/admin`,
@@ -180,7 +186,7 @@ export const RolesManager: React.FC = () => {
 						</div>
 						<a
 							className={meemTheme.pageHeaderExitButton}
-							onClick={navigateToAgreementAdmin}
+							onClick={navigateToAgreementHome}
 						>
 							<Image src="/delete.png" width={24} height={24} />
 						</a>
