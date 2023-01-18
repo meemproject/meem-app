@@ -335,7 +335,8 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							},
 							members: membersArray,
 							maxSupply: '0',
-							agreementId: agreement.id ?? ''
+							agreementId: agreement.id ?? '',
+							shouldMintTokens: true
 						})
 
 						log.debug(
