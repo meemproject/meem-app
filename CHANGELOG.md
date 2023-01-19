@@ -1,3 +1,15 @@
+# [1.12.0](https://github.com/meemproject/meem-app/compare/v1.11.1...v1.12.0) (2023-01-19)
+
+
+### Bug Fixes
+
+* don't use 'add link' logic as it may not apply to non-link, non-widget extensions ([315d4a9](https://github.com/meemproject/meem-app/commit/315d4a9))
+
+
+### Features
+
+* added missing extensions back into the app ([42d853f](https://github.com/meemproject/meem-app/commit/42d853f))
+
 ## [1.11.1](https://github.com/meemproject/meem-app/compare/v1.11.0...v1.11.1) (2023-01-18)
 
 # [1.11.0](https://github.com/meemproject/meem-app/compare/v1.10.0...v1.11.0) (2023-01-18)
