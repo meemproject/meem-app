@@ -58,7 +58,7 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 		if (
 			linkUrl.length === 0 ||
 			linkUrl.length > 100 ||
-			!linkUrl.includes('discord')
+			!linkUrl.includes('https://discord.gg')
 		) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
@@ -120,7 +120,7 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Discord Server URL`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -170,7 +170,7 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

@@ -59,7 +59,11 @@ export const MycoLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (linkUrl.length === 0 || linkUrl.length > 100) {
+		if (
+			linkUrl.length === 0 ||
+			linkUrl.length > 100 ||
+			!linkUrl.includes('myco')
+		) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -170,7 +174,7 @@ export const MycoLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

@@ -120,7 +120,11 @@ export const CalendarLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Calendar URL`.toUpperCase()}
+									</Text>
+									<Space h={12} />
+									<Text className={meemTheme.tExtraSmall}>
+										{`Don't forget to make sure the calendar link is accessible to the public!`}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -170,7 +174,7 @@ export const CalendarLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

@@ -59,7 +59,11 @@ export const ParagraphLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (linkUrl.length === 0 || linkUrl.length > 100) {
+		if (
+			linkUrl.length === 0 ||
+			linkUrl.length > 100 ||
+			!linkUrl.includes('https://paragraph.xyz/')
+		) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -120,7 +124,11 @@ export const ParagraphLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Paragraph Publication URL`.toUpperCase()}
+									</Text>
+									<Space h={12} />
+									<Text className={meemTheme.tExtraSmall}>
+										{`Deeper integration with Paragraph is coming soon.`}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -170,7 +178,7 @@ export const ParagraphLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

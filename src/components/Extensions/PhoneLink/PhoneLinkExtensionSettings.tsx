@@ -59,9 +59,21 @@ export const PhoneLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (linkUrl.length === 0 || linkUrl.length > 100) {
-			showErrorNotification('Oops!', 'Please enter a valid URL.')
+		if (linkUrl.length === 0 || linkUrl.length > 20) {
+			showErrorNotification('Oops!', 'Please enter a valid phone number.')
 			return
+		}
+
+		// Ask the user to fix their tel prefix if necessary
+		if (linkUrl.includes('tel') && !linkUrl.includes('tel:')) {
+			showErrorNotification('Oops!', 'Please fix your tel: prefix.')
+			return
+		}
+
+		let phoneNumber = linkUrl
+		if (!linkUrl.includes('tel:')) {
+			phoneNumber = `tel:${linkUrl}`
+			phoneNumber.replaceAll(' ', '')
 		}
 
 		setIsSavingChanges(true)
@@ -73,7 +85,7 @@ export const PhoneLinkExtensionSettings: React.FC = () => {
 				favoriteLinksVisible: shouldDisplayInFavoriteLinks
 			},
 			externalLink: {
-				url: linkUrl,
+				url: phoneNumber,
 				isEnabled: true,
 				visibility: isPrivateExtension
 					? MeemAPI.AgreementExtensionVisibility.TokenHolders
@@ -120,7 +132,7 @@ export const PhoneLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Phone number`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -139,7 +151,7 @@ export const PhoneLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										LINK DISPLAY SETTINGS
+										DISPLAY SETTINGS
 									</Text>
 									<Space h={8} />
 									<div
@@ -147,7 +159,9 @@ export const PhoneLinkExtensionSettings: React.FC = () => {
 									>
 										<Switch
 											color={'green'}
-											label={'Display link in sidebar'}
+											label={
+												'Display phone number in sidebar'
+											}
 											checked={shouldDisplayInSidebar}
 											onChange={value => {
 												if (value) {
@@ -170,7 +184,7 @@ export const PhoneLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display phone number in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks
@@ -196,7 +210,7 @@ export const PhoneLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Hide links if viewer is not a community member'
+												'Hide phone number if viewer is not a community member'
 											}
 											checked={isPrivateExtension}
 											onChange={value => {

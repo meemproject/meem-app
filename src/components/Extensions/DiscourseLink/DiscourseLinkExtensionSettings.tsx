@@ -120,7 +120,7 @@ export const DiscourseLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Discourse Link URL`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -170,7 +170,7 @@ export const DiscourseLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

@@ -59,7 +59,11 @@ export const RedditLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (linkUrl.length === 0 || linkUrl.length > 100) {
+		if (
+			linkUrl.length === 0 ||
+			linkUrl.length > 100 ||
+			(!linkUrl.includes('reddit') && !linkUrl.includes('redd.it'))
+		) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -120,7 +124,7 @@ export const RedditLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Subreddit URL`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -170,7 +174,7 @@ export const RedditLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

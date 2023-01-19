@@ -59,7 +59,12 @@ export const YouTubeLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (linkUrl.length === 0 || linkUrl.length > 100) {
+		if (
+			linkUrl.length === 0 ||
+			linkUrl.length > 100 ||
+			(!linkUrl.includes('https://youtu.be') &&
+				!linkUrl.includes('https://youtube.com'))
+		) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -120,7 +125,7 @@ export const YouTubeLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`YouTube URL`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -170,7 +175,7 @@ export const YouTubeLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

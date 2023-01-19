@@ -59,9 +59,27 @@ export const EmailLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (linkUrl.length === 0 || linkUrl.length > 100) {
-			showErrorNotification('Oops!', 'Please enter a valid URL.')
+		if (
+			linkUrl.length === 0 ||
+			linkUrl.length > 100 ||
+			!linkUrl.includes('@')
+		) {
+			showErrorNotification(
+				'Oops!',
+				'Please enter a valid email address.'
+			)
 			return
+		}
+
+		// Ask the user to fix their mailto prefix if necessary
+		if (linkUrl.includes('mailto') && !linkUrl.includes('mailto:')) {
+			showErrorNotification('Oops!', 'Please fix your mailto: prefix.')
+			return
+		}
+
+		let email = linkUrl
+		if (!linkUrl.includes('mailto:')) {
+			email = `mailto:${linkUrl}`
 		}
 
 		setIsSavingChanges(true)
@@ -73,7 +91,7 @@ export const EmailLinkExtensionSettings: React.FC = () => {
 				favoriteLinksVisible: shouldDisplayInFavoriteLinks
 			},
 			externalLink: {
-				url: linkUrl,
+				url: email,
 				isEnabled: true,
 				visibility: isPrivateExtension
 					? MeemAPI.AgreementExtensionVisibility.TokenHolders
@@ -120,7 +138,7 @@ export const EmailLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Email Address`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -139,7 +157,7 @@ export const EmailLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										LINK DISPLAY SETTINGS
+										EMAIL ADDRESS DISPLAY SETTINGS
 									</Text>
 									<Space h={8} />
 									<div
@@ -147,7 +165,9 @@ export const EmailLinkExtensionSettings: React.FC = () => {
 									>
 										<Switch
 											color={'green'}
-											label={'Display link in sidebar'}
+											label={
+												'Display email address in sidebar'
+											}
 											checked={shouldDisplayInSidebar}
 											onChange={value => {
 												if (value) {
@@ -170,7 +190,7 @@ export const EmailLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display email address in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks
@@ -196,7 +216,7 @@ export const EmailLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Hide links if viewer is not a community member'
+												'Hide email address if viewer is not a community member'
 											}
 											checked={isPrivateExtension}
 											onChange={value => {

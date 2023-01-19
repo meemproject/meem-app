@@ -105,7 +105,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 								isSettingsPage
 									? ' Settings'
 									: hasNoWidget
-									? 'Link Settings'
+									? ' Settings'
 									: ''
 							}`}</Text>
 						</div>
