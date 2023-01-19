@@ -750,11 +750,13 @@ export default async function agreementFromDb(
 		}
 
 		// Extensions
-		const allExtensions: AgreementExtensions[] = []
+		let allExtensions: AgreementExtensions[] = []
 		if (agreementData.AgreementExtensions) {
-			agreementData.AgreementExtensions.forEach(extension => {
-				allExtensions.push(extension)
-			})
+			const sortedAgrExts = [...agreementData.AgreementExtensions]
+			sortedAgrExts.sort((a, b) =>
+				(a.Extension?.slug ?? '').localeCompare(b.Extension?.slug ?? '')
+			)
+			allExtensions = [...sortedAgrExts]
 		}
 
 		// Calculate slots left if totalOriginSupply > 0

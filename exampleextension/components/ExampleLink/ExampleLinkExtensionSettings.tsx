@@ -175,7 +175,7 @@ export const ExampleLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks

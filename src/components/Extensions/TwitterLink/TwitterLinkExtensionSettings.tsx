@@ -59,7 +59,12 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (linkUrl.length === 0 || linkUrl.length > 100) {
+		if (
+			linkUrl.length === 0 ||
+			linkUrl.length > 100 ||
+			(!linkUrl.includes('https://twitter.com/') &&
+				!linkUrl.includes('t.co'))
+		) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -120,7 +125,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Link URL`.toUpperCase()}
+										{`Twitter Profile URL`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -170,7 +175,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in Favorite Links section'
+												'Display link in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks
