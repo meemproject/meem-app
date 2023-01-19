@@ -21,10 +21,10 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const TwitterLinkExtensionSettings: React.FC = () => {
+export const EmailLinkExtensionSettings: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('twitter', agreement)
+	const agreementExtension = extensionFromSlug('email', agreement)
 	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -62,11 +62,24 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 		if (
 			linkUrl.length === 0 ||
 			linkUrl.length > 100 ||
-			(!linkUrl.includes('https://twitter.com/') &&
-				!linkUrl.includes('t.co'))
+			!linkUrl.includes('@')
 		) {
-			showErrorNotification('Oops!', 'Please enter a valid URL.')
+			showErrorNotification(
+				'Oops!',
+				'Please enter a valid email address.'
+			)
 			return
+		}
+
+		// Ask the user to fix their mailto prefix if necessary
+		if (linkUrl.includes('mailto') && !linkUrl.includes('mailto:')) {
+			showErrorNotification('Oops!', 'Please fix your mailto: prefix.')
+			return
+		}
+
+		let email = linkUrl
+		if (!linkUrl.includes('mailto:')) {
+			email = `mailto:${linkUrl}`
 		}
 
 		setIsSavingChanges(true)
@@ -78,7 +91,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 				favoriteLinksVisible: shouldDisplayInFavoriteLinks
 			},
 			externalLink: {
-				url: linkUrl,
+				url: email,
 				isEnabled: true,
 				visibility: isPrivateExtension
 					? MeemAPI.AgreementExtensionVisibility.TokenHolders
@@ -96,7 +109,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'twitter'} />
+			<ExtensionBlankSlate extensionSlug={'email'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -118,14 +131,14 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'twitter'} />
+							<ExtensionPageHeader extensionSlug={'email'} />
 
 							<Container>
 								<div>
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Twitter Profile URL`.toUpperCase()}
+										{`Email Address`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -144,7 +157,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										LINK DISPLAY SETTINGS
+										EMAIL ADDRESS DISPLAY SETTINGS
 									</Text>
 									<Space h={8} />
 									<div
@@ -152,7 +165,9 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 									>
 										<Switch
 											color={'green'}
-											label={'Display link in sidebar'}
+											label={
+												'Display email address in sidebar'
+											}
 											checked={shouldDisplayInSidebar}
 											onChange={value => {
 												if (value) {
@@ -175,7 +190,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in main column on homepage'
+												'Display email address in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks
@@ -201,7 +216,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Hide links if viewer is not a community member'
+												'Hide email address if viewer is not a community member'
 											}
 											checked={isPrivateExtension}
 											onChange={value => {

@@ -21,10 +21,10 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const TwitterLinkExtensionSettings: React.FC = () => {
+export const CalendarLinkExtensionSettings: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('twitter', agreement)
+	const agreementExtension = extensionFromSlug('calendar', agreement)
 	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -59,12 +59,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (
-			linkUrl.length === 0 ||
-			linkUrl.length > 100 ||
-			(!linkUrl.includes('https://twitter.com/') &&
-				!linkUrl.includes('t.co'))
-		) {
+		if (linkUrl.length === 0 || linkUrl.length > 100) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -96,7 +91,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'twitter'} />
+			<ExtensionBlankSlate extensionSlug={'calendar'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -118,14 +113,18 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'twitter'} />
+							<ExtensionPageHeader extensionSlug={'calendar'} />
 
 							<Container>
 								<div>
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Twitter Profile URL`.toUpperCase()}
+										{`Calendar URL`.toUpperCase()}
+									</Text>
+									<Space h={12} />
+									<Text className={meemTheme.tExtraSmall}>
+										{`Don't forget to make sure the calendar link is accessible to the public!`}
 									</Text>
 									<Space h={12} />
 									<TextInput

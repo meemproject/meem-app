@@ -21,10 +21,10 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const TwitterLinkExtensionSettings: React.FC = () => {
+export const WebsiteLinkExtensionSettings: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('twitter', agreement)
+	const agreementExtension = extensionFromSlug('website', agreement)
 	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -59,12 +59,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (
-			linkUrl.length === 0 ||
-			linkUrl.length > 100 ||
-			(!linkUrl.includes('https://twitter.com/') &&
-				!linkUrl.includes('t.co'))
-		) {
+		if (linkUrl.length === 0 || linkUrl.length > 100) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -96,7 +91,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'twitter'} />
+			<ExtensionBlankSlate extensionSlug={'website'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -118,14 +113,14 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'twitter'} />
+							<ExtensionPageHeader extensionSlug={'website'} />
 
 							<Container>
 								<div>
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Twitter Profile URL`.toUpperCase()}
+										{`Website URL`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput

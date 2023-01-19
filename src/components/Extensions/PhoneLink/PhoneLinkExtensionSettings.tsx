@@ -21,10 +21,10 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const TwitterLinkExtensionSettings: React.FC = () => {
+export const PhoneLinkExtensionSettings: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('twitter', agreement)
+	const agreementExtension = extensionFromSlug('phone', agreement)
 	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -59,14 +59,21 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (
-			linkUrl.length === 0 ||
-			linkUrl.length > 100 ||
-			(!linkUrl.includes('https://twitter.com/') &&
-				!linkUrl.includes('t.co'))
-		) {
-			showErrorNotification('Oops!', 'Please enter a valid URL.')
+		if (linkUrl.length === 0 || linkUrl.length > 20) {
+			showErrorNotification('Oops!', 'Please enter a valid phone number.')
 			return
+		}
+
+		// Ask the user to fix their tel prefix if necessary
+		if (linkUrl.includes('tel') && !linkUrl.includes('tel:')) {
+			showErrorNotification('Oops!', 'Please fix your tel: prefix.')
+			return
+		}
+
+		let phoneNumber = linkUrl
+		if (!linkUrl.includes('tel:')) {
+			phoneNumber = `tel:${linkUrl}`
+			phoneNumber.replaceAll(' ', '')
 		}
 
 		setIsSavingChanges(true)
@@ -78,7 +85,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 				favoriteLinksVisible: shouldDisplayInFavoriteLinks
 			},
 			externalLink: {
-				url: linkUrl,
+				url: phoneNumber,
 				isEnabled: true,
 				visibility: isPrivateExtension
 					? MeemAPI.AgreementExtensionVisibility.TokenHolders
@@ -96,7 +103,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'twitter'} />
+			<ExtensionBlankSlate extensionSlug={'phone'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -118,14 +125,14 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'twitter'} />
+							<ExtensionPageHeader extensionSlug={'phone'} />
 
 							<Container>
 								<div>
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										{`Twitter Profile URL`.toUpperCase()}
+										{`Phone number`.toUpperCase()}
 									</Text>
 									<Space h={12} />
 									<TextInput
@@ -144,7 +151,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallLabel}
 									>
-										LINK DISPLAY SETTINGS
+										DISPLAY SETTINGS
 									</Text>
 									<Space h={8} />
 									<div
@@ -152,7 +159,9 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 									>
 										<Switch
 											color={'green'}
-											label={'Display link in sidebar'}
+											label={
+												'Display phone number in sidebar'
+											}
 											checked={shouldDisplayInSidebar}
 											onChange={value => {
 												if (value) {
@@ -175,7 +184,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Display link in main column on homepage'
+												'Display phone number in main column on homepage'
 											}
 											checked={
 												shouldDisplayInFavoriteLinks
@@ -201,7 +210,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 										<Switch
 											color={'green'}
 											label={
-												'Hide links if viewer is not a community member'
+												'Hide phone number if viewer is not a community member'
 											}
 											checked={isPrivateExtension}
 											onChange={value => {
