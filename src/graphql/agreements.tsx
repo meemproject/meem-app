@@ -341,7 +341,7 @@ export const SUB_AGREEMENTS = gql`
 
 export const GET_EXTENSIONS = gql`
 	query GetExtensions {
-		Extensions {
+		Extensions(order_by: { slug: asc }) {
 			createdAt
 			description
 			guideUrl
