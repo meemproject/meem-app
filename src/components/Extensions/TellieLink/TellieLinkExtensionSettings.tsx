@@ -59,10 +59,7 @@ export const TellieLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (
-			linkUrl.length === 0 ||
-			linkUrl.length > 100
-		) {
+		if (linkUrl.length === 0 || linkUrl.length > 100) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -116,9 +113,7 @@ export const TellieLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader
-								extensionSlug={'tellie'}
-							/>
+							<ExtensionPageHeader extensionSlug={'tellie'} />
 
 							<Container>
 								<div>

@@ -59,10 +59,7 @@ export const IOSLinkExtensionSettings: React.FC = () => {
 	}, [agreementExtension, isExistingDataSetup])
 
 	const saveChanges = async () => {
-		if (
-			linkUrl.length === 0 ||
-			linkUrl.length > 100
-		) {
+		if (linkUrl.length === 0 || linkUrl.length > 100) {
 			showErrorNotification('Oops!', 'Please enter a valid URL.')
 			return
 		}
@@ -116,9 +113,7 @@ export const IOSLinkExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader
-								extensionSlug={'ios'}
-							/>
+							<ExtensionPageHeader extensionSlug={'ios'} />
 
 							<Container>
 								<div>
