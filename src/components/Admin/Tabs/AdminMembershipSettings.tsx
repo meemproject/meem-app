@@ -246,7 +246,7 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 					<a onClick={openMembershipStartTimingModal}>
 						<span className={meemTheme.fBlueSelectableSpan}>
 							{membershipStartDate === undefined ||
-							membershipStartDate.getUTCMilliseconds() === 0
+							membershipStartDate.getFullYear() < 2023
 								? 'now'
 								: `${membershipStartDate.toDateString()} at ${membershipStartDate.getHours()}:${
 										membershipStartDate.getMinutes() > 9
@@ -259,7 +259,7 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 					<a onClick={openMembershipTimingEndModal}>
 						<span className={meemTheme.fBlueSelectableSpan}>
 							{membershipEndDate === undefined ||
-							membershipEndDate.getUTCMilliseconds() === 0
+							membershipEndDate.getFullYear() < 2023
 								? 'forever'
 								: `${membershipEndDate.toDateString()} at ${membershipEndDate.getHours()}:${
 										membershipEndDate.getMinutes() > 9

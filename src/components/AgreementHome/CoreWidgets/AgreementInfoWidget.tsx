@@ -540,7 +540,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 									height={20}
 									onClick={() => {
 										navigator.clipboard.writeText(
-											`${window.location.origin}/${agreement.slug}`
+											`${agreement.address}`
 										)
 										showSuccessNotification(
 											'Community agreement contract address copied!',
