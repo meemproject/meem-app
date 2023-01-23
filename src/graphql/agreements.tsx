@@ -292,6 +292,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 				OwnerId
 				AgreementRoleId
 				id
+				tokenId
 			}
 			AgreementWallets {
 				role
