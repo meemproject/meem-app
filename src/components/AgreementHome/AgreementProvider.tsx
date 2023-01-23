@@ -73,7 +73,8 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 						global.window ? global.window.location.host : ''
 					)
 			},
-			client: anonClient
+			client: anonClient,
+			skip: wallet.isConnected && wallet.isMeLoading
 		}
 	)
 
