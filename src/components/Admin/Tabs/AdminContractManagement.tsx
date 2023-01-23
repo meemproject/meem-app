@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
-import { useAuth, useSDK, useWallet } from '@meemproject/react'
+import { useAuth, useMeemApollo, useSDK, useWallet } from '@meemproject/react'
 import { Contract, ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -29,6 +29,8 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 	const { sdk } = useSDK()
 	const { chainId } = useAuth()
 
+	const { anonClient } = useMeemApollo()
+
 	const [smartContractPermission, setSmartContractPermission] =
 		useState('members-and-meem')
 
@@ -36,13 +38,22 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
 	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
 	const [isUpgradingAgreement, setIsUpgradingAgreement] = useState(false)
+	const [
+		isChangingMeemProtocolPermission,
+		setIsChangingMeemProtocolPermission
+	] = useState(false)
+	// Using this boolean avoids us creating a modal or listening to the result of changing
+	// protocol permission
+	const [hasChangedProtocolPermission, setHasChangedProtocolPermission] =
+		useState(false)
 
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
 		{
 			variables: {
 				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
-			}
+			},
+			client: anonClient
 		}
 	)
 
@@ -172,14 +183,21 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			}
 		}
 		fetchFacets()
-
-		// set the Meem API control radio button selection based on agreement data
-		setSmartContractPermission(
-			agreement.isAgreementControlledByMeemApi
-				? 'members-and-meem'
-				: 'members'
-		)
-	}, [agreement, wallet, bundleData, shouldShowUpgrade])
+		if (!hasChangedProtocolPermission) {
+			// set the Meem API control radio button selection based on agreement data
+			setSmartContractPermission(
+				agreement.isAgreementControlledByMeemApi
+					? 'members-and-meem'
+					: 'members'
+			)
+		}
+	}, [
+		agreement,
+		wallet,
+		bundleData,
+		shouldShowUpgrade,
+		hasChangedProtocolPermission
+	])
 
 	return (
 		<div>
@@ -224,37 +242,51 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			<Space h={8} />
 			<Text className={meemTheme.tSmallFaded}>
 				Please note that a transaction will occur when you save changes
-				to this setting.
+				to this setting. Changes may take a couple of minutes to apply.
 			</Text>
 			<Space h={12} />
 
-			<Radio.Group
-				orientation="vertical"
-				spacing={10}
-				size="md"
-				color="dark"
-				value={smartContractPermission}
-				onChange={(value: any) => {
-					setSmartContractPermission(value)
-				}}
-				required
-			>
-				<Radio
-					value="members-and-meem"
-					label="Yes, make Meem protocol an additional contract admin (Recommended)"
-				/>
-				<Radio
-					value="members"
-					label="No, only community members with the Admin role can manage this contract"
-				/>
-			</Radio.Group>
+			{!isChangingMeemProtocolPermission && (
+				<>
+					<Radio.Group
+						orientation="vertical"
+						spacing={10}
+						size="md"
+						color="dark"
+						value={smartContractPermission}
+						onChange={(value: any) => {
+							setSmartContractPermission(value)
+						}}
+						required
+					>
+						<Radio
+							value="members-and-meem"
+							label="Yes, make Meem protocol an additional contract admin (Recommended)"
+						/>
+						<Radio
+							value="members"
+							label="No, only community members with the Admin role can manage this contract"
+						/>
+					</Radio.Group>
+				</>
+			)}
 
 			<Space h={24} />
 
 			<Button
 				className={meemTheme.buttonBlack}
+				loading={isChangingMeemProtocolPermission}
+				disabled={isChangingMeemProtocolPermission}
 				onClick={async () => {
+					if (!bundleData) {
+						showErrorNotification(
+							'Oops!',
+							'Bundle data not found. Please let us know about this!'
+						)
+					}
 					try {
+						setHasChangedProtocolPermission(true)
+
 						const agreementContract = new Contract(
 							agreement?.address ?? '',
 							bundleData?.Bundles[0].abi,
@@ -266,24 +298,29 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 							smartContractPermission === 'members-and-meem' &&
 							!agreement.isAgreementControlledByMeemApi
 						) {
+							setIsChangingMeemProtocolPermission(true)
 							const tx = await agreementContract?.grantRole(
 								AgreementAdminRole,
 								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
 							)
 
 							await tx.wait()
+							setIsChangingMeemProtocolPermission(false)
 						} else if (
 							// If controlled by meem api and user wants to remove control...
 							smartContractPermission === 'members' &&
 							agreement.isAgreementControlledByMeemApi
 						) {
+							setIsChangingMeemProtocolPermission(true)
 							const tx = await agreementContract?.revokeRole(
 								AgreementAdminRole,
 								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
 							)
 
 							await tx.wait()
+							setIsChangingMeemProtocolPermission(false)
 						} else {
+							setIsChangingMeemProtocolPermission(false)
 							showErrorNotification(
 								'Oops!',
 								`There are no changes to save.`
