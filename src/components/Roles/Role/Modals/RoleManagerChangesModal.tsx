@@ -336,7 +336,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							members: membersArray,
 							maxSupply: '0',
 							agreementId: agreement.id ?? '',
-							shouldMintTokens: true
+							shouldMintTokens: true,
+							tokenMetadata: {
+								meem_metadata_type: 'Meem_AgreementToken',
+								meem_metadata_version: '20221116',
+								description: ``,
+								name: role.name,
+								image: '',
+								associations: [],
+								external_url: ''
+							}
 						})
 
 						log.debug(
