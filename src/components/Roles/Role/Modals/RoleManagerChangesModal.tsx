@@ -167,6 +167,13 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						}
 
 						// What tokens need to be minted or burned?
+						const originalRoleMemberWallets =
+							originalRoleMembers?.map(or =>
+								or.wallet.toLowerCase()
+							)
+						const roleMemberWallets = roleMembers?.map(r =>
+							r.wallet.toLowerCase()
+						)
 						const toMint: AgreementMember[] = []
 						const toBurn: AgreementMember[] = []
 						log.debug(
@@ -176,8 +183,8 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							`modal - role members = ${roleMembers?.length}`
 						)
 						if (
-							JSON.stringify(originalRoleMembers) ===
-							JSON.stringify(roleMembers)
+							JSON.stringify(originalRoleMemberWallets) ===
+							JSON.stringify(roleMemberWallets)
 						) {
 							log.debug('the list of members has not changed.')
 							if (!haveRoleSettingsChanged) {
@@ -277,7 +284,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 											token.AgreementRoleId === role.id &&
 											token.OwnerId === member.ownerId
 										) {
-											tokenId = token.OwnerId
+											tokenId = token.tokenId
 										}
 									}
 								)
@@ -336,7 +343,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							members: membersArray,
 							maxSupply: '0',
 							agreementId: agreement.id ?? '',
-							shouldMintTokens: true
+							shouldMintTokens: true,
+							tokenMetadata: {
+								meem_metadata_type: 'Meem_AgreementToken',
+								meem_metadata_version: '20221116',
+								description: ``,
+								name: role.name,
+								image: '',
+								associations: [],
+								external_url: ''
+							}
 						})
 
 						log.debug(
