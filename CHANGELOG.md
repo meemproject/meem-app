@@ -1,3 +1,16 @@
+# [1.13.0](https://github.com/meemproject/meem-app/compare/v1.12.0...v1.13.0) (2023-01-24)
+
+
+### Bug Fixes
+
+* burning role tokens ([c65100d](https://github.com/meemproject/meem-app/commit/c65100d))
+
+
+### Features
+
+* both creating a safe and changing meem protocol permissions now wait for changes on the db ([3129d1c](https://github.com/meemproject/meem-app/commit/3129d1c))
+* working role changes modal ([4868938](https://github.com/meemproject/meem-app/commit/4868938))
+
 # [1.12.0](https://github.com/meemproject/meem-app/compare/v1.11.1...v1.12.0) (2023-01-19)
 
 
