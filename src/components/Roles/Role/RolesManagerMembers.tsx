@@ -60,6 +60,8 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		const search = searchTerm
 		const newFiltered: AgreementMember[] = []
 
+		log.debug(`all members before filtering = ${allMembers.length}`)
+
 		if (searchTerm.length > 0) {
 			allMembers.forEach(member => {
 				if (
@@ -79,10 +81,12 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 		}
 	}
 
-	const addMember = (member: AgreementMember) => {
+	const addMembers = (toAdd: AgreementMember[]) => {
 		log.debug('add member')
 		const newMembers = [...members]
-		newMembers.push(member)
+		toAdd.forEach(mem => {
+			newMembers.push(mem)
+		})
 		filterMembers(newMembers, currentSearchTerm)
 		setMembers(newMembers)
 	}
@@ -272,9 +276,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 				}}
 				isOpened={isMembersModalOpen}
 				onMembersSaved={newMembers => {
-					newMembers.forEach(member => {
-						addMember(member)
-					})
+					addMembers(newMembers)
 					onMembersUpdated(newMembers)
 				}}
 			/>
