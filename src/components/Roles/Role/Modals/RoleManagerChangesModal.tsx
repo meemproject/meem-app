@@ -2,17 +2,11 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
-import {
-	useMeemApollo,
-	useSDK,
-	useSockets,
-	useWallet
-} from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
+import { useMeemApollo, useSDK, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { GetAgreementSubscriptionSubscription } from '../../../../../generated/graphql'
-import { SUB_AGREEMENT_AS_MEMBER } from '../../../../graphql/agreements'
+import { GetTransactionsSubscription } from '../../../../../generated/graphql'
+import { SUB_TRANSACTIONS } from '../../../../graphql/transactions'
 import {
 	Agreement,
 	AgreementMember,
@@ -22,7 +16,6 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../../utils/notifications'
-import { hostnameToChainId } from '../../../App'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {
@@ -54,66 +47,57 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 
 	const { classes: meemTheme } = useMeemTheme()
 
+	const [hasStartedTxs, setHasStartedTx] = useState(false)
+
+	const [hasCompletedTxs, setHasCompletedTx] = useState(false)
+
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const [currentAgreementDataString, setCurrentAgreementDataString] =
 		useState('')
 
-	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
+	const { anonClient } = useMeemApollo()
 
-	const { connect, sockets } = useSockets()
+	const [txIds, setTxIds] = useState<string[]>([])
 
-	const { mutualMembersClient } = useMeemApollo()
-
-	const {
-		loading,
-		error,
-		data: agreementData
-	} = useSubscription<GetAgreementSubscriptionSubscription>(
-		SUB_AGREEMENT_AS_MEMBER,
-		{
+	const { error, data: transactions } =
+		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
 			variables: {
-				slug: agreement?.slug ?? '',
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+				transactionIds: txIds
 			},
-			client: mutualMembersClient
-		}
-	)
+			client: anonClient,
+			skip: txIds.length === 0
+		})
 
 	const closeModal = useCallback(() => {
-		if (sockets) {
-			sockets.unsubscribe([
-				{ type: MeemAPI.MeemEvent.Err },
-				{ type: MeemAPI.MeemEvent.MeemIdUpdated },
-				{ type: MeemAPI.MeemEvent.MeemMinted }
-			])
-		}
 		onModalClosed()
-		setHasSubscribedToSockets(false)
+		setTxIds([])
+		setHasStartedTx(false)
+		setHasCompletedTx(false)
 		setIsSavingChanges(false)
 		setCurrentAgreementDataString('')
-	}, [onModalClosed, sockets])
+	}, [onModalClosed])
 
 	useEffect(() => {
 		function onRoleChangesSaved() {
-			log.debug('role changes saved')
+			if (!hasCompletedTxs) {
+				setHasCompletedTx(true)
+				log.debug('role changes saved')
 
-			showSuccessNotification(
-				'Role saved!',
-				`This role has been saved. Please wait...`
-			)
-			if (agreement) {
-				if (router.query.createRole) {
-					router.push({
-						pathname: `/${agreement.slug}/admin`,
-						query: { tab: 'roles' }
-					})
-				} else {
-					router.reload()
+				showSuccessNotification(
+					'Role saved!',
+					`This role has been saved. Please wait...`
+				)
+
+				if (agreement) {
+					if (router.query.createRole) {
+						router.push({
+							pathname: `/${agreement.slug}/admin`,
+							query: { tab: 'roles' }
+						})
+					} else {
+						router.reload()
+					}
 				}
 			}
 		}
@@ -132,12 +116,8 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					return
 				}
 
-				// const permissionsArray: string[] = []
-				// // role.permissions.forEach(permission => {
-				// // 	if (permission.enabled) {
-				// // 		permissionsArray.push(permission.id)
-				// // 	}
-				// // })
+				// List of transaction ids to monitor
+				const txs: string[] = []
 
 				if (isExistingRole) {
 					// Save the updates to the existing role
@@ -146,20 +126,24 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							log.debug(
 								'role settings have been changed, calling reinitialize...'
 							)
-							await sdk.agreement.reInitializeAgreementRole({
-								agreementId: agreement?.id ?? '',
-								agreementRoleId: role?.id,
-								name: role.name,
-								isTransferLocked: role?.isTransferrable,
-								metadata: {
-									meem_metadata_type:
-										'Meem_AgreementRoleContract',
-									meem_metadata_version: '20221116',
+
+							const reinit =
+								await sdk.agreement.reInitializeAgreementRole({
+									agreementId: agreement?.id ?? '',
+									agreementRoleId: role?.id,
 									name: role.name,
-									description: '',
-									meem_agreement_address: agreement.address
-								}
-							})
+									isTransferLocked: role?.isTransferrable,
+									metadata: {
+										meem_metadata_type:
+											'Meem_AgreementRoleContract',
+										meem_metadata_version: '20221116',
+										name: role.name,
+										description: '',
+										meem_agreement_address:
+											agreement.address
+									}
+								})
+							txs.push(reinit.txId)
 						} else {
 							log.debug(
 								'role name not changed, skipping reinitialize...'
@@ -262,11 +246,15 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 									to: member.wallet
 								})
 							})
-							await sdk.agreement.bulkMintAgreementRoleTokens({
-								agreementId: agreement?.id ?? '',
-								agreementRoleId: role.id,
-								tokens: addressesToMint
-							})
+							const bulkMint =
+								await sdk.agreement.bulkMintAgreementRoleTokens(
+									{
+										agreementId: agreement?.id ?? '',
+										agreementRoleId: role.id,
+										tokens: addressesToMint
+									}
+								)
+							txs.push(bulkMint.txId)
 						}
 
 						if (toBurn.length > 0) {
@@ -297,16 +285,18 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							log.debug(
 								`Found ${roleTokenIdsToBurn.length} matching role token ids to burn`
 							)
-							await sdk.agreement.bulkBurnAgreementRoleTokens({
-								agreementId: agreement?.id ?? '',
-								agreementRoleId: role.id,
-								tokenIds: roleTokenIdsToBurn
-							})
+							const bulkBurn =
+								await sdk.agreement.bulkBurnAgreementRoleTokens(
+									{
+										agreementId: agreement?.id ?? '',
+										agreementRoleId: role.id,
+										tokenIds: roleTokenIdsToBurn
+									}
+								)
+							txs.push(bulkBurn.txId)
 						}
 
-						log.debug(
-							'All operations complete. Awaiting DB changes...'
-						)
+						log.debug('All operations complete. Awaiting tx...')
 					} catch (e) {
 						log.debug(e)
 						showErrorNotification(
@@ -330,7 +320,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						`creating new role ${role.name} with ${membersArray.length} members`
 					)
 					try {
-						await sdk.agreement.createAgreementRole({
+						const create = await sdk.agreement.createAgreementRole({
 							name: role.name,
 							metadata: {
 								meem_metadata_type:
@@ -354,10 +344,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 								external_url: ''
 							}
 						})
-
-						log.debug(
-							'createAgreementRole complete. Awaiting DB changes...'
-						)
+						if (create) {
+							txs.push(create?.cutTxId)
+							txs.push(create?.deployContractTxId)
+							if (create?.mintTxId) {
+								txs.push(create?.mintTxId)
+							}
+							log.debug(
+								'createAgreementRole complete. Awaiting tx...'
+							)
+						}
 					} catch (e) {
 						log.debug(e)
 						showErrorNotification(
@@ -369,77 +365,58 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						return
 					}
 				}
+
+				// Now set all tx ids to trigger tx watcher
+				log.debug(`subscribing to watch txs: ${JSON.stringify(txs)}`)
+				setTxIds(txs)
 			}
 		}
 
-		if (
-			!hasSubscribedToSockets &&
-			sockets &&
-			wallet.accounts[0] &&
-			isOpened
-		) {
-			setHasSubscribedToSockets(true)
-
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.Err }],
-				wallet.accounts[0]
-			)
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.Err,
-				handler: err => {
-					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
-					log.crit(err)
-					log.crit(err.detail.code)
-
-					if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
-						showErrorNotification(
-							'Transaction limit exceeded',
-							'You have used all the transactions available to you today. Get in touch or wait until tomorrow.'
-						)
-					} else {
-						showErrorNotification(
-							'Error saving changes',
-							'An error occurred while saving changes. Please try again.'
-						)
+		async function checkTxStatus() {
+			if (transactions?.Transactions) {
+				const total = txIds.length
+				let totalComplete = 0
+				let failed = false
+				const currentTxs = transactions?.Transactions
+				currentTxs.forEach(currentTx => {
+					if (currentTx.status === 'success') {
+						totalComplete = totalComplete + 1
+					} else if (currentTx.status === 'failure') {
+						failed = true
 					}
-
+				})
+				log.debug(`${totalComplete} / ${total} tx are complete...`)
+				if (totalComplete === total) {
+					log.debug(`all tx are complete!`)
+					// All pending tx are complete, wait for 5s and then close modal
+					await new Promise(f => setTimeout(f, 5000))
+					onRoleChangesSaved()
+				} else if (failed) {
+					showErrorNotification(
+						'Error',
+						`Unable to save role. Please let us know!`
+					)
+					setIsSavingChanges(false)
 					closeModal()
 				}
-			})
-		}
-
-		function compareAgreementData() {
-			if (agreementData) {
-				const newAgreementDataString = JSON.stringify(agreementData)
-
-				if (currentAgreementDataString === newAgreementDataString) {
-					log.debug('nothing has changed on the agreement yet.')
-				} else {
-					log.debug('changes detected on the agreement.')
-					if (isSavingChanges) {
-						setIsSavingChanges(false)
-						onRoleChangesSaved()
-					}
-				}
+			} else if (error) {
+				log.debug(JSON.stringify(error))
+				showErrorNotification(
+					'Error',
+					`Unable to save role. Please let us know!`
+				)
+				setIsSavingChanges(false)
+				closeModal()
 			}
 		}
 
-		if (agreementData && !loading && !error && isOpened) {
-			if (currentAgreementDataString.length === 0) {
-				if (agreementData.Agreements.length > 0) {
-					// Set initial agreement data
-					log.debug('setting initial agreement data...')
-					setCurrentAgreementDataString(JSON.stringify(agreementData))
-				}
-			} else {
-				// compare to initial agreement fata
-				compareAgreementData()
-			}
-		}
-
-		if (isOpened && !hasSubscribedToSockets) {
-			connect()
+		if (isOpened && !isSavingChanges && !hasStartedTxs) {
+			setHasStartedTx(true)
 			saveRoleChanges()
+		}
+
+		if (isOpened) {
+			checkTxStatus()
 		}
 	}, [
 		closeModal,
@@ -454,14 +431,13 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 		roleMembers,
 		router,
 		sdk.agreement,
-		hasSubscribedToSockets,
-		sockets,
-		connect,
-		agreementData,
-		loading,
-		error,
 		haveRoleSettingsChanged,
-		originalRoleMembers
+		originalRoleMembers,
+		transactions?.Transactions,
+		txIds.length,
+		error,
+		hasStartedTxs,
+		hasCompletedTxs
 	])
 
 	return (
@@ -485,7 +461,8 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 					<Space h={16} />
 					<Text
 						className={meemTheme.tMediumBold}
-					>{`Saving role changes...`}</Text>
+					>{`Saving role...`}</Text>
+
 					<Space h={24} />
 
 					<Text
