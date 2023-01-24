@@ -170,6 +170,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 			>
 				This will be your community’s membership token. You can change
 				it anytime. Icons should be square and either JPG or PNG files.
+				Note that the image may take a moment to update.
 			</Text>
 
 			<Space h={16} />

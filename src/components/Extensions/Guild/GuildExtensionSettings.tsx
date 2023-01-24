@@ -236,7 +236,10 @@ export const GuildExtensionSettings: React.FC = () => {
 						url: `https://guild.xyz/${myGuild.urlName}`
 					},
 					metadata: {
-						guildId: myGuild.id
+						guildId: myGuild.id,
+						// TODO: allow user to change these settings
+						sidebarVisible: true,
+						favoriteLinksVisible: true
 					}
 				})
 			} catch (e) {

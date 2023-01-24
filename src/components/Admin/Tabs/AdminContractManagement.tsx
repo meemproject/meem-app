@@ -2,22 +2,21 @@ import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
-import { useAuth, useSDK, useWallet } from '@meemproject/react'
-import { Contract, ethers } from 'ethers'
+import { useAuth, useMeemApollo, useSDK, useWallet } from '@meemproject/react'
+import { ethers } from 'ethers'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useEffect, useState } from 'react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
-import {
-	Agreement,
-	AgreementAdminRole
-} from '../../../model/agreement/agreements'
+import { Agreement } from '../../../model/agreement/agreements'
 import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ChangeMeemProtocolPermissionsModal } from '../Modals/ChangeMeemProtocolPermissionsModal'
+import { CreateSafeModal } from '../Modals/CreateSafeModal'
 
 interface IProps {
 	agreement: Agreement
@@ -29,20 +28,26 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 	const { sdk } = useSDK()
 	const { chainId } = useAuth()
 
+	const { anonClient } = useMeemApollo()
+
 	const [smartContractPermission, setSmartContractPermission] =
 		useState('members-and-meem')
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
+	const [isCreatingSafeModalOpen, setIsCreatingSafeModalOpen] =
+		useState(false)
 	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
 	const [isUpgradingAgreement, setIsUpgradingAgreement] = useState(false)
+	const [isMeemPermissionModalOpen, setIsMeemPermissionModalOpen] =
+		useState(false)
 
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
 		{
 			variables: {
 				id: process.env.NEXT_PUBLIC_MEEM_BUNDLE_ID
-			}
+			},
+			client: anonClient
 		}
 	)
 
@@ -172,7 +177,6 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			}
 		}
 		fetchFacets()
-
 		// set the Meem API control radio button selection based on agreement data
 		setSmartContractPermission(
 			agreement.isAgreementControlledByMeemApi
@@ -224,74 +228,43 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			<Space h={8} />
 			<Text className={meemTheme.tSmallFaded}>
 				Please note that a transaction will occur when you save changes
-				to this setting.
+				to this setting. Changes may take a couple of minutes to apply.
 			</Text>
 			<Space h={12} />
 
-			<Radio.Group
-				orientation="vertical"
-				spacing={10}
-				size="md"
-				color="dark"
-				value={smartContractPermission}
-				onChange={(value: any) => {
-					setSmartContractPermission(value)
-				}}
-				required
-			>
-				<Radio
-					value="members-and-meem"
-					label="Yes, make Meem protocol an additional contract admin (Recommended)"
-				/>
-				<Radio
-					value="members"
-					label="No, only community members with the Admin role can manage this contract"
-				/>
-			</Radio.Group>
+			{!isMeemPermissionModalOpen && (
+				<>
+					<Radio.Group
+						orientation="vertical"
+						spacing={10}
+						size="md"
+						color="dark"
+						value={smartContractPermission}
+						onChange={(value: any) => {
+							setSmartContractPermission(value)
+						}}
+						required
+					>
+						<Radio
+							value="members-and-meem"
+							label="Yes, make Meem protocol an additional contract admin (Recommended)"
+						/>
+						<Radio
+							value="members"
+							label="No, only community members with the Admin role can manage this contract"
+						/>
+					</Radio.Group>
+				</>
+			)}
 
 			<Space h={24} />
 
 			<Button
 				className={meemTheme.buttonBlack}
+				loading={isMeemPermissionModalOpen}
+				disabled={isMeemPermissionModalOpen}
 				onClick={async () => {
-					try {
-						const agreementContract = new Contract(
-							agreement?.address ?? '',
-							bundleData?.Bundles[0].abi,
-							wallet.signer
-						)
-
-						if (
-							// If not controlled by meem api and the user wants to enable control...
-							smartContractPermission === 'members-and-meem' &&
-							!agreement.isAgreementControlledByMeemApi
-						) {
-							const tx = await agreementContract?.grantRole(
-								AgreementAdminRole,
-								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
-							)
-
-							await tx.wait()
-						} else if (
-							// If controlled by meem api and user wants to remove control...
-							smartContractPermission === 'members' &&
-							agreement.isAgreementControlledByMeemApi
-						) {
-							const tx = await agreementContract?.revokeRole(
-								AgreementAdminRole,
-								process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
-							)
-
-							await tx.wait()
-						} else {
-							showErrorNotification(
-								'Oops!',
-								`There are no changes to save.`
-							)
-						}
-					} catch (e) {
-						log.debug(e)
-					}
+					setIsMeemPermissionModalOpen(true)
 				}}
 			>
 				Save Changes
@@ -402,40 +375,34 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			{!agreement.gnosisSafeAddress && wallet.chainId !== 420 && (
 				<Button
 					className={meemTheme.buttonBlack}
-					disabled={isCreatingSafe}
-					loading={isCreatingSafe}
-					onClick={async () => {
-						if (
-							!agreement.id ||
-							!agreement.adminAddresses ||
-							!wallet.chainId
-						) {
-							return
-						}
-						try {
-							setIsCreatingSafe(true)
-
-							await sdk.agreement.createSafe({
-								safeOwners: agreement.adminAddresses ?? [],
-								agreementId: agreement.id
-							})
-
-							setIsCreatingSafe(false)
-						} catch (e) {
-							log.crit(e)
-							setIsCreatingSafe(false)
-							showErrorNotification(
-								'Wallet creation failed.',
-								'We were unable to create a treasury for your community. Please refresh the page and try again.'
-							)
-						}
+					disabled={isCreatingSafeModalOpen}
+					loading={isCreatingSafeModalOpen}
+					onClick={() => {
+						setIsCreatingSafeModalOpen(true)
 					}}
 				>
 					Create Treasury
 				</Button>
 			)}
 
-			<Space h={'xl'} />
+			<Space h={64} />
+
+			<CreateSafeModal
+				agreement={agreement}
+				isOpened={isCreatingSafeModalOpen}
+				onModalClosed={() => {
+					setIsCreatingSafeModalOpen(false)
+				}}
+			/>
+			<ChangeMeemProtocolPermissionsModal
+				agreement={agreement}
+				isOpened={isMeemPermissionModalOpen}
+				onModalClosed={() => {
+					setIsMeemPermissionModalOpen(false)
+				}}
+				bundleData={bundleData}
+				smartContractPermission={smartContractPermission}
+			/>
 		</div>
 	)
 }
