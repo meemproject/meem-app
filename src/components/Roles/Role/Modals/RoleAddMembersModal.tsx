@@ -240,6 +240,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 								role.
 							</Text>
 						</Center>
+						<Space h={24} />
 					</>
 				)}
 				{members.length > 0 &&
