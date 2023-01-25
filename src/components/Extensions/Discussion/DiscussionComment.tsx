@@ -111,7 +111,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 					}
 				})
 
-				gun.get(`${path}/comments/${comment.id}`)
+				gun?.get(`${path}/comments/${comment.id}`)
 					// @ts-ignore
 					.get('reactions')
 					// @ts-ignore
@@ -169,7 +169,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 			})
 
 			// @ts-ignore
-			gun.get(`${path}/comments/${comment.id}`).get('comments').set(item)
+			gun?.get(`${path}/comments/${comment.id}`).get('comments').set(item)
 
 			editor?.commands.clearContent()
 
