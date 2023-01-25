@@ -10,7 +10,8 @@ import {
 	Modal,
 	Loader,
 	TextInput,
-	Grid
+	Grid,
+	useMantineColorScheme
 } from '@mantine/core'
 import {
 	useMeemUser,
@@ -29,6 +30,7 @@ import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
 import { showErrorNotification } from '../../../../utils/notifications'
+import { DeveloperPortalButton } from '../../../Developer/DeveloperPortalButton'
 import { colorVerified, useMeemTheme } from '../../../Styles/MeemTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
@@ -157,6 +159,10 @@ export const ManageIdentityComponent: React.FC = () => {
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
+	const { colorScheme } = useMantineColorScheme()
+
+	const isDarkTheme = colorScheme === 'dark'
+
 	const saveChanges = async () => {
 		setIsSavingChanges(true)
 
@@ -264,7 +270,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				onChange={event => setDisplayName(event.currentTarget.value)}
 			/>
 			{/* Only show verified accounts section if the user has an existing identity */}
-			{me?.id && (
+			{!me?.id && (
 				<>
 					<Space h={48} />
 					<Divider />
@@ -277,7 +283,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Text>
 						Choose a Display Name or Profile Picture and save
 						changes to add a verified account, such as Twitter,
-						Discord or Email.
+						Discord, Google or Email.
 					</Text>
 				</>
 			)}
@@ -333,7 +339,21 @@ export const ManageIdentityComponent: React.FC = () => {
 													}
 												>
 													<Image
-														src={`${userIdentity.IdentityProvider?.icon}`}
+														src={`${
+															isDarkTheme
+																? `${(
+																		userIdentity
+																			.IdentityProvider
+																			?.icon ??
+																		''
+																  ).replace(
+																		'.png',
+																		'-white.png'
+																  )}`
+																: userIdentity
+																		.IdentityProvider
+																		?.icon
+														}`}
 														width={16}
 														height={16}
 														fit={'contain'}
@@ -360,6 +380,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Text className={meemTheme.tMediumBold}>
 						Verify Accounts
 					</Text>
+
 					<Space h={16} />
 					{isLoadingAvailableExtensions && (
 						<Loader variant="oval" color="blue" />
@@ -393,7 +414,17 @@ export const ManageIdentityComponent: React.FC = () => {
 													}
 												>
 													<Image
-														src={`${extension.icon}`}
+														src={`${
+															isDarkTheme
+																? `${(
+																		extension.icon ??
+																		''
+																  ).replace(
+																		'.png',
+																		'-white.png'
+																  )}`
+																: extension.icon
+														}`}
 														width={16}
 														height={16}
 														fit={'contain'}
@@ -412,6 +443,15 @@ export const ManageIdentityComponent: React.FC = () => {
 					)}
 				</>
 			)}
+			<Space h={24} />
+			<DeveloperPortalButton
+				portalButtonText={'Add more accounts'}
+				modalTitle={'Help us add more verified accounts!'}
+				modalText={
+					'We use Auth0 to manage 3rd party account verification. Let us know if you would like to add support for more accounts.'
+				}
+				devDocsLink={`https://auth0.com/docs/authenticate/identity-providers`}
+			/>
 			<Space h={'xl'} />
 			<Button
 				className={meemTheme.buttonBlack}
@@ -421,29 +461,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				Save Changes
 			</Button>
 			<Space h={'xl'} />
-			{/* <ProfileLinkTwitterModal
-				extension={extensionCurrentlyEditing}
-				isOpened={isTwitterModalOpen}
-				onModalClosed={() => {
-					setIsTwitterModalOpen(false)
-				}}
-			/>
-			<ProfileLinkEmailModal
-				extensionId={extensionCurrentlyEditing?.id}
-				identity={id.identity}
-				isOpened={isEmailModalOpen}
-				onModalClosed={() => {
-					setIsEmailModalOpen(false)
-				}}
-			/>
-			<ProfileLinkDiscordModal
-				extensionId={extensionCurrentlyEditing?.id}
-				discordAuthCode={discordAuthCode}
-				isOpened={isDiscordModalOpen}
-				onModalClosed={() => {
-					setIsDiscordModalOpen(false)
-				}}
-			/> */}
+
 			<ManageLinkedAccountModal
 				userIdentity={userIdentityCurrentlyEditing}
 				isOpened={isLinkedAccountModalOpen}

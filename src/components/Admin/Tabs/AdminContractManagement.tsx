@@ -14,6 +14,7 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
+import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ChangeMeemProtocolPermissionsModal } from '../Modals/ChangeMeemProtocolPermissionsModal'
 import { CreateSafeModal } from '../Modals/CreateSafeModal'
@@ -384,6 +385,18 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 					Create Treasury
 				</Button>
 			)}
+
+			<Space h={32} />
+			<Divider />
+			<Space h={32} />
+			<Text className={meemTheme.tExtraSmallLabel}>DEVELOPER PORTAL</Text>
+			<Space h={20} />
+			<DeveloperPortalButton
+				portalButtonText={`Add more features`}
+				modalTitle={'Add more contract management features'}
+				modalText={`Add more features to this page by building on the meem app source code. Look for AdminContractManagement.tsx and get coding! Pull Requests are always welcome.`}
+				githubLink={`https://github.com/meemproject/meem-app`}
+			/>
 
 			<Space h={64} />
 

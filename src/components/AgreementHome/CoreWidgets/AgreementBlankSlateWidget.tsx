@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
+import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import {
 	colorAshLight,
 	colorDarkGrey,
@@ -156,6 +157,14 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 							</Grid.Col>
 						))}
 					</Grid>
+					<Space h={24} />
+					<DeveloperPortalButton
+						portalButtonText={`Don't see your app?`}
+						modalTitle={'Build your own apps and extensions'}
+						modalText={`We're always looking for more 3rd party apps and extensions to integrate with us. Meem is open source and ready for contributions!`}
+						devDocsLink={`https://docs.meem.wtf/meem-protocol/meem-web-app/developers/building-an-extension`}
+						githubLink={`https://github.com/meemproject/meem-app`}
+					/>
 					<Space h={16} />
 				</>
 			)}

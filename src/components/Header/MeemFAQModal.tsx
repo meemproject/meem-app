@@ -41,11 +41,7 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 				<Space h={16} />
 
 				<Text className={meemTheme.tSmall}>
-					Today, you can manage permissions for your community with
-					nuanced, intuitive membership logic. Within your community,
-					set up token-gated access for popular third-party tools such
-					as Discord, Notion, and SlikSafe, or use your community
-					Gnosis wallet to manage funds.
+					{`Today, you can manage permissions for your community with nuanced, intuitive membership logic. Within your community, set up token-gated access for popular third-party tools such as Discord, Notion, and SlikSafe, or use your community Gnosis wallet to manage funds.`}
 				</Text>
 				<Space h={24} />
 
