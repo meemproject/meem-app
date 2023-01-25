@@ -166,6 +166,26 @@ export const StewardExtensionSettings: React.FC = () => {
 		setIsRuleBuilderOpen(false)
 	}
 
+	const removeRule = async (ruleId: string) => {
+		if (!agreement?.id || !jwt) {
+			return
+		}
+
+		await makeRequest<API.v1.RemoveRules.IDefinition>(
+			`${
+				process.env.NEXT_PUBLIC_STEWARD_API_URL
+			}${API.v1.RemoveRules.path()}`,
+			{
+				method: API.v1.RemoveRules.method,
+				body: {
+					jwt,
+					agreementId: agreement.id,
+					ruleIds: [ruleId]
+				}
+			}
+		)
+	}
+
 	useEffect(() => {
 		const gun = sdk.storage.getGunInstance()
 		if (!agreement?.id || hasFetchedData || !gun) {
@@ -174,7 +194,6 @@ export const StewardExtensionSettings: React.FC = () => {
 		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/twitter`)
 			.once(data => {
-				console.log({ data })
 				if (data) {
 					setTwitterUsername(data.username)
 				}
@@ -182,7 +201,6 @@ export const StewardExtensionSettings: React.FC = () => {
 		gun.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/discord`)
 			.once(data => {
-				console.log('discord data', { data })
 				if (data) {
 					// setDiscordInfo(data)
 					setDiscordInfo(data)
@@ -191,20 +209,24 @@ export const StewardExtensionSettings: React.FC = () => {
 
 		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/rules`)
+			// @ts-ignore
 			.open(data => {
 				if (data) {
 					const filteredRules: API.ISavedRule[] = []
-					Object.keys(data).forEach(id => {
-						const rule: API.ISavedRule = data[id]
+					if (typeof data === 'object') {
+						Object.keys(data).forEach(id => {
+							const rule: API.ISavedRule = data[id]
 
-						if (
-							rule.action === API.PublishAction.Tweet &&
-							rule.isEnabled &&
-							rule.votes
-						) {
-							filteredRules.push(rule)
-						}
-					})
+							if (
+								rule &&
+								rule.action === API.PublishAction.Tweet &&
+								rule.isEnabled &&
+								rule.votes
+							) {
+								filteredRules.push(rule)
+							}
+						})
+					}
 
 					setRules(filteredRules)
 				}
@@ -242,7 +264,6 @@ export const StewardExtensionSettings: React.FC = () => {
 	TODO
 	Add your custom extension permissions layout here.
 	 */
-	console.log({ selectedRule })
 	const customExtensionPermissions = () => (
 		<>
 			{rolesData &&
@@ -267,25 +288,41 @@ export const StewardExtensionSettings: React.FC = () => {
 							>
 								{Object.values(rule.approverEmojis).map(
 									emojiCode => (
-										<>
-											<Emoji
-												key={`emoji-${rule.ruleId}-${emojiCode}`}
-												unified={emojiCode}
-											/>
-											<Space w="xs" />
-										</>
+										<div
+											key={`emoji-${rule.ruleId}-${emojiCode}`}
+											style={{
+												marginRight: '8px'
+											}}
+										>
+											<Emoji unified={emojiCode} />
+										</div>
 									)
 								)}
 							</div>
 							<Space h="xs" />
-							<Button
-								onClick={() => {
-									setSelectedRule(rule)
-									setIsRuleBuilderOpen(true)
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'row'
 								}}
 							>
-								Edit
-							</Button>
+								<Button
+									onClick={() => {
+										setSelectedRule(rule)
+										setIsRuleBuilderOpen(true)
+									}}
+								>
+									Edit
+								</Button>
+								<Space w="xs" />
+								<Button
+									onClick={() => {
+										removeRule(rule.ruleId)
+									}}
+								>
+									Remove
+								</Button>
+							</div>
 							<Space h="md" />
 							<Divider size="sm" />
 							<Space h="md" />

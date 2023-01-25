@@ -51,7 +51,7 @@ export const DiscussionsProvider: FC<IDiscussionsProviderProps> = ({
 
 			const gun = sdk.storage.getGunInstance()
 
-			gun.get(path).once(async (items: any) => {
+			gun?.get(path).once(async (items: any) => {
 				if (!items) {
 					const key = await sdk.storage.generateAESKey()
 

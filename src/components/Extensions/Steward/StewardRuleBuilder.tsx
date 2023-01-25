@@ -14,7 +14,7 @@ import type { EmojiClickData } from 'emoji-picker-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useState } from 'react'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+// import { useMeemTheme } from '../../Styles/MeemTheme'
 import { API } from './stewardTypes.generated'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -34,7 +34,10 @@ export enum EmojiSelectType {
 }
 
 export interface IFormValues
-	extends Omit<API.IRule, 'proposerEmojis' | 'approverEmojis' | 'action'> {}
+	extends Omit<
+		API.IRule,
+		'proposerEmojis' | 'approverEmojis' | 'action' | 'ruleId' | 'isEnabled'
+	> {}
 
 export interface IOnSave extends IFormValues {
 	proposerEmojis: string[]
@@ -48,8 +51,8 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 	onSave
 }) => {
 	// Default extension settings / properties - leave these alone if possible!
-	const { classes: meemTheme } = useMeemTheme()
-	console.log({ selectedRule })
+	// const { classes: meemTheme } = useMeemTheme()
+
 	const form = useForm({
 		initialValues: {
 			publishType: API.PublishType.PublishImmediately,
