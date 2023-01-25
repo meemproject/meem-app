@@ -2206,6 +2206,14 @@
   dependencies:
     "@mantine/utils" "5.8.0"
 
+"@mantine/form@5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@mantine/form/-/form-5.8.0.tgz#a8eb9e65412f2b67f8031f5fe54833bb1ea1dacb"
+  integrity sha512-gm43Z7x03fheS5ma8ftiU3SdKPPCWAJUcByCbf9Ye2ZkBDmhuVsDE7UG5Mne96Ew2XEAZ9jBv+U3Ewk+9v+4gQ==
+  dependencies:
+    fast-deep-equal "^3.1.3"
+    klona "^2.0.5"
+
 "@mantine/hooks@5.8.0", "@mantine/hooks@^5.7.2":
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.8.0.tgz#9858cffcea8000e893be0b2bdb84e7f759407294"
@@ -2330,10 +2338,10 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/meem-contracts@^0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.17.0.tgz#5615585980487d109cddd101ac40687b0097d4d5"
-  integrity sha512-ApVrkhB4eLFEBhNTgIVEA8Wq+9Tg1a48q6Wuk8+3EVUpZCxJI88TSXwj0yu65hc5h4yDtUuNSn6hknnr1yiAxQ==
+"@meemproject/meem-contracts@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.17.1.tgz#bade797a6b233f11648e435e172ccb4f4ef0fee8"
+  integrity sha512-kNiU7+6ikkiMolN3b/hJteJjggNCjCysBwZsUG3uqcvjK+n/qrFMxxWVAMqMpJ8Zb0lbvoP7LmQ/00FjXXvzsA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@openzeppelin/contracts" "^4.7.3"
@@ -2342,10 +2350,10 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.17.0.tgz#611a9644b05e371fc97f7b0bb4141b229764f94e"
-  integrity sha512-kacIFf/2aQFbADsIySU0CnaXyj/Rtnnfhq/IgECXSN8MQ52B4hY9hJQz0lLywzvWDXR2CRt2F43r47xoB/ZM+Q==
+"@meemproject/react@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.17.1.tgz#7583d2d94916300cb11a2a131e3c73987c09af6b"
+  integrity sha512-gadIBKIjraQnt3JniKLgP7Eqh+PE16rUTQZvlofXFtRwKv7RcwwXHvvjKhQYF0vlmw85UNcR2yw3EapITzgGBg==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@auth0/auth0-react" "^1.12.0"
@@ -2357,9 +2365,9 @@
     "@mantine/hooks" "^5.7.2"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/meem-contracts" "^0.17.0"
-    "@meemproject/sdk" "^0.17.0"
-    "@meemproject/utils" "^0.17.0"
+    "@meemproject/meem-contracts" "^0.17.1"
+    "@meemproject/sdk" "^0.17.1"
+    "@meemproject/utils" "^0.17.1"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -2375,17 +2383,17 @@
     swr "^1.3.0"
     web3modal "^1.9.9"
 
-"@meemproject/sdk@^0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.17.0.tgz#047ee8e0acf342580c54ccc55224a305b19a318b"
-  integrity sha512-w0RMmFblKiAIapg60BOV31yAeKJy13PPmirBHMYk++fW7orkPvi9eV8HrdkYfGipRttege7m4nFhIzqJKgp9ZQ==
+"@meemproject/sdk@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.17.1.tgz#afb906fe02be38aebaed8d5f17c18f5e172eb977"
+  integrity sha512-IKllab0t/uf8aFYmKj/uaUZAwfyqVntqi/eEa//KQDjkytYF6tmkyE8j/xUEoVq7DFbnkJJZ1wxGB+Ceaq/xoQ==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@kengoldfarb/log" "^1.0.5"
     "@lit-protocol/constants" "^2.0.35"
     "@lit-protocol/lit-node-client" "^2.0.35"
-    "@meemproject/meem-contracts" "^0.17.0"
-    "@meemproject/utils" "^0.17.0"
+    "@meemproject/meem-contracts" "^0.17.1"
+    "@meemproject/utils" "^0.17.1"
     "@peculiar/webcrypto" "^1.4.1"
     "@tableland/sdk" "^3.1.5"
     "@typechain/ethers-v5" "^10.0.0"
@@ -2394,8 +2402,10 @@
     cross-fetch "^3.1.5"
     ethers "^5.6.4"
     graphql "^16.6.0"
+    graphql-ws "^5.11.2"
     gun "https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c"
     js-cookie "^3.0.1"
+    jwt-decode "^3.1.2"
     luxon "^3.0.1"
     siwe "^1.1.6"
     slug "^8.2.2"
@@ -2406,13 +2416,13 @@
     typed-emitter "^2.1.0"
     uuid "^9.0.0"
 
-"@meemproject/utils@^0.17.0":
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.17.0.tgz#580772af76a3780da72f7eafc40cdfd757885bb6"
-  integrity sha512-fC7IyoHk8YulLeEnpWg58L+CA3F/6C+uyblDpGCxdI0SOVJi2MI5TJfgKI7YJS92BZ9J7x8KG7GNcaEJMAxDSQ==
+"@meemproject/utils@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.17.1.tgz#353fe8d4a15686340d20a0bdc6ff0fb2ad641eab"
+  integrity sha512-yYY5SniqmN6TOZUtmCdJ7n+FcXvzJoG0o8X4G66nsWJeAMGzg2SiUvmMSxNMG1iZPrvF4H6KXebW7IDJt9nt/Q==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.17.0"
+    "@meemproject/meem-contracts" "^0.17.1"
     ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@^2.0.0":
@@ -6799,6 +6809,11 @@ clsx@1.1.1, clsx@^1.0.4, clsx@^1.1.1:
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.1.tgz#98b3134f9abbdf23b2663491ace13c5c03a73188"
   integrity sha512-6/bPho624p3S2pMyvP5kKBPXnI3ufHLObBFCfgx+LkeR5lg2XYy2hqZqUf45ypD8COn2bhgGJSUE+l5dhNBieA==
 
+clsx@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
+  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
+
 cmd-shim@^4.0.1:
   version "4.1.0"
   resolved "https://registry.npmjs.org/cmd-shim/-/cmd-shim-4.1.0.tgz"
@@ -7951,10 +7966,12 @@ emittery@^0.8.1:
   resolved "https://registry.npmjs.org/emittery/-/emittery-0.8.1.tgz"
   integrity sha512-uDfvUjVrfGJJhymx/kz6prltenw1u7WrCg1oa94zYY8xxVpLLUu045LAT0dhDZdXG58/EpPL/5kA180fQ/qudg==
 
-emoji-picker-react@^3.5.1:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/emoji-picker-react/-/emoji-picker-react-3.5.1.tgz#dbb4cda675a58dc86624d2fc488f75c2f4fc377d"
-  integrity sha512-cuSthFAvUO8Q1N7KJPEgZ7N0JNIWPKgN5GUmKe71UlSD4qFYI/p05RT9nohlWOq6YSFhEy2mI/60zBZiaku4mg==
+emoji-picker-react@^4.4.7:
+  version "4.4.7"
+  resolved "https://registry.yarnpkg.com/emoji-picker-react/-/emoji-picker-react-4.4.7.tgz#faff798cf7acad41c5eb6b103c93480e777f2222"
+  integrity sha512-HcB1Fr57W6M+gLLm/W4YhbAnUQqYBUAhZBOHmPlSQODLtsDI8vecyqNIF9RrStZHfZwzUSLlpZMfY07AA6gxmA==
+  dependencies:
+    clsx "^1.2.1"
 
 emoji-regex@^7.0.1:
   version "7.0.3"
@@ -12125,6 +12142,11 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.npmjs.org/kleur/-/kleur-3.0.3.tgz"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
+
+klona@^2.0.5:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.6.tgz#85bffbf819c03b2f53270412420a4555ef882e22"
+  integrity sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==
 
 language-subtag-registry@~0.3.2:
   version "0.3.21"
@@ -16807,6 +16829,13 @@ swr@^1.3.0:
   resolved "https://registry.npmjs.org/swr/-/swr-1.3.0.tgz"
   integrity sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==
 
+swr@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-2.0.1.tgz#8b4c132269fadcd845df4d44bd8722eba484ff71"
+  integrity sha512-6z4FpS9dKAay7axedlStsPahEw25nuMlVh4GHkuPpGptbmEEP8v/+kr0GkAE/7ErUs25U2VFOnZQz3AWfkmXdw==
+  dependencies:
+    use-sync-external-store "^1.2.0"
+
 symbol-observable@^1.1.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.2.0.tgz"
@@ -17705,6 +17734,11 @@ use-latest@^1.2.1:
   integrity sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==
   dependencies:
     use-isomorphic-layout-effect "^1.1.1"
+
+use-sync-external-store@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
+  integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
 utf-8-validate@^5.0.2:
   version "5.0.10"

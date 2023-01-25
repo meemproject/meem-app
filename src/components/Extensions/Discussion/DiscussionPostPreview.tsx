@@ -82,7 +82,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 					}
 				})
 
-				gun.get(
+				gun?.get(
 					`meem/${agreement.id}/extensions/discussion/posts/${post.id}`
 				)
 					// @ts-ignore

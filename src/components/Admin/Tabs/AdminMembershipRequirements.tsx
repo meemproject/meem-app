@@ -7,7 +7,8 @@ import {
 	Modal,
 	Radio,
 	TextInput,
-	Textarea
+	Textarea,
+	Divider
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
@@ -22,6 +23,7 @@ import {
 } from '../../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../../model/token/token'
 import { showErrorNotification } from '../../../utils/notifications'
+import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { colorBlue, colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
@@ -450,7 +452,20 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 				>
 					{'Save Changes'}
 				</Button>
-				<Space h="lg" />
+				<Space h={32} />
+				<Divider />
+				<Space h={32} />
+				<Text className={meemTheme.tExtraSmallLabel}>
+					DEVELOPER PORTAL
+				</Text>
+				<Space h={20} />
+				<DeveloperPortalButton
+					portalButtonText={`Create new requirement types`}
+					modalTitle={'Create new requirements'}
+					modalText={`Communities may need additional gating requirements in the future. You can contribute by building on the meem app source code. Look for AdminMembershipRequirements.tsx and get coding! Pull Requests are always welcome.`}
+					githubLink={`https://github.com/meemproject/meem-app`}
+				/>
+				<Space h={64} />
 				<Modal
 					withCloseButton={false}
 					centered

@@ -120,7 +120,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 					}
 				})
 
-				gun.get(
+				gun?.get(
 					`meem/${agreement.id}/extensions/discussion/posts/${postId}`
 				)
 					// @ts-ignore
@@ -171,7 +171,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				}
 			})
 
-			gun.get(
+			gun?.get(
 				`meem/${agreement.id}/extensions/discussion/posts/${postId}`
 			)
 				// @ts-ignore

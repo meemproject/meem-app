@@ -15,6 +15,7 @@ export const colorBlue = '#9ED3FD'
 export const colorBlueHover = '#82c5fc'
 export const colorLightBlue = '#f3faff'
 export const colorDarkBlue = '#6895f7'
+export const colorLightYellow = `#FEFFE5`
 export const colorYellow = '#F9FF15'
 export const colorDarkYellow = '#e0e810'
 export const colorDarkerYellow = '#4d4f08'
@@ -113,6 +114,21 @@ export const useMeemTheme = createStyles(theme => ({
 		'&:disabled': {
 			backgroundColor: colorDarkYellow
 		},
+		borderRadius: 24
+	},
+	buttonYellowSolidBordered: {
+		color: colorBlack,
+		backgroundColor: colorYellow,
+		'&:hover': {
+			backgroundColor: colorDarkYellow
+		},
+		'&:loading': {
+			backgroundColor: colorDarkYellow
+		},
+		'&:disabled': {
+			backgroundColor: colorDarkYellow
+		},
+		border: `1px solid ${colorBlack}`,
 		borderRadius: 24
 	},
 	buttonYellowBordered: {
