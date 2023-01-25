@@ -6,13 +6,15 @@ import {
 	Badge,
 	Menu,
 	useMantineColorScheme,
-	Center
+	Center,
+	Divider
 } from '@mantine/core'
 import { Group } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Dots, Lock } from 'tabler-icons-react'
 import { Agreement, AgreementRole } from '../../../model/agreement/agreements'
+import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
 import {
 	colorBlack,
@@ -191,7 +193,17 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 					</Center>
 				</>
 			)}
-
+			<Space h={32} />
+			<Divider />
+			<Space h={32} />
+			<Text className={meemTheme.tExtraSmallLabel}>DEVELOPER PORTAL</Text>
+			<Space h={20} />
+			<DeveloperPortalButton
+				portalButtonText={`Improve the roles feature`}
+				modalTitle={'Improving roles'}
+				modalText={`Roles are a core part of what makes the meem protocol so interesting. Because each role is backed by a token, the possibilities are endless. You can contribute by building on the meem app source code. Look for AdminRoles.tsx and get coding! Pull Requests are always welcome.`}
+				githubLink={`https://github.com/meemproject/meem-app`}
+			/>
 			<Space h={64} />
 			<DeleteRoleModal
 				role={roleToDelete}

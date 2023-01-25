@@ -24,6 +24,7 @@ import {
 } from '../../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
+import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { colorGrey, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
@@ -443,6 +444,15 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 						<Text>Unable to load available extensions.</Text>
 					</>
 				)}
+
+				<Space h={24} />
+				<DeveloperPortalButton
+					portalButtonText={`Don't see your app?`}
+					modalTitle={'Build your own apps and extensions'}
+					modalText={`We're always looking for more 3rd party apps and extensions to integrate with us. Meem is open source and ready for contributions! Pull Requests are always welcome.`}
+					devDocsLink={`https://docs.meem.wtf/meem-protocol/meem-web-app/developers/building-an-extension`}
+					githubLink={`https://github.com/meemproject/meem-app`}
+				/>
 
 				<Space h="xl" />
 				<Modal

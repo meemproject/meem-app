@@ -7,7 +7,8 @@ import {
 	Modal,
 	Radio,
 	TextInput,
-	Center
+	Center,
+	Divider
 } from '@mantine/core'
 import { Calendar, TimeInput } from '@mantine/dates'
 import { useWallet } from '@meemproject/react'
@@ -20,6 +21,7 @@ import {
 } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
 import { quickTruncate } from '../../../utils/truncated_wallet'
+import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
@@ -279,7 +281,20 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 				>
 					{'Save Changes'}
 				</Button>
-				<Space h="lg" />
+				<Space h={32} />
+				<Divider />
+				<Space h={32} />
+				<Text className={meemTheme.tExtraSmallLabel}>
+					DEVELOPER PORTAL
+				</Text>
+				<Space h={20} />
+				<DeveloperPortalButton
+					portalButtonText={`Add more settings`}
+					modalTitle={'Add more membership settings'}
+					modalText={`Can you think of any additional membership settings communities might need? You can contribute by building on the meem app source code. Look for AdminMembershipSettings.tsx and get coding! Pull Requests are always welcome.`}
+					githubLink={`https://github.com/meemproject/meem-app`}
+				/>
+				<Space h={64} />
 
 				<Modal
 					withCloseButton={false}
