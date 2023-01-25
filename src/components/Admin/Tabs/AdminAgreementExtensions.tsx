@@ -118,7 +118,6 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 					categories.push({ title: category, extensions: [ext] })
 				}
 			})
-			log.debug(`${JSON.stringify(categories)}`)
 			setExtensionCategories(categories)
 		},
 		[agreement?.extensions, currentSearchTerm]
