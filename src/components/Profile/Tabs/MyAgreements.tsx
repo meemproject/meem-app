@@ -138,7 +138,7 @@ export const MyAgreementsComponent: React.FC = () => {
 					<Text className={meemTheme.tLargeBold}>My Communities</Text>
 					<Space h={32} />
 
-					<Grid style={{ maxWidth: 1000 }}>
+					<Grid style={{ maxWidth: 800 }}>
 						{agreements.map(agreement => (
 							<Grid.Col
 								xs={6}
@@ -172,7 +172,7 @@ export const MyAgreementsComponent: React.FC = () => {
 													radius={8}
 													fit={'cover'}
 												/>
-												<Space w={20} />
+												<Space w={24} />
 											</>
 										)}
 

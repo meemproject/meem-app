@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
-import log from '@kengoldfarb/log'
 import {
 	Text,
 	Image,
@@ -11,7 +10,8 @@ import {
 	Loader,
 	useMantineColorScheme,
 	Center,
-	Modal
+	Modal,
+	Button
 } from '@mantine/core'
 import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
@@ -215,21 +215,16 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 									<Grid.Col
 										xs={8}
 										sm={8}
-										md={4}
-										lg={4}
-										xl={4}
+										md={6}
+										lg={6}
+										xl={6}
 										key={extension.id}
 									>
 										<div
 											className={
-												meemTheme.extensionGridItemEnabled
+												meemTheme.extensionGridItem
 											}
 										>
-											<div
-												className={
-													meemTheme.extensionGridItemEnabledHeaderBackground
-												}
-											/>
 											<div
 												className={
 													meemTheme.extensionGridItemHeader
@@ -251,8 +246,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																	.Extension
 																	?.icon
 													}`}
-													width={16}
-													height={16}
+													width={28}
+													height={28}
 													fit={'contain'}
 												/>
 												<Space w={8} />
@@ -267,43 +262,22 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 														/>
 													</>
 												)}
-												{/* {extension.isVerified && (
-												<>
-													<Space w={12} />
-													<Image
-														src="/icon-verified.png"
-														width={16}
-														height={16}
-													/>
-													<Space w={4} />
-													<Text
-														color={'#3EA2FF'}
-														size={'sm'}
-													>
-														Verified
-													</Text>
-												</>
-											)} */}
 											</div>
-											<div
-												style={{
-													width: '100%'
-												}}
-											>
-												<Space h={16} />
-												<Divider color={colorGrey} />
-											</div>
-											<div
-												className={meemTheme.row}
-												style={{
-													height: 46
-												}}
-											>
+											<Space h={16} />
+											<div className={meemTheme.row}>
 												{extension
 													.AgreementExtensionWidgets
 													.length > 0 && (
 													<>
-														<a
+														<Button
+															className={
+																meemTheme.buttonWhite
+															}
+															leftIcon={
+																<ExternalLink
+																	size={20}
+																/>
+															}
 															onClick={() => {
 																navigateToExtensionHome(
 																	extension
@@ -313,35 +287,25 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																)
 															}}
 														>
-															<div
+															<Text
 																className={
-																	meemTheme.row
+																	meemTheme.tExtraSmall
 																}
-																style={{
-																	cursor: 'pointer',
-																	padding: 12
-																}}
 															>
-																<ExternalLink
-																	size={20}
-																/>
-																<Space w={4} />
-																<Text
-																	className={
-																		meemTheme.tExtraSmall
-																	}
-																>
-																	Homepage
-																</Text>
-															</div>
-														</a>
-														<Space w={4} />
-														<Divider orientation="vertical" />
-														<Space w={4} />
+																Launch
+															</Text>
+														</Button>
+														<Space w={8} />
 													</>
 												)}
 
-												<a
+												<Button
+													leftIcon={
+														<Settings size={20} />
+													}
+													className={
+														meemTheme.buttonWhite
+													}
 													onClick={() => {
 														if (
 															extension.Extension
@@ -352,27 +316,14 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 														}
 													}}
 												>
-													<div
+													<Text
 														className={
-															meemTheme.row
+															meemTheme.tExtraSmall
 														}
-														style={{
-															cursor: 'pointer',
-															padding: 12
-														}}
 													>
-														<Settings size={20} />
-
-														<Space w={4} />
-														<Text
-															className={
-																meemTheme.tExtraSmall
-															}
-														>
-															{'Settings'}
-														</Text>
-													</div>
-												</a>
+														{'Settings'}
+													</Text>
+												</Button>
 											</div>
 										</div>
 									</Grid.Col>
@@ -416,9 +367,9 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 										<Grid.Col
 											xs={8}
 											sm={8}
-											md={4}
-											lg={4}
-											xl={4}
+											md={6}
+											lg={6}
+											xl={6}
 											key={extension.name}
 										>
 											<a
@@ -445,19 +396,20 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																	  )}`
 																	: extension.icon
 															}`}
-															width={16}
-															height={16}
+															width={24}
+															height={24}
 															fit={'contain'}
 														/>
 														<Space w={8} />
 														<Text>{`${extension.name}`}</Text>
 													</div>
+
 													<Text
 														className={
-															meemTheme.tExtraSmall
+															meemTheme.tExtraSmallFaded
 														}
 														style={{
-															marginTop: 6
+															marginTop: 12
 														}}
 													>
 														{extension.description}
