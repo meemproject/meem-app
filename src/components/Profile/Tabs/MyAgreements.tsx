@@ -277,14 +277,14 @@ export const MyAgreementsComponent: React.FC = () => {
 					</Grid>
 
 					<Space h={60} />
-					<CreateAgreementModal
-						isOpened={isCreationModalOpen}
-						onModalClosed={function (): void {
-							setIsCreationModalOpen(false)
-						}}
-					/>
 				</>
 			)}
+			<CreateAgreementModal
+				isOpened={isCreationModalOpen}
+				onModalClosed={function (): void {
+					setIsCreationModalOpen(false)
+				}}
+			/>
 		</>
 	)
 }
