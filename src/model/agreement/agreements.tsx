@@ -22,15 +22,15 @@ export const AgreementUpgraderRole =
 // GraphQL extension
 export interface Extension {
 	__typename?: 'Extensions' | undefined
-	// category: string
-	// capabilities: string[]
+	capabilities: any
+	category?: string | null | undefined
 	createdAt: any
 	description: string
 	guideUrl: string
 	icon: string
 	id: any
 	name: string
-	// setupRequired: boolean
+	isSetupRequired: boolean
 	slug: string
 	updatedAt: any
 }

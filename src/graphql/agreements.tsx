@@ -178,6 +178,7 @@ export const SUB_AGREEMENT = gql`
 				metadata
 				id
 				isInitialized
+				isSetupComplete
 				Extension {
 					slug
 					id
@@ -267,6 +268,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 				id
 				metadata
 				isInitialized
+				isSetupComplete
 				Extension {
 					slug
 					id
@@ -343,11 +345,14 @@ export const SUB_AGREEMENTS = gql`
 export const GET_EXTENSIONS = gql`
 	query GetExtensions {
 		Extensions(order_by: { slug: asc }) {
+			capabilities
+			category
 			createdAt
 			description
 			guideUrl
 			icon
 			id
+			isSetupRequired
 			name
 			slug
 			updatedAt
