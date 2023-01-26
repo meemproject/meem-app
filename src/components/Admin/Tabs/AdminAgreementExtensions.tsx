@@ -145,7 +145,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		await sdk.agreementExtension.createAgreementExtension({
 			agreementId: agreement?.id ?? '',
 			extensionId: extension.id,
-			isInitialized: true
+			isInitialized: true,
+			isSetupComplete: !extension.isSetupRequired
 		})
 		// Required to avoid a race condition where the extension has not
 		// yet been enabled on the database
