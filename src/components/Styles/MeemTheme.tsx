@@ -148,17 +148,21 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 	buttonWhite: {
 		borderRadius: 24,
-		color: colorBlack,
+		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
 		borderColor: colorBlack,
-		backgroundColor: colorWhite,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkerGrey : colorWhite,
 		'&:hover': {
-			backgroundColor: colorLightGrey
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorBlack : colorLightGrey
 		},
 		'&:loading': {
-			backgroundColor: colorLightGrey
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorBlack : colorLightGrey
 		},
 		'&:disabled': {
-			backgroundColor: colorLightGrey
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorBlack : colorLightGrey
 		}
 	},
 
@@ -354,7 +358,7 @@ export const useMeemTheme = createStyles(theme => ({
 		}`,
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
-		borderRadius: 16,
+		borderRadius: 8,
 		padding: 16
 	},
 	extensionGridItemEnabled: {
@@ -516,7 +520,7 @@ export const useMeemTheme = createStyles(theme => ({
 		marginLeft: 32,
 		marginRight: 32,
 		width: '100%',
-		maxWidth: 1000,
+		maxWidth: 800,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8,
 			width: '85%'
