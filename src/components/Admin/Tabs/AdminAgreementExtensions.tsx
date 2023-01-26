@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery } from '@apollo/client'
-import log from '@kengoldfarb/log'
 import {
 	Text,
 	Image,
 	Space,
 	TextInput,
 	Grid,
-	Divider,
 	Loader,
 	useMantineColorScheme,
 	Center,
-	Modal
+	Modal,
+	Button
 } from '@mantine/core'
 import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
@@ -25,9 +24,14 @@ import {
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import { colorGrey, useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
+}
+
+interface ExtensionCategory {
+	title: string
+	extensions: Extension[]
 }
 
 export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
@@ -49,6 +53,10 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 	const [searchedExtensions, setSearchedExtensions] = useState<Extension[]>(
 		availableExtensionsData?.Extensions ?? []
 	)
+	const [extensionCategories, setExtensionCategories] = useState<
+		ExtensionCategory[]
+	>([])
+
 	// Current search term
 	const [currentSearchTerm, setCurrentSearchTerm] = useState('')
 	const [isEnablingExtension, setIsEnablingExtension] = useState(false)
@@ -57,9 +65,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		useState(false)
 
 	const filterExtensions = useCallback(
-		(all: Extension[]) => {
-			const search = currentSearchTerm
-
+		(all: Extension[], search: string) => {
 			// Filter out extensions already enabled
 			const available: Extension[] = []
 			all.forEach(ext => {
@@ -75,17 +81,43 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 			})
 
 			const filteredExtensions: Extension[] = []
+			let searched: Extension[] = []
 
+			// Set up searched extensions
 			if (currentSearchTerm.length > 0) {
 				available.forEach(ext => {
 					if (ext.name.toLowerCase().includes(search)) {
 						filteredExtensions.push(ext)
 					}
 				})
+				searched = filteredExtensions
 				setSearchedExtensions(filteredExtensions)
 			} else {
+				searched = available
 				setSearchedExtensions(available)
 			}
+
+			// Now sort searched extensions into categories
+			const categories: ExtensionCategory[] = []
+			searched.forEach(ext => {
+				// TODO: use the real categories
+				const category = 'Basic'
+				let existingCategory: any = undefined
+
+				// Check if the category already exists
+				categories.forEach(cat => {
+					if (cat.title === category) {
+						existingCategory = cat
+					}
+				})
+
+				if (existingCategory) {
+					existingCategory.extensions.push(ext)
+				} else {
+					categories.push({ title: category, extensions: [ext] })
+				}
+			})
+			setExtensionCategories(categories)
 		},
 		[agreement?.extensions, currentSearchTerm]
 	)
@@ -93,7 +125,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 	useEffect(() => {
 		if (availableExtensionsData && !loading && !hasSetInitialSearchTerm) {
 			setHasSetInitialSearchTerm(true)
-			filterExtensions(availableExtensionsData.Extensions)
+			filterExtensions(availableExtensionsData.Extensions, '')
 		}
 	}, [
 		availableExtensionsData,
@@ -140,8 +172,6 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		router.push(`/${agreement.slug}/e/${slug}`)
 	}
 
-	log.debug('EXTENSIONS YO', availableExtensionsData)
-
 	return (
 		<>
 			<div>
@@ -184,21 +214,16 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 									<Grid.Col
 										xs={8}
 										sm={8}
-										md={4}
-										lg={4}
-										xl={4}
+										md={6}
+										lg={6}
+										xl={6}
 										key={extension.id}
 									>
 										<div
 											className={
-												meemTheme.extensionGridItemEnabled
+												meemTheme.extensionGridItem
 											}
 										>
-											<div
-												className={
-													meemTheme.extensionGridItemEnabledHeaderBackground
-												}
-											/>
 											<div
 												className={
 													meemTheme.extensionGridItemHeader
@@ -220,8 +245,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																	.Extension
 																	?.icon
 													}`}
-													width={16}
-													height={16}
+													width={28}
+													height={28}
 													fit={'contain'}
 												/>
 												<Space w={8} />
@@ -236,43 +261,22 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 														/>
 													</>
 												)}
-												{/* {extension.isVerified && (
-												<>
-													<Space w={12} />
-													<Image
-														src="/icon-verified.png"
-														width={16}
-														height={16}
-													/>
-													<Space w={4} />
-													<Text
-														color={'#3EA2FF'}
-														size={'sm'}
-													>
-														Verified
-													</Text>
-												</>
-											)} */}
 											</div>
-											<div
-												style={{
-													width: '100%'
-												}}
-											>
-												<Space h={16} />
-												<Divider color={colorGrey} />
-											</div>
-											<div
-												className={meemTheme.row}
-												style={{
-													height: 46
-												}}
-											>
+											<Space h={16} />
+											<div className={meemTheme.row}>
 												{extension
 													.AgreementExtensionWidgets
 													.length > 0 && (
 													<>
-														<a
+														<Button
+															className={
+																meemTheme.buttonWhite
+															}
+															leftIcon={
+																<ExternalLink
+																	size={20}
+																/>
+															}
 															onClick={() => {
 																navigateToExtensionHome(
 																	extension
@@ -282,35 +286,25 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																)
 															}}
 														>
-															<div
+															<Text
 																className={
-																	meemTheme.row
+																	meemTheme.tExtraSmall
 																}
-																style={{
-																	cursor: 'pointer',
-																	padding: 12
-																}}
 															>
-																<ExternalLink
-																	size={20}
-																/>
-																<Space w={4} />
-																<Text
-																	className={
-																		meemTheme.tExtraSmall
-																	}
-																>
-																	Homepage
-																</Text>
-															</div>
-														</a>
-														<Space w={4} />
-														<Divider orientation="vertical" />
-														<Space w={4} />
+																Launch
+															</Text>
+														</Button>
+														<Space w={8} />
 													</>
 												)}
 
-												<a
+												<Button
+													leftIcon={
+														<Settings size={20} />
+													}
+													className={
+														meemTheme.buttonWhite
+													}
 													onClick={() => {
 														if (
 															extension.Extension
@@ -321,27 +315,14 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 														}
 													}}
 												>
-													<div
+													<Text
 														className={
-															meemTheme.row
+															meemTheme.tExtraSmall
 														}
-														style={{
-															cursor: 'pointer',
-															padding: 12
-														}}
 													>
-														<Settings size={20} />
-
-														<Space w={4} />
-														<Text
-															className={
-																meemTheme.tExtraSmall
-															}
-														>
-															{'Settings'}
-														</Text>
-													</div>
-												</a>
+														{'Settings'}
+													</Text>
+												</Button>
 											</div>
 										</div>
 									</Grid.Col>
@@ -351,89 +332,97 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 						<Space h={32} />
 					</>
 				)}
-				{!loading &&
-					availableExtensionsData &&
-					searchedExtensions.length > 0 && (
-						<>
-							<Text
-								className={meemTheme.tMediumBold}
-							>{`Available extensions (${searchedExtensions?.length})`}</Text>
-							<Space h={8} />
+				{!loading && extensionCategories && (
+					<>
+						<Text
+							className={meemTheme.tMediumBold}
+						>{`Available extensions (${searchedExtensions?.length})`}</Text>
+						<Space h={8} />
 
-							<TextInput
-								radius={16}
-								size={'md'}
-								onChange={event => {
-									if (event.target.value) {
-										setCurrentSearchTerm(event.target.value)
-										filterExtensions(
-											availableExtensionsData.Extensions
-										)
-									} else {
-										setSearchedExtensions(
-											availableExtensionsData.Extensions
-										)
-									}
-								}}
-								placeholder="Search Apps"
-							/>
-							<Space h={24} />
-							<Grid>
-								{searchedExtensions.map(extension => (
-									<Grid.Col
-										xs={8}
-										sm={8}
-										md={4}
-										lg={4}
-										xl={4}
-										key={extension.name}
-									>
-										<a
-											onClick={() => {
-												enableExtension(extension)
-											}}
+						<TextInput
+							radius={16}
+							size={'md'}
+							onChange={event => {
+								setCurrentSearchTerm(event.target.value ?? '')
+								if (availableExtensionsData?.Extensions) {
+									filterExtensions(
+										availableExtensionsData.Extensions,
+										event.target.value ?? ''
+									)
+								}
+							}}
+							placeholder="Search Apps"
+						/>
+						<Space h={24} />
+
+						{extensionCategories.map(cat => (
+							<>
+								<Text className={meemTheme.tExtraSmallLabel}>
+									{`${cat.title.toUpperCase()}`}
+								</Text>
+								<Space h={16} />
+								<Grid>
+									{cat.extensions.map(extension => (
+										<Grid.Col
+											xs={8}
+											sm={8}
+											md={6}
+											lg={6}
+											xl={6}
+											key={extension.name}
 										>
-											<div
-												className={
-													meemTheme.extensionGridItem
-												}
+											<a
+												onClick={() => {
+													enableExtension(extension)
+												}}
 											>
 												<div
 													className={
-														meemTheme.extensionGridItemHeader
+														meemTheme.extensionGridItem
 													}
 												>
-													<Image
-														src={`/${
-															isDarkTheme
-																? `${extension.icon?.replace(
-																		'.png',
-																		'-white.png'
-																  )}`
-																: extension.icon
-														}`}
-														width={16}
-														height={16}
-														fit={'contain'}
-													/>
-													<Space w={8} />
-													<Text>{`${extension.name}`}</Text>
+													<div
+														className={
+															meemTheme.extensionGridItemHeader
+														}
+													>
+														<Image
+															src={`/${
+																isDarkTheme
+																	? `${extension.icon?.replace(
+																			'.png',
+																			'-white.png'
+																	  )}`
+																	: extension.icon
+															}`}
+															width={24}
+															height={24}
+															fit={'contain'}
+														/>
+														<Space w={8} />
+														<Text>{`${extension.name}`}</Text>
+													</div>
+
+													<Text
+														className={
+															meemTheme.tExtraSmallFaded
+														}
+														style={{
+															marginTop: 12
+														}}
+													>
+														{extension.description}
+													</Text>
 												</div>
-												<Text
-													className={
-														meemTheme.tExtraSmall
-													}
-													style={{ marginTop: 6 }}
-												>
-													{extension.description}
-												</Text>
-											</div>
-										</a>
-									</Grid.Col>
-								))}
-							</Grid>
-						</>
-					)}
+											</a>
+										</Grid.Col>
+									))}
+								</Grid>
+								<Space h={16} />
+							</>
+						))}
+					</>
+				)}
 				{loading && (
 					<>
 						<Loader color="blue" variant="oval" />

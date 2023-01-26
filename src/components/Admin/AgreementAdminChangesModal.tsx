@@ -2,19 +2,12 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
-import {
-	useSDK,
-	useSockets,
-	useWallet,
-	useMeemApollo
-} from '@meemproject/react'
+import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 // eslint-disable-next-line import/namespace
-import {
-	GetAgreementSubscriptionSubscription // eslint-disable-next-line import/namespace
-} from '../../../generated/graphql'
-import { SUB_AGREEMENT_AS_MEMBER } from '../../graphql/agreements'
+import { GetTransactionsSubscription } from '../../../generated/graphql'
+import { SUB_TRANSACTIONS } from '../../graphql/transactions'
 import {
 	Agreement,
 	MembershipRequirementToMeemPermission
@@ -23,7 +16,6 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../utils/notifications'
-import { hostnameToChainId } from '../App'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
@@ -43,49 +35,26 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 
 	const { classes: meemTheme } = useMeemTheme()
 
-	const { mutualMembersClient } = useMeemApollo()
+	const { anonClient } = useMeemApollo()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [currentAgreementDataString, setCurrentAgreementDataString] =
-		useState('')
-
-	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
-
-	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
+	const [txIds, setTxIds] = useState<string[]>([])
 
 	const closeModal = useCallback(() => {
-		if (sockets) {
-			sockets.unsubscribe([
-				{ type: MeemAPI.MeemEvent.Err },
-				{ type: MeemAPI.MeemEvent.MeemIdUpdated },
-				{ type: MeemAPI.MeemEvent.MeemMinted }
-			])
-		}
 		onModalClosed()
-		setHasSubscribedToSockets(false)
 		setIsSavingChanges(false)
-		setCurrentAgreementDataString('')
-	}, [onModalClosed, sockets])
+		setTxIds([])
+	}, [onModalClosed])
 
-	const {
-		loading,
-		error,
-		data: agreementData
-	} = useSubscription<GetAgreementSubscriptionSubscription>(
-		SUB_AGREEMENT_AS_MEMBER,
-		{
+	const { error, data: transactions } =
+		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
 			variables: {
-				slug: agreement?.slug ?? '',
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+				transactionIds: txIds
 			},
-			client: mutualMembersClient
-		}
-	)
+			client: anonClient,
+			skip: txIds.length === 0
+		})
 
 	useEffect(() => {
 		async function reinitialize() {
@@ -235,6 +204,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					const { txId } = await sdk.agreement.reInitialize(data)
 
 					log.debug(`Reinitializing agreement w/ txId: ${txId}`)
+					setTxIds([txId])
 				} catch (e) {
 					log.debug(e)
 					closeModal()
@@ -246,93 +216,58 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 				}
 			}
 		}
-		function compareAgreementData() {
-			if (agreementData) {
-				const newAgreementDataString = JSON.stringify(agreementData)
+		function checkTransactionCompletion() {
+			if (transactions && transactions.Transactions.length > 0) {
+				const currentTx = transactions.Transactions[0]
 
-				if (currentAgreementDataString === newAgreementDataString) {
-					log.debug('nothing has changed on the agreement yet.')
-				} else {
-					log.debug('changes detected on the agreement.')
+				log.debug(
+					`watching tx ${currentTx.id}, current status = ${currentTx.status}`
+				)
+
+				if (currentTx.status === 'success') {
 					closeModal()
 
 					showSuccessNotification(
 						'Success!',
-						`${agreementData.Agreements[0].name} has been updated.`
+						`Your community settings have been updated.`
+					)
+				} else if (currentTx.status === 'failure') {
+					closeModal()
+					showErrorNotification(
+						'Error saving community settings',
+						`Please get in touch!`
 					)
 				}
-			}
-		}
-
-		if (agreementData && !loading && !error && isOpened) {
-			if (currentAgreementDataString.length === 0) {
-				if (agreementData.Agreements.length > 0) {
-					// Set initial agreement data
-					log.debug('setting initial agreement data...')
-					setCurrentAgreementDataString(JSON.stringify(agreementData))
-				}
+			} else if (error) {
+				log.debug(JSON.stringify(error))
+				closeModal()
+				showErrorNotification(
+					'Error saving community settings',
+					`Please get in touch!`
+				)
 			} else {
-				// compare to initial agreement fata
-				compareAgreementData()
+				log.debug(`no tx to monitor right now`)
 			}
 		}
 
-		if (
-			!hasSubscribedToSockets &&
-			sockets &&
-			wallet.accounts[0] &&
-			isOpened
-		) {
-			setHasSubscribedToSockets(true)
-
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.Err }],
-				wallet.accounts[0]
-			)
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.Err,
-				handler: err => {
-					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
-					log.crit(err)
-					log.crit(err.detail.code)
-
-					if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
-						showErrorNotification(
-							'Transaction limit exceeded',
-							'You have used all the transactions available to you today. Get in touch or wait until tomorrow.'
-						)
-					} else {
-						showErrorNotification(
-							'Error saving changes',
-							'An error occurred while saving changes. Please try again.'
-						)
-					}
-
-					closeModal()
-				}
-			})
+		if (isOpened && !isSavingChanges) {
+			log.debug(`should reinit`)
+			reinitialize()
 		}
 
-		if (isOpened && !hasSubscribedToSockets) {
-			connect()
-			reinitialize()
+		if (isOpened) {
+			checkTransactionCompletion()
 		}
 	}, [
 		closeModal,
-		connect,
 		isSavingChanges,
-		isSocketsConnected,
 		agreement,
-		agreementData,
-		currentAgreementDataString,
 		error,
-		hasSubscribedToSockets,
 		isOpened,
-		loading,
 		onModalClosed,
-		sockets,
 		wallet,
-		sdk.agreement
+		sdk.agreement,
+		transactions
 	])
 
 	return (

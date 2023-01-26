@@ -24,21 +24,15 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 							{agreement.extensions?.filter(
 								ext => ext.AgreementExtensionWidgets.length > 0
 							).length === 0 && (
-								<div className={meemTheme.widgetMeem}>
+								<div className={meemTheme.widgetLight}>
 									<Center>
-										<Text
-											className={meemTheme.tLargeBold}
-											style={{ color: 'black' }}
-										>
+										<Text className={meemTheme.tLargeBold}>
 											Get started
 										</Text>
 									</Center>
 									<Space h={16} />
 									<Center>
-										<Text
-											className={meemTheme.tSmall}
-											style={{ color: 'black' }}
-										>
+										<Text className={meemTheme.tSmall}>
 											Your community does not have any
 											extensions yet. Extensions are apps
 											you can add which enable
@@ -51,7 +45,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 
 									<Center>
 										<Button
-											className={meemTheme.buttonBlue}
+											className={meemTheme.buttonAsh}
 											onClick={() => {
 												router.push({
 													pathname: `${agreement.slug}/admin`,

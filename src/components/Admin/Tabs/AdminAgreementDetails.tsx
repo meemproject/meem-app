@@ -135,7 +135,7 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 			<DeveloperPortalButton
 				portalButtonText={`Add more community details`}
 				modalTitle={'Add more community details'}
-				modalText={`What other key information might communities want to advertise? You can contribute by building on the meem app source code. Look for AdminAgreementDetails.tsx and get coding!`}
+				modalText={`What other key information might communities want to advertise? You can contribute by building on the meem app source code. Look for AdminAgreementDetails.tsx and get coding! Pull Requests are always welcome.`}
 				githubLink={`https://github.com/meemproject/meem-app`}
 			/>
 			<Space h={64} />
