@@ -349,6 +349,7 @@ export type AgreementExtensionLinks_Updates = {
   _prepend?: InputMaybe<AgreementExtensionLinks_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementExtensionLinks_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementExtensionLinks_Bool_Exp;
 };
 
@@ -622,6 +623,7 @@ export type AgreementExtensionRoles_Updates = {
   _prepend?: InputMaybe<AgreementExtensionRoles_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementExtensionRoles_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementExtensionRoles_Bool_Exp;
 };
 
@@ -854,6 +856,7 @@ export type AgreementExtensionStorages_Updates = {
   _prepend?: InputMaybe<AgreementExtensionStorages_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementExtensionStorages_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementExtensionStorages_Bool_Exp;
 };
 
@@ -1160,6 +1163,7 @@ export type AgreementExtensionWidgets_Updates = {
   _prepend?: InputMaybe<AgreementExtensionWidgets_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementExtensionWidgets_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementExtensionWidgets_Bool_Exp;
 };
 
@@ -1194,6 +1198,7 @@ export type AgreementExtensions = {
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
   isInitialized?: Maybe<Scalars['Boolean']>;
+  isSetupComplete: Scalars['Boolean'];
   metadata?: Maybe<Scalars['jsonb']>;
   updatedAt: Scalars['timestamptz'];
 };
@@ -1374,6 +1379,7 @@ export type AgreementExtensions_Bool_Exp = {
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   isInitialized?: InputMaybe<Boolean_Comparison_Exp>;
+  isSetupComplete?: InputMaybe<Boolean_Comparison_Exp>;
   metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
@@ -1418,6 +1424,7 @@ export type AgreementExtensions_Insert_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   isInitialized?: InputMaybe<Scalars['Boolean']>;
+  isSetupComplete?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -1502,6 +1509,7 @@ export type AgreementExtensions_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   isInitialized?: InputMaybe<Order_By>;
+  isSetupComplete?: InputMaybe<Order_By>;
   metadata?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
 };
@@ -1531,6 +1539,8 @@ export enum AgreementExtensions_Select_Column {
   /** column name */
   IsInitialized = 'isInitialized',
   /** column name */
+  IsSetupComplete = 'isSetupComplete',
+  /** column name */
   Metadata = 'metadata',
   /** column name */
   UpdatedAt = 'updatedAt'
@@ -1539,13 +1549,17 @@ export enum AgreementExtensions_Select_Column {
 /** select "AgreementExtensions_aggregate_bool_exp_bool_and_arguments_columns" columns of table "AgreementExtensions" */
 export enum AgreementExtensions_Select_Column_AgreementExtensions_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  IsInitialized = 'isInitialized'
+  IsInitialized = 'isInitialized',
+  /** column name */
+  IsSetupComplete = 'isSetupComplete'
 }
 
 /** select "AgreementExtensions_aggregate_bool_exp_bool_or_arguments_columns" columns of table "AgreementExtensions" */
 export enum AgreementExtensions_Select_Column_AgreementExtensions_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
-  IsInitialized = 'isInitialized'
+  IsInitialized = 'isInitialized',
+  /** column name */
+  IsSetupComplete = 'isSetupComplete'
 }
 
 /** input type for updating data in table "AgreementExtensions" */
@@ -1556,6 +1570,7 @@ export type AgreementExtensions_Set_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   isInitialized?: InputMaybe<Scalars['Boolean']>;
+  isSetupComplete?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -1576,6 +1591,7 @@ export type AgreementExtensions_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   isInitialized?: InputMaybe<Scalars['Boolean']>;
+  isSetupComplete?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
@@ -1595,6 +1611,8 @@ export enum AgreementExtensions_Update_Column {
   /** column name */
   IsInitialized = 'isInitialized',
   /** column name */
+  IsSetupComplete = 'isSetupComplete',
+  /** column name */
   Metadata = 'metadata',
   /** column name */
   UpdatedAt = 'updatedAt'
@@ -1613,6 +1631,7 @@ export type AgreementExtensions_Updates = {
   _prepend?: InputMaybe<AgreementExtensions_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementExtensions_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementExtensions_Bool_Exp;
 };
 
@@ -1962,6 +1981,7 @@ export type AgreementRoleExtensions_Updates = {
   _prepend?: InputMaybe<AgreementRoleExtensions_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementRoleExtensions_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementRoleExtensions_Bool_Exp;
 };
 
@@ -2221,6 +2241,7 @@ export enum AgreementRoleTokenTransfers_Update_Column {
 export type AgreementRoleTokenTransfers_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementRoleTokenTransfers_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementRoleTokenTransfers_Bool_Exp;
 };
 
@@ -2604,6 +2625,7 @@ export type AgreementRoleTokens_Updates = {
   _prepend?: InputMaybe<AgreementRoleTokens_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementRoleTokens_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementRoleTokens_Bool_Exp;
 };
 
@@ -2785,6 +2807,7 @@ export enum AgreementRoleWallets_Update_Column {
 export type AgreementRoleWallets_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementRoleWallets_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementRoleWallets_Bool_Exp;
 };
 
@@ -3471,6 +3494,7 @@ export type AgreementRoles_Updates = {
   _prepend?: InputMaybe<AgreementRoles_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementRoles_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementRoles_Bool_Exp;
 };
 
@@ -3763,6 +3787,7 @@ export enum AgreementTokenTransfers_Update_Column {
 export type AgreementTokenTransfers_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementTokenTransfers_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementTokenTransfers_Bool_Exp;
 };
 
@@ -4146,6 +4171,7 @@ export type AgreementTokens_Updates = {
   _prepend?: InputMaybe<AgreementTokens_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementTokens_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementTokens_Bool_Exp;
 };
 
@@ -4384,6 +4410,7 @@ export enum AgreementWallets_Update_Column {
 export type AgreementWallets_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<AgreementWallets_Set_Input>;
+  /** filter the rows which have to be updated */
   where: AgreementWallets_Bool_Exp;
 };
 
@@ -5172,6 +5199,7 @@ export type Agreements_Updates = {
   _prepend?: InputMaybe<Agreements_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Agreements_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Agreements_Bool_Exp;
 };
 
@@ -5585,6 +5613,7 @@ export type BundleContracts_Updates = {
   _prepend?: InputMaybe<BundleContracts_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<BundleContracts_Set_Input>;
+  /** filter the rows which have to be updated */
   where: BundleContracts_Bool_Exp;
 };
 
@@ -5949,6 +5978,7 @@ export type Bundles_Updates = {
   _prepend?: InputMaybe<Bundles_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Bundles_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Bundles_Bool_Exp;
 };
 
@@ -6209,6 +6239,7 @@ export type ChainNonces_Updates = {
   _inc?: InputMaybe<ChainNonces_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<ChainNonces_Set_Input>;
+  /** filter the rows which have to be updated */
   where: ChainNonces_Bool_Exp;
 };
 
@@ -6574,6 +6605,7 @@ export type ContractInstances_Updates = {
   _inc?: InputMaybe<ContractInstances_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<ContractInstances_Set_Input>;
+  /** filter the rows which have to be updated */
   where: ContractInstances_Bool_Exp;
 };
 
@@ -7093,6 +7125,7 @@ export type Contracts_Updates = {
   _prepend?: InputMaybe<Contracts_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Contracts_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Contracts_Bool_Exp;
 };
 
@@ -7140,11 +7173,14 @@ export type Extensions = {
   AgreementRoleExtensions: Array<AgreementRoleExtensions>;
   /** An aggregate relationship */
   AgreementRoleExtensions_aggregate: AgreementRoleExtensions_Aggregate;
+  capabilities: Scalars['jsonb'];
+  category?: Maybe<Scalars['String']>;
   createdAt: Scalars['timestamptz'];
   description: Scalars['String'];
   guideUrl: Scalars['String'];
   icon: Scalars['String'];
   id: Scalars['uuid'];
+  isSetupRequired: Scalars['Boolean'];
   name: Scalars['String'];
   slug: Scalars['String'];
   storageDefinition: Scalars['jsonb'];
@@ -7194,6 +7230,12 @@ export type ExtensionsAgreementRoleExtensions_AggregateArgs = {
 
 
 /** columns and relationships of "Extensions" */
+export type ExtensionsCapabilitiesArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+
+/** columns and relationships of "Extensions" */
 export type ExtensionsStorageDefinitionArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
@@ -7228,6 +7270,7 @@ export type Extensions_Aggregate_FieldsCountArgs = {
 
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Extensions_Append_Input = {
+  capabilities?: InputMaybe<Scalars['jsonb']>;
   storageDefinition?: InputMaybe<Scalars['jsonb']>;
   widgetDefinition?: InputMaybe<Scalars['jsonb']>;
 };
@@ -7241,11 +7284,14 @@ export type Extensions_Bool_Exp = {
   _and?: InputMaybe<Array<Extensions_Bool_Exp>>;
   _not?: InputMaybe<Extensions_Bool_Exp>;
   _or?: InputMaybe<Array<Extensions_Bool_Exp>>;
+  capabilities?: InputMaybe<Jsonb_Comparison_Exp>;
+  category?: InputMaybe<String_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   guideUrl?: InputMaybe<String_Comparison_Exp>;
   icon?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  isSetupRequired?: InputMaybe<Boolean_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   slug?: InputMaybe<String_Comparison_Exp>;
   storageDefinition?: InputMaybe<Jsonb_Comparison_Exp>;
@@ -7261,18 +7307,21 @@ export enum Extensions_Constraint {
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Extensions_Delete_At_Path_Input = {
+  capabilities?: InputMaybe<Array<Scalars['String']>>;
   storageDefinition?: InputMaybe<Array<Scalars['String']>>;
   widgetDefinition?: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
 export type Extensions_Delete_Elem_Input = {
+  capabilities?: InputMaybe<Scalars['Int']>;
   storageDefinition?: InputMaybe<Scalars['Int']>;
   widgetDefinition?: InputMaybe<Scalars['Int']>;
 };
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export type Extensions_Delete_Key_Input = {
+  capabilities?: InputMaybe<Scalars['String']>;
   storageDefinition?: InputMaybe<Scalars['String']>;
   widgetDefinition?: InputMaybe<Scalars['String']>;
 };
@@ -7281,11 +7330,14 @@ export type Extensions_Delete_Key_Input = {
 export type Extensions_Insert_Input = {
   AgreementExtensions?: InputMaybe<AgreementExtensions_Arr_Rel_Insert_Input>;
   AgreementRoleExtensions?: InputMaybe<AgreementRoleExtensions_Arr_Rel_Insert_Input>;
+  capabilities?: InputMaybe<Scalars['jsonb']>;
+  category?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guideUrl?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
+  isSetupRequired?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   storageDefinition?: InputMaybe<Scalars['jsonb']>;
@@ -7296,6 +7348,7 @@ export type Extensions_Insert_Input = {
 /** aggregate max on columns */
 export type Extensions_Max_Fields = {
   __typename?: 'Extensions_max_fields';
+  category?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   guideUrl?: Maybe<Scalars['String']>;
@@ -7309,6 +7362,7 @@ export type Extensions_Max_Fields = {
 /** aggregate min on columns */
 export type Extensions_Min_Fields = {
   __typename?: 'Extensions_min_fields';
+  category?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   guideUrl?: Maybe<Scalars['String']>;
@@ -7346,11 +7400,14 @@ export type Extensions_On_Conflict = {
 export type Extensions_Order_By = {
   AgreementExtensions_aggregate?: InputMaybe<AgreementExtensions_Aggregate_Order_By>;
   AgreementRoleExtensions_aggregate?: InputMaybe<AgreementRoleExtensions_Aggregate_Order_By>;
+  capabilities?: InputMaybe<Order_By>;
+  category?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   guideUrl?: InputMaybe<Order_By>;
   icon?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  isSetupRequired?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   slug?: InputMaybe<Order_By>;
   storageDefinition?: InputMaybe<Order_By>;
@@ -7365,12 +7422,17 @@ export type Extensions_Pk_Columns_Input = {
 
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export type Extensions_Prepend_Input = {
+  capabilities?: InputMaybe<Scalars['jsonb']>;
   storageDefinition?: InputMaybe<Scalars['jsonb']>;
   widgetDefinition?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "Extensions" */
 export enum Extensions_Select_Column {
+  /** column name */
+  Capabilities = 'capabilities',
+  /** column name */
+  Category = 'category',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -7381,6 +7443,8 @@ export enum Extensions_Select_Column {
   Icon = 'icon',
   /** column name */
   Id = 'id',
+  /** column name */
+  IsSetupRequired = 'isSetupRequired',
   /** column name */
   Name = 'name',
   /** column name */
@@ -7395,11 +7459,14 @@ export enum Extensions_Select_Column {
 
 /** input type for updating data in table "Extensions" */
 export type Extensions_Set_Input = {
+  capabilities?: InputMaybe<Scalars['jsonb']>;
+  category?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guideUrl?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
+  isSetupRequired?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   storageDefinition?: InputMaybe<Scalars['jsonb']>;
@@ -7417,11 +7484,14 @@ export type Extensions_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Extensions_Stream_Cursor_Value_Input = {
+  capabilities?: InputMaybe<Scalars['jsonb']>;
+  category?: InputMaybe<Scalars['String']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   guideUrl?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
+  isSetupRequired?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
   storageDefinition?: InputMaybe<Scalars['jsonb']>;
@@ -7432,6 +7502,10 @@ export type Extensions_Stream_Cursor_Value_Input = {
 /** update columns of table "Extensions" */
 export enum Extensions_Update_Column {
   /** column name */
+  Capabilities = 'capabilities',
+  /** column name */
+  Category = 'category',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
@@ -7441,6 +7515,8 @@ export enum Extensions_Update_Column {
   Icon = 'icon',
   /** column name */
   Id = 'id',
+  /** column name */
+  IsSetupRequired = 'isSetupRequired',
   /** column name */
   Name = 'name',
   /** column name */
@@ -7466,6 +7542,7 @@ export type Extensions_Updates = {
   _prepend?: InputMaybe<Extensions_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Extensions_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Extensions_Bool_Exp;
 };
 
@@ -7678,6 +7755,7 @@ export enum IdentityProviders_Update_Column {
 export type IdentityProviders_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<IdentityProviders_Set_Input>;
+  /** filter the rows which have to be updated */
   where: IdentityProviders_Bool_Exp;
 };
 
@@ -7896,6 +7974,7 @@ export enum Integrations_Update_Column {
 export type Integrations_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Integrations_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Integrations_Bool_Exp;
 };
 
@@ -8077,6 +8156,7 @@ export enum RolePermissions_Update_Column {
 export type RolePermissions_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<RolePermissions_Set_Input>;
+  /** filter the rows which have to be updated */
   where: RolePermissions_Bool_Exp;
 };
 
@@ -8198,6 +8278,7 @@ export enum SequelizeMeta_Update_Column {
 export type SequelizeMeta_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<SequelizeMeta_Set_Input>;
+  /** filter the rows which have to be updated */
   where: SequelizeMeta_Bool_Exp;
 };
 
@@ -8731,6 +8812,7 @@ export type Transactions_Updates = {
   _prepend?: InputMaybe<Transactions_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Transactions_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Transactions_Bool_Exp;
 };
 
@@ -8981,6 +9063,7 @@ export enum Transfers_Update_Column {
 export type Transfers_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Transfers_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Transfers_Bool_Exp;
 };
 
@@ -9292,6 +9375,7 @@ export type UserIdentities_Updates = {
   _prepend?: InputMaybe<UserIdentities_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<UserIdentities_Set_Input>;
+  /** filter the rows which have to be updated */
   where: UserIdentities_Bool_Exp;
 };
 
@@ -9586,6 +9670,7 @@ export enum Users_Update_Column {
 export type Users_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Users_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Users_Bool_Exp;
 };
 
@@ -9836,6 +9921,7 @@ export enum WalletContractInstances_Update_Column {
 export type WalletContractInstances_Updates = {
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<WalletContractInstances_Set_Input>;
+  /** filter the rows which have to be updated */
   where: WalletContractInstances_Bool_Exp;
 };
 
@@ -10502,6 +10588,7 @@ export type Wallets_Updates = {
   _inc?: InputMaybe<Wallets_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Wallets_Set_Input>;
+  /** filter the rows which have to be updated */
   where: Wallets_Bool_Exp;
 };
 
@@ -14674,7 +14761,7 @@ export type GetAgreementSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetAgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, id: any, isInitialized?: boolean | null, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
+export type GetAgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, id: any, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
 
 export type GetAgreementAsMemberSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -14682,7 +14769,7 @@ export type GetAgreementAsMemberSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetAgreementAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, id: any, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', id: any, metadata?: any | null, isInitialized?: boolean | null, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null, AgreementRoleId?: any | null, id: any }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
+export type GetAgreementAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, id: any, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', id: any, metadata?: any | null, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', slug: string, id: any, icon: string, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null, AgreementRoleId?: any | null, id: any, tokenId: string }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
 
 export type AgreementSubscriptionSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -14690,12 +14777,12 @@ export type AgreementSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type AgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, createdAt: any, name: string, metadata: any, isLaunched: boolean, splits: any, mintPermissions: any, symbol: string, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
+export type AgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, createdAt: any, name: string, metadata: any, isLaunched: boolean, splits: any, mintPermissions: any, symbol: string, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
 
 export type GetExtensionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', createdAt: any, description: string, guideUrl: string, icon: string, id: any, name: string, slug: string, updatedAt: any }> };
+export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', capabilities: any, category?: string | null, createdAt: any, description: string, guideUrl: string, icon: string, id: any, isSetupRequired: boolean, name: string, slug: string, updatedAt: any }> };
 
 export type GetAvailablePermissionQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -14709,7 +14796,7 @@ export type GetAgreementMembersForRoleQueryVariables = Exact<{
 }>;
 
 
-export type GetAgreementMembersForRoleQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', AgreementTokens: Array<{ __typename?: 'AgreementTokens', Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }> }> };
+export type GetAgreementMembersForRoleQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }> }> };
 
 export type AllAgreementsQueryVariables = Exact<{
   chainId?: InputMaybe<Scalars['Int']>;
@@ -14718,7 +14805,7 @@ export type AllAgreementsQueryVariables = Exact<{
 }>;
 
 
-export type AllAgreementsQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> };
+export type AllAgreementsQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, createdAt: any, name: string, metadata: any, splits: any, mintPermissions: any, symbol: string, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> };
 
 export type MyAgreementsSubscriptionSubscriptionVariables = Exact<{
   walletAddress?: InputMaybe<Scalars['String']>;
@@ -14726,7 +14813,7 @@ export type MyAgreementsSubscriptionSubscriptionVariables = Exact<{
 }>;
 
 
-export type MyAgreementsSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, isLaunched: boolean, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementTokens: Array<{ __typename?: 'AgreementTokens', Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> };
+export type MyAgreementsSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', id: any, slug: string, address: string, createdAt: any, OwnerId?: any | null, name: string, metadata: any, isLaunched: boolean, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> };
 
 export type GetBundleByIdQueryVariables = Exact<{
   id: Scalars['uuid'];
@@ -15060,6 +15147,7 @@ export const GetAgreementSubscriptionDocument = gql`
       metadata
       id
       isInitialized
+      isSetupComplete
       Extension {
         slug
         id
@@ -15165,6 +15253,7 @@ export const GetAgreementAsMemberSubscriptionDocument = gql`
       id
       metadata
       isInitialized
+      isSetupComplete
       Extension {
         slug
         id
@@ -15190,6 +15279,7 @@ export const GetAgreementAsMemberSubscriptionDocument = gql`
       OwnerId
       AgreementRoleId
       id
+      tokenId
     }
     AgreementWallets {
       role
@@ -15238,6 +15328,7 @@ export const AgreementSubscriptionDocument = gql`
         address
         ens
       }
+      OwnerId
       tokenId
       tokenURI
       mintedAt
@@ -15282,12 +15373,15 @@ export type AgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useA
 export type AgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<AgreementSubscriptionSubscription>;
 export const GetExtensionsDocument = gql`
     query GetExtensions {
-  Extensions {
+  Extensions(order_by: {slug: asc}) {
+    capabilities
+    category
     createdAt
     description
     guideUrl
     icon
     id
+    isSetupRequired
     name
     slug
     updatedAt
@@ -15361,6 +15455,7 @@ export const GetAgreementMembersForRoleDocument = gql`
     query GetAgreementMembersForRole($slug: String, $chainId: Int, $roleId: uuid) {
   Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
     AgreementTokens(where: {Agreement: {AgreementRoles: {id: {_eq: $roleId}}}}) {
+      OwnerId
       Wallet {
         address
         ens
@@ -15425,6 +15520,7 @@ export const AllAgreementsDocument = gql`
         address
         ens
       }
+      OwnerId
       tokenId
       tokenURI
       mintedAt
@@ -15476,6 +15572,7 @@ export const MyAgreementsSubscriptionDocument = gql`
     slug
     address
     createdAt
+    OwnerId
     name
     metadata
     isLaunched
@@ -15508,6 +15605,7 @@ export const MyAgreementsSubscriptionDocument = gql`
         address
         ens
       }
+      OwnerId
     }
   }
 }

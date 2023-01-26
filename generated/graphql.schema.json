@@ -2282,7 +2282,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -4069,7 +4069,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -5546,7 +5546,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -7569,7 +7569,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -8486,6 +8486,22 @@
             "deprecationReason": null
           },
           {
+            "name": "isSetupComplete",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "metadata",
             "description": null,
             "args": [
@@ -9295,6 +9311,18 @@
             "deprecationReason": null
           },
           {
+            "name": "isSetupComplete",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Boolean_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "metadata",
             "description": null,
             "type": {
@@ -9581,6 +9609,18 @@
           },
           {
             "name": "isInitialized",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupComplete",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -10268,6 +10308,18 @@
             "deprecationReason": null
           },
           {
+            "name": "isSetupComplete",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "metadata",
             "description": null,
             "type": {
@@ -10391,6 +10443,12 @@
             "deprecationReason": null
           },
           {
+            "name": "isSetupComplete",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "metadata",
             "description": "column name",
             "isDeprecated": false,
@@ -10418,6 +10476,12 @@
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
+          },
+          {
+            "name": "isSetupComplete",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -10432,6 +10496,12 @@
         "enumValues": [
           {
             "name": "isInitialized",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupComplete",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -10507,6 +10577,18 @@
           },
           {
             "name": "isInitialized",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupComplete",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -10664,6 +10746,18 @@
             "deprecationReason": null
           },
           {
+            "name": "isSetupComplete",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "metadata",
             "description": null,
             "type": {
@@ -10732,6 +10826,12 @@
           },
           {
             "name": "isInitialized",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupComplete",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -10831,7 +10931,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -13262,7 +13362,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -15133,7 +15233,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -17929,7 +18029,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -19122,7 +19222,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -24319,7 +24419,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -26328,7 +26428,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -29124,7 +29224,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -30773,7 +30873,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -36842,7 +36942,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -39515,7 +39615,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -41953,7 +42053,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -43480,7 +43580,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -45922,7 +46022,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -49500,7 +49600,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -50051,6 +50151,47 @@
             "deprecationReason": null
           },
           {
+            "name": "capabilities",
+            "description": null,
+            "args": [
+              {
+                "name": "path",
+                "description": "JSON select path",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "jsonb",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "args": [],
@@ -50124,6 +50265,22 @@
               "ofType": {
                 "kind": "SCALAR",
                 "name": "uuid",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
                 "ofType": null
               }
             },
@@ -50380,6 +50537,18 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "storageDefinition",
             "description": null,
             "type": {
@@ -50515,6 +50684,30 @@
             "deprecationReason": null
           },
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "jsonb_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "String_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -50568,6 +50761,18 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "uuid_comparison_exp",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
+            "description": null,
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "Boolean_comparison_exp",
               "ofType": null
             },
             "defaultValue": null,
@@ -50663,6 +50868,26 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "storageDefinition",
             "description": null,
             "type": {
@@ -50714,6 +50939,18 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "storageDefinition",
             "description": null,
             "type": {
@@ -50748,6 +50985,18 @@
         "description": "delete key/value pair or string element. key/value pairs are matched based on their key value",
         "fields": null,
         "inputFields": [
+          {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "storageDefinition",
             "description": null,
@@ -50808,6 +51057,30 @@
             "deprecationReason": null
           },
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -50861,6 +51134,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "defaultValue": null,
@@ -50937,6 +51222,18 @@
         "name": "Extensions_max_fields",
         "description": "aggregate max on columns",
         "fields": [
+          {
+            "name": "category",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "createdAt",
             "description": null,
@@ -51044,6 +51341,18 @@
         "name": "Extensions_min_fields",
         "description": "aggregate min on columns",
         "fields": [
+          {
+            "name": "category",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "createdAt",
             "description": null,
@@ -51330,6 +51639,30 @@
             "deprecationReason": null
           },
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -51379,6 +51712,18 @@
           },
           {
             "name": "id",
+            "description": null,
+            "type": {
+              "kind": "ENUM",
+              "name": "order_by",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
             "description": null,
             "type": {
               "kind": "ENUM",
@@ -51488,6 +51833,18 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "storageDefinition",
             "description": null,
             "type": {
@@ -51525,6 +51882,18 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "capabilities",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": "column name",
             "isDeprecated": false,
@@ -51550,6 +51919,12 @@
           },
           {
             "name": "id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -51593,6 +51968,30 @@
         "description": "input type for updating data in table \"Extensions\"",
         "fields": null,
         "inputFields": [
+          {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
           {
             "name": "createdAt",
             "description": null,
@@ -51647,6 +52046,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "defaultValue": null,
@@ -51764,6 +52175,30 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "capabilities",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "jsonb",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "type": {
@@ -51817,6 +52252,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "uuid",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
               "ofType": null
             },
             "defaultValue": null,
@@ -51897,6 +52344,18 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "capabilities",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "category",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": "column name",
             "isDeprecated": false,
@@ -51922,6 +52381,12 @@
           },
           {
             "name": "id",
+            "description": "column name",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "isSetupRequired",
             "description": "column name",
             "isDeprecated": false,
             "deprecationReason": null
@@ -52039,7 +52504,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -53513,7 +53978,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -55079,7 +55544,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -56276,7 +56741,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -56917,7 +57382,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -60720,7 +61185,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -62387,7 +62852,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -64476,7 +64941,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -66590,7 +67055,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -68361,7 +68826,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -73536,7 +74001,7 @@
           },
           {
             "name": "where",
-            "description": null,
+            "description": "filter the rows which have to be updated",
             "type": {
               "kind": "NON_NULL",
               "name": null,

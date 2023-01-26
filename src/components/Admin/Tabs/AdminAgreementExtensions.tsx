@@ -10,7 +10,8 @@ import {
 	useMantineColorScheme,
 	Center,
 	Modal,
-	Button
+	Button,
+	Badge
 } from '@mantine/core'
 import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
@@ -24,7 +25,7 @@ import {
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { colorAsh, colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }
@@ -100,13 +101,11 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 			// Now sort searched extensions into categories
 			const categories: ExtensionCategory[] = []
 			searched.forEach(ext => {
-				// TODO: use the real categories
-				const category = 'Basic'
 				let existingCategory: any = undefined
 
 				// Check if the category already exists
 				categories.forEach(cat => {
-					if (cat.title === category) {
+					if (cat.title === ext.category) {
 						existingCategory = cat
 					}
 				})
@@ -114,7 +113,10 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 				if (existingCategory) {
 					existingCategory.extensions.push(ext)
 				} else {
-					categories.push({ title: category, extensions: [ext] })
+					categories.push({
+						title: ext.category ?? 'basic',
+						extensions: [ext]
+					})
 				}
 			})
 			setExtensionCategories(categories)
@@ -143,7 +145,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		await sdk.agreementExtension.createAgreementExtension({
 			agreementId: agreement?.id ?? '',
 			extensionId: extension.id,
-			isInitialized: true
+			isInitialized: true,
+			isSetupComplete: !extension.isSetupRequired
 		})
 		// Required to avoid a race condition where the extension has not
 		// yet been enabled on the database
@@ -154,15 +157,19 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 
 	const navigateToExtensionSettings = (extension: AgreementExtensions) => {
 		if (extension.Extension) {
-			if (extension.AgreementExtensionWidgets.length > 0) {
+			if (
+				extension.Extension.capabilities.length === 1 &&
+				extension.Extension.capabilities[0] === 'link'
+			) {
+				// link extension and nothing more
+				router.push(
+					`/${agreement.slug}/e/${extension.Extension?.slug ?? ''}`
+				)
+			} else {
 				router.push(
 					`/${agreement.slug}/e/${
 						extension.Extension?.slug ?? ''
 					}/settings`
-				)
-			} else {
-				router.push(
-					`/${agreement.slug}/e/${extension.Extension?.slug ?? ''}`
 				)
 			}
 		}
@@ -263,27 +270,88 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												)}
 											</div>
 											<Space h={16} />
-											<div className={meemTheme.row}>
-												{extension
-													.AgreementExtensionWidgets
-													.length > 0 && (
-													<>
-														<Button
+											{!extension.isSetupComplete && (
+												<>
+													<Button
+														className={
+															meemTheme.buttonWhite
+														}
+														onClick={() => {
+															navigateToExtensionSettings(
+																extension
+															)
+														}}
+													>
+														<Text
 															className={
-																meemTheme.buttonWhite
+																meemTheme.tExtraSmall
 															}
+														>
+															Complete Setup
+														</Text>
+													</Button>
+												</>
+											)}
+											{extension.isSetupComplete && (
+												<>
+													<div
+														className={
+															meemTheme.row
+														}
+													>
+														{extension
+															.AgreementExtensionWidgets
+															.length > 0 && (
+															<>
+																<Button
+																	className={
+																		meemTheme.buttonWhite
+																	}
+																	leftIcon={
+																		<ExternalLink
+																			size={
+																				20
+																			}
+																		/>
+																	}
+																	onClick={() => {
+																		navigateToExtensionHome(
+																			extension
+																				.Extension
+																				?.slug ??
+																				''
+																		)
+																	}}
+																>
+																	<Text
+																		className={
+																			meemTheme.tExtraSmall
+																		}
+																	>
+																		Launch
+																	</Text>
+																</Button>
+																<Space w={8} />
+															</>
+														)}
+
+														<Button
 															leftIcon={
-																<ExternalLink
+																<Settings
 																	size={20}
 																/>
 															}
+															className={
+																meemTheme.buttonWhite
+															}
 															onClick={() => {
-																navigateToExtensionHome(
-																	extension
-																		.Extension
-																		?.slug ??
-																		''
-																)
+																if (
+																	extension.Extension
+																) {
+																	navigateToExtensionSettings(
+																		extension
+																	)
+																}
 															}}
 														>
 															<Text
@@ -291,39 +359,12 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																	meemTheme.tExtraSmall
 																}
 															>
-																Launch
+																{'Settings'}
 															</Text>
 														</Button>
-														<Space w={8} />
-													</>
-												)}
-
-												<Button
-													leftIcon={
-														<Settings size={20} />
-													}
-													className={
-														meemTheme.buttonWhite
-													}
-													onClick={() => {
-														if (
-															extension.Extension
-														) {
-															navigateToExtensionSettings(
-																extension
-															)
-														}
-													}}
-												>
-													<Text
-														className={
-															meemTheme.tExtraSmall
-														}
-													>
-														{'Settings'}
-													</Text>
-												</Button>
-											</div>
+													</div>
+												</>
+											)}
 										</div>
 									</Grid.Col>
 								)
@@ -353,7 +394,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 							}}
 							placeholder="Search Apps"
 						/>
-						<Space h={24} />
+						<Space h={32} />
 
 						{extensionCategories.map(cat => (
 							<>
@@ -380,6 +421,9 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													className={
 														meemTheme.extensionGridItem
 													}
+													style={{
+														position: 'relative'
+													}}
 												>
 													<div
 														className={
@@ -413,12 +457,40 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													>
 														{extension.description}
 													</Text>
+
+													{extension.capabilities.includes(
+														'widget'
+													) && (
+														<Badge
+															gradient={{
+																from: isDarkTheme
+																	? colorDarkerGrey
+																	: colorAsh,
+																to: isDarkTheme
+																	? colorDarkerGrey
+																	: colorAsh,
+																deg: 35
+															}}
+															classNames={{
+																inner: meemTheme.tBadgeText
+															}}
+															style={{
+																position:
+																	'absolute',
+																top: 16,
+																right: 16
+															}}
+															variant={'gradient'}
+														>
+															Widget
+														</Badge>
+													)}
 												</div>
 											</a>
 										</Grid.Col>
 									))}
 								</Grid>
-								<Space h={16} />
+								<Space h={24} />
 							</>
 						))}
 					</>

@@ -57,7 +57,8 @@ export const ExampleExtensionSettings: React.FC = () => {
 	const saveCustomChanges = async () => {
 		await sdk.agreementExtension.updateAgreementExtension({
 			agreementId: agreement?.id ?? '',
-			agreementExtensionId: agreementExtension?.id
+			agreementExtensionId: agreementExtension?.id,
+			isSetupComplete: true
 			// ---------------------------------------------
 			// Include externalLink if you'd like to add or update
 			// an external link to your community home page.
