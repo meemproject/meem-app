@@ -266,27 +266,88 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 												)}
 											</div>
 											<Space h={16} />
-											<div className={meemTheme.row}>
-												{extension
-													.AgreementExtensionWidgets
-													.length > 0 && (
-													<>
-														<Button
+											{!extension.isSetupComplete && (
+												<>
+													<Button
+														className={
+															meemTheme.buttonWhite
+														}
+														onClick={() => {
+															navigateToExtensionSettings(
+																extension
+															)
+														}}
+													>
+														<Text
 															className={
-																meemTheme.buttonWhite
+																meemTheme.tExtraSmall
 															}
+														>
+															Complete Setup
+														</Text>
+													</Button>
+												</>
+											)}
+											{extension.isSetupComplete && (
+												<>
+													<div
+														className={
+															meemTheme.row
+														}
+													>
+														{extension
+															.AgreementExtensionWidgets
+															.length > 0 && (
+															<>
+																<Button
+																	className={
+																		meemTheme.buttonWhite
+																	}
+																	leftIcon={
+																		<ExternalLink
+																			size={
+																				20
+																			}
+																		/>
+																	}
+																	onClick={() => {
+																		navigateToExtensionHome(
+																			extension
+																				.Extension
+																				?.slug ??
+																				''
+																		)
+																	}}
+																>
+																	<Text
+																		className={
+																			meemTheme.tExtraSmall
+																		}
+																	>
+																		Launch
+																	</Text>
+																</Button>
+																<Space w={8} />
+															</>
+														)}
+
+														<Button
 															leftIcon={
-																<ExternalLink
+																<Settings
 																	size={20}
 																/>
 															}
+															className={
+																meemTheme.buttonWhite
+															}
 															onClick={() => {
-																navigateToExtensionHome(
-																	extension
-																		.Extension
-																		?.slug ??
-																		''
-																)
+																if (
+																	extension.Extension
+																) {
+																	navigateToExtensionSettings(
+																		extension
+																	)
+																}
 															}}
 														>
 															<Text
@@ -294,39 +355,12 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																	meemTheme.tExtraSmall
 																}
 															>
-																Launch
+																{'Settings'}
 															</Text>
 														</Button>
-														<Space w={8} />
-													</>
-												)}
-
-												<Button
-													leftIcon={
-														<Settings size={20} />
-													}
-													className={
-														meemTheme.buttonWhite
-													}
-													onClick={() => {
-														if (
-															extension.Extension
-														) {
-															navigateToExtensionSettings(
-																extension
-															)
-														}
-													}}
-												>
-													<Text
-														className={
-															meemTheme.tExtraSmall
-														}
-													>
-														{'Settings'}
-													</Text>
-												</Button>
-											</div>
+													</div>
+												</>
+											)}
 										</div>
 									</Grid.Col>
 								)

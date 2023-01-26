@@ -230,6 +230,7 @@ export const GuildExtensionSettings: React.FC = () => {
 			try {
 				await sdk.agreementExtension.updateAgreementExtension({
 					agreementId: agreement?.id ?? '',
+					isSetupComplete: true,
 					agreementExtensionId: agreementExtension?.id,
 					externalLink: {
 						label: `${myGuild.name}`,
@@ -299,6 +300,7 @@ export const GuildExtensionSettings: React.FC = () => {
 					const selectedGuildData = await guild.get(guildId)
 
 					await sdk.agreementExtension.updateAgreementExtension({
+						isSetupComplete: true,
 						agreementId: agreement?.id ?? '',
 						agreementExtensionId: agreementExtension?.id,
 						externalLink: {
