@@ -30,8 +30,8 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
-import { quickTruncate } from '../../../utils/truncated_wallet'
 import { colorLightGrey, useMeemTheme } from '../../Styles/MeemTheme'
+import { AgreementDetailsModal } from '../AgreementDetailsModal'
 import { JoinLeaveAgreementModal } from '../JoinLeaveAgreementModal'
 interface IProps {
 	agreement: Agreement
@@ -52,6 +52,9 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 	const [isJoiningAgreement, setIsJoiningAgreement] = useState(false)
 	const [isLeavingAgreement, setIsLeavingAgreement] = useState(false)
+
+	const [isAgreementDetailsModalOpen, setIsAgreementDetailsModalOpen] =
+		useState(false)
 
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
@@ -523,33 +526,15 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 						<Space h={32} />
 						<Center>
-							<Text className={meemTheme.tExtraSmallLabel}>
-								Contract Address
+							<Text
+								className={meemTheme.tExtraSmallLabel}
+								style={{ cursor: 'pointer' }}
+								onClick={() => {
+									setIsAgreementDetailsModalOpen(true)
+								}}
+							>
+								View Details
 							</Text>
-						</Center>
-						<Space h={8} />
-						<Center>
-							<div className={meemTheme.row}>
-								<Text>
-									{quickTruncate(agreement.address ?? '')}
-								</Text>
-								<Space w={4} />
-								<Image
-									className={meemTheme.copyIcon}
-									src="/copy.png"
-									height={20}
-									onClick={() => {
-										navigator.clipboard.writeText(
-											`${agreement.address}`
-										)
-										showSuccessNotification(
-											'Community agreement contract address copied!',
-											`This community's agreement contract address was copied to your clipboard.`
-										)
-									}}
-									width={20}
-								/>
-							</div>
 						</Center>
 					</>
 				)}
@@ -596,6 +581,13 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					}
 				/>
 			</Modal>
+			<AgreementDetailsModal
+				agreement={agreement}
+				isOpened={isAgreementDetailsModalOpen}
+				onModalClosed={() => {
+					setIsAgreementDetailsModalOpen(false)
+				}}
+			/>
 		</>
 	)
 }
