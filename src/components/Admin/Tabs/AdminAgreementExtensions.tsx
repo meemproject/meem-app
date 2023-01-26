@@ -157,15 +157,19 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 
 	const navigateToExtensionSettings = (extension: AgreementExtensions) => {
 		if (extension.Extension) {
-			if (extension.AgreementExtensionWidgets.length > 0) {
+			if (
+				extension.Extension.capabilities.length === 1 &&
+				extension.Extension.capabilities[0] === 'link'
+			) {
+				// link extension and nothing more
+				router.push(
+					`/${agreement.slug}/e/${extension.Extension?.slug ?? ''}`
+				)
+			} else {
 				router.push(
 					`/${agreement.slug}/e/${
 						extension.Extension?.slug ?? ''
 					}/settings`
-				)
-			} else {
-				router.push(
-					`/${agreement.slug}/e/${extension.Extension?.slug ?? ''}`
 				)
 			}
 		}

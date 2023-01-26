@@ -463,12 +463,14 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							agreement.extensions?.filter(
 								ext =>
 									ext.AgreementExtensionLinks.length > 0 &&
+									ext.isSetupComplete &&
 									ext.metadata.sidebarVisible
 							).length > 0 && <Space h={12} />}
 						{agreement.extensions &&
 							agreement.extensions?.filter(
 								ext =>
 									ext.AgreementExtensionLinks.length > 0 &&
+									ext.isSetupComplete &&
 									ext.metadata.sidebarVisible
 							).length > 0 && (
 								<>

@@ -180,6 +180,7 @@ export const SUB_AGREEMENT = gql`
 				isInitialized
 				isSetupComplete
 				Extension {
+					capabilities
 					slug
 					id
 					icon
@@ -270,7 +271,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 				isInitialized
 				isSetupComplete
 				Extension {
-					slug
+					capabilities
 					id
 					icon
 					name
