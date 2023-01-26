@@ -6,7 +6,6 @@ import {
 	Space,
 	TextInput,
 	Grid,
-	Divider,
 	Loader,
 	useMantineColorScheme,
 	Center,
@@ -25,7 +24,7 @@ import {
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import { colorGrey, useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }
