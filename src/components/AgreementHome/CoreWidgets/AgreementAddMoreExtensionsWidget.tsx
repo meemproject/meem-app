@@ -21,9 +21,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 				<>
 					{agreement.isCurrentUserAgreementAdmin && (
 						<>
-							{agreement.extensions?.filter(
-								ext => ext.AgreementExtensionWidgets.length > 0
-							).length === 0 && (
+							{agreement.extensions?.length === 0 && (
 								<div className={meemTheme.widgetLight}>
 									<Center>
 										<Text className={meemTheme.tLargeBold}>
@@ -61,10 +59,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 							)}
 
 							{agreement.extensions &&
-								agreement.extensions?.filter(
-									ext =>
-										ext.AgreementExtensionWidgets.length > 0
-								).length > 0 && (
+								agreement.extensions?.length > 0 && (
 									<>
 										<Space h={32} />
 

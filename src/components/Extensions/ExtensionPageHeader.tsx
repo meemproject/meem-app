@@ -1,4 +1,10 @@
-import { Text, Space, Image, Button } from '@mantine/core'
+import {
+	Text,
+	Space,
+	Image,
+	Button,
+	useMantineColorScheme
+} from '@mantine/core'
 import { useRouter } from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
@@ -38,6 +44,9 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 
 	const isSettingsPage =
 		(window && window.location.pathname.includes('settings')) ?? false
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	// Hide the back arrow for extensions with no widgets - presumably they
 	// have no homepage either (i.e. are link extensions)
@@ -95,7 +104,14 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 						<div className={meemTheme.centeredRow}>
 							<Image
 								className={meemTheme.copyIcon}
-								src={`/${agreementExtension?.Extension?.icon}`}
+								src={`/${
+									isDarkTheme
+										? `${(
+												agreementExtension?.Extension
+													?.icon ?? ''
+										  ).replace('.png', '-white.png')}`
+										: agreementExtension?.Extension?.icon
+								}`}
 								width={16}
 							/>
 							<Space w={8} />
