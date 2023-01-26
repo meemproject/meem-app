@@ -1,3 +1,20 @@
+# [1.14.0](https://github.com/meemproject/meem-app/compare/v1.13.1...v1.14.0) (2023-01-26)
+
+
+### Bug Fixes
+
+* create agreement modal wasn't opening in some scenarios ([9904dc4](https://github.com/meemproject/meem-app/commit/9904dc4))
+* don't print ext categories ([653cc3a](https://github.com/meemproject/meem-app/commit/653cc3a))
+* missing icon for steward ([4d58927](https://github.com/meemproject/meem-app/commit/4d58927))
+* Switch Agreement Admin Changes modal over to monitor transactions, like roles modal ([f8cc355](https://github.com/meemproject/meem-app/commit/f8cc355))
+* Update copy in dev modal for agreement details ([fc83c38](https://github.com/meemproject/meem-app/commit/fc83c38))
+
+
+### Features
+
+* sort extensions in list by category ([0f18c6d](https://github.com/meemproject/meem-app/commit/0f18c6d))
+* updated style for enabled extensions ([86962fb](https://github.com/meemproject/meem-app/commit/86962fb))
+
 ## [1.13.1](https://github.com/meemproject/meem-app/compare/v1.13.0...v1.13.1) (2023-01-25)
 
 # [1.13.0](https://github.com/meemproject/meem-app/compare/v1.12.0...v1.13.0) (2023-01-24)
