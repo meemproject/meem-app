@@ -79,7 +79,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 								extensionsSetupWithWidgets === 0 && (
 									<div
 										className={meemTheme.widgetLight}
-										style={{ marginTop: 26 }}
+										style={{ marginTop: 16 }}
 									>
 										<Center>
 											<Text
@@ -124,7 +124,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 								extensionsSetupWithWidgets === 0 && (
 									<div
 										className={meemTheme.widgetLight}
-										style={{ marginTop: 26 }}
+										style={{ marginTop: 16 }}
 									>
 										<Center>
 											<Text
