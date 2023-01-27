@@ -7,7 +7,8 @@ import {
 	Image,
 	Center,
 	Modal,
-	Divider
+	Divider,
+	useMantineColorScheme
 } from '@mantine/core'
 import { cleanNotifications } from '@mantine/notifications'
 import {
@@ -56,6 +57,9 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 	const [isAgreementDetailsModalOpen, setIsAgreementDetailsModalOpen] =
 		useState(false)
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
@@ -468,7 +472,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 															.sidebarVisible
 												)
 												.map(extension => (
-													<>
+													<div key={extension.id}>
 														<Button
 															style={{
 																margin: 3
@@ -491,14 +495,24 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 														>
 															<Image
 																width={20}
-																src={
-																	extension
-																		.Extension
-																		?.icon
-																}
+																src={`/${
+																	isDarkTheme
+																		? `${(
+																				extension
+																					.Extension
+																					?.icon ??
+																				''
+																		  ).replace(
+																				'.png',
+																				'-white.png'
+																		  )}`
+																		: extension
+																				.Extension
+																				?.icon
+																}`}
 															/>
 														</Button>
-													</>
+													</div>
 												))}
 										</div>
 									</Center>
@@ -522,14 +536,16 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 				{agreement.isCurrentUserAgreementAdmin && (
 					<Link href={`/${agreement.slug}/admin`}>
-						<Settings
-							style={{
-								position: 'absolute',
-								top: 16,
-								right: 16,
-								cursor: 'pointer'
-							}}
-						/>
+						<div>
+							<Settings
+								style={{
+									position: 'absolute',
+									top: 16,
+									right: 16,
+									cursor: 'pointer'
+								}}
+							/>
+						</div>
 					</Link>
 				)}
 			</div>
