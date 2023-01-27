@@ -128,15 +128,22 @@ export const AgreementAdminComponent: React.FC = () => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
 							{agreement.image && (
-								<div className={meemTheme.pageHeaderImage}>
-									<Image
-										width={80}
-										height={80}
-										radius={8}
-										className={meemTheme.imageAgreementLogo}
-										src={agreement.image}
-									/>
-								</div>
+								<Link href={`/${agreement.slug}`}>
+									<div
+										className={meemTheme.pageHeaderImage}
+										style={{ cursor: 'pointer' }}
+									>
+										<Image
+											width={80}
+											height={80}
+											radius={8}
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											src={agreement.image}
+										/>
+									</div>
+								</Link>
 							)}
 
 							{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
