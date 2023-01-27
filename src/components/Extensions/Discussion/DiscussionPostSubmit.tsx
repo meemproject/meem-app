@@ -228,11 +228,13 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
 							<Link href={`/${agreementSlug}/e/discussions`}>
-								<ArrowLeft
-									style={{ marginTop: 35 }}
-									className={meemTheme.backArrow}
-									size={32}
-								/>
+								<div>
+									<ArrowLeft
+										style={{ marginTop: 35 }}
+										className={meemTheme.backArrow}
+										size={32}
+									/>
+								</div>
 							</Link>
 							<Space w={16} />
 							<div>

@@ -42,9 +42,11 @@ export const ExampleWidget: React.FC<IProps> = ({ agreement }) => {
 						<div className={meemTheme.row}>
 							<Space w={8} />
 							<Link href={`/${agreement.slug}/e/example/settings`}>
-								<Settings
-									className={meemTheme.clickable}
-								/>
+								<div>
+									<Settings
+										className={meemTheme.clickable}
+									/>
+								</div>
 							</Link>
 							
 						</div>

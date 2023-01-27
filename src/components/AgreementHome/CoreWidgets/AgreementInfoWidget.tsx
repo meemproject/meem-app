@@ -472,7 +472,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 															.sidebarVisible
 												)
 												.map(extension => (
-													<>
+													<div key={extension.id}>
 														<Button
 															style={{
 																margin: 3
@@ -512,7 +512,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 																}`}
 															/>
 														</Button>
-													</>
+													</div>
 												))}
 										</div>
 									</Center>
@@ -536,14 +536,16 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 				{agreement.isCurrentUserAgreementAdmin && (
 					<Link href={`/${agreement.slug}/admin`}>
-						<Settings
-							style={{
-								position: 'absolute',
-								top: 16,
-								right: 16,
-								cursor: 'pointer'
-							}}
-						/>
+						<div>
+							<Settings
+								style={{
+									position: 'absolute',
+									top: 16,
+									right: 16,
+									cursor: 'pointer'
+								}}
+							/>
+						</div>
 					</Link>
 				)}
 			</div>

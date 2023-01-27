@@ -353,9 +353,11 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									<Link
 										href={`/${agreement.slug}/admin?tab=membershiprequirements`}
 									>
-										<Settings
-											className={meemTheme.clickable}
-										/>
+										<div>
+											<Settings
+												className={meemTheme.clickable}
+											/>
+										</div>
 									</Link>
 								</div>
 							)}

@@ -196,7 +196,10 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 						<>
 							{(extensionsSetupWithWidgets === 0 ||
 								extensionsNotSetupWithWidgets === 0) && (
-								<div className={meemTheme.widgetLight}>
+								<div
+									className={meemTheme.widgetLight}
+									style={{ marginTop: 26 }}
+								>
 									<Center>
 										<Text className={meemTheme.tMediumBold}>
 											Under construction
