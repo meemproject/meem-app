@@ -88,14 +88,15 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 			newMembers.push(mem)
 		})
 		filterMembers(newMembers, currentSearchTerm)
+		onMembersUpdated(newMembers)
 		setMembers(newMembers)
 	}
 
 	const removeMember = (member: AgreementMember) => {
 		const newMembers = members.filter(memb => memb.wallet !== member.wallet)
 		filterMembers(newMembers, currentSearchTerm)
-		setMembers(newMembers)
 		onMembersUpdated(newMembers)
+		setMembers(newMembers)
 	}
 
 	const [isMembersModalOpen, setIsMembersModalOpen] = useState(false)
@@ -277,7 +278,6 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 				isOpened={isMembersModalOpen}
 				onMembersSaved={newMembers => {
 					addMembers(newMembers)
-					onMembersUpdated(newMembers)
 				}}
 			/>
 		</>

@@ -124,14 +124,21 @@ export const RolesManager: React.FC = () => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
 							{agreement.image && (
-								<div className={meemTheme.pageHeaderImage}>
-									<Image
-										width={80}
-										height={80}
-										radius={8}
-										className={meemTheme.imageAgreementLogo}
-										src={agreement.image}
-									/>
+								<div
+									className={meemTheme.pageHeaderImage}
+									style={{ cursor: 'pointer' }}
+								>
+									<Link href={`/${agreement.slug}`}>
+										<Image
+											width={80}
+											height={80}
+											radius={8}
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											src={agreement.image}
+										/>
+									</Link>
 								</div>
 							)}
 							<div className={meemTheme.pageHeaderTitleContainer}>
@@ -226,9 +233,11 @@ export const RolesManager: React.FC = () => {
 									<Link
 										href={`/${agreement?.slug}/admin?tab=roles`}
 									>
-										<ArrowLeft
-											className={meemTheme.clickable}
-										/>
+										<div>
+											<ArrowLeft
+												className={meemTheme.clickable}
+											/>
+										</div>
 									</Link>
 
 									<Space w={8} />

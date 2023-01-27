@@ -117,14 +117,21 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
 							{agreement.image && (
-								<div className={meemTheme.pageHeaderImage}>
-									<Image
-										width={80}
-										height={80}
-										radius={8}
-										className={meemTheme.imageAgreementLogo}
-										src={agreement.image}
-									/>
+								<div
+									className={meemTheme.pageHeaderImage}
+									style={{ cursor: 'pointer' }}
+								>
+									<Link href={`/${agreement.slug}`}>
+										<Image
+											width={80}
+											height={80}
+											radius={8}
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											src={agreement.image}
+										/>
+									</Link>
 								</div>
 							)}
 							<div>
