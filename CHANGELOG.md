@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/meemproject/meem-app/compare/v1.15.0...v1.15.1) (2023-01-27)
+
+
+### Bug Fixes
+
+* extension settings ([2441de2](https://github.com/meemproject/meem-app/commit/2441de2))
+
 # [1.15.0](https://github.com/meemproject/meem-app/compare/v1.14.0...v1.15.0) (2023-01-27)
 
 
