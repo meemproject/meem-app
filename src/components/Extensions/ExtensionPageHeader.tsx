@@ -66,15 +66,16 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 					)}
 
 					{agreement?.image && (
-						<>
+						<Link href={`/${agreement?.slug}`}>
 							<Image
+								style={{ cursor: 'pointer' }}
 								radius={8}
 								height={80}
 								width={80}
 								src={agreement?.image}
 							/>
 							<Space w={24} />
-						</>
+						</Link>
 					)}
 					{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
 					<div className={meemTheme.pageHeaderTitleContainer}>
