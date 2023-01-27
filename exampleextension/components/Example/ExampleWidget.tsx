@@ -1,5 +1,6 @@
 import { Space, Text } from '@mantine/core'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React from 'react'
 import { Settings } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
@@ -40,14 +41,12 @@ export const ExampleWidget: React.FC<IProps> = ({ agreement }) => {
 					{agreement.isCurrentUserAgreementAdmin && (
 						<div className={meemTheme.row}>
 							<Space w={8} />
-							<Settings
-								className={meemTheme.clickable}
-								onClick={() => {
-									router.push({
-										pathname: `/${agreement.slug}/e/example/settings`
-									})
-								}}
-							/>
+							<Link href={`/${agreement.slug}/e/example/settings`}>
+								<Settings
+									className={meemTheme.clickable}
+								/>
+							</Link>
+							
 						</div>
 					)}
 				</div>

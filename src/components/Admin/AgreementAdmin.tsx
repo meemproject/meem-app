@@ -12,6 +12,7 @@ import {
 	Burger
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
@@ -54,10 +55,6 @@ export const AgreementAdminComponent: React.FC = () => {
 
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
-
-	const navigateToAgreementDetail = () => {
-		router.push({ pathname: `/${agreement?.slug}` })
-	}
 
 	useEffect(() => {
 		if (
@@ -170,12 +167,14 @@ export const AgreementAdminComponent: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<a
-							className={meemTheme.pageHeaderExitButton}
-							onClick={navigateToAgreementDetail}
-						>
-							<Image src="/delete.png" width={24} height={24} />
-						</a>
+						<Link href={`/${agreement.slug}`}>
+							<Image
+								className={meemTheme.pageHeaderExitButton}
+								src="/delete.png"
+								width={24}
+								height={24}
+							/>
+						</Link>
 					</div>
 
 					{!agreement?.isCurrentUserAgreementAdmin && (
