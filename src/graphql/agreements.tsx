@@ -110,8 +110,6 @@ export const GET_AGREEMENT_INFO = gql`
 		) {
 			slug
 			address
-			metadata
-			createdAt
 			name
 		}
 	}

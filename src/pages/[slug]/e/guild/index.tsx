@@ -131,7 +131,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 				agreement = {
 					isError: false,
 					responseBody: data,
-					description: data.Agreements[0].metadata.description ?? ''
+					description: `Effortless access management and collaborative
+					publishing tools for your online community`
 				}
 			}
 			return {
