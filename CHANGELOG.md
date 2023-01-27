@@ -1,3 +1,27 @@
+# [1.15.0](https://github.com/meemproject/meem-app/compare/v1.14.0...v1.15.0) (2023-01-27)
+
+
+### Bug Fixes
+
+* adding role members removes existing ones ([e8c9657](https://github.com/meemproject/meem-app/commit/e8c9657))
+* dark mode ext. icons ([0ddffdf](https://github.com/meemproject/meem-app/commit/0ddffdf))
+* don't fetch agreement metadata in GetServerSideProps (should save many kb for agreements with images) ([e36c280](https://github.com/meemproject/meem-app/commit/e36c280))
+* don't show 'add your first extension' for admins if there is an extension added of any kind ([a14d072](https://github.com/meemproject/meem-app/commit/a14d072))
+* extension header community icon also links back to homepage ([2a6f275](https://github.com/meemproject/meem-app/commit/2a6f275))
+* forwardref warnings and margins ([4eb7369](https://github.com/meemproject/meem-app/commit/4eb7369))
+* url now correctly updates when navigating between tabs ([f18fc2a](https://github.com/meemproject/meem-app/commit/f18fc2a))
+* use Link instead of Router.push to speed up page navigation ([d6a4bb8](https://github.com/meemproject/meem-app/commit/d6a4bb8))
+
+
+### Features
+
+* clicking on the header image in settings pages takes you back to the community home page ([a3bf40a](https://github.com/meemproject/meem-app/commit/a3bf40a))
+* new blank slate state handling for community homepage ([aa51e74](https://github.com/meemproject/meem-app/commit/aa51e74))
+* Require extensions to have completed setup before displaying in the UI. ([25dd733](https://github.com/meemproject/meem-app/commit/25dd733))
+* set 'setup complete' when certain conditions are met on extensions ([67de79e](https://github.com/meemproject/meem-app/commit/67de79e))
+* when creating extensions, set 'is setup complete' to true automatically if setup is not required ([9da6b9f](https://github.com/meemproject/meem-app/commit/9da6b9f))
+* working extension categories ([073717a](https://github.com/meemproject/meem-app/commit/073717a))
+
 # [1.14.0](https://github.com/meemproject/meem-app/compare/v1.13.1...v1.14.0) (2023-01-26)
 
 
