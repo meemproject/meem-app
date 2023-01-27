@@ -67,7 +67,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 
 					{agreement?.image && (
 						<Link href={`/${agreement?.slug}`}>
-							<div>
+							<div className={meemTheme.row}>
 								<Image
 									style={{ cursor: 'pointer' }}
 									radius={8}
