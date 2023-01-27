@@ -3,7 +3,7 @@ import { Text, Space, Loader, Center, Button } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
 import Linkify from 'linkify-react'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import {
@@ -33,20 +33,12 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 	onMeetsAllReqsChanged
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 	const wallet = useWallet()
 
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
 	>([])
 	const [areRequirementsParsed, setRequirementsParsed] = useState(false)
-
-	const navigateToAgreementRequirementsSettings = () => {
-		router.push({
-			pathname: `/${agreement.slug}/admin`,
-			query: { tab: 'membershiprequirements' }
-		})
-	}
 
 	const checkEligibility = useCallback(
 		(
@@ -358,17 +350,13 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 							agreement.isLaunched && (
 								<div className={meemTheme.row}>
 									<Space w={8} />
-									<Settings
-										className={meemTheme.clickable}
-										onClick={() => {
-											router.push({
-												pathname: `/${agreement.slug}/admin`,
-												query: {
-													tab: 'membershiprequirements'
-												}
-											})
-										}}
-									/>
+									<Link
+										href={`/${agreement.slug}/admin?tab=membershiprequirements`}
+									>
+										<Settings
+											className={meemTheme.clickable}
+										/>
+									</Link>
 								</div>
 							)}
 					</div>
@@ -415,14 +403,13 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 					<>
 						<Space h={16} />
 						<Center>
-							<Button
-								className={meemTheme.buttonAsh}
-								onClick={() => {
-									navigateToAgreementRequirementsSettings()
-								}}
+							<Link
+								href={`/${agreement.slug}/admin?tab=membershiprequirements`}
 							>
-								Edit requirements
-							</Button>
+								<Button className={meemTheme.buttonAsh}>
+									Edit requirements
+								</Button>
+							</Link>
 						</Center>
 					</>
 				)}

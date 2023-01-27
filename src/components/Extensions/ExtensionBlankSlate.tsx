@@ -1,5 +1,5 @@
 import { Text, Space, Container, Loader, Center, Button } from '@mantine/core'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
 import { AgreementExtensions } from '../../../generated/graphql'
@@ -26,8 +26,6 @@ export const extensionIsReady = (
 
 export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
-
-	const router = useRouter()
 
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
@@ -75,19 +73,13 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 						<>
 							<Space h={24} />{' '}
 							<Center>
-								<Button
-									className={meemTheme.buttonGrey}
-									onClick={() => {
-										router.push({
-											pathname: `/${agreement.slug}/admin`,
-											query: {
-												tab: 'extensions'
-											}
-										})
-									}}
+								<Link
+									href={`/${agreement.slug}/admin?tab=extensions`}
 								>
-									Enable this extension
-								</Button>
+									<Button className={meemTheme.buttonGrey}>
+										Enable this extension
+									</Button>
+								</Link>
 							</Center>
 						</>
 					)}

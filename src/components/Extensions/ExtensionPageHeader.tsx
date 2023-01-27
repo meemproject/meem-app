@@ -5,7 +5,7 @@ import {
 	Button,
 	useMantineColorScheme
 } from '@mantine/core'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
 import { ArrowLeft, Settings } from 'tabler-icons-react'
@@ -28,20 +28,6 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 
 	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
-	const router = useRouter()
-
-	const navigateToAgreementHome = () => {
-		router.push({
-			pathname: `/${agreement?.slug}`
-		})
-	}
-
-	const navigateToExtensionSettings = () => {
-		router.push({
-			pathname: `/${agreement?.slug}/e/${extensionSlug}/settings`
-		})
-	}
-
 	const isSettingsPage =
 		(window && window.location.pathname.includes('settings')) ?? false
 
@@ -61,25 +47,18 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 				<div className={meemTheme.spacedRowCentered}>
 					{(hasNoWidget || isSettingsPage || isSubPage) && (
 						<>
-							<a
-								onClick={() => {
-									if (hasNoWidget) {
-										router.push({
-											pathname: `/${agreement?.slug}/admin`,
-											query: { tab: 'extensions' }
-										})
-									} else {
-										router.push({
-											pathname: `/${agreement?.slug}/e/${extensionSlug}`
-										})
-									}
-								}}
+							<Link
+								href={
+									hasNoWidget
+										? `/${agreement?.slug}/admin?tab=extensions`
+										: `/${agreement?.slug}/e/${extensionSlug}`
+								}
 							>
 								<ArrowLeft
 									className={meemTheme.backArrow}
 									size={32}
 								/>
-							</a>
+							</Link>
 							<Space w={24} />
 						</>
 					)}
@@ -132,23 +111,23 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 						!hasNoWidget &&
 						(agreement?.isCurrentUserAgreementAdmin ||
 							agreement?.isCurrentUserAgreementOwner) && (
-							<Button
-								leftIcon={<Settings />}
-								onClick={() => {
-									navigateToExtensionSettings()
-								}}
-								className={meemTheme.buttonWhite}
+							<Link
+								href={`/${agreement?.slug}/e/${extensionSlug}/settings`}
 							>
-								Settings
-							</Button>
+								<Button
+									leftIcon={<Settings />}
+									className={meemTheme.buttonWhite}
+								>
+									Settings
+								</Button>
+							</Link>
 						)}
 					<Space w={16} />
-					<a
-						className={meemTheme.pageHeaderExitButton}
-						onClick={navigateToAgreementHome}
-					>
-						<Image src="/delete.png" width={24} height={24} />
-					</a>
+					<div className={meemTheme.pageHeaderExitButton}>
+						<Link href={`/${agreement?.slug}`}>
+							<Image src="/delete.png" width={24} height={24} />
+						</Link>
+					</div>
 				</div>
 			</div>
 		</>

@@ -15,13 +15,10 @@ import {
 } from '@mantine/core'
 import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ExternalLink, Settings } from 'tabler-icons-react'
-import {
-	AgreementExtensions,
-	GetExtensionsQuery
-} from '../../../../generated/graphql'
+import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
@@ -37,7 +34,6 @@ interface ExtensionCategory {
 
 export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 	const { sdk } = useSDK()
 	const { anonClient } = useMeemApollo()
 
@@ -155,30 +151,6 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 		setIsEnablingExtension(false)
 	}
 
-	const navigateToExtensionSettings = (extension: AgreementExtensions) => {
-		if (extension.Extension) {
-			if (
-				extension.Extension.capabilities.length === 1 &&
-				extension.Extension.capabilities[0] === 'link'
-			) {
-				// link extension and nothing more
-				router.push(
-					`/${agreement.slug}/e/${extension.Extension?.slug ?? ''}`
-				)
-			} else {
-				router.push(
-					`/${agreement.slug}/e/${
-						extension.Extension?.slug ?? ''
-					}/settings`
-				)
-			}
-		}
-	}
-
-	const navigateToExtensionHome = (slug: string) => {
-		router.push(`/${agreement.slug}/e/${slug}`)
-	}
-
 	return (
 		<>
 			<div>
@@ -272,24 +244,47 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 											<Space h={16} />
 											{!extension.isSetupComplete && (
 												<>
-													<Button
-														className={
-															meemTheme.buttonWhite
+													<Link
+														// 😎
+														href={
+															extension?.Extension
+																?.capabilities
+																.length === 1 &&
+															extension?.Extension
+																?.capabilities[0] ===
+																'link'
+																? `/${
+																		agreement.slug
+																  }/e/${
+																		extension
+																			.Extension
+																			?.slug ??
+																		''
+																  }`
+																: `/${
+																		agreement.slug
+																  }/e/${
+																		extension
+																			.Extension
+																			?.slug ??
+																		''
+																  }/settings`
 														}
-														onClick={() => {
-															navigateToExtensionSettings(
-																extension
-															)
-														}}
 													>
-														<Text
+														<Button
 															className={
-																meemTheme.tExtraSmall
+																meemTheme.buttonWhite
 															}
 														>
-															Complete Setup
-														</Text>
-													</Button>
+															<Text
+																className={
+																	meemTheme.tExtraSmall
+																}
+															>
+																Complete Setup
+															</Text>
+														</Button>
+													</Link>
 												</>
 											)}
 											{extension.isSetupComplete && (
@@ -303,65 +298,86 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 															.AgreementExtensionWidgets
 															.length > 0 && (
 															<>
-																<Button
-																	className={
-																		meemTheme.buttonWhite
-																	}
-																	leftIcon={
-																		<ExternalLink
-																			size={
-																				20
-																			}
-																		/>
-																	}
-																	onClick={() => {
-																		navigateToExtensionHome(
-																			extension
-																				.Extension
-																				?.slug ??
-																				''
-																		)
-																	}}
+																<Link
+																	href={`/${agreement.slug}/e/${extension?.Extension?.slug}`}
 																>
-																	<Text
+																	<Button
 																		className={
-																			meemTheme.tExtraSmall
+																			meemTheme.buttonWhite
+																		}
+																		leftIcon={
+																			<ExternalLink
+																				size={
+																					20
+																				}
+																			/>
 																		}
 																	>
-																		Launch
-																	</Text>
-																</Button>
+																		<Text
+																			className={
+																				meemTheme.tExtraSmall
+																			}
+																		>
+																			Launch
+																		</Text>
+																	</Button>
+																</Link>
+
 																<Space w={8} />
 															</>
 														)}
 
-														<Button
-															leftIcon={
-																<Settings
-																	size={20}
-																/>
+														<Link
+															// 😎
+															href={
+																extension
+																	?.Extension
+																	?.capabilities
+																	.length ===
+																	1 &&
+																extension
+																	?.Extension
+																	?.capabilities[0] ===
+																	'link'
+																	? `/${
+																			agreement.slug
+																	  }/e/${
+																			extension
+																				.Extension
+																				?.slug ??
+																			''
+																	  }`
+																	: `/${
+																			agreement.slug
+																	  }/e/${
+																			extension
+																				.Extension
+																				?.slug ??
+																			''
+																	  }/settings`
 															}
-															className={
-																meemTheme.buttonWhite
-															}
-															onClick={() => {
-																if (
-																	extension.Extension
-																) {
-																	navigateToExtensionSettings(
-																		extension
-																	)
-																}
-															}}
 														>
-															<Text
+															<Button
+																leftIcon={
+																	<Settings
+																		size={
+																			20
+																		}
+																	/>
+																}
 																className={
-																	meemTheme.tExtraSmall
+																	meemTheme.buttonWhite
 																}
 															>
-																{'Settings'}
-															</Text>
-														</Button>
+																<Text
+																	className={
+																		meemTheme.tExtraSmall
+																	}
+																>
+																	{'Settings'}
+																</Text>
+															</Button>
+														</Link>
 													</div>
 												</>
 											)}
@@ -397,7 +413,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 						<Space h={32} />
 
 						{extensionCategories.map(cat => (
-							<>
+							<div key={cat.title}>
 								<Text className={meemTheme.tExtraSmallLabel}>
 									{`${cat.title.toUpperCase()}`}
 								</Text>
@@ -491,7 +507,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 									))}
 								</Grid>
 								<Space h={24} />
-							</>
+							</div>
 						))}
 					</>
 				)}

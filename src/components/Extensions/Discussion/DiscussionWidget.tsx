@@ -1,6 +1,6 @@
 import { Text, Button, Space, Center, Loader } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Plus, Settings } from 'tabler-icons-react'
 import {
@@ -21,8 +21,6 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 
 	const [hasFetchdData, setHasFetchedData] = useState(false)
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
-
-	const router = useRouter()
 
 	const { sdk } = useSDK()
 	const { privateKey } = useDiscussions()
@@ -102,42 +100,37 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 							{posts.length > 0 && (
 								<>
 									<>
-										<Button
-											className={meemTheme.buttonAsh}
-											onClick={() => {
-												router.push({
-													pathname: `/${agreement.slug}/e/discussions/submit`
-												})
-											}}
+										<Link
+											href={`/${agreement.slug}/e/discussions/submit`}
 										>
-											<Plus />
-										</Button>
+											<Button
+												className={meemTheme.buttonAsh}
+											>
+												<Plus />
+											</Button>
+										</Link>
 									</>
 									<Space w={8} />
-									<Button
-										className={meemTheme.buttonAsh}
-										onClick={() => {
-											router.push({
-												pathname: `/${agreement.slug}/e/discussions`
-											})
-										}}
+									<Link
+										href={`/${agreement.slug}/e/discussions`}
 									>
-										View All
-									</Button>
+										<Button className={meemTheme.buttonAsh}>
+											View All
+										</Button>
+									</Link>
 								</>
 							)}
 
 							{agreement.isCurrentUserAgreementAdmin && (
 								<div className={meemTheme.row}>
 									<Space w={8} />
-									<Settings
-										className={meemTheme.clickable}
-										onClick={() => {
-											router.push({
-												pathname: `/${agreement.slug}/e/discussions/settings`
-											})
-										}}
-									/>
+									<Link
+										href={`/${agreement.slug}/e/discussions/settings`}
+									>
+										<Settings
+											className={meemTheme.clickable}
+										/>
+									</Link>
 								</div>
 							)}
 						</div>
@@ -175,16 +168,17 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									<>
 										<Space h={12} />
 										<Center>
-											<Button
-												onClick={() => {
-													router.push({
-														pathname: `/${agreement.slug}/e/discussions/submit`
-													})
-												}}
-												className={meemTheme.buttonAsh}
+											<Link
+												href={`/${agreement.slug}/e/discussions/submit`}
 											>
-												+ Create a discussion
-											</Button>
+												<Button
+													className={
+														meemTheme.buttonAsh
+													}
+												>
+													+ Create a discussion
+												</Button>
+											</Link>
 										</Center>
 										<Space h={8} />
 									</>

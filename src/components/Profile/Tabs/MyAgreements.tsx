@@ -13,6 +13,7 @@ import {
 } from '@mantine/core'
 import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { MyAgreementsSubscriptionSubscription } from '../../../../generated/graphql'
@@ -80,10 +81,6 @@ export const MyAgreementsComponent: React.FC = () => {
 		}
 	}, [error, router])
 
-	const navigateToAgreement = (agreement: string) => {
-		router.push({ pathname: `/${agreement}` })
-	}
-
 	const agreements: Agreement[] = []
 
 	agreementData?.Agreements.forEach(agr => {
@@ -148,104 +145,106 @@ export const MyAgreementsComponent: React.FC = () => {
 								xl={6}
 								key={agreement.address}
 							>
-								<div
-									key={agreement.address}
-									className={meemTheme.gridItem}
-									onClick={() => {
-										navigateToAgreement(
-											agreement.slug ?? ''
-										)
-									}}
-								>
-									<div className={meemTheme.row}>
-										{agreement.image && (
-											<>
-												<Image
-													className={
-														meemTheme.imageAgreementLogo
-													}
-													style={{
-														width: '56px',
-														height: '56px'
-													}}
-													src={agreement.image}
-													radius={8}
-													fit={'cover'}
-												/>
-												<Space w={24} />
-											</>
-										)}
+								<Link href={`/${agreement.slug}`}>
+									<div
+										key={agreement.address}
+										className={meemTheme.gridItem}
+									>
+										<div className={meemTheme.row}>
+											{agreement.image && (
+												<>
+													<Image
+														className={
+															meemTheme.imageAgreementLogo
+														}
+														style={{
+															width: '56px',
+															height: '56px'
+														}}
+														src={agreement.image}
+														radius={8}
+														fit={'cover'}
+													/>
+													<Space w={24} />
+												</>
+											)}
 
-										<div className={meemTheme.tEllipsis}>
-											<Text
-												style={{
-													fontWeight: 500,
-													fontSize: 18
-												}}
+											<div
+												className={meemTheme.tEllipsis}
 											>
-												{agreement.name}
-											</Text>
-
-											<Space h={20} />
-											<div className={meemTheme.row}>
-												<Badge
-													gradient={{
-														from: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														to: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														deg: 35
+												<Text
+													style={{
+														fontWeight: 500,
+														fontSize: 18
 													}}
-													classNames={{
-														inner: meemTheme.tBadgeText
-													}}
-													variant={'gradient'}
-													leftSection={
-														<>
-															<Group
-																style={{
-																	color: isDarkTheme
-																		? colorWhite
-																		: colorBlack,
-																	marginTop: 5
-																}}
-															/>
-														</>
-													}
 												>
-													{agreement.members?.length}
-												</Badge>
-												{!agreement.isLaunched &&
-													agreement.isCurrentUserAgreementAdmin && (
-														<>
-															<Space w={8} />
-															<Badge
-																gradient={{
-																	from: isDarkTheme
-																		? colorDarkerYellow
-																		: colorYellow,
-																	to: isDarkTheme
-																		? colorDarkerYellow
-																		: colorYellow,
-																	deg: 35
-																}}
-																classNames={{
-																	inner: meemTheme.tBadgeText
-																}}
-																variant={
-																	'gradient'
-																}
-															>
-																Draft
-															</Badge>
-														</>
-													)}
+													{agreement.name}
+												</Text>
+
+												<Space h={20} />
+												<div className={meemTheme.row}>
+													<Badge
+														gradient={{
+															from: isDarkTheme
+																? colorDarkerGrey
+																: '#DCDCDC',
+															to: isDarkTheme
+																? colorDarkerGrey
+																: '#DCDCDC',
+															deg: 35
+														}}
+														classNames={{
+															inner: meemTheme.tBadgeText
+														}}
+														variant={'gradient'}
+														leftSection={
+															<>
+																<Group
+																	style={{
+																		color: isDarkTheme
+																			? colorWhite
+																			: colorBlack,
+																		marginTop: 5
+																	}}
+																/>
+															</>
+														}
+													>
+														{
+															agreement.members
+																?.length
+														}
+													</Badge>
+													{!agreement.isLaunched &&
+														agreement.isCurrentUserAgreementAdmin && (
+															<>
+																<Space w={8} />
+																<Badge
+																	gradient={{
+																		from: isDarkTheme
+																			? colorDarkerYellow
+																			: colorYellow,
+																		to: isDarkTheme
+																			? colorDarkerYellow
+																			: colorYellow,
+																		deg: 35
+																	}}
+																	classNames={{
+																		inner: meemTheme.tBadgeText
+																	}}
+																	variant={
+																		'gradient'
+																	}
+																>
+																	Draft
+																</Badge>
+															</>
+														)}
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
+								</Link>
 							</Grid.Col>
 						))}
 						<Grid.Col

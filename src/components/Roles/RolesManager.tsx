@@ -13,6 +13,7 @@ import {
 	Burger
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { ArrowLeft, Plus } from 'tabler-icons-react'
@@ -42,19 +43,6 @@ export const RolesManager: React.FC = () => {
 	const [currentTab, setCurrentTab] = useState<Tab>()
 	const [isAddingNewRole, setIsAddingNewRole] = useState(false)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
-
-	const navigateToAgreementHome = () => {
-		router.push({
-			pathname: `/${agreement?.slug}/`
-		})
-	}
-
-	const navigateToAgreementAdmin = () => {
-		router.push({
-			pathname: `/${agreement?.slug}/admin`,
-			query: { tab: 'roles' }
-		})
-	}
 
 	const addRole = () => {
 		if (!isAddingNewRole) {
@@ -184,12 +172,14 @@ export const RolesManager: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<a
-							className={meemTheme.pageHeaderExitButton}
-							onClick={navigateToAgreementHome}
-						>
-							<Image src="/delete.png" width={24} height={24} />
-						</a>
+						<Link href={`/${agreement?.slug}/`}>
+							<Image
+								className={meemTheme.pageHeaderExitButton}
+								src="/delete.png"
+								width={24}
+								height={24}
+							/>
+						</Link>
 					</div>
 
 					{!agreement?.isCurrentUserAgreementAdmin && (
@@ -233,12 +223,14 @@ export const RolesManager: React.FC = () => {
 									className={meemTheme.centeredRow}
 									style={{ marginLeft: 18, marginBottom: 24 }}
 								>
-									<ArrowLeft
-										className={meemTheme.clickable}
-										onClick={() => {
-											navigateToAgreementAdmin()
-										}}
-									/>
+									<Link
+										href={`/${agreement?.slug}/admin?tab=roles`}
+									>
+										<ArrowLeft
+											className={meemTheme.clickable}
+										/>
+									</Link>
+
 									<Space w={8} />
 									<Text className={meemTheme.tLargeBold}>
 										Manage Roles
