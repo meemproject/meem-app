@@ -54,10 +54,12 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 										: `/${agreement?.slug}/e/${extensionSlug}`
 								}
 							>
-								<ArrowLeft
-									className={meemTheme.backArrow}
-									size={32}
-								/>
+								<div>
+									<ArrowLeft
+										className={meemTheme.backArrow}
+										size={32}
+									/>
+								</div>
 							</Link>
 							<Space w={24} />
 						</>

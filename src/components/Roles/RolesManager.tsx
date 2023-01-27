@@ -226,9 +226,11 @@ export const RolesManager: React.FC = () => {
 									<Link
 										href={`/${agreement?.slug}/admin?tab=roles`}
 									>
-										<ArrowLeft
-											className={meemTheme.clickable}
-										/>
+										<div>
+											<ArrowLeft
+												className={meemTheme.clickable}
+											/>
+										</div>
 									</Link>
 
 									<Space w={8} />
