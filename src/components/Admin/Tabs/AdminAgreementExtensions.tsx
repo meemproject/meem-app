@@ -413,7 +413,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 						<Space h={32} />
 
 						{extensionCategories.map(cat => (
-							<>
+							<div key={cat.title}>
 								<Text className={meemTheme.tExtraSmallLabel}>
 									{`${cat.title.toUpperCase()}`}
 								</Text>
@@ -507,7 +507,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 									))}
 								</Grid>
 								<Space h={24} />
-							</>
+							</div>
 						))}
 					</>
 				)}

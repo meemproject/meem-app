@@ -19,6 +19,7 @@ import {
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode } from 'iconoir-react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import QRCode from 'react-qr-code'
@@ -297,24 +298,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	// UI
 	const [isQrModalOpened, setIsQrModalOpened] = useState(false)
 
-	const navigateToAdmin = () => {
-		router.push({ pathname: `/${agreement.slug}/admin` })
-	}
-
-	const navigateToAgreementIconSettings = () => {
-		router.push({
-			pathname: `/${agreement.slug}/admin`,
-			query: { tab: 'icon' }
-		})
-	}
-
-	const navigateToAgreementDetailsSettings = () => {
-		router.push({
-			pathname: `/${agreement.slug}/admin`,
-			query: { tab: 'details' }
-		})
-	}
-
 	return (
 		<>
 			<div className={meemTheme.widgetDark}>
@@ -335,16 +318,15 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					<>
 						<Space h={8} />
 						<Center>
-							<Image
-								onClick={() => {
-									navigateToAgreementIconSettings()
-								}}
-								className={meemTheme.clickable}
-								height={150}
-								width={150}
-								radius={16}
-								src={'/community-no-icon.png'}
-							/>
+							<Link href={`/${agreement.slug}/admin?tab=icon`}>
+								<Image
+									className={meemTheme.clickable}
+									height={150}
+									width={150}
+									radius={16}
+									src={'/community-no-icon.png'}
+								/>
+							</Link>
 						</Center>
 					</>
 				)}
@@ -363,14 +345,11 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					<>
 						<Space h={16} />
 						<Center>
-							<Button
-								className={meemTheme.buttonAsh}
-								onClick={() => {
-									navigateToAgreementDetailsSettings()
-								}}
-							>
-								Edit info
-							</Button>
+							<Link href={`/${agreement.slug}/admin?tab=details`}>
+								<Button className={meemTheme.buttonAsh}>
+									Edit info
+								</Button>
+							</Link>
 						</Center>
 						<Space h={16} />
 					</>
@@ -542,20 +521,16 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				)}
 
 				{agreement.isCurrentUserAgreementAdmin && (
-					<div
-						style={{
-							position: 'absolute',
-							top: 16,
-							right: 16,
-							cursor: 'pointer'
-						}}
-					>
+					<Link href={`/${agreement.slug}/admin`}>
 						<Settings
-							onClick={() => {
-								navigateToAdmin()
+							style={{
+								position: 'absolute',
+								top: 16,
+								right: 16,
+								cursor: 'pointer'
 							}}
 						/>
-					</div>
+					</Link>
 				)}
 			</div>
 

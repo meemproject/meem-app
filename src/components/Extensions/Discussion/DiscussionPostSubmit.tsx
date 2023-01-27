@@ -13,7 +13,7 @@ import {
 import { RichTextEditor } from '@mantine/tiptap'
 import { useAuth, useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
-import Link from '@tiptap/extension-link'
+import { Link as TipTapLink } from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import TextAlign from '@tiptap/extension-text-align'
@@ -21,6 +21,7 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { base64StringToBlob } from 'blob-util'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
@@ -59,7 +60,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 		extensions: [
 			StarterKit,
 			Underline,
-			Link,
+			TipTapLink,
 			Superscript,
 			Subscript,
 			Highlight,
@@ -195,7 +196,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				key: privateKey
 			})
 
-			await router.push({
+			router.push({
 				pathname: `/${agreement.slug}/e/discussions/${id}`
 			})
 		} catch (e) {
@@ -226,19 +227,13 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				<>
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
-							<a
-								style={{ marginTop: 35 }}
-								onClick={() => {
-									router.push({
-										pathname: `/${agreementSlug}/e/discussions`
-									})
-								}}
-							>
+							<Link href={`/${agreementSlug}/e/discussions`}>
 								<ArrowLeft
+									style={{ marginTop: 35 }}
 									className={meemTheme.backArrow}
 									size={32}
 								/>
-							</a>
+							</Link>
 							<Space w={16} />
 							<div>
 								<Text className={meemTheme.tSmallBoldFaded}>

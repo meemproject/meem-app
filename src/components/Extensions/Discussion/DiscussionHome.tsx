@@ -11,7 +11,7 @@ import {
 } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { useSDK } from '@meemproject/react'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Search } from 'tabler-icons-react'
 import {
@@ -195,7 +195,6 @@ export function rowToDiscussionPost(options: {
 
 export const DiscussionHome: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
 	const [filteredPosts, setFilteredPosts] = useState<DiscussionPost[]>([])
 	const [sortOrder, setSortOrder] = useState(1)
@@ -333,16 +332,15 @@ export const DiscussionHome: React.FC = () => {
 								)}
 
 								<Center>
-									<Button
-										className={meemTheme.buttonBlack}
-										onClick={() => {
-											router.push({
-												pathname: `/${agreement?.slug}/e/discussions/submit`
-											})
-										}}
+									<Link
+										href={`/${agreement?.slug}/e/discussions/submit`}
 									>
-										+ Start a discussion
-									</Button>
+										<Button
+											className={meemTheme.buttonBlack}
+										>
+											+ Start a discussion
+										</Button>
+									</Link>
 								</Center>
 								<Space h={48} />
 								{posts.length > 0 && (

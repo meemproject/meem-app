@@ -12,7 +12,6 @@ import { useAuth, useSDK } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
 import { DateTime } from 'luxon'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Message } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
@@ -39,7 +38,6 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 	const [commentCount, setCommentCount] = useState(0)
 	const [canReact, setCanReact] = useState(false)
 
-	const router = useRouter()
 	const { privateKey } = useDiscussions()
 
 	const { sdk } = useSDK()
@@ -132,65 +130,58 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 	return (
 		<div className={meemTheme.greyContentBox} style={{ marginBottom: 16 }}>
 			<>
-				<div
-					className={meemTheme.clickable}
-					onClick={() => {
-						router.push({
-							pathname: `/${agreement?.slug}/e/discussions/${post.id}`
-						})
-					}}
-				>
-					<div className={meemTheme.row}>
-						<div>
-							<Center>
-								<Tooltip
-									label="You have already reacted to this post."
-									disabled={canReact}
-								>
-									<span>
-										<ChevronUp
-											style={{ cursor: 'pointer' }}
-											onClick={() => {
-												if (canReact && !isLoading) {
-													handleReactionSubmit({
-														reaction: 'upvote'
-													})
-												}
-											}}
-										>
-											<ChevronUp />
-										</ChevronUp>
-									</span>
-								</Tooltip>
-							</Center>
+				<div className={meemTheme.row}>
+					<div>
+						<Center>
+							<Tooltip
+								label="You have already reacted to this post."
+								disabled={canReact}
+							>
+								<span>
+									<ChevronUp
+										style={{ cursor: 'pointer' }}
+										onClick={() => {
+											if (canReact && !isLoading) {
+												handleReactionSubmit({
+													reaction: 'upvote'
+												})
+											}
+										}}
+									>
+										<ChevronUp />
+									</ChevronUp>
+								</span>
+							</Tooltip>
+						</Center>
 
-							<Space h={16} />
-							<Center>{votes ?? 0}</Center>
-							<Space h={16} />
-							<Center>
-								<Tooltip
-									label="You have already reacted to this post."
-									disabled={canReact}
-								>
-									<span>
-										<ChevronDown
-											style={{ cursor: 'pointer' }}
-											onClick={() => {
-												if (canReact && !isLoading) {
-													handleReactionSubmit({
-														reaction: 'downvote'
-													})
-												}
-											}}
-										>
-											<ChevronDown />
-										</ChevronDown>
-									</span>
-								</Tooltip>
-							</Center>
-						</div>
-						<Space w={16} />
-						<div style={{ width: '100%' }}>
+						<Space h={16} />
+						<Center>{votes ?? 0}</Center>
+						<Space h={16} />
+						<Center>
+							<Tooltip
+								label="You have already reacted to this post."
+								disabled={canReact}
+							>
+								<span>
+									<ChevronDown
+										style={{ cursor: 'pointer' }}
+										onClick={() => {
+											if (canReact && !isLoading) {
+												handleReactionSubmit({
+													reaction: 'downvote'
+												})
+											}
+										}}
+									>
+										<ChevronDown />
+									</ChevronDown>
+								</span>
+							</Tooltip>
+						</Center>
+					</div>
+					<Space w={16} />
+					<Link href={`/${agreement?.slug}/e/discussions/${post.id}`}>
+						<div style={{ width: '100%', cursor: 'pointer' }}>
 							<div className={meemTheme.row}>
 								{post.attachment && (
 									<>
@@ -296,24 +287,16 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 									className={meemTheme.row}
 									style={{ marginTop: 16 }}
 								>
-									<Link
-										href={`/${post.agreementSlug}/e/discussions/${post.id}`}
+									<div
+										className={meemTheme.centeredRow}
+										style={{ cursor: 'pointer' }}
 									>
-										<div
-											className={meemTheme.centeredRow}
-											style={{ cursor: 'pointer' }}
-										>
-											<Message width={20} height={20} />
-											<Space w={4} />
-											<Text
-												className={
-													meemTheme.tExtraSmall
-												}
-											>
-												{commentCount}
-											</Text>
-										</div>
-									</Link>
+										<Message width={20} height={20} />
+										<Space w={4} />
+										<Text className={meemTheme.tExtraSmall}>
+											{commentCount}
+										</Text>
+									</div>
 									<Space w={16} />
 									{/* <div
 										className={meemTheme.centeredRow}
@@ -329,7 +312,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 								</div>
 							</div>
 						</div>
-					</div>
+					</Link>
 				</div>
 			</>
 		</div>

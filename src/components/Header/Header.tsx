@@ -21,6 +21,7 @@ import {
 } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
 import { QuestionMarkCircle } from 'iconoir-react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
@@ -55,18 +56,6 @@ export function HeaderMenu() {
 	} = useAuth()
 
 	const { user } = useMeemUser()
-
-	const navigateHome = () => {
-		router.push({ pathname: '/' })
-	}
-
-	const navigateToMyAccount = () => {
-		router.push({ pathname: '/profile', query: { tab: 'identity' } })
-	}
-
-	const navigateToMyAgreements = () => {
-		router.push({ pathname: '/profile', query: { tab: 'myCommunities' } })
-	}
 
 	const handleDiscord = () => {
 		window.open('https://discord.gg/jgxuK6662v')
@@ -119,8 +108,9 @@ export function HeaderMenu() {
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
 					<Space w={8} />
-					<a onClick={navigateHome} className={meemTheme.clickable}>
+					<Link href={`/`}>
 						<Image
+							className={meemTheme.clickable}
 							src={
 								isDarkTheme
 									? '/meem-logo-white.svg'
@@ -130,7 +120,7 @@ export function HeaderMenu() {
 							height={20}
 							width={80}
 						/>
-					</a>
+					</Link>
 					<div className={meemTheme.visibleDesktopOnly}>
 						<div style={{ display: 'flex' }}>
 							<Space w={24} />
@@ -230,20 +220,26 @@ export function HeaderMenu() {
 								{loginState === LoginState.LoggedIn && (
 									<>
 										<Menu.Item
-											onClick={navigateToMyAccount}
 											className={
 												meemTheme.tExtraSmallBold
 											}
 										>
-											My Account
+											<Link
+												href={`/profile?tab=identity`}
+											>
+												<Text>My Account</Text>
+											</Link>
 										</Menu.Item>
 										<Menu.Item
-											onClick={navigateToMyAgreements}
 											className={
 												meemTheme.tExtraSmallBold
 											}
 										>
-											My Communities
+											<Link
+												href={`/profile?tab=myCommunities`}
+											>
+												<Text>My Communities</Text>
+											</Link>
 										</Menu.Item>
 									</>
 								)}
@@ -255,7 +251,11 @@ export function HeaderMenu() {
 									style={{ color: colorDarkBlue }}
 									icon={<Logout size={14} />}
 								>
-									{isConnected ? 'Disconnect' : 'Sign Out'}
+									<Text>
+										{isConnected
+											? 'Disconnect'
+											: 'Sign Out'}
+									</Text>
 								</Menu.Item>
 							</Menu.Dropdown>
 						</Menu>
