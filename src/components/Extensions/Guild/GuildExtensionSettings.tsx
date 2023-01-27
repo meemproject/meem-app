@@ -28,7 +28,7 @@ import { useSDK, useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/named
 import { Bytes } from 'ethers'
 import { DeleteCircledOutline } from 'iconoir-react'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Settings } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
@@ -47,7 +47,6 @@ interface ISyncedGuildRole {
 export const GuildExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('guild', agreement)
 
@@ -230,6 +229,7 @@ export const GuildExtensionSettings: React.FC = () => {
 			try {
 				await sdk.agreementExtension.updateAgreementExtension({
 					agreementId: agreement?.id ?? '',
+					isSetupComplete: true,
 					agreementExtensionId: agreementExtension?.id,
 					externalLink: {
 						label: `${myGuild.name}`,
@@ -299,6 +299,7 @@ export const GuildExtensionSettings: React.FC = () => {
 					const selectedGuildData = await guild.get(guildId)
 
 					await sdk.agreementExtension.updateAgreementExtension({
+						isSetupComplete: true,
 						agreementId: agreement?.id ?? '',
 						agreementExtensionId: agreementExtension?.id,
 						externalLink: {
@@ -510,33 +511,23 @@ Add your custom extension settings layout here.
 					</Stack>
 					<Group ml="auto">
 						{isAgreementMemberRole ? (
-							<Button
-								onClick={() => {
-									router.push({
-										pathname: `/${agreement.slug}/members`
-									})
-								}}
-								className={meemTheme.buttonBlack}
-							>
-								Manage Members
-							</Button>
+							<Link href={`/${agreement.slug}/members`}>
+								<Button className={meemTheme.buttonBlack}>
+									Manage Members
+								</Button>
+							</Link>
 						) : props.guildRoleId ? (
 							<>
 								{props.agreementRoleId && (
-									<Button
-										onClick={() => {
-											if (!agreement) return
-											router.push({
-												pathname: `/${agreement.slug}/roles`,
-												query: {
-													role: `%2F${props.agreementRoleId}`
-												}
-											})
-										}}
-										className={meemTheme.buttonBlack}
+									<Link
+										href={`/${agreement?.slug}/roles?role=${props.agreementRoleId}`}
 									>
-										Manage Members
-									</Button>
+										<Button
+											className={meemTheme.buttonBlack}
+										>
+											Manage Members
+										</Button>
+									</Link>
 								)}
 								<Button
 									leftIcon={<DeleteCircledOutline />}

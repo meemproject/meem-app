@@ -81,7 +81,7 @@ export const AgreementExtensionLinksWidget: React.FC<IProps> = ({
 						.filter(
 							ext =>
 								ext.AgreementExtensionLinks[0] &&
-								ext.AgreementExtensionLinks[0].url &&
+								ext.isSetupComplete &&
 								ext.metadata.favoriteLinksVisible
 						)
 						.map(extension => (

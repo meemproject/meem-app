@@ -10,7 +10,7 @@ import {
 	Center,
 	useMantineColorScheme
 } from '@mantine/core'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Search } from 'tabler-icons-react'
 import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
@@ -23,7 +23,6 @@ interface IProps {
 
 export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -31,13 +30,6 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 	const [members, setMembers] = useState<AgreementMember[]>([])
 
 	const [filteredMembers, setFilteredMembers] = useState<AgreementMember[]>()
-
-	const navigateToAgreementAirdropSettings = () => {
-		router.push({
-			pathname: `/${agreement.slug}/admin`,
-			query: { tab: 'airdrops' }
-		})
-	}
 
 	useEffect(() => {
 		if (!filteredMembers && agreement) {
@@ -90,16 +82,11 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 					</div>
 
 					{agreement.isLaunched && (
-						<Button
-							onClick={() => {
-								router.push({
-									pathname: `/${agreement.slug}/members`
-								})
-							}}
-							className={meemTheme.buttonBlack}
-						>
-							View All
-						</Button>
+						<Link href={`/${agreement.slug}/members`}>
+							<Button className={meemTheme.buttonBlack}>
+								View All
+							</Button>
+						</Link>
 					)}
 				</div>
 				<Space h={24} />
@@ -226,14 +213,13 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 					<>
 						<Space h={24} />
 						<Center>
-							<Button
-								className={meemTheme.buttonAsh}
-								onClick={() => {
-									navigateToAgreementAirdropSettings()
-								}}
+							<Link
+								href={`/${agreement.slug}/admin?tab=airdrops`}
 							>
-								Invite members
-							</Button>
+								<Button className={meemTheme.buttonAsh}>
+									Invite members
+								</Button>
+							</Link>
 						</Center>
 					</>
 				)}

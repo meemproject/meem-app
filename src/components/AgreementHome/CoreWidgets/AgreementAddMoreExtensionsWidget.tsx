@@ -1,5 +1,5 @@
 import { Button, Center, Space, Text } from '@mantine/core'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { useMeemTheme } from '../../Styles/MeemTheme'
@@ -11,9 +11,25 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 	agreement
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 
 	useEffect(() => {}, [agreement])
+
+	// How many extensions have been set up and have widgets
+	const extensionsSetupWithWidgets =
+		agreement.extensions?.filter(
+			ext =>
+				ext.AgreementExtensionWidgets.length > 0 && ext.isSetupComplete
+		).length ?? 0
+
+	// How many extensions have not been set up and have widgets
+	const extensionsNotSetupWithWidgets =
+		agreement.extensions?.filter(
+			ext =>
+				ext.AgreementExtensionWidgets.length > 0 && !ext.isSetupComplete
+		).length ?? 0
+
+	// Total extensions, including links and other integrations
+	const totalExtensions = agreement.extensions?.length ?? 0
 
 	return (
 		<div>
@@ -21,9 +37,8 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 				<>
 					{agreement.isCurrentUserAgreementAdmin && (
 						<>
-							{agreement.extensions?.filter(
-								ext => ext.AgreementExtensionWidgets.length > 0
-							).length === 0 && (
+							{/* No extensions at all */}
+							{totalExtensions === 0 && (
 								<div className={meemTheme.widgetLight}>
 									<Center>
 										<Text className={meemTheme.tLargeBold}>
@@ -44,44 +59,132 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 									<Space h={32} />
 
 									<Center>
-										<Button
-											className={meemTheme.buttonAsh}
-											onClick={() => {
-												router.push({
-													pathname: `${agreement.slug}/admin`,
-													query: { tab: 'extensions' }
-												})
-											}}
+										<Link
+											href={`${agreement.slug}/admin?tab=extensions`}
 										>
-											+ Add your first extension
-										</Button>
+											<Button
+												className={meemTheme.buttonAsh}
+											>
+												+ Add your first extension
+											</Button>
+										</Link>
 									</Center>
 									<Space h={8} />
 								</div>
 							)}
 
-							{agreement.extensions &&
-								agreement.extensions?.filter(
-									ext =>
-										ext.AgreementExtensionWidgets.length > 0
-								).length > 0 && (
-									<>
+							{/* Extensions enabled but none with widgets */}
+							{totalExtensions > 0 &&
+								extensionsNotSetupWithWidgets === 0 &&
+								extensionsSetupWithWidgets === 0 && (
+									<div
+										className={meemTheme.widgetLight}
+										style={{ marginTop: 16 }}
+									>
+										<Center>
+											<Text
+												className={meemTheme.tLargeBold}
+											>
+												Add your first widget
+											</Text>
+										</Center>
+										<Space h={16} />
+										<Center>
+											<Text className={meemTheme.tSmall}>
+												{`Your community has extensions
+												enabled but none of these have any
+												widgets. You can add extensions
+												with widgets by looking for the
+												'widget' badge in your extension settings.`}
+											</Text>
+										</Center>
 										<Space h={32} />
 
 										<Center>
-											<Button
-												className={meemTheme.buttonGrey}
-												onClick={() => {
-													router.push({
-														pathname: `${agreement.slug}/admin`,
-														query: {
-															tab: 'extensions'
-														}
-													})
-												}}
+											<Link
+												href={`${agreement.slug}/admin?tab=extensions`}
 											>
-												+ Add an extension
-											</Button>
+												<Button
+													className={
+														meemTheme.buttonAsh
+													}
+												>
+													+ Add your first widget
+												</Button>
+											</Link>
+										</Center>
+										<Space h={8} />
+									</div>
+								)}
+
+							{/* Some exts with widgets have not been set up yet	 */}
+							{agreement.extensions &&
+								totalExtensions > 0 &&
+								extensionsNotSetupWithWidgets > 0 &&
+								extensionsSetupWithWidgets === 0 && (
+									<div
+										className={meemTheme.widgetLight}
+										style={{ marginTop: 16 }}
+									>
+										<Center>
+											<Text
+												className={meemTheme.tLargeBold}
+											>
+												Complete extension setup
+											</Text>
+										</Center>
+										<Space h={16} />
+										<Center>
+											<Text className={meemTheme.tSmall}>
+												Your community has extensions
+												enabled but one or more are not
+												ready to display until they have
+												been properly set up.
+											</Text>
+										</Center>
+										<Space h={32} />
+
+										<Center>
+											<Link
+												href={`${agreement.slug}/admin?tab=extensions`}
+											>
+												<Button
+													className={
+														meemTheme.buttonAsh
+													}
+												>
+													Complete setup
+												</Button>
+											</Link>
+										</Center>
+										<Space h={8} />
+									</div>
+								)}
+
+							{/* There's already at least one widget that has been set up  */}
+							{agreement.extensions &&
+								totalExtensions > 0 &&
+								extensionsNotSetupWithWidgets === 0 &&
+								extensionsSetupWithWidgets > 0 && (
+									<>
+										<Space h={32} />
+										<Center>
+											<Text
+												className={meemTheme.tSmall}
+											></Text>
+										</Center>
+										<Center>
+											<Link
+												href={`${agreement.slug}/admin?tab=extensions`}
+											>
+												<Button
+													className={
+														meemTheme.buttonGrey
+													}
+												>
+													+ Add an extension
+												</Button>
+											</Link>
 										</Center>
 										<Space h={32} />
 									</>
@@ -91,10 +194,12 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 
 					{!agreement.isCurrentUserAgreementAdmin && (
 						<>
-							{agreement.extensions?.filter(
-								ext => ext.AgreementExtensionWidgets.length > 0
-							).length === 0 && (
-								<div className={meemTheme.widgetLight}>
+							{(extensionsSetupWithWidgets === 0 ||
+								extensionsNotSetupWithWidgets === 0) && (
+								<div
+									className={meemTheme.widgetLight}
+									style={{ marginTop: 26 }}
+								>
 									<Center>
 										<Text className={meemTheme.tMediumBold}>
 											Under construction

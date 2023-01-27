@@ -11,6 +11,7 @@ import {
 	Select,
 	SelectItem
 } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
@@ -22,6 +23,7 @@ import { ExtensionPageHeader } from '../ExtensionPageHeader'
 export const DiscussionSettings: React.FC = () => {
 	// Default settings
 	const router = useRouter()
+	const sdk = useSDK()
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('discussions', agreement)
@@ -240,7 +242,13 @@ export const DiscussionSettings: React.FC = () => {
 	TODO
 	Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
 	 */
-	const saveCustomChanges = async () => {}
+	const saveCustomChanges = async () => {
+		await sdk.sdk.agreementExtension.updateAgreementExtension({
+			agreementId: agreement?.id ?? '',
+			agreementExtensionId: agreementExtension?.id,
+			isSetupComplete: true
+		})
+	}
 
 	/*
 	Boilerplate area - please don't edit the below code!

@@ -1,5 +1,11 @@
-import { Text, Space, Image, Button } from '@mantine/core'
-import { useRouter } from 'next/router'
+import {
+	Text,
+	Space,
+	Image,
+	Button,
+	useMantineColorScheme
+} from '@mantine/core'
+import Link from 'next/link'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
 import { ArrowLeft, Settings } from 'tabler-icons-react'
@@ -22,22 +28,11 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 
 	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
-	const router = useRouter()
-
-	const navigateToAgreementHome = () => {
-		router.push({
-			pathname: `/${agreement?.slug}`
-		})
-	}
-
-	const navigateToExtensionSettings = () => {
-		router.push({
-			pathname: `/${agreement?.slug}/e/${extensionSlug}/settings`
-		})
-	}
-
 	const isSettingsPage =
 		(window && window.location.pathname.includes('settings')) ?? false
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	// Hide the back arrow for extensions with no widgets - presumably they
 	// have no homepage either (i.e. are link extensions)
@@ -52,39 +47,35 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 				<div className={meemTheme.spacedRowCentered}>
 					{(hasNoWidget || isSettingsPage || isSubPage) && (
 						<>
-							<a
-								onClick={() => {
-									if (hasNoWidget) {
-										router.push({
-											pathname: `/${agreement?.slug}/admin`,
-											query: { tab: 'extensions' }
-										})
-									} else {
-										router.push({
-											pathname: `/${agreement?.slug}/e/${extensionSlug}`
-										})
-									}
-								}}
+							<Link
+								href={
+									hasNoWidget
+										? `/${agreement?.slug}/admin?tab=extensions`
+										: `/${agreement?.slug}/e/${extensionSlug}`
+								}
 							>
-								<ArrowLeft
-									className={meemTheme.backArrow}
-									size={32}
-								/>
-							</a>
+								<div>
+									<ArrowLeft
+										className={meemTheme.backArrow}
+										size={32}
+									/>
+								</div>
+							</Link>
 							<Space w={24} />
 						</>
 					)}
 
 					{agreement?.image && (
-						<>
+						<Link href={`/${agreement?.slug}`}>
 							<Image
+								style={{ cursor: 'pointer' }}
 								radius={8}
 								height={80}
 								width={80}
 								src={agreement?.image}
 							/>
 							<Space w={24} />
-						</>
+						</Link>
 					)}
 					{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
 					<div className={meemTheme.pageHeaderTitleContainer}>
@@ -95,7 +86,14 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 						<div className={meemTheme.centeredRow}>
 							<Image
 								className={meemTheme.copyIcon}
-								src={`/${agreementExtension?.Extension?.icon}`}
+								src={`/${
+									isDarkTheme
+										? `${(
+												agreementExtension?.Extension
+													?.icon ?? ''
+										  ).replace('.png', '-white.png')}`
+										: agreementExtension?.Extension?.icon
+								}`}
 								width={16}
 							/>
 							<Space w={8} />
@@ -116,23 +114,23 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 						!hasNoWidget &&
 						(agreement?.isCurrentUserAgreementAdmin ||
 							agreement?.isCurrentUserAgreementOwner) && (
-							<Button
-								leftIcon={<Settings />}
-								onClick={() => {
-									navigateToExtensionSettings()
-								}}
-								className={meemTheme.buttonWhite}
+							<Link
+								href={`/${agreement?.slug}/e/${extensionSlug}/settings`}
 							>
-								Settings
-							</Button>
+								<Button
+									leftIcon={<Settings />}
+									className={meemTheme.buttonWhite}
+								>
+									Settings
+								</Button>
+							</Link>
 						)}
 					<Space w={16} />
-					<a
-						className={meemTheme.pageHeaderExitButton}
-						onClick={navigateToAgreementHome}
-					>
-						<Image src="/delete.png" width={24} height={24} />
-					</a>
+					<div className={meemTheme.pageHeaderExitButton}>
+						<Link href={`/${agreement?.slug}`}>
+							<Image src="/delete.png" width={24} height={24} />
+						</Link>
+					</div>
 				</div>
 			</div>
 		</>

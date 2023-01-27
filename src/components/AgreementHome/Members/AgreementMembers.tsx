@@ -11,7 +11,7 @@ import {
 	Center,
 	HoverCard
 } from '@mantine/core'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Search, Star } from 'tabler-icons-react'
 import { AgreementMember } from '../../../model/agreement/agreements'
@@ -26,12 +26,7 @@ interface IProps {
 
 export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
 	const { agreement, isLoadingAgreement, error } = useAgreement()
-
-	const navigateToAgreementDetail = () => {
-		router.push({ pathname: `/${slug}` })
-	}
 
 	const memberIsAdmin = (member: string): boolean => {
 		if (agreement) {
@@ -122,14 +117,21 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
 							{agreement.image && (
-								<div className={meemTheme.pageHeaderImage}>
-									<Image
-										width={80}
-										height={80}
-										radius={8}
-										className={meemTheme.imageAgreementLogo}
-										src={agreement.image}
-									/>
+								<div
+									className={meemTheme.pageHeaderImage}
+									style={{ cursor: 'pointer' }}
+								>
+									<Link href={`/${agreement.slug}`}>
+										<Image
+											width={80}
+											height={80}
+											radius={8}
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											src={agreement.image}
+										/>
+									</Link>
 								</div>
 							)}
 							<div>
@@ -152,12 +154,15 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 								</Text>
 							</div>
 						</div>
-						<a
-							className={meemTheme.pageHeaderExitButton}
-							onClick={navigateToAgreementDetail}
-						>
-							<Image src="/delete.png" width={24} height={24} />
-						</a>
+						<div className={meemTheme.pageHeaderExitButton}>
+							<Link href={`/${slug}`}>
+								<Image
+									src="/delete.png"
+									width={24}
+									height={24}
+								/>
+							</Link>
+						</div>
 					</div>
 
 					<Container>

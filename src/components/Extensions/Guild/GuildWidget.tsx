@@ -1,5 +1,5 @@
 import { Space, Text } from '@mantine/core'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React from 'react'
 import { Settings } from 'tabler-icons-react'
 import { Agreement } from '../../../model/agreement/agreements'
@@ -17,7 +17,6 @@ Be sure to import your widget in AgreementHome.tsx to ensure it is displayed
 when enabled.
 */
 export const GuildWidget: React.FC<IProps> = ({ agreement }) => {
-	const router = useRouter()
 	/*
 	Use the meemTheme object to access agreements styles
 	such as colors, fonts and layouts
@@ -40,14 +39,11 @@ export const GuildWidget: React.FC<IProps> = ({ agreement }) => {
 					{agreement.isCurrentUserAgreementAdmin && (
 						<div className={meemTheme.row}>
 							<Space w={8} />
-							<Settings
-								className={meemTheme.clickable}
-								onClick={() => {
-									router.push({
-										pathname: `/${agreement.slug}/e/example/settings`
-									})
-								}}
-							/>
+							<Link
+								href={`/${agreement.slug}/e/example/settings`}
+							>
+								<Settings className={meemTheme.clickable} />
+							</Link>
 						</div>
 					)}
 				</div>
