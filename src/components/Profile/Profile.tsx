@@ -226,6 +226,11 @@ export const ProfileComponent: React.FC = () => {
 								label={'Manage Identity'}
 								onClick={() => {
 									setCurrentTab(Tab.Profile)
+									router.push(
+										`/profile?tab=identity`,
+										undefined,
+										{ shallow: true }
+									)
 									setIsMobileNavBarVisible(false)
 								}}
 							/>
@@ -235,6 +240,11 @@ export const ProfileComponent: React.FC = () => {
 								label={'My Communities'}
 								onClick={() => {
 									setCurrentTab(Tab.MyAgreements)
+									router.push(
+										`/profile?tab=myCommunities`,
+										undefined,
+										{ shallow: true }
+									)
 									setIsMobileNavBarVisible(false)
 								}}
 							/>

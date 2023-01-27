@@ -229,6 +229,11 @@ export const AgreementAdminComponent: React.FC = () => {
 									label={'Contract Management'}
 									onClick={() => {
 										setCurrentTab(Tab.ContractManagement)
+										router.push(
+											`/${agreement.slug}/admin?tab=contractmanagement`,
+											undefined,
+											{ shallow: true }
+										)
 										setMobileNavBarVisible(false)
 									}}
 								/>
@@ -249,6 +254,11 @@ export const AgreementAdminComponent: React.FC = () => {
 												setCurrentTab(
 													Tab.MembershipSettings
 												)
+												router.push(
+													`/${agreement.slug}/admin?tab=membershipsettings`,
+													undefined,
+													{ shallow: true }
+												)
 												setMobileNavBarVisible(false)
 											}}
 										/>
@@ -264,6 +274,11 @@ export const AgreementAdminComponent: React.FC = () => {
 											onClick={() => {
 												setCurrentTab(
 													Tab.MembershipRequirements
+												)
+												router.push(
+													`/${agreement.slug}/admin?tab=membershiprequirements`,
+													undefined,
+													{ shallow: true }
 												)
 												setMobileNavBarVisible(false)
 											}}
@@ -281,6 +296,11 @@ export const AgreementAdminComponent: React.FC = () => {
 											label={'Roles'}
 											onClick={() => {
 												setCurrentTab(Tab.Roles)
+												router.push(
+													`/${agreement.slug}/admin?tab=roles`,
+													undefined,
+													{ shallow: true }
+												)
 												setMobileNavBarVisible(false)
 											}}
 										/>
@@ -311,6 +331,11 @@ export const AgreementAdminComponent: React.FC = () => {
 											label={'Extensions'}
 											onClick={() => {
 												setCurrentTab(Tab.Extensions)
+												router.push(
+													`/${agreement.slug}/admin?tab=extensions`,
+													undefined,
+													{ shallow: true }
+												)
 												setMobileNavBarVisible(false)
 											}}
 										/>
@@ -323,6 +348,11 @@ export const AgreementAdminComponent: React.FC = () => {
 									label={'Airdrops'}
 									onClick={() => {
 										setCurrentTab(Tab.Airdrops)
+										router.push(
+											`/${agreement.slug}/admin?tab=airdrops`,
+											undefined,
+											{ shallow: true }
+										)
 										setMobileNavBarVisible(false)
 									}}
 								/>
@@ -349,6 +379,11 @@ export const AgreementAdminComponent: React.FC = () => {
 											label={'Community Details'}
 											onClick={() => {
 												setCurrentTab(Tab.Details)
+												router.push(
+													`/${agreement.slug}/admin?tab=details`,
+													undefined,
+													{ shallow: true }
+												)
 												setMobileNavBarVisible(false)
 											}}
 										/>
@@ -360,6 +395,11 @@ export const AgreementAdminComponent: React.FC = () => {
 											label={'Community Icon'}
 											onClick={() => {
 												setCurrentTab(Tab.Icon)
+												router.push(
+													`/${agreement.slug}/admin?tab=icon`,
+													undefined,
+													{ shallow: true }
+												)
 												setMobileNavBarVisible(false)
 											}}
 										/>
