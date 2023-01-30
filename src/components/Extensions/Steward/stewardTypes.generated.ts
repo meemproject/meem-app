@@ -97,27 +97,21 @@ export namespace API {
 		proposerEmojis: string[]
 		approverRoles: string[]
 		approverEmojis: string[]
+		vetoerRoles: string[]
+		vetoerEmojis: string[]
 		proposalChannels: string[]
 		proposalShareChannel: string
+		canVeto: boolean
 		votes: number
+		vetoVotes: number
+		proposeVotes: number
 		shouldReply: boolean
 		ruleId: string
 		isEnabled: boolean
 	}
 
-	export interface IRuleToSave {
-		action: PublishAction
-		publishType: PublishType
-		proposerRoles: string[]
-		proposerEmojis: string[]
-		approverRoles: string[]
-		approverEmojis: string[]
-		proposalChannels: string[]
-		proposalShareChannel: string
-		votes: number
-		shouldReply: boolean
+	export interface IRuleToSave extends Omit<IRule, 'ruleId'> {
 		ruleId?: string
-		isEnabled: boolean
 	}
 
 	export interface ISavedRule
@@ -127,13 +121,17 @@ export namespace API {
 			| 'proposerEmojis'
 			| 'approverRoles'
 			| 'approverEmojis'
+			| 'vetoerRoles'
+			| 'vetoerEmojis'
 			| 'proposalChannels'
 		> {
-		proposerRoles: { [idx: string]: string }
-		proposerEmojis: { [idx: string]: string }
-		approverRoles: { [idx: string]: string }
-		approverEmojis: { [idx: string]: string }
-		proposalChannels: { [idx: string]: string }
+		proposerRoles: string
+		proposerEmojis: string
+		approverRoles: string
+		approverEmojis: string
+		vetoerRoles: string
+		vetoerEmojis: string
+		proposalChannels: string
 	}
 
 	export interface IDiscordRole {

@@ -13,7 +13,7 @@ import { Emoji } from 'emoji-picker-react'
 import type { EmojiClickData } from 'emoji-picker-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 // import { useMeemTheme } from '../../Styles/MeemTheme'
 import { API } from './stewardTypes.generated'
 
@@ -24,24 +24,31 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 export interface IProps {
 	channels?: API.IDiscordChannel[]
 	roles?: API.IDiscordRole[]
-	selectedRule?: API.ISavedRule
+	selectedRule?: API.IRule
 	onSave: (values: IOnSave) => void
 }
 
 export enum EmojiSelectType {
 	Proposer = 'proposer',
-	Approver = 'approver'
+	Approver = 'approver',
+	Vetoer = 'vetoer'
 }
 
 export interface IFormValues
 	extends Omit<
 		API.IRule,
-		'proposerEmojis' | 'approverEmojis' | 'action' | 'ruleId' | 'isEnabled'
+		| 'proposerEmojis'
+		| 'approverEmojis'
+		| 'vetoerEmojis'
+		| 'action'
+		| 'ruleId'
+		| 'isEnabled'
 	> {}
 
 export interface IOnSave extends IFormValues {
 	proposerEmojis: string[]
 	approverEmojis: string[]
+	vetoerEmojis: string[]
 }
 
 export const StewardRuleBuilder: React.FC<IProps> = ({
@@ -62,12 +69,18 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 			approverRoles: selectedRule?.approverRoles
 				? Object.values(selectedRule.approverRoles)
 				: [],
+			vetoerRoles: selectedRule?.vetoerRoles
+				? Object.values(selectedRule.vetoerRoles)
+				: [],
 			proposalChannels: selectedRule?.proposalChannels
 				? Object.values(selectedRule.proposalChannels)
 				: [],
 			proposalShareChannel: selectedRule?.proposalShareChannel ?? '',
 			votes: selectedRule?.votes ?? 1,
-			shouldReply: selectedRule?.shouldReply ?? true
+			vetoVotes: selectedRule?.vetoVotes ?? 1,
+			proposeVotes: selectedRule?.proposeVotes ?? 1,
+			shouldReply: selectedRule?.shouldReply ?? true,
+			canVeto: selectedRule?.canVeto ?? false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -101,6 +114,11 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 			? Object.values(selectedRule?.proposerEmojis)
 			: []
 	)
+	const [vetoerEmojis, setVetoerEmojis] = useState<string[]>(
+		selectedRule?.vetoerEmojis
+			? Object.values(selectedRule?.vetoerEmojis)
+			: []
+	)
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
 		EmojiSelectType.Approver
 	)
@@ -108,27 +126,56 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 
 	const handleEmojiClick = useCallback(
 		async (emojiObject: EmojiClickData) => {
-			if (emojiSelectType === EmojiSelectType.Proposer) {
-				setProposerEmojis(
-					uniq([...proposerEmojis, emojiObject.unified])
-				)
-			} else {
-				setApproverEmojis(
-					uniq([...approverEmojis, emojiObject.unified])
-				)
+			switch (emojiSelectType) {
+				case EmojiSelectType.Approver:
+					setApproverEmojis(
+						uniq([...approverEmojis, emojiObject.unified])
+					)
+					break
+
+				case EmojiSelectType.Proposer:
+					setProposerEmojis(
+						uniq([...proposerEmojis, emojiObject.unified])
+					)
+					break
+
+				case EmojiSelectType.Vetoer:
+					setVetoerEmojis(
+						uniq([...vetoerEmojis, emojiObject.unified])
+					)
+					break
 			}
 			setIsEmojiPickerOpen(false)
 		},
-		[emojiSelectType, approverEmojis, proposerEmojis]
+		[emojiSelectType, approverEmojis, proposerEmojis, vetoerEmojis]
 	)
 
 	const handleFormSubmit = async (values: IFormValues) => {
 		onSave({
 			...values,
 			approverEmojis,
+			vetoerEmojis,
 			proposerEmojis
 		})
 	}
+
+	useEffect(() => {
+		form.setValues({
+			publishType:
+				selectedRule?.publishType ?? API.PublishType.PublishImmediately,
+			proposerRoles: selectedRule?.proposerRoles,
+			approverRoles: selectedRule?.approverRoles,
+			proposalChannels: selectedRule?.proposalChannels,
+			proposalShareChannel: selectedRule?.proposalShareChannel,
+			votes: selectedRule?.votes,
+			vetoVotes: selectedRule?.vetoVotes,
+			proposeVotes: selectedRule?.proposeVotes,
+			shouldReply: selectedRule?.shouldReply,
+			canVeto: selectedRule?.canVeto
+		})
+	}, [selectedRule])
+
+	console.log(form.values)
 
 	return (
 		<form onSubmit={form.onSubmit(values => handleFormSubmit(values))}>
@@ -166,9 +213,10 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					{...form.getInputProps('proposalChannels')}
 				/>
 			)}
-			<Space h="md" />
+
 			{form.values.publishType === API.PublishType.Proposal && (
 				<>
+					<Space h="md" />
 					<Text>Who can propose a new post?</Text>
 					<Space h="xs" />
 					{roles && (
@@ -191,14 +239,21 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 						}}
 					>
 						{proposerEmojis.map(e => (
-							<>
-								<Emoji
-									key={`proposerEmoji-${e}`}
-									unified={e}
-									size={25}
-								/>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'row'
+								}}
+								key={`proposerEmoji-${e}`}
+								onClick={() => {
+									setProposerEmojis(
+										proposerEmojis.filter(pe => pe !== e)
+									)
+								}}
+							>
+								<Emoji unified={e} size={25} />
 								<Space w="xs" />
-							</>
+							</div>
 						))}
 					</div>
 					<Space h="xs" />
@@ -210,52 +265,28 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					>
 						Add emoji
 					</Button>
+
 					<Space h="md" />
-				</>
-			)}
-			<Text>Who can vote to approve new posts for publication?</Text>
-			<Space h="xs" />
-			{roles && (
-				<MultiSelect
-					multiple
-					data={roles.map(c => ({
-						value: c.id,
-						label: c.name
-					}))}
-					{...form.getInputProps('approverRoles')}
-				/>
-			)}
-			<Space h="md" />
-			{form.values.publishType === API.PublishType.Proposal && (
-				<>
+					<Text>{'How many proposal reactions?'}</Text>
+					<Space h="xs" />
+					<NumberInput {...form.getInputProps('proposeVotes')} />
+					<Space h="md" />
 					<Text>
-						What Discord channel will new proposals be shared in?
+						Who can vote to approve new posts for publication?
 					</Text>
 					<Space h="xs" />
-					{channels && (
-						<Select
-							data={channels.map(c => ({
+					{roles && (
+						<MultiSelect
+							multiple
+							data={roles.map(c => ({
 								value: c.id,
 								label: c.name
 							}))}
-							{...form.getInputProps('proposerChannel')}
+							{...form.getInputProps('approverRoles')}
 						/>
 					)}
 				</>
 			)}
-			{/* {channels && (
-				<MultiSelect
-					label="Discord Channel"
-					data={[
-						{ value: 'all', label: 'All Channels' },
-						...channels.map(c => ({
-							value: c.id,
-							label: c.name
-						}))
-					]}
-					{...form.getInputProps('channel')}
-				/>
-			)} */}
 			<Space h="md" />
 			<Text>Which emojis will count as affirmative votes?</Text>
 			<Space h="xs" />
@@ -266,13 +297,24 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 				}}
 			>
 				{approverEmojis.map(e => (
-					<div key={`approvalEmoji-${e}`}>
+					<div
+						key={`approvalEmoji-${e}`}
+						style={{
+							display: 'flex',
+							flexDirection: 'row'
+						}}
+						onClick={() => {
+							setApproverEmojis(
+								approverEmojis.filter(ae => ae !== e)
+							)
+						}}
+					>
 						<Emoji unified={e} size={25} />
 						<Space w="xs" />
 					</div>
 				))}
 			</div>
-
+			<Space h="xs" />
 			<Button
 				onClick={() => {
 					setEmojiSelectType(EmojiSelectType.Approver)
@@ -290,14 +332,95 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 			<Space h="xs" />
 			<NumberInput {...form.getInputProps('votes')} />
 			<Space h="md" />
+			{form.values.publishType === API.PublishType.Proposal && (
+				<>
+					<Text>
+						What Discord channel will new proposals be shared in?
+					</Text>
+					<Space h="xs" />
+					{channels && (
+						<Select
+							data={channels.map(c => ({
+								value: c.id,
+								label: c.name
+							}))}
+							{...form.getInputProps('proposalShareChannel')}
+						/>
+					)}
+				</>
+			)}
+
+			<Space h="md" />
+			<Text>Can posts be vetoed?</Text>
+			<Switch
+				label="Yes, posts can be vetoed"
+				{...form.getInputProps('canVeto', { type: 'checkbox' })}
+			/>
+			<Space h="md" />
+			{form.values.canVeto && (
+				<>
+					<Text>Who can veto?</Text>
+					<Space h="xs" />
+					{roles && (
+						<MultiSelect
+							multiple
+							data={roles.map(c => ({
+								value: c.id,
+								label: c.name
+							}))}
+							{...form.getInputProps('vetoerRoles')}
+						/>
+					)}
+					<Space h="md" />
+					<Text>Which emojis will count as a veto?</Text>
+					<Space h="xs" />
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'row'
+						}}
+					>
+						{vetoerEmojis.map(e => (
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'row'
+								}}
+								key={`approvalEmoji-${e}`}
+								onClick={() => {
+									setVetoerEmojis(
+										vetoerEmojis.filter(ve => ve !== e)
+									)
+								}}
+							>
+								<Emoji unified={e} size={25} />
+								<Space w="xs" />
+							</div>
+						))}
+					</div>
+					<Space h="xs" />
+					<Button
+						onClick={() => {
+							setEmojiSelectType(EmojiSelectType.Vetoer)
+							setIsEmojiPickerOpen(true)
+						}}
+					>
+						Add emoji
+					</Button>
+					<Space h="md" />
+					<Text>{'How many vetoes are required?'}</Text>
+					<Space h="xs" />
+					<NumberInput {...form.getInputProps('vetoVotes')} />
+				</>
+			)}
+			<Space h="md" />
 			<Text>
 				Would you like Steward to reply to approved proposals with a
 				link to the published tweet?
 			</Text>
 			<Switch
 				label="Yes, reply with a link"
-				defaultChecked
-				{...form.getInputProps('shouldReply')}
+				{...form.getInputProps('shouldReply', { type: 'checkbox' })}
 			/>
 			<Modal
 				opened={isEmojiPickerOpen}

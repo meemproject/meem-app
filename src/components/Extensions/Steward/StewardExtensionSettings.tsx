@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	Container,
 	Text,
@@ -33,8 +34,8 @@ export const StewardExtensionSettings: React.FC = () => {
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [twitterUsername, setTwitterUsername] = useState()
-	const [rules, setRules] = useState<API.ISavedRule[]>([])
-	const [selectedRule, setSelectedRule] = useState<API.ISavedRule>()
+	const [rules, setRules] = useState<API.IRule[]>([])
+	const [selectedRule, setSelectedRule] = useState<API.IRule>()
 	const [discordInfo, setDiscordInfo] = useState<
 		| {
 				icon: string | null
@@ -168,6 +169,7 @@ export const StewardExtensionSettings: React.FC = () => {
 
 	const removeRule = async (ruleId: string) => {
 		if (!agreement?.id || !jwt) {
+			log.warn('Invalid agreement or jwt')
 			return
 		}
 
@@ -212,7 +214,7 @@ export const StewardExtensionSettings: React.FC = () => {
 			// @ts-ignore
 			.open(data => {
 				if (data) {
-					const filteredRules: API.ISavedRule[] = []
+					const filteredRules: API.IRule[] = []
 					if (typeof data === 'object') {
 						Object.keys(data).forEach(id => {
 							const rule: API.ISavedRule = data[id]
@@ -221,9 +223,37 @@ export const StewardExtensionSettings: React.FC = () => {
 								rule &&
 								rule.action === API.PublishAction.Tweet &&
 								rule.isEnabled &&
+								rule.ruleId &&
 								rule.votes
 							) {
-								filteredRules.push(rule)
+								try {
+									filteredRules.push({
+										...rule,
+										proposerRoles:
+											rule.proposerRoles &&
+											JSON.parse(rule.proposerRoles),
+										proposerEmojis:
+											rule.proposerEmojis &&
+											JSON.parse(rule.proposerEmojis),
+										approverRoles:
+											rule.approverRoles &&
+											JSON.parse(rule.approverRoles),
+										vetoerEmojis:
+											rule.approverEmojis &&
+											JSON.parse(rule.approverEmojis),
+										vetoerRoles:
+											rule.approverRoles &&
+											JSON.parse(rule.approverRoles),
+										approverEmojis:
+											rule.approverEmojis &&
+											JSON.parse(rule.approverEmojis),
+										proposalChannels:
+											rule.proposalChannels &&
+											JSON.parse(rule.proposalChannels)
+									})
+								} catch (e) {
+									log.warn(e)
+								}
 							}
 						})
 					}
@@ -268,8 +298,7 @@ export const StewardExtensionSettings: React.FC = () => {
 		<>
 			{rolesData &&
 				rules.map(rule => {
-					const roleIds = Object.values(rule.approverRoles)
-					const roleNames = roleIds.map(id => {
+					const roleNames = rule.approverRoles.map(id => {
 						const role = rolesData.roles.find(r => r.id === id)
 
 						return role?.name ?? ''
@@ -286,18 +315,16 @@ export const StewardExtensionSettings: React.FC = () => {
 									flexDirection: 'row'
 								}}
 							>
-								{Object.values(rule.approverEmojis).map(
-									emojiCode => (
-										<div
-											key={`emoji-${rule.ruleId}-${emojiCode}`}
-											style={{
-												marginRight: '8px'
-											}}
-										>
-											<Emoji unified={emojiCode} />
-										</div>
-									)
-								)}
+								{rule.approverEmojis.map(emojiCode => (
+									<div
+										key={`emoji-${rule.ruleId}-${emojiCode}`}
+										style={{
+											marginRight: '8px'
+										}}
+									>
+										<Emoji unified={emojiCode} />
+									</div>
+								))}
 							</div>
 							<Space h="xs" />
 							<div
