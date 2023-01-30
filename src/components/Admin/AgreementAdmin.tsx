@@ -60,6 +60,8 @@ export const AgreementAdminComponent: React.FC = () => {
 		if (
 			error &&
 			error.graphQLErrors.length > 0 &&
+			error.graphQLErrors[0].extensions &&
+			error.graphQLErrors[0].extensions.code &&
 			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
 		) {
 			router.push({
