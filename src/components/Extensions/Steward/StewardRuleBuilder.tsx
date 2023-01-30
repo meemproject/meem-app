@@ -173,9 +173,8 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 			shouldReply: selectedRule?.shouldReply,
 			canVeto: selectedRule?.canVeto
 		})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedRule])
-
-	console.log(form.values)
 
 	return (
 		<form onSubmit={form.onSubmit(values => handleFormSubmit(values))}>
