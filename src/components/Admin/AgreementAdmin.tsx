@@ -59,6 +59,7 @@ export const AgreementAdminComponent: React.FC = () => {
 	useEffect(() => {
 		if (
 			error &&
+			error.graphQLErrors &&
 			error.graphQLErrors.length > 0 &&
 			error.graphQLErrors[0].extensions &&
 			error.graphQLErrors[0].extensions.code &&
