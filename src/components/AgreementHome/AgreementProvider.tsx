@@ -73,8 +73,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 						global.window ? global.window.location.host : ''
 					)
 			},
-			client: anonClient,
-			skip: wallet.isConnected && wallet.isMeLoading
+			client: anonClient
 		}
 	)
 
@@ -91,10 +90,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 					global.window ? global.window.location.host : ''
 				)
 		},
-		client: anonClient,
-		skip:
-			!isCurrentUserAgreementMemberData ||
-			isCurrentUserAgreementMemberData.AgreementTokens.length > 0
+		client: anonClient
 	})
 
 	const {
@@ -115,7 +111,8 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			client: mutualMembersClient,
 			skip:
 				!isCurrentUserAgreementMemberData ||
-				isCurrentUserAgreementMemberData.AgreementTokens.length === 0
+				isCurrentUserAgreementMemberData.AgreementTokens.length === 0 ||
+				(wallet.isConnected && wallet.isMeLoading)
 		}
 	)
 
