@@ -78,22 +78,6 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 	)
 
 	const {
-		loading: loadingAnonAgreement,
-		error: errorAnonAgreement,
-		data: anonAgreementData
-	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
-		variables: {
-			slug,
-			chainId:
-				wallet.chainId ??
-				hostnameToChainId(
-					global.window ? global.window.location.host : ''
-				)
-		},
-		client: anonClient
-	})
-
-	const {
 		loading: loadingMemberAgreement,
 		error: errorMemberAgreement,
 		data: memberAgreementData
@@ -111,10 +95,28 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			client: mutualMembersClient,
 			skip:
 				!isCurrentUserAgreementMemberData ||
-				isCurrentUserAgreementMemberData.AgreementTokens.length === 0 ||
-				(wallet.isConnected && wallet.isMeLoading)
+				isCurrentUserAgreementMemberData.AgreementTokens.length === 0
 		}
 	)
+
+	const {
+		loading: loadingAnonAgreement,
+		error: errorAnonAgreement,
+		data: anonAgreementData
+	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
+		variables: {
+			slug,
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
+		},
+		skip:
+			(isCurrentUserAgreementMemberData?.AgreementTokens ?? []).length >
+			0,
+		client: anonClient
+	})
 
 	useEffect(() => {
 		if (errorAnonAgreement) {

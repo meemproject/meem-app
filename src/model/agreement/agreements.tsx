@@ -445,7 +445,8 @@ export default async function agreementFromDb(
 								)
 								iAmAgreementOwner =
 									agreementToken.OwnerId ===
-									agreementData.OwnerId
+										agreementData.OwnerId &&
+									agreementToken.OwnerId !== undefined
 
 								// Is the current user an admin?
 								if (iAmAgreementOwner) {
@@ -453,7 +454,10 @@ export default async function agreementFromDb(
 								} else {
 									agreementData.AgreementRoles.forEach(
 										role => {
-											if (role.isAdminRole) {
+											if (
+												role.isAdminRole &&
+												role.AgreementRoleTokens
+											) {
 												role.AgreementRoleTokens.forEach(
 													token => {
 														if (
@@ -491,7 +495,9 @@ export default async function agreementFromDb(
 
 							// Is this member the agreement owner?
 							isMemberTheAgreementOwner =
-								agreementToken.OwnerId === agreementData.OwnerId
+								agreementToken.OwnerId ===
+									agreementData.OwnerId &&
+								agreementToken.OwnerId !== undefined
 
 							// Roles + permissions logic
 							let memberRoles: AgreementRole[] = []
