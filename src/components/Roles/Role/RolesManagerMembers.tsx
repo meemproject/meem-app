@@ -205,7 +205,10 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 												</div>
 											</div>
 										</HoverCard.Target>
-										<AgreementMemberCard member={member} />
+										<AgreementMemberCard
+											agreement={agreement}
+											member={member}
+										/>
 									</HoverCard>
 
 									{!member.isAgreementOwner && (

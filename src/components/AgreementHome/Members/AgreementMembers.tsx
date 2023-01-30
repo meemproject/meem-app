@@ -122,7 +122,10 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 							)}
 						</div>
 					</HoverCard.Target>
-					<AgreementMemberCard member={member} />
+					<AgreementMemberCard
+						agreement={agreement}
+						member={member}
+					/>
 				</HoverCard>
 			</Grid.Col>
 		</>

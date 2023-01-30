@@ -113,7 +113,10 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 								</div>
 							</div>
 						</HoverCard.Target>
-						<AgreementMemberCard member={member} />
+						<AgreementMemberCard
+							agreement={agreement}
+							member={member}
+						/>
 					</HoverCard>
 				</div>
 				<Space h={16} />
