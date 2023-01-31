@@ -31,8 +31,6 @@ const DiscussionPostPage: NextPage<IProps> = ({ agreement }) => {
 
 	const postId: string =
 		router.query.postId === undefined ? '' : `${router.query.postId}`
-	const agreementSlug =
-		router.query.slug === undefined ? '' : `${router.query.slug}`
 
 	return (
 		<>
@@ -97,11 +95,10 @@ const DiscussionPostPage: NextPage<IProps> = ({ agreement }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<AgreementProvider slug={agreementSlug}>
-				<DiscussionsProvider>
-					<DiscussionPostComponent postId={postId} />
-				</DiscussionsProvider>
-			</AgreementProvider>
+
+			<DiscussionsProvider>
+				<DiscussionPostComponent postId={postId} />
+			</DiscussionsProvider>
 			<Space h={64} />
 			<MeemFooter />
 		</>

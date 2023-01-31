@@ -3,9 +3,7 @@ import log from '@kengoldfarb/log'
 import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React from 'react'
-import { AgreementProvider } from '../../components/AgreementHome/AgreementProvider'
 import { AgreementMembersComponent } from '../../components/AgreementHome/Members/AgreementMembers'
 import { hostnameToChainId } from '../../components/App'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
@@ -24,10 +22,6 @@ interface IProps {
 }
 
 const AgreementMembersPage: NextPage<IProps> = ({ agreement }) => {
-	const router = useRouter()
-
-	const agreementSlug =
-		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
@@ -94,9 +88,8 @@ const AgreementMembersPage: NextPage<IProps> = ({ agreement }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<AgreementProvider slug={agreementSlug}>
-				<AgreementMembersComponent slug={agreementSlug} />
-			</AgreementProvider>
+
+			<AgreementMembersComponent />
 
 			<Space h={64} />
 			<MeemFooter />

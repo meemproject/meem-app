@@ -5,9 +5,11 @@ import {
 	Space,
 	Center,
 	Button,
-	Divider,
-	Switch,
-	Modal
+	Image,
+	Modal,
+	Loader,
+	Stepper,
+	useMantineColorScheme
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import { makeFetcher, makeRequest } from '@meemproject/sdk'
@@ -17,7 +19,7 @@ import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { colorBlue, colorDarkBlue, useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { IOnSave, StewardRuleBuilder } from './StewardRuleBuilder'
@@ -33,7 +35,8 @@ export const StewardExtensionSettings: React.FC = () => {
 	const router = useRouter()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [twitterUsername, setTwitterUsername] = useState()
+	const [activeStep, setActiveStep] = useState(0)
+	const [twitterUsername, setTwitterUsername] = useState('')
 	const [rules, setRules] = useState<API.IRule[]>([])
 	const [selectedRule, setSelectedRule] = useState<API.IRule>()
 	const [discordInfo, setDiscordInfo] = useState<
@@ -44,13 +47,12 @@ export const StewardExtensionSettings: React.FC = () => {
 		| undefined
 	>()
 	const [botCode, setBotCode] = useState<string | undefined>()
-	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
-	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
-		useState(false)
-	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
 	const [hasFetchedData, setHasFetchedData] = useState(false)
 
 	const [isRuleBuilderOpen, setIsRuleBuilderOpen] = useState(false)
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const handleInviteBot = async () => {
 		if (!agreement?.id || !jwt) {
@@ -239,24 +241,27 @@ export const StewardExtensionSettings: React.FC = () => {
 		if (!agreement?.id || hasFetchedData || !gun) {
 			return
 		}
+		log.debug(`getting gun data...`)
 		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/twitter`)
 			.once(data => {
 				if (data) {
 					setTwitterUsername(data.username)
+					log.debug(`twitter username = ${data.username}`)
 				}
 			})
 		gun.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/discord`)
 			.once(data => {
 				if (data) {
-					// setDiscordInfo(data)
 					setDiscordInfo(data)
+					log.debug(`discord data found`)
 				}
 			})
 
 		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/rules`)
+
 			// @ts-ignore
 			.open(data => {
 				if (data) {
@@ -309,37 +314,104 @@ export const StewardExtensionSettings: React.FC = () => {
 			})
 
 		setHasFetchedData(true)
-	}, [agreement, sdk, hasFetchedData])
 
-	/*
-	TODO
-	Add your custom extension settings layout here.
-	 */
+		if (twitterUsername.length > 0 && activeStep === 0) {
+			setActiveStep(1)
+		}
+	}, [
+		agreement,
+		sdk,
+		hasFetchedData,
+		discordInfo,
+		twitterUsername,
+		activeStep
+	])
+
 	const customExtensionSettings = () => (
 		<>
-			<Space h={40} />
-			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
-			<Space h={16} />
-			{twitterUsername && <Text>Authenticated as {twitterUsername}</Text>}
-			<Space h={16} />
-			<Button onClick={handleAuthTwitter}>
-				{twitterUsername
-					? 'Re-Authenticate Twitter'
-					: 'Authenticate Twitter'}
-			</Button>
-			<Space h={16} />
-			{discordInfo && <Text>Discord bot activated!</Text>}
-			{botCode && <Text>Activate with /activateSteward {botCode}</Text>}
-			<Space h={16} />
-			<Button onClick={handleInviteBot}>Invite Bot To Discord</Button>
-			<Space h={8} />
+			<Space h={24} />
+
+			<div className={meemTheme.row}>
+				<div>
+					<Text className={meemTheme.tExtraSmallLabel}>
+						TWITTER ACCOUNT
+					</Text>
+					<Space h={16} />
+					<div className={meemTheme.centeredRow}>
+						<Image
+							width={24}
+							src={
+								isDarkTheme
+									? `/integration-twitter-white.png`
+									: `/integration-twitter.png`
+							}
+						/>
+						<Space w={16} />
+						<div>
+							<Text
+								className={meemTheme.tSmall}
+							>{`Connected as ${twitterUsername}`}</Text>
+							<Space h={4} />
+							<Text
+								onClick={() => {
+									handleAuthTwitter()
+								}}
+								className={meemTheme.tSmallBold}
+								style={{
+									cursor: 'pointer',
+									color: isDarkTheme
+										? colorBlue
+										: colorDarkBlue
+								}}
+							>
+								Manage Connection
+							</Text>
+						</div>
+					</div>
+				</div>
+				<Space w={64} />
+				<div>
+					<Text className={meemTheme.tExtraSmallLabel}>
+						DISCORD SERVER
+					</Text>
+					<Space h={16} />
+					<div className={meemTheme.centeredRow}>
+						<Image width={24} src={discordInfo?.icon} />
+						<Space w={16} />
+						<div>
+							<Text
+								className={meemTheme.tSmall}
+							>{`Connected as ${discordInfo?.name}`}</Text>
+							<Space h={4} />
+							<Text
+								onClick={() => {
+									handleInviteBot()
+								}}
+								className={meemTheme.tSmallBold}
+								style={{
+									cursor: 'pointer',
+									color: isDarkTheme
+										? colorBlue
+										: colorDarkBlue
+								}}
+							>
+								Manage Connection
+							</Text>
+							{botCode && (
+								<>
+									<Space h={4} />
+									<Text>
+										Activate with /activateSteward {botCode}
+									</Text>
+								</>
+							)}
+						</div>
+					</div>
+				</div>
+			</div>
 		</>
 	)
 
-	/*
-	TODO
-	Add your custom extension permissions layout here.
-	 */
 	const customExtensionPermissions = () => (
 		<>
 			{rolesData &&
@@ -350,64 +422,79 @@ export const StewardExtensionSettings: React.FC = () => {
 						return role?.name ?? ''
 					})
 					return (
-						<div key={`rule-${rule.ruleId}`}>
-							<Text>{`Publish to Twitter when users with any of these roles: ${roleNames.join(
-								', '
-							)} react with ${rule.votes} of these emoji:`}</Text>
-							<Space h="xs" />
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'row'
-								}}
-							>
-								{rule.approverEmojis.map(emojiCode => (
+						<div
+							key={`rule-${rule.ruleId}`}
+							className={meemTheme.gridItem}
+						>
+							<div className={meemTheme.row}>
+								<div>
+									<Text
+										className={meemTheme.tSmallBold}
+									>{`Publish to Twitter when users with any of these roles: ${roleNames.join(
+										', '
+									)} react with ${
+										rule.votes
+									} of these emoji:`}</Text>
+									<Space h="xs" />
 									<div
-										key={`emoji-${rule.ruleId}-${emojiCode}`}
 										style={{
-											marginRight: '8px'
+											display: 'flex',
+											flexDirection: 'row'
 										}}
 									>
-										<Emoji unified={emojiCode} />
+										{rule.approverEmojis.map(emojiCode => (
+											<div
+												key={`emoji-${rule.ruleId}-${emojiCode}`}
+												style={{
+													marginRight: '8px'
+												}}
+											>
+												<Emoji unified={emojiCode} />
+											</div>
+										))}
 									</div>
-								))}
+									<Space h="xs" />
+								</div>
+								<Space w={24} />
+								<div>
+									<Button
+										className={meemTheme.buttonWhite}
+										onClick={() => {
+											setSelectedRule(rule)
+											setIsRuleBuilderOpen(true)
+										}}
+									>
+										Edit
+									</Button>
+									<Space h={8} />
+									<Button
+										className={meemTheme.buttonRedBordered}
+										onClick={() => {
+											removeRule(rule.ruleId)
+										}}
+									>
+										Remove
+									</Button>
+								</div>
 							</div>
-							<Space h="xs" />
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'row'
-								}}
-							>
-								<Button
-									onClick={() => {
-										setSelectedRule(rule)
-										setIsRuleBuilderOpen(true)
-									}}
-								>
-									Edit
-								</Button>
-								<Space w="xs" />
-								<Button
-									onClick={() => {
-										removeRule(rule.ruleId)
-									}}
-								>
-									Remove
-								</Button>
-							</div>
-							<Space h="md" />
-							<Divider size="sm" />
-							<Space h="md" />
 						</div>
 					)
 				})}
-			<Button onClick={() => setIsRuleBuilderOpen(true)}>Add Rule</Button>
+			{rolesData && <Space h={16} />}
+			<Button
+				className={meemTheme.buttonWhite}
+				onClick={() => setIsRuleBuilderOpen(true)}
+			>
+				+ Add Rule
+			</Button>
 			<Modal
-				withCloseButton={false}
-				padding={8}
+				title={
+					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
+				}
+				padding={24}
 				overlayBlur={8}
-				size={296}
+				radius={16}
+				size={'lg'}
 				opened={isRuleBuilderOpen}
 				onClose={() => {
 					setSelectedRule(undefined)
@@ -424,10 +511,122 @@ export const StewardExtensionSettings: React.FC = () => {
 		</>
 	)
 
-	const disableExtension = async () => {
-		setIsDisablingExtension(true)
-		setIsDisablingExtension(false)
-	}
+	const onboardingState = (
+		<>
+			<Space h={24} />
+			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
+			<Space h={24} />
+			<Stepper active={activeStep} breakpoint="sm" orientation="vertical">
+				<Stepper.Step
+					label="Connect publishing account"
+					description={
+						<>
+							<Text
+								className={meemTheme.tExtraSmall}
+							>{`Please connect the account where your community’s posts will be published.`}</Text>
+							{activeStep === 0 && (
+								<>
+									<Space h={16} />
+									<div className={meemTheme.row}>
+										<Button
+											onClick={() => {
+												handleAuthTwitter()
+											}}
+											className={meemTheme.buttonBlack}
+											leftIcon={
+												<Image
+													width={16}
+													src={`/integration-twitter-white.png`}
+												/>
+											}
+										>
+											Connect Twitter
+										</Button>
+										<Space w={8} />
+										<Button
+											className={
+												meemTheme.buttonYellowSolidBordered
+											}
+										>
+											Add More Accounts
+										</Button>
+									</div>
+								</>
+							)}
+							{activeStep === 1 && (
+								<>
+									<Space h={16} />
+									<div className={meemTheme.row}>
+										<Button
+											className={meemTheme.buttonWhite}
+										>
+											{`Connected as ${twitterUsername}`}
+										</Button>
+									</div>
+								</>
+							)}
+							<Space h={16} />
+						</>
+					}
+				></Stepper.Step>
+				<Stepper.Step
+					label="Invite Steward bot"
+					description={
+						<>
+							<Text
+								className={meemTheme.tExtraSmall}
+							>{`Please invite the Steward bot to manage your Discord server.`}</Text>
+							{activeStep === 1 && (
+								<>
+									<Space h={16} />
+									<div className={meemTheme.row}>
+										<Button
+											leftIcon={
+												<Image
+													width={16}
+													src={`/integration-discord-white.png`}
+												/>
+											}
+											className={meemTheme.buttonBlack}
+										>
+											{`Invite Steward Bot`}
+										</Button>
+									</div>
+								</>
+							)}
+						</>
+					}
+				></Stepper.Step>
+			</Stepper>
+		</>
+	)
+
+	const mainState = (
+		<>
+			{customExtensionSettings()}
+			<Space h={40} />
+			<Text className={meemTheme.tExtraSmallLabel}>PERMISSIONS</Text>
+			<Space h={4} />
+			<Text className={meemTheme.tExtraSmall}>
+				{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process. `}
+			</Text>
+			<Space h={16} />
+
+			{customExtensionPermissions()}
+			<Space h={48} />
+
+			<Button
+				disabled={isSavingChanges}
+				loading={isSavingChanges}
+				onClick={() => {
+					saveChanges()
+				}}
+				className={meemTheme.buttonBlack}
+			>
+				Save Changes
+			</Button>
+		</>
+	)
 
 	return (
 		<div>
@@ -453,87 +652,29 @@ export const StewardExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'steward'} />
+							{!hasFetchedData && (
+								<>
+									<Space h={40} />
+									<Loader variant={'oval'} color={'blue'} />
+								</>
+							)}
+							{hasFetchedData && (
+								<>
+									<ExtensionPageHeader
+										extensionSlug={'steward'}
+									/>
 
-							<Container>
-								<div>
-									<div
-										className={meemTheme.spacedRowCentered}
-									>
-										<Switch
-											color={'green'}
-											label={'Display dashboard widget'}
-											checked={
-												shouldDisplayDashboardWidget
-											}
-											onChange={value => {
-												if (value) {
-													setShouldDisplayDashboardWidget(
-														value.currentTarget
-															.checked
-													)
-												}
-											}}
-										/>
-									</div>
-									<Space h={16} />
-									<Divider />
-								</div>
-								<div>
-									<Space h={4} />
-									<div
-										className={meemTheme.spacedRowCentered}
-									>
-										<Switch
-											color={'green'}
-											label={
-												'Hide widget if viewer is not a community member'
-											}
-											checked={isPrivateExtension}
-											onChange={value => {
-												if (value) {
-													setIsPrivateExtension(
-														value.currentTarget
-															.checked
-													)
-												}
-											}}
-										/>
-									</div>
-									<Space h={16} />
-									<Divider />
-								</div>
-								<Space h={16} />
+									<Container>
+										{twitterUsername.length > 0 &&
+											discordInfo && <>{mainState}</>}
 
-								<Button
-									disabled={isDisablingExtension}
-									loading={isDisablingExtension}
-									className={meemTheme.buttonAsh}
-									onClick={disableExtension}
-								>
-									Disable extension
-								</Button>
-
-								{customExtensionSettings()}
-								<Space h={40} />
-								<Text className={meemTheme.tExtraSmallLabel}>
-									PERMISSIONS
-								</Text>
-								<Space h={16} />
-
-								{customExtensionPermissions()}
-								<Space h={48} />
-								<Button
-									disabled={isSavingChanges}
-									loading={isSavingChanges}
-									onClick={() => {
-										saveChanges()
-									}}
-									className={meemTheme.buttonBlack}
-								>
-									Save Changes
-								</Button>
-							</Container>
+										{(twitterUsername.length === 0 ||
+											!discordInfo) && (
+											<>{onboardingState}</>
+										)}
+									</Container>
+								</>
+							)}
 						</div>
 					)}
 				</>

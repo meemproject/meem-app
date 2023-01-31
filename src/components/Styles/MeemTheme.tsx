@@ -146,6 +146,24 @@ export const useMeemTheme = createStyles(theme => ({
 		border: `2px solid ${colorYellow}`,
 		borderRadius: 24
 	},
+	buttonRedBordered: {
+		color: colorRed,
+		backgroundColor: 'transparent',
+		'&:hover': {
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+		},
+		'&:loading': {
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+		},
+		'&:disabled': {
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+		},
+		border: `2px solid ${colorRed}`,
+		borderRadius: 24
+	},
 	buttonWhite: {
 		borderRadius: 24,
 		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,

@@ -19,7 +19,7 @@ interface IProps {
 export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const [hasFetchdData, setHasFetchedData] = useState(false)
+	const [hasFetchedData, setHasFetchedData] = useState(false)
 	const [posts, setPosts] = useState<DiscussionPost[]>([])
 
 	const { sdk } = useSDK()
@@ -29,7 +29,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchdData || !sdk.id.hasInitialized || !privateKey) {
+			if (hasFetchedData || !sdk.id.hasInitialized || !privateKey) {
 				return
 			}
 
@@ -78,7 +78,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 		}
 
 		fetchData()
-	}, [hasFetchdData, agreement, sdk, privateKey])
+	}, [hasFetchedData, agreement, sdk, privateKey, agreementExtension])
 
 	return (
 		<>
@@ -89,11 +89,12 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 							Discussions
 						</Text>
 						<Space w={6} />
-						{hasFetchdData && agreementExtension?.isInitialized && (
-							<Text className={meemTheme.tMedium}>
-								{`(${posts.length})`}
-							</Text>
-						)}
+						{hasFetchedData &&
+							agreementExtension?.isInitialized && (
+								<Text className={meemTheme.tMedium}>
+									{`(${posts.length})`}
+								</Text>
+							)}
 					</div>
 					{agreementExtension?.isInitialized && (
 						<div className={meemTheme.centeredRow}>
@@ -106,7 +107,9 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 											<Button
 												className={meemTheme.buttonAsh}
 											>
-												<Plus />
+												<div>
+													<Plus />
+												</div>
 											</Button>
 										</Link>
 									</>
@@ -127,9 +130,11 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									<Link
 										href={`/${agreement.slug}/e/discussions/settings`}
 									>
-										<Settings
-											className={meemTheme.clickable}
-										/>
+										<div>
+											<Settings
+												className={meemTheme.clickable}
+											/>
+										</div>
 									</Link>
 								</div>
 							)}
@@ -137,7 +142,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					)}
 				</div>
 				<Space h={24} />
-				{!hasFetchdData && agreementExtension?.isInitialized && (
+				{!hasFetchedData && agreementExtension?.isInitialized && (
 					<>
 						<Center>
 							<Loader variant="oval" color="blue" />
@@ -145,7 +150,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 						<Space h={8} />
 					</>
 				)}
-				{hasFetchdData && agreementExtension?.isInitialized && (
+				{hasFetchedData && agreementExtension?.isInitialized && (
 					<>
 						{posts.length > 0 && (
 							<>

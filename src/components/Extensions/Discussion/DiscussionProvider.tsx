@@ -35,13 +35,7 @@ export const DiscussionsProvider: FC<IDiscussionsProviderProps> = ({
 
 	useEffect(() => {
 		const run = async () => {
-			if (
-				!sdk.id.hasInitialized ||
-				!agreement ||
-				!chainId ||
-				privateKey ||
-				hasFetchedKeys
-			) {
+			if (!agreement || !chainId || privateKey || hasFetchedKeys) {
 				return
 			}
 
@@ -105,7 +99,7 @@ export function useDiscussions() {
 
 	if (typeof context === 'undefined') {
 		throw new Error(
-			'useAgreement must be used within a DiscussionsProvider'
+			'useDiscussions must be used within a DiscussionsProvider'
 		)
 	}
 	return context
