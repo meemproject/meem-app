@@ -301,10 +301,9 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					</Text>
 					<Space h={8} />
 					<NumberInput {...form.getInputProps('proposeVotes')} />
-					<Space h="md" />
 				</>
 			)}
-			<Space h="md" />
+			<Space h="lg" />
 
 			<Text className={meemTheme.tExtraSmallLabel}>VOTES</Text>
 			<Space h={4} />
@@ -323,7 +322,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					{...form.getInputProps('approverRoles')}
 				/>
 			)}
-			<Space h="md" />
+			<Space h="lg" />
 			<Text className={meemTheme.tExtraSmall}>
 				Which emojis will count as affirmative votes?
 			</Text>
@@ -365,7 +364,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 			>
 				+ Add emoji
 			</Button>
-			<Space h="md" />
+			<Space h="lg" />
 			<Text className={meemTheme.tExtraSmall}>
 				{
 					"How many affirmative votes must a proposed post receive before it's approved?"
@@ -423,7 +422,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 							{...form.getInputProps('vetoerRoles')}
 						/>
 					)}
-					<Space h="md" />
+					<Space h="lg" />
 					<Text className={meemTheme.tExtraSmall}>
 						Which emojis will count as a veto?
 					</Text>
@@ -468,7 +467,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					>
 						+ Add emoji
 					</Button>
-					<Space h="md" />
+					<Space h="lg" />
 					<Text className={meemTheme.tExtraSmall}>
 						{'How many vetoes are required?'}
 					</Text>
