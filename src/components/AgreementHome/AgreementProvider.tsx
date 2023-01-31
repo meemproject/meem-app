@@ -144,7 +144,11 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				return
 			}
 
-			if (agreementData.Agreements.length === 0) {
+			if (
+				anonAgreementData &&
+				!memberAgreementData &&
+				agreementData.Agreements.length === 0
+			) {
 				setIsLoadingAgreement(false)
 				return
 			}
