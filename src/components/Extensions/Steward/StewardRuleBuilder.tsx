@@ -91,7 +91,8 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					: null,
 			approverRoles: val =>
 				val.length === 0 ? 'Approver is required' : null,
-			proposalChannels: val =>
+			proposalChannels: (val, current) =>
+				current.publishType === API.PublishType.Proposal &&
 				val.length === 0
 					? 'Proposal Channels must be selected required'
 					: null,
@@ -300,26 +301,29 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					</Text>
 					<Space h={8} />
 					<NumberInput {...form.getInputProps('proposeVotes')} />
-					<Space h={'lg'} />
-					<Text className={meemTheme.tExtraSmall}>
-						Who can vote to approve new posts for publication?
-					</Text>
-					<Space h={8} />
-					{roles && (
-						<MultiSelect
-							multiple
-							data={roles.map(c => ({
-								value: c.id,
-								label: c.name
-							}))}
-							{...form.getInputProps('approverRoles')}
-						/>
-					)}
+					<Space h="md" />
 				</>
 			)}
 			<Space h="md" />
+
 			<Text className={meemTheme.tExtraSmallLabel}>VOTES</Text>
 			<Space h={4} />
+
+			<Text className={meemTheme.tExtraSmall}>
+				Who can vote to approve new posts for publication?
+			</Text>
+			<Space h={8} />
+			{roles && (
+				<MultiSelect
+					multiple
+					data={roles.map(c => ({
+						value: c.id,
+						label: c.name
+					}))}
+					{...form.getInputProps('approverRoles')}
+				/>
+			)}
+			<Space h="md" />
 			<Text className={meemTheme.tExtraSmall}>
 				Which emojis will count as affirmative votes?
 			</Text>
