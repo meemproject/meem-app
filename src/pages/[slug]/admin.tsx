@@ -2,10 +2,8 @@
 import log from '@kengoldfarb/log'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { AgreementAdminComponent } from '../../components/Admin/AgreementAdmin'
-import { AgreementProvider } from '../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../components/App'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
@@ -18,10 +16,6 @@ interface IProps {
 }
 
 const AgreementAdminPage: NextPage<IProps> = ({ agreement }) => {
-	const router = useRouter()
-
-	const agreementSlug =
-		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
@@ -99,9 +93,8 @@ const AgreementAdminPage: NextPage<IProps> = ({ agreement }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<AgreementProvider slug={agreementSlug}>
-				<AgreementAdminComponent />
-			</AgreementProvider>
+
+			<AgreementAdminComponent />
 
 			<MeemFooter />
 		</>

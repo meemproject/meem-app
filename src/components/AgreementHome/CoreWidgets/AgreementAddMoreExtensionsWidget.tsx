@@ -194,8 +194,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 
 					{!agreement.isCurrentUserAgreementAdmin && (
 						<>
-							{(extensionsSetupWithWidgets === 0 ||
-								extensionsNotSetupWithWidgets === 0) && (
+							{totalExtensions === 0 && (
 								<div
 									className={meemTheme.widgetLight}
 									style={{ marginTop: 26 }}

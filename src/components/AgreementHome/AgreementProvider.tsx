@@ -39,11 +39,13 @@ export default AgreementContext
 
 export interface IAgreementProviderProps {
 	children?: ReactNode
-	slug: string
+	slug?: string
+	isMembersOnly?: boolean
 }
 
 export const AgreementProvider: FC<IAgreementProviderProps> = ({
 	slug,
+	isMembersOnly,
 	...props
 }) => {
 	// General imports
@@ -56,6 +58,9 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		useState('')
 	const router = useRouter()
 	const [isLoadingAgreement, setIsLoadingAgreement] = useState(true)
+
+	// Has the agreement slug changed? (i.e. from page navigation)
+	const [originalSlug, setOriginalSlug] = useState('')
 
 	// Subscriptions
 	const {
@@ -73,6 +78,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 						global.window ? global.window.location.host : ''
 					)
 			},
+			skip: isMembersOnly,
 			client: anonClient
 		}
 	)
@@ -94,8 +100,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			},
 			client: mutualMembersClient,
 			skip:
-				!isCurrentUserAgreementMemberData ||
-				isCurrentUserAgreementMemberData.AgreementTokens.length === 0
+				!isMembersOnly &&
+				(!isCurrentUserAgreementMemberData ||
+					isCurrentUserAgreementMemberData.AgreementTokens.length ===
+						0)
 		}
 	)
 
@@ -112,10 +120,8 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 					global.window ? global.window.location.host : ''
 				)
 		},
-		skip:
-			(isCurrentUserAgreementMemberData?.AgreementTokens ?? []).length >
-			0,
-		client: anonClient
+		client: anonClient,
+		skip: agreement !== undefined || isMembersOnly
 	})
 
 	useEffect(() => {
@@ -159,6 +165,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			if (possibleAgreement && possibleAgreement.name) {
 				setAgreement(possibleAgreement)
 				setIsLoadingAgreement(false)
+				setOriginalSlug(slug ?? '')
 				log.debug('got agreement')
 			}
 
@@ -182,6 +189,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		if (
 			errorMemberAgreement &&
 			errorMemberAgreement.graphQLErrors.length > 0 &&
+			errorMemberAgreement.graphQLErrors[0].extensions &&
 			errorMemberAgreement.graphQLErrors[0].extensions.code ===
 				'invalid-jwt'
 		) {
@@ -191,6 +199,11 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 					return: window.location.pathname
 				}
 			})
+		}
+
+		if (slug !== originalSlug) {
+			setAgreement(undefined)
+			setIsLoadingAgreement(true)
 		}
 	}, [
 		agreement,
@@ -204,7 +217,9 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		memberAgreementData,
 		userAgreementMemberError,
 		router,
-		isCurrentUserAgreementMemberData
+		isCurrentUserAgreementMemberData,
+		slug,
+		originalSlug
 	])
 	const value = useMemo(
 		() => ({

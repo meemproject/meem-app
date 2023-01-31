@@ -183,24 +183,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 															meemTheme.tSmallBold
 														}
 													>
-														{member.displayName
-															? member.displayName
-															: member.isMeemApi
-															? 'Meem API'
-															: member.isAgreementOwner
-															? 'Community Owner'
-															: member.isAgreementAdmin
-															? 'Community Administrator'
-															: 'Community Member'}
-													</Text>
-													<Text
-														className={
-															meemTheme.tExtraSmallFaded
-														}
-													>
-														{member.ens
-															? member.ens
-															: member.wallet}
+														{member.identity}
 													</Text>
 												</div>
 											</div>

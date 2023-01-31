@@ -15,16 +15,11 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { Search, Star } from 'tabler-icons-react'
 import { AgreementMember } from '../../../model/agreement/agreements'
-import { quickTruncate } from '../../../utils/truncated_wallet'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { useAgreement } from '../AgreementProvider'
 
-interface IProps {
-	slug: string
-}
-
-export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
+export const AgreementMembersComponent: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
@@ -91,7 +86,7 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 										? member.profilePicture
 										: '/member-placeholder.png'
 								}
-								radius={4}
+								radius={16}
 								height={32}
 								width={32}
 							/>
@@ -101,17 +96,10 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 									marginLeft: 6
 								}}
 							>
-								{member.displayName
-									? member.displayName
-									: member.ens
-									? member.ens
-									: member.wallet.toLowerCase() ===
-									  process.env
-											.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
-									? 'meem.eth'
-									: quickTruncate(member.wallet)}
+								{member.identity}
 							</Text>
-							{member.isAgreementAdmin && (
+							{(member.isAgreementAdmin ||
+								member.isAgreementOwner) && (
 								<Star
 									style={{
 										marginLeft: 6,
@@ -206,7 +194,7 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 							</div>
 						</div>
 						<div className={meemTheme.pageHeaderExitButton}>
-							<Link href={`/${slug}`}>
+							<Link href={`/${agreement.slug}`}>
 								<Image
 									src="/delete.png"
 									width={24}

@@ -13,9 +13,13 @@ import {
 	AgreementMember
 } from '../../../../model/agreement/agreements'
 import { showSuccessNotification } from '../../../../utils/notifications'
-import { quickTruncate } from '../../../../utils/truncated_wallet'
 import { RemoveMemberConfirmationModal } from '../../../Admin/Modals/RemoveMemberConfirmationModal'
-import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import {
+	colorBlack,
+	colorDarkBlue,
+	colorWhite,
+	useMeemTheme
+} from '../../../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement
@@ -36,7 +40,11 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 
 	return (
 		<>
-			<HoverCard.Dropdown>
+			<HoverCard.Dropdown
+				style={{
+					backgroundColor: isDarkTheme ? colorBlack : colorWhite
+				}}
+			>
 				<div className={meemTheme.centeredRow}>
 					<Image
 						height={36}
@@ -52,27 +60,13 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 								: '/member-placeholder.png'
 						}
 					/>
-					<Space w={16} />
+					<Space w={12} />
 					<div>
-						<Text className={meemTheme.tSmallBold}>
-							{member.displayName
-								? member.displayName
-								: member.isMeemApi
-								? 'Meem API'
-								: member.isAgreementOwner
-								? 'Community Owner'
-								: member.isAgreementAdmin
-								? 'Community Administrator'
-								: 'Community Member'}
-						</Text>
-						<Space h={4} />
-
 						<div className={meemTheme.centeredRow}>
-							<Text className={meemTheme.tSmallFaded}>
-								{member.ens
-									? member.ens
-									: quickTruncate(member.wallet)}
+							<Text className={meemTheme.tSmallBold}>
+								{member.identity}
 							</Text>
+							<Space w={2} />
 							<Image
 								className={meemTheme.copyIcon}
 								src="/copy.png"
@@ -89,6 +83,11 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 								}}
 							/>
 						</div>
+						{member.isAgreementOwner && (
+							<Text className={meemTheme.tExtraSmallFaded}>
+								Owner
+							</Text>
+						)}
 					</div>
 				</div>
 				{(member.emailAddress ||
@@ -208,19 +207,20 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 						))}
 					</>
 				)}
-				{agreement?.isCurrentUserAgreementAdmin && (
-					<>
-						<Space h={16} />
-						<Button
-							onClick={() => {
-								setIsConfirmModalOpen(true)
-							}}
-							className={meemTheme.buttonRedBordered}
-						>
-							Remove
-						</Button>
-					</>
-				)}
+				{agreement?.isCurrentUserAgreementAdmin &&
+					!member.isAgreementOwner && (
+						<>
+							<Space h={16} />
+							<Button
+								onClick={() => {
+									setIsConfirmModalOpen(true)
+								}}
+								className={meemTheme.buttonRedBordered}
+							>
+								Remove
+							</Button>
+						</>
+					)}
 			</HoverCard.Dropdown>
 			<RemoveMemberConfirmationModal
 				isOpened={isConfirmModalOpen}

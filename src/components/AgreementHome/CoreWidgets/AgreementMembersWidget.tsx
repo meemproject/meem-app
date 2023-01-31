@@ -6,17 +6,15 @@ import {
 	Image,
 	TextInput,
 	HoverCard,
-	Divider,
 	Center,
 	useMantineColorScheme
 } from '@mantine/core'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { Search } from 'tabler-icons-react'
+import { Search, Star } from 'tabler-icons-react'
 import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
-import { quickTruncate } from '../../../utils/truncated_wallet'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { colorRed, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }
@@ -68,61 +66,56 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 	}
 
 	const memberItem = (member: AgreementMember) => (
-		<>
-			<div key={member.wallet}>
-				<Space h={16} />
-				<div className={meemTheme.spacedRowCentered}>
-					<HoverCard width={280} shadow="md" radius={16}>
-						<HoverCard.Target>
-							<div className={meemTheme.centeredRow}>
-								<Image
-									height={36}
-									width={36}
-									radius={18}
-									fit={'cover'}
-									src={
-										member.profilePicture &&
-										member.profilePicture.length > 0
-											? member.profilePicture
-											: isDarkTheme
-											? '/member-placeholder-white.png'
-											: '/member-placeholder.png'
-									}
-								/>
-								<Space w={16} />
+		<div>
+			<Space h={16} />
+			<div className={meemTheme.spacedRowCentered}>
+				<HoverCard width={280} shadow="md" radius={16}>
+					<HoverCard.Target>
+						<div className={meemTheme.centeredRow}>
+							<Image
+								height={36}
+								width={36}
+								radius={18}
+								fit={'cover'}
+								src={
+									member.profilePicture &&
+									member.profilePicture.length > 0
+										? member.profilePicture
+										: isDarkTheme
+										? '/member-placeholder-white.png'
+										: '/member-placeholder.png'
+								}
+							/>
+							<Space w={12} />
 
-								<div>
-									<Text className={meemTheme.tSmallBold}>
-										{member.displayName
-											? member.displayName
-											: member.isMeemApi
-											? 'Meem API'
-											: member.isAgreementOwner
-											? 'Owner'
-											: member.isAgreementAdmin
-											? 'Admin'
-											: 'Member'}
-									</Text>
-									<Text
-										className={meemTheme.tExtraSmallFaded}
-									>
-										{member.ens
-											? member.ens
-											: quickTruncate(member.wallet)}
-									</Text>
-								</div>
-							</div>
-						</HoverCard.Target>
-						<AgreementMemberCard
-							agreement={agreement}
-							member={member}
-						/>
-					</HoverCard>
-				</div>
-				<Space h={16} />
-				<Divider />
+							<Text className={meemTheme.tSmallBold}>
+								{member.identity}
+							</Text>
+							{(member.isAgreementAdmin ||
+								member.isAgreementOwner) && (
+								<Star
+									color={
+										member.isAgreementOwner
+											? colorRed
+											: undefined
+									}
+									style={{
+										marginLeft: 6,
+										height: 16,
+										width: 16
+									}}
+								/>
+							)}
+						</div>
+					</HoverCard.Target>
+					<AgreementMemberCard
+						agreement={agreement}
+						member={member}
+					/>
+				</HoverCard>
 			</div>
-		</>
+			<Space h={8} />
+		</div>
 	)
 
 	return (
@@ -173,14 +166,14 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 				{members && !hasSearched && (
 					<>
 						{members.map(member => (
-							<> {memberItem(member)} </>
+							<div key={member.wallet}>{memberItem(member)} </div>
 						))}
 					</>
 				)}
 				{members && hasSearched && (
 					<>
 						{searchedMembers.map(member => (
-							<> {memberItem(member)} </>
+							<div key={member.wallet}>{memberItem(member)} </div>
 						))}
 					</>
 				)}
