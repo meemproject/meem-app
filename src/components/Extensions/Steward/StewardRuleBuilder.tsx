@@ -210,7 +210,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 
 			{channels && (
 				<>
-					<Space h="xs" />
+					<Space h={8} />
 					<MultiSelect
 						data={[
 							{ value: 'all', label: 'All Channels' },
@@ -236,7 +236,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					</Text>
 					{roles && (
 						<>
-							<Space h={4} />
+							<Space h={8} />
 
 							<MultiSelect
 								multiple
@@ -252,32 +252,38 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					<Text className={meemTheme.tExtraSmall}>
 						Which emojis will create a proposal?
 					</Text>
-					<Space h="xs" />
-					<div
-						style={{
-							display: 'flex',
-							flexDirection: 'row'
-						}}
-					>
-						{proposerEmojis.map(e => (
+					{proposerEmojis.length > 0 && (
+						<>
 							<div
 								style={{
 									display: 'flex',
-									flexDirection: 'row'
-								}}
-								key={`proposerEmoji-${e}`}
-								onClick={() => {
-									setProposerEmojis(
-										proposerEmojis.filter(pe => pe !== e)
-									)
+									flexDirection: 'row',
+									marginTop: 4
 								}}
 							>
-								<Emoji unified={e} size={25} />
-								<Space w="xs" />
+								{proposerEmojis.map(e => (
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'row'
+										}}
+										key={`proposerEmoji-${e}`}
+										onClick={() => {
+											setProposerEmojis(
+												proposerEmojis.filter(
+													pe => pe !== e
+												)
+											)
+										}}
+									>
+										<Emoji unified={e} size={25} />
+										<Space w="xs" />
+									</div>
+								))}
 							</div>
-						))}
-					</div>
-					<Space h="xs" />
+						</>
+					)}
+					<Space h={8} />
 					<Button
 						className={meemTheme.buttonWhite}
 						onClick={() => {
@@ -292,13 +298,13 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					<Text className={meemTheme.tExtraSmall}>
 						{'How many proposal reactions?'}
 					</Text>
-					<Space h="xs" />
+					<Space h={8} />
 					<NumberInput {...form.getInputProps('proposeVotes')} />
 					<Space h={'lg'} />
 					<Text className={meemTheme.tExtraSmall}>
 						Who can vote to approve new posts for publication?
 					</Text>
-					<Space h="xs" />
+					<Space h={8} />
 					{roles && (
 						<MultiSelect
 							multiple
@@ -345,7 +351,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					))}
 				</div>
 			)}
-			<Space h="xs" />
+			<Space h={8} />
 			<Button
 				className={meemTheme.buttonWhite}
 				onClick={() => {
@@ -375,7 +381,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					</Text>
 					{channels && (
 						<>
-							<Space h="xs" />
+							<Space h={8} />
 
 							<Select
 								data={channels.map(c => ({
@@ -401,8 +407,8 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 				<>
 					<Space h={'lg'} />
 
-					<Text>Who can veto?</Text>
-					<Space h="xs" />
+					<Text className={meemTheme.tExtraSmall}>Who can veto?</Text>
+					<Space h={8} />
 					{roles && (
 						<MultiSelect
 							multiple
@@ -414,44 +420,55 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 						/>
 					)}
 					<Space h="md" />
-					<Text>Which emojis will count as a veto?</Text>
-					<Space h="xs" />
-					<div
-						style={{
-							display: 'flex',
-							flexDirection: 'row'
-						}}
-					>
-						{vetoerEmojis.map(e => (
+					<Text className={meemTheme.tExtraSmall}>
+						Which emojis will count as a veto?
+					</Text>
+					{vetoerEmojis.length > 0 && (
+						<>
+							<Space h="xs" />
 							<div
 								style={{
 									display: 'flex',
 									flexDirection: 'row'
 								}}
-								key={`approvalEmoji-${e}`}
-								onClick={() => {
-									setVetoerEmojis(
-										vetoerEmojis.filter(ve => ve !== e)
-									)
-								}}
 							>
-								<Emoji unified={e} size={25} />
-								<Space w="xs" />
+								{vetoerEmojis.map(e => (
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'row'
+										}}
+										key={`approvalEmoji-${e}`}
+										onClick={() => {
+											setVetoerEmojis(
+												vetoerEmojis.filter(
+													ve => ve !== e
+												)
+											)
+										}}
+									>
+										<Emoji unified={e} size={25} />
+										<Space w="xs" />
+									</div>
+								))}
 							</div>
-						))}
-					</div>
-					<Space h="xs" />
+						</>
+					)}
+					<Space h={8} />
 					<Button
+						className={meemTheme.buttonWhite}
 						onClick={() => {
 							setEmojiSelectType(EmojiSelectType.Vetoer)
 							setIsEmojiPickerOpen(true)
 						}}
 					>
-						Add emoji
+						+ Add emoji
 					</Button>
 					<Space h="md" />
-					<Text>{'How many vetoes are required?'}</Text>
-					<Space h="xs" />
+					<Text className={meemTheme.tExtraSmall}>
+						{'How many vetoes are required?'}
+					</Text>
+					<Space h={8} />
 					<NumberInput {...form.getInputProps('vetoVotes')} />
 				</>
 			)}

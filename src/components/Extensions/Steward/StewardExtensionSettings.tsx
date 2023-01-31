@@ -5,7 +5,6 @@ import {
 	Space,
 	Center,
 	Button,
-	Divider,
 	Image,
 	Modal,
 	Loader,
@@ -36,8 +35,8 @@ export const StewardExtensionSettings: React.FC = () => {
 	const router = useRouter()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [activeStep, setActiveStep] = useState(1)
-	const [twitterUsername, setTwitterUsername] = useState()
+	const [activeStep, setActiveStep] = useState(0)
+	const [twitterUsername, setTwitterUsername] = useState('')
 	const [rules, setRules] = useState<API.IRule[]>([])
 	const [selectedRule, setSelectedRule] = useState<API.IRule>()
 	const [discordInfo, setDiscordInfo] = useState<
@@ -242,11 +241,13 @@ export const StewardExtensionSettings: React.FC = () => {
 		if (!agreement?.id || hasFetchedData || !gun) {
 			return
 		}
+		log.debug(`getting gun data...`)
 		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/twitter`)
 			.once(data => {
 				if (data) {
 					setTwitterUsername(data.username)
+					log.debug(`twitter username = ${data.username}`)
 				}
 			})
 		gun.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
@@ -254,11 +255,13 @@ export const StewardExtensionSettings: React.FC = () => {
 			.once(data => {
 				if (data) {
 					setDiscordInfo(data)
+					log.debug(`discord data found`)
 				}
 			})
 
 		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
 			.get(`${agreement.id}/rules`)
+
 			// @ts-ignore
 			.open(data => {
 				if (data) {
@@ -312,7 +315,7 @@ export const StewardExtensionSettings: React.FC = () => {
 
 		setHasFetchedData(true)
 
-		if (twitterUsername && activeStep === 0) {
+		if (twitterUsername.length > 0 && activeStep === 0) {
 			setActiveStep(1)
 		}
 	}, [
@@ -374,7 +377,7 @@ export const StewardExtensionSettings: React.FC = () => {
 					<Space h={16} />
 					<div className={meemTheme.centeredRow}>
 						<Image width={24} src={discordInfo?.icon} />
-						<Space w={4} />
+						<Space w={16} />
 						<div>
 							<Text
 								className={meemTheme.tSmall}
@@ -419,58 +422,65 @@ export const StewardExtensionSettings: React.FC = () => {
 						return role?.name ?? ''
 					})
 					return (
-						<div key={`rule-${rule.ruleId}`}>
-							<Text>{`Publish to Twitter when users with any of these roles: ${roleNames.join(
-								', '
-							)} react with ${rule.votes} of these emoji:`}</Text>
-							<Space h="xs" />
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'row'
-								}}
-							>
-								{rule.approverEmojis.map(emojiCode => (
+						<div
+							key={`rule-${rule.ruleId}`}
+							className={meemTheme.gridItem}
+						>
+							<div className={meemTheme.row}>
+								<div>
+									<Text
+										className={meemTheme.tSmallBold}
+									>{`Publish to Twitter when users with any of these roles: ${roleNames.join(
+										', '
+									)} react with ${
+										rule.votes
+									} of these emoji:`}</Text>
+									<Space h="xs" />
 									<div
-										key={`emoji-${rule.ruleId}-${emojiCode}`}
 										style={{
-											marginRight: '8px'
+											display: 'flex',
+											flexDirection: 'row'
 										}}
 									>
-										<Emoji unified={emojiCode} />
+										{rule.approverEmojis.map(emojiCode => (
+											<div
+												key={`emoji-${rule.ruleId}-${emojiCode}`}
+												style={{
+													marginRight: '8px'
+												}}
+											>
+												<Emoji unified={emojiCode} />
+											</div>
+										))}
 									</div>
-								))}
+									<Space h="xs" />
+								</div>
+								<Space w={24} />
+								<div>
+									<Button
+										className={meemTheme.buttonWhite}
+										onClick={() => {
+											setSelectedRule(rule)
+											setIsRuleBuilderOpen(true)
+										}}
+									>
+										Edit
+									</Button>
+									<Space h={8} />
+									<Button
+										className={meemTheme.buttonRedBordered}
+										onClick={() => {
+											removeRule(rule.ruleId)
+										}}
+									>
+										Remove
+									</Button>
+								</div>
 							</div>
-							<Space h="xs" />
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'row'
-								}}
-							>
-								<Button
-									onClick={() => {
-										setSelectedRule(rule)
-										setIsRuleBuilderOpen(true)
-									}}
-								>
-									Edit
-								</Button>
-								<Space w="xs" />
-								<Button
-									onClick={() => {
-										removeRule(rule.ruleId)
-									}}
-								>
-									Remove
-								</Button>
-							</div>
-							<Space h="md" />
-							<Divider size="sm" />
-							<Space h="md" />
 						</div>
 					)
 				})}
+			{rolesData && <Space h={16} />}
 			<Button
 				className={meemTheme.buttonWhite}
 				onClick={() => setIsRuleBuilderOpen(true)}
@@ -655,11 +665,11 @@ export const StewardExtensionSettings: React.FC = () => {
 									/>
 
 									<Container>
-										{twitterUsername && discordInfo && (
-											<>{mainState}</>
-										)}
+										{twitterUsername.length > 0 &&
+											discordInfo && <>{mainState}</>}
 
-										{(!twitterUsername || !discordInfo) && (
+										{(twitterUsername.length === 0 ||
+											!discordInfo) && (
 											<>{onboardingState}</>
 										)}
 									</Container>
