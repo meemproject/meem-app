@@ -90,7 +90,8 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					: null,
 			approverRoles: val =>
 				val.length === 0 ? 'Approver is required' : null,
-			proposalChannels: val =>
+			proposalChannels: (val, current) =>
+				current.publishType === API.PublishType.Proposal &&
 				val.length === 0
 					? 'Proposal Channels must be selected required'
 					: null,
@@ -270,21 +271,19 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					<Space h="xs" />
 					<NumberInput {...form.getInputProps('proposeVotes')} />
 					<Space h="md" />
-					<Text>
-						Who can vote to approve new posts for publication?
-					</Text>
-					<Space h="xs" />
-					{roles && (
-						<MultiSelect
-							multiple
-							data={roles.map(c => ({
-								value: c.id,
-								label: c.name
-							}))}
-							{...form.getInputProps('approverRoles')}
-						/>
-					)}
 				</>
+			)}
+			<Text>Who can vote to approve new posts for publication?</Text>
+			<Space h="xs" />
+			{roles && (
+				<MultiSelect
+					multiple
+					data={roles.map(c => ({
+						value: c.id,
+						label: c.name
+					}))}
+					{...form.getInputProps('approverRoles')}
+				/>
 			)}
 			<Space h="md" />
 			<Text>Which emojis will count as affirmative votes?</Text>
