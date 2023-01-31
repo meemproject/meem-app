@@ -14,6 +14,7 @@ import {
 } from '../../../../model/agreement/agreements'
 import { showSuccessNotification } from '../../../../utils/notifications'
 import { RemoveMemberConfirmationModal } from '../../../Admin/Modals/RemoveMemberConfirmationModal'
+import { RemoveMemberModal } from '../../../Admin/Modals/RemoveMemberModal'
 import {
 	colorBlack,
 	colorDarkBlue,
@@ -36,6 +37,7 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 	const isDarkTheme = colorScheme === 'dark'
 
 	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+
 	const [isDeletionModalOpen, setIsDeletionModalOpen] = useState(false)
 
 	return (
@@ -231,6 +233,14 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 				}}
 				onModalClosed={function (): void {
 					setIsConfirmModalOpen(false)
+				}}
+			/>
+			<RemoveMemberModal
+				agreement={agreement}
+				member={member}
+				isOpened={isDeletionModalOpen}
+				onModalClosed={function (): void {
+					setIsDeletionModalOpen(false)
 				}}
 			/>
 		</>

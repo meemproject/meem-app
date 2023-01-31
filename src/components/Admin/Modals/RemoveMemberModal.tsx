@@ -1,9 +1,7 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Space, Modal, Loader, Stepper } from '@mantine/core'
+import { Text, Space, Modal, Loader } from '@mantine/core'
 import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
-import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetTransactionsSubscription } from '../../../../generated/graphql'
 import { SUB_TRANSACTIONS } from '../../../graphql/transactions'
@@ -12,23 +10,20 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
-import { hostnameToChainId } from '../../App'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
-	agreement: Agreement
+	agreement?: Agreement
 	member: AgreementMember
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
-export const CreationProgressModal: React.FC<IProps> = ({
+export const RemoveMemberModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
 	agreement,
 	member
 }) => {
-	const router = useRouter()
-
 	const { sdk } = useSDK()
 
 	const wallet = useWallet()
@@ -67,12 +62,12 @@ export const CreationProgressModal: React.FC<IProps> = ({
 	}, [onModalClosed])
 
 	const removeMember = useCallback(async () => {
-		log.debug('creating agreement...')
+		log.debug('removing member...')
 
 		if (!wallet.web3Provider || !wallet.chainId) {
 			log.debug('no web3 provider, returning.')
 			showErrorNotification(
-				'Error creating community',
+				'Error removing member',
 				'Please connect your wallet first.'
 			)
 			closeModal()
@@ -81,6 +76,19 @@ export const CreationProgressModal: React.FC<IProps> = ({
 		}
 
 		try {
+			let tokenId = ''
+
+			agreement?.rawAgreement?.AgreementTokens.forEach(token => {
+				if (token.OwnerId === member.ownerId) {
+					tokenId = token.tokenId
+				}
+			})
+			const result = await sdk.agreement.bulkBurn({
+				agreementId: agreement?.id ?? '',
+				tokenIds: [tokenId]
+			})
+
+			setTransactionIds([result.txId])
 		} catch (e) {
 			log.crit(e)
 			showErrorNotification(
@@ -91,15 +99,70 @@ export const CreationProgressModal: React.FC<IProps> = ({
 			closeModal()
 			setIsBurningToken(false)
 		}
-	}, [wallet, closeModal])
+	}, [
+		wallet.web3Provider,
+		wallet.chainId,
+		closeModal,
+		agreement?.rawAgreement?.AgreementTokens,
+		agreement?.id,
+		sdk.agreement,
+		member.ownerId
+	])
 
 	useEffect(() => {
-		// Create the agreement
-		if (isOpened && !isBurningToken) {
+		function checkTransactionCompletion() {
+			if (transactions && transactions.Transactions.length > 0) {
+				const currentTx = transactions.Transactions[0]
+
+				log.debug(
+					`watching tx ${currentTx.id}, current status = ${currentTx.status}`
+				)
+
+				if (currentTx.status === 'success') {
+					closeModal()
+					setTransactionIds([])
+
+					showSuccessNotification(
+						'Success!',
+						`This member has been removed from your community.`
+					)
+				} else if (currentTx.status === 'failure') {
+					closeModal()
+					setTransactionIds([])
+					showErrorNotification(
+						'Error removing member',
+						`An error occurred while removing this member from the community. Please let us know!`
+					)
+				}
+			} else if (error) {
+				log.debug(JSON.stringify(error))
+				closeModal()
+				setTransactionIds([])
+				showErrorNotification(
+					'Error removing member',
+					`An error occurred while removing this member from the community. Please let us know!`
+				)
+			} else {
+				log.debug(`no tx to monitor right now`)
+			}
+		}
+		// Burn the member token
+		if (isOpened && !isBurningToken && agreement) {
 			setIsBurningToken(true)
 			removeMember()
 		}
-	}, [isBurningToken, isOpened, removeMember])
+
+		// Check tx status
+		checkTransactionCompletion()
+	}, [
+		agreement,
+		closeModal,
+		error,
+		isBurningToken,
+		isOpened,
+		removeMember,
+		transactions
+	])
 
 	return (
 		<>
@@ -120,13 +183,9 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				<div className={meemTheme.modalHeader}>
 					<Loader color="blue" variant="oval" />
 					<Space h={16} />
-					<Text className={meemTheme.tMediumBold}>{`Removing ${
-						(member.displayName ?? '').length > 0
-							? member.displayName
-							: (member.ens ?? '').length > 0
-							? member.ens
-							: member.wallet
-					}...`}</Text>
+					<Text
+						className={meemTheme.tMediumBold}
+					>{`Removing ${member.identity}...`}</Text>
 					<Space h={24} />
 
 					<Text
