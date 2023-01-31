@@ -15,6 +15,7 @@ import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
 // import { useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { API } from './stewardTypes.generated'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -58,7 +59,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 	onSave
 }) => {
 	// Default extension settings / properties - leave these alone if possible!
-	// const { classes: meemTheme } = useMeemTheme()
+	const { classes: meemTheme } = useMeemTheme()
 
 	const form = useForm({
 		initialValues: {
@@ -178,8 +179,12 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 
 	return (
 		<form onSubmit={form.onSubmit(values => handleFormSubmit(values))}>
-			<Text>What rule type should we follow?</Text>
-			<Space h="xs" />
+			<Text className={meemTheme.tExtraSmallLabel}>RULE TYPE</Text>
+			<Space h={4} />
+			<Text className={meemTheme.tExtraSmall}>
+				What rule type should we follow?
+			</Text>
+			<Space h={8} />
 			<Select
 				data={[
 					{
@@ -193,43 +198,60 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 				]}
 				{...form.getInputProps('publishType')}
 			/>
-			<Space h="md" />
-			<Text>
+			<Space h={'lg'} />
+			<Text className={meemTheme.tExtraSmallLabel}>CHANNELS</Text>
+			<Space h={4} />
+
+			<Text className={meemTheme.tExtraSmall}>
 				{form.values.publishType === API.PublishType.PublishImmediately
 					? 'From what channels should we publish?'
 					: 'In what channels can a proposal be submitted?'}
 			</Text>
-			<Space h="xs" />
+
 			{channels && (
-				<MultiSelect
-					data={[
-						{ value: 'all', label: 'All Channels' },
-						...channels.map(c => ({
-							value: c.id,
-							label: c.name
-						}))
-					]}
-					{...form.getInputProps('proposalChannels')}
-				/>
+				<>
+					<Space h="xs" />
+					<MultiSelect
+						data={[
+							{ value: 'all', label: 'All Channels' },
+							...channels.map(c => ({
+								value: c.id,
+								label: c.name
+							}))
+						]}
+						{...form.getInputProps('proposalChannels')}
+					/>
+				</>
 			)}
 
 			{form.values.publishType === API.PublishType.Proposal && (
 				<>
-					<Space h="md" />
-					<Text>Who can propose a new post?</Text>
-					<Space h="xs" />
+					<Space h={'lg'} />
+					<Text className={meemTheme.tExtraSmallLabel}>
+						PROPOSALS
+					</Text>
+					<Space h={4} />
+					<Text className={meemTheme.tExtraSmall}>
+						Who can propose a post?
+					</Text>
 					{roles && (
-						<MultiSelect
-							multiple
-							data={roles.map(c => ({
-								value: c.id,
-								label: c.name
-							}))}
-							{...form.getInputProps('proposerRoles')}
-						/>
+						<>
+							<Space h={4} />
+
+							<MultiSelect
+								multiple
+								data={roles.map(c => ({
+									value: c.id,
+									label: c.name
+								}))}
+								{...form.getInputProps('proposerRoles')}
+							/>
+						</>
 					)}
-					<Space h="md" />
-					<Text>Which emojis will create a proposal?</Text>
+					<Space h={'lg'} />
+					<Text className={meemTheme.tExtraSmall}>
+						Which emojis will create a proposal?
+					</Text>
 					<Space h="xs" />
 					<div
 						style={{
@@ -257,20 +279,23 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					</div>
 					<Space h="xs" />
 					<Button
+						className={meemTheme.buttonWhite}
 						onClick={() => {
 							setEmojiSelectType(EmojiSelectType.Proposer)
 							setIsEmojiPickerOpen(true)
 						}}
 					>
-						Add emoji
+						+ Add emoji
 					</Button>
 
-					<Space h="md" />
-					<Text>{'How many proposal reactions?'}</Text>
+					<Space h={'lg'} />
+					<Text className={meemTheme.tExtraSmall}>
+						{'How many proposal reactions?'}
+					</Text>
 					<Space h="xs" />
 					<NumberInput {...form.getInputProps('proposeVotes')} />
-					<Space h="md" />
-					<Text>
+					<Space h={'lg'} />
+					<Text className={meemTheme.tExtraSmall}>
 						Who can vote to approve new posts for publication?
 					</Text>
 					<Space h="xs" />
@@ -287,77 +312,95 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 				</>
 			)}
 			<Space h="md" />
-			<Text>Which emojis will count as affirmative votes?</Text>
-			<Space h="xs" />
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'row'
-				}}
-			>
-				{approverEmojis.map(e => (
-					<div
-						key={`approvalEmoji-${e}`}
-						style={{
-							display: 'flex',
-							flexDirection: 'row'
-						}}
-						onClick={() => {
-							setApproverEmojis(
-								approverEmojis.filter(ae => ae !== e)
-							)
-						}}
-					>
-						<Emoji unified={e} size={25} />
-						<Space w="xs" />
-					</div>
-				))}
-			</div>
+			<Text className={meemTheme.tExtraSmallLabel}>VOTES</Text>
+			<Space h={4} />
+			<Text className={meemTheme.tExtraSmall}>
+				Which emojis will count as affirmative votes?
+			</Text>
+			{approverEmojis.length > 0 && (
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'row',
+						marginTop: 4
+					}}
+				>
+					{approverEmojis.map(e => (
+						<div
+							key={`approvalEmoji-${e}`}
+							style={{
+								display: 'flex',
+								flexDirection: 'row',
+								cursor: 'pointer'
+							}}
+							onClick={() => {
+								setApproverEmojis(
+									approverEmojis.filter(ae => ae !== e)
+								)
+							}}
+						>
+							<Emoji unified={e} size={25} />
+							<Space w="xs" />
+						</div>
+					))}
+				</div>
+			)}
 			<Space h="xs" />
 			<Button
+				className={meemTheme.buttonWhite}
 				onClick={() => {
 					setEmojiSelectType(EmojiSelectType.Approver)
 					setIsEmojiPickerOpen(true)
 				}}
 			>
-				Add emoji
+				+ Add emoji
 			</Button>
 			<Space h="md" />
-			<Text>
+			<Text className={meemTheme.tExtraSmall}>
 				{
 					"How many affirmative votes must a proposed post receive before it's approved?"
 				}
 			</Text>
-			<Space h="xs" />
+			<Space h={8} />
 			<NumberInput {...form.getInputProps('votes')} />
-			<Space h="md" />
 			{form.values.publishType === API.PublishType.Proposal && (
 				<>
-					<Text>
+					<Space h={'lg'} />
+					<Text className={meemTheme.tExtraSmallLabel}>
+						DISCORD CHANNEL FOR PROPOSALS
+					</Text>
+					<Space h={4} />
+					<Text className={meemTheme.tExtraSmall}>
 						What Discord channel will new proposals be shared in?
 					</Text>
-					<Space h="xs" />
 					{channels && (
-						<Select
-							data={channels.map(c => ({
-								value: c.id,
-								label: c.name
-							}))}
-							{...form.getInputProps('proposalShareChannel')}
-						/>
+						<>
+							<Space h="xs" />
+
+							<Select
+								data={channels.map(c => ({
+									value: c.id,
+									label: c.name
+								}))}
+								{...form.getInputProps('proposalShareChannel')}
+							/>
+						</>
 					)}
 				</>
 			)}
 
-			<Space h="md" />
-			<Text>Can posts be vetoed?</Text>
+			<Space h={'lg'} />
+			<Text className={meemTheme.tExtraSmallLabel}>VETOES</Text>
+			<Space h={4} />
+			<Text className={meemTheme.tExtraSmall}>Can posts be vetoed?</Text>
 			<Switch
 				label="Yes, posts can be vetoed"
 				{...form.getInputProps('canVeto', { type: 'checkbox' })}
 			/>
-			<Space h="md" />
 			{form.values.canVeto && (
 				<>
+					<Space h={'lg'} />
+
 					<Text>Who can veto?</Text>
 					<Space h="xs" />
 					{roles && (
@@ -412,8 +455,10 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					<NumberInput {...form.getInputProps('vetoVotes')} />
 				</>
 			)}
-			<Space h="md" />
-			<Text>
+			<Space h={'lg'} />
+			<Text className={meemTheme.tExtraSmallLabel}>AUTO REPLY</Text>
+			<Space h={4} />
+			<Text className={meemTheme.tExtraSmall}>
 				Would you like Steward to reply to approved proposals with a
 				link to the published tweet?
 			</Text>
@@ -427,8 +472,10 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 			>
 				<EmojiPicker onEmojiClick={handleEmojiClick} />
 			</Modal>
-			<Space h="md" />
-			<Button type="submit">Save</Button>
+			<Space h={'lg'} />
+			<Button className={meemTheme.buttonBlack} type="submit">
+				Save
+			</Button>
 		</form>
 	)
 }
