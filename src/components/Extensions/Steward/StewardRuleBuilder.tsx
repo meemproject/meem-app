@@ -303,11 +303,6 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					<NumberInput {...form.getInputProps('proposeVotes')} />
 				</>
 			)}
-<<<<<<< HEAD
-			<Space h="md" />
-			<Text>Who can vote to approve new posts for publication?</Text>
-			<Space h="xs" />
-=======
 			<Space h="lg" />
 
 			<Text className={meemTheme.tExtraSmallLabel}>VOTES</Text>
@@ -317,7 +312,6 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 				Who can vote to approve new posts for publication?
 			</Text>
 			<Space h={8} />
->>>>>>> 54cbbfd7815202fcc52840c73ca43f8b83c7b425
 			{roles && (
 				<MultiSelect
 					multiple
