@@ -270,9 +270,9 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 					<Text>{'How many proposal reactions?'}</Text>
 					<Space h="xs" />
 					<NumberInput {...form.getInputProps('proposeVotes')} />
-					<Space h="md" />
 				</>
 			)}
+			<Space h="md" />
 			<Text>Who can vote to approve new posts for publication?</Text>
 			<Space h="xs" />
 			{roles && (
