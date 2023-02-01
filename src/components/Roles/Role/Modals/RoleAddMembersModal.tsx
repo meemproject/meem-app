@@ -210,17 +210,7 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 											<Text
 												className={meemTheme.tSmallBold}
 											>
-												{member.displayName ??
-													'Agreement Member'}
-											</Text>
-											<Text
-												className={
-													meemTheme.tExtraSmallFaded
-												}
-											>
-												{member.ens
-													? member.ens
-													: member.wallet}
+												{member.identity}
 											</Text>
 										</div>
 									</div>

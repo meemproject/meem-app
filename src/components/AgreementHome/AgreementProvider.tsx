@@ -39,11 +39,13 @@ export default AgreementContext
 
 export interface IAgreementProviderProps {
 	children?: ReactNode
-	slug: string
+	slug?: string
+	isMembersOnly?: boolean
 }
 
 export const AgreementProvider: FC<IAgreementProviderProps> = ({
 	slug,
+	isMembersOnly,
 	...props
 }) => {
 	// General imports
@@ -56,6 +58,9 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		useState('')
 	const router = useRouter()
 	const [isLoadingAgreement, setIsLoadingAgreement] = useState(true)
+
+	// Has the agreement slug changed? (i.e. from page navigation)
+	const [originalSlug, setOriginalSlug] = useState('')
 
 	// Subscriptions
 	const {
@@ -73,29 +78,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 						global.window ? global.window.location.host : ''
 					)
 			},
-			client: anonClient,
-			skip: wallet.isConnected && wallet.isMeLoading
+			skip: isMembersOnly,
+			client: anonClient
 		}
 	)
-
-	const {
-		loading: loadingAnonAgreement,
-		error: errorAnonAgreement,
-		data: anonAgreementData
-	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
-		variables: {
-			slug,
-			chainId:
-				wallet.chainId ??
-				hostnameToChainId(
-					global.window ? global.window.location.host : ''
-				)
-		},
-		client: anonClient,
-		skip:
-			!isCurrentUserAgreementMemberData ||
-			isCurrentUserAgreementMemberData.AgreementTokens.length > 0
-	})
 
 	const {
 		loading: loadingMemberAgreement,
@@ -114,10 +100,29 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			},
 			client: mutualMembersClient,
 			skip:
-				!isCurrentUserAgreementMemberData ||
-				isCurrentUserAgreementMemberData.AgreementTokens.length === 0
+				!isMembersOnly &&
+				(!isCurrentUserAgreementMemberData ||
+					isCurrentUserAgreementMemberData.AgreementTokens.length ===
+						0)
 		}
 	)
+
+	const {
+		loading: loadingAnonAgreement,
+		error: errorAnonAgreement,
+		data: anonAgreementData
+	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
+		variables: {
+			slug,
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
+		},
+		client: anonClient,
+		skip: agreement !== undefined || isMembersOnly
+	})
 
 	useEffect(() => {
 		if (errorAnonAgreement) {
@@ -139,7 +144,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				return
 			}
 
-			if (agreementData.Agreements.length === 0) {
+			if (
+				anonAgreementData &&
+				anonAgreementData.Agreements.length === 0
+			) {
 				setIsLoadingAgreement(false)
 				return
 			}
@@ -160,6 +168,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			if (possibleAgreement && possibleAgreement.name) {
 				setAgreement(possibleAgreement)
 				setIsLoadingAgreement(false)
+				setOriginalSlug(slug ?? '')
 				log.debug('got agreement')
 			}
 
@@ -183,6 +192,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		if (
 			errorMemberAgreement &&
 			errorMemberAgreement.graphQLErrors.length > 0 &&
+			errorMemberAgreement.graphQLErrors[0].extensions &&
 			errorMemberAgreement.graphQLErrors[0].extensions.code ===
 				'invalid-jwt'
 		) {
@@ -192,6 +202,11 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 					return: window.location.pathname
 				}
 			})
+		}
+
+		if (slug !== originalSlug) {
+			setAgreement(undefined)
+			setIsLoadingAgreement(true)
 		}
 	}, [
 		agreement,
@@ -205,7 +220,9 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		memberAgreementData,
 		userAgreementMemberError,
 		router,
-		isCurrentUserAgreementMemberData
+		isCurrentUserAgreementMemberData,
+		slug,
+		originalSlug
 	])
 	const value = useMemo(
 		() => ({

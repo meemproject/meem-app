@@ -12,47 +12,27 @@ import {
 	HoverCard
 } from '@mantine/core'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Search, Star } from 'tabler-icons-react'
 import { AgreementMember } from '../../../model/agreement/agreements'
-import { quickTruncate } from '../../../utils/truncated_wallet'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { useAgreement } from '../AgreementProvider'
 
-interface IProps {
-	slug: string
-}
-
-export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
+export const AgreementMembersComponent: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
-	const memberIsAdmin = (member: string): boolean => {
-		if (agreement) {
-			let isAdmin = false
-			agreement.adminAddresses?.forEach(admin => {
-				if (admin === member) {
-					isAdmin = true
-				}
-			})
-
-			return isAdmin
-		} else {
-			return false
-		}
+	let members: AgreementMember[] = []
+	if (agreement) {
+		members = agreement.members ?? []
 	}
 
-	const [members, setMembers] = useState<AgreementMember[]>([])
+	const [searchedMembers, setSearchedMembers] = useState<AgreementMember[]>(
+		[]
+	)
 
-	const [filteredMembers, setFilteredMembers] = useState<AgreementMember[]>()
-
-	useEffect(() => {
-		if (!filteredMembers && agreement) {
-			setMembers(agreement.members ?? [])
-			setFilteredMembers(agreement.members ?? [])
-		}
-	}, [agreement, filteredMembers, members])
+	const [hasSearched, setHasSearched] = useState(false)
 
 	const filterMembers = (
 		allMembers: AgreementMember[],
@@ -76,12 +56,68 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 			log.debug(
 				`found ${newFiltered.length} entries matching search term ${searchTerm}`
 			)
-			setFilteredMembers(newFiltered)
+			setSearchedMembers(newFiltered)
 		} else {
 			log.debug('no search term, resetting to all members')
-			setFilteredMembers(allMembers)
+			setSearchedMembers(allMembers)
 		}
 	}
+
+	const memberGridItem = (member: AgreementMember) => (
+		<>
+			<Grid.Col xs={6} sm={4} md={4} lg={4} xl={4} key={member.wallet}>
+				<HoverCard width={280} shadow="md" radius={16}>
+					<HoverCard.Target>
+						<div
+							className={meemTheme.gridItem}
+							style={{
+								minHeight: 60,
+								display: 'flex',
+								alignItems: 'center'
+							}}
+						>
+							<Image
+								style={{
+									marginRight: 10
+								}}
+								src={
+									member.profilePicture &&
+									member.profilePicture.length > 0
+										? member.profilePicture
+										: '/member-placeholder.png'
+								}
+								radius={16}
+								height={32}
+								width={32}
+							/>
+
+							<Text
+								styles={{
+									marginLeft: 6
+								}}
+							>
+								{member.identity}
+							</Text>
+							{(member.isAgreementAdmin ||
+								member.isAgreementOwner) && (
+								<Star
+									style={{
+										marginLeft: 6,
+										height: 16,
+										width: 16
+									}}
+								/>
+							)}
+						</div>
+					</HoverCard.Target>
+					<AgreementMemberCard
+						agreement={agreement}
+						member={member}
+					/>
+				</HoverCard>
+			</Grid.Col>
+		</>
+	)
 
 	return (
 		<>
@@ -150,12 +186,15 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 										marginRight: 16
 									}}
 								>
-									{agreement.description}
+									{agreement.description &&
+									agreement.description.length > 0
+										? agreement.description
+										: 'A Meem community'}
 								</Text>
 							</div>
 						</div>
 						<div className={meemTheme.pageHeaderExitButton}>
-							<Link href={`/${slug}`}>
+							<Link href={`/${agreement.slug}`}>
 								<Image
 									src="/delete.png"
 									width={24}
@@ -172,7 +211,9 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 								marginBottom: 16,
 								marginTop: 40
 							}}
-						>{`Members (${filteredMembers?.length})`}</Text>
+						>{`Members (${
+							(hasSearched ? searchedMembers : members)?.length
+						})`}</Text>
 						<TextInput
 							radius={20}
 							classNames={{
@@ -184,6 +225,9 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 							size={'lg'}
 							onChange={event => {
 								if (event.target.value) {
+									if (!hasSearched) {
+										setHasSearched(true)
+									}
 									filterMembers(members, event.target.value)
 								} else {
 									filterMembers(members, '')
@@ -191,90 +235,22 @@ export const AgreementMembersComponent: React.FC<IProps> = ({ slug }) => {
 							}}
 						/>
 						<Space h={24} />
-						{filterMembers?.length === 0 && (
+						{hasSearched && searchedMembers?.length === 0 && (
 							<Text className={meemTheme.tMedium}>
 								No members were found matching your search term.
 							</Text>
 						)}
-						{filteredMembers && filterMembers?.length > 0 && (
+						{members && !hasSearched && (
 							<Grid>
-								{filteredMembers.map(member => (
-									<Grid.Col
-										xs={6}
-										sm={4}
-										md={4}
-										lg={4}
-										xl={4}
-										key={member.wallet}
-									>
-										<HoverCard
-											width={280}
-											shadow="md"
-											radius={16}
-										>
-											<HoverCard.Target>
-												<div
-													className={
-														meemTheme.gridItem
-													}
-													style={{
-														minHeight: 60,
-														display: 'flex',
-														alignItems: 'center'
-													}}
-												>
-													<Image
-														style={{
-															marginRight: 10
-														}}
-														src={
-															member.profilePicture &&
-															member
-																.profilePicture
-																.length > 0
-																? member.profilePicture
-																: '/member-placeholder.png'
-														}
-														radius={4}
-														height={32}
-														width={32}
-													/>
-
-													<Text
-														styles={{
-															marginLeft: 6
-														}}
-													>
-														{member.displayName
-															? member.displayName
-															: member.ens
-															? member.ens
-															: member.wallet.toLowerCase() ===
-															  process.env
-																	.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
-															? 'meem.eth'
-															: quickTruncate(
-																	member.wallet
-															  )}
-													</Text>
-													{memberIsAdmin(
-														member.wallet
-													) && (
-														<Star
-															style={{
-																marginLeft: 6,
-																height: 16,
-																width: 16
-															}}
-														/>
-													)}
-												</div>
-											</HoverCard.Target>
-											<AgreementMemberCard
-												member={member}
-											/>
-										</HoverCard>
-									</Grid.Col>
+								{members.map(member => (
+									<>{memberGridItem(member)}</>
+								))}
+							</Grid>
+						)}
+						{members && hasSearched && (
+							<Grid>
+								{searchedMembers.map(member => (
+									<>{memberGridItem(member)}</>
 								))}
 							</Grid>
 						)}

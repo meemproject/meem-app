@@ -9,13 +9,17 @@ import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
+import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
 import { App, hostnameToChainId } from '../components/App'
 import '@fontsource/inter'
 // import { CustomApolloProvider } from '../providers/ApolloProvider'
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props
+
+	const router = useRouter()
 
 	useEffect(() => {
 		const jssStyles = document.querySelector('#jss-server-side')
@@ -57,6 +61,15 @@ function MyApp(props: AppProps) {
 	} else {
 		chainId = 5
 	}
+
+	const agreementSlug =
+		router.query.slug === undefined ? undefined : `${router.query.slug}`
+
+	const isMembershipRequired =
+		router.pathname.includes('/admin') ||
+		router.pathname.includes(
+			'/settings' || router.pathname.includes('/roles')
+		)
 
 	return (
 		<ColorSchemeProvider
@@ -100,9 +113,14 @@ function MyApp(props: AppProps) {
 					magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
 				>
 					<NotificationsProvider>
-						<App>
-							<Component {...pageProps} />
-						</App>
+						<AgreementProvider
+							slug={agreementSlug}
+							isMembersOnly={isMembershipRequired}
+						>
+							<App>
+								<Component {...pageProps} />
+							</App>
+						</AgreementProvider>
 					</NotificationsProvider>
 				</MeemProvider>
 			</MantineProvider>
