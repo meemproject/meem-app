@@ -93,9 +93,12 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									wallet
 								)
 								if (token) {
+									log.debug(`token ${JSON.stringify(token)}`)
 									tokenBalance = token.balance
 									tokenUrl = token.url
 									tokenName = token.name
+								} else {
+									log.debug(`no token found`)
 								}
 							}
 
