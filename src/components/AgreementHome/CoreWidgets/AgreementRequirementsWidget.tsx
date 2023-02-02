@@ -1,6 +1,6 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Loader, Center, Button } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useMeemUser, useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
 import Linkify from 'linkify-react'
 import Link from 'next/link'
@@ -34,6 +34,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const wallet = useWallet()
+	const user = useMeemUser()
 
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
@@ -323,10 +324,25 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 	)
 
 	useEffect(() => {
-		if (agreement.name) {
+		if (
+			agreement.name &&
+			user.user &&
+			!user.isLoading &&
+			wallet.isConnected &&
+			wallet.signer &&
+			wallet.web3Provider
+		) {
 			parseRequirements(agreement)
 		}
-	}, [agreement, parseRequirements])
+	}, [
+		agreement,
+		parseRequirements,
+		user.isLoading,
+		user.user,
+		wallet.isConnected,
+		wallet.signer,
+		wallet.web3Provider
+	])
 
 	return (
 		<>
@@ -353,8 +369,18 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 				</div>
 
 				<Space h={16} />
-				{parsedRequirements.length === 0 && (
+				{user.user && !areRequirementsParsed && (
 					<Loader variant="oval" color={colorBlue} />
+				)}
+				{!user.user && user.isLoading && (
+					<Loader variant="oval" color={colorBlue} />
+				)}
+				{!user.isLoading && !user.user && (
+					<>
+						<Text className={meemTheme.tSmall}>
+							Connect an account to see membership requirements.
+						</Text>
+					</>
 				)}
 				{parsedRequirements.length > 0 && (
 					<>
