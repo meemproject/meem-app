@@ -196,7 +196,6 @@ export function HeaderMenu() {
 												className={
 													meemTheme.tExtraSmallBold
 												}
-												style={{ color: colorDarkBlue }}
 											>
 												{displayName}
 											</Text>
@@ -252,11 +251,7 @@ export function HeaderMenu() {
 									style={{ color: colorDarkBlue }}
 									icon={<Logout size={14} />}
 								>
-									<Text>
-										{isConnected
-											? 'Disconnect'
-											: 'Sign Out'}
-									</Text>
+									<Text>{'Sign Out'}</Text>
 								</Menu.Item>
 							</Menu.Dropdown>
 						</Menu>
