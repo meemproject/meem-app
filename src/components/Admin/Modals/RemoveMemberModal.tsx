@@ -153,7 +153,9 @@ export const RemoveMemberModal: React.FC<IProps> = ({
 		}
 
 		// Check tx status
-		checkTransactionCompletion()
+		if (isOpened) {
+			checkTransactionCompletion()
+		}
 	}, [
 		agreement,
 		closeModal,

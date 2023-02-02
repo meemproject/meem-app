@@ -8,12 +8,14 @@ import {
 	Center,
 	Modal,
 	Divider,
-	useMantineColorScheme
+	useMantineColorScheme,
+	Loader
 } from '@mantine/core'
 import { cleanNotifications } from '@mantine/notifications'
 import {
 	LoginState,
 	useMeemApollo,
+	useMeemUser,
 	useSDK,
 	useWallet
 } from '@meemproject/react'
@@ -38,16 +40,19 @@ import { JoinLeaveAgreementModal } from '../JoinLeaveAgreementModal'
 interface IProps {
 	agreement: Agreement
 	meetsReqs: boolean
+	reqsChecked: boolean
 }
 
 export const AgreementInfoWidget: React.FC<IProps> = ({
 	agreement,
-	meetsReqs
+	meetsReqs,
+	reqsChecked
 }) => {
 	// General Imports
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const user = useMeemUser()
 	const { sdk } = useSDK()
 
 	const { anonClient } = useMeemApollo()
@@ -362,7 +367,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					<>
 						<Center>
 							<Text className={meemTheme.tSmall}>
-								{agreement.description}
+								{agreement.description &&
+								agreement.description?.length > 0
+									? agreement.description
+									: 'A Meem community'}
 							</Text>
 						</Center>
 						<Space h={24} />
@@ -381,25 +389,49 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 								</Button>
 							)}
 							{!agreement.isCurrentUserAgreementMember && (
-								<Button
-									className={meemTheme.buttonYellow}
-									disabled={isJoiningAgreement || !meetsReqs}
-									loading={isJoiningAgreement}
-									onClick={() => {
-										joinAgreement()
-									}}
-								>
-									{meetsReqs
-										? `Join ${
-												agreement.membershipSettings
-													?.costToJoin &&
-												agreement.membershipSettings
-													?.costToJoin > 0
-													? `(${agreement.membershipSettings.costToJoin} MATIC)`
-													: ''
-										  }`
-										: 'Requirements Not Met'}
-								</Button>
+								<>
+									{user.user && !reqsChecked && (
+										<>
+											<Center>
+												<Loader
+													height={24}
+													variant={'oval'}
+													color={'blue'}
+												/>
+											</Center>
+										</>
+									)}
+									{((user.user && reqsChecked) ||
+										(!user.user && !user.isLoading)) && (
+										<Button
+											className={meemTheme.buttonYellow}
+											disabled={
+												isJoiningAgreement ||
+												(!meetsReqs &&
+													user.user &&
+													!user.isLoading)
+											}
+											loading={isJoiningAgreement}
+											onClick={() => {
+												joinAgreement()
+											}}
+										>
+											{meetsReqs ||
+											(!user.user && !user.isLoading)
+												? `Join ${
+														agreement
+															.membershipSettings
+															?.costToJoin &&
+														agreement
+															.membershipSettings
+															?.costToJoin > 0
+															? `(${agreement.membershipSettings.costToJoin} MATIC)`
+															: ''
+												  }`
+												: 'Requirements Not Met'}
+										</Button>
+									)}
+								</>
 							)}
 						</Center>
 						{!agreement.isCurrentUserAgreementMember &&

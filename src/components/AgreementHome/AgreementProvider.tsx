@@ -78,7 +78,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 						global.window ? global.window.location.host : ''
 					)
 			},
-			skip: isMembersOnly,
+			skip: !slug || isMembersOnly,
 			client: anonClient
 		}
 	)
@@ -100,10 +100,11 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			},
 			client: mutualMembersClient,
 			skip:
-				!isMembersOnly &&
-				(!isCurrentUserAgreementMemberData ||
-					isCurrentUserAgreementMemberData.AgreementTokens.length ===
-						0)
+				!slug ||
+				(!isMembersOnly &&
+					(!isCurrentUserAgreementMemberData ||
+						isCurrentUserAgreementMemberData.AgreementTokens
+							.length === 0))
 		}
 	)
 
@@ -121,7 +122,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				)
 		},
 		client: anonClient,
-		skip: agreement !== undefined || isMembersOnly
+		skip: !slug || agreement !== undefined || isMembersOnly
 	})
 
 	useEffect(() => {
@@ -144,6 +145,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				return
 			}
 
+			// Agreement does not exist
 			if (
 				anonAgreementData &&
 				anonAgreementData.Agreements.length === 0
@@ -151,6 +153,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				setIsLoadingAgreement(false)
 				return
 			}
+
 			// TODO: Why do I have to compare strings to prevent an infinite useEffect loop?
 
 			if (previousAgreementDataString) {
@@ -213,6 +216,12 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			setAgreement(undefined)
 			setIsLoadingAgreement(true)
 		}
+
+		// User does not have access to this page
+		if (isMembersOnly && memberAgreementData?.Agreements.length === 0) {
+			setIsLoadingAgreement(false)
+			return
+		}
 	}, [
 		agreement,
 		previousAgreementDataString,
@@ -227,7 +236,8 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		router,
 		isCurrentUserAgreementMemberData,
 		slug,
-		originalSlug
+		originalSlug,
+		isMembersOnly
 	])
 	const value = useMemo(
 		() => ({

@@ -147,7 +147,7 @@ export const ProfileComponent: React.FC = () => {
 								style={{ paddingBottom: 4 }}
 							>
 								<Text className={meemTheme.tLargeBold}>
-									{'My Meem Profile'}
+									{'My Profile'}
 								</Text>
 								<Space h={8} />
 								<div className={meemTheme.row}>
