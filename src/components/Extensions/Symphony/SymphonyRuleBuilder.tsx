@@ -14,9 +14,8 @@ import type { EmojiClickData } from 'emoji-picker-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
-// import { useMeemTheme } from '../../Styles/MeemTheme'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { API } from './stewardTypes.generated'
+import { API } from './symphonyTypes.generated'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -52,7 +51,7 @@ export interface IOnSave extends IFormValues {
 	vetoerEmojis: string[]
 }
 
-export const StewardRuleBuilder: React.FC<IProps> = ({
+export const SymphonyRuleBuilder: React.FC<IProps> = ({
 	channels,
 	roles,
 	selectedRule,
@@ -479,7 +478,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 			<Text className={meemTheme.tExtraSmallLabel}>AUTO REPLY</Text>
 			<Space h={4} />
 			<Text className={meemTheme.tExtraSmall}>
-				Would you like Steward to reply to approved proposals with a
+				Would you like Symphony to reply to approved proposals with a
 				link to the published tweet?
 			</Text>
 			<Switch
