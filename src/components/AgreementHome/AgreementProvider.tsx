@@ -78,7 +78,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 						global.window ? global.window.location.host : ''
 					)
 			},
-			skip: isMembersOnly,
+			skip: !slug || isMembersOnly,
 			client: anonClient
 		}
 	)
@@ -100,10 +100,11 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			},
 			client: mutualMembersClient,
 			skip:
-				!isMembersOnly &&
-				(!isCurrentUserAgreementMemberData ||
-					isCurrentUserAgreementMemberData.AgreementTokens.length ===
-						0)
+				!slug ||
+				(!isMembersOnly &&
+					(!isCurrentUserAgreementMemberData ||
+						isCurrentUserAgreementMemberData.AgreementTokens
+							.length === 0))
 		}
 	)
 
@@ -121,7 +122,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				)
 		},
 		client: anonClient,
-		skip: agreement !== undefined || isMembersOnly
+		skip: !slug || agreement !== undefined || isMembersOnly
 	})
 
 	useEffect(() => {

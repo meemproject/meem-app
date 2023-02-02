@@ -20,6 +20,7 @@ import {
 interface IProps {
 	agreement: Agreement
 	onMeetsAllReqsChanged: (changed: boolean) => void
+	onRequirementsChecked: (checked: boolean) => void
 }
 
 interface RequirementString {
@@ -30,7 +31,8 @@ interface RequirementString {
 
 export const AgreementRequirementsWidget: React.FC<IProps> = ({
 	agreement,
-	onMeetsAllReqsChanged
+	onMeetsAllReqsChanged,
+	onRequirementsChecked
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const wallet = useWallet()
@@ -66,8 +68,9 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 					onMeetsAllReqsChanged(true)
 				}
 			}
+			onRequirementsChecked(true)
 		},
-		[onMeetsAllReqsChanged]
+		[onMeetsAllReqsChanged, onRequirementsChecked]
 	)
 
 	const parseRequirements = useCallback(
