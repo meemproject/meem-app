@@ -14,6 +14,7 @@ import { cleanNotifications } from '@mantine/notifications'
 import {
 	LoginState,
 	useMeemApollo,
+	useMeemUser,
 	useSDK,
 	useWallet
 } from '@meemproject/react'
@@ -48,6 +49,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const user = useMeemUser()
 	const { sdk } = useSDK()
 
 	const { anonClient } = useMeemApollo()
@@ -383,13 +385,19 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							{!agreement.isCurrentUserAgreementMember && (
 								<Button
 									className={meemTheme.buttonYellow}
-									disabled={isJoiningAgreement || !meetsReqs}
+									disabled={
+										isJoiningAgreement ||
+										(!meetsReqs &&
+											user.user &&
+											!user.isLoading)
+									}
 									loading={isJoiningAgreement}
 									onClick={() => {
 										joinAgreement()
 									}}
 								>
-									{meetsReqs
+									{meetsReqs ||
+									(!user.user && !user.isLoading)
 										? `Join ${
 												agreement.membershipSettings
 													?.costToJoin &&
