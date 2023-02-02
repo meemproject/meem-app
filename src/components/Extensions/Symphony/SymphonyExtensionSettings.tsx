@@ -327,6 +327,12 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		activeStep
 	])
 
+	useEffect(() => {
+		if (twitterUsername.length > 0 && activeStep === 0) {
+			setActiveStep(1)
+		}
+	}, [twitterUsername, activeStep])
+
 	const customExtensionSettings = () => (
 		<>
 			<Space h={24} />
@@ -589,10 +595,24 @@ export const SymphonyExtensionSettings: React.FC = () => {
 												/>
 											}
 											className={meemTheme.buttonBlack}
+											onClick={() => {
+												handleInviteBot()
+											}}
 										>
 											{`Invite Symphony Bot`}
 										</Button>
 									</div>
+								</>
+							)}
+							{botCode && (
+								<>
+									<Space h={16} />
+									<Text
+										className={meemTheme.tMedium}
+									>{`Complete setup in Discord`}</Text>
+									<Text
+										className={meemTheme.tMediumBold}
+									>{`/activate ${botCode}`}</Text>
 								</>
 							)}
 						</>
