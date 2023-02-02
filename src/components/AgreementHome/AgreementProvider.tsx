@@ -194,16 +194,21 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 
 		if (
 			errorMemberAgreement &&
+			errorMemberAgreement.graphQLErrors &&
 			errorMemberAgreement.graphQLErrors.length > 0 &&
 			errorMemberAgreement.graphQLErrors[0].extensions &&
 			errorMemberAgreement.graphQLErrors[0].extensions.code ===
 				'invalid-jwt'
 		) {
+			const query =
+				window.location.pathname !== '/authenticate'
+					? {
+							return: window.location.pathname
+					  }
+					: {}
 			router.push({
 				pathname: '/authenticate',
-				query: {
-					return: window.location.pathname
-				}
+				query
 			})
 		}
 
