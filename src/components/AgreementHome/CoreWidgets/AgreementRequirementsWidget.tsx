@@ -1,6 +1,6 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Loader, Center, Button } from '@mantine/core'
-import { useWallet } from '@meemproject/react'
+import { useMeemUser, useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
 import Linkify from 'linkify-react'
 import Link from 'next/link'
@@ -20,6 +20,7 @@ import {
 interface IProps {
 	agreement: Agreement
 	onMeetsAllReqsChanged: (changed: boolean) => void
+	onRequirementsChecked: (checked: boolean) => void
 }
 
 interface RequirementString {
@@ -30,10 +31,12 @@ interface RequirementString {
 
 export const AgreementRequirementsWidget: React.FC<IProps> = ({
 	agreement,
-	onMeetsAllReqsChanged
+	onMeetsAllReqsChanged,
+	onRequirementsChecked
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const wallet = useWallet()
+	const user = useMeemUser()
 
 	const [parsedRequirements, setParsedRequirements] = useState<
 		RequirementString[]
@@ -65,8 +68,9 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 					onMeetsAllReqsChanged(true)
 				}
 			}
+			onRequirementsChecked(true)
 		},
-		[onMeetsAllReqsChanged]
+		[onMeetsAllReqsChanged, onRequirementsChecked]
 	)
 
 	const parseRequirements = useCallback(
@@ -78,155 +82,145 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 			const reqs: RequirementString[] = []
 			let index = 0
 
-			if (possibleAgreement.membershipSettings) {
-				await Promise.all(
-					possibleAgreement.membershipSettings?.requirements.map(
-						async function (req) {
-							index++
+			if (
+				possibleAgreement.membershipSettings &&
+				possibleAgreement.membershipSettings.requirements
+			) {
+				// eslint-disable-next-line no-unsafe-optional-chaining
+				for await (const req of possibleAgreement.membershipSettings
+					?.requirements) {
+					index++
 
-							let tokenBalance = BigNumber.from(0)
-							let tokenUrl = ''
-							let tokenName = 'Unknown Token'
-							if (wallet.web3Provider && wallet.signer) {
-								const token = await tokenFromContractAddress(
-									req.tokenContractAddress,
-									wallet
-								)
-								if (token) {
-									tokenBalance = token.balance
-									tokenUrl = token.url
-									tokenName = token.name
-								}
-							}
+					let tokenBalance = BigNumber.from(0)
+					let tokenUrl = ''
+					let tokenName = 'Unknown Token'
+					if (wallet.web3Provider && wallet.signer) {
+						const token = await tokenFromContractAddress(
+							req.tokenContractAddress,
+							wallet
+						)
+						if (token) {
+							log.debug(`token ${JSON.stringify(token)}`)
+							tokenBalance = token.balance
+							tokenUrl = token.url
+							tokenName = token.name
+						} else {
+							log.debug(`no token found`)
+						}
+					}
 
-							switch (req.type) {
-								case MembershipReqType.None:
-									reqs.push({
-										requirementKey: `Anyone${index}`,
-										requirementComponent: (
-											<Text
-												className={
-													meemTheme.tExtraSmall
-												}
-											>
-												Anyone can join this community.
-											</Text>
-										),
-										meetsRequirement: true
-									})
-									break
-								case MembershipReqType.ApprovedApplicants:
-									reqs.push({
-										requirementKey: `Applicants${index}`,
-										requirementComponent: (
-											<div
-												style={{
-													display: 'flex',
-													flexDirection: 'column'
-												}}
-											>
+					switch (req.type) {
+						case MembershipReqType.None:
+							reqs.push({
+								requirementKey: `Anyone${index}`,
+								requirementComponent: (
+									<Text className={meemTheme.tExtraSmall}>
+										Anyone can join this community.
+									</Text>
+								),
+								meetsRequirement: true
+							})
+							break
+						case MembershipReqType.ApprovedApplicants:
+							reqs.push({
+								requirementKey: `Applicants${index}`,
+								requirementComponent: (
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'column'
+										}}
+									>
+										<Text className={meemTheme.tExtraSmall}>
+											Membership is available to approved
+											applicants.
+											{!req.applicationInstructions && (
+												<span>
+													{' '}
+													Contact a Community
+													Administrator for
+													instructions.
+												</span>
+											)}
+										</Text>
+										{req.applicationInstructions && (
+											<>
+												<Space h={16} />
 												<Text
 													className={
-														meemTheme.tExtraSmall
+														meemTheme.tExtraSmallBold
 													}
 												>
-													Membership is available to
-													approved applicants.
-													{!req.applicationInstructions && (
-														<span>
-															{' '}
-															Contact a Community
-															Administrator for
-															instructions.
-														</span>
-													)}
+													Follow these instructions to
+													apply:
 												</Text>
-												{req.applicationInstructions && (
-													<>
-														<Space h={16} />
-														<Text
-															className={
-																meemTheme.tExtraSmallBold
-															}
-														>
-															Follow these
-															instructions to
-															apply:
-														</Text>
-														<Space h={8} />
-														<Text
-															className={
-																meemTheme.tLinkified
-															}
-														>
-															<Space h={4} />
-															<Linkify>
-																{`${req.applicationInstructions}`}
-															</Linkify>
-														</Text>
-														<Space h={8} />
-													</>
-												)}
-											</div>
-										),
-
-										meetsRequirement: wallet.isConnected
-											? req.approvedAddresses.includes(
-													wallet.accounts[0]
-											  )
-											: false
-									})
-									break
-
-								case MembershipReqType.TokenHolders:
-									reqs.push({
-										requirementKey: `Token${index}`,
-										requirementComponent: (
-											<Text
-												className={
-													meemTheme.tExtraSmall
-												}
-											>
-												Members must hold{' '}
-												{req.tokenMinQuantity}{' '}
-												<a
-													className={meemTheme.tLink}
-													href={tokenUrl}
+												<Space h={8} />
+												<Text
+													className={
+														meemTheme.tLinkified
+													}
 												>
-													{tokenName}
-												</a>
-												.
-											</Text>
-										),
-										meetsRequirement:
-											tokenBalance > BigNumber.from(0)
-									})
-									break
-								case MembershipReqType.OtherAgreementMember:
-									reqs.push({
-										requirementKey: `OtherAgreement${index}`,
-										requirementComponent: (
-											<Text
-												className={
-													meemTheme.tExtraSmall
-												}
-											>
-												Members must also be a member of{' '}
-												<a
-													className={meemTheme.tLink}
-													href="/agreement"
-												>
-													{req.otherAgreementName}
-												</a>
-											</Text>
-										),
-										meetsRequirement: true
-									})
-									break
-							}
-						}
-					)
-				)
+													<Space h={4} />
+													<Linkify>
+														{`${req.applicationInstructions}`}
+													</Linkify>
+												</Text>
+												<Space h={8} />
+											</>
+										)}
+									</div>
+								),
+
+								meetsRequirement: wallet.isConnected
+									? req.approvedAddresses.includes(
+											wallet.accounts[0]
+									  )
+									: false
+							})
+							break
+
+						case MembershipReqType.TokenHolders:
+							reqs.push({
+								requirementKey: `Token${index}`,
+								requirementComponent: (
+									<Text className={meemTheme.tExtraSmall}>
+										Members must hold {req.tokenMinQuantity}{' '}
+										<a
+											className={meemTheme.tLink}
+											href={tokenUrl}
+											target={'_blank'}
+											rel="noreferrer"
+										>
+											{tokenName}
+										</a>
+										.
+									</Text>
+								),
+								meetsRequirement:
+									tokenBalance > BigNumber.from(0)
+							})
+							break
+						case MembershipReqType.OtherAgreementMember:
+							reqs.push({
+								requirementKey: `OtherAgreement${index}`,
+								requirementComponent: (
+									<Text className={meemTheme.tExtraSmall}>
+										Members must also be a member of{' '}
+										<a
+											className={meemTheme.tLink}
+											href="/agreement"
+										>
+											{req.otherAgreementName}
+										</a>
+									</Text>
+								),
+								meetsRequirement: true
+							})
+							break
+					}
+
+					//log.debug(`parse requirement ${index} at ${Date.now()}`)
+				}
 			}
 
 			log.debug('set parsed reqs')
@@ -335,10 +329,25 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 	)
 
 	useEffect(() => {
-		if (agreement.name) {
+		if (
+			agreement.name &&
+			user.user &&
+			!user.isLoading &&
+			wallet.isConnected &&
+			wallet.signer &&
+			wallet.web3Provider
+		) {
 			parseRequirements(agreement)
 		}
-	}, [agreement, parseRequirements])
+	}, [
+		agreement,
+		parseRequirements,
+		user.isLoading,
+		user.user,
+		wallet.isConnected,
+		wallet.signer,
+		wallet.web3Provider
+	])
 
 	return (
 		<>
@@ -365,8 +374,18 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 				</div>
 
 				<Space h={16} />
-				{parsedRequirements.length === 0 && (
+				{user.user && !areRequirementsParsed && (
 					<Loader variant="oval" color={colorBlue} />
+				)}
+				{!user.user && user.isLoading && (
+					<Loader variant="oval" color={colorBlue} />
+				)}
+				{!user.isLoading && !user.user && (
+					<>
+						<Text className={meemTheme.tSmall}>
+							Connect an account to see membership requirements.
+						</Text>
+					</>
 				)}
 				{parsedRequirements.length > 0 && (
 					<>

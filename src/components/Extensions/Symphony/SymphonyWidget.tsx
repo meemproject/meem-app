@@ -16,7 +16,7 @@ interface IProps {
 Be sure to import your widget in AgreementHome.tsx to ensure it is displayed
 when enabled.
 */
-export const StewardWidget: React.FC<IProps> = ({ agreement }) => {
+export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 	/*
 	Use the meemTheme object to access agreements styles
 	such as colors, fonts and layouts
@@ -31,7 +31,7 @@ export const StewardWidget: React.FC<IProps> = ({ agreement }) => {
 			<div className={meemTheme.spacedRowCentered}>
 				<div className={meemTheme.centeredRow}>
 					<Text className={meemTheme.tMediumBold}>
-						Steward Extension Widget
+						Symphony Extension Widget
 					</Text>
 					<Space w={6} />
 				</div>
@@ -40,7 +40,7 @@ export const StewardWidget: React.FC<IProps> = ({ agreement }) => {
 						<div className={meemTheme.row}>
 							<Space w={8} />
 							<Link
-								href={`/${agreement.slug}/e/steward/settings`}
+								href={`/${agreement.slug}/e/symphony/settings`}
 							>
 								<Settings className={meemTheme.clickable} />
 							</Link>
@@ -50,7 +50,7 @@ export const StewardWidget: React.FC<IProps> = ({ agreement }) => {
 			</div>
 			<Space h={24} />
 			<Text className={meemTheme.tSmall}>
-				{`This is an steward Community Extension Widget for ${agreement.name}`}
+				{`This is an symphony Community Extension Widget for ${agreement.name}`}
 			</Text>
 		</div>
 	)

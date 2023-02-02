@@ -112,7 +112,8 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor: colorDarkYellow
 		},
 		'&:disabled': {
-			backgroundColor: colorDarkYellow
+			backgroundColor: colorDarkYellow,
+			color: colorBlack
 		},
 		borderRadius: 24
 	},
@@ -126,7 +127,8 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor: colorDarkYellow
 		},
 		'&:disabled': {
-			backgroundColor: colorDarkYellow
+			backgroundColor: colorDarkYellow,
+			color: colorBlack
 		},
 		border: `1px solid ${colorBlack}`,
 		borderRadius: 24
@@ -144,6 +146,24 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor: colorDarkerGrey
 		},
 		border: `2px solid ${colorYellow}`,
+		borderRadius: 24
+	},
+	buttonRedBordered: {
+		color: colorRed,
+		backgroundColor: 'transparent',
+		'&:hover': {
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+		},
+		'&:loading': {
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+		},
+		'&:disabled': {
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
+		},
+		border: `2px solid ${colorRed}`,
 		borderRadius: 24
 	},
 	buttonWhite: {

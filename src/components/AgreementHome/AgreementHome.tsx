@@ -29,6 +29,8 @@ export const AgreementHome: React.FC = () => {
 
 	const { sdk } = useSDK()
 
+	const [reqsChecked, setReqsChecked] = useState(false)
+
 	const [doesMeetAllRequirements, setDoesMeetAllRequirements] =
 		useState(false)
 
@@ -73,6 +75,9 @@ export const AgreementHome: React.FC = () => {
 						onMeetsAllReqsChanged={meetsReqs => {
 							setDoesMeetAllRequirements(meetsReqs)
 						}}
+						onRequirementsChecked={checked => {
+							setReqsChecked(checked)
+						}}
 					/>
 					<AgreementMembersWidget agreement={agreement} />
 				</>
@@ -105,6 +110,7 @@ export const AgreementHome: React.FC = () => {
 									ext.Extension.capabilities.includes(
 										'widget'
 									) &&
+									ext.AgreementExtensionWidgets.length > 0 &&
 									ext.isSetupComplete
 							)
 							.map(extension => (
@@ -141,6 +147,7 @@ export const AgreementHome: React.FC = () => {
 					<div className={meemTheme.pageLeftColumn}>
 						<AgreementInfoWidget
 							agreement={agreement}
+							reqsChecked={reqsChecked}
 							meetsReqs={doesMeetAllRequirements}
 						/>
 						{communityInfoContents}
@@ -160,6 +167,7 @@ export const AgreementHome: React.FC = () => {
 				<>
 					<AgreementInfoWidget
 						agreement={agreement}
+						reqsChecked={reqsChecked}
 						meetsReqs={doesMeetAllRequirements}
 					/>
 					<Tabs color="dark" defaultValue="widgets">

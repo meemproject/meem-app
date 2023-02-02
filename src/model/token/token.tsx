@@ -49,7 +49,7 @@ export async function tokenFromContractAddress(
 			break
 
 		case 80001:
-			baseUrl = 'https://mumbai.polygonscan.io/address/'
+			baseUrl = 'https://mumbai.polygonscan.com/address/'
 			break
 
 		case 420:
@@ -62,7 +62,7 @@ export async function tokenFromContractAddress(
 
 		case 137:
 		default:
-			baseUrl = 'https://polygonscan.io/address/'
+			baseUrl = 'https://polygonscan.com/address/'
 			break
 	}
 
@@ -73,13 +73,6 @@ export async function tokenFromContractAddress(
 
 	// Balance
 	let tokenBalance = BigNumber.from(0)
-	try {
-		tokenBalance = await wallet.web3Provider.getBalance(contractAddress)
-	} catch (e) {
-		return undefined
-	}
-
-	log.debug(`get token balance (${tokenBalance})`)
 
 	let symbol = ''
 	let name = ''
@@ -104,6 +97,8 @@ export async function tokenFromContractAddress(
 			wallet.web3Provider
 		) as unknown as ERC20
 		symbol = await contractToCheck.symbol()
+		tokenBalance = await contractToCheck.balanceOf(wallet.accounts[0])
+		log.debug(`get token balance (${tokenBalance})`)
 		log.debug('get symbol')
 		name = await contractToCheck.name()
 		log.debug('get name')
@@ -119,6 +114,12 @@ export async function tokenFromContractAddress(
 				signer: wallet.signer
 			})
 			symbol = await contractToCheck.symbol()
+			if (!is20Contract) {
+				tokenBalance = await contractToCheck.balanceOf(
+					wallet.accounts[0]
+				)
+			}
+			log.debug(`get token balance (${tokenBalance})`)
 			log.debug('get symbol')
 			name = await contractToCheck.name()
 			log.debug('get name')

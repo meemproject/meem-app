@@ -39,11 +39,13 @@ export default AgreementContext
 
 export interface IAgreementProviderProps {
 	children?: ReactNode
-	slug: string
+	slug?: string
+	isMembersOnly?: boolean
 }
 
 export const AgreementProvider: FC<IAgreementProviderProps> = ({
 	slug,
+	isMembersOnly,
 	...props
 }) => {
 	// General imports
@@ -56,6 +58,9 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		useState('')
 	const router = useRouter()
 	const [isLoadingAgreement, setIsLoadingAgreement] = useState(true)
+
+	// Has the agreement slug changed? (i.e. from page navigation)
+	const [originalSlug, setOriginalSlug] = useState('')
 
 	// Subscriptions
 	const {
@@ -73,29 +78,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 						global.window ? global.window.location.host : ''
 					)
 			},
-			client: anonClient,
-			skip: wallet.isConnected && wallet.isMeLoading
+			skip: !slug || isMembersOnly,
+			client: anonClient
 		}
 	)
-
-	const {
-		loading: loadingAnonAgreement,
-		error: errorAnonAgreement,
-		data: anonAgreementData
-	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
-		variables: {
-			slug,
-			chainId:
-				wallet.chainId ??
-				hostnameToChainId(
-					global.window ? global.window.location.host : ''
-				)
-		},
-		client: anonClient,
-		skip:
-			!isCurrentUserAgreementMemberData ||
-			isCurrentUserAgreementMemberData.AgreementTokens.length > 0
-	})
 
 	const {
 		loading: loadingMemberAgreement,
@@ -114,10 +100,30 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			},
 			client: mutualMembersClient,
 			skip:
-				!isCurrentUserAgreementMemberData ||
-				isCurrentUserAgreementMemberData.AgreementTokens.length === 0
+				!slug ||
+				(!isMembersOnly &&
+					(!isCurrentUserAgreementMemberData ||
+						isCurrentUserAgreementMemberData.AgreementTokens
+							.length === 0))
 		}
 	)
+
+	const {
+		loading: loadingAnonAgreement,
+		error: errorAnonAgreement,
+		data: anonAgreementData
+	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
+		variables: {
+			slug,
+			chainId:
+				wallet.chainId ??
+				hostnameToChainId(
+					global.window ? global.window.location.host : ''
+				)
+		},
+		client: anonClient,
+		skip: !slug || agreement !== undefined || isMembersOnly
+	})
 
 	useEffect(() => {
 		if (errorAnonAgreement) {
@@ -139,10 +145,15 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				return
 			}
 
-			if (agreementData.Agreements.length === 0) {
+			// Agreement does not exist
+			if (
+				anonAgreementData &&
+				anonAgreementData.Agreements.length === 0
+			) {
 				setIsLoadingAgreement(false)
 				return
 			}
+
 			// TODO: Why do I have to compare strings to prevent an infinite useEffect loop?
 
 			if (previousAgreementDataString) {
@@ -160,6 +171,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			if (possibleAgreement && possibleAgreement.name) {
 				setAgreement(possibleAgreement)
 				setIsLoadingAgreement(false)
+				setOriginalSlug(slug ?? '')
 				log.debug('got agreement')
 			}
 
@@ -182,16 +194,33 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 
 		if (
 			errorMemberAgreement &&
+			errorMemberAgreement.graphQLErrors &&
 			errorMemberAgreement.graphQLErrors.length > 0 &&
+			errorMemberAgreement.graphQLErrors[0].extensions &&
 			errorMemberAgreement.graphQLErrors[0].extensions.code ===
 				'invalid-jwt'
 		) {
+			const query =
+				window.location.pathname !== '/authenticate'
+					? {
+							return: window.location.pathname
+					  }
+					: {}
 			router.push({
 				pathname: '/authenticate',
-				query: {
-					return: window.location.pathname
-				}
+				query
 			})
+		}
+
+		if (slug !== originalSlug) {
+			setAgreement(undefined)
+			setIsLoadingAgreement(true)
+		}
+
+		// User does not have access to this page
+		if (isMembersOnly && memberAgreementData?.Agreements.length === 0) {
+			setIsLoadingAgreement(false)
+			return
 		}
 	}, [
 		agreement,
@@ -205,7 +234,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		memberAgreementData,
 		userAgreementMemberError,
 		router,
-		isCurrentUserAgreementMemberData
+		isCurrentUserAgreementMemberData,
+		slug,
+		originalSlug,
+		isMembersOnly
 	])
 	const value = useMemo(
 		() => ({

@@ -59,7 +59,10 @@ export const AgreementAdminComponent: React.FC = () => {
 	useEffect(() => {
 		if (
 			error &&
+			error.graphQLErrors &&
 			error.graphQLErrors.length > 0 &&
+			error.graphQLErrors[0].extensions &&
+			error.graphQLErrors[0].extensions.code &&
 			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
 		) {
 			router.push({
@@ -118,7 +121,10 @@ export const AgreementAdminComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that community does not exist!</Text>
+						<Text>
+							Sorry, either this community does not exist or you
+							do not have permission to view this page.
+						</Text>
 					</Center>
 				</Container>
 			)}

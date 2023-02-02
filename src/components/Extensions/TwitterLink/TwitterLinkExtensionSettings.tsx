@@ -73,6 +73,7 @@ export const TwitterLinkExtensionSettings: React.FC = () => {
 		await sdk.sdk.agreementExtension.updateAgreementExtension({
 			agreementId: agreement?.id ?? '',
 			agreementExtensionId: agreementExtension?.id,
+			isSetupComplete: true,
 			metadata: {
 				sidebarVisible: shouldDisplayInSidebar,
 				favoriteLinksVisible: shouldDisplayInFavoriteLinks

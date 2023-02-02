@@ -34,11 +34,7 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { useDiscussions } from './DiscussionProvider'
 
-interface IProps {
-	agreementSlug?: string
-}
-
-export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
+export const DiscussionPostSubmit: React.FC = () => {
 	// General properties / tab management
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
@@ -227,7 +223,7 @@ export const DiscussionPostSubmit: React.FC<IProps> = ({ agreementSlug }) => {
 				<>
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.row}>
-							<Link href={`/${agreementSlug}/e/discussions`}>
+							<Link href={`/${agreement?.slug}/e/discussions`}>
 								<div>
 									<ArrowLeft
 										style={{ marginTop: 35 }}

@@ -373,18 +373,25 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 				</>
 			)}
 
-			{!agreement.gnosisSafeAddress && wallet.chainId !== 420 && (
-				<Button
-					className={meemTheme.buttonBlack}
-					disabled={isCreatingSafeModalOpen}
-					loading={isCreatingSafeModalOpen}
-					onClick={() => {
-						setIsCreatingSafeModalOpen(true)
-					}}
-				>
-					Create Treasury
-				</Button>
-			)}
+			{!agreement.gnosisSafeAddress &&
+				wallet.chainId !== 420 &&
+				wallet.chainId !== 80001 && (
+					<Button
+						className={meemTheme.buttonBlack}
+						disabled={isCreatingSafeModalOpen}
+						loading={isCreatingSafeModalOpen}
+						onClick={() => {
+							setIsCreatingSafeModalOpen(true)
+						}}
+					>
+						Create Treasury
+					</Button>
+				)}
+
+			{!agreement.gnosisSafeAddress &&
+				(wallet.chainId === 420 || wallet.chainId === 80001) && (
+					<Text>Not supported on this network</Text>
+				)}
 
 			<Space h={32} />
 			<Divider />

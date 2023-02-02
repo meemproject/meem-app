@@ -3,11 +3,9 @@ import log from '@kengoldfarb/log'
 import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React from 'react'
-import { AgreementProvider } from '../../../../components/AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../../../components/App'
-import { StewardExtensionSettings } from '../../../../components/Extensions/Steward/StewardExtensionSettings'
+import { SymphonyExtensionSettings } from '../../../../components/Extensions/Symphony/SymphonyExtensionSettings'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
@@ -23,27 +21,23 @@ interface IProps {
 	agreement: AgreementPropViewModel
 }
 
-const AgreementStewardExtensionSettingsPage: NextPage<IProps> = ({
+const AgreementSymphonyExtensionSettingsPage: NextPage<IProps> = ({
 	agreement
 }) => {
-	const router = useRouter()
-
-	const agreementSlug =
-		router.query.slug === undefined ? '' : `${router.query.slug}`
 	return (
 		<>
 			<Head>
 				<title>
 					{agreement === undefined || agreement.isError
 						? 'Not found'
-						: `${agreement.responseBody.Agreements[0].name} | Steward Extension Settings | Meem`}
+						: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`}
 				</title>
 				<meta
 					name="title"
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Steward Extension Settings | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`
 					}
 				/>
 				<meta name="description" content={agreement.description} />
@@ -54,7 +48,7 @@ const AgreementStewardExtensionSettingsPage: NextPage<IProps> = ({
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Steward Extension Settings | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -68,7 +62,7 @@ const AgreementStewardExtensionSettingsPage: NextPage<IProps> = ({
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Steward Extension Settings | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -96,9 +90,8 @@ const AgreementStewardExtensionSettingsPage: NextPage<IProps> = ({
 				/>
 			</Head>
 			<HeaderMenu />
-			<AgreementProvider slug={agreementSlug}>
-				<StewardExtensionSettings />
-			</AgreementProvider>
+
+			<SymphonyExtensionSettings />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -161,4 +154,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default AgreementStewardExtensionSettingsPage
+export default AgreementSymphonyExtensionSettingsPage

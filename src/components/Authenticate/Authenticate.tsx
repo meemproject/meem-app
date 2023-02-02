@@ -1,6 +1,6 @@
 import log from '@kengoldfarb/log'
 import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
-import { useAuth, useSDK } from '@meemproject/react'
+import { LoginForm, useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
@@ -32,6 +32,10 @@ const MAuthenticate: React.FC = () => {
 					router.push({
 						pathname: router.query.return.toString()
 					})
+				} else {
+					router.push({
+						pathname: '/'
+					})
 				}
 			}
 		} catch (e) {
@@ -43,13 +47,6 @@ const MAuthenticate: React.FC = () => {
 			log.crit(e)
 		}
 	}, [wallet, router, login])
-
-	const connectWallet = useCallback(async () => {
-		setIsLoading(true)
-		await wallet.connectWallet()
-
-		setIsLoading(false)
-	}, [wallet])
 
 	return (
 		<Center>
@@ -73,14 +70,7 @@ const MAuthenticate: React.FC = () => {
 
 					{isLoading && <Loader variant="oval" color={'blue'} />}
 					<div>
-						{!isLoading && !wallet.isConnected && (
-							<Button
-								className={meemTheme.buttonBlack}
-								onClick={connectWallet}
-							>
-								Connect Wallet
-							</Button>
-						)}
+						{!isLoading && !wallet.isConnected && <LoginForm />}
 						{!isLoading && wallet.isConnected && (
 							<Button
 								className={meemTheme.buttonBlack}

@@ -10,6 +10,7 @@ import {
 	AgreementRoleTokens,
 	Agreements
 } from '../../../generated/graphql'
+import { quickTruncate } from '../../utils/truncated_wallet'
 import { tokenFromContractAddress } from '../token/token'
 
 export const AgreementAdminRole =
@@ -68,6 +69,7 @@ export interface AgreementMember {
 	displayName?: string
 	emailAddress?: string
 	ens?: string
+	identity?: string
 	isAgreementAdmin?: boolean
 	isAgreementOwner?: boolean
 	isMeemApi?: boolean
@@ -445,7 +447,8 @@ export default async function agreementFromDb(
 								)
 								iAmAgreementOwner =
 									agreementToken.OwnerId ===
-									agreementData.OwnerId
+										agreementData.OwnerId &&
+									agreementToken.OwnerId !== undefined
 
 								// Is the current user an admin?
 								if (iAmAgreementOwner) {
@@ -453,7 +456,10 @@ export default async function agreementFromDb(
 								} else {
 									agreementData.AgreementRoles.forEach(
 										role => {
-											if (role.isAdminRole) {
+											if (
+												role.isAdminRole &&
+												role.AgreementRoleTokens
+											) {
 												role.AgreementRoleTokens.forEach(
 													token => {
 														if (
@@ -491,7 +497,9 @@ export default async function agreementFromDb(
 
 							// Is this member the agreement owner?
 							isMemberTheAgreementOwner =
-								agreementToken.OwnerId === agreementData.OwnerId
+								agreementToken.OwnerId ===
+									agreementData.OwnerId &&
+								agreementToken.OwnerId !== undefined
 
 							// Roles + permissions logic
 							let memberRoles: AgreementRole[] = []
@@ -531,28 +539,40 @@ export default async function agreementFromDb(
 							}
 
 							// Agreement member metadata + extensions
-							const memberIdentity =
-								agreementToken.Wallet.Users &&
-								agreementToken.Wallet.Users.length > 0
-									? agreementToken.Wallet.Users[0]
-									: undefined
 
 							const twitterUsername = ''
 							const discordUsername = ''
 							const discordUserId = ''
 							const emailAddress = ''
 
+							const identity =
+								(agreementToken.Wallet.User?.displayName ?? '')
+									.length > 0
+									? agreementToken.Wallet.User?.displayName
+									: (agreementToken.Wallet.ens ?? '').length >
+									  0
+									? agreementToken.Wallet.ens
+									: quickTruncate(
+											agreementToken.Wallet.address
+									  )
+							const finalIdentity = identity
+								? identity?.toString()
+								: 'Member'
+
 							// Assemble member
 							const memberData = {
 								wallet: agreementToken.Wallet.address,
 								ens: agreementToken.Wallet.ens ?? undefined,
 								roles: memberRoles,
-								displayName: memberIdentity?.displayName
-									? memberIdentity?.displayName
+								displayName: agreementToken.Wallet.User
+									?.displayName
+									? agreementToken.Wallet.User?.displayName
 									: '',
-								profilePicture: memberIdentity?.profilePicUrl
+								profilePicture: agreementToken.Wallet.User
+									?.profilePicUrl
 									? normalizeImageUrl(
-											memberIdentity?.profilePicUrl
+											agreementToken.Wallet.User
+												?.profilePicUrl
 									  )
 									: '',
 								ownerId: agreementToken.OwnerId,
@@ -562,7 +582,8 @@ export default async function agreementFromDb(
 								emailAddress,
 								isAgreementOwner: isMemberTheAgreementOwner,
 								isAgreementAdmin: isMemberAnAdmin,
-								isMeemApi: isMemberMeemAPI
+								isMeemApi: isMemberMeemAPI,
+								identity: finalIdentity
 							}
 
 							// Add to members
