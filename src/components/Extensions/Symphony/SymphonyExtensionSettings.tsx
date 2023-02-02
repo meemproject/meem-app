@@ -31,7 +31,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('steward', agreement)
+	const agreementExtension = extensionFromSlug('symphony', agreement)
 	const router = useRouter()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
@@ -61,7 +61,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		const { code, inviteUrl } =
 			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
 				`${
-					process.env.NEXT_PUBLIC_STEWARD_API_URL
+					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 				}${API.v1.InviteDiscordBot.path()}`,
 				{ query: { agreementId: agreement?.id, jwt } }
 			)
@@ -75,7 +75,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		useSWR<API.v1.GetDiscordChannels.IResponseBody>(
 			agreement?.id && jwt
 				? `${
-						process.env.NEXT_PUBLIC_STEWARD_API_URL
+						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 				  }${API.v1.GetDiscordChannels.path()}`
 				: null,
 			url => {
@@ -95,7 +95,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const { data: rolesData } = useSWR<API.v1.GetDiscordRoles.IResponseBody>(
 		agreement?.id && jwt
 			? `${
-					process.env.NEXT_PUBLIC_STEWARD_API_URL
+					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 			  }${API.v1.GetDiscordRoles.path()}`
 			: null,
 		url => {
@@ -129,7 +129,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 		router.push({
 			pathname: `${
-				process.env.NEXT_PUBLIC_STEWARD_API_URL
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 			}${API.v1.GetTwitterAuthUrl.path()}`,
 			query: {
 				agreementId: agreement.id,
@@ -187,7 +187,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 		await makeRequest<API.v1.SaveRules.IDefinition>(
 			`${
-				process.env.NEXT_PUBLIC_STEWARD_API_URL
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 			}${API.v1.SaveRules.path()}`,
 			{
 				method: API.v1.SaveRules.method,
@@ -223,7 +223,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 		await makeRequest<API.v1.RemoveRules.IDefinition>(
 			`${
-				process.env.NEXT_PUBLIC_STEWARD_API_URL
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 			}${API.v1.RemoveRules.path()}`,
 			{
 				method: API.v1.RemoveRules.method,
@@ -242,7 +242,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			return
 		}
 		log.debug(`getting gun data...`)
-		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
+		gun?.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/twitter`)
 			.once(data => {
 				if (data) {
@@ -250,7 +250,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					log.debug(`twitter username = ${data.username}`)
 				}
 			})
-		gun.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
+		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/discord`)
 			.once(data => {
 				if (data) {
@@ -259,7 +259,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				}
 			})
 
-		gun?.get(`~${process.env.NEXT_PUBLIC_STEWARD_PUBLIC_KEY}`)
+		gun?.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/rules`)
 
 			// @ts-ignore
@@ -631,7 +631,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'steward'} />
+			<ExtensionBlankSlate extensionSlug={'symphony'} />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
@@ -662,7 +662,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							{hasFetchedData && (
 								<>
 									<ExtensionPageHeader
-										extensionSlug={'steward'}
+										extensionSlug={'symphony'}
 									/>
 
 									<Container>

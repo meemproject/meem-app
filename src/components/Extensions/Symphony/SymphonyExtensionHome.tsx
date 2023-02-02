@@ -17,14 +17,14 @@ export const SymphonyExtensionHome: React.FC = () => {
 
 	/*
 	Access the agreement, loading and error states using AgreementContext.
-	Look inside /pages/e/steward/index.tsx for an steward of how
+	Look inside /pages/e/symphony/index.tsx for an symphony of how
 	the AgreementProvider and AgreementContext is used to fetch a agreement
 	where required.
 	*/
 	// const { agreement, isLoadingAgreement, error } = useAgreement()
 
 	// Access your extension's data like so:
-	//const agreementExtension = extensionFromSlug('steward', agreement)
+	//const agreementExtension = extensionFromSlug('symphony', agreement)
 
 	/*
 	NOTE: For UI development, we have disabled loading / error states for you. 
@@ -55,10 +55,10 @@ export const SymphonyExtensionHome: React.FC = () => {
 			) && (
 				<>
 
-					<ExtensionPageHeader extensionSlug={'steward'} />
+					<ExtensionPageHeader extensionSlug={'symphony'} />
 
 					<Text className={meemTheme.tSmall}>
-						This is the homepage for an steward extension.
+						This is the homepage for an symphony extension.
 					</Text>
 				</>
 			)} */}
