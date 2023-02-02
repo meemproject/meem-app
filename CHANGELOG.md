@@ -1,3 +1,10 @@
+## [1.16.1](https://github.com/meemproject/meem-app/compare/v1.16.0...v1.16.1) (2023-02-02)
+
+
+### Bug Fixes
+
+* twitter detection and bot activation ([266ee5a](https://github.com/meemproject/meem-app/commit/266ee5a))
+
 # [1.16.0](https://github.com/meemproject/meem-app/compare/v1.15.1...v1.16.0) (2023-02-02)
 
 
