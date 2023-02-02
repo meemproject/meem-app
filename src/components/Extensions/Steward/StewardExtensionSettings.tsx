@@ -291,7 +291,7 @@ export const StewardExtensionSettings: React.FC = () => {
 											JSON.parse(rule.approverRoles),
 										vetoerEmojis:
 											rule.approverEmojis &&
-											JSON.parse(rule.approverEmojis),
+											JSON.parse(rule.vetoerEmojis),
 										vetoerRoles:
 											rule.approverRoles &&
 											JSON.parse(rule.approverRoles),
