@@ -8,7 +8,7 @@ import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
-export const StewardExtensionHome: React.FC = () => {
+export const SymphonyExtensionHome: React.FC = () => {
 	/*
 	Use the meemTheme object to access agreements styles
 	such as colors, fonts and layouts
@@ -37,7 +37,7 @@ export const StewardExtensionHome: React.FC = () => {
 
 			<Center>
 				<Text className={meemTheme.tSmall}>
-					This is the homepage for an steward extension.
+					This is the homepage for the symphony extension.
 				</Text>
 			</Center>
 

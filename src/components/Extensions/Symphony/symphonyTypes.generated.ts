@@ -76,12 +76,12 @@ export namespace API {
 	// export interface IRule {
 	// 	ruleId?: string
 	// 	channelIds?: string[] | null
-	// 	action: StewardAction
+	// 	action: SymphonyAction
 	// 	requirements: IRequirementGroup[]
 	// 	isEnabled: boolean
 	// }
 
-	// export interface IStewardSettings {
+	// export interface ISymphonySettings {
 	// 	rules: IRule[]
 	// }
 
@@ -332,7 +332,7 @@ export namespace API {
 				/** The url to invite the bot to your discord */
 				inviteUrl: string
 
-				/** The code to activate the bot using /activateSteward command */
+				/** The code to activate the bot using /activateSymphony command */
 				code: string
 			}
 

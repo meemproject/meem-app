@@ -22,10 +22,10 @@ import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorBlue, colorDarkBlue, useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
-import { IOnSave, StewardRuleBuilder } from './StewardRuleBuilder'
-import { API } from './stewardTypes.generated'
+import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
+import { API } from './symphonyTypes.generated'
 
-export const StewardExtensionSettings: React.FC = () => {
+export const SymphonyExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()
@@ -401,7 +401,8 @@ export const StewardExtensionSettings: React.FC = () => {
 								<>
 									<Space h={4} />
 									<Text>
-										Activate with /activateSteward {botCode}
+										Activate with /activateSymphony{' '}
+										{botCode}
 									</Text>
 								</>
 							)}
@@ -501,7 +502,7 @@ export const StewardExtensionSettings: React.FC = () => {
 					setIsRuleBuilderOpen(false)
 				}}
 			>
-				<StewardRuleBuilder
+				<SymphonyRuleBuilder
 					channels={channelsData?.channels}
 					selectedRule={selectedRule}
 					roles={rolesData?.roles}
@@ -570,12 +571,12 @@ export const StewardExtensionSettings: React.FC = () => {
 					}
 				></Stepper.Step>
 				<Stepper.Step
-					label="Invite Steward bot"
+					label="Invite Symphony bot"
 					description={
 						<>
 							<Text
 								className={meemTheme.tExtraSmall}
-							>{`Please invite the Steward bot to manage your Discord server.`}</Text>
+							>{`Please invite the Symphony bot to manage your Discord server.`}</Text>
 							{activeStep === 1 && (
 								<>
 									<Space h={16} />
@@ -589,7 +590,7 @@ export const StewardExtensionSettings: React.FC = () => {
 											}
 											className={meemTheme.buttonBlack}
 										>
-											{`Invite Steward Bot`}
+											{`Invite Symphony Bot`}
 										</Button>
 									</div>
 								</>

@@ -16,7 +16,7 @@ interface IProps {
 Be sure to import your widget in AgreementHome.tsx to ensure it is displayed
 when enabled.
 */
-export const StewardWidget: React.FC<IProps> = ({ agreement }) => {
+export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 	/*
 	Use the meemTheme object to access agreements styles
 	such as colors, fonts and layouts
@@ -31,7 +31,7 @@ export const StewardWidget: React.FC<IProps> = ({ agreement }) => {
 			<div className={meemTheme.spacedRowCentered}>
 				<div className={meemTheme.centeredRow}>
 					<Text className={meemTheme.tMediumBold}>
-						Steward Extension Widget
+						Symphony Extension Widget
 					</Text>
 					<Space w={6} />
 				</div>
