@@ -36,6 +36,24 @@ const COMMIT_SHA =
   VERCEL_BITBUCKET_COMMIT_SHA;
 
 const config = {
+  // async headers() {
+  //   const ContentSecurityPolicy = `
+  //     default-src 'self' *.magic.link *.meem.wtf localhost:3005 localhost:3006 'unsafe-eval' 'unsafe-inline';
+  //     connect-src 'self' ws: *.meem.wtf localhost:3005 localhost:3006;
+  //   `
+
+  //   const securityHeaders = [{
+  //     key: 'Content-Security-Policy',
+  //     value: ContentSecurityPolicy.replace(/\s{2,}/g, ' ').trim()
+
+  //   }]
+
+  //   return [{
+  //     // Apply these headers to all routes in your application.
+  //     source: '/:path*',
+  //     headers: securityHeaders,
+  //   }]
+  // },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

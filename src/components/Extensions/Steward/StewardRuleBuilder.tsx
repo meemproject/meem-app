@@ -441,7 +441,7 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 											display: 'flex',
 											flexDirection: 'row'
 										}}
-										key={`approvalEmoji-${e}`}
+										key={`vetoerEmoji-${e}`}
 										onClick={() => {
 											setVetoerEmojis(
 												vetoerEmojis.filter(

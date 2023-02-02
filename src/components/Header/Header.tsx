@@ -156,7 +156,7 @@ export function HeaderMenu() {
 				</div>
 
 				<div className={meemTheme.siteHeaderRightItems}>
-					{walletType === 'magic' && (
+					{walletType === 'magic' && isConnected && (
 						<Button
 							className={meemTheme.buttonAsh}
 							onClick={() => {
