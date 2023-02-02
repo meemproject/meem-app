@@ -1,3 +1,31 @@
+# [1.16.0](https://github.com/meemproject/meem-app/compare/v1.15.1...v1.16.0) (2023-02-02)
+
+
+### Bug Fixes
+
+* another edge case with error.graphqlerrors ([11ecf62](https://github.com/meemproject/meem-app/commit/11ecf62))
+* client side error when checking for an 'invalid-jwt' error ([3446708](https://github.com/meemproject/meem-app/commit/3446708))
+* dark mode google icon ([3d2564c](https://github.com/meemproject/meem-app/commit/3d2564c))
+* display of 'under construction' message ([390610a](https://github.com/meemproject/meem-app/commit/390610a))
+* don't check membership requirements if wallet is not connected ([f054798](https://github.com/meemproject/meem-app/commit/f054798))
+* edge case where if a community had no available widgets but had a link, the under construction message would show up ([15f1dde](https://github.com/meemproject/meem-app/commit/15f1dde))
+* emoji picker not working in a couple spots on the site ([f6a3965](https://github.com/meemproject/meem-app/commit/f6a3965))
+* get token balance, show loading state instead of join button if reqs are being checked ([60a4e60](https://github.com/meemproject/meem-app/commit/60a4e60))
+* improve page loads by ~1.5 seconds by streaming in member-only data when ready rather than waiting for anon queries first ([deff5e8](https://github.com/meemproject/meem-app/commit/deff5e8))
+* margins ([d9ed88c](https://github.com/meemproject/meem-app/commit/d9ed88c))
+* only check for tx in remove member modal if opened ([cc5369f](https://github.com/meemproject/meem-app/commit/cc5369f))
+* refactor steward to symphony ([36b801a](https://github.com/meemproject/meem-app/commit/36b801a))
+* small edge case where loading an anonymous agreement could temporarily show 'this community does not exist' ([d8aa919](https://github.com/meemproject/meem-app/commit/d8aa919))
+* small ui fixes, revert authenticate as it's being worked on ([56506f9](https://github.com/meemproject/meem-app/commit/56506f9))
+* token polygonscan link fixed, also now opens correctly in new tab ([1bf6e4a](https://github.com/meemproject/meem-app/commit/1bf6e4a))
+
+
+### Features
+
+* magic link wallet link moved into user dropdown ([c0e9699](https://github.com/meemproject/meem-app/commit/c0e9699))
+* remove members from community via hover card ([deff4e7](https://github.com/meemproject/meem-app/commit/deff4e7))
+* symphony styles ([af0c876](https://github.com/meemproject/meem-app/commit/af0c876))
+
 ## [1.15.1](https://github.com/meemproject/meem-app/compare/v1.15.0...v1.15.1) (2023-01-27)
 
 
