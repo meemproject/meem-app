@@ -185,6 +185,8 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 										<a
 											className={meemTheme.tLink}
 											href={tokenUrl}
+											target={'_blank'}
+											rel="noreferrer"
 										>
 											{tokenName}
 										</a>

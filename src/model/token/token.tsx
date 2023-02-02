@@ -49,7 +49,7 @@ export async function tokenFromContractAddress(
 			break
 
 		case 80001:
-			baseUrl = 'https://mumbai.polygonscan.io/address/'
+			baseUrl = 'https://mumbai.polygonscan.com/address/'
 			break
 
 		case 420:
@@ -62,7 +62,7 @@ export async function tokenFromContractAddress(
 
 		case 137:
 		default:
-			baseUrl = 'https://polygonscan.io/address/'
+			baseUrl = 'https://polygonscan.com/address/'
 			break
 	}
 
