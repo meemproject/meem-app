@@ -1,6 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Image, Loader, Button, Space, Modal } from '@mantine/core'
 import { base64StringToBlob } from 'blob-util'
+import type { EmojiClickData } from 'emoji-picker-react'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
@@ -26,7 +27,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 	const [hasLoadedAgreementData, setHasLoadedAgreementData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [chosenEmoji, setChosenEmoji] = useState<any>(null)
+	const [chosenEmoji, setChosenEmoji] = useState<EmojiClickData>()
 
 	// Agreement logo
 	const [smallAgreementLogo, setSmallAgreementLogo] = useState('')
@@ -95,7 +96,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 		return new Promise(res => setTimeout(res, delay))
 	}
 
-	const onEmojiClick = async (event: any, emojiObject: any) => {
+	const onEmojiClick = async (emojiObject: EmojiClickData) => {
 		setChosenEmoji(emojiObject)
 		setIsEmojiPickerOpen(false)
 		await timeout(100)
@@ -104,6 +105,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 			log.debug('found emojiCanvas')
 
 			const canvas = await html2canvas(element as HTMLElement)
+
 			const image = canvas.toDataURL('image/png', 1.0)
 			const agreementLogoBlob = base64StringToBlob(
 				image.split(',')[1],
@@ -237,7 +239,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 				withCloseButton={false}
 				padding={8}
 				overlayBlur={8}
-				size={296}
+				size={366}
 				opened={isEmojiPickerOpen}
 				onClose={() => {
 					setIsEmojiPickerOpen(false)

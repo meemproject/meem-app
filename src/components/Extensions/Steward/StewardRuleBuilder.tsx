@@ -487,6 +487,10 @@ export const StewardRuleBuilder: React.FC<IProps> = ({
 				{...form.getInputProps('shouldReply', { type: 'checkbox' })}
 			/>
 			<Modal
+				withCloseButton={false}
+				padding={8}
+				overlayBlur={8}
+				size={366}
 				opened={isEmojiPickerOpen}
 				onClose={() => setIsEmojiPickerOpen(false)}
 			>

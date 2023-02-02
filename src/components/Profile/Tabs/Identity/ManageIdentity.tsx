@@ -22,6 +22,7 @@ import {
 import type { UserIdentity } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
+import type { EmojiClickData } from 'emoji-picker-react'
 import html2canvas from 'html2canvas'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
@@ -134,7 +135,7 @@ export const ManageIdentityComponent: React.FC = () => {
 		return new Promise(res => setTimeout(res, delay))
 	}
 
-	const onEmojiClick = async (event: any, emojiObject: any) => {
+	const onEmojiClick = async (emojiObject: EmojiClickData) => {
 		setChosenEmoji(emojiObject)
 		setIsEmojiPickerOpen(false)
 		await timeout(100)
@@ -477,7 +478,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				withCloseButton={false}
 				padding={8}
 				overlayBlur={8}
-				size={296}
+				size={366}
 				opened={isEmojiPickerOpen}
 				onClose={() => {
 					setIsEmojiPickerOpen(false)
