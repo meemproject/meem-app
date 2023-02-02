@@ -314,10 +314,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			})
 
 		setHasFetchedData(true)
-
-		if (twitterUsername.length > 0 && activeStep === 0) {
-			setActiveStep(1)
-		}
 	}, [
 		agreement,
 		sdk,
