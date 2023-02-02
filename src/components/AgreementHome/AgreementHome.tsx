@@ -105,6 +105,7 @@ export const AgreementHome: React.FC = () => {
 									ext.Extension.capabilities.includes(
 										'widget'
 									) &&
+									ext.AgreementExtensionWidgets.length > 0 &&
 									ext.isSetupComplete
 							)
 							.map(extension => (

@@ -114,7 +114,10 @@ export const RolesManager: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>Sorry, that community does not exist!</Text>
+						<Text>
+							Sorry, either this community does not exist or you
+							do not have permission to view this page.
+						</Text>
 					</Center>
 				</Container>
 			)}

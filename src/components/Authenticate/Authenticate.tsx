@@ -38,7 +38,7 @@ const MAuthenticate: React.FC = () => {
 			setIsLoading(false)
 			showErrorNotification(
 				'Oops!',
-				'Unable to sign into Meem with your wallet. Please get in touch!'
+				'Unable to sign into Meem. Please get in touch!'
 			)
 			log.crit(e)
 		}
@@ -65,7 +65,7 @@ const MAuthenticate: React.FC = () => {
 						<Text>
 							{wallet.isConnected
 								? `Please sign the message below.`
-								: `Please reconnect your wallet below first.`}
+								: `Please sign in below first.`}
 						</Text>
 					</div>
 
@@ -78,7 +78,7 @@ const MAuthenticate: React.FC = () => {
 								className={meemTheme.buttonBlack}
 								onClick={connectWallet}
 							>
-								Connect Wallet
+								Sign in
 							</Button>
 						)}
 						{!isLoading && wallet.isConnected && (

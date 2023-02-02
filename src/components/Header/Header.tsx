@@ -10,8 +10,7 @@ import {
 	Space,
 	Loader,
 	useMantineColorScheme,
-	ActionIcon,
-	Button
+	ActionIcon
 } from '@mantine/core'
 import {
 	LoginModal,
@@ -156,16 +155,6 @@ export function HeaderMenu() {
 				</div>
 
 				<div className={meemTheme.siteHeaderRightItems}>
-					{walletType === 'magic' && (
-						<Button
-							className={meemTheme.buttonAsh}
-							onClick={() => {
-								magic?.connect.showWallet()
-							}}
-						>
-							Show Wallet
-						</Button>
-					)}
 					{(loginState === LoginState.LoggedIn || isConnected) && (
 						<Menu
 							radius={8}
@@ -219,6 +208,18 @@ export function HeaderMenu() {
 							<Menu.Dropdown>
 								{loginState === LoginState.LoggedIn && (
 									<>
+										{walletType === 'magic' && (
+											<Menu.Item
+												onClick={() => {
+													magic?.connect?.showWallet()
+												}}
+												className={
+													meemTheme.tExtraSmallBold
+												}
+											>
+												<Text>My Wallet</Text>
+											</Menu.Item>
+										)}
 										<Menu.Item
 											className={
 												meemTheme.tExtraSmallBold
@@ -227,7 +228,7 @@ export function HeaderMenu() {
 											<Link
 												href={`/profile?tab=identity`}
 											>
-												<Text>My Account</Text>
+												<Text>My Profile</Text>
 											</Link>
 										</Menu.Item>
 										<Menu.Item
