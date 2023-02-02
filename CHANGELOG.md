@@ -1,3 +1,81 @@
+# [1.16.0](https://github.com/meemproject/meem-app/compare/v1.15.1...v1.16.0) (2023-02-02)
+
+
+### Bug Fixes
+
+* another edge case with error.graphqlerrors ([11ecf62](https://github.com/meemproject/meem-app/commit/11ecf62))
+* client side error when checking for an 'invalid-jwt' error ([3446708](https://github.com/meemproject/meem-app/commit/3446708))
+* dark mode google icon ([3d2564c](https://github.com/meemproject/meem-app/commit/3d2564c))
+* display of 'under construction' message ([390610a](https://github.com/meemproject/meem-app/commit/390610a))
+* don't check membership requirements if wallet is not connected ([f054798](https://github.com/meemproject/meem-app/commit/f054798))
+* edge case where if a community had no available widgets but had a link, the under construction message would show up ([15f1dde](https://github.com/meemproject/meem-app/commit/15f1dde))
+* emoji picker not working in a couple spots on the site ([f6a3965](https://github.com/meemproject/meem-app/commit/f6a3965))
+* get token balance, show loading state instead of join button if reqs are being checked ([60a4e60](https://github.com/meemproject/meem-app/commit/60a4e60))
+* improve page loads by ~1.5 seconds by streaming in member-only data when ready rather than waiting for anon queries first ([deff5e8](https://github.com/meemproject/meem-app/commit/deff5e8))
+* margins ([d9ed88c](https://github.com/meemproject/meem-app/commit/d9ed88c))
+* only check for tx in remove member modal if opened ([cc5369f](https://github.com/meemproject/meem-app/commit/cc5369f))
+* refactor steward to symphony ([36b801a](https://github.com/meemproject/meem-app/commit/36b801a))
+* small edge case where loading an anonymous agreement could temporarily show 'this community does not exist' ([d8aa919](https://github.com/meemproject/meem-app/commit/d8aa919))
+* small ui fixes, revert authenticate as it's being worked on ([56506f9](https://github.com/meemproject/meem-app/commit/56506f9))
+* token polygonscan link fixed, also now opens correctly in new tab ([1bf6e4a](https://github.com/meemproject/meem-app/commit/1bf6e4a))
+
+
+### Features
+
+* magic link wallet link moved into user dropdown ([c0e9699](https://github.com/meemproject/meem-app/commit/c0e9699))
+* remove members from community via hover card ([deff4e7](https://github.com/meemproject/meem-app/commit/deff4e7))
+* symphony styles ([af0c876](https://github.com/meemproject/meem-app/commit/af0c876))
+
+## [1.15.1](https://github.com/meemproject/meem-app/compare/v1.15.0...v1.15.1) (2023-01-27)
+
+
+### Bug Fixes
+
+* extension settings ([2441de2](https://github.com/meemproject/meem-app/commit/2441de2))
+
+# [1.15.0](https://github.com/meemproject/meem-app/compare/v1.14.0...v1.15.0) (2023-01-27)
+
+
+### Bug Fixes
+
+* adding role members removes existing ones ([e8c9657](https://github.com/meemproject/meem-app/commit/e8c9657))
+* dark mode ext. icons ([0ddffdf](https://github.com/meemproject/meem-app/commit/0ddffdf))
+* don't fetch agreement metadata in GetServerSideProps (should save many kb for agreements with images) ([e36c280](https://github.com/meemproject/meem-app/commit/e36c280))
+* don't show 'add your first extension' for admins if there is an extension added of any kind ([a14d072](https://github.com/meemproject/meem-app/commit/a14d072))
+* extension header community icon also links back to homepage ([2a6f275](https://github.com/meemproject/meem-app/commit/2a6f275))
+* forwardref warnings and margins ([4eb7369](https://github.com/meemproject/meem-app/commit/4eb7369))
+* url now correctly updates when navigating between tabs ([f18fc2a](https://github.com/meemproject/meem-app/commit/f18fc2a))
+* use Link instead of Router.push to speed up page navigation ([d6a4bb8](https://github.com/meemproject/meem-app/commit/d6a4bb8))
+
+
+### Features
+
+* clicking on the header image in settings pages takes you back to the community home page ([a3bf40a](https://github.com/meemproject/meem-app/commit/a3bf40a))
+* new blank slate state handling for community homepage ([aa51e74](https://github.com/meemproject/meem-app/commit/aa51e74))
+* Require extensions to have completed setup before displaying in the UI. ([25dd733](https://github.com/meemproject/meem-app/commit/25dd733))
+* set 'setup complete' when certain conditions are met on extensions ([67de79e](https://github.com/meemproject/meem-app/commit/67de79e))
+* when creating extensions, set 'is setup complete' to true automatically if setup is not required ([9da6b9f](https://github.com/meemproject/meem-app/commit/9da6b9f))
+* working extension categories ([073717a](https://github.com/meemproject/meem-app/commit/073717a))
+
+# [1.14.0](https://github.com/meemproject/meem-app/compare/v1.13.1...v1.14.0) (2023-01-26)
+
+
+### Bug Fixes
+
+* create agreement modal wasn't opening in some scenarios ([9904dc4](https://github.com/meemproject/meem-app/commit/9904dc4))
+* don't print ext categories ([653cc3a](https://github.com/meemproject/meem-app/commit/653cc3a))
+* missing icon for steward ([4d58927](https://github.com/meemproject/meem-app/commit/4d58927))
+* Switch Agreement Admin Changes modal over to monitor transactions, like roles modal ([f8cc355](https://github.com/meemproject/meem-app/commit/f8cc355))
+* Update copy in dev modal for agreement details ([fc83c38](https://github.com/meemproject/meem-app/commit/fc83c38))
+
+
+### Features
+
+* sort extensions in list by category ([0f18c6d](https://github.com/meemproject/meem-app/commit/0f18c6d))
+* updated style for enabled extensions ([86962fb](https://github.com/meemproject/meem-app/commit/86962fb))
+
+## [1.13.1](https://github.com/meemproject/meem-app/compare/v1.13.0...v1.13.1) (2023-01-25)
+
 # [1.13.0](https://github.com/meemproject/meem-app/compare/v1.12.0...v1.13.0) (2023-01-24)
 
 
