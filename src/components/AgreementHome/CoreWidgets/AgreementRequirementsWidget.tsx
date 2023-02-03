@@ -49,9 +49,10 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 			isCurrentUserAgreementAdmin: boolean,
 			slotsLeft: number
 		) => {
+			onRequirementsChecked(true)
+
 			if (reqs.length === 0 || isCurrentUserAgreementAdmin) {
 				onMeetsAllReqsChanged(true)
-				onRequirementsChecked(true)
 			} else {
 				let reqsMet = 0
 				reqs.forEach(req => {
@@ -69,7 +70,6 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 					onMeetsAllReqsChanged(true)
 				}
 			}
-			onRequirementsChecked(true)
 		},
 		[onMeetsAllReqsChanged, onRequirementsChecked]
 	)
@@ -95,7 +95,11 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 					let tokenBalance = BigNumber.from(0)
 					let tokenUrl = ''
 					let tokenName = 'Unknown Token'
-					if (wallet.web3Provider && wallet.signer) {
+					if (
+						wallet.web3Provider &&
+						wallet.signer &&
+						req.type === MembershipReqType.TokenHolders
+					) {
 						const token = await tokenFromContractAddress(
 							req.tokenContractAddress,
 							wallet
@@ -331,7 +335,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (
-			agreement.name &&
+			agreement &&
 			user.user &&
 			!user.isLoading &&
 			wallet.isConnected &&
@@ -343,8 +347,10 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 	}, [
 		agreement,
 		parseRequirements,
+		user,
 		user.isLoading,
 		user.user,
+		wallet,
 		wallet.isConnected,
 		wallet.signer,
 		wallet.web3Provider
