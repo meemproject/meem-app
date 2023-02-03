@@ -669,8 +669,8 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 				</Modal>
 				<AgreementAdminChangesModal
 					agreement={newAgreementData}
-					isOpened={isSaveChangesModalOpened}
-					onModalClosed={() => {
+					isRequestInProgress={isSaveChangesModalOpened}
+					onRequestComplete={() => {
 						setIsSavingChanges(false)
 						setSaveChangesModalOpened(false)
 					}}

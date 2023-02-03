@@ -1,32 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Space, Modal, Loader } from '@mantine/core'
-import {
-	useSDK,
-	useSockets,
-	useWallet,
-	useMeemApollo
-} from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
+import { useSDK, useWallet } from '@meemproject/react'
 import { Contract } from 'ethers'
 import React, { useCallback, useEffect, useState } from 'react'
 // eslint-disable-next-line import/namespace
-import {
-	GetAgreementSubscriptionSubscription, // eslint-disable-next-line import/namespace
-	GetBundleByIdQuery
-} from '../../../../generated/graphql'
-import { SUB_AGREEMENT_AS_MEMBER } from '../../../graphql/agreements'
+import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import {
 	Agreement,
 	AgreementAdminRole
 } from '../../../model/agreement/agreements'
-import {
-	showErrorNotification,
-	showSuccessNotification
-} from '../../../utils/notifications'
-import { hostnameToChainId } from '../../App'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { showErrorNotification } from '../../../utils/notifications'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 
 interface IProps {
 	agreement?: Agreement
@@ -47,51 +31,14 @@ export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
 
 	const { sdk } = useSDK()
 
-	const { classes: meemTheme } = useMeemTheme()
-
-	const { mutualMembersClient } = useMeemApollo()
+	const { watchTransactions } = useAgreement()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [currentAgreementDataString, setCurrentAgreementDataString] =
-		useState('')
-
-	const [hasSubscribedToSockets, setHasSubscribedToSockets] = useState(false)
-
-	const { connect, sockets, isConnected: isSocketsConnected } = useSockets()
-
 	const closeModal = useCallback(() => {
-		if (sockets) {
-			sockets.unsubscribe([
-				{ type: MeemAPI.MeemEvent.Err },
-				{ type: MeemAPI.MeemEvent.MeemIdUpdated },
-				{ type: MeemAPI.MeemEvent.MeemMinted }
-			])
-		}
 		onModalClosed()
-		setHasSubscribedToSockets(false)
 		setIsSavingChanges(false)
-		setCurrentAgreementDataString('')
-	}, [onModalClosed, sockets])
-
-	const {
-		loading,
-		error,
-		data: agreementData
-	} = useSubscription<GetAgreementSubscriptionSubscription>(
-		SUB_AGREEMENT_AS_MEMBER,
-		{
-			variables: {
-				slug: agreement?.slug ?? '',
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
-			},
-			client: mutualMembersClient
-		}
-	)
+	}, [onModalClosed])
 
 	useEffect(() => {
 		async function changeMeemProtocolPermissions() {
@@ -140,134 +87,38 @@ export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
 							process.env.NEXT_PUBLIC_MEEM_API_WALLET_ADDRESS
 						)
 
-						await tx.wait()
+						if (tx) {
+							log.debug(JSON.stringify(tx))
+							if (tx.id) {
+								watchTransactions([tx.id])
+							} else {
+								watchTransactions([tx])
+							}
+							closeModal()
+						}
 					}
 				} catch (e) {
+					closeModal()
 					log.debug(e)
 				}
 			}
 		}
-		function compareAgreementData() {
-			if (agreementData) {
-				const newAgreementDataString = JSON.stringify(agreementData)
 
-				if (currentAgreementDataString === newAgreementDataString) {
-					log.debug('nothing has changed on the agreement yet.')
-				} else {
-					log.debug('changes detected on the agreement.')
-					closeModal()
-
-					showSuccessNotification(
-						'Success!',
-						`${agreementData.Agreements[0].name} has been updated.`
-					)
-				}
-			}
-		}
-
-		if (agreementData && !loading && !error && isOpened) {
-			if (currentAgreementDataString.length === 0) {
-				if (agreementData.Agreements.length > 0) {
-					// Set initial agreement data
-					log.debug('setting initial agreement data...')
-					setCurrentAgreementDataString(JSON.stringify(agreementData))
-				}
-			} else {
-				// compare to initial agreement fata
-				compareAgreementData()
-			}
-		}
-
-		if (
-			!hasSubscribedToSockets &&
-			sockets &&
-			wallet.accounts[0] &&
-			isOpened
-		) {
-			setHasSubscribedToSockets(true)
-
-			sockets.subscribe(
-				[{ key: MeemAPI.MeemEvent.Err }],
-				wallet.accounts[0]
-			)
-			sockets.on({
-				eventName: MeemAPI.MeemEvent.Err,
-				handler: err => {
-					log.crit('SOCKET ERROR CAUGHT!!!!!!!!!!')
-					log.crit(err)
-					log.crit(err.detail.code)
-
-					if (err.detail.code === 'TX_LIMIT_EXCEEDED') {
-						showErrorNotification(
-							'Transaction limit exceeded',
-							'You have used all the transactions available to you today. Get in touch or wait until tomorrow.'
-						)
-					} else {
-						showErrorNotification(
-							'Error saving changes',
-							'An error occurred while saving changes. Please try again.'
-						)
-					}
-
-					closeModal()
-				}
-			})
-		}
-
-		if (isOpened && !hasSubscribedToSockets) {
-			connect()
+		if (isOpened && !isSavingChanges) {
 			changeMeemProtocolPermissions()
 		}
 	}, [
 		closeModal,
-		connect,
 		isSavingChanges,
-		isSocketsConnected,
 		agreement,
-		agreementData,
-		currentAgreementDataString,
-		error,
-		hasSubscribedToSockets,
 		isOpened,
-		loading,
 		onModalClosed,
-		sockets,
 		wallet,
 		sdk.agreement,
 		bundleData,
-		smartContractPermission
+		smartContractPermission,
+		watchTransactions
 	])
 
-	return (
-		<>
-			<Modal
-				centered
-				withCloseButton={false}
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				overlayBlur={8}
-				radius={16}
-				size={'lg'}
-				padding={'sm'}
-				opened={isOpened}
-				onClose={() => {
-					closeModal()
-				}}
-			>
-				<div className={meemTheme.modalHeader}>
-					<Loader color="cyan" variant="oval" />
-					<Space h={16} />
-					<Text
-						className={meemTheme.tMediumBold}
-					>{`Changing Meem Protocol admin permissions...`}</Text>
-					<Space h={24} />
-
-					<Text
-						className={meemTheme.tSmall}
-						style={{ textAlign: 'center' }}
-					>{`Please don’t refresh or close this window until this step is complete. This might take a few minutes.`}</Text>
-				</div>
-			</Modal>
-		</>
-	)
+	return <></>
 }

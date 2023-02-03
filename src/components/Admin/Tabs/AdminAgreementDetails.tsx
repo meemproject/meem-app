@@ -1,4 +1,3 @@
-import log from '@kengoldfarb/log'
 import {
 	Text,
 	Button,
@@ -10,6 +9,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
@@ -25,6 +25,8 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 	const [hasLoadedAgreementData, setHasLoadedAgreementData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
+	const { isTransactionInProgress } = useAgreement()
+
 	useEffect(() => {
 		if (!hasLoadedAgreementData) {
 			setHasLoadedAgreementData(true)
@@ -34,12 +36,12 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 	}, [agreement, hasLoadedAgreementData])
 
 	const [newAgreementData, setNewAgreementData] = useState<Agreement>()
-	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
-		useState(false)
-	const openSaveChangesModal = () => {
+
+	const startRequest = () => {
 		// Some basic validation
 		if (agreementName.length < 3 || agreementName.length > 50) {
 			// Agreement name invalid
+			setIsSavingChanges(false)
 			showErrorNotification(
 				'Oops!',
 				'You entered an invalid community name. Please choose a longer or shorter name.'
@@ -67,20 +69,8 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 		newAgreement.description = agreementDescription
 		newAgreement.image = agreement.image
 
-		if (oldAgreement === JSON.stringify(newAgreement)) {
-			log.debug('no changes, nothing to save. Tell user.')
-			setIsSavingChanges(false)
-			showErrorNotification('Oops!', 'There are no changes to save.')
-			return
-		} else {
-			setNewAgreementData(newAgreement)
-			setSaveChangesModalOpened(true)
-		}
-	}
-
-	const saveChanges = async () => {
+		setNewAgreementData(newAgreement)
 		setIsSavingChanges(true)
-		openSaveChangesModal()
 	}
 
 	return (
@@ -122,8 +112,9 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 			<Space h={40} />
 			<Button
 				className={meemTheme.buttonBlack}
-				loading={isSavingChanges}
-				onClick={saveChanges}
+				loading={isSavingChanges || isTransactionInProgress}
+				disabled={isSavingChanges || isTransactionInProgress}
+				onClick={startRequest}
 			>
 				Save Changes
 			</Button>
@@ -141,10 +132,9 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 			<Space h={64} />
 			<AgreementAdminChangesModal
 				agreement={newAgreementData}
-				isOpened={isSaveChangesModalOpened}
-				onModalClosed={() => {
+				isRequestInProgress={isSavingChanges}
+				onRequestComplete={() => {
 					setIsSavingChanges(false)
-					setSaveChangesModalOpened(false)
 				}}
 			/>
 		</div>
