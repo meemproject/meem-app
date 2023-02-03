@@ -1,3 +1,17 @@
+# [1.17.0](https://github.com/meemproject/meem-app/compare/v1.16.1...v1.17.0) (2023-02-03)
+
+
+### Bug Fixes
+
+* app colors, discussion display name ([b8b5a2c](https://github.com/meemproject/meem-app/commit/b8b5a2c))
+* widget margins on homepage ([9b3540b](https://github.com/meemproject/meem-app/commit/9b3540b))
+
+
+### Features
+
+* divider on homepage and couple mobile fixes ([ba59659](https://github.com/meemproject/meem-app/commit/ba59659))
+* new ext picker UI w/ categories for blank slate ([45fa7b4](https://github.com/meemproject/meem-app/commit/45fa7b4))
+
 ## [1.16.1](https://github.com/meemproject/meem-app/compare/v1.16.0...v1.16.1) (2023-02-02)
 
 
