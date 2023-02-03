@@ -26,7 +26,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 
 	const { sdk } = useSDK()
 
-	const { startTransactions } = useAgreement()
+	const { watchTransactions } = useAgreement()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -182,7 +182,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.debug(data)
 					const { txId } = await sdk.agreement.reInitialize(data)
 
-					startTransactions([txId])
+					watchTransactions([txId])
 					completeRequest()
 
 					log.debug(`Reinitializing agreement w/ txId: ${txId}`)
@@ -207,7 +207,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 		agreement,
 		wallet,
 		sdk.agreement,
-		startTransactions,
+		watchTransactions,
 		isRequestInProgress
 	])
 

@@ -21,7 +21,7 @@ export const RemoveMemberModal: React.FC<IProps> = ({
 
 	const wallet = useWallet()
 
-	const { startTransactions } = useAgreement()
+	const { watchTransactions } = useAgreement()
 
 	const [isBurningToken, setIsBurningToken] = useState(false)
 
@@ -57,7 +57,7 @@ export const RemoveMemberModal: React.FC<IProps> = ({
 				tokenIds: [tokenId]
 			})
 
-			startTransactions([result.txId])
+			watchTransactions([result.txId])
 			closeModal()
 		} catch (e) {
 			log.crit(e)
@@ -76,7 +76,7 @@ export const RemoveMemberModal: React.FC<IProps> = ({
 		agreement?.rawAgreement?.AgreementTokens,
 		agreement?.id,
 		sdk.agreement,
-		startTransactions,
+		watchTransactions,
 		member.ownerId
 	])
 

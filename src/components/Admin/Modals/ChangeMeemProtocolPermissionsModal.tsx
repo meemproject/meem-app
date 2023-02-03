@@ -31,7 +31,7 @@ export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
 
 	const { sdk } = useSDK()
 
-	const { startTransactions } = useAgreement()
+	const { watchTransactions } = useAgreement()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -90,9 +90,9 @@ export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
 						if (tx) {
 							log.debug(JSON.stringify(tx))
 							if (tx.id) {
-								startTransactions([tx.id])
+								watchTransactions([tx.id])
 							} else {
-								startTransactions([tx])
+								watchTransactions([tx])
 							}
 							closeModal()
 						}
@@ -117,7 +117,7 @@ export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
 		sdk.agreement,
 		bundleData,
 		smartContractPermission,
-		startTransactions
+		watchTransactions
 	])
 
 	return <></>

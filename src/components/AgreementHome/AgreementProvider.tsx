@@ -38,11 +38,11 @@ const defaultState: {
 	error?: ApolloError | undefined
 	txIds?: string[]
 	isTransactionInProgress: boolean
-	startTransactions: (txIds: string[]) => void
+	watchTransactions: (txIds: string[]) => void
 } = {
 	isLoadingAgreement: false,
 	isTransactionInProgress: false,
-	startTransactions: () => {}
+	watchTransactions: () => {}
 }
 
 const AgreementContext = createContext(defaultState)
@@ -320,7 +320,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		error
 	])
 
-	function startTransactions(txIds: string[]) {
+	function watchTransactions(txIds: string[]) {
 		setTransactionIds(txIds)
 		setIsTransactionInProgress(true)
 
@@ -341,7 +341,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			error: errorAnonAgreement || errorMemberAgreement,
 			txIds: transactionIds,
 			isTransactionInProgress,
-			startTransactions
+			watchTransactions
 		}),
 		[
 			agreement,

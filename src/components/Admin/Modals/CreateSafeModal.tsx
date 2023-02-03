@@ -22,7 +22,7 @@ export const CreateSafeModal: React.FC<IProps> = ({
 
 	const { sdk } = useSDK()
 
-	const { startTransactions } = useAgreement()
+	const { watchTransactions } = useAgreement()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
@@ -49,7 +49,7 @@ export const CreateSafeModal: React.FC<IProps> = ({
 						agreementId: agreement?.id ?? ''
 					})
 
-					startTransactions([result.txId])
+					watchTransactions([result.txId])
 				} catch (e) {
 					log.debug(e)
 					completeRequest()
@@ -72,7 +72,7 @@ export const CreateSafeModal: React.FC<IProps> = ({
 		onRequestComplete,
 		wallet,
 		sdk.agreement,
-		startTransactions,
+		watchTransactions,
 		isRequestInProgress
 	])
 
