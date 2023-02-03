@@ -1,60 +1,39 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Space, Modal, Loader } from '@mantine/core'
-import { useSDK, useWallet, useMeemApollo } from '@meemproject/react'
+import { useSDK, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 // eslint-disable-next-line import/namespace
-import { GetTransactionsSubscription } from '../../../generated/graphql'
-import { SUB_TRANSACTIONS } from '../../graphql/transactions'
 import {
 	Agreement,
 	MembershipRequirementToMeemPermission
 } from '../../model/agreement/agreements'
-import {
-	showErrorNotification,
-	showSuccessNotification
-} from '../../utils/notifications'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { showErrorNotification } from '../../utils/notifications'
+import { useAgreement } from '../AgreementHome/AgreementProvider'
 
 interface IProps {
 	agreement?: Agreement
-	isOpened: boolean
-	onModalClosed: () => void
+	isRequestInProgress: boolean
+	onRequestComplete: () => void
 }
 
 export const AgreementAdminChangesModal: React.FC<IProps> = ({
-	isOpened,
-	onModalClosed,
-	agreement
+	agreement,
+	isRequestInProgress,
+	onRequestComplete
 }) => {
 	const wallet = useWallet()
 
 	const { sdk } = useSDK()
 
-	const { classes: meemTheme } = useMeemTheme()
-
-	const { anonClient } = useMeemApollo()
+	const { startTransactions } = useAgreement()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [txIds, setTxIds] = useState<string[]>([])
-
-	const closeModal = useCallback(() => {
-		onModalClosed()
+	const completeRequest = useCallback(() => {
+		onRequestComplete()
 		setIsSavingChanges(false)
-		setTxIds([])
-	}, [onModalClosed])
-
-	const { error, data: transactions } =
-		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
-			variables: {
-				transactionIds: txIds
-			},
-			client: anonClient,
-			skip: txIds.length === 0
-		})
+	}, [onRequestComplete])
 
 	useEffect(() => {
 		async function reinitialize() {
@@ -145,7 +124,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 							'Error saving community settings',
 							`Please get in touch!`
 						)
-						closeModal()
+						completeRequest()
 						return
 					}
 
@@ -154,7 +133,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 							'Oops!',
 							`This community has invalid membership requirements. Please double-check your entries and try again.`
 						)
-						closeModal()
+						completeRequest()
 						return
 					}
 
@@ -203,12 +182,13 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					log.debug(data)
 					const { txId } = await sdk.agreement.reInitialize(data)
 
+					startTransactions([txId])
+					completeRequest()
+
 					log.debug(`Reinitializing agreement w/ txId: ${txId}`)
-					setTxIds([txId])
 				} catch (e) {
 					log.debug(e)
-					closeModal()
-
+					completeRequest()
 					showErrorNotification(
 						'Error saving community settings',
 						`Please get in touch!`
@@ -216,90 +196,20 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 				}
 			}
 		}
-		function checkTransactionCompletion() {
-			if (transactions && transactions.Transactions.length > 0) {
-				const currentTx = transactions.Transactions[0]
 
-				log.debug(
-					`watching tx ${currentTx.id}, current status = ${currentTx.status}`
-				)
-
-				if (currentTx.status === 'success') {
-					closeModal()
-
-					showSuccessNotification(
-						'Success!',
-						`Your community settings have been updated.`
-					)
-				} else if (currentTx.status === 'failure') {
-					closeModal()
-					showErrorNotification(
-						'Error saving community settings',
-						`Please get in touch!`
-					)
-				}
-			} else if (error) {
-				log.debug(JSON.stringify(error))
-				closeModal()
-				showErrorNotification(
-					'Error saving community settings',
-					`Please get in touch!`
-				)
-			} else {
-				log.debug(`no tx to monitor right now`)
-			}
-		}
-
-		if (isOpened && !isSavingChanges) {
+		if (isRequestInProgress && !isSavingChanges) {
 			log.debug(`should reinit`)
 			reinitialize()
 		}
-
-		if (isOpened) {
-			checkTransactionCompletion()
-		}
 	}, [
-		closeModal,
+		completeRequest,
 		isSavingChanges,
 		agreement,
-		error,
-		isOpened,
-		onModalClosed,
 		wallet,
 		sdk.agreement,
-		transactions
+		startTransactions,
+		isRequestInProgress
 	])
 
-	return (
-		<>
-			<Modal
-				centered
-				withCloseButton={false}
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				overlayBlur={8}
-				radius={16}
-				size={'lg'}
-				padding={'sm'}
-				opened={isOpened}
-				onClose={() => {
-					closeModal()
-				}}
-			>
-				<div className={meemTheme.modalHeader}>
-					<Loader color="cyan" variant="oval" />
-					<Space h={16} />
-					<Text
-						className={meemTheme.tMediumBold}
-					>{`Saving changes...`}</Text>
-					<Space h={24} />
-
-					<Text
-						className={meemTheme.tSmall}
-						style={{ textAlign: 'center' }}
-					>{`Please don’t refresh or close this window until this step is complete. This might take a few minutes.`}</Text>
-				</div>
-			</Modal>
-		</>
-	)
+	return <></>
 }

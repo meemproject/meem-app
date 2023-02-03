@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { ApolloError, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
+import { hideNotification, showNotification } from '@mantine/notifications'
 import { useWallet, useMeemApollo } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, {
@@ -15,22 +16,33 @@ import React, {
 import {
 	Agreements,
 	GetAgreementSubscriptionSubscription,
-	GetIsMemberOfAgreementSubscriptionSubscription
+	GetIsMemberOfAgreementSubscriptionSubscription,
+	GetTransactionsSubscription
 } from '../../../generated/graphql'
 import {
 	SUB_AGREEMENT,
 	SUB_AGREEMENT_AS_MEMBER,
 	SUB_IS_MEMBER_OF_AGREEMENT
 } from '../../graphql/agreements'
+import { SUB_TRANSACTIONS } from '../../graphql/transactions'
 import agreementFromDb, { Agreement } from '../../model/agreement/agreements'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
 
 const defaultState: {
 	agreement?: Agreement
 	isLoadingAgreement: boolean
 	error?: ApolloError | undefined
+	txIds?: string[]
+	isTransactionInProgress: boolean
+	startTransactions: (txIds: string[]) => void
 } = {
-	isLoadingAgreement: false
+	isLoadingAgreement: false,
+	isTransactionInProgress: false,
+	startTransactions: () => {}
 }
 
 const AgreementContext = createContext(defaultState)
@@ -57,7 +69,13 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 	const [previousAgreementDataString, setPreviousAgreementDataString] =
 		useState('')
 	const router = useRouter()
+
 	const [isLoadingAgreement, setIsLoadingAgreement] = useState(true)
+
+	// Transactions
+	const [transactionIds, setTransactionIds] = useState<string[]>([])
+	const [isTransactionInProgress, setIsTransactionInProgress] =
+		useState(false)
 
 	// Has the agreement slug changed? (i.e. from page navigation)
 	const [originalSlug, setOriginalSlug] = useState('')
@@ -130,6 +148,15 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			isCurrentUserAgreementMemberData.AgreementTokens.length > 0
 	})
 
+	const { error, data: transactions } =
+		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
+			variables: {
+				transactionIds
+			},
+			client: anonClient,
+			skip: transactionIds?.length === 0
+		})
+
 	useEffect(() => {
 		if (errorAnonAgreement) {
 			log.debug('Loading anonymous agreement failed:')
@@ -141,6 +168,47 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			log.debug('Loading member-access agreement failed:')
 			log.debug(JSON.stringify(errorMemberAgreement))
 			setIsLoadingAgreement(false)
+		}
+
+		function onTxSuccess() {
+			hideNotification('changesModal')
+			setTransactionIds([])
+			setIsTransactionInProgress(false)
+			showSuccessNotification(
+				'Success!',
+				`Your community settings have been updated.`
+			)
+		}
+
+		function onTxFailure(apError?: ApolloError) {
+			log.debug(JSON.stringify(apError))
+			hideNotification('changesModal')
+			setTransactionIds([])
+			setIsTransactionInProgress(false)
+			showErrorNotification(
+				'Error saving community settings',
+				`Please get in touch!`
+			)
+		}
+
+		function checkTransactionCompletion() {
+			if (transactions && transactions.Transactions.length > 0) {
+				const currentTx = transactions.Transactions[0]
+
+				log.debug(
+					`watching tx ${currentTx.id}, current status = ${currentTx.status}`
+				)
+
+				if (currentTx.status === 'success') {
+					onTxSuccess()
+				} else if (currentTx.status === 'failure') {
+					onTxFailure()
+				}
+			} else if (error) {
+				onTxFailure(error)
+			} else {
+				log.debug(`no tx to monitor right now`)
+			}
 		}
 
 		async function getAgreement() {
@@ -227,6 +295,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			setIsLoadingAgreement(false)
 			return
 		}
+
+		if (transactionIds.length > 0) {
+			checkTransactionCompletion()
+		}
 	}, [
 		agreement,
 		previousAgreementDataString,
@@ -242,19 +314,42 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		isCurrentUserAgreementMemberData,
 		slug,
 		originalSlug,
-		isMembersOnly
+		isMembersOnly,
+		transactionIds.length,
+		transactions,
+		error
 	])
+
+	function startTransactions(txIds: string[]) {
+		setTransactionIds(txIds)
+		setIsTransactionInProgress(true)
+
+		showNotification({
+			id: 'changesModal',
+			title: 'Saving changes',
+			message: 'Please wait...',
+			autoClose: false,
+			disallowClose: true,
+			loading: true
+		})
+	}
+
 	const value = useMemo(
 		() => ({
 			agreement,
 			isLoadingAgreement,
-			error: errorAnonAgreement || errorMemberAgreement
+			error: errorAnonAgreement || errorMemberAgreement,
+			txIds: transactionIds,
+			isTransactionInProgress,
+			startTransactions
 		}),
 		[
 			agreement,
 			errorAnonAgreement,
 			errorMemberAgreement,
-			isLoadingAgreement
+			isLoadingAgreement,
+			isTransactionInProgress,
+			transactionIds
 		]
 	)
 	return <AgreementContext.Provider value={value} {...props} />

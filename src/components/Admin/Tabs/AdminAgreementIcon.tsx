@@ -10,6 +10,7 @@ import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
@@ -26,6 +27,8 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 
 	const [hasLoadedAgreementData, setHasLoadedAgreementData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
+
+	const { isTransactionInProgress } = useAgreement()
 
 	const [chosenEmoji, setChosenEmoji] = useState<EmojiClickData>()
 
@@ -119,9 +122,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 	}
 
 	const [newAgreementData, setNewAgreementData] = useState<Agreement>()
-	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
-		useState(false)
-	const openSaveChangesModal = () => {
+	const startRequest = () => {
 		// Some basic validation
 
 		if (smallAgreementLogo.length === 0) {
@@ -139,20 +140,8 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 		newAgreement.description = agreement.description
 		newAgreement.image = smallAgreementLogo
 
-		if (oldAgreement === JSON.stringify(newAgreement)) {
-			log.debug('no changes, nothing to save. Tell user.')
-			setIsSavingChanges(false)
-			showErrorNotification('Oops!', 'There are no changes to save.')
-			return
-		} else {
-			setNewAgreementData(newAgreement)
-			setSaveChangesModalOpened(true)
-		}
-	}
-
-	const saveChanges = async () => {
+		setNewAgreementData(newAgreement)
 		setIsSavingChanges(true)
-		openSaveChangesModal()
 	}
 
 	return (
@@ -218,18 +207,18 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 			<Space h={smallAgreementLogo.length > 0 ? 148 : 40} />
 			<Button
 				className={meemTheme.buttonBlack}
-				loading={isSavingChanges}
-				onClick={saveChanges}
+				loading={isSavingChanges || isTransactionInProgress}
+				disabled={isSavingChanges || isTransactionInProgress}
+				onClick={startRequest}
 			>
 				Save Changes
 			</Button>
 			<Space h={64} />
 			<AgreementAdminChangesModal
 				agreement={newAgreementData}
-				isOpened={isSaveChangesModalOpened}
-				onModalClosed={() => {
+				isRequestInProgress={isSavingChanges}
+				onRequestComplete={() => {
 					setIsSavingChanges(false)
-					setSaveChangesModalOpened(false)
 				}}
 			/>
 			<div id="emojiCanvas" className={meemTheme.emojiCanvas}>

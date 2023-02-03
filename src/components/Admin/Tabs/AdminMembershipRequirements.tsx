@@ -23,6 +23,7 @@ import {
 } from '../../../model/agreement/agreements'
 import { tokenFromContractAddress } from '../../../model/token/token'
 import { showErrorNotification } from '../../../utils/notifications'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { colorBlue, colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
@@ -37,8 +38,6 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 	const { classes: meemTheme } = useMeemTheme()
 
 	const wallet = useWallet()
-
-	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
 	const [isCheckingRequirement, setIsCheckingRequirement] = useState(false)
 
@@ -125,12 +124,8 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 	}
 
 	const [newAgreementData, setNewAgreementData] = useState<Agreement>()
-	const [isSaveChangesModalOpened, setSaveChangesModalOpened] =
-		useState(false)
-	const openSaveChangesModal = async () => {
-		// 'save changes' modal for execution agreement settings updates
-		setSaveChangesModalOpened(true)
-	}
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
+	const { isTransactionInProgress } = useAgreement()
 
 	const membershipTypeString = (req: MembershipRequirement): string => {
 		switch (req.type) {
@@ -146,9 +141,6 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 	}
 
 	const saveChanges = async () => {
-		// Start saving changes on UI
-		setIsSavingChanges(true)
-
 		// Validate / convert agreement admins
 		const provider = new ethers.providers.AlchemyProvider(
 			'mainnet',
@@ -229,7 +221,6 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 				'Oops!',
 				'One or more approved wallet addresses are invalid. Check what you entered and try again.'
 			)
-			setIsSavingChanges(false)
 			return
 		}
 
@@ -238,7 +229,6 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 				'Oops!',
 				'It looks like you provided an invalid token address or quantity. Check what you entered and try again.'
 			)
-			setIsSavingChanges(false)
 			return
 		}
 
@@ -257,30 +247,13 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 					agreement.membershipSettings.membershipEndDate
 			}
 
-			// Now compare to see if there's anything to change - if saving changes
-
-			// Compare membership settings
-			const oldMembershipSettings = JSON.stringify(
-				agreement?.membershipSettings
-			)
-			const newMembershipSettings = JSON.stringify(settings)
-			const isMembershipSettingsSame =
-				oldMembershipSettings === newMembershipSettings
-
-			if (isMembershipSettingsSame) {
-				log.debug('no changes, nothing to save. Tell user.')
-				setIsSavingChanges(false)
-				showErrorNotification('Oops!', 'There are no changes to save.')
-				return
-			}
-
 			// Show the appropriate modal (create vs edit)
 			const oldAgreement = JSON.stringify(agreement)
 			const newAgreement = JSON.parse(oldAgreement)
 			if (newAgreement) {
 				newAgreement.membershipSettings = settings
 				setNewAgreementData(newAgreement)
-				openSaveChangesModal()
+				setIsSavingChanges(true)
 			}
 		}
 	}
@@ -445,8 +418,8 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 				<Space h={40} />
 
 				<Button
-					disabled={isSavingChanges}
-					loading={isSavingChanges}
+					disabled={isSavingChanges || isTransactionInProgress}
+					loading={isSavingChanges || isTransactionInProgress}
 					className={meemTheme.buttonBlack}
 					onClick={saveChanges}
 				>
@@ -821,10 +794,9 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 
 				<AgreementAdminChangesModal
 					agreement={newAgreementData}
-					isOpened={isSaveChangesModalOpened}
-					onModalClosed={() => {
+					isRequestInProgress={isSavingChanges}
+					onRequestComplete={() => {
 						setIsSavingChanges(false)
-						setSaveChangesModalOpened(false)
 					}}
 				/>
 			</div>
