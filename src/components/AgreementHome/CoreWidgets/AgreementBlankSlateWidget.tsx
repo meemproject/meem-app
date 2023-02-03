@@ -137,7 +137,7 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 				<>
 					<Space h={32} />
 					<Center>
-						<Loader variant="oval" color="blue" />
+						<Loader variant="oval" color="cyan" />
 					</Center>
 					<Space h={24} />
 				</>

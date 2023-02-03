@@ -174,7 +174,7 @@ export function HeaderMenu() {
 										<Loader
 											style={{ marginTop: 4 }}
 											variant="oval"
-											color="blue"
+											color="cyan"
 											size={20}
 										/>
 									)}

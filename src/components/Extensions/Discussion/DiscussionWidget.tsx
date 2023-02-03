@@ -105,7 +105,9 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 											href={`/${agreement.slug}/e/discussions/submit`}
 										>
 											<Button
-												className={meemTheme.buttonAsh}
+												className={
+													meemTheme.buttonDarkGrey
+												}
 											>
 												<div>
 													<Plus />
@@ -117,7 +119,9 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									<Link
 										href={`/${agreement.slug}/e/discussions`}
 									>
-										<Button className={meemTheme.buttonAsh}>
+										<Button
+											className={meemTheme.buttonDarkGrey}
+										>
 											View All
 										</Button>
 									</Link>
@@ -145,7 +149,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 				{!hasFetchedData && agreementExtension?.isInitialized && (
 					<>
 						<Center>
-							<Loader variant="oval" color="blue" />
+							<Loader variant="oval" color="cyan" />
 						</Center>
 						<Space h={8} />
 					</>
@@ -178,7 +182,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 											>
 												<Button
 													className={
-														meemTheme.buttonAsh
+														meemTheme.buttonDarkGrey
 													}
 												>
 													+ Create a discussion

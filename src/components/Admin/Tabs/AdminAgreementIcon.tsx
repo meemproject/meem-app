@@ -195,7 +195,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 					</Button>
 				</div>
 			)}
-			{isLoadingImage && <Loader color="blue" variant="oval" />}
+			{isLoadingImage && <Loader color="cyan" variant="oval" />}
 			{!isLoadingImage && smallAgreementLogo.length > 0 && (
 				<div className={meemTheme.imageAgreementLogoContainer}>
 					<Image

@@ -11,7 +11,7 @@ import {
 	Divider
 } from '@mantine/core'
 import { RichTextEditor } from '@mantine/tiptap'
-import { useAuth, useSDK, useWallet } from '@meemproject/react'
+import { useMeemUser, useSDK, useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import { Link as TipTapLink } from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -44,7 +44,7 @@ export const DiscussionPostSubmit: React.FC = () => {
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 
-	const { me } = useAuth()
+	const { user } = useMeemUser()
 
 	const { sdk } = useSDK()
 
@@ -176,10 +176,10 @@ export const DiscussionPostSubmit: React.FC = () => {
 					body: editor?.getHTML(),
 					tags: postTags.split(' ').map(tag => tag.trim()),
 					walletAddress: wallet.accounts[0],
-					userId: me?.user.id,
-					displayName: me?.user.displayName,
-					profilePicUrl: me?.user.profilePicUrl,
-					ens: me?.user.DefaultWallet.ens,
+					userId: user?.id,
+					displayName: user?.displayName ?? user?.DefaultWallet?.ens,
+					profilePicUrl: user?.profilePicUrl,
+					ens: user?.DefaultWallet?.ens,
 					agreementSlug: agreement?.slug,
 					attachment:
 						postAttachment && postAttachment.length > 0
@@ -200,16 +200,19 @@ export const DiscussionPostSubmit: React.FC = () => {
 			setIsLoading(false)
 		}
 	}, [
+		wallet,
 		agreement,
-		me,
-		editor,
-		postAttachment,
-		postTags,
 		postTitle,
+		editor,
 		privateKey,
-		router,
 		sdk.storage,
-		wallet
+		postTags,
+		user?.id,
+		user?.displayName,
+		user?.profilePicUrl,
+		user?.DefaultWallet?.ens,
+		postAttachment,
+		router
 	])
 
 	return (

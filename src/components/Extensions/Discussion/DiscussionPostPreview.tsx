@@ -16,7 +16,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, Message } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
-import { quickTruncate } from '../../../utils/truncated_wallet'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
 import { calculateVotes } from './DiscussionHome'
@@ -263,12 +262,8 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 												meemTheme.tExtraSmallBold
 											}
 										>
-											{post.displayName ??
-											post.walletAddress
-												? quickTruncate(
-														post.walletAddress
-												  )
-												: `Community Member`}
+											{post?.displayName ??
+												post?.walletAddress}
 										</Text>
 										<Text
 											className={

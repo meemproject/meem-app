@@ -274,7 +274,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 						<>
 							<Space h={48} />
 							<Center>
-								<Loader color="blue" variant="oval" />
+								<Loader color="cyan" variant="oval" />
 							</Center>
 						</>
 					)}

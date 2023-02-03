@@ -37,7 +37,7 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="blue" variant="oval" />
+						<Loader color="cyan" variant="oval" />
 					</Center>
 				</Container>
 			)}
@@ -101,7 +101,7 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 						</Center>
 						<Space h={24} />
 						<Center>
-							<Loader variant="oval" color="blue" />
+							<Loader variant="oval" color="cyan" />
 						</Center>
 					</Container>
 				)}

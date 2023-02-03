@@ -11,10 +11,10 @@ export const colorGrey = '#E1E1E1'
 export const colorLightGrey = '#F2F2F2'
 export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
-export const colorBlue = '#9ED3FD'
-export const colorBlueHover = '#82c5fc'
-export const colorLightBlue = '#f3faff'
-export const colorDarkBlue = '#6895f7'
+export const colorBlue = '#7da6c4'
+export const colorBlueHover = '#EFF7FF'
+export const colorLightBlue = '#EFF7FF'
+export const colorDarkBlue = '#26699D'
 export const colorLightYellow = `#FEFFE5`
 export const colorYellow = '#F9FF15'
 export const colorDarkYellow = '#e0e810'
@@ -197,10 +197,7 @@ export const useMeemTheme = createStyles(theme => ({
 		padding: 4,
 		borderRadius: 8,
 		fontWeight: 'bold',
-		backgroundColor:
-			theme.colorScheme === 'dark'
-				? 'rgba(255, 102, 81, 0.3)'
-				: colorLightBlue,
+		backgroundColor: colorLightBlue,
 		color: colorDarkBlue,
 		cursor: 'pointer'
 	},

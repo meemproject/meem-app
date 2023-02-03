@@ -255,7 +255,7 @@ export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
 				}}
 			>
 				<div className={meemTheme.modalHeader}>
-					<Loader color="blue" variant="oval" />
+					<Loader color="cyan" variant="oval" />
 					<Space h={16} />
 					<Text
 						className={meemTheme.tMediumBold}
