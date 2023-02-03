@@ -51,6 +51,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 		) => {
 			if (reqs.length === 0 || isCurrentUserAgreementAdmin) {
 				onMeetsAllReqsChanged(true)
+				onRequirementsChecked(true)
 			} else {
 				let reqsMet = 0
 				reqs.forEach(req => {
