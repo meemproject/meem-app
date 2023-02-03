@@ -503,22 +503,30 @@ export const useMeemTheme = createStyles(theme => ({
 	pageResponsiveContainer: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 48,
+		marginTop: 0,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			flexDirection: 'column',
 			marginTop: 0
 		}
 	},
 	pageLeftColumn: {
-		width: 350,
+		width: 320,
 		paddingRight: 32,
+		marginTop: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%',
 			paddingRight: 0
 		}
 	},
 	pageRightColumn: {
-		width: 650,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? 'transparent' : colorLightestGrey
+	},
+
+	pageRightColumnInner: {
+		width: 680,
+		marginTop: 32,
+		paddingLeft: 40,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%'
 		}
@@ -664,6 +672,22 @@ export const useMeemTheme = createStyles(theme => ({
 			borderBottom: `8px solid ${
 				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
 			}`
+		}
+	},
+	widgetLink: {
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 16,
+		width: '100%',
+		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
+		padding: 24,
+		marginBottom: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginLeft: 16,
+			marginRight: 16,
+			marginTop: 16
 		}
 	},
 	widgetMeem: {

@@ -7,13 +7,15 @@ import {
 	Loader,
 	Center,
 	Button,
-	Tabs
+	Tabs,
+	Divider,
+	useMantineColorScheme
 } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
 import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
 import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
@@ -26,6 +28,9 @@ import { MeemCreateCommunityWidget } from './CoreWidgets/MeemCreateCommunityWidg
 export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const { classes: meemTheme } = useMeemTheme()
+
+	const { colorScheme } = useMantineColorScheme()
+	const isDarkTheme = colorScheme === 'dark'
 
 	const { sdk } = useSDK()
 
@@ -152,9 +157,11 @@ export const AgreementHome: React.FC = () => {
 						/>
 						{communityInfoContents}
 					</div>
+					<Divider orientation="vertical" />
 					<div className={meemTheme.pageRightColumn}>
-						{communityExtensionsContents}
-						<Space h={64} />
+						<div className={meemTheme.pageRightColumnInner}>
+							{communityExtensionsContents}
+						</div>
 					</div>
 				</div>
 			)}
@@ -294,18 +301,39 @@ export const AgreementHome: React.FC = () => {
 								<Space h={40} />
 							</div>
 						)}
-						<Container
-							size={1000}
-							className={meemTheme.pageZeroPaddingMobileContainer}
-						>
-							<div className={meemTheme.visibleDesktopOnly}>
-								{desktopHomeLayout}
-							</div>
-
-							<div className={meemTheme.visibleMobileOnly}>
+						<div className={meemTheme.visibleMobileOnly}>
+							<Container
+								size={1000}
+								className={
+									meemTheme.pageZeroPaddingMobileContainer
+								}
+							>
 								{mobileHomeLayout}
-							</div>
-						</Container>
+							</Container>
+						</div>
+
+						<div
+							className={meemTheme.visibleDesktopOnly}
+							style={{ position: 'relative' }}
+						>
+							<div
+								style={{
+									backgroundColor: isDarkTheme
+										? 'transparent'
+										: colorLightestGrey,
+									position: 'absolute',
+									top: 0,
+									left: '50%',
+									right: 0,
+									bottom: 0,
+									zIndex: -1
+								}}
+							/>
+
+							<Center style={{ marginBottom: -64 }}>
+								{desktopHomeLayout}
+							</Center>
+						</div>
 					</div>
 				)}
 		</>

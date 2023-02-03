@@ -29,7 +29,7 @@ export const AgreementExtensionLinksWidget: React.FC<IProps> = ({
 	const isDarkTheme = colorScheme === 'dark'
 
 	const extensionLink = (extension: AgreementExtensions) => (
-		<div className={meemTheme.widgetLight} style={{ position: 'relative' }}>
+		<div className={meemTheme.widgetLink} style={{ position: 'relative' }}>
 			<div
 				style={{ cursor: 'pointer' }}
 				onClick={() => {
