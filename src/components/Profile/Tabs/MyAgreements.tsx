@@ -105,7 +105,7 @@ export const MyAgreementsComponent: React.FC = () => {
 			{loading && (
 				<>
 					<Space h={16} />
-					<Loader variant="oval" color="blue" />
+					<Loader variant="oval" color="cyan" />
 				</>
 			)}
 			{agreements.length === 0 && !loading && (

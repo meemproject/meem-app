@@ -11,10 +11,10 @@ export const colorGrey = '#E1E1E1'
 export const colorLightGrey = '#F2F2F2'
 export const colorLightestGrey = '#FAFAFA'
 export const colorWhite = '#FFFFFF'
-export const colorBlue = '#9ED3FD'
-export const colorBlueHover = '#82c5fc'
-export const colorLightBlue = '#f3faff'
-export const colorDarkBlue = '#6895f7'
+export const colorBlue = '#7da6c4'
+export const colorBlueHover = '#EFF7FF'
+export const colorLightBlue = '#EFF7FF'
+export const colorDarkBlue = '#26699D'
 export const colorLightYellow = `#FEFFE5`
 export const colorYellow = '#F9FF15'
 export const colorDarkYellow = '#e0e810'
@@ -197,10 +197,7 @@ export const useMeemTheme = createStyles(theme => ({
 		padding: 4,
 		borderRadius: 8,
 		fontWeight: 'bold',
-		backgroundColor:
-			theme.colorScheme === 'dark'
-				? 'rgba(255, 102, 81, 0.3)'
-				: colorLightBlue,
+		backgroundColor: colorLightBlue,
 		color: colorDarkBlue,
 		cursor: 'pointer'
 	},
@@ -506,22 +503,30 @@ export const useMeemTheme = createStyles(theme => ({
 	pageResponsiveContainer: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginTop: 48,
+		marginTop: 0,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			flexDirection: 'column',
 			marginTop: 0
 		}
 	},
 	pageLeftColumn: {
-		width: 350,
+		width: 320,
 		paddingRight: 32,
+		marginTop: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%',
 			paddingRight: 0
 		}
 	},
 	pageRightColumn: {
-		width: 650,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? 'transparent' : colorLightestGrey
+	},
+
+	pageRightColumnInner: {
+		width: 680,
+		marginTop: 32,
+		paddingLeft: 40,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%'
 		}
@@ -627,7 +632,7 @@ export const useMeemTheme = createStyles(theme => ({
 		width: '100%',
 		borderRadius: 16,
 
-		marginBottom: 48,
+		marginBottom: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
 			boxShadow: '',
@@ -640,7 +645,7 @@ export const useMeemTheme = createStyles(theme => ({
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkerGrey : colorAshLight,
 		padding: 24,
-		marginBottom: 48,
+		marginBottom: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',
@@ -659,7 +664,7 @@ export const useMeemTheme = createStyles(theme => ({
 		width: '100%',
 		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		padding: 24,
-		marginBottom: 36,
+		marginBottom: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',
@@ -667,6 +672,22 @@ export const useMeemTheme = createStyles(theme => ({
 			borderBottom: `8px solid ${
 				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
 			}`
+		}
+	},
+	widgetLink: {
+		boxShadow:
+			theme.colorScheme === 'dark'
+				? ''
+				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
+		borderRadius: 16,
+		width: '100%',
+		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
+		padding: 24,
+		marginBottom: 24,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginLeft: 16,
+			marginRight: 16,
+			marginTop: 16
 		}
 	},
 	widgetMeem: {
@@ -679,7 +700,7 @@ export const useMeemTheme = createStyles(theme => ({
 		background:
 			'linear-gradient(117deg, rgba(227,255,191,1) 0%, rgba(229,255,183,0.8477984943977591) 3%, rgba(247,254,113,0.8534007352941176) 31%, rgba(177,220,255,0.8505996148459384) 66%, rgba(133,139,33,0.4724483543417367) 100%)',
 		padding: 24,
-		marginBottom: 48,
+		marginBottom: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',

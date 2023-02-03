@@ -125,7 +125,7 @@ export const AgreementMembersComponent: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Loader color="blue" variant="oval" />
+						<Loader color="cyan" variant="oval" />
 					</Center>
 				</Container>
 			)}
