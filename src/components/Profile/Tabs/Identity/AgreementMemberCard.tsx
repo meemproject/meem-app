@@ -238,8 +238,8 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 			<RemoveMemberModal
 				agreement={agreement}
 				member={member}
-				isOpened={isDeletionModalOpen}
-				onModalClosed={function (): void {
+				isRequestInProgress={isDeletionModalOpen}
+				onRequestComplete={function (): void {
 					setIsDeletionModalOpen(false)
 				}}
 			/>

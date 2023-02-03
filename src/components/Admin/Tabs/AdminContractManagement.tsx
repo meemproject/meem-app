@@ -36,8 +36,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 		useState('members-and-meem')
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-	const [isCreatingSafeModalOpen, setIsCreatingSafeModalOpen] =
-		useState(false)
+	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
 	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
 	const [isUpgradingAgreement, setIsUpgradingAgreement] = useState(false)
 	const [isSavingMeemPermission, setIsSavingMeemPermission] = useState(false)
@@ -379,10 +378,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 				wallet.chainId !== 80001 && (
 					<Button
 						className={meemTheme.buttonBlack}
-						disabled={isCreatingSafeModalOpen}
-						loading={isCreatingSafeModalOpen}
+						disabled={isCreatingSafe}
+						loading={isCreatingSafe}
 						onClick={() => {
-							setIsCreatingSafeModalOpen(true)
+							setIsCreatingSafe(true)
 						}}
 					>
 						Create Treasury
@@ -410,9 +409,9 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 			<CreateSafeModal
 				agreement={agreement}
-				isOpened={isCreatingSafeModalOpen}
-				onModalClosed={() => {
-					setIsCreatingSafeModalOpen(false)
+				isRequestInProgress={isCreatingSafe}
+				onRequestComplete={() => {
+					setIsCreatingSafe(false)
 				}}
 			/>
 			<ChangeMeemProtocolPermissionsModal

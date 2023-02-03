@@ -7,13 +7,13 @@ import { useAgreement } from '../../AgreementHome/AgreementProvider'
 interface IProps {
 	agreement?: Agreement
 	member: AgreementMember
-	isOpened: boolean
-	onModalClosed: () => void
+	isRequestInProgress: boolean
+	onRequestComplete: () => void
 }
 
 export const RemoveMemberModal: React.FC<IProps> = ({
-	isOpened,
-	onModalClosed,
+	isRequestInProgress,
+	onRequestComplete,
 	agreement,
 	member
 }) => {
@@ -26,9 +26,9 @@ export const RemoveMemberModal: React.FC<IProps> = ({
 	const [isBurningToken, setIsBurningToken] = useState(false)
 
 	const closeModal = useCallback(() => {
-		onModalClosed()
+		onRequestComplete()
 		setIsBurningToken(false)
-	}, [onModalClosed])
+	}, [onRequestComplete])
 
 	const removeMember = useCallback(async () => {
 		log.debug('removing member...')
@@ -82,11 +82,17 @@ export const RemoveMemberModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		// Burn the member token
-		if (isOpened && !isBurningToken && agreement) {
+		if (isRequestInProgress && !isBurningToken && agreement) {
 			setIsBurningToken(true)
 			removeMember()
 		}
-	}, [agreement, closeModal, isBurningToken, isOpened, removeMember])
+	}, [
+		agreement,
+		closeModal,
+		isBurningToken,
+		isRequestInProgress,
+		removeMember
+	])
 
 	return <></>
 }
