@@ -672,7 +672,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							{!hasFetchedData && (
 								<>
 									<Space h={40} />
-									<Loader variant={'oval'} color={'blue'} />
+									<Loader variant={'oval'} color={'cyan'} />
 								</>
 							)}
 							{hasFetchedData && (

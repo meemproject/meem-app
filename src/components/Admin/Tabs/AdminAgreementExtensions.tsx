@@ -234,7 +234,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 													<>
 														<Space w={8} />
 														<Loader
-															color="blue"
+															color="cyan"
 															variant="oval"
 															size={16}
 														/>
@@ -513,7 +513,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 				)}
 				{loading && (
 					<>
-						<Loader color="blue" variant="oval" />
+						<Loader color="cyan" variant="oval" />
 					</>
 				)}
 				{!loading && error && (
@@ -555,7 +555,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 					<Space h={24} />
 
 					<Center>
-						<Loader variant="oval" color="blue" />
+						<Loader variant="oval" color="cyan" />
 					</Center>
 				</Modal>
 			</div>

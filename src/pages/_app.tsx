@@ -92,13 +92,13 @@ function MyApp(props: AppProps) {
 					},
 					colors: {
 						brand: [
-							'#F0F2FA',
-							'#CBD3F2',
-							'#A2B2F3',
-							'#748FFC',
-							'#617CEA',
-							'#546ED6',
-							'#4B62C1',
+							'#EFF7FF',
+							'#bed2e2',
+							'#266a9d',
+							'#266a9d',
+							'#266a9d',
+							'#266a9d',
+							'#266a9d',
 							'#495CA8',
 							'#4B588F',
 							'#49537A'

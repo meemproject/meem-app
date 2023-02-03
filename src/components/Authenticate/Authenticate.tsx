@@ -68,7 +68,7 @@ const MAuthenticate: React.FC = () => {
 
 					<Space h={40} />
 
-					{isLoading && <Loader variant="oval" color={'blue'} />}
+					{isLoading && <Loader variant="oval" color={'cyan'} />}
 					<div>
 						{!isLoading && !wallet.isConnected && <LoginForm />}
 						{!isLoading && wallet.isConnected && (

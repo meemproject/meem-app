@@ -6,22 +6,24 @@ import {
 	Space,
 	Text,
 	Image,
-	useMantineColorScheme
+	useMantineColorScheme,
+	Badge
 } from '@mantine/core'
 import { useMeemApollo } from '@meemproject/react'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
-import { Agreement } from '../../../model/agreement/agreements'
+import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import {
-	colorAshLight,
-	colorDarkGrey,
-	useMeemTheme
-} from '../../Styles/MeemTheme'
+import { colorAsh, colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 	onChosenExtensionsChanged: (chosenExtensions: string[]) => void
+}
+
+interface ExtensionCategory {
+	title: string
+	extensions: Extension[]
 }
 
 export const AgreementBlankSlateWidget: React.FC<IProps> = ({
@@ -34,7 +36,20 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 
 	const { anonClient } = useMeemApollo()
 
+	// Fetch a list of available extensions.
+	const { loading, data: availableExtensionsData } =
+		useQuery<GetExtensionsQuery>(GET_EXTENSIONS, {
+			client: anonClient
+		})
+
 	const [chosenExtensions, setChosenExtensions] = useState<string[]>([])
+
+	const [extensionCategories, setExtensionCategories] = useState<
+		ExtensionCategory[]
+	>([])
+
+	const [hasSetInitialSearchTerm, setHasSetInitialSearchTerm] =
+		useState(false)
 
 	const toggleExtensionSelected = (extension: any) => {
 		if (chosenExtensions.includes(extension.id)) {
@@ -53,14 +68,67 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 		}
 	}
 
-	// Fetch a list of available extensions.
-	const { loading, data: availableExtensionsData } =
-		useQuery<GetExtensionsQuery>(GET_EXTENSIONS, {
-			client: anonClient
-		})
-
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	const filterExtensions = useCallback(
+		(all: Extension[]) => {
+			// Filter out extensions already enabled
+			const available: Extension[] = []
+			all.forEach(ext => {
+				let isAlreadyEnabled = false
+				agreement?.extensions?.forEach(enabledExt => {
+					if (ext.slug === enabledExt.Extension?.slug) {
+						isAlreadyEnabled = true
+					}
+				})
+				if (!isAlreadyEnabled) {
+					available.push(ext)
+				}
+			})
+
+			let searched: Extension[] = []
+
+			// Set up searched extensions
+			searched = available
+
+			// Now sort searched extensions into categories
+			const categories: ExtensionCategory[] = []
+			searched.forEach(ext => {
+				let existingCategory: any = undefined
+
+				// Check if the category already exists
+				categories.forEach(cat => {
+					if (cat.title === ext.category) {
+						existingCategory = cat
+					}
+				})
+
+				if (existingCategory) {
+					existingCategory.extensions.push(ext)
+				} else {
+					categories.push({
+						title: ext.category ?? 'basic',
+						extensions: [ext]
+					})
+				}
+			})
+			setExtensionCategories(categories)
+		},
+		[agreement?.extensions]
+	)
+
+	useEffect(() => {
+		if (availableExtensionsData && !loading && !hasSetInitialSearchTerm) {
+			setHasSetInitialSearchTerm(true)
+			filterExtensions(availableExtensionsData.Extensions)
+		}
+	}, [
+		availableExtensionsData,
+		filterExtensions,
+		hasSetInitialSearchTerm,
+		loading
+	])
 
 	return (
 		<div className={meemTheme.widgetLight}>
@@ -69,7 +137,7 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 				<>
 					<Space h={32} />
 					<Center>
-						<Loader variant="oval" color="blue" />
+						<Loader variant="oval" color="cyan" />
 					</Center>
 					<Space h={24} />
 				</>
@@ -77,86 +145,124 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 			{!loading && availableExtensionsData && (
 				<>
 					<Space h={24} />
-					<Grid>
-						{availableExtensionsData.Extensions.map(extension => (
-							<Grid.Col
-								xs={4}
-								sm={4}
-								md={4}
-								lg={4}
-								xl={4}
-								key={extension.id}
-							>
-								<div
-									className={meemTheme.gridItemCenteredAsh}
-									style={{
-										height: '150px',
-										backgroundColor: isDarkTheme
-											? colorDarkGrey
-											: colorAshLight,
-										boxShadow: 'none',
-										position: 'relative'
-									}}
-									onClick={() => {
-										toggleExtensionSelected(extension)
-									}}
-								>
-									<Center>
-										<Image
-											src={`/${
-												isDarkTheme
-													? `${extension.icon?.replace(
-															'.png',
-															'-white.png'
-													  )}`
-													: extension.icon
-											}`}
-											fit={'contain'}
-											height={16}
-										/>
-									</Center>
-									<Space h={12} />
-									<Center>
-										<Text className={meemTheme.tSmallBold}>
-											{extension.name}
-										</Text>
-									</Center>
-									<Space h={4} />
-									<Center>
-										<Text
-											className={meemTheme.tExtraSmall}
-											style={{
-												display: '-webkit-box',
-												WebkitLineClamp: '3',
-												WebkitBoxOrient: 'vertical',
-												overflow: 'hidden',
-												textAlign: 'center'
+
+					{extensionCategories.map(cat => (
+						<div key={cat.title}>
+							<Text className={meemTheme.tExtraSmallLabel}>
+								{`${cat.title.toUpperCase()}`}
+							</Text>
+							<Space h={16} />
+							<Grid>
+								{cat.extensions.map(extension => (
+									<Grid.Col
+										xs={8}
+										sm={8}
+										md={6}
+										lg={6}
+										xl={6}
+										key={extension.name}
+									>
+										<div
+											style={{ position: 'relative' }}
+											onClick={() => {
+												toggleExtensionSelected(
+													extension
+												)
 											}}
 										>
-											{extension.description}
-										</Text>
-									</Center>
-									<div
-										style={{
-											position: 'absolute',
-											top: 8,
-											left: 8
-										}}
-									>
-										{chosenExtensions.includes(
-											extension.id
-										) && (
-											<Image
-												width={18}
-												height={18}
-												src={'/check.png'}
-											/>
-										)}
-									</div>
-								</div>
-							</Grid.Col>
-						))}
-					</Grid>
+											<div
+												className={
+													meemTheme.extensionGridItem
+												}
+												style={{
+													position: 'relative'
+												}}
+											>
+												<div
+													className={
+														meemTheme.extensionGridItemHeader
+													}
+												>
+													<Image
+														src={`/${
+															isDarkTheme
+																? `${extension.icon?.replace(
+																		'.png',
+																		'-white.png'
+																  )}`
+																: extension.icon
+														}`}
+														width={24}
+														height={24}
+														fit={'contain'}
+													/>
+													<Space w={8} />
+													<Text>{`${extension.name}`}</Text>
+												</div>
+
+												<Text
+													className={
+														meemTheme.tExtraSmallFaded
+													}
+													style={{
+														marginTop: 12
+													}}
+												>
+													{extension.description}
+												</Text>
+
+												{extension.capabilities.includes(
+													'widget'
+												) && (
+													<Badge
+														gradient={{
+															from: isDarkTheme
+																? colorDarkerGrey
+																: colorAsh,
+															to: isDarkTheme
+																? colorDarkerGrey
+																: colorAsh,
+															deg: 35
+														}}
+														classNames={{
+															inner: meemTheme.tBadgeText
+														}}
+														style={{
+															position:
+																'absolute',
+															top: 16,
+															right: 16
+														}}
+														variant={'gradient'}
+													>
+														Widget
+													</Badge>
+												)}
+											</div>
+											<div
+												style={{
+													position: 'absolute',
+													top: -6,
+													left: -6
+												}}
+											>
+												{chosenExtensions.includes(
+													extension.id
+												) && (
+													<Image
+														width={18}
+														height={18}
+														src={'/check.png'}
+													/>
+												)}
+											</div>
+										</div>
+									</Grid.Col>
+								))}
+							</Grid>
+							<Space h={24} />
+						</div>
+					))}
 					<Space h={24} />
 					<DeveloperPortalButton
 						portalButtonText={`Don't see your app?`}

@@ -374,66 +374,75 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							</Text>
 						</Center>
 						<Space h={24} />
-
 						<Center>
-							{agreement.isCurrentUserAgreementMember && (
-								<Button
-									className={meemTheme.buttonYellowBordered}
-									disabled={isLeavingAgreement}
-									loading={isLeavingAgreement}
-									onClick={() => {
-										leaveAgreement()
-									}}
-								>
-									Leave Community
-								</Button>
-							)}
-							{!agreement.isCurrentUserAgreementMember && (
-								<>
-									{user.user && !reqsChecked && (
-										<>
-											<Center>
-												<Loader
-													height={24}
-													variant={'oval'}
-													color={'blue'}
-												/>
-											</Center>
-										</>
-									)}
-									{((user.user && reqsChecked) ||
-										(!user.user && !user.isLoading)) && (
-										<Button
-											className={meemTheme.buttonYellow}
-											disabled={
-												isJoiningAgreement ||
-												(!meetsReqs &&
-													user.user &&
-													!user.isLoading)
-											}
-											loading={isJoiningAgreement}
-											onClick={() => {
-												joinAgreement()
-											}}
-										>
-											{meetsReqs ||
-											(!user.user && !user.isLoading)
-												? `Join ${
-														agreement
-															.membershipSettings
-															?.costToJoin &&
-														agreement
-															.membershipSettings
-															?.costToJoin > 0
-															? `(${agreement.membershipSettings.costToJoin} MATIC)`
-															: ''
-												  }`
-												: 'Requirements Not Met'}
-										</Button>
-									)}
-								</>
-							)}
+							<div style={{ width: 200 }}>
+								{agreement.isCurrentUserAgreementMember && (
+									<Button
+										fullWidth
+										className={
+											meemTheme.buttonYellowBordered
+										}
+										disabled={isLeavingAgreement}
+										loading={isLeavingAgreement}
+										onClick={() => {
+											leaveAgreement()
+										}}
+									>
+										Leave Community
+									</Button>
+								)}
+								{!agreement.isCurrentUserAgreementMember && (
+									<>
+										{user.user && !reqsChecked && (
+											<>
+												<Center>
+													<Loader
+														height={24}
+														variant={'oval'}
+														color={'cyan'}
+													/>
+												</Center>
+											</>
+										)}
+										{((user.user && reqsChecked) ||
+											(!user.user &&
+												!user.isLoading)) && (
+											<Button
+												fullWidth
+												className={
+													meemTheme.buttonYellow
+												}
+												disabled={
+													isJoiningAgreement ||
+													(!meetsReqs &&
+														user.user &&
+														!user.isLoading)
+												}
+												loading={isJoiningAgreement}
+												onClick={() => {
+													joinAgreement()
+												}}
+											>
+												{meetsReqs ||
+												(!user.user && !user.isLoading)
+													? `Join ${
+															agreement
+																.membershipSettings
+																?.costToJoin &&
+															agreement
+																.membershipSettings
+																?.costToJoin > 0
+																? `(${agreement.membershipSettings.costToJoin} MATIC)`
+																: ''
+													  }`
+													: 'Requirements Not Met'}
+											</Button>
+										)}
+									</>
+								)}
+							</div>
 						</Center>
+
 						{!agreement.isCurrentUserAgreementMember &&
 							agreement.membershipSettings?.membershipQuantity !==
 								undefined &&
@@ -452,27 +461,30 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 						<Space h={16} />
 
 						<Center>
-							<Button
-								style={{
-									margin:
-										agreement.extensions &&
-										agreement.extensions?.length > 0
-											? 3
-											: 0
-								}}
-								className={
-									agreement.isCurrentUserAgreementMember
-										? meemTheme.buttonYellow
-										: meemTheme.buttonYellowBordered
-								}
-								onClick={() => {
-									setIsQrModalOpened(true)
-								}}
-							>
-								<QrCode />
-								<Space w={4} />
-								<Text>Scan Code</Text>
-							</Button>
+							<div style={{ width: 200 }}>
+								<Button
+									style={{
+										margin:
+											agreement.extensions &&
+											agreement.extensions?.length > 0
+												? 3
+												: 0
+									}}
+									fullWidth
+									className={
+										agreement.isCurrentUserAgreementMember
+											? meemTheme.buttonYellow
+											: meemTheme.buttonYellowBordered
+									}
+									onClick={() => {
+										setIsQrModalOpened(true)
+									}}
+								>
+									<QrCode />
+									<Space w={4} />
+									<Text>Scan Code</Text>
+								</Button>
+							</div>
 						</Center>
 						{agreement.extensions &&
 							agreement.extensions?.filter(
@@ -554,7 +566,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 						<Space h={32} />
 						<Center>
 							<Text
-								className={meemTheme.tExtraSmallLabel}
+								className={meemTheme.tExtraSmallBold}
 								style={{ cursor: 'pointer' }}
 								onClick={() => {
 									setIsAgreementDetailsModalOpen(true)

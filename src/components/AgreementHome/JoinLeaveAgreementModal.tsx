@@ -35,7 +35,7 @@ export const JoinLeaveAgreementModal: React.FC<IProps> = ({
 				<div className={meemTheme.modalHeader}>
 					<Space h={128} />
 
-					<Loader color="blue" variant="oval" />
+					<Loader color="cyan" variant="oval" />
 					<Space h={24} />
 					<Text
 						className={meemTheme.tLargeBold}

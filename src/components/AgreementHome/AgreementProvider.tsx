@@ -122,7 +122,12 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				)
 		},
 		client: anonClient,
-		skip: !slug || agreement !== undefined || isMembersOnly
+		skip:
+			!slug ||
+			agreement !== undefined ||
+			isMembersOnly ||
+			!isCurrentUserAgreementMemberData ||
+			isCurrentUserAgreementMemberData.AgreementTokens.length > 0
 	})
 
 	useEffect(() => {
