@@ -172,11 +172,23 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 
 		function onTxSuccess() {
 			hideNotification('changesModal')
+			log.debug('all tx in queue succeeded.')
 			setTransactionIds([])
 			setIsTransactionInProgress(false)
 			showSuccessNotification(
 				'Success!',
 				`Your community settings have been updated.`
+			)
+		}
+
+		function onPartialTxFailure(apError?: ApolloError) {
+			log.debug(JSON.stringify(apError))
+			hideNotification('changesModal')
+			setTransactionIds([])
+			setIsTransactionInProgress(false)
+			showErrorNotification(
+				'Transactions completed with errors.',
+				`Not all of your changes have saved. Please get in touch!`
 			)
 		}
 
@@ -193,16 +205,31 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 
 		function checkTransactionCompletion() {
 			if (transactions && transactions.Transactions.length > 0) {
-				const currentTx = transactions.Transactions[0]
+				const totalTx = transactions.Transactions.length
+				let numComplete = 0
+				let numFailures = 0
+				let numPending = 0
+				transactions.Transactions.forEach(tx => {
+					if (tx.status === 'success') {
+						numComplete = numComplete + 1
+					} else if (tx.status === 'failure') {
+						numFailures = numFailures + 1
+					} else if (tx.status === 'pending') {
+						numPending = numPending + 1
+					}
+				})
 
-				log.debug(
-					`watching tx ${currentTx.id}, current status = ${currentTx.status}`
-				)
-
-				if (currentTx.status === 'success') {
+				if (numComplete === totalTx) {
 					onTxSuccess()
-				} else if (currentTx.status === 'failure') {
+				} else if (
+					numComplete > 0 &&
+					numComplete + numFailures === totalTx
+				) {
+					onPartialTxFailure()
+				} else if (numFailures === totalTx) {
 					onTxFailure()
+				} else {
+					log.debug(`watching ${totalTx} tx. pending = ${numPending}`)
 				}
 			} else if (error) {
 				onTxFailure(error)
