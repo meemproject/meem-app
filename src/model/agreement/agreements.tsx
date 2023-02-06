@@ -526,9 +526,9 @@ export default async function agreementFromDb(
 										}
 									)
 									if (memberHasRole) {
-										log.debug(
-											`member ${agreementToken.Wallet?.address} has role ${role.name}`
-										)
+										// log.debug(
+										// 	`member ${agreementToken.Wallet?.address} has role ${role.name}`
+										// )
 										rawMemberRoles.push(role)
 									}
 								})
@@ -627,9 +627,9 @@ export default async function agreementFromDb(
 			}
 		})
 
-		memberRolesMap.forEach((value, key) => {
-			log.debug(`members for role ${key} = ${value.length}`)
-		})
+		// memberRolesMap.forEach((value, key) => {
+		// 	log.debug(`members for role ${key} = ${value.length}`)
+		// })
 
 		let membershipStartDate: Date | undefined
 		let membershipEndDate: Date | undefined

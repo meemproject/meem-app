@@ -2,6 +2,7 @@
 import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Loader } from '@mantine/core'
+import { cleanNotifications } from '@mantine/notifications'
 import { useMeemApollo, useSDK, useWallet } from '@meemproject/react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -53,9 +54,6 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const [currentAgreementDataString, setCurrentAgreementDataString] =
-		useState('')
-
 	const { anonClient } = useMeemApollo()
 
 	const [txIds, setTxIds] = useState<string[]>([])
@@ -66,38 +64,38 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				transactionIds: txIds
 			},
 			client: anonClient,
-			skip: txIds.length === 0
+			skip: txIds.length === 0 || !isSavingChanges
 		})
 
-	const closeModal = useCallback(() => {
-		onModalClosed()
+	const resetState = () => {
 		setTxIds([])
 		setHasStartedTx(false)
-		setHasCompletedTx(false)
 		setIsSavingChanges(false)
-		setCurrentAgreementDataString('')
+	}
+
+	const closeModal = useCallback(() => {
+		resetState()
+		onModalClosed()
 	}, [onModalClosed])
 
 	useEffect(() => {
 		function onRoleChangesSaved() {
-			if (!hasCompletedTxs) {
-				setHasCompletedTx(true)
-				log.debug('role changes saved')
+			log.debug('role changes saved')
 
-				showSuccessNotification(
-					'Role saved!',
-					`This role has been saved. Please wait...`
-				)
+			cleanNotifications()
+			showSuccessNotification(
+				'Role saved!',
+				`This role has been saved. Please wait...`
+			)
 
-				if (agreement) {
-					if (router.query.createRole) {
-						router.push({
-							pathname: `/${agreement.slug}/admin`,
-							query: { tab: 'roles' }
-						})
-					} else {
-						router.reload()
-					}
+			if (agreement) {
+				if (router.query.createRole) {
+					router.push({
+						pathname: `/${agreement.slug}/admin`,
+						query: { tab: 'roles' }
+					})
+				} else {
+					router.reload()
 				}
 			}
 		}
@@ -320,7 +318,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						`creating new role ${role.name} with ${membersArray.length} members`
 					)
 					try {
-						const create = await sdk.agreement.createAgreementRole({
+						const data = {
 							name: role.name,
 							metadata: {
 								meem_metadata_type:
@@ -337,13 +335,18 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 							tokenMetadata: {
 								meem_metadata_type: 'Meem_AgreementToken',
 								meem_metadata_version: '20221116',
-								description: ``,
+								description: `Role token for ${agreement.name}`,
 								name: role.name,
-								image: '',
 								associations: [],
 								external_url: ''
 							}
-						})
+						}
+						//log.debug(JSON.stringify(data))
+
+						const create = await sdk.agreement.createAgreementRole(
+							data
+						)
+
 						if (create) {
 							txs.push(create?.cutTxId)
 							txs.push(create?.deployContractTxId)
@@ -387,10 +390,14 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				})
 				log.debug(`${totalComplete} / ${total} tx are complete...`)
 				if (totalComplete === total) {
-					log.debug(`all tx are complete!`)
 					// All pending tx are complete, wait for 5s and then close modal
-					await new Promise(f => setTimeout(f, 5000))
-					onRoleChangesSaved()
+					if (!hasCompletedTxs) {
+						setHasCompletedTx(true)
+						setTxIds([])
+						await new Promise(f => setTimeout(f, 5000))
+						log.debug(`all tx are complete!`)
+						onRoleChangesSaved()
+					}
 				} else if (failed) {
 					showErrorNotification(
 						'Error',
@@ -415,14 +422,13 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			saveRoleChanges()
 		}
 
-		if (isOpened) {
+		if (isOpened && isSavingChanges && hasStartedTxs && !hasCompletedTxs) {
 			checkTxStatus()
 		}
 	}, [
 		closeModal,
 		isSavingChanges,
 		agreement,
-		currentAgreementDataString,
 		isOpened,
 		onModalClosed,
 		wallet,
@@ -453,7 +459,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				padding={'sm'}
 				opened={isOpened}
 				onClose={() => {
-					closeModal()
+					onModalClosed()
 				}}
 			>
 				<div className={meemTheme.modalHeader}>
