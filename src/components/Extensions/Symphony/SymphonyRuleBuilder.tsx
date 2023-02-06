@@ -487,6 +487,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 			/>
 			<Modal
 				withCloseButton={false}
+				closeOnClickOutside={false}
 				padding={8}
 				overlayBlur={8}
 				size={366}
