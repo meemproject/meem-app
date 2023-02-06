@@ -1,3 +1,11 @@
+# [1.18.0](https://github.com/meemproject/meem-app/compare/v1.17.0...v1.18.0) (2023-02-06)
+
+
+### Features
+
+* agreement transactions (other than roles) are now handled in the background ([279f3bd](https://github.com/meemproject/meem-app/commit/279f3bd))
+* support monitoring multiple tx passed into the provider ([e5ea87c](https://github.com/meemproject/meem-app/commit/e5ea87c))
+
 # [1.17.0](https://github.com/meemproject/meem-app/compare/v1.16.1...v1.17.0) (2023-02-03)
 
 
