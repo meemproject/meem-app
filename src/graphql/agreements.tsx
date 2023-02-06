@@ -359,16 +359,6 @@ export const GET_EXTENSIONS = gql`
 	}
 `
 
-export const GET_AVAILABLE_PERMISSIONS = gql`
-	query GetAvailablePermission {
-		RolePermissions {
-			description
-			id
-			name
-		}
-	}
-`
-
 export const GET_MEMBERS_FOR_ROLE = gql`
 	query GetAgreementMembersForRole(
 		$slug: String
@@ -458,6 +448,11 @@ export const SUB_MY_AGREEMENTS = gql`
 			gnosisSafeAddress
 			mintPermissions
 			symbol
+			AgreementExtensions {
+				Extension {
+					slug
+				}
+			}
 			AgreementWallets {
 				role
 				Wallet {

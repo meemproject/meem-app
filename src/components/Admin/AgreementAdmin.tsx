@@ -53,7 +53,7 @@ export const AgreementAdminComponent: React.FC = () => {
 
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
+	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Extensions)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	useEffect(() => {

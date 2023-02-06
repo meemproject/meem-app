@@ -459,6 +459,26 @@ export const useMeemTheme = createStyles(theme => ({
 		},
 		cursor: 'pointer'
 	},
+	pageHeaderExtension: {
+		marginBottom: 32,
+		display: 'flex',
+		backgroundColor: colorBlack,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+		paddingTop: 40,
+		borderBottomColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey,
+		borderBottomWidth: '1px',
+		borderBottomStyle: 'solid',
+		paddingBottom: 40,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: 32,
+			paddingBottom: 16,
+			paddingLeft: 16,
+			paddingTop: 16
+		}
+	},
 
 	// Page Footer
 	pageFooterContainer: {

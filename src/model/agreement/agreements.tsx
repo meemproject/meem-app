@@ -311,7 +311,7 @@ export function agreementSummaryFromDb(
 			adminAddresses: [],
 			admins: [],
 			description: agreementData.metadata.description,
-			extensions: [],
+			extensions: agreementData.AgreementExtensions,
 			id: agreementData.id,
 			image: agreementData.metadata.image,
 			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
