@@ -14,6 +14,7 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ChangeMeemProtocolPermissionsModal } from '../Modals/ChangeMeemProtocolPermissionsModal'
@@ -35,12 +36,11 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 		useState('members-and-meem')
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-	const [isCreatingSafeModalOpen, setIsCreatingSafeModalOpen] =
-		useState(false)
+	const [isCreatingSafe, setIsCreatingSafe] = useState(false)
 	const [shouldShowUpgrade, setShouldShowUpgrade] = useState(false)
 	const [isUpgradingAgreement, setIsUpgradingAgreement] = useState(false)
-	const [isMeemPermissionModalOpen, setIsMeemPermissionModalOpen] =
-		useState(false)
+	const [isSavingMeemPermission, setIsSavingMeemPermission] = useState(false)
+	const { isTransactionInProgress } = useAgreement()
 
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
@@ -233,7 +233,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 			</Text>
 			<Space h={12} />
 
-			{!isMeemPermissionModalOpen && (
+			{!isSavingMeemPermission && (
 				<>
 					<Radio.Group
 						orientation="vertical"
@@ -262,10 +262,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 			<Button
 				className={meemTheme.buttonBlack}
-				loading={isMeemPermissionModalOpen}
-				disabled={isMeemPermissionModalOpen}
+				loading={isSavingMeemPermission || isTransactionInProgress}
+				disabled={isSavingMeemPermission || isTransactionInProgress}
 				onClick={async () => {
-					setIsMeemPermissionModalOpen(true)
+					setIsSavingMeemPermission(true)
 				}}
 			>
 				Save Changes
@@ -378,10 +378,10 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 				wallet.chainId !== 80001 && (
 					<Button
 						className={meemTheme.buttonBlack}
-						disabled={isCreatingSafeModalOpen}
-						loading={isCreatingSafeModalOpen}
+						disabled={isCreatingSafe}
+						loading={isCreatingSafe}
 						onClick={() => {
-							setIsCreatingSafeModalOpen(true)
+							setIsCreatingSafe(true)
 						}}
 					>
 						Create Treasury
@@ -409,16 +409,16 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 			<CreateSafeModal
 				agreement={agreement}
-				isOpened={isCreatingSafeModalOpen}
-				onModalClosed={() => {
-					setIsCreatingSafeModalOpen(false)
+				isRequestInProgress={isCreatingSafe}
+				onRequestComplete={() => {
+					setIsCreatingSafe(false)
 				}}
 			/>
 			<ChangeMeemProtocolPermissionsModal
 				agreement={agreement}
-				isOpened={isMeemPermissionModalOpen}
+				isOpened={isSavingMeemPermission}
 				onModalClosed={() => {
-					setIsMeemPermissionModalOpen(false)
+					setIsSavingMeemPermission(false)
 				}}
 				bundleData={bundleData}
 				smartContractPermission={smartContractPermission}
