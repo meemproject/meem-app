@@ -170,12 +170,14 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 					isInitialized: true
 				})
 				router.push({
-					pathname: `/${agreementSlug}/e/${extensionSlug}/settings?isOnboarding=true`
+					pathname: `/${agreementSlug}/e/${extensionSlug}/settings`,
+					query: { isOnboarding: true }
 				})
 			} catch (e) {
 				if ((e as any).toString().includes('EXTENSION_ALREADY_ADDED')) {
 					router.push({
-						pathname: `/${agreementSlug}/e/${extensionSlug}/settings?isOnboarding=true`
+						pathname: `/${agreementSlug}/e/${extensionSlug}/settings`,
+						query: { isOnboarding: true }
 					})
 				} else {
 					log.debug(e)
@@ -270,7 +272,9 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 					</Center>
 				</>
 			)}
-			{!loading && !extensionsLoading && <>{pageHeader}</>}
+			{!loading && !extensionsLoading && !isEnablingExtension && (
+				<>{pageHeader}</>
+			)}
 
 			{!isEnablingExtension &&
 				!extensionsLoading &&
