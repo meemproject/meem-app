@@ -503,7 +503,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 
 			<CreateAgreementModal
 				isOpened={isCreatingNewCommunity}
-				quietMode
+				quietMode={true}
 				quietModeAgreementName={agreementName}
 				onModalClosed={function (slug, id): void {
 					if (id && slug) {
