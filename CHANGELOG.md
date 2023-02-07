@@ -1,3 +1,18 @@
+# [1.19.0](https://github.com/meemproject/meem-app/compare/v1.18.0...v1.19.0) (2023-02-07)
+
+
+### Bug Fixes
+
+* a couple bugs with role changes modal duplicating some actions ([e76b623](https://github.com/meemproject/meem-app/commit/e76b623))
+* clicking outside of rule builder closes it ([1a84110](https://github.com/meemproject/meem-app/commit/1a84110))
+* edge case with agreement provider where errors could cause an infinite loading state ([e6e4203](https://github.com/meemproject/meem-app/commit/e6e4203))
+
+
+### Features
+
+* enhanced symphony onboarding flow ([88f6737](https://github.com/meemproject/meem-app/commit/88f6737))
+* extension setup / onboarding + community creation flow ([069f2e3](https://github.com/meemproject/meem-app/commit/069f2e3))
+
 # [1.18.0](https://github.com/meemproject/meem-app/compare/v1.17.0...v1.18.0) (2023-02-06)
 
 
