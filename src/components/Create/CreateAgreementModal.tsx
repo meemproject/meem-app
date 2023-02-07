@@ -154,7 +154,6 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				<>
 					<Modal
 						centered
-						closeOnClickOutside={false}
 						closeOnEscape={false}
 						withCloseButton={true}
 						radius={16}
@@ -206,7 +205,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			<CreationProgressModal
 				agreementName={agreementName}
 				isOpened={isAgreementCreationModalOpened}
-				quietMode
+				quietMode={quietMode}
 				onModalClosed={(status, slug, id) => {
 					setIsAgreementCreationModalOpened(false)
 					if (quietMode) {
