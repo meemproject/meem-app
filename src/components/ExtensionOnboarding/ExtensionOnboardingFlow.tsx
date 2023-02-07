@@ -13,13 +13,15 @@ import {
 	useMantineColorScheme,
 	Container,
 	Stepper,
-	TextInput
+	TextInput,
+	Popover
 } from '@mantine/core'
 import { useWallet, useMeemApollo, useSDK } from '@meemproject/react'
 import { Group } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { InfoCircle } from 'tabler-icons-react'
 import {
 	GetExtensionsQuery,
 	MyAgreementsSubscriptionSubscription
@@ -191,61 +193,71 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 			)
 		}
 	}
+	const easterEgg = (
+		<>
+			{extensionSlug === 'symphony' && (
+				<>
+					<Space w={48} />
+					<div className={meemTheme.centeredRow}>
+						<audio controls>
+							<source src="/symphony.mp3" type="audio/mpeg" />
+							Your browser does not support the audio element.
+						</audio>
+
+						<Popover
+							width={200}
+							position="bottom"
+							withArrow
+							shadow="md"
+						>
+							<Popover.Target>
+								<Button className={meemTheme.buttonTransparent}>
+									<InfoCircle color={'white'} />
+								</Button>
+							</Popover.Target>
+							<Popover.Dropdown>
+								<Text
+									className={meemTheme.tExtraExtraSmall}
+									style={{ maxWidth: 300 }}
+								>
+									Handel - Arrival of the Queen of Sheba,
+									performed by the Advent Chamber Orchestra,
+									November 2006 Roxanna Pavel Goldstein,
+									Musical Director; Elias Goldstein, Orchestra
+									Manager. License: CC-BY-SA
+								</Text>
+								<Space h={8} />
+								<Link
+									href={`https://commons.wikimedia.org/wiki/File:Handel_-_Arrival_of_the_Queen_of_Sheba.ogg`}
+								>
+									<Text
+										className={meemTheme.tExtraSmallBold}
+										style={{ cursor: 'pointer' }}
+									>
+										Source
+									</Text>
+								</Link>
+							</Popover.Dropdown>
+						</Popover>
+					</div>
+				</>
+			)}
+		</>
+	)
 
 	const pageHeader = (
-		<>
-			<div className={meemTheme.pageHeaderExtension}>
-				<Space h={8} />
-				<Center>
+		<div className={meemTheme.pageHeaderExtension}>
+			<Container>
+				<div className={meemTheme.spacedRowCentered}>
 					<Image
 						className={meemTheme.copyIcon}
 						src={`/${extensionIcon}`}
 						width={220}
 					/>
-				</Center>
-
-				<Space h={8} />
-			</div>
-		</>
-	)
-
-	const pageFooter = (
-		<>
-			<Space h={108} />
-			<Center>
-				<Center>
-					<audio controls>
-						<source src="/symphony.mp3" type="audio/mpeg" />
-						Your browser does not support the audio element.
-					</audio>
-				</Center>
-			</Center>
-			<Space h={8} />
-			<Center>
-				<Text
-					className={meemTheme.tExtraExtraSmall}
-					style={{ maxWidth: 300 }}
-				>
-					Handel - Arrival of the Queen of Sheba, performed by the
-					Advent Chamber Orchestra, November 2006 Roxanna Pavel
-					Goldstein, Musical Director; Elias Goldstein, Orchestra
-					Manager. License: CC-BY-SA
-				</Text>
-			</Center>
-			<Space h={8} />
-			<Center>
-				<Link
-					href={`https://commons.wikimedia.org/wiki/File:Handel_-_Arrival_of_the_Queen_of_Sheba.ogg`}
-				>
-					<Text
-						className={meemTheme.tExtraSmallBold}
-						style={{ cursor: 'pointer' }}
-					>
-						Source
-					</Text>
-				</Link>
-			</Center>
-		</>
+					{easterEgg}
+				</div>
+			</Container>
+		</div>
 	)
 
 	return (
@@ -258,12 +270,13 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 					</Center>
 				</>
 			)}
+			{!loading && !extensionsLoading && <>{pageHeader}</>}
+
 			{!isEnablingExtension &&
 				!extensionsLoading &&
 				(agreements.length === 0 || shouldShowCreateNewCommunity) &&
 				!loading && (
 					<>
-						{pageHeader}
 						<Space h={32} />
 						<Container>
 							<Text className={meemTheme.tExtraSmallLabel}>
@@ -329,8 +342,6 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 								></Stepper.Step>
 							</Stepper>
 						</Container>
-						{pageFooter}
-						<Space h={48} />
 					</>
 				)}
 			{!isEnablingExtension &&
@@ -339,7 +350,6 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 				!shouldShowCreateNewCommunity &&
 				!loading && (
 					<>
-						{pageHeader}
 						<Space h={32} />
 						<Center>
 							<Text className={meemTheme.tLargeBold}>
@@ -486,12 +496,11 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 								</Grid.Col>
 							</Grid>
 						</Center>
-
-						{extensionSlug === 'symphony' && pageFooter}
-
-						<Space h={60} />
 					</>
 				)}
+
+			<Space h={60} />
+
 			<CreateAgreementModal
 				isOpened={isCreatingNewCommunity}
 				quietMode

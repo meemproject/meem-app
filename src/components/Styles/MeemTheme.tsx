@@ -31,6 +31,20 @@ export const colorSiteDarkModeBg = '#1A1C1E'
 
 export const useMeemTheme = createStyles(theme => ({
 	// Buttons
+	buttonTransparent: {
+		backgroundColor: 'transparent',
+		'&:hover': {
+			backgroundColor: 'transparent'
+		},
+		'&:loading': {
+			backgroundColor: 'transparent'
+		},
+		'&:disabled': {
+			backgroundColor: 'transparent'
+		},
+		color: colorBlack,
+		borderRadius: 24
+	},
 	buttonBlack: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorBlack,
