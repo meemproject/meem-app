@@ -31,6 +31,20 @@ export const colorSiteDarkModeBg = '#1A1C1E'
 
 export const useMeemTheme = createStyles(theme => ({
 	// Buttons
+	buttonTransparent: {
+		backgroundColor: 'transparent',
+		'&:hover': {
+			backgroundColor: 'transparent'
+		},
+		'&:loading': {
+			backgroundColor: 'transparent'
+		},
+		'&:disabled': {
+			backgroundColor: 'transparent'
+		},
+		color: colorBlack,
+		borderRadius: 24
+	},
 	buttonBlack: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorBlack,
@@ -99,6 +113,20 @@ export const useMeemTheme = createStyles(theme => ({
 		},
 		'&:disabled': {
 			backgroundColor: colorBlueHover
+		},
+		borderRadius: 24
+	},
+	buttonDiscordBlue: {
+		color: colorWhite,
+		backgroundColor: '#5865F2',
+		'&:hover': {
+			backgroundColor: '#7289da'
+		},
+		'&:loading': {
+			backgroundColor: '#7289da'
+		},
+		'&:disabled': {
+			backgroundColor: '#7289da'
 		},
 		borderRadius: 24
 	},
@@ -458,6 +486,26 @@ export const useMeemTheme = createStyles(theme => ({
 			display: 'none'
 		},
 		cursor: 'pointer'
+	},
+	pageHeaderExtension: {
+		marginBottom: 32,
+		display: 'flex',
+		backgroundColor: colorBlack,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+		paddingTop: 40,
+		borderBottomColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey,
+		borderBottomWidth: '1px',
+		borderBottomStyle: 'solid',
+		paddingBottom: 40,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			marginBottom: 32,
+			paddingBottom: 16,
+			paddingLeft: 16,
+			paddingTop: 16
+		}
 	},
 
 	// Page Footer
