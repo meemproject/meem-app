@@ -89,6 +89,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					jwt: jwt as string,
 					agreementId: agreement?.id as string
 				})
+			},
+			{
+				shouldRetryOnError: false
 			}
 		)
 
@@ -109,6 +112,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				jwt: jwt as string,
 				agreementId: agreement?.id as string
 			})
+		},
+		{
+			shouldRetryOnError: false
 		}
 	)
 
@@ -241,10 +247,14 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		if (!agreement?.id || hasFetchedData || !gun) {
 			return
 		}
-		log.debug(`getting gun data...`)
+		log.debug(`getting gun data...`, {
+			path: `${agreement.id}/services/twitter`
+		})
 		gun?.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/twitter`)
-			.once(data => {
+			// @ts-ignore
+			.open(data => {
+				log.debug('twitter data', data)
 				if (data) {
 					setTwitterUsername(data.username)
 					log.debug(`twitter username = ${data.username}`)
@@ -252,7 +262,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			})
 		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/discord`)
-			.once(data => {
+			// @ts-ignore
+			.open(data => {
+				log.debug('discord data', data)
 				if (data) {
 					setDiscordInfo(data)
 					log.debug(`discord data found`)
@@ -261,7 +273,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 		gun?.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/rules`)
-
 			// @ts-ignore
 			.open(data => {
 				if (data) {
@@ -399,15 +410,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							>
 								Manage Connection
 							</Text>
-							{botCode && (
-								<>
-									<Space h={4} />
-									<Text>
-										Activate with /activateSymphony{' '}
-										{botCode}
-									</Text>
-								</>
-							)}
 						</div>
 					</div>
 				</div>
