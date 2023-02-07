@@ -154,7 +154,6 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				<>
 					<Modal
 						centered
-						closeOnClickOutside={false}
 						closeOnEscape={false}
 						withCloseButton={true}
 						radius={16}
