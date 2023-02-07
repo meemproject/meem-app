@@ -150,6 +150,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				shouldCreateAdminRole: true,
 				name: agreementName,
 				admins: wallet.accounts,
+				members: wallet.accounts,
 				minters: wallet.accounts,
 				maxSupply: '0x00',
 				mintPermissions,
