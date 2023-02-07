@@ -161,12 +161,14 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		if (errorAnonAgreement) {
 			log.debug('Loading anonymous agreement failed:')
 			log.debug(JSON.stringify(errorAnonAgreement))
+			setOriginalSlug(slug ?? '')
 			setIsLoadingAgreement(false)
 		}
 
 		if (errorMemberAgreement) {
 			log.debug('Loading member-access agreement failed:')
 			log.debug(JSON.stringify(errorMemberAgreement))
+			setOriginalSlug(slug ?? '')
 			setIsLoadingAgreement(false)
 		}
 
@@ -251,6 +253,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				anonAgreementData.Agreements.length === 0
 			) {
 				setIsLoadingAgreement(false)
+				setOriginalSlug(slug ?? '')
 				return
 			}
 
@@ -315,12 +318,12 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		if (slug !== originalSlug) {
 			setAgreement(undefined)
 			setIsLoadingAgreement(true)
+			log.debug('loading agreement')
 		}
 
 		// User does not have access to this page
 		if (isMembersOnly && memberAgreementData?.Agreements.length === 0) {
 			setIsLoadingAgreement(false)
-			return
 		}
 
 		if (transactionIds.length > 0) {

@@ -14,6 +14,7 @@ import {
 import { useAuth, useSDK } from '@meemproject/react'
 import { makeFetcher, makeRequest } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
@@ -53,6 +54,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	const isInOnboardingMode = router.query.isOnboarding === 'true'
 
 	const handleInviteBot = async () => {
 		if (!agreement?.id || !jwt) {
@@ -517,7 +520,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const onboardingState = (
 		<>
 			<Space h={24} />
-			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
+			<Text className={meemTheme.tExtraSmallLabel}>{`${
+				isInOnboardingMode ? 'COMPLETE SYMPHONY SETUP' : 'CONFIGURATION'
+			}`}</Text>
 			<Space h={24} />
 			<Stepper active={activeStep} breakpoint="sm" orientation="vertical">
 				<Stepper.Step
@@ -677,9 +682,49 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							)}
 							{hasFetchedData && (
 								<>
-									<ExtensionPageHeader
-										extensionSlug={'symphony'}
-									/>
+									{!agreementExtension?.isSetupComplete && (
+										<div
+											className={
+												meemTheme.pageHeaderExtension
+											}
+											style={{ position: 'relative' }}
+										>
+											<Space h={8} />
+											<Center>
+												<Image
+													className={
+														meemTheme.copyIcon
+													}
+													src={`/ext-symphony.png`}
+													width={220}
+												/>
+											</Center>
+
+											<Space h={8} />
+											<div
+												style={{
+													position: 'absolute',
+													top: 50,
+													right: 48
+												}}
+											>
+												<Link
+													href={`/${agreement?.slug}`}
+												>
+													<Image
+														src="/delete.png"
+														width={24}
+														height={24}
+													/>
+												</Link>
+											</div>
+										</div>
+									)}
+									{agreementExtension?.isSetupComplete && (
+										<ExtensionPageHeader
+											extensionSlug={'symphony'}
+										/>
+									)}
 
 									<Container>
 										{twitterUsername.length > 0 &&
