@@ -8,6 +8,7 @@ export const SUB_TRANSACTIONS = gql`
 			status
 			Agreements {
 				slug
+				id
 			}
 		}
 	}
