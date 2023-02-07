@@ -192,147 +192,175 @@ export const RolesManager: React.FC = () => {
 						</Link>
 					</div>
 
-					{!agreement?.isCurrentUserAgreementAdmin && (
-						<Container>
-							<Space h={120} />
-							<Center>
-								<Text>
-									Sorry, you do not have permission to view
-									this page. Contact the community owner for
-									help.
-								</Text>
-							</Center>
-						</Container>
-					)}
-					{agreement?.isCurrentUserAgreementAdmin && (
-						<div className={meemTheme.pagePanelLayoutContainer}>
-							<MediaQuery
-								largerThan="sm"
-								styles={{ display: 'none' }}
-							>
-								<Burger
-									style={{ marginLeft: 24 }}
-									opened={mobileNavBarVisible}
-									onClick={() =>
-										setMobileNavBarVisible(o => !o)
-									}
-									size="sm"
-									mr="xl"
-								/>
-							</MediaQuery>
-							<Navbar
-								className={meemTheme.pagePanelLayoutNavBar}
-								width={{ base: 288 }}
-								height={400}
-								hidden={!mobileNavBarVisible}
-								hiddenBreakpoint={'sm'}
-								withBorder={false}
-								p="xs"
-							>
-								<div
-									className={meemTheme.centeredRow}
-									style={{ marginLeft: 18, marginBottom: 24 }}
-								>
-									<Link
-										href={`/${agreement?.slug}/admin?tab=roles`}
-									>
-										<div>
-											<ArrowLeft
-												className={meemTheme.clickable}
-											/>
-										</div>
-									</Link>
-
-									<Space w={8} />
-									<Text className={meemTheme.tLargeBold}>
-										Manage Roles
+					{!isLoadingAgreement &&
+						!agreement?.isCurrentUserAgreementAdmin && (
+							<Container>
+								<Space h={120} />
+								<Center>
+									<Text>
+										Sorry, you do not have permission to
+										view this page. Contact the community
+										owner for help.
 									</Text>
-								</div>
-								<div
-									className={meemTheme.spacedRowCentered}
-									style={{ marginLeft: 20 }}
+								</Center>
+							</Container>
+						)}
+					{!isLoadingAgreement &&
+						agreement?.isCurrentUserAgreementAdmin && (
+							<div className={meemTheme.pagePanelLayoutContainer}>
+								<MediaQuery
+									largerThan="sm"
+									styles={{ display: 'none' }}
 								>
-									<Text
-										className={meemTheme.tExtraSmallLabel}
+									<Burger
+										style={{ marginLeft: 24 }}
+										opened={mobileNavBarVisible}
+										onClick={() =>
+											setMobileNavBarVisible(o => !o)
+										}
+										size="sm"
+										mr="xl"
+									/>
+								</MediaQuery>
+								<Navbar
+									className={meemTheme.pagePanelLayoutNavBar}
+									width={{ base: 288 }}
+									height={400}
+									hidden={!mobileNavBarVisible}
+									hiddenBreakpoint={'sm'}
+									withBorder={false}
+									p="xs"
+								>
+									<div
+										className={meemTheme.centeredRow}
 										style={{
-											marginLeft: 10
+											marginLeft: 18,
+											marginBottom: 24
 										}}
 									>
-										ROLES
-									</Text>
-									<Plus
-										className={meemTheme.clickable}
-										onClick={() => {
-											if (!isAddingNewRole) addRole()
-										}}
-									/>
-								</div>
-								<Space h={8} />
-
-								{tabs.map(tab => (
-									<NavLink
-										key={tab.associatedRole?.id}
-										style={{ marginLeft: 8 }}
-										className={
-											meemTheme.pagePanelLayoutNavItem
-										}
-										active={
-											currentTab &&
-											currentTab.associatedRole?.id ===
-												tab.associatedRole?.id
-										}
-										label={tab.name}
-										onClick={() => {
-											setCurrentTab(tab)
-											setMobileNavBarVisible(false)
-										}}
-									/>
-								))}
-							</Navbar>
-							{!mobileNavBarVisible && (
-								<div
-									className={meemTheme.pagePanelLayoutContent}
-								>
-									{tabs.map(tab => (
-										<div key={tab.associatedRole?.id}>
-											<div
-												className={
-													currentTab &&
-													currentTab.associatedRole
-														?.id ===
-														tab.associatedRole?.id
-														? meemTheme.visibleContainer
-														: meemTheme.invisibleContainer
-												}
-											>
-												<RolesManagerContent
-													agreement={agreement}
-													initialRole={
-														tab.associatedRole
+										<Link
+											href={`/${agreement?.slug}/admin?tab=roles`}
+										>
+											<div>
+												<ArrowLeft
+													className={
+														meemTheme.clickable
 													}
-													onRoleUpdated={newRole => {
-														tabs.forEach(theTab => {
-															if (
-																theTab.associatedRole &&
-																theTab
-																	.associatedRole
-																	.id ===
-																	newRole.id
-															) {
-																theTab.associatedRole =
-																	newRole
-															}
-														})
-														setTabs(tabs)
-													}}
 												/>
 											</div>
-										</div>
+										</Link>
+
+										<Space w={8} />
+										<Text className={meemTheme.tLargeBold}>
+											Manage Roles
+										</Text>
+									</div>
+									<div
+										className={meemTheme.spacedRowCentered}
+										style={{ marginLeft: 20 }}
+									>
+										<Text
+											className={
+												meemTheme.tExtraSmallLabel
+											}
+											style={{
+												marginLeft: 10
+											}}
+										>
+											ROLES
+										</Text>
+										<Plus
+											className={meemTheme.clickable}
+											onClick={() => {
+												if (!isAddingNewRole) addRole()
+											}}
+										/>
+									</div>
+									<Space h={8} />
+
+									{tabs.map(tab => (
+										<NavLink
+											key={tab.associatedRole?.id}
+											style={{ marginLeft: 8 }}
+											className={
+												meemTheme.pagePanelLayoutNavItem
+											}
+											active={
+												currentTab &&
+												currentTab.associatedRole
+													?.id ===
+													tab.associatedRole?.id
+											}
+											label={tab.name}
+											onClick={() => {
+												setCurrentTab(tab)
+												if (tab.associatedRole) {
+													router.push(
+														`/${
+															agreement.slug
+														}/roles?role=${
+															tab.associatedRole
+																?.id ?? ''
+														}`,
+														undefined,
+														{ shallow: true }
+													)
+												}
+												setMobileNavBarVisible(false)
+											}}
+										/>
 									))}
-								</div>
-							)}
-						</div>
-					)}
+								</Navbar>
+								{!mobileNavBarVisible && (
+									<div
+										className={
+											meemTheme.pagePanelLayoutContent
+										}
+									>
+										{tabs.map(tab => (
+											<div key={tab.associatedRole?.id}>
+												<div
+													className={
+														currentTab &&
+														currentTab
+															.associatedRole
+															?.id ===
+															tab.associatedRole
+																?.id
+															? meemTheme.visibleContainer
+															: meemTheme.invisibleContainer
+													}
+												>
+													<RolesManagerContent
+														agreement={agreement}
+														initialRole={
+															tab.associatedRole
+														}
+														onRoleUpdated={newRole => {
+															tabs.forEach(
+																theTab => {
+																	if (
+																		theTab.associatedRole &&
+																		theTab
+																			.associatedRole
+																			.id ===
+																			newRole.id
+																	) {
+																		theTab.associatedRole =
+																			newRole
+																	}
+																}
+															)
+															setTabs(tabs)
+														}}
+													/>
+												</div>
+											</div>
+										))}
+									</div>
+								)}
+							</div>
+						)}
 				</>
 			)}
 		</>

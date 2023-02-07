@@ -16,13 +16,19 @@ import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	agreementName: string
 	isOpened: boolean
-	onModalClosed: () => void
+	onModalClosed: (
+		status: string,
+		agreementSlug: string,
+		agreementId: string
+	) => void
+	quietMode?: boolean
 }
 
 export const CreationProgressModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
-	agreementName
+	agreementName,
+	quietMode
 }) => {
 	const router = useRouter()
 
@@ -65,28 +71,41 @@ export const CreationProgressModal: React.FC<IProps> = ({
 		}
 	}, [error])
 
-	const closeModal = useCallback(() => {
-		onModalClosed()
-
-		setHasStartedCreating(false)
-	}, [onModalClosed])
+	const closeModal = useCallback(
+		(status: string, agreementSlug?: string, agreementId?: string) => {
+			setTransactionIds([])
+			setHasStartedCreating(false)
+			onModalClosed(status, agreementSlug ?? '', agreementId ?? '')
+		},
+		[onModalClosed]
+	)
 
 	const finishAgreementCreation = useCallback(
-		async (slug: string) => {
-			// Successfully created agreement
-			log.debug('agreement creation complete')
+		async (slug: string, id: string) => {
+			if (hasStartedCreating) {
+				// Successfully created agreement
+				log.debug('agreement creation complete')
 
-			// Route to the created agreement detail page
-			showSuccessNotification(
-				'Success!',
-				`Your community has been created.`
-			)
+				if (quietMode) {
+					showSuccessNotification(
+						'Success!',
+						`Your community has been created. Let's get you set up.`
+					)
+					closeModal('success', slug, id)
+				} else {
+					// Route to the created agreement detail page
+					showSuccessNotification(
+						'Success!',
+						`Your community has been created.`
+					)
 
-			router.push({
-				pathname: `/${slug}`
-			})
+					router.push({
+						pathname: `/${slug}`
+					})
+				}
+			}
 		},
-		[router]
+		[closeModal, hasStartedCreating, quietMode, router]
 	)
 
 	const create = useCallback(async () => {
@@ -98,7 +117,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				'Error creating community',
 				'Please connect your wallet first.'
 			)
-			closeModal()
+			closeModal('failure', '')
 			setHasStartedCreating(false)
 			return
 		}
@@ -131,6 +150,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				shouldCreateAdminRole: true,
 				name: agreementName,
 				admins: wallet.accounts,
+				members: wallet.accounts,
 				minters: wallet.accounts,
 				maxSupply: '0x00',
 				mintPermissions,
@@ -182,7 +202,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				'An error occurred while creating this community. Please try again.'
 			)
 
-			closeModal()
+			closeModal('failure')
 			setHasStartedCreating(false)
 		}
 	}, [wallet, closeModal, agreementName, sdk.agreement])
@@ -221,13 +241,17 @@ export const CreationProgressModal: React.FC<IProps> = ({
 		if (mintTransaction?.status === MeemAPI.TransactionStatus.Success) {
 			newActiveStep = 4
 			if (cutTransaction?.Agreements[0]) {
-				finishAgreementCreation(cutTransaction.Agreements[0].slug)
+				finishAgreementCreation(
+					cutTransaction.Agreements[0].slug,
+					cutTransaction.Agreements[0].id
+				)
 			} else {
 				// TODO: Handle edge case error
 				showErrorNotification(
 					'Error creating community',
 					'Please try again.'
 				)
+				closeModal('failure')
 			}
 		}
 
@@ -237,7 +261,8 @@ export const CreationProgressModal: React.FC<IProps> = ({
 		setActiveStep,
 		transactions,
 		router,
-		finishAgreementCreation
+		finishAgreementCreation,
+		closeModal
 	])
 
 	const modalContents = (
@@ -324,36 +349,40 @@ export const CreationProgressModal: React.FC<IProps> = ({
 
 	return (
 		<>
-			<Modal
-				className={meemTheme.visibleDesktopOnly}
-				centered
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				withCloseButton={false}
-				radius={16}
-				size={'60%'}
-				overlayBlur={8}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal()}
-			>
-				{modalContents}
-			</Modal>
-			<Modal
-				className={meemTheme.visibleMobileOnly}
-				centered
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				withCloseButton={false}
-				radius={16}
-				fullScreen={true}
-				overlayBlur={8}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal()}
-			>
-				{modalContents}
-			</Modal>
+			{!quietMode && (
+				<>
+					<Modal
+						className={meemTheme.visibleDesktopOnly}
+						centered
+						closeOnClickOutside={false}
+						closeOnEscape={false}
+						withCloseButton={false}
+						radius={16}
+						size={'60%'}
+						overlayBlur={8}
+						padding={'lg'}
+						opened={isOpened}
+						onClose={() => closeModal('failure')}
+					>
+						{modalContents}
+					</Modal>
+					<Modal
+						className={meemTheme.visibleMobileOnly}
+						centered
+						closeOnClickOutside={false}
+						closeOnEscape={false}
+						withCloseButton={false}
+						radius={16}
+						fullScreen={true}
+						overlayBlur={8}
+						padding={'lg'}
+						opened={isOpened}
+						onClose={() => closeModal('failure')}
+					>
+						{modalContents}
+					</Modal>
+				</>
+			)}
 		</>
 	)
 }

@@ -179,7 +179,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 
 	return (
 		<form onSubmit={form.onSubmit(values => handleFormSubmit(values))}>
-			<Text className={meemTheme.tExtraSmallLabel}>RULE TYPE</Text>
+			{/* <Text className={meemTheme.tExtraSmallLabel}>RULE TYPE</Text>
 			<Space h={4} />
 			<Text className={meemTheme.tExtraSmall}>
 				What rule type should we follow?
@@ -198,7 +198,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 				]}
 				{...form.getInputProps('publishType')}
 			/>
-			<Space h={'lg'} />
+			<Space h={'lg'} /> */}
 			<Text className={meemTheme.tExtraSmallLabel}>CHANNELS</Text>
 			<Space h={4} />
 
@@ -487,6 +487,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 			/>
 			<Modal
 				withCloseButton={false}
+				closeOnClickOutside={false}
 				padding={8}
 				overlayBlur={8}
 				size={366}
