@@ -102,6 +102,20 @@ export const useMeemTheme = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
+	buttonDiscordBlue: {
+		color: colorWhite,
+		backgroundColor: '#5865F2',
+		'&:hover': {
+			backgroundColor: '#7289da'
+		},
+		'&:loading': {
+			backgroundColor: '#7289da'
+		},
+		'&:disabled': {
+			backgroundColor: '#7289da'
+		},
+		borderRadius: 24
+	},
 	buttonYellow: {
 		color: colorBlack,
 		backgroundColor: colorYellow,

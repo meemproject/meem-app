@@ -119,6 +119,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			client: mutualMembersClient,
 			skip:
 				!slug ||
+				(isMembersOnly && !wallet.isConnected) ||
 				(!isMembersOnly &&
 					(!isCurrentUserAgreementMemberData ||
 						isCurrentUserAgreementMemberData.AgreementTokens
