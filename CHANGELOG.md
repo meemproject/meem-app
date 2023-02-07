@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/meemproject/meem-app/compare/v1.19.0...v1.19.1) (2023-02-07)
+
+
+### Bug Fixes
+
+* click outside to close create agreement modal ([3e2685d](https://github.com/meemproject/meem-app/commit/3e2685d))
+
 # [1.19.0](https://github.com/meemproject/meem-app/compare/v1.18.0...v1.19.0) (2023-02-07)
 
 
