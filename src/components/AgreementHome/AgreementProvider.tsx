@@ -36,6 +36,7 @@ const defaultState: {
 	agreement?: Agreement
 	isLoadingAgreement: boolean
 	error?: ApolloError | undefined
+	isMembersOnly?: boolean
 	txIds?: string[]
 	isTransactionInProgress: boolean
 	watchTransactions: (txIds: string[]) => void
@@ -370,6 +371,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			agreement,
 			isLoadingAgreement,
 			error: errorAnonAgreement || errorMemberAgreement,
+			isMembersOnly,
 			txIds: transactionIds,
 			isTransactionInProgress,
 			watchTransactions
@@ -379,6 +381,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			errorAnonAgreement,
 			errorMemberAgreement,
 			isLoadingAgreement,
+			isMembersOnly,
 			isTransactionInProgress,
 			transactionIds
 		]
