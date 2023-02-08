@@ -15,6 +15,7 @@ import { useWallet } from '@meemproject/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { isJwtError } from '../../model/agreement/agreements'
 import {
 	userHasPermissionEditProfile,
 	userHasPermissionManageApps,
