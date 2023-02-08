@@ -24,7 +24,6 @@ import { showSuccessNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorBlue, colorDarkBlue, useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
 import { API } from './symphonyTypes.generated'
 
@@ -62,6 +61,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		useState(false)
 	const [hasDismissedSetupComplete, setHasDismissedSetupComplete] =
 		useState(false)
+
+	const isConnectionEstablished = twitterUsername && discordInfo
 
 	const handleInviteBot = async () => {
 		if (!agreement?.id || !jwt) {
@@ -780,6 +781,83 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		</>
 	)
 
+	const pageHeader = (
+		<>
+			<div
+				className={meemTheme.pageHeaderExtension}
+				style={{ position: 'relative' }}
+			>
+				<Space h={8} />
+				<Center>
+					<Image
+						className={meemTheme.copyIcon}
+						src={`/ext-symphony.png`}
+						width={220}
+					/>
+				</Center>
+
+				<Space h={8} />
+				<div
+					style={{
+						position: 'absolute',
+						top: 50,
+						right: 48
+					}}
+				>
+					<Link href={`/${agreement?.slug}`}>
+						<Image src="/delete.png" width={24} height={24} />
+					</Link>
+				</div>
+			</div>
+		</>
+	)
+
+	const pageHeaderOnboarding = (
+		<>
+			<div className={meemTheme.widgetMeemFlat}>
+				<Space h={24} />
+
+				<Center>
+					<Text className={meemTheme.tLargeBold}>
+						Publishing is just one of the many things communities
+						can do together on meem.
+					</Text>
+				</Center>
+				<Space h={24} />
+				<Center>
+					<Text className={meemTheme.tMedium}>
+						Tap below to customize your community page and browse
+						our other extensions.
+					</Text>
+				</Center>
+				<Space h={36} />
+				<Center>
+					<Link href={`/${agreement?.slug}`}>
+						<Button className={meemTheme.buttonBlack}>
+							Explore meem
+						</Button>
+					</Link>
+				</Center>
+				<Space h={24} />
+			</div>
+			<Space h={32} />
+			<Container>
+				<div className={meemTheme.centeredRow}>
+					<Image
+						height={24}
+						width={24}
+						src={'/integration-symphony.png'}
+					/>
+					<Space w={16} />
+					<Text className={meemTheme.tLargeBold}>
+						Symphony Settings
+					</Text>
+				</div>
+			</Container>
+			<Space h={32} />
+		</>
+	)
+
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'symphony'} />
@@ -812,49 +890,24 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							)}
 							{hasFetchedData && (
 								<>
-									{!agreementExtension?.isSetupComplete && (
-										<div
-											className={
-												meemTheme.pageHeaderExtension
-											}
-											style={{ position: 'relative' }}
-										>
-											<Space h={8} />
-											<Center>
-												<Image
-													className={
-														meemTheme.copyIcon
-													}
-													src={`/ext-symphony.png`}
-													width={220}
-												/>
-											</Center>
+									{/* buckle up...  */}
+									{isInOnboardingMode && (
+										<>
+											{!isConnectionEstablished && (
+												<>{pageHeader}</>
+											)}
+											{isConnectionEstablished &&
+												!hasDismissedSetupComplete && (
+													<>{pageHeader}</>
+												)}
 
-											<Space h={8} />
-											<div
-												style={{
-													position: 'absolute',
-													top: 50,
-													right: 48
-												}}
-											>
-												<Link
-													href={`/${agreement?.slug}`}
-												>
-													<Image
-														src="/delete.png"
-														width={24}
-														height={24}
-													/>
-												</Link>
-											</div>
-										</div>
+											{isConnectionEstablished &&
+												hasDismissedSetupComplete && (
+													<>{pageHeaderOnboarding}</>
+												)}
+										</>
 									)}
-									{agreementExtension?.isSetupComplete && (
-										<ExtensionPageHeader
-											extensionSlug={'symphony'}
-										/>
-									)}
+									{!isInOnboardingMode && <>{pageHeader}</>}
 
 									<Container>
 										{shouldShowSetupComplete &&
