@@ -11,6 +11,7 @@ import { MeemProvider } from '@meemproject/react'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+import TagManager from 'react-gtm-module'
 import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
 import { App, hostnameToChainId } from '../components/App'
 import '@fontsource/inter'
@@ -22,6 +23,7 @@ function MyApp(props: AppProps) {
 	const router = useRouter()
 
 	useEffect(() => {
+		TagManager.initialize({ gtmId: 'G-0TBQZ0HQLV' })
 		const jssStyles = document.querySelector('#jss-server-side')
 		if (jssStyles) {
 			jssStyles.parentElement?.removeChild(jssStyles)
