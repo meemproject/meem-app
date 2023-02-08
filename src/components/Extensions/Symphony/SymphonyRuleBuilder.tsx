@@ -14,7 +14,8 @@ import type { EmojiClickData } from 'emoji-picker-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { AlertCircle } from 'tabler-icons-react'
+import { useMeemTheme, colorRed } from '../../Styles/MeemTheme'
 import { API } from './symphonyTypes.generated'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -177,6 +178,36 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedRule])
 
+	let isProposalChannelGated = false
+
+	if (
+		channels &&
+		form.values.proposalChannels &&
+		form.values.proposalChannels.length > 0
+	) {
+		form.values.proposalChannels.forEach(c => {
+			if (c === 'all') {
+				isProposalChannelGated = true
+			} else {
+				const channel = channels.find(ch => ch.id === c)
+				if (channel && (!channel.canSend || !channel.canView)) {
+					isProposalChannelGated = true
+				}
+			}
+		})
+	}
+
+	let isShareChannelGated = false
+
+	if (channels && form.values.proposalShareChannel) {
+		const channel = channels.find(
+			ch => ch.id === form.values.proposalShareChannel
+		)
+		if (channel && (!channel.canSend || !channel.canView)) {
+			isShareChannelGated = true
+		}
+	}
+
 	return (
 		<form onSubmit={form.onSubmit(values => handleFormSubmit(values))}>
 			{/* <Text className={meemTheme.tExtraSmallLabel}>RULE TYPE</Text>
@@ -221,6 +252,30 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 						]}
 						{...form.getInputProps('proposalChannels')}
 					/>
+					{isProposalChannelGated && (
+						<>
+							<Space h={8} />
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'row',
+									alignItems: 'center'
+								}}
+							>
+								<AlertCircle color={colorRed} size={16} />
+								<Space w={4} />
+								<Text
+									className={meemTheme.tBadgeText}
+									style={{
+										color: colorRed
+									}}
+								>
+									Please ensure Symphony Bot has full access
+									to channels in Discord
+								</Text>
+							</div>
+						</>
+					)}
 				</>
 			)}
 
@@ -392,6 +447,34 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 								}))}
 								{...form.getInputProps('proposalShareChannel')}
 							/>
+
+							{isShareChannelGated && (
+								<>
+									<Space h={8} />
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'row',
+											alignItems: 'center'
+										}}
+									>
+										<AlertCircle
+											color={colorRed}
+											size={16}
+										/>
+										<Space w={4} />
+										<Text
+											className={meemTheme.tBadgeText}
+											style={{
+												color: colorRed
+											}}
+										>
+											Please ensure Symphony Bot has full
+											access to channels in Discord
+										</Text>
+									</div>
+								</>
+							)}
 						</>
 					)}
 				</>
