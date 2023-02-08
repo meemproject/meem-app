@@ -1,3 +1,20 @@
+# [1.20.0](https://github.com/meemproject/meem-app/compare/v1.19.3...v1.20.0) (2023-02-08)
+
+
+### Bug Fixes
+
+* another spot where error code could be null ([56ce0cc](https://github.com/meemproject/meem-app/commit/56ce0cc))
+* if not logged in on extension pages requiring auth, redirect to login ([18a65a4](https://github.com/meemproject/meem-app/commit/18a65a4))
+* remove signer + web3provider as reqs for parsing reqs ([7ce2500](https://github.com/meemproject/meem-app/commit/7ce2500))
+* standardize jwt errors across the app, fix possible double forward slash error ([60e7533](https://github.com/meemproject/meem-app/commit/60e7533))
+
+
+### Features
+
+* onboarding banner in symphony settings ([3ab7fc1](https://github.com/meemproject/meem-app/commit/3ab7fc1))
+* show warning when adding to gated discord channels ([83277bb](https://github.com/meemproject/meem-app/commit/83277bb))
+* symphony widget for unlaunched communities ([a4b751d](https://github.com/meemproject/meem-app/commit/a4b751d))
+
 ## [1.19.3](https://github.com/meemproject/meem-app/compare/v1.19.2...v1.19.3) (2023-02-07)
 
 ## [1.19.2](https://github.com/meemproject/meem-app/compare/v1.19.1...v1.19.2) (2023-02-07)
