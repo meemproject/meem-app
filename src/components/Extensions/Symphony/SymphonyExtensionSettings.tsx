@@ -586,7 +586,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 										>
 											Connect Twitter
 										</Button>
-										<Space w={8} />
+										{/* <Space w={8} />
 										<Button
 											className={
 												meemTheme.buttonYellowSolidBordered
@@ -594,7 +594,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 											onClick={() => {}}
 										>
 											Add More Accounts
-										</Button>
+										</Button> */}
 									</div>
 								</>
 							)}
