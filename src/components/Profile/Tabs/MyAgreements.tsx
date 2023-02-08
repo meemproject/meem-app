@@ -20,7 +20,8 @@ import { MyAgreementsSubscriptionSubscription } from '../../../../generated/grap
 import { SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
 import {
 	Agreement,
-	agreementSummaryFromDb
+	agreementSummaryFromDb,
+	isJwtError as isJwtError
 } from '../../../model/agreement/agreements'
 import { hostnameToChainId } from '../../App'
 import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
@@ -67,11 +68,7 @@ export const MyAgreementsComponent: React.FC = () => {
 	)
 
 	useEffect(() => {
-		if (
-			error?.graphQLErrors &&
-			error.graphQLErrors.length > 0 &&
-			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
-		) {
+		if (isJwtError(error)) {
 			router.push({
 				pathname: '/authenticate',
 				query: {

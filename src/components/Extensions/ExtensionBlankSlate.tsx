@@ -1,7 +1,9 @@
 import { Text, Space, Container, Loader, Center, Button } from '@mantine/core'
+import { LoginState, useAuth } from '@meemproject/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AgreementExtensions } from '../../../generated/graphql'
 import { Agreement, extensionFromSlug } from '../../model/agreement/agreements'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
@@ -27,9 +29,29 @@ export const extensionIsReady = (
 export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const { agreement, isLoadingAgreement, error } = useAgreement()
+	const { agreement, isLoadingAgreement, error, isMembersOnly } =
+		useAgreement()
+
+	const auth = useAuth()
+
+	const router = useRouter()
 
 	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
+
+	useEffect(() => {
+		if (
+			auth.loginState === LoginState.NotLoggedIn &&
+			isMembersOnly &&
+			window
+		) {
+			router.push({
+				pathname: '/authenticate',
+				query: {
+					return: window.location.href
+				}
+			})
+		}
+	}, [auth.loginState, isMembersOnly, router])
 
 	return (
 		<>
