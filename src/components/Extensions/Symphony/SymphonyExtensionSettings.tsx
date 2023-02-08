@@ -13,7 +13,7 @@ import {
 	Code
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
-import { makeFetcher, makeRequest } from '@meemproject/sdk'
+import { makeFetcher, makeRequest, MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -129,16 +129,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		}
 	)
 
-	// const { data: roles, mutateRoles } =
-	// 	useSWR<MeemAPI.v1.GetDiscordRoles.IResponseBody>(
-	// 		tokenId
-	// 			? MeemAPI.v1.GetMeem.path({
-	// 					tokenId
-	// 			  })
-	// 			: null,
-	// 		makeFetcher({ method: MeemAPI.v1.GetMeem.method })
-	// 	)
-
 	const handleAuthTwitter = async () => {
 		if (!agreement?.id || !jwt) {
 			return
@@ -166,25 +156,11 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		await sdk.agreementExtension.updateAgreementExtension({
 			agreementId: agreement?.id ?? '',
 			isSetupComplete: true,
-			agreementExtensionId: agreementExtension?.id
-			// ---------------------------------------------
-			// Include externalLink if you'd like to add or update
-			// an external link to your community home page.
-			// Setting this to null will remove an existing link.
-			// ---------------------------------------------
-			// externalLink: {
-			// 	url: '',
-			// 	label: ''
-			// },
-			// ---------------------------------------------
-			// Store/update non-sensitive metadata for configuring your extension.
-			// We also recommend versioning your extension so you can gracefully
-			// handle any future updates to metadata schema
-			// ---------------------------------------------
-			// metadata: {
-			// 	version: '1.0.0',
-			// 	customProperty: 'boop'
-			// }
+			agreementExtensionId: agreementExtension?.id,
+			widget: {
+				isEnabled: true,
+				visibility: MeemAPI.AgreementExtensionVisibility.TokenHolders
+			}
 		})
 	}
 
