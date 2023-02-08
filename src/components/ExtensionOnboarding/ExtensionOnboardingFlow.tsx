@@ -29,7 +29,8 @@ import {
 import { GET_EXTENSIONS, SUB_MY_AGREEMENTS } from '../../graphql/agreements'
 import {
 	Agreement,
-	agreementSummaryFromDb
+	agreementSummaryFromDb,
+	isJwtError
 } from '../../model/agreement/agreements'
 import { showErrorNotification } from '../../utils/notifications'
 import { toTitleCase } from '../../utils/strings'
@@ -96,11 +97,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 		})
 
 	useEffect(() => {
-		if (
-			error?.graphQLErrors &&
-			error.graphQLErrors.length > 0 &&
-			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
-		) {
+		if (isJwtError(error)) {
 			router.push({
 				pathname: '/authenticate',
 				query: {

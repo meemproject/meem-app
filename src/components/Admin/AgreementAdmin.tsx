@@ -57,14 +57,7 @@ export const AgreementAdminComponent: React.FC = () => {
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	useEffect(() => {
-		if (
-			error &&
-			error.graphQLErrors &&
-			error.graphQLErrors.length > 0 &&
-			error.graphQLErrors[0].extensions &&
-			error.graphQLErrors[0].extensions.code &&
-			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
-		) {
+		if (isJwtError(error)) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
