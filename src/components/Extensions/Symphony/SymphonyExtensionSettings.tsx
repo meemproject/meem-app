@@ -287,6 +287,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			.get(`${agreement.id}/rules`)
 			// @ts-ignore
 			.open(data => {
+				log.debug('rules data', data)
 				if (data) {
 					const filteredRules: API.IRule[] = []
 					if (typeof data === 'object') {
