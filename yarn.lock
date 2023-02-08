@@ -3786,10 +3786,10 @@
     ethers "^5.6.9"
     siwe "^2.0.5"
 
-"@tabler/icons@^1.114.0":
-  version "1.114.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-1.114.0.tgz#b2d03b9210787838ce7fcf30ea5fed09a3f93c05"
-  integrity sha512-TI6l2YhGlpZGutaT/zrzTjLF0lsdB648QzM80Dhe22rL2lggvqOzcyWTw6ctmFTySgCwkmEnrUImOICjTlqoAA==
+"@tabler/icons@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.2.0.tgz#b3d0682d83d7d341a5dcf517f9247dccf30d7ab1"
+  integrity sha512-s2mm+7JqmLObKdU89Dtiy+USmUpOlACsoXZZPykjAJZC4pK3wMYxLsclJxViWLeLTb6Bc0oga92V7R+9nrj1ZQ==
 
 "@tiptap/core@^2.0.0-beta.202":
   version "2.0.0-beta.202"
@@ -4244,6 +4244,11 @@
   version "15.7.5"
   resolved "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.5.tgz"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
+
+"@types/react-gtm-module@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-gtm-module/-/react-gtm-module-2.0.1.tgz#b2c6cd14ec251d6ae7fa576edf1d43825908a378"
+  integrity sha512-T/DN9gAbCYk5wJ1nxf4pSwmXz4d1iVjM++OoG+mwMfz9STMAotGjSb65gJHOS5bPvl6vLSsJnuC+y/43OQrltg==
 
 "@types/react-is@^16.7.1 || ^17.0.0":
   version "17.0.3"
@@ -15136,7 +15141,7 @@ react-dom@^16.8.6, react-dom@^18.1.0:
 
 react-gtm-module@^2.0.11:
   version "2.0.11"
-  resolved "https://registry.npmjs.org/react-gtm-module/-/react-gtm-module-2.0.11.tgz"
+  resolved "https://registry.yarnpkg.com/react-gtm-module/-/react-gtm-module-2.0.11.tgz#14484dac8257acd93614e347c32da9c5ac524206"
   integrity sha512-8gyj4TTxeP7eEyc2QKawEuQoAZdjKvMY4pgWfycGmqGByhs17fR+zEBs0JUDq4US/l+vbTl+6zvUIx27iDo/Vw==
 
 react-image-file-resizer@^0.4.7:

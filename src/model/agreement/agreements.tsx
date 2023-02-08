@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-loop-func */
+import { ApolloError } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { MeemAPI, normalizeImageUrl } from '@meemproject/sdk'
 import { ethers } from 'ethers'
@@ -108,6 +109,16 @@ export interface Agreement {
 	roles?: AgreementRole[]
 	slotsLeft?: number
 	slug?: string
+}
+
+export const isJwtError = (error: ApolloError | undefined): boolean => {
+	const isJwt =
+		error &&
+		error.graphQLErrors &&
+		error.graphQLErrors.length > 0 &&
+		error.graphQLErrors[0].extensions &&
+		error.graphQLErrors[0].extensions.code === 'invalid-jwt'
+	return isJwt ?? false
 }
 
 export const extensionFromSlug = (slug: string, agreement?: Agreement) => {

@@ -17,6 +17,7 @@ import {
 	Popover
 } from '@mantine/core'
 import { useWallet, useMeemApollo, useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { Group } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -29,7 +30,8 @@ import {
 import { GET_EXTENSIONS, SUB_MY_AGREEMENTS } from '../../graphql/agreements'
 import {
 	Agreement,
-	agreementSummaryFromDb
+	agreementSummaryFromDb,
+	isJwtError
 } from '../../model/agreement/agreements'
 import { showErrorNotification } from '../../utils/notifications'
 import { toTitleCase } from '../../utils/strings'
@@ -96,11 +98,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 		})
 
 	useEffect(() => {
-		if (
-			error?.graphQLErrors &&
-			error.graphQLErrors.length > 0 &&
-			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
-		) {
+		if (isJwtError(error)) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -167,7 +165,11 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 				await sdk.agreementExtension.createAgreementExtension({
 					agreementId,
 					extensionId,
-					isInitialized: true
+					isInitialized: true,
+					widget: {
+						visibility:
+							MeemAPI.AgreementExtensionVisibility.TokenHolders
+					}
 				})
 				router.push({
 					pathname: `/${agreementSlug}/e/${extensionSlug}/settings`,

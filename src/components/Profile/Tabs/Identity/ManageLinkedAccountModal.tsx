@@ -33,18 +33,6 @@ export const ManageLinkedAccountModal: React.FC<IProps> = ({
 
 		// Save the change to the db
 		try {
-			// await request
-			// 	.post(
-			// 		`${
-			// 			process.env.NEXT_PUBLIC_API_URL
-			// 		}${MeemAPI.v1.CreateOrUpdateMeemIdIntegration.path({
-			// 			extensionId: extension?.id ?? ''
-			// 		})}`
-			// 	)
-			// 	.set('Authorization', `JWT ${wallet.jwt}`)
-			// 	.send({
-			// 		visibility: extensionVisibility
-			// 	})
 			if (userIdentity?.id) {
 				await sdk.id.updateUserIdentity({
 					userIdentityId: userIdentity.id,

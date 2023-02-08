@@ -271,7 +271,7 @@ export function HeaderMenu() {
 									router.push({
 										pathname: '/authenticate',
 										query: {
-											return: `/${window.location.pathname}`
+											return: window.location.pathname
 										}
 									})
 								}}

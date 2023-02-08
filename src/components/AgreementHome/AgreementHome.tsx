@@ -15,6 +15,7 @@ import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
+import { SymphonyWidget } from '../Extensions/Symphony/SymphonyWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
 import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
@@ -96,6 +97,26 @@ export const AgreementHome: React.FC = () => {
 				<>
 					{agreement.slug === 'meem' && (
 						<MeemCreateCommunityWidget agreement={agreement} />
+					)}
+
+					{/* Special case for symphony in unlaunched state */}
+					{agreement.slug !== 'meem' && !agreement.isLaunched && (
+						<>
+							{agreement.extensions &&
+								agreement.extensions
+									.filter(
+										ext =>
+											ext.Extension &&
+											ext.Extension.slug === 'symphony'
+									)
+									.map(extension => (
+										<div key={extension.id}>
+											<SymphonyWidget
+												agreement={agreement}
+											/>
+										</div>
+									))}
+						</>
 					)}
 
 					{agreement.slug !== 'meem' && !agreement.isLaunched && (

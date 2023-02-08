@@ -334,14 +334,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 	)
 
 	useEffect(() => {
-		if (
-			agreement &&
-			user.user &&
-			!user.isLoading &&
-			wallet.isConnected &&
-			wallet.signer &&
-			wallet.web3Provider
-		) {
+		if (agreement && user.user && !user.isLoading && wallet.isConnected) {
 			parseRequirements(agreement)
 		}
 	}, [
