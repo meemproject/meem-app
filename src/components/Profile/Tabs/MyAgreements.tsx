@@ -70,6 +70,8 @@ export const MyAgreementsComponent: React.FC = () => {
 		if (
 			error?.graphQLErrors &&
 			error.graphQLErrors.length > 0 &&
+			error.graphQLErrors[0].extensions &&
+			error.graphQLErrors[0].extensions.code &&
 			error.graphQLErrors[0].extensions.code === 'invalid-jwt'
 		) {
 			router.push({
