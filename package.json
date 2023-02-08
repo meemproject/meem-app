@@ -64,6 +64,7 @@
 		"@tiptap/extension-underline": "^2.0.0-beta.202",
 		"@tiptap/react": "^2.0.0-beta.202",
 		"@tiptap/starter-kit": "^2.0.0-beta.202",
+		"@types/react-gtm-module": "^2.0.1",
 		"@types/superagent": "^4.1.15",
 		"blob-util": "^2.0.2",
 		"dayjs": "^1.11.0",
