@@ -170,6 +170,68 @@ export namespace API {
 	}
 
 	export namespace v1 {
+		export namespace DisconnectDiscord {
+			export interface IPathParams {}
+
+			export const path = () => '/api/1.0/discord'
+
+			export const method = HttpMethod.Delete
+
+			export interface IQueryParams {}
+
+			export interface IRequestBody {
+				/** The agreement to disconnect twitter from */
+				agreementId: string
+
+				/** The jwt to authenticate the user with */
+				jwt: string
+			}
+
+			export interface IResponseBody extends IApiResponseBody {
+				status: 'success'
+			}
+
+			export interface IDefinition {
+				pathParams: IPathParams
+				queryParams: IQueryParams
+				requestBody: IRequestBody
+				responseBody: IResponseBody
+			}
+
+			export type Response = IResponseBody | IError
+		}
+
+		export namespace DisconnectTwitter {
+			export interface IPathParams {}
+
+			export const path = () => '/api/1.0/twitter'
+
+			export const method = HttpMethod.Delete
+
+			export interface IQueryParams {}
+
+			export interface IRequestBody {
+				/** The agreement to disconnect twitter from */
+				agreementId: string
+
+				/** The jwt to authenticate the user with */
+				jwt: string
+			}
+
+			export interface IResponseBody extends IApiResponseBody {
+				status: 'success'
+			}
+
+			export interface IDefinition {
+				pathParams: IPathParams
+				queryParams: IQueryParams
+				requestBody: IRequestBody
+				responseBody: IResponseBody
+			}
+
+			export type Response = IResponseBody | IError
+		}
+
 		/** Get Config */
 		export namespace GetConfig {
 			export interface IPathParams {}

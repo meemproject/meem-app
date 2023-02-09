@@ -2338,10 +2338,10 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@meemproject/meem-contracts@^0.19.4":
-  version "0.19.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.19.4.tgz#11de53dece5c599146ee1831fe098f26faad0399"
-  integrity sha512-VXymSCYQPN0WyAq04y+OELyjXO4IV8a+QyCO0fpe004cxbGZX1P1IeBezgJMZ83ixFpRjjym0/83Hc6ZSK+Eqg==
+"@meemproject/meem-contracts@^0.19.5":
+  version "0.19.5"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.19.5.tgz#8a61b5c2d1cbbb92a2b9e6bab7e177ff1bef3101"
+  integrity sha512-2n4RGHqiJWmFRO09G/OruxfHFXJTJ7dLqleV5PeuI96ld9VyJC0w1qMKB2ityp9+pVj6skyFfWlmCz8KRGPyMA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@openzeppelin/contracts" "^4.7.3"
@@ -2350,10 +2350,10 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.19.4":
-  version "0.19.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.19.4.tgz#a9eb2bd08b4210fd0acd59d22a9fcef26b34dfd5"
-  integrity sha512-U0sDoGzKvSn6iEXKAZS/s7RLgwsXUSAVS4N0K9mcyjuwgClT//wWzKqhQLhq0Hi4+JQlq7+QJqbaXuPsUvcAfQ==
+"@meemproject/react@^0.19.5":
+  version "0.19.5"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.19.5.tgz#5f950cdfa22de1f4816a62b14c7c46c6583fee07"
+  integrity sha512-8EH4FpXpcCE1hXj8Yi38Iw3AB0zO549470bgLYCZ2m+zKsmUTyiLl3TAURZXVEdv0PRBtLcPy9ZegyWFjWB3gQ==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@auth0/auth0-react" "^1.12.0"
@@ -2365,9 +2365,9 @@
     "@mantine/hooks" "^5.7.2"
     "@material-ui/core" "^4.12.4"
     "@material-ui/lab" "^4.0.0-alpha.61"
-    "@meemproject/meem-contracts" "^0.19.4"
-    "@meemproject/sdk" "^0.19.4"
-    "@meemproject/utils" "^0.19.4"
+    "@meemproject/meem-contracts" "^0.19.5"
+    "@meemproject/sdk" "^0.19.5"
+    "@meemproject/utils" "^0.19.5"
     "@mui/material" "^5.6.1"
     "@walletconnect/web3-provider" "^1.7.7"
     ethers "^5.6.4"
@@ -2383,17 +2383,17 @@
     swr "^1.3.0"
     web3modal "^1.9.9"
 
-"@meemproject/sdk@^0.19.4":
-  version "0.19.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.19.4.tgz#874e693e5588b3edf63cb10ac867013a4dc8873b"
-  integrity sha512-ZWItJpaWzjzBIxZ+HJZUIWkgjNXyMNuzAaLRwpFG/V0OAWy4G2AC3Rvh8Pi8/0od9Wi8RJT27B8mQ26OkxwhwA==
+"@meemproject/sdk@^0.19.5":
+  version "0.19.5"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.19.5.tgz#36367729ee058818e855c247cea4452d441b80a0"
+  integrity sha512-WwLi2iByeEVX6VfNezszE9gpB9Oq/XmzCK7D9nIOx08WKaQAjWlMdY68cBBAVmigvokzLCG63IWqYkVFajGiRw==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@kengoldfarb/log" "^1.0.5"
     "@lit-protocol/constants" "^2.0.35"
     "@lit-protocol/lit-node-client" "^2.0.35"
-    "@meemproject/meem-contracts" "^0.19.4"
-    "@meemproject/utils" "^0.19.4"
+    "@meemproject/meem-contracts" "^0.19.5"
+    "@meemproject/utils" "^0.19.5"
     "@peculiar/webcrypto" "^1.4.1"
     "@tableland/sdk" "^3.1.5"
     "@typechain/ethers-v5" "^10.0.0"
@@ -2416,13 +2416,13 @@
     typed-emitter "^2.1.0"
     uuid "^9.0.0"
 
-"@meemproject/utils@^0.19.4":
-  version "0.19.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.19.4.tgz#55f44092bd87b0f879c8b73cbd0759379689df4b"
-  integrity sha512-DmIA8beefcr2u/2U7XleKr2Mip+APT3dAl7GAzhV6r70RiUYzq5q+URAWK6skErSk30/MH5ZxMaxfpoEBmlg9Q==
+"@meemproject/utils@^0.19.5":
+  version "0.19.5"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.19.5.tgz#d8729011c79d3c362e4134d65784a1f0ea58c2af"
+  integrity sha512-HApwi8dNBWxJ945Bi/JjXLFKOrW+mFiVXIgsBV2h779AtKW+Km3Kr/itSGrKEgenxmVA7gym8Zerk9eFkQttaA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.19.4"
+    "@meemproject/meem-contracts" "^0.19.5"
     ethers "^5.6.4"
 
 "@metamask/safe-event-emitter@^2.0.0":
@@ -10182,9 +10182,9 @@ growl@1.10.5:
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.10.5.tgz#f2735dc2283674fa67478b10181059355c369e5e"
   integrity sha512-qBr4OuELkhPenW6goKVXiv47US3clb3/IbuWF9KNKEijAy9oeHxU9IgzjvJhHkUzhaj7rOUD7+YGWqUjLp5oSA==
 
-"gun@https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c":
+"gun@git+https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c":
   version "0.2020.1239"
-  resolved "https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c"
+  resolved "git+https://github.com/amark/gun.git#9ceb86b208d9bea899682aa570064eb3cdecfc9c"
   dependencies:
     ws "^7.2.1"
   optionalDependencies:

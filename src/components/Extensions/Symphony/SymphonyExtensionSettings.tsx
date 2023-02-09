@@ -17,16 +17,24 @@ import { makeFetcher, makeRequest } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
-import { showSuccessNotification } from '../../../utils/notifications'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorBlue, colorDarkBlue, useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
 import { API } from './symphonyTypes.generated'
+
+export enum SelectedConnection {
+	Discord = 'discord',
+	Twitter = 'twitter'
+}
 
 export const SymphonyExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -51,6 +59,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	>()
 	const [botCode, setBotCode] = useState<string | undefined>()
 	const [hasFetchedData, setHasFetchedData] = useState(false)
+	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [selectedConnection, setSelectedConnection] =
+		useState<SelectedConnection>()
 
 	const [isRuleBuilderOpen, setIsRuleBuilderOpen] = useState(false)
 
@@ -63,7 +74,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const [hasDismissedSetupComplete, setHasDismissedSetupComplete] =
 		useState(false)
 
-	const handleInviteBot = async () => {
+	const handleInviteBot = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
 			return
 		}
@@ -79,7 +90,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		setActiveStep(2)
 
 		window.open(inviteUrl, '_blank')
-	}
+	}, [agreement, jwt])
 
 	const { data: channelsData } =
 		useSWR<API.v1.GetDiscordChannels.IResponseBody>(
@@ -138,7 +149,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	// 		makeFetcher({ method: MeemAPI.v1.GetMeem.method })
 	// 	)
 
-	const handleAuthTwitter = async () => {
+	const handleAuthTwitter = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
 			return
 		}
@@ -155,7 +166,74 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				returnUrl: window.location.href
 			}
 		})
-	}
+	}, [router, agreement, jwt])
+
+	const handleReauthenticate = useCallback(async () => {
+		switch (selectedConnection) {
+			case SelectedConnection.Discord:
+				handleInviteBot()
+				break
+
+			case SelectedConnection.Twitter:
+				handleAuthTwitter()
+				break
+		}
+	}, [selectedConnection, handleAuthTwitter, handleInviteBot])
+
+	const handleDisconnect = useCallback(async () => {
+		if (!jwt || !agreement?.id) {
+			return
+		}
+		try {
+			switch (selectedConnection) {
+				case SelectedConnection.Discord:
+					await makeRequest<API.v1.DisconnectDiscord.IDefinition>(
+						`${
+							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+						}${API.v1.DisconnectDiscord.path()}`,
+						{
+							method: API.v1.DisconnectDiscord.method,
+							body: {
+								jwt,
+								agreementId: agreement?.id
+							}
+						}
+					)
+					showSuccessNotification(
+						'Discord Disconnected',
+						'Discord has been disconnected'
+					)
+					setIsModalOpen(false)
+					break
+
+				case SelectedConnection.Twitter:
+					await makeRequest<API.v1.DisconnectTwitter.IDefinition>(
+						`${
+							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+						}${API.v1.DisconnectTwitter.path()}`,
+						{
+							method: API.v1.DisconnectTwitter.method,
+							body: {
+								jwt,
+								agreementId: agreement?.id
+							}
+						}
+					)
+					showSuccessNotification(
+						'Twitter Disconnected',
+						'Twitter has been disconnected'
+					)
+					setIsModalOpen(false)
+					break
+
+				default:
+					log.warn('Invalid case for handleDisconnect')
+					break
+			}
+		} catch (e) {
+			showErrorNotification('Something went wrong', 'Please try again ')
+		}
+	}, [selectedConnection, agreement, jwt])
 
 	/*
 	TODO
@@ -262,14 +340,16 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		log.debug(`getting gun data...`, {
 			path: `${agreement.id}/services/twitter`
 		})
-		gun?.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
+		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/twitter`)
 			// @ts-ignore
 			.open(data => {
 				log.debug('twitter data', data)
-				if (data) {
+				if (data?.username) {
 					setTwitterUsername(data.username)
 					log.debug(`twitter username = ${data.username}`)
+				} else {
+					setTwitterUsername('')
 				}
 			})
 		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
@@ -280,14 +360,16 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				if (data) {
 					setDiscordInfo(data)
 					log.debug(`discord data found`)
+				} else {
+					setDiscordInfo(undefined)
 				}
 			})
 
-		gun?.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
+		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/rules`)
 			// @ts-ignore
 			.open(data => {
-				log.debug('rules data', data)
+				// log.debug('rules data', data)
 				if (data) {
 					const filteredRules: API.IRule[] = []
 					if (typeof data === 'object') {
@@ -398,7 +480,10 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							<Space h={4} />
 							<Text
 								onClick={() => {
-									handleAuthTwitter()
+									setSelectedConnection(
+										SelectedConnection.Twitter
+									)
+									setIsModalOpen(true)
 								}}
 								className={meemTheme.tSmallBold}
 								style={{
@@ -434,7 +519,10 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							<Space h={4} />
 							<Text
 								onClick={() => {
-									handleInviteBot()
+									setSelectedConnection(
+										SelectedConnection.Discord
+									)
+									setIsModalOpen(true)
 								}}
 								className={meemTheme.tSmallBold}
 								style={{
@@ -450,6 +538,24 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					</div>
 				</div>
 			</div>
+			<Modal
+				opened={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				title={'Manage Connection'}
+			>
+				<div
+					style={{
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'space-around'
+					}}
+				>
+					<Button onClick={handleReauthenticate}>
+						Reauthenticate
+					</Button>
+					<Button onClick={handleDisconnect}>Disconnect</Button>
+				</div>
+			</Modal>
 		</>
 	)
 
