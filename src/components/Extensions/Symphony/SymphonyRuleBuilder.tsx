@@ -11,10 +11,10 @@ import {
 import { useForm } from '@mantine/form'
 import { Emoji } from 'emoji-picker-react'
 import type { EmojiClickData } from 'emoji-picker-react'
-import { WarningCircle } from 'iconoir-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
+import { AlertCircle } from 'tabler-icons-react'
 import { useMeemTheme, colorRed } from '../../Styles/MeemTheme'
 import { API } from './symphonyTypes.generated'
 
@@ -262,11 +262,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 									alignItems: 'center'
 								}}
 							>
-								<WarningCircle
-									color={colorRed}
-									height={16}
-									width={16}
-								/>
+								<AlertCircle color={colorRed} size={16} />
 								<Space w={4} />
 								<Text
 									className={meemTheme.tBadgeText}
@@ -462,10 +458,9 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 											alignItems: 'center'
 										}}
 									>
-										<WarningCircle
+										<AlertCircle
 											color={colorRed}
-											height={16}
-											width={16}
+											size={16}
 										/>
 										<Space w={4} />
 										<Text

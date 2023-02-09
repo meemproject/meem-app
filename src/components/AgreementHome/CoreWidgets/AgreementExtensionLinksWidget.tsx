@@ -6,9 +6,9 @@ import {
 	Center,
 	useMantineColorScheme
 } from '@mantine/core'
-import { Settings } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
+import { Settings } from 'tabler-icons-react'
 import { AgreementExtensions } from '../../../../generated/graphql'
 import { Agreement } from '../../../model/agreement/agreements'
 import { useMeemTheme } from '../../Styles/MeemTheme'

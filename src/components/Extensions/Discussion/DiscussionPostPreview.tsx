@@ -10,10 +10,10 @@ import {
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
-import { Message, NavArrowDown, NavArrowUp } from 'iconoir-react'
 import { DateTime } from 'luxon'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
+import { ChevronDown, ChevronUp, Message } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -137,7 +137,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 								disabled={canReact}
 							>
 								<span>
-									<NavArrowUp
+									<ChevronUp
 										style={{ cursor: 'pointer' }}
 										onClick={() => {
 											if (canReact && !isLoading) {
@@ -146,7 +146,9 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 												})
 											}
 										}}
-									/>
+									>
+										<ChevronUp />
+									</ChevronUp>
 								</span>
 							</Tooltip>
 						</Center>
@@ -160,7 +162,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 								disabled={canReact}
 							>
 								<span>
-									<NavArrowDown
+									<ChevronDown
 										style={{ cursor: 'pointer' }}
 										onClick={() => {
 											if (canReact && !isLoading) {
@@ -169,7 +171,9 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 												})
 											}
 										}}
-									/>
+									>
+										<ChevronDown />
+									</ChevronDown>
 								</span>
 							</Tooltip>
 						</Center>

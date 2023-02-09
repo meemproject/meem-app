@@ -27,9 +27,10 @@ import {
 import { useSDK, useWallet } from '@meemproject/react'
 // eslint-disable-next-line import/named
 import { Bytes } from 'ethers'
-import { DeleteCircle, Settings } from 'iconoir-react'
+import { DeleteCircledOutline } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
+import { Settings } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
@@ -529,7 +530,7 @@ Add your custom extension settings layout here.
 									</Link>
 								)}
 								<Button
-									leftIcon={<DeleteCircle />}
+									leftIcon={<DeleteCircledOutline />}
 									style={{ backgroundColor: 'red' }}
 									ml="auto"
 									onClick={() => {

@@ -12,8 +12,8 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
-import { MinusCircle } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
+import { CircleMinus } from 'tabler-icons-react'
 import {
 	MembershipSettings,
 	MembershipReqAndor,
@@ -344,7 +344,7 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 											{membershipTypeString(requirement)}
 										</span>
 									</a>
-									<MinusCircle
+									<CircleMinus
 										onClick={() => {
 											removeMembershipRequirement(
 												requirement.index

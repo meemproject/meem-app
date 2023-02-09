@@ -9,9 +9,9 @@ import {
 	Center,
 	useMantineColorScheme
 } from '@mantine/core'
-import { Search, Star } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { Search, Star } from 'tabler-icons-react'
 import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
 import { colorRed, useMeemTheme } from '../../Styles/MeemTheme'

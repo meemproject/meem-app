@@ -13,8 +13,8 @@ import {
 import { Calendar, TimeInput } from '@mantine/dates'
 import { useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
-import { Clock } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
+import { Clock } from 'tabler-icons-react'
 import {
 	MembershipSettings,
 	Agreement
@@ -535,7 +535,7 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 									<TimeInput
 										format="24"
 										size="sm"
-										icon={<Clock height={16} width={16} />}
+										icon={<Clock size={16} />}
 										radius={'lg'}
 										value={membershipStartDate}
 										onChange={time => {
@@ -631,7 +631,7 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 									<TimeInput
 										format="24"
 										size="sm"
-										icon={<Clock height={16} width={16} />}
+										icon={<Clock size={16} />}
 										radius={'lg'}
 										value={membershipEndDate}
 										onChange={time => {

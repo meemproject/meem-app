@@ -1,12 +1,12 @@
 import { showNotification } from '@mantine/notifications'
-import { CheckCircle, DeleteCircle } from 'iconoir-react'
 import React from 'react'
+import { Check, X } from 'tabler-icons-react'
 
 export function showSuccessNotification(title: string, message: string) {
 	showNotification({
 		title,
 		color: 'green',
-		icon: <CheckCircle color="white" />,
+		icon: <Check color="white" />,
 		message
 	})
 }
@@ -15,7 +15,7 @@ export function showErrorNotification(title: string, message: string) {
 	showNotification({
 		title,
 		color: 'red',
-		icon: <DeleteCircle color="white" />,
+		icon: <X color="white" />,
 		message
 	})
 }

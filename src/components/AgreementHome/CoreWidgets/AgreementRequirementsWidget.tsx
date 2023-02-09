@@ -2,10 +2,10 @@ import log from '@kengoldfarb/log'
 import { Text, Space, Loader, Center, Button } from '@mantine/core'
 import { useMeemUser, useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
-import { CheckCircle, DeleteCircle, Settings } from 'iconoir-react'
 import Linkify from 'linkify-react'
 import Link from 'next/link'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import { CircleCheck, CircleX, Settings } from 'tabler-icons-react'
 import {
 	Agreement,
 	MembershipReqType
@@ -396,16 +396,14 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									style={{ marginTop: 8 }}
 								>
 									{requirement.meetsRequirement && (
-										<CheckCircle
+										<CircleCheck
 											width={24}
-											height={24}
 											color={colorGreen}
 										/>
 									)}
 									{!requirement.meetsRequirement && (
-										<DeleteCircle
-											width={24}
-											height={24}
+										<CircleX
+											style={{ width: 24 }}
 											color={colorRed}
 										/>
 									)}

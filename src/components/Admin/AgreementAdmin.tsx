@@ -12,7 +12,6 @@ import {
 	Burger
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
-import { Copy, DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -25,7 +24,7 @@ import {
 } from '../../model/identity/permissions'
 import { showSuccessNotification } from '../../utils/notifications'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
-import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { AdminAgreementDetails } from './Tabs/AdminAgreementDetails'
 import { AdminAgreementExtensions } from './Tabs/AdminAgreementExtensions'
 import { AdminAgreementIcon } from './Tabs/AdminAgreementIcon'
@@ -157,11 +156,10 @@ export const AgreementAdminComponent: React.FC = () => {
 									<Text
 										className={meemTheme.tExtraSmallFaded}
 									>{`${window.location.origin}/${agreement.slug}`}</Text>
-									<Copy
+									<Image
 										className={meemTheme.copyIcon}
+										src="/copy.png"
 										height={20}
-										width={20}
-										color={colorBlue}
 										onClick={() => {
 											navigator.clipboard.writeText(
 												`${window.location.origin}/${agreement.slug}`
@@ -171,13 +169,15 @@ export const AgreementAdminComponent: React.FC = () => {
 												`This community's URL was copied to your clipboard.`
 											)
 										}}
+										width={20}
 									/>
 								</div>
 							</div>
 						</div>
 						<Link href={`/${agreement.slug}`}>
-							<DeleteCircle
+							<Image
 								className={meemTheme.pageHeaderExitButton}
+								src="/delete.png"
 								width={24}
 								height={24}
 							/>

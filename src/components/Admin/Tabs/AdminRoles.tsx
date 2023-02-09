@@ -9,9 +9,10 @@ import {
 	Center,
 	Divider
 } from '@mantine/core'
-import { Group, Lock, MoreHorizCircle } from 'iconoir-react'
+import { Group } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { Dots, Lock } from 'tabler-icons-react'
 import { Agreement, AgreementRole } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
@@ -65,8 +66,7 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 									{role.isAdminRole && (
 										<>
 											<Lock
-												height={16}
-												width={16}
+												size={16}
 												style={{ marginBottom: 1 }}
 											/>
 											<Space w={4} />
@@ -121,7 +121,7 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 								<Menu radius={8} shadow={'lg'}>
 									<Menu.Target>
 										<div style={{ paddingBottom: 4 }}>
-											<MoreHorizCircle />
+											<Dots />
 										</div>
 									</Menu.Target>
 									<Menu.Dropdown>

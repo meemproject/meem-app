@@ -24,9 +24,9 @@ import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { Message, NavArrowDown, NavArrowUp, ShareIos } from 'iconoir-react'
 import { DateTime } from 'luxon'
 import React, { useCallback, useEffect, useState } from 'react'
+import { ChevronDown, ChevronUp, Message, Share } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
@@ -294,7 +294,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												disabled={canReact}
 											>
 												<span>
-													<NavArrowUp
+													<ChevronUp
 														style={{
 															cursor: 'pointer'
 														}}
@@ -311,7 +311,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 																)
 															}
 														}}
-													></NavArrowUp>
+													></ChevronUp>
 												</span>
 											</Tooltip>
 										</Center>
@@ -325,7 +325,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 												disabled={canReact}
 											>
 												<span>
-													<NavArrowDown
+													<ChevronDown
 														style={{
 															cursor: 'pointer'
 														}}
@@ -342,7 +342,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 																)
 															}
 														}}
-													/>
+													></ChevronDown>
 												</span>
 											</Tooltip>
 										</Center>
@@ -500,7 +500,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 																cursor: 'pointer'
 															}}
 														>
-															<ShareIos
+															<Share
 																width={20}
 																height={20}
 															/>

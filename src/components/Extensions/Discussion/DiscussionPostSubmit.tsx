@@ -21,11 +21,11 @@ import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { base64StringToBlob } from 'blob-util'
-import { ArrowLeft, DeleteCircle, Upload } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
+import { ArrowLeft, Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
@@ -231,8 +231,7 @@ export const DiscussionPostSubmit: React.FC = () => {
 									<ArrowLeft
 										style={{ marginTop: 35 }}
 										className={meemTheme.backArrow}
-										height={32}
-										width={32}
+										size={32}
 									/>
 								</div>
 							</Link>
@@ -334,7 +333,7 @@ export const DiscussionPostSubmit: React.FC = () => {
 						{postAttachment.length === 0 && !isLoadingImage && (
 							<div className={meemTheme.row}>
 								<Button
-									leftIcon={<Upload height={14} width={14} />}
+									leftIcon={<Upload size={14} />}
 									className={meemTheme.buttonBlack}
 									onClick={() => openFileSelector()}
 								>
@@ -350,13 +349,14 @@ export const DiscussionPostSubmit: React.FC = () => {
 							>
 								<Image src={postAttachment} fit={'cover'} />
 								<a onClick={deleteImage}>
-									<DeleteCircle
+									<Image
 										style={{
 											top: 8,
 											right: 8,
 											position: 'absolute',
 											cursor: 'pointer'
 										}}
+										src="/delete.png"
 										width={24}
 										height={24}
 									/>

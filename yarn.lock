@@ -3786,10 +3786,10 @@
     ethers "^5.6.9"
     siwe "^2.0.5"
 
-"@tabler/icons@^1.114.0":
-  version "1.119.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-1.119.0.tgz#8c590bc5a563c8673a78ccd451bedabd584b376e"
-  integrity sha512-Fk3Qq4w2SXcTjc/n1cuL5bccPkylrOMo7cYpQIf/yw6zP76LQV9dtLcHQUjFiUnaYuswR645CnURIhlafyAh9g==
+"@tabler/icons@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.2.0.tgz#b3d0682d83d7d341a5dcf517f9247dccf30d7ab1"
+  integrity sha512-s2mm+7JqmLObKdU89Dtiy+USmUpOlACsoXZZPykjAJZC4pK3wMYxLsclJxViWLeLTb6Bc0oga92V7R+9nrj1ZQ==
 
 "@tiptap/core@^2.0.0-beta.202":
   version "2.0.0-beta.202"
@@ -10569,10 +10569,10 @@ hyphenate-style-name@^1.0.3:
   resolved "https://registry.npmjs.org/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz"
   integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
 
-iconoir-react@6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/iconoir-react/-/iconoir-react-6.2.1.tgz#d4b224679d9cc89f269b6c976a22d5eaf93cdc41"
-  integrity sha512-KcVRNsgNSm8OoZDJPWH6xCa7qnZXweG6SswykINyGXl5ro/2TM7Taf1G8zr6usNnbxnYixOoPLz8G/5amxexvA==
+iconoir-react@4.9.1:
+  version "4.9.1"
+  resolved "https://registry.npmjs.org/iconoir-react/-/iconoir-react-4.9.1.tgz"
+  integrity sha512-/m//LPjN3p6lJf0321/LQZSIii3mmHGWVu7MtjWRTEET1Swtc7jce5J/ad/dRtCSaZrae9r16AsbgwngxUKkpw==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
@@ -16884,6 +16884,11 @@ table@6.8.0:
     slice-ansi "^4.0.0"
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
+
+tabler-icons-react@^1.46.0:
+  version "1.48.1"
+  resolved "https://registry.npmjs.org/tabler-icons-react/-/tabler-icons-react-1.48.1.tgz"
+  integrity sha512-TX12VEymcICeHOUd0f086JgMZhwogol36aTbEZBe4KnvHIjr7TyHFUUKkqydgPwjdJPEA+6Y1XOglJ9IGKVC5Q==
 
 tar-stream@^1.5.2:
   version "1.6.2"

@@ -15,9 +15,9 @@ import {
 } from '@mantine/core'
 import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
-import { Settings, Shortcut } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
+import { ExternalLink, Settings } from 'tabler-icons-react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
@@ -306,11 +306,8 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																			meemTheme.buttonWhite
 																		}
 																		leftIcon={
-																			<Shortcut
-																				height={
-																					20
-																				}
-																				width={
+																			<ExternalLink
+																				size={
 																					20
 																				}
 																			/>
@@ -363,10 +360,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 															<Button
 																leftIcon={
 																	<Settings
-																		height={
-																			20
-																		}
-																		width={
+																		size={
 																			20
 																		}
 																	/>

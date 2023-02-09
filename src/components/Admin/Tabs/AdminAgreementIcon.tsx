@@ -3,15 +3,15 @@ import { Text, Image, Loader, Button, Space, Modal } from '@mantine/core'
 import { base64StringToBlob } from 'blob-util'
 import type { EmojiClickData } from 'emoji-picker-react'
 import html2canvas from 'html2canvas'
-import { DeleteCircle, Upload } from 'iconoir-react'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
+import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -168,7 +168,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 			{smallAgreementLogo.length === 0 && !isLoadingImage && (
 				<div className={meemTheme.row}>
 					<Button
-						leftIcon={<Upload height={20} width={20} />}
+						leftIcon={<Upload size={14} />}
 						className={meemTheme.buttonWhite}
 						onClick={() => openFileSelector()}
 					>
@@ -195,15 +195,10 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 						fit={'cover'}
 					/>
 					<a onClick={deleteImage}>
-						<DeleteCircle
-							style={{
-								position: 'absolute',
-								top: 0,
-								right: -96,
-								cursor: 'pointer'
-							}}
+						<Image
+							className={meemTheme.imageAgreementLogoDeleteButton}
+							src="/delete.png"
 							width={24}
-							fill={colorWhite}
 							height={24}
 						/>
 					</a>

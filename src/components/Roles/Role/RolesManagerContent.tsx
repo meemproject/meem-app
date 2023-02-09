@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
-import { Text, Space, TextInput, Tabs, Button, Radio } from '@mantine/core'
-import { Copy } from 'iconoir-react'
+import {
+	Text,
+	Space,
+	TextInput,
+	Image,
+	Tabs,
+	Button,
+	Radio
+} from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import {
 	Agreement,
@@ -12,7 +19,7 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
-import { colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { RoleManagerChangesModal } from './Modals/RoleManagerChangesModal'
 import { RolesManagerMembers } from './RolesManagerMembers'
 interface IProps {
@@ -182,11 +189,14 @@ export const RolesManagerContent: React.FC<IProps> = ({
 									>
 										{role?.tokenAddress}
 									</Text>
-									<Copy
-										className={meemTheme.copyIcon}
+									<Image
+										style={{
+											marginLeft: 4,
+											padding: 2,
+											cursor: 'pointer'
+										}}
+										src="/copy.png"
 										height={20}
-										width={20}
-										color={colorBlue}
 										onClick={() => {
 											navigator.clipboard.writeText(
 												agreement.address ?? ''
@@ -196,6 +206,7 @@ export const RolesManagerContent: React.FC<IProps> = ({
 												`This role's contract address was copied to your clipboard.`
 											)
 										}}
+										width={20}
 									/>
 								</div>
 

@@ -27,8 +27,7 @@
 		"localPackageUnlink": "echo 'Cleaning up...' && rm -rf node_modules && rm -rf .next && yarn unlink @meemproject/metadata @meemproject/sdk @meemproject/react @meemproject/utils @meemproject/meem-contracts && yarn",
 		"apollo": "apollo",
 		"codegen": "graphql-codegen -r dotenv/config --config codegen.js",
-		"createExtension": "./create_extension.sh",
-		"clean": "echo 'Cleaning up...' && rm -rf node_modules && rm -rf .next && rm -rf yarn.lock && yarn"
+		"createExtension": "./create_extension.sh"
 	},
 	"resolutions": {
 		"graphql": "^15.7.2",
@@ -56,7 +55,7 @@
 		"@meemproject/sdk": "^0.19.4",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@tableland/sdk": "^3.1.5",
-		"@tabler/icons": "^1.114.0",
+		"@tabler/icons": "^2.2.0",
 		"@tiptap/extension-highlight": "^2.0.0-beta.202",
 		"@tiptap/extension-link": "^2.0.0-beta.202",
 		"@tiptap/extension-subscript": "^2.0.0-beta.202",
@@ -74,7 +73,7 @@
 		"graphql": "^15.7.2",
 		"graphql-ws": "^5.8.2",
 		"html2canvas": "^1.4.1",
-		"iconoir-react": "6.2.1",
+		"iconoir-react": "4.9.1",
 		"js-cookie": "^3.0.1",
 		"linkify-react": "^4.1.0",
 		"linkifyjs": "^4.1.0",
@@ -89,6 +88,7 @@
 		"react-qr-code": "^2.0.7",
 		"superagent": "^7.1.6",
 		"swr": "^2.0.1",
+		"tabler-icons-react": "^1.46.0",
 		"twitter-intent": "^0.0.3",
 		"use-file-picker": "^1.4.2"
 	},
