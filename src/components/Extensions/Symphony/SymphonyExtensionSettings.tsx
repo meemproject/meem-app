@@ -650,26 +650,17 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					label="Activate Symphony"
 					description={
 						<>
-							<Text
-								className={meemTheme.tExtraSmall}
-							>{`Finish up by entering the commands below in the public channel you wish to use Symphony in.`}</Text>
+							<Text className={meemTheme.tExtraSmall}>
+								Type{' '}
+								<span style={{ fontWeight: '600' }}>
+									/activate
+								</span>{' '}
+								in any public channel of your Discord server,
+								then enter the code below:
+							</Text>
 							{activeStep === 2 && (
 								<>
 									<Space h={16} />
-									<Code
-										style={{ cursor: 'pointer' }}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												`/activate`
-											)
-											showSuccessNotification(
-												'Copied to clipboard',
-												`The command was copied to your clipboard.`
-											)
-										}}
-										block
-									>{`/activate`}</Code>
-									<Space h={8} />
 									<Code
 										style={{ cursor: 'pointer' }}
 										onClick={() => {

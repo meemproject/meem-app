@@ -18,11 +18,10 @@ import {
 } from '@mantine/core'
 import { useWallet, useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
-import { Group } from 'iconoir-react'
+import { Group, InfoEmpty } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { InfoCircle } from 'tabler-icons-react'
 import {
 	GetExtensionsQuery,
 	MyAgreementsSubscriptionSubscription
@@ -216,7 +215,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 						>
 							<Popover.Target>
 								<Button className={meemTheme.buttonTransparent}>
-									<InfoCircle color={'white'} />
+									<InfoEmpty color={'white'} />
 								</Button>
 							</Popover.Target>
 							<Popover.Dropdown>

@@ -2,7 +2,7 @@ import { Space, Text } from '@mantine/core'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import React from 'react'
-import { Settings } from 'tabler-icons-react'
+import { Settings } from 'iconoir-react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 

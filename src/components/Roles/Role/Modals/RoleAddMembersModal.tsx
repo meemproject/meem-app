@@ -11,8 +11,8 @@ import {
 	Center,
 	useMantineColorScheme
 } from '@mantine/core'
+import { Search } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
-import { Search } from 'tabler-icons-react'
 import {
 	Agreement,
 	AgreementMember

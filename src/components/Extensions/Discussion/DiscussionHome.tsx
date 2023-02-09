@@ -11,9 +11,9 @@ import {
 } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { useSDK } from '@meemproject/react'
+import { NavArrowDown, NavArrowUp, Search } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
-import { ChevronDown, ChevronUp, Search } from 'tabler-icons-react'
 import {
 	Agreement,
 	extensionFromSlug
@@ -368,9 +368,9 @@ export const DiscussionHome: React.FC = () => {
 											}
 											rightIcon={
 												sortOrder === 1 ? (
-													<ChevronDown />
+													<NavArrowUp />
 												) : (
-													<ChevronUp />
+													<NavArrowDown />
 												)
 											}
 										>
