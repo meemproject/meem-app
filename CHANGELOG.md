@@ -1,3 +1,12 @@
+## [1.20.1](https://github.com/meemproject/meem-app/compare/v1.20.0...v1.20.1) (2023-02-09)
+
+
+### Bug Fixes
+
+* onboarding steps ([d90cd8b](https://github.com/meemproject/meem-app/commit/d90cd8b))
+* re-add tabler icon as they're a mantine dependency ([bb72d35](https://github.com/meemproject/meem-app/commit/bb72d35))
+* refactor icons in the app to only use iconnoir ([86248a3](https://github.com/meemproject/meem-app/commit/86248a3))
+
 # [1.20.0](https://github.com/meemproject/meem-app/compare/v1.19.3...v1.20.0) (2023-02-08)
 
 
