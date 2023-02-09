@@ -19,20 +19,20 @@ import {
 	useMeemUser
 } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
-import { QuestionMarkCircle } from 'iconoir-react'
+import {
+	Discord,
+	HalfMoon,
+	HelpCircle,
+	LogOut,
+	Mail,
+	MessageText,
+	MoreHoriz,
+	NavArrowDown,
+	SunLight
+} from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import {
-	Logout,
-	ChevronDown,
-	Dots,
-	BrandDiscord,
-	MessageCircle,
-	Mail,
-	Sun,
-	MoonStars
-} from 'tabler-icons-react'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
@@ -199,7 +199,10 @@ export function HeaderMenu() {
 											>
 												{displayName}
 											</Text>
-											<ChevronDown size={12} />
+											<NavArrowDown
+												height={12}
+												width={12}
+											/>
 										</Group>
 									)}
 								</UnstyledButton>
@@ -249,7 +252,7 @@ export function HeaderMenu() {
 										await disconnectWallet()
 									}}
 									style={{ color: colorDarkBlue }}
-									icon={<Logout size={14} />}
+									icon={<LogOut height={14} width={14} />}
 								>
 									<Text>{'Sign Out'}</Text>
 								</Menu.Item>
@@ -290,16 +293,24 @@ export function HeaderMenu() {
 						title="Toggle color scheme"
 					>
 						{isDarkTheme ? (
-							<Sun size={18} color={colorDarkBlue} />
+							<SunLight
+								height={18}
+								width={18}
+								color={colorDarkBlue}
+							/>
 						) : (
-							<MoonStars size={18} color={colorDarkBlue} />
+							<HalfMoon
+								height={18}
+								width={18}
+								color={colorDarkBlue}
+							/>
 						)}
 					</ActionIcon>
 
 					<Menu offset={10} radius={8} shadow={'lg'}>
 						<Menu.Target>
 							<UnstyledButton>
-								<Dots
+								<MoreHoriz
 									className={meemTheme.siteHeaderMenuEllipse}
 								/>
 							</UnstyledButton>
@@ -314,12 +325,7 @@ export function HeaderMenu() {
 									marginTop: '-2px'
 								}}
 								className={meemTheme.tExtraSmallBold}
-								icon={
-									<QuestionMarkCircle
-										height={20}
-										width={20}
-									/>
-								}
+								icon={<HelpCircle height={20} width={20} />}
 							>
 								{`What can I do here?`}
 							</Menu.Item>
@@ -334,7 +340,7 @@ export function HeaderMenu() {
 									marginTop: '-2px'
 								}}
 								className={meemTheme.tExtraSmallBold}
-								icon={<BrandDiscord size={20} />}
+								icon={<Discord height={20} width={20} />}
 							>
 								Our community
 							</Menu.Item>
@@ -345,7 +351,7 @@ export function HeaderMenu() {
 									marginTop: '-2px'
 								}}
 								className={meemTheme.tExtraSmallBold}
-								icon={<Mail size={20} />}
+								icon={<Mail height={20} width={20} />}
 							>
 								Contact Us
 							</Menu.Item>
@@ -357,7 +363,7 @@ export function HeaderMenu() {
 									marginBottom: '-2px',
 									marginTop: '-2px'
 								}}
-								icon={<MessageCircle size={20} />}
+								icon={<MessageText height={20} width={20} />}
 							>
 								Share Feedback
 							</Menu.Item>

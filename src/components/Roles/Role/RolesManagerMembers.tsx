@@ -11,8 +11,8 @@ import {
 	HoverCard,
 	useMantineColorScheme
 } from '@mantine/core'
+import { MinusCircle, Search, Lock } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
-import { CircleMinus, Lock, Search } from 'tabler-icons-react'
 import {
 	Agreement,
 	AgreementMember,
@@ -196,7 +196,7 @@ export const RolesManagerMembers: React.FC<IProps> = ({
 
 									{!member.isAgreementOwner && (
 										<>
-											<CircleMinus
+											<MinusCircle
 												className={meemTheme.clickable}
 												onClick={() => {
 													removeMember(member)

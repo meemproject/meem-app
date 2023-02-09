@@ -24,15 +24,19 @@ import { normalizeImageUrl } from '@meemproject/sdk'
 import { base64StringToBlob } from 'blob-util'
 import type { EmojiClickData } from 'emoji-picker-react'
 import html2canvas from 'html2canvas'
+import { DeleteCircle, Upload } from 'iconoir-react'
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState } from 'react'
 import Resizer from 'react-image-file-resizer'
-import { Upload } from 'tabler-icons-react'
 import { useFilePicker } from 'use-file-picker'
 import { GetIdentityProvidersQuery } from '../../../../../generated/graphql'
 import { showErrorNotification } from '../../../../utils/notifications'
 import { DeveloperPortalButton } from '../../../Developer/DeveloperPortalButton'
-import { colorVerified, useMeemTheme } from '../../../Styles/MeemTheme'
+import {
+	colorVerified,
+	colorWhite,
+	useMeemTheme
+} from '../../../Styles/MeemTheme'
 import { ManageLinkedAccountModal } from './ManageLinkedAccountModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -210,7 +214,7 @@ export const ManageIdentityComponent: React.FC = () => {
 					<Space h={16} />
 					<div className={meemTheme.row}>
 						<Button
-							leftIcon={<Upload size={14} />}
+							leftIcon={<Upload height={14} width={14} />}
 							className={meemTheme.buttonWhite}
 							onClick={() => openFileSelector()}
 						>
@@ -246,16 +250,16 @@ export const ManageIdentityComponent: React.FC = () => {
 						fit={'cover'}
 					/>
 					<a onClick={deleteImage}>
-						<Image
+						<DeleteCircle
+							width={24}
+							height={24}
+							fill={colorWhite}
 							style={{
 								position: 'absolute',
 								top: '10px',
 								right: '-85px',
 								cursor: 'pointer'
 							}}
-							src="/delete.png"
-							width={24}
-							height={24}
 						/>
 					</a>
 				</div>

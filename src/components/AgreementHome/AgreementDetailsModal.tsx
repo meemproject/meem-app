@@ -1,17 +1,10 @@
-import {
-	Text,
-	Space,
-	Modal,
-	Center,
-	Image,
-	Button,
-	Collapse
-} from '@mantine/core'
+import { Text, Space, Modal, Center, Button, Collapse } from '@mantine/core'
+import { Copy } from 'iconoir-react'
 import React, { useState } from 'react'
 import { Agreement } from '../../model/agreement/agreements'
 import { showSuccessNotification } from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement
@@ -64,10 +57,11 @@ export const AgreementDetailsModal: React.FC<IProps> = ({
 					<div className={meemTheme.row}>
 						<Text>{agreement?.address ?? ''}</Text>
 						<Space w={4} />
-						<Image
+						<Copy
 							className={meemTheme.copyIcon}
-							src="/copy.png"
 							height={20}
+							width={20}
+							color={colorBlue}
 							onClick={() => {
 								navigator.clipboard.writeText(
 									`${agreement?.address}`
@@ -77,7 +71,6 @@ export const AgreementDetailsModal: React.FC<IProps> = ({
 									`This community's agreement contract address was copied to your clipboard.`
 								)
 							}}
-							width={20}
 						/>
 					</div>
 				</Center>
@@ -92,10 +85,11 @@ export const AgreementDetailsModal: React.FC<IProps> = ({
 							{hostnameToChainId(window?.location.hostname)}
 						</Text>
 						<Space w={4} />
-						<Image
+						<Copy
 							className={meemTheme.copyIcon}
-							src="/copy.png"
 							height={20}
+							width={20}
+							color={colorBlue}
 							onClick={() => {
 								navigator.clipboard.writeText(
 									`${hostnameToChainId(
@@ -107,7 +101,6 @@ export const AgreementDetailsModal: React.FC<IProps> = ({
 									`This community's agreement contract chain ID was copied to your clipboard.`
 								)
 							}}
-							width={20}
 						/>
 					</div>
 				</Center>
