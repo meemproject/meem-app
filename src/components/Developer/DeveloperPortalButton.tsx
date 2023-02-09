@@ -5,8 +5,8 @@ import {
 	Button,
 	useMantineColorScheme
 } from '@mantine/core'
+import { Link } from 'iconoir-react'
 import React, { useState } from 'react'
-import { Link } from 'tabler-icons-react'
 import {
 	colorDarkerGrey,
 	colorLightYellow,

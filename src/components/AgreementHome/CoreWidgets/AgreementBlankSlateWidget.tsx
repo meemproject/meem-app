@@ -10,6 +10,7 @@ import {
 	Badge
 } from '@mantine/core'
 import { useMeemApollo } from '@meemproject/react'
+import { Check } from 'iconoir-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
@@ -249,10 +250,9 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 												{chosenExtensions.includes(
 													extension.id
 												) && (
-													<Image
+													<Check
 														width={18}
 														height={18}
-														src={'/check.png'}
 													/>
 												)}
 											</div>
