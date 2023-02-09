@@ -20,9 +20,9 @@ import TextAlign from '@tiptap/extension-text-align'
 import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { NavArrowUp, Reply } from 'iconoir-react'
 import { DateTime } from 'luxon'
 import React, { useCallback, useEffect, useState } from 'react'
-import { ChevronUp } from 'tabler-icons-react'
 import { DiscussionComment } from '../../../model/agreement/extensions/discussion/discussionComment'
 import { showSuccessNotification } from '../../../utils/notifications'
 import { quickTruncate } from '../../../utils/truncated_wallet'
@@ -264,7 +264,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 							disabled={canReact}
 						>
 							<span>
-								<ChevronUp
+								<NavArrowUp
 									style={{ cursor: 'pointer' }}
 									onClick={() => {
 										if (canReact && !isLoading) {
@@ -285,13 +285,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 							{votes}
 						</Text>
 						<Space w={20} />
-						<Image
-							src={
-								isDarkTheme ? '/reply-white.png' : '/reply.png'
-							}
-							width={16}
-							height={16}
-						/>
+						<Reply width={16} height={16} />
 						<Space w={8} />
 
 						<Text

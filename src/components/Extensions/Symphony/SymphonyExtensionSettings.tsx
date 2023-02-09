@@ -13,7 +13,7 @@ import {
 	Code
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
-import { makeFetcher, makeRequest } from '@meemproject/sdk'
+import { makeFetcher, makeRequest, MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -27,7 +27,6 @@ import {
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorBlue, colorDarkBlue, useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
 import { API } from './symphonyTypes.generated'
 
@@ -73,6 +72,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		useState(false)
 	const [hasDismissedSetupComplete, setHasDismissedSetupComplete] =
 		useState(false)
+
+	const isConnectionEstablished = twitterUsername && discordInfo
 
 	const handleInviteBot = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
@@ -243,25 +244,11 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		await sdk.agreementExtension.updateAgreementExtension({
 			agreementId: agreement?.id ?? '',
 			isSetupComplete: true,
-			agreementExtensionId: agreementExtension?.id
-			// ---------------------------------------------
-			// Include externalLink if you'd like to add or update
-			// an external link to your community home page.
-			// Setting this to null will remove an existing link.
-			// ---------------------------------------------
-			// externalLink: {
-			// 	url: '',
-			// 	label: ''
-			// },
-			// ---------------------------------------------
-			// Store/update non-sensitive metadata for configuring your extension.
-			// We also recommend versioning your extension so you can gracefully
-			// handle any future updates to metadata schema
-			// ---------------------------------------------
-			// metadata: {
-			// 	version: '1.0.0',
-			// 	customProperty: 'boop'
-			// }
+			agreementExtensionId: agreementExtension?.id,
+			widget: {
+				isEnabled: true,
+				visibility: MeemAPI.AgreementExtensionVisibility.TokenHolders
+			}
 		})
 	}
 
@@ -779,26 +766,17 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					label="Activate Symphony"
 					description={
 						<>
-							<Text
-								className={meemTheme.tExtraSmall}
-							>{`Finish up by entering the commands below in the public channel you wish to use Symphony in.`}</Text>
+							<Text className={meemTheme.tExtraSmall}>
+								Type{' '}
+								<span style={{ fontWeight: '600' }}>
+									/activate
+								</span>{' '}
+								in any public channel of your Discord server,
+								then enter the code below:
+							</Text>
 							{activeStep === 2 && (
 								<>
 									<Space h={16} />
-									<Code
-										style={{ cursor: 'pointer' }}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												`/activate`
-											)
-											showSuccessNotification(
-												'Copied to clipboard',
-												`The command was copied to your clipboard.`
-											)
-										}}
-										block
-									>{`/activate`}</Code>
-									<Space h={8} />
 									<Code
 										style={{ cursor: 'pointer' }}
 										onClick={() => {
@@ -886,6 +864,83 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		</>
 	)
 
+	const pageHeader = (
+		<>
+			<div
+				className={meemTheme.pageHeaderExtension}
+				style={{ position: 'relative' }}
+			>
+				<Space h={8} />
+				<Center>
+					<Image
+						className={meemTheme.copyIcon}
+						src={`/ext-symphony.png`}
+						width={220}
+					/>
+				</Center>
+
+				<Space h={8} />
+				<div
+					style={{
+						position: 'absolute',
+						top: 50,
+						right: 48
+					}}
+				>
+					<Link href={`/${agreement?.slug}`}>
+						<Image src="/delete.png" width={24} height={24} />
+					</Link>
+				</div>
+			</div>
+		</>
+	)
+
+	const pageHeaderOnboarding = (
+		<>
+			<div className={meemTheme.widgetMeemFlat}>
+				<Space h={24} />
+
+				<Center>
+					<Text className={meemTheme.tLargeBold}>
+						Publishing is just one of the many things communities
+						can do together on meem.
+					</Text>
+				</Center>
+				<Space h={24} />
+				<Center>
+					<Text className={meemTheme.tMedium}>
+						Tap below to customize your community page and browse
+						our other extensions.
+					</Text>
+				</Center>
+				<Space h={36} />
+				<Center>
+					<Link href={`/${agreement?.slug}`}>
+						<Button className={meemTheme.buttonBlack}>
+							Explore meem
+						</Button>
+					</Link>
+				</Center>
+				<Space h={24} />
+			</div>
+			<Space h={32} />
+			<Container>
+				<div className={meemTheme.centeredRow}>
+					<Image
+						height={24}
+						width={24}
+						src={'/integration-symphony.png'}
+					/>
+					<Space w={16} />
+					<Text className={meemTheme.tLargeBold}>
+						Symphony Settings
+					</Text>
+				</div>
+			</Container>
+			<Space h={32} />
+		</>
+	)
+
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'symphony'} />
@@ -918,49 +973,24 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							)}
 							{hasFetchedData && (
 								<>
-									{!agreementExtension?.isSetupComplete && (
-										<div
-											className={
-												meemTheme.pageHeaderExtension
-											}
-											style={{ position: 'relative' }}
-										>
-											<Space h={8} />
-											<Center>
-												<Image
-													className={
-														meemTheme.copyIcon
-													}
-													src={`/ext-symphony.png`}
-													width={220}
-												/>
-											</Center>
+									{/* buckle up...  */}
+									{isInOnboardingMode && (
+										<>
+											{!isConnectionEstablished && (
+												<>{pageHeader}</>
+											)}
+											{isConnectionEstablished &&
+												!hasDismissedSetupComplete && (
+													<>{pageHeader}</>
+												)}
 
-											<Space h={8} />
-											<div
-												style={{
-													position: 'absolute',
-													top: 50,
-													right: 48
-												}}
-											>
-												<Link
-													href={`/${agreement?.slug}`}
-												>
-													<Image
-														src="/delete.png"
-														width={24}
-														height={24}
-													/>
-												</Link>
-											</div>
-										</div>
+											{isConnectionEstablished &&
+												hasDismissedSetupComplete && (
+													<>{pageHeaderOnboarding}</>
+												)}
+										</>
 									)}
-									{agreementExtension?.isSetupComplete && (
-										<ExtensionPageHeader
-											extensionSlug={'symphony'}
-										/>
-									)}
+									{!isInOnboardingMode && <>{pageHeader}</>}
 
 									<Container>
 										{shouldShowSetupComplete &&

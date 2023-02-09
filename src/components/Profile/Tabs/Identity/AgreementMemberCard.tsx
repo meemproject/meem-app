@@ -7,6 +7,7 @@ import {
 	Text,
 	useMantineColorScheme
 } from '@mantine/core'
+import { Copy } from 'iconoir-react'
 import React, { useState } from 'react'
 import {
 	Agreement,
@@ -17,6 +18,7 @@ import { RemoveMemberConfirmationModal } from '../../../Admin/Modals/RemoveMembe
 import { RemoveMemberModal } from '../../../Admin/Modals/RemoveMemberModal'
 import {
 	colorBlack,
+	colorBlue,
 	colorDarkBlue,
 	colorWhite,
 	useMeemTheme
@@ -69,11 +71,11 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 								{member.identity}
 							</Text>
 							<Space w={2} />
-							<Image
+							<Copy
 								className={meemTheme.copyIcon}
-								src="/copy.png"
 								height={18}
 								width={18}
+								color={colorBlue}
 								onClick={() => {
 									navigator.clipboard.writeText(
 										member.ens ? member.ens : member.wallet

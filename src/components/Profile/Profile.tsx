@@ -14,6 +14,7 @@ import {
 } from '@mantine/core'
 import { LoginState, useAuth, useSDK, useMeemUser } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
+import { Copy } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import {
@@ -21,7 +22,7 @@ import {
 	showSuccessNotification
 } from '../../utils/notifications'
 import { quickTruncate } from '../../utils/truncated_wallet'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { DiscordRoleRedirectModal } from './Tabs/Identity/DiscordRoleRedirectModal'
 import { ManageIdentityComponent } from './Tabs/Identity/ManageIdentity'
 import { MyAgreementsComponent } from './Tabs/MyAgreements'
@@ -164,10 +165,11 @@ export const ProfileComponent: React.FC = () => {
 									</Text>
 									{user.id && (
 										<>
-											<Image
+											<Copy
 												className={meemTheme.copyIcon}
-												src="/copy.png"
 												height={20}
+												width={20}
+												color={colorBlue}
 												onClick={() => {
 													navigator.clipboard.writeText(
 														`${
@@ -182,7 +184,6 @@ export const ProfileComponent: React.FC = () => {
 														`Wallet info was copied to your clipboard.`
 													)
 												}}
-												width={20}
 											/>
 										</>
 									)}

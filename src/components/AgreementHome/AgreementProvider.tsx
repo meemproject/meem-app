@@ -25,7 +25,10 @@ import {
 	SUB_IS_MEMBER_OF_AGREEMENT
 } from '../../graphql/agreements'
 import { SUB_TRANSACTIONS } from '../../graphql/transactions'
-import agreementFromDb, { Agreement } from '../../model/agreement/agreements'
+import agreementFromDb, {
+	Agreement,
+	isJwtError
+} from '../../model/agreement/agreements'
 import {
 	showErrorNotification,
 	showSuccessNotification
@@ -36,6 +39,7 @@ const defaultState: {
 	agreement?: Agreement
 	isLoadingAgreement: boolean
 	error?: ApolloError | undefined
+	isMembersOnly?: boolean
 	txIds?: string[]
 	isTransactionInProgress: boolean
 	watchTransactions: (txIds: string[]) => void
@@ -296,14 +300,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			getAgreement()
 		}
 
-		if (
-			errorMemberAgreement &&
-			errorMemberAgreement.graphQLErrors &&
-			errorMemberAgreement.graphQLErrors.length > 0 &&
-			errorMemberAgreement.graphQLErrors[0].extensions &&
-			errorMemberAgreement.graphQLErrors[0].extensions.code ===
-				'invalid-jwt'
-		) {
+		if (isJwtError(errorMemberAgreement)) {
 			const query =
 				window.location.pathname !== '/authenticate'
 					? {
@@ -370,6 +367,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			agreement,
 			isLoadingAgreement,
 			error: errorAnonAgreement || errorMemberAgreement,
+			isMembersOnly,
 			txIds: transactionIds,
 			isTransactionInProgress,
 			watchTransactions
@@ -379,6 +377,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			errorAnonAgreement,
 			errorMemberAgreement,
 			isLoadingAgreement,
+			isMembersOnly,
 			isTransactionInProgress,
 			transactionIds
 		]

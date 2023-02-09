@@ -21,12 +21,11 @@ import {
 } from '@meemproject/react'
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
-import { QrCode } from 'iconoir-react'
+import { QrCode, Settings } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import QRCode from 'react-qr-code'
-import { Settings } from 'tabler-icons-react'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
@@ -201,18 +200,22 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			const error: any = JSON.parse(
 				(e as any).toString().split('Error: ')[1]
 			)
-			log.debug(error.code)
-			if (error.code === 'TX_LIMIT_EXCEEDED') {
-				showErrorNotification(
-					'Transaction limit exceeded',
-					`Come back tomorrow or get in touch!`
-				)
-			} else {
-				showErrorNotification(
-					'Unable to join this community.',
-					`Make sure you meet all of the community's requirements!`
-				)
+
+			if (error.code) {
+				log.debug(error.code)
+				if (error.code === 'TX_LIMIT_EXCEEDED') {
+					showErrorNotification(
+						'Transaction limit exceeded',
+						`Come back tomorrow or get in touch!`
+					)
+				} else {
+					showErrorNotification(
+						'Unable to join this community.',
+						`Make sure you meet all of the community's requirements!`
+					)
+				}
 			}
+
 			setIsJoiningAgreement(false)
 		}
 	}

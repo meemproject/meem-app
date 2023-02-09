@@ -13,10 +13,10 @@ import {
 	Burger
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
+import { ArrowLeft, Copy, DeleteCircle, Plus } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { ArrowLeft, Plus } from 'tabler-icons-react'
 import {
 	Agreement,
 	AgreementRole,
@@ -24,7 +24,7 @@ import {
 } from '../../model/agreement/agreements'
 import { showSuccessNotification } from '../../utils/notifications'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface Tab {
 	name: string
@@ -164,10 +164,11 @@ export const RolesManager: React.FC = () => {
 											overflow: 'hidden'
 										}}
 									>{`${window.location.origin}/${agreement.slug}`}</Text>
-									<Image
+									<Copy
 										className={meemTheme.copyIcon}
-										src="/copy.png"
 										height={20}
+										width={20}
+										color={colorBlue}
 										onClick={() => {
 											navigator.clipboard.writeText(
 												`${window.location.origin}/${agreement.slug}`
@@ -177,15 +178,13 @@ export const RolesManager: React.FC = () => {
 												`This community's URL was copied to your clipboard.`
 											)
 										}}
-										width={20}
 									/>
 								</div>
 							</div>
 						</div>
 						<Link href={`/${agreement?.slug}/`}>
-							<Image
+							<DeleteCircle
 								className={meemTheme.pageHeaderExitButton}
-								src="/delete.png"
 								width={24}
 								height={24}
 							/>

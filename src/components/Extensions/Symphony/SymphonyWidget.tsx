@@ -1,8 +1,10 @@
-import { Space, Text } from '@mantine/core'
+import { Button, Space, Text } from '@mantine/core'
 import Link from 'next/link'
 import React from 'react'
-import { Settings } from 'tabler-icons-react'
-import { Agreement } from '../../../model/agreement/agreements'
+import {
+	Agreement,
+	extensionFromSlug
+} from '../../../model/agreement/agreements'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 
 /*
@@ -23,6 +25,8 @@ export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 	*/
 	const { classes: meemTheme } = useMeemTheme()
 
+	const agreementExtension = extensionFromSlug('symphony', agreement)
+
 	return (
 		/*
 		Ensure your widget's UI is contained entirely within the parent <div> element.
@@ -30,12 +34,10 @@ export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 		<div className={meemTheme.widgetLight}>
 			<div className={meemTheme.spacedRowCentered}>
 				<div className={meemTheme.centeredRow}>
-					<Text className={meemTheme.tMediumBold}>
-						Symphony Extension Widget
-					</Text>
+					<Text className={meemTheme.tMediumBold}>Symphony</Text>
 					<Space w={6} />
 				</div>
-				<div className={meemTheme.centeredRow}>
+				{/* <div className={meemTheme.centeredRow}>
 					{agreement.isCurrentUserAgreementAdmin && (
 						<div className={meemTheme.row}>
 							<Space w={8} />
@@ -46,12 +48,34 @@ export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 							</Link>
 						</div>
 					)}
-				</div>
+				</div> */}
 			</div>
 			<Space h={24} />
-			<Text className={meemTheme.tSmall}>
-				{`This is an symphony Community Extension Widget for ${agreement.name}`}
-			</Text>
+			{!agreementExtension?.isSetupComplete && (
+				<>
+					<Text>You have not yet set up any Symphony rules.</Text>
+					<Space h={8} />
+					<Link href={`/${agreement.slug}/e/symphony/settings`}>
+						<Button className={meemTheme.buttonBlack}>
+							Continue Symphony setup
+						</Button>
+					</Link>
+				</>
+			)}
+			{agreementExtension?.isSetupComplete && (
+				<>
+					<Text>
+						Your Symphony rules are set up. Click below to change
+						them.
+					</Text>
+					<Space h={8} />
+					<Link href={`/${agreement.slug}/e/symphony/settings`}>
+						<Button className={meemTheme.buttonBlack}>
+							Configure Symphony
+						</Button>
+					</Link>
+				</>
+			)}
 		</div>
 	)
 }
