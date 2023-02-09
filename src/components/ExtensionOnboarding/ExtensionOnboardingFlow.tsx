@@ -18,11 +18,10 @@ import {
 } from '@mantine/core'
 import { useWallet, useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
-import { Group } from 'iconoir-react'
+import { Group, InfoEmpty } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { InfoCircle } from 'tabler-icons-react'
 import {
 	GetExtensionsQuery,
 	MyAgreementsSubscriptionSubscription
@@ -37,8 +36,10 @@ import { showErrorNotification } from '../../utils/notifications'
 import { toTitleCase } from '../../utils/strings'
 import { hostnameToChainId } from '../App'
 import { CreateAgreementModal } from '../Create/CreateAgreementModal'
+import { MeemFAQModal } from '../Header/MeemFAQModal'
 import {
 	colorBlack,
+	colorBlue,
 	colorDarkerGrey,
 	colorWhite,
 	useMeemTheme
@@ -65,6 +66,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 	const [shouldShowCreateNewCommunity, setShouldShowCreateNewCommunity] =
 		useState(false)
 	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
+	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
 
 	const [agreementName, setAgreementName] = useState('')
 	const extensionName = toTitleCase(extensionSlug.replaceAll('-', ' '))
@@ -216,7 +218,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 						>
 							<Popover.Target>
 								<Button className={meemTheme.buttonTransparent}>
-									<InfoCircle color={'white'} />
+									<InfoEmpty color={'white'} />
 								</Button>
 							</Popover.Target>
 							<Popover.Dropdown>
@@ -302,7 +304,28 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 												className={
 													meemTheme.tExtraSmall
 												}
-											>{`Please choose a name for your community that will use ${extensionName}.`}</Text>
+											>
+												We’ll create an on-chain
+												community agreement so you can
+												take your group’s roles and
+												rules everywhere.{' '}
+												<span
+													style={{
+														textDecoration:
+															'underline',
+														fontWeight: 'bold',
+														color: colorBlue,
+														cursor: 'pointer'
+													}}
+													onClick={() => {
+														setIsMeemFaqModalOpen(
+															true
+														)
+													}}
+												>
+													Learn more.
+												</span>
+											</Text>
 											<Space h={16} />
 											<TextInput
 												radius="lg"
@@ -517,6 +540,13 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 					} else {
 						setIsCreatingNewCommunity(false)
 					}
+				}}
+			/>
+
+			<MeemFAQModal
+				isOpened={isMeemFaqModalOpen}
+				onModalClosed={function (): void {
+					setIsMeemFaqModalOpen(false)
 				}}
 			/>
 		</>

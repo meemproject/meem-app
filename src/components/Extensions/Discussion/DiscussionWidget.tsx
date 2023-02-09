@@ -1,8 +1,8 @@
 import { Text, Button, Space, Center, Loader } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
+import { Plus, Settings } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { Plus, Settings } from 'tabler-icons-react'
 import {
 	Agreement,
 	extensionFromSlug

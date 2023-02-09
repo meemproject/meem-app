@@ -11,9 +11,9 @@ import {
 	Center,
 	HoverCard
 } from '@mantine/core'
+import { DeleteCircle, Search, Star } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { Search, Star } from 'tabler-icons-react'
 import { AgreementMember } from '../../../model/agreement/agreements'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
 import { useMeemTheme } from '../../Styles/MeemTheme'
@@ -195,11 +195,7 @@ export const AgreementMembersComponent: React.FC = () => {
 						</div>
 						<div className={meemTheme.pageHeaderExitButton}>
 							<Link href={`/${agreement.slug}`}>
-								<Image
-									src="/delete.png"
-									width={24}
-									height={24}
-								/>
+								<DeleteCircle width={24} height={24} />
 							</Link>
 						</div>
 					</div>

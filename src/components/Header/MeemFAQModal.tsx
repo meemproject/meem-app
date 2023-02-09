@@ -32,16 +32,39 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 
 				<Text
 					className={meemTheme.tSmall}
-				>{`Meem is your community's Web3 home base. Set membership criteria and seamlessly issue tokens to authorized participants, then sync your favorite tools and apps to create a living dashboard for your members. Meem empowers you to manage your community and its activities without dependence on centralized platforms.`}</Text>
+				>{`At Meem, we’re enabling a future of portable communities — that is, groups of people linked by their desire to do something together, not by the platforms on which they operate.
+				`}</Text>
+				<Space h={16} />
+
+				<Text
+					className={meemTheme.tSmall}
+				>{`We’re letting communities decide for themselves who’s in their group, what those members’ roles and rules are, and what tools they want to use together. And we’re stitching together a multitude of Web2 and Web3 platforms to let communities collaboratively publish.
+				`}</Text>
+				<Space h={16} />
+
+				<Text
+					className={meemTheme.tSmall}
+				>{`We do this through community agreements — Meem smart contracts deployed, owned, and controlled by the communities themselves.`}</Text>
+
 				<Space h={24} />
 
 				<Text className={meemTheme.tMediumBold}>
-					What can I do with my community on Meem?
+					What can I do with my Meem community agreement?
 				</Text>
 				<Space h={16} />
 
 				<Text className={meemTheme.tSmall}>
-					{`Today, you can manage permissions for your community with nuanced, intuitive membership logic. Within your community, set up token-gated access for popular third-party tools such as Discord, Notion, and SlikSafe, or use your community Gnosis wallet to manage funds.`}
+					{`Set nuanced, intuitive membership logic to determine who can participate in your community and how they can join. Create multiple roles for members and set rules and permissions for each. Using Meem’s native extensions, discuss and publish content together across platforms. Finally, connect a wide range of Web2 and Web3 tools to use with your community, ensuring they respect the roles and rules you’ve already established.`}
+				</Text>
+				<Space h={24} />
+
+				<Text
+					className={meemTheme.tMediumBold}
+				>{`What's Symphony?`}</Text>
+				<Space h={16} />
+
+				<Text className={meemTheme.tSmall}>
+					{`Symphony is an extension that lets your community publish together. Today, Symphony lets you use Discord to decide what to Tweet from a shared account. Coming soon, we’ll be adding even more platforms in which you can collaborate, more platforms to which you can publish, and advanced publishing and editing capabilities.`}
 				</Text>
 				<Space h={24} />
 
@@ -52,7 +75,7 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 
 				<Text
 					className={meemTheme.tSmall}
-				>{`We’ll be building more functionality for communities and group leaders, and we’ll be integrating with other Web2 and Web3 tools to allow your community to do even more.`}</Text>
+				>{`We’ll be building more open-source extensions and expanding our SDK, allowing developers to create and modify even more apps. We’ll also be integrating with other Web2 and Web3 tools to make communities’ existing apps more interoperable.`}</Text>
 
 				<Space h={24} />
 				<Text className={meemTheme.tMediumBold}>

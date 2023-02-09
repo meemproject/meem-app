@@ -1,9 +1,10 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Image, Divider, Space, Button, Radio } from '@mantine/core'
+import { Text, Divider, Space, Button, Radio } from '@mantine/core'
 import { diamondABI, IFacetVersion, getCuts } from '@meemproject/meem-contracts'
 import { useAuth, useMeemApollo, useSDK, useWallet } from '@meemproject/react'
 import { ethers } from 'ethers'
+import { Copy } from 'iconoir-react'
 import { isEqual } from 'lodash'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useEffect, useState } from 'react'
@@ -16,7 +17,7 @@ import {
 } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
 import { ChangeMeemProtocolPermissionsModal } from '../Modals/ChangeMeemProtocolPermissionsModal'
 import { CreateSafeModal } from '../Modals/CreateSafeModal'
 
@@ -199,10 +200,11 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 				<Text style={{ wordBreak: 'break-word' }}>
 					{agreement.address}
 				</Text>
-				<Image
+				<Copy
 					className={meemTheme.copyIcon}
-					src="/copy.png"
 					height={20}
+					width={20}
+					color={colorBlue}
 					onClick={() => {
 						navigator.clipboard.writeText(agreement.address ?? '')
 						showSuccessNotification(
@@ -210,7 +212,6 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 							`This community's agreement contract address was copied to your clipboard.`
 						)
 					}}
-					width={20}
 				/>
 			</div>
 
@@ -335,10 +336,11 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 						<Text style={{ wordBreak: 'break-word' }}>
 							{agreement.gnosisSafeAddress}
 						</Text>
-						<Image
+						<Copy
 							className={meemTheme.copyIcon}
-							src="/copy.png"
 							height={20}
+							width={20}
+							color={colorBlue}
 							onClick={() => {
 								navigator.clipboard.writeText(
 									agreement.gnosisSafeAddress ?? ''
@@ -348,7 +350,6 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 									`This community's treasury address was copied to your clipboard.`
 								)
 							}}
-							width={20}
 						/>
 					</div>
 					<Space h={12} />

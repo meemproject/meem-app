@@ -5,10 +5,10 @@ import {
 	Button,
 	useMantineColorScheme
 } from '@mantine/core'
+import { ArrowLeft, DeleteCircle, Settings } from 'iconoir-react'
 import Link from 'next/link'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { ArrowLeft, Settings } from 'tabler-icons-react'
 import { extensionFromSlug } from '../../model/agreement/agreements'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
@@ -57,7 +57,8 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 								<div>
 									<ArrowLeft
 										className={meemTheme.backArrow}
-										size={32}
+										width={32}
+										height={32}
 									/>
 								</div>
 							</Link>
@@ -130,7 +131,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 					<Space w={16} />
 					<div className={meemTheme.pageHeaderExitButton}>
 						<Link href={`/${agreement?.slug}`}>
-							<Image src="/delete.png" width={24} height={24} />
+							<DeleteCircle width={24} height={24} />
 						</Link>
 					</div>
 				</div>
