@@ -1,3 +1,10 @@
+## [1.20.2](https://github.com/meemproject/meem-app/compare/v1.20.1...v1.20.2) (2023-02-09)
+
+
+### Bug Fixes
+
+* update copy in meem faq and symphony onboarding ([3f4d67c](https://github.com/meemproject/meem-app/commit/3f4d67c))
+
 ## [1.20.1](https://github.com/meemproject/meem-app/compare/v1.20.0...v1.20.1) (2023-02-09)
 
 
