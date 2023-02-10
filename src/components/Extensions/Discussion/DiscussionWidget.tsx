@@ -30,6 +30,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			if (hasFetchedData || !sdk.id.hasInitialized || !privateKey) {
+				setHasFetchedData(true)
 				return
 			}
 
@@ -168,13 +169,23 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 						)}
 						{posts.length == 0 && (
 							<>
-								<Center>
-									<Text className={meemTheme.tSmallBold}>
-										There are no discussions yet.
-									</Text>
-								</Center>
+								{!agreement.isCurrentUserAgreementMember && (
+									<Center>
+										<Text className={meemTheme.tSmallBold}>
+											Join this community to view its
+											discussions.
+										</Text>
+									</Center>
+								)}
 								{agreement.isCurrentUserAgreementMember && (
 									<>
+										<Center>
+											<Text
+												className={meemTheme.tSmallBold}
+											>
+												There are no discussions yet.
+											</Text>
+										</Center>
 										<Space h={12} />
 										<Center>
 											<Link
