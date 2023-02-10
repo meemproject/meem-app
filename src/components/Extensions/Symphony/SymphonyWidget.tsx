@@ -1,4 +1,4 @@
-import { Button, Space, Text } from '@mantine/core'
+import { Button, Center, Space, Text } from '@mantine/core'
 import Link from 'next/link'
 import React from 'react'
 import {
@@ -51,29 +51,59 @@ export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 				</div> */}
 			</div>
 			<Space h={24} />
-			{!agreementExtension?.isSetupComplete && (
-				<>
-					<Text>You have not yet set up any Symphony rules.</Text>
-					<Space h={8} />
-					<Link href={`/${agreement.slug}/e/symphony/settings`}>
-						<Button className={meemTheme.buttonBlack}>
-							Continue Symphony setup
-						</Button>
-					</Link>
-				</>
+			{!agreement.isCurrentUserAgreementAdmin && (
+				<Center>
+					<Text
+						className={meemTheme.tSmallBold}
+					>{`${agreement.name} is using Symphony to publish together on Twitter!`}</Text>
+				</Center>
 			)}
-			{agreementExtension?.isSetupComplete && (
+			{agreement.isCurrentUserAgreementMember && (
 				<>
-					<Text>
-						Your Symphony rules are set up. Click below to change
-						them.
-					</Text>
+					{!agreementExtension?.isSetupComplete && (
+						<>
+							<Center>
+								<Text className={meemTheme.tSmallBold}>
+									You have not yet set up any Symphony rules.
+								</Text>
+							</Center>
+							<Space h={12} />
+							<Center>
+								<Link
+									href={`/${agreement.slug}/e/symphony/settings`}
+								>
+									<Button
+										className={meemTheme.buttonDarkGrey}
+									>
+										Continue Symphony setup
+									</Button>
+								</Link>
+							</Center>
+						</>
+					)}
+					{agreementExtension?.isSetupComplete && (
+						<>
+							<Center>
+								<Text className={meemTheme.tSmallBold}>
+									Your Symphony rules are set up. Click below
+									to change them.
+								</Text>
+							</Center>
+							<Space h={12} />
+							<Center>
+								<Link
+									href={`/${agreement.slug}/e/symphony/settings`}
+								>
+									<Button
+										className={meemTheme.buttonDarkGrey}
+									>
+										Configure Symphony
+									</Button>
+								</Link>
+							</Center>
+						</>
+					)}
 					<Space h={8} />
-					<Link href={`/${agreement.slug}/e/symphony/settings`}>
-						<Button className={meemTheme.buttonBlack}>
-							Configure Symphony
-						</Button>
-					</Link>
 				</>
 			)}
 		</div>

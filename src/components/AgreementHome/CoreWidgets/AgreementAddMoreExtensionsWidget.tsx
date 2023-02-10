@@ -29,10 +29,10 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 		).length ?? 0
 
 	// How many extensions have been set up and have links
-	const extensionsSetupWithLinks =
-		agreement.extensions?.filter(
-			ext => ext.AgreementExtensionLinks.length > 0 && ext.isSetupComplete
-		).length ?? 0
+	// const extensionsSetupWithLinks =
+	// 	agreement.extensions?.filter(
+	// 		ext => ext.AgreementExtensionLinks.length > 0 && ext.isSetupComplete
+	// 	).length ?? 0
 
 	// Total extensions, including links and other integrations
 	const totalExtensions = agreement.extensions?.length ?? 0
@@ -200,30 +200,25 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 
 					{!agreement.isCurrentUserAgreementAdmin && (
 						<>
-							{extensionsSetupWithWidgets === 0 &&
-								extensionsSetupWithLinks === 0 && (
-									<div
-										className={meemTheme.widgetLight}
-										style={{ marginTop: 26 }}
-									>
-										<Center>
-											<Text
-												className={
-													meemTheme.tMediumBold
-												}
-											>
-												Under construction
-											</Text>
-										</Center>
-										<Space h={16} />
-										<Center>
-											<Text className={meemTheme.tSmall}>
-												This community does not have any
-												content yet. Check back later!
-											</Text>
-										</Center>
-									</div>
-								)}
+							{totalExtensions === 0 && (
+								<div
+									className={meemTheme.widgetLight}
+									style={{ marginTop: 26 }}
+								>
+									<Center>
+										<Text className={meemTheme.tMediumBold}>
+											Under construction
+										</Text>
+									</Center>
+									<Space h={16} />
+									<Center>
+										<Text className={meemTheme.tSmall}>
+											This community is not using any
+											tools yet. Check back later!
+										</Text>
+									</Center>
+								</div>
+							)}
 						</>
 					)}
 				</>

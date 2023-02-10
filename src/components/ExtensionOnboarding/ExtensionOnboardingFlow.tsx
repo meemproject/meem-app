@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
@@ -143,8 +145,28 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 
 	const enableExtensionAndRedirect = async (
 		agreementSlug: string,
-		agreementId: string
+		agreementId: string,
+		agreement?: Agreement
 	) => {
+		if (agreement) {
+			// Agreement exists already. Let's see if it already has symphony enabled...
+			let isExtensionEnabled = false
+			agreement.extensions?.forEach(ext => {
+				if (ext.Extension?.slug === extensionSlug) {
+					isExtensionEnabled = true
+				}
+			})
+			if (isExtensionEnabled) {
+				log.debug(
+					'extension already enabled for this community, redirecting'
+				)
+				router.push({
+					pathname: `/${agreementSlug}/e/${extensionSlug}/settings`
+				})
+				return
+			}
+		}
+
 		if (availableExtensionsData) {
 			setIsEnablingExtension(true)
 			try {
@@ -178,18 +200,11 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 					query: { isOnboarding: true }
 				})
 			} catch (e) {
-				if ((e as any).toString().includes('EXTENSION_ALREADY_ADDED')) {
-					router.push({
-						pathname: `/${agreementSlug}/e/${extensionSlug}/settings`,
-						query: { isOnboarding: true }
-					})
-				} else {
-					log.debug(e)
-					showErrorNotification(
-						'Oops!',
-						`There was an error enabling ${extensionName} on this community. Please let us know!`
-					)
-				}
+				log.debug(e)
+				showErrorNotification(
+					'Oops!',
+					`There was an error enabling ${extensionName} on this community. Please let us know!`
+				)
 			}
 		} else {
 			log.debug('no matching extensions to enable...')
@@ -199,57 +214,57 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 			)
 		}
 	}
-	const easterEgg = (
-		<>
-			{extensionSlug === 'symphony' && (
-				<>
-					<Space w={48} />
-					<div className={meemTheme.centeredRow}>
-						<audio controls>
-							<source src="/symphony.mp3" type="audio/mpeg" />
-							Your browser does not support the audio element.
-						</audio>
+	// const easterEgg = (
+	// 	<>
+	// 		{extensionSlug === 'symphony' && (
+	// 			<>
+	// 				<Space w={48} />
+	// 				<div className={meemTheme.centeredRow}>
+	// 					<audio controls>
+	// 						<source src="/symphony.mp3" type="audio/mpeg" />
+	// 						Your browser does not support the audio element.
+	// 					</audio>
 
-						<Popover
-							width={200}
-							position="bottom"
-							withArrow
-							shadow="md"
-						>
-							<Popover.Target>
-								<Button className={meemTheme.buttonTransparent}>
-									<InfoEmpty color={'white'} />
-								</Button>
-							</Popover.Target>
-							<Popover.Dropdown>
-								<Text
-									className={meemTheme.tExtraExtraSmall}
-									style={{ maxWidth: 300 }}
-								>
-									Handel - Arrival of the Queen of Sheba,
-									performed by the Advent Chamber Orchestra,
-									November 2006 Roxanna Pavel Goldstein,
-									Musical Director; Elias Goldstein, Orchestra
-									Manager. License: CC-BY-SA
-								</Text>
-								<Space h={8} />
-								<Link
-									href={`https://commons.wikimedia.org/wiki/File:Handel_-_Arrival_of_the_Queen_of_Sheba.ogg`}
-								>
-									<Text
-										className={meemTheme.tExtraSmallBold}
-										style={{ cursor: 'pointer' }}
-									>
-										Source
-									</Text>
-								</Link>
-							</Popover.Dropdown>
-						</Popover>
-					</div>
-				</>
-			)}
-		</>
-	)
+	// 					<Popover
+	// 						width={200}
+	// 						position="bottom"
+	// 						withArrow
+	// 						shadow="md"
+	// 					>
+	// 						<Popover.Target>
+	// 							<Button className={meemTheme.buttonTransparent}>
+	// 								<InfoEmpty color={'white'} />
+	// 							</Button>
+	// 						</Popover.Target>
+	// 						<Popover.Dropdown>
+	// 							<Text
+	// 								className={meemTheme.tExtraExtraSmall}
+	// 								style={{ maxWidth: 300 }}
+	// 							>
+	// 								Handel - Arrival of the Queen of Sheba,
+	// 								performed by the Advent Chamber Orchestra,
+	// 								November 2006 Roxanna Pavel Goldstein,
+	// 								Musical Director; Elias Goldstein, Orchestra
+	// 								Manager. License: CC-BY-SA
+	// 							</Text>
+	// 							<Space h={8} />
+	// 							<Link
+	// 								href={`https://commons.wikimedia.org/wiki/File:Handel_-_Arrival_of_the_Queen_of_Sheba.ogg`}
+	// 							>
+	// 								<Text
+	// 									className={meemTheme.tExtraSmallBold}
+	// 									style={{ cursor: 'pointer' }}
+	// 								>
+	// 									Source
+	// 								</Text>
+	// 							</Link>
+	// 						</Popover.Dropdown>
+	// 					</Popover>
+	// 				</div>
+	// 			</>
+	// 		)}
+	// 	</>
+	// )
 
 	const pageHeader = (
 		<div className={meemTheme.pageHeaderExtension}>
@@ -260,7 +275,6 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 						src={`/${extensionIcon}`}
 						width={220}
 					/>
-					{easterEgg}
 				</div>
 			</Container>
 		</div>
@@ -402,7 +416,8 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 											onClick={() => {
 												enableExtensionAndRedirect(
 													agreement.slug ?? '',
-													agreement.id ?? ''
+													agreement.id ?? '',
+													agreement
 												)
 											}}
 										>
