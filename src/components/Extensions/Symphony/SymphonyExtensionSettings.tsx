@@ -61,6 +61,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		| {
 				data: string
 				teamName: string
+				icon?: string
 		  }
 		| undefined
 	>()
