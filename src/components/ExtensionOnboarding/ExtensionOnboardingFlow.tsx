@@ -145,8 +145,28 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 
 	const enableExtensionAndRedirect = async (
 		agreementSlug: string,
-		agreementId: string
+		agreementId: string,
+		agreement?: Agreement
 	) => {
+		if (agreement) {
+			// Agreement exists already. Let's see if it already has symphony enabled...
+			let isExtensionEnabled = false
+			agreement.extensions?.forEach(ext => {
+				if (ext.Extension?.slug === extensionSlug) {
+					isExtensionEnabled = true
+				}
+			})
+			if (isExtensionEnabled) {
+				log.debug(
+					'extension already enabled for this community, redirecting'
+				)
+				router.push({
+					pathname: `/${agreementSlug}/e/${extensionSlug}/settings`
+				})
+				return
+			}
+		}
+
 		if (availableExtensionsData) {
 			setIsEnablingExtension(true)
 			try {
@@ -403,7 +423,8 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 											onClick={() => {
 												enableExtensionAndRedirect(
 													agreement.slug ?? '',
-													agreement.id ?? ''
+													agreement.id ?? '',
+													agreement
 												)
 											}}
 										>
