@@ -15,6 +15,7 @@ import {
 import { useAuth, useSDK } from '@meemproject/react'
 import { makeFetcher, makeRequest, MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
+import { DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -25,7 +26,12 @@ import {
 	showSuccessNotification
 } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorBlue, colorDarkBlue, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	colorBlue,
+	colorDarkBlue,
+	colorWhite,
+	useMeemTheme
+} from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
 import { API } from './symphonyTypes.generated'
@@ -962,7 +968,11 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					}}
 				>
 					<Link href={`/${agreement?.slug}`}>
-						<Image src="/delete.png" width={24} height={24} />
+						<DeleteCircle
+							width={24}
+							height={24}
+							color={colorWhite}
+						/>
 					</Link>
 				</div>
 			</div>
