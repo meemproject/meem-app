@@ -70,15 +70,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		  }
 		| undefined
 	>()
-
-	// Managing gundb states
-	const [hasFetchedRules, setHasFetchedRules] = useState(false)
-	const [hasFetchedTwitterInfo, setHasFetchedTwitterInfo] = useState(false)
-	const [hasFetchedDiscordInfo, setHasFetchedDiscordInfo] = useState(false)
-	const [hasFetchedSlackInfo, setHasFetchedSlackInfo] = useState(false)
-	const [hasFetchedData, setHasFetchedData] = useState(false)
-
 	const [botCode, setBotCode] = useState<string | undefined>()
+	const [hasFetchedData, setHasFetchedData] = useState(false)
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [selectedConnection, setSelectedConnection] =
 		useState<SelectedConnection>()
@@ -368,7 +361,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			// @ts-ignore
 			.open(data => {
 				log.debug('twitter data', data)
-				setHasFetchedTwitterInfo(true)
 				if (data?.username) {
 					setTwitterUsername(data.username)
 					log.debug(`twitter username = ${data.username}`)
@@ -382,7 +374,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			// @ts-ignore
 			.open(data => {
 				log.debug('discord data', data)
-				setHasFetchedDiscordInfo(true)
 				if (data) {
 					setDiscordInfo(data)
 					log.debug(`discord data found`)
@@ -396,7 +387,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				.get(`${agreement.id}/services/slack`)
 				// @ts-ignore
 				.open(data => {
-					setHasFetchedSlackInfo(true)
 					log.debug('slack data', data)
 					if (data) {
 						setSlackInfo(data)
@@ -405,8 +395,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						setSlackInfo(undefined)
 					}
 				})
-		} else {
-			setHasFetchedSlackInfo(true)
 		}
 
 		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
@@ -460,31 +448,17 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					}
 
 					setRules(filteredRules)
-					setHasFetchedRules(true)
-				} else {
-					setHasFetchedRules(true)
 				}
 			})
 
-		if (
-			hasFetchedDiscordInfo &&
-			hasFetchedTwitterInfo &&
-			hasFetchedSlackInfo &&
-			hasFetchedRules
-		) {
-			setHasFetchedData(true)
-		}
+		setHasFetchedData(true)
 	}, [
 		agreement,
 		sdk,
 		hasFetchedData,
 		discordInfo,
 		twitterUsername,
-		activeStep,
-		hasFetchedDiscordInfo,
-		hasFetchedTwitterInfo,
-		hasFetchedSlackInfo,
-		hasFetchedRules
+		activeStep
 	])
 
 	useEffect(() => {
@@ -1078,13 +1052,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						<div>
 							{!hasFetchedData && (
 								<>
-									<Space h={120} />
-									<Center>
-										<Loader
-											variant={'oval'}
-											color={'cyan'}
-										/>
-									</Center>
+									<Space h={40} />
+									<Loader variant={'oval'} color={'cyan'} />
 								</>
 							)}
 							{hasFetchedData && (
