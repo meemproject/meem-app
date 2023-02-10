@@ -99,26 +99,6 @@ export const AgreementHome: React.FC = () => {
 						<MeemCreateCommunityWidget agreement={agreement} />
 					)}
 
-					{/* Special case for symphony in unlaunched state */}
-					{agreement.slug !== 'meem' && !agreement.isLaunched && (
-						<>
-							{agreement.extensions &&
-								agreement.extensions
-									.filter(
-										ext =>
-											ext.Extension &&
-											ext.Extension.slug === 'symphony'
-									)
-									.map(extension => (
-										<div key={extension.id}>
-											<SymphonyWidget
-												agreement={agreement}
-											/>
-										</div>
-									))}
-						</>
-					)}
-
 					{agreement.slug !== 'meem' && !agreement.isLaunched && (
 						<AgreementBlankSlateWidget
 							onChosenExtensionsChanged={extensions => {
@@ -130,19 +110,19 @@ export const AgreementHome: React.FC = () => {
 
 					{agreement.extensions &&
 						agreement.extensions
-							.filter(
-								ext =>
-									ext.Extension &&
-									ext.Extension.capabilities.includes(
-										'widget'
-									) &&
-									ext.AgreementExtensionWidgets.length > 0 &&
-									ext.isSetupComplete
-							)
+							.filter(ext => ext.Extension)
 							.map(extension => (
 								// TODO: Developers, make sure you import your extension's widget
 								// TODO: here, checking against the slug you chose for your extension.
-								<>
+								<div key={extension.id}>
+									{extension.Extension?.slug ===
+										'symphony' && (
+										<>
+											<SymphonyWidget
+												agreement={agreement}
+											/>
+										</>
+									)}
 									{extension.Extension?.slug ===
 										'discussions' && (
 										<DiscussionWidget
@@ -150,7 +130,7 @@ export const AgreementHome: React.FC = () => {
 											agreement={agreement}
 										/>
 									)}
-								</>
+								</div>
 							))}
 
 					<AgreementExtensionLinksWidget agreement={agreement} />

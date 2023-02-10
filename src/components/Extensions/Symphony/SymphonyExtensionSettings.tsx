@@ -15,6 +15,7 @@ import {
 import { useAuth, useSDK } from '@meemproject/react'
 import { makeFetcher, makeRequest, MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
+import { DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -25,7 +26,12 @@ import {
 	showSuccessNotification
 } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorBlue, colorDarkBlue, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	colorBlue,
+	colorDarkBlue,
+	colorWhite,
+	useMeemTheme
+} from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
 import { API } from './symphonyTypes.generated'
@@ -45,7 +51,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const agreementExtension = extensionFromSlug('symphony', agreement)
 	const router = useRouter()
 
-	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [activeStep, setActiveStep] = useState(0)
 	const [twitterUsername, setTwitterUsername] = useState('')
 	const [rules, setRules] = useState<API.IRule[]>([])
@@ -65,8 +70,15 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		  }
 		| undefined
 	>()
-	const [botCode, setBotCode] = useState<string | undefined>()
+
+	// Managing gundb states
+	const [hasFetchedRules, setHasFetchedRules] = useState(false)
+	const [hasFetchedTwitterInfo, setHasFetchedTwitterInfo] = useState(false)
+	const [hasFetchedDiscordInfo, setHasFetchedDiscordInfo] = useState(false)
+	const [hasFetchedSlackInfo, setHasFetchedSlackInfo] = useState(false)
 	const [hasFetchedData, setHasFetchedData] = useState(false)
+
+	const [botCode, setBotCode] = useState<string | undefined>()
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [selectedConnection, setSelectedConnection] =
 		useState<SelectedConnection>()
@@ -275,10 +287,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		}
 	}, [selectedConnection, agreement, jwt])
 
-	/*
-	TODO
-	Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
-	 */
 	const saveCustomChanges = async () => {
 		await sdk.agreementExtension.updateAgreementExtension({
 			agreementId: agreement?.id ?? '',
@@ -289,17 +297,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				visibility: MeemAPI.AgreementExtensionVisibility.TokenHolders
 			}
 		})
-	}
-
-	/*
-	Boilerplate area - please don't edit the below code!
-	===============================================================
-	 */
-
-	const saveChanges = async () => {
-		setIsSavingChanges(true)
-		await saveCustomChanges()
-		setIsSavingChanges(false)
 	}
 
 	const handleRuleSave = async (values: IOnSave) => {
@@ -371,6 +368,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			// @ts-ignore
 			.open(data => {
 				log.debug('twitter data', data)
+				setHasFetchedTwitterInfo(true)
 				if (data?.username) {
 					setTwitterUsername(data.username)
 					log.debug(`twitter username = ${data.username}`)
@@ -384,6 +382,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			// @ts-ignore
 			.open(data => {
 				log.debug('discord data', data)
+				setHasFetchedDiscordInfo(true)
 				if (data) {
 					setDiscordInfo(data)
 					log.debug(`discord data found`)
@@ -397,6 +396,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				.get(`${agreement.id}/services/slack`)
 				// @ts-ignore
 				.open(data => {
+					setHasFetchedSlackInfo(true)
 					log.debug('slack data', data)
 					if (data) {
 						setSlackInfo(data)
@@ -405,6 +405,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						setSlackInfo(undefined)
 					}
 				})
+		} else {
+			setHasFetchedSlackInfo(true)
 		}
 
 		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
@@ -458,17 +460,31 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					}
 
 					setRules(filteredRules)
+					setHasFetchedRules(true)
+				} else {
+					setHasFetchedRules(true)
 				}
 			})
 
-		setHasFetchedData(true)
+		if (
+			hasFetchedDiscordInfo &&
+			hasFetchedTwitterInfo &&
+			hasFetchedSlackInfo &&
+			hasFetchedRules
+		) {
+			setHasFetchedData(true)
+		}
 	}, [
 		agreement,
 		sdk,
 		hasFetchedData,
 		discordInfo,
 		twitterUsername,
-		activeStep
+		activeStep,
+		hasFetchedDiscordInfo,
+		hasFetchedTwitterInfo,
+		hasFetchedSlackInfo,
+		hasFetchedRules
 	])
 
 	useEffect(() => {
@@ -930,17 +946,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 			{customExtensionPermissions()}
 			<Space h={48} />
-
-			<Button
-				disabled={isSavingChanges}
-				loading={isSavingChanges}
-				onClick={() => {
-					saveChanges()
-				}}
-				className={meemTheme.buttonBlack}
-			>
-				Save Changes
-			</Button>
 		</>
 	)
 
@@ -989,7 +994,12 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					}}
 				>
 					<Link href={`/${agreement?.slug}`}>
-						<Image src="/delete.png" width={24} height={24} />
+						<DeleteCircle
+							className={meemTheme.clickable}
+							width={24}
+							height={24}
+							color={colorWhite}
+						/>
 					</Link>
 				</div>
 			</div>
@@ -1068,8 +1078,13 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						<div>
 							{!hasFetchedData && (
 								<>
-									<Space h={40} />
-									<Loader variant={'oval'} color={'cyan'} />
+									<Space h={120} />
+									<Center>
+										<Loader
+											variant={'oval'}
+											color={'cyan'}
+										/>
+									</Center>
 								</>
 							)}
 							{hasFetchedData && (
