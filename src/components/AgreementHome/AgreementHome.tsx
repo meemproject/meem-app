@@ -100,7 +100,7 @@ export const AgreementHome: React.FC = () => {
 					)}
 
 					{/* Special case for symphony in unlaunched state */}
-					{agreement.slug !== 'meem' && !agreement.isLaunched && (
+					{agreement.isCurrentUserAgreementAdmin && (
 						<>
 							{agreement.extensions &&
 								agreement.extensions
