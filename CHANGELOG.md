@@ -1,3 +1,18 @@
+# [1.22.0](https://github.com/meemproject/meem-app/compare/v1.21.0...v1.22.0) (2023-02-10)
+
+
+### Bug Fixes
+
+* make symphony exit button clickable ([7f1a18c](https://github.com/meemproject/meem-app/commit/7f1a18c))
+* remove 'save changes' from symphony settings ([9ccaace](https://github.com/meemproject/meem-app/commit/9ccaace))
+* robust redirect for communities with extensions already enabled ([463a49c](https://github.com/meemproject/meem-app/commit/463a49c))
+* symphony loading now waits for all gun data to be available ([ba1789f](https://github.com/meemproject/meem-app/commit/ba1789f))
+
+
+### Features
+
+* better symphony widget ([0188348](https://github.com/meemproject/meem-app/commit/0188348))
+
 # [1.21.0](https://github.com/meemproject/meem-app/compare/v1.20.0...v1.21.0) (2023-02-10)
 
 
