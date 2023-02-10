@@ -995,6 +995,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				>
 					<Link href={`/${agreement?.slug}`}>
 						<DeleteCircle
+							className={meemTheme.clickable}
 							width={24}
 							height={24}
 							color={colorWhite}
