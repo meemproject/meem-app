@@ -200,18 +200,11 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 					query: { isOnboarding: true }
 				})
 			} catch (e) {
-				if ((e as any).toString().includes('EXTENSION_ALREADY_ADDED')) {
-					router.push({
-						pathname: `/${agreementSlug}/e/${extensionSlug}/settings`,
-						query: { isOnboarding: true }
-					})
-				} else {
-					log.debug(e)
-					showErrorNotification(
-						'Oops!',
-						`There was an error enabling ${extensionName} on this community. Please let us know!`
-					)
-				}
+				log.debug(e)
+				showErrorNotification(
+					'Oops!',
+					`There was an error enabling ${extensionName} on this community. Please let us know!`
+				)
 			}
 		} else {
 			log.debug('no matching extensions to enable...')
