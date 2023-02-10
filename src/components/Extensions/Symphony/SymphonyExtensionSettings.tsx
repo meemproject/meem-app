@@ -45,7 +45,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const agreementExtension = extensionFromSlug('symphony', agreement)
 	const router = useRouter()
 
-	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [activeStep, setActiveStep] = useState(0)
 	const [twitterUsername, setTwitterUsername] = useState('')
 	const [rules, setRules] = useState<API.IRule[]>([])
@@ -275,10 +274,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		}
 	}, [selectedConnection, agreement, jwt])
 
-	/*
-	TODO
-	Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
-	 */
 	const saveCustomChanges = async () => {
 		await sdk.agreementExtension.updateAgreementExtension({
 			agreementId: agreement?.id ?? '',
@@ -289,17 +284,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				visibility: MeemAPI.AgreementExtensionVisibility.TokenHolders
 			}
 		})
-	}
-
-	/*
-	Boilerplate area - please don't edit the below code!
-	===============================================================
-	 */
-
-	const saveChanges = async () => {
-		setIsSavingChanges(true)
-		await saveCustomChanges()
-		setIsSavingChanges(false)
 	}
 
 	const handleRuleSave = async (values: IOnSave) => {
@@ -930,17 +914,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 			{customExtensionPermissions()}
 			<Space h={48} />
-
-			<Button
-				disabled={isSavingChanges}
-				loading={isSavingChanges}
-				onClick={() => {
-					saveChanges()
-				}}
-				className={meemTheme.buttonBlack}
-			>
-				Save Changes
-			</Button>
 		</>
 	)
 
