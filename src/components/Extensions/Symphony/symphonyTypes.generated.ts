@@ -170,6 +170,71 @@ export namespace API {
 	}
 
 	export namespace v1 {
+		/** Redirect the user to this endpoint to authenticate w/ slack */
+		export namespace AuthenticateWithSlack {
+			export interface IPathParams {}
+
+			export const path = () => '/api/1.0/slack/auth'
+
+			export const method = HttpMethod.Get
+
+			export interface IQueryParams {
+				/** The agreement id to associate the twitter account with */
+				agreementId: string
+
+				/** The jwt to authenticate the user with */
+				jwt: string
+
+				/** The url to return the user to after authentication */
+				returnUrl: string
+			}
+
+			export interface IRequestBody {}
+
+			export interface IResponseBody extends IApiResponseBody {}
+
+			export interface IDefinition {
+				pathParams: IPathParams
+				queryParams: IQueryParams
+				requestBody: IRequestBody
+				responseBody: IResponseBody
+			}
+
+			export type Response = IResponseBody | IError
+		}
+
+		export namespace AuthenticateWithTwitter {
+			export interface IPathParams {}
+
+			export const path = () => '/api/1.0/twitter/auth'
+
+			export const method = HttpMethod.Get
+
+			export interface IQueryParams {
+				/** The agreement id to associate the twitter account with */
+				agreementId: string
+
+				/** The jwt to authenticate the user with */
+				jwt: string
+
+				/** The url to return the user to after authentication */
+				returnUrl: string
+			}
+
+			export interface IRequestBody {}
+
+			export interface IResponseBody extends IApiResponseBody {}
+
+			export interface IDefinition {
+				pathParams: IPathParams
+				queryParams: IQueryParams
+				requestBody: IRequestBody
+				responseBody: IResponseBody
+			}
+
+			export type Response = IResponseBody | IError
+		}
+
 		export namespace DisconnectDiscord {
 			export interface IPathParams {}
 
@@ -343,41 +408,6 @@ export namespace API {
 			export type Response = IResponseBody | IError
 		}
 
-		export namespace GetTwitterAuthUrl {
-			export interface IPathParams {}
-
-			export const path = () => '/api/1.0/twitter/auth'
-
-			export const method = HttpMethod.Get
-
-			export interface IQueryParams {
-				/** The agreement id to associate the twitter account with */
-				agreementId: string
-
-				/** The jwt to authenticate the user with */
-				jwt: string
-
-				/** The url to return the user to after authentication */
-				returnUrl: string
-			}
-
-			export interface IRequestBody {}
-
-			export interface IResponseBody extends IApiResponseBody {
-				/** The url to authenticate with twitter */
-				authUrl: string
-			}
-
-			export interface IDefinition {
-				pathParams: IPathParams
-				queryParams: IQueryParams
-				requestBody: IRequestBody
-				responseBody: IResponseBody
-			}
-
-			export type Response = IResponseBody | IError
-		}
-
 		export namespace InviteDiscordBot {
 			export interface IPathParams {}
 
@@ -468,10 +498,10 @@ export namespace API {
 			export type Response = IResponseBody | IError
 		}
 
-		export namespace TwitterAuthCallback {
+		export namespace SlackAuthCallback {
 			export interface IPathParams {}
 
-			export const path = () => '/api/1.0/twitter/callback'
+			export const path = () => '/api/1.0/slack/callback'
 
 			export const method = HttpMethod.Get
 

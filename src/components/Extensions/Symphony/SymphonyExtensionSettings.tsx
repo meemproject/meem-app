@@ -32,7 +32,8 @@ import { API } from './symphonyTypes.generated'
 
 export enum SelectedConnection {
 	Discord = 'discord',
-	Twitter = 'twitter'
+	Twitter = 'twitter',
+	Slack = 'slack'
 }
 
 export const SymphonyExtensionSettings: React.FC = () => {
@@ -53,6 +54,13 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		| {
 				icon: string | null
 				name: string
+		  }
+		| undefined
+	>()
+	const [slackInfo, setSlackInfo] = useState<
+		| {
+				data: string
+				teamName: string
 		  }
 		| undefined
 	>()
@@ -155,12 +163,27 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			return
 		}
 
-		log.debug(window.location.href)
+		router.push({
+			pathname: `${
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+			}${API.v1.AuthenticateWithTwitter.path()}`,
+			query: {
+				agreementId: agreement.id,
+				jwt,
+				returnUrl: window.location.href
+			}
+		})
+	}, [router, agreement, jwt])
+
+	const handleAuthSlack = useCallback(async () => {
+		if (!agreement?.id || !jwt) {
+			return
+		}
 
 		router.push({
 			pathname: `${
 				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.GetTwitterAuthUrl.path()}`,
+			}${API.v1.AuthenticateWithSlack.path()}`,
 			query: {
 				agreementId: agreement.id,
 				jwt,
@@ -178,8 +201,23 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			case SelectedConnection.Twitter:
 				handleAuthTwitter()
 				break
+
+			case SelectedConnection.Slack:
+				handleAuthSlack()
+				break
+
+			default:
+				log.warn(
+					`No matching selectedConnection for ${selectedConnection}`
+				)
+				break
 		}
-	}, [selectedConnection, handleAuthTwitter, handleInviteBot])
+	}, [
+		selectedConnection,
+		handleAuthTwitter,
+		handleInviteBot,
+		handleAuthSlack
+	])
 
 	const handleDisconnect = useCallback(async () => {
 		if (!jwt || !agreement?.id) {
@@ -339,6 +377,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					setTwitterUsername('')
 				}
 			})
+
 		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/services/discord`)
 			// @ts-ignore
@@ -351,6 +390,21 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					setDiscordInfo(undefined)
 				}
 			})
+
+		if (process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true') {
+			gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
+				.get(`${agreement.id}/services/slack`)
+				// @ts-ignore
+				.open(data => {
+					log.debug('slack data', data)
+					if (data) {
+						setSlackInfo(data)
+						log.debug(`slack data found`)
+					} else {
+						setSlackInfo(undefined)
+					}
+				})
+		}
 
 		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
 			.get(`${agreement.id}/rules`)
@@ -524,6 +578,52 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						</div>
 					</div>
 				</div>
+				{process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
+					<>
+						<Space w={64} />
+						<div>
+							<Text className={meemTheme.tExtraSmallLabel}>
+								SLACK SERVER
+							</Text>
+							<Space h={16} />
+							<div className={meemTheme.centeredRow}>
+								{slackInfo?.icon && (
+									<>
+										<Image
+											width={24}
+											src={slackInfo?.icon}
+										/>
+										<Space w={16} />
+									</>
+								)}
+
+								<div>
+									<Text
+										className={meemTheme.tSmall}
+									>{`Connected as ${slackInfo?.teamName}`}</Text>
+									<Space h={4} />
+									<Text
+										onClick={() => {
+											setSelectedConnection(
+												SelectedConnection.Slack
+											)
+											setIsModalOpen(true)
+										}}
+										className={meemTheme.tSmallBold}
+										style={{
+											cursor: 'pointer',
+											color: isDarkTheme
+												? colorBlue
+												: colorDarkBlue
+										}}
+									>
+										Manage Connection
+									</Text>
+								</div>
+							</div>
+						</div>
+					</>
+				)}
 			</div>
 			<Modal
 				opened={isModalOpen}
