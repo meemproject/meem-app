@@ -1,3 +1,19 @@
+# [1.21.0](https://github.com/meemproject/meem-app/compare/v1.20.0...v1.21.0) (2023-02-10)
+
+
+### Bug Fixes
+
+* onboarding steps ([d90cd8b](https://github.com/meemproject/meem-app/commit/d90cd8b))
+* re-add tabler icon as they're a mantine dependency ([bb72d35](https://github.com/meemproject/meem-app/commit/bb72d35))
+* refactor icons in the app to only use iconnoir ([86248a3](https://github.com/meemproject/meem-app/commit/86248a3))
+* update copy in meem faq and symphony onboarding ([3f4d67c](https://github.com/meemproject/meem-app/commit/3f4d67c))
+
+
+### Features
+
+* modal for manage connection ([8cb5238](https://github.com/meemproject/meem-app/commit/8cb5238))
+* slack connection w/ feature flag ([4fca8d9](https://github.com/meemproject/meem-app/commit/4fca8d9))
+
 ## [1.20.1](https://github.com/meemproject/meem-app/compare/v1.20.0...v1.20.1) (2023-02-09)
 
 
