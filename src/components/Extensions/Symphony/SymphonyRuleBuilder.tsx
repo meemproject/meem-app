@@ -15,6 +15,7 @@ import { WarningCircle } from 'iconoir-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
+import { SubRulesSubscription } from '../../../../generated/graphql'
 import { useMeemTheme, colorRed } from '../../Styles/MeemTheme'
 import { API } from './symphonyTypes.generated'
 
@@ -25,7 +26,7 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 export interface IProps {
 	channels?: API.IDiscordChannel[]
 	roles?: API.IDiscordRole[]
-	selectedRule?: API.IRule
+	selectedRule?: SubRulesSubscription['Rules'][0]
 	onSave: (values: IOnSave) => void
 }
 
@@ -64,24 +65,17 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 	const form = useForm({
 		initialValues: {
 			publishType: API.PublishType.PublishImmediately,
-			proposerRoles: selectedRule?.proposerRoles
-				? Object.values(selectedRule.proposerRoles)
-				: [],
-			approverRoles: selectedRule?.approverRoles
-				? Object.values(selectedRule.approverRoles)
-				: [],
-			vetoerRoles: selectedRule?.vetoerRoles
-				? Object.values(selectedRule.vetoerRoles)
-				: [],
-			proposalChannels: selectedRule?.proposalChannels
-				? Object.values(selectedRule.proposalChannels)
-				: [],
-			proposalShareChannel: selectedRule?.proposalShareChannel ?? '',
-			votes: selectedRule?.votes ?? 1,
-			vetoVotes: selectedRule?.vetoVotes ?? 1,
-			proposeVotes: selectedRule?.proposeVotes ?? 1,
-			shouldReply: selectedRule?.shouldReply ?? true,
-			canVeto: selectedRule?.canVeto ?? false
+			proposerRoles: selectedRule?.definition.proposerRoles ?? [],
+			approverRoles: selectedRule?.definition.approverRoles ?? [],
+			vetoerRoles: selectedRule?.definition.vetoerRoles ?? [],
+			proposalChannels: selectedRule?.definition.proposalChannels ?? [],
+			proposalShareChannel:
+				selectedRule?.definition.proposalShareChannel ?? '',
+			votes: selectedRule?.definition.votes ?? 1,
+			vetoVotes: selectedRule?.definition.vetoVotes ?? 1,
+			proposeVotes: selectedRule?.definition.proposeVotes ?? 1,
+			shouldReply: selectedRule?.definition.shouldReply ?? true,
+			canVeto: selectedRule?.definition.canVeto ?? false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -107,19 +101,13 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 	})
 
 	const [approverEmojis, setApproverEmojis] = useState<string[]>(
-		selectedRule?.approverEmojis
-			? Object.values(selectedRule?.approverEmojis)
-			: []
+		selectedRule?.definition.approverEmojis ?? []
 	)
 	const [proposerEmojis, setProposerEmojis] = useState<string[]>(
-		selectedRule?.proposerEmojis
-			? Object.values(selectedRule?.proposerEmojis)
-			: []
+		selectedRule?.definition.proposerEmojis ?? []
 	)
 	const [vetoerEmojis, setVetoerEmojis] = useState<string[]>(
-		selectedRule?.vetoerEmojis
-			? Object.values(selectedRule?.vetoerEmojis)
-			: []
+		selectedRule?.definition.vetoerEmojis ?? []
 	)
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
 		EmojiSelectType.Approver
@@ -164,16 +152,17 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 	useEffect(() => {
 		form.setValues({
 			publishType:
-				selectedRule?.publishType ?? API.PublishType.PublishImmediately,
-			proposerRoles: selectedRule?.proposerRoles,
-			approverRoles: selectedRule?.approverRoles,
-			proposalChannels: selectedRule?.proposalChannels,
-			proposalShareChannel: selectedRule?.proposalShareChannel,
-			votes: selectedRule?.votes,
-			vetoVotes: selectedRule?.vetoVotes,
-			proposeVotes: selectedRule?.proposeVotes,
-			shouldReply: selectedRule?.shouldReply,
-			canVeto: selectedRule?.canVeto
+				selectedRule?.definition.publishType ??
+				API.PublishType.PublishImmediately,
+			proposerRoles: selectedRule?.definition.proposerRoles,
+			approverRoles: selectedRule?.definition.approverRoles,
+			proposalChannels: selectedRule?.definition.proposalChannels,
+			proposalShareChannel: selectedRule?.definition.proposalShareChannel,
+			votes: selectedRule?.definition.votes,
+			vetoVotes: selectedRule?.definition.vetoVotes,
+			proposeVotes: selectedRule?.definition.proposeVotes,
+			shouldReply: selectedRule?.definition.shouldReply,
+			canVeto: selectedRule?.definition.canVeto
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedRule])
@@ -185,7 +174,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 		form.values.proposalChannels &&
 		form.values.proposalChannels.length > 0
 	) {
-		form.values.proposalChannels.forEach(c => {
+		form.values.proposalChannels.forEach((c: string) => {
 			if (c === 'all') {
 				isProposalChannelGated = true
 			} else {

@@ -1,3 +1,5 @@
+import { ApolloClient, useSubscription } from '@apollo/client'
+import type { NormalizedCacheObject } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Container,
@@ -13,13 +15,24 @@ import {
 	Code
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
-import { makeFetcher, makeRequest, MeemAPI } from '@meemproject/sdk'
+import {
+	createApolloClient,
+	makeFetcher,
+	makeRequest,
+	MeemAPI
+} from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
 import { DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
+import {
+	SubDiscordSubscription,
+	SubRulesSubscription,
+	SubSlackSubscription,
+	SubTwitterSubscription
+} from '../../../../generated/graphql'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import {
 	showErrorNotification,
@@ -33,6 +46,7 @@ import {
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { SUB_DISCORD, SUB_RULES, SUB_SLACK, SUB_TWITTER } from './symphony.gql'
 import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
 import { API } from './symphonyTypes.generated'
 
@@ -52,26 +66,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const router = useRouter()
 
 	const [activeStep, setActiveStep] = useState(0)
-	const [twitterUsername, setTwitterUsername] = useState('')
-	const [rules, setRules] = useState<API.IRule[]>([])
-	const [selectedRule, setSelectedRule] = useState<API.IRule>()
-	const [discordInfo, setDiscordInfo] = useState<
-		| {
-				icon: string | null
-				name: string
-		  }
-		| undefined
-	>()
-	const [slackInfo, setSlackInfo] = useState<
-		| {
-				data: string
-				teamName: string
-				icon?: string
-		  }
-		| undefined
-	>()
+	const [selectedRule, setSelectedRule] =
+		useState<SubRulesSubscription['Rules'][0]>()
 	const [botCode, setBotCode] = useState<string | undefined>()
-	const [hasFetchedData, setHasFetchedData] = useState(false)
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [selectedConnection, setSelectedConnection] =
 		useState<SelectedConnection>()
@@ -87,7 +84,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const [hasDismissedSetupComplete, setHasDismissedSetupComplete] =
 		useState(false)
 
-	const isConnectionEstablished = twitterUsername && discordInfo
+	const [symphonyClient, setSymphonyClient] =
+		useState<ApolloClient<NormalizedCacheObject>>()
 
 	const handleInviteBot = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
@@ -106,6 +104,64 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 		window.open(inviteUrl, '_blank')
 	}, [agreement, jwt])
+
+	useEffect(() => {
+		const c = createApolloClient({
+			httpUrl: `https://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`,
+			wsUri: `wss://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`
+		})
+
+		setSymphonyClient(c)
+	}, [])
+
+	const { data: twitterData } = useSubscription<SubTwitterSubscription>(
+		SUB_TWITTER,
+		{
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		}
+	)
+
+	const { data: discordData } = useSubscription<SubDiscordSubscription>(
+		SUB_DISCORD,
+		{
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		}
+	)
+
+	const { data: slackData } = useSubscription<SubSlackSubscription>(
+		SUB_SLACK,
+		{
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip:
+				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
+				!symphonyClient ||
+				!agreement?.id,
+			client: symphonyClient
+		}
+	)
+
+	const { data: rulesData } = useSubscription<SubRulesSubscription>(
+		SUB_RULES,
+		{
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		}
+	)
+
+	// console.log({ twitterData, discordData, slackData, rulesData })
 
 	const { data: channelsData } =
 		useSWR<API.v1.GetDiscordChannels.IResponseBody>(
@@ -153,16 +209,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			shouldRetryOnError: false
 		}
 	)
-
-	// const { data: roles, mutateRoles } =
-	// 	useSWR<MeemAPI.v1.GetDiscordRoles.IResponseBody>(
-	// 		tokenId
-	// 			? MeemAPI.v1.GetMeem.path({
-	// 					tokenId
-	// 			  })
-	// 			: null,
-	// 		makeFetcher({ method: MeemAPI.v1.GetMeem.method })
-	// 	)
 
 	const handleAuthTwitter = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
@@ -244,6 +290,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							}
 						}
 					)
+					setActiveStep(1)
 					showSuccessNotification(
 						'Discord Disconnected',
 						'Discord has been disconnected'
@@ -264,6 +311,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							}
 						}
 					)
+					setActiveStep(0)
 					showSuccessNotification(
 						'Twitter Disconnected',
 						'Twitter has been disconnected'
@@ -311,7 +359,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							...values,
 							action: API.PublishAction.Tweet,
 							isEnabled: true,
-							ruleId: selectedRule?.ruleId
+							ruleId: selectedRule?.id
 						}
 					]
 				}
@@ -348,129 +396,27 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		)
 	}
 
-	useEffect(() => {
-		const gun = sdk.storage.getGunInstance()
-		if (!agreement?.id || hasFetchedData || !gun) {
-			return
-		}
-		log.debug(`getting gun data...`, {
-			path: `${agreement.id}/services/twitter`
-		})
-		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
-			.get(`${agreement.id}/services/twitter`)
-			// @ts-ignore
-			.open(data => {
-				log.debug('twitter data', data)
-				if (data?.username) {
-					setTwitterUsername(data.username)
-					log.debug(`twitter username = ${data.username}`)
-				} else {
-					setTwitterUsername('')
-				}
-			})
-
-		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
-			.get(`${agreement.id}/services/discord`)
-			// @ts-ignore
-			.open(data => {
-				log.debug('discord data', data)
-				if (data) {
-					setDiscordInfo(data)
-					log.debug(`discord data found`)
-				} else {
-					setDiscordInfo(undefined)
-				}
-			})
-
-		if (process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true') {
-			gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
-				.get(`${agreement.id}/services/slack`)
-				// @ts-ignore
-				.open(data => {
-					log.debug('slack data', data)
-					if (data) {
-						setSlackInfo(data)
-						log.debug(`slack data found`)
-					} else {
-						setSlackInfo(undefined)
-					}
-				})
-		}
-
-		gun.get(`~${process.env.NEXT_PUBLIC_SYMPHONY_PUBLIC_KEY}`)
-			.get(`${agreement.id}/rules`)
-			// @ts-ignore
-			.open(data => {
-				// log.debug('rules data', data)
-				if (data) {
-					const filteredRules: API.IRule[] = []
-					if (typeof data === 'object') {
-						Object.keys(data).forEach(id => {
-							const rule: API.ISavedRule = data[id]
-
-							if (
-								rule &&
-								rule.action === API.PublishAction.Tweet &&
-								rule.isEnabled &&
-								rule.ruleId &&
-								rule.votes
-							) {
-								try {
-									filteredRules.push({
-										...rule,
-										proposerRoles:
-											rule.proposerRoles &&
-											JSON.parse(rule.proposerRoles),
-										proposerEmojis:
-											rule.proposerEmojis &&
-											JSON.parse(rule.proposerEmojis),
-										approverRoles:
-											rule.approverRoles &&
-											JSON.parse(rule.approverRoles),
-										vetoerEmojis:
-											rule.approverEmojis &&
-											JSON.parse(rule.vetoerEmojis),
-										vetoerRoles:
-											rule.approverRoles &&
-											JSON.parse(rule.approverRoles),
-										approverEmojis:
-											rule.approverEmojis &&
-											JSON.parse(rule.approverEmojis),
-										proposalChannels:
-											rule.proposalChannels &&
-											JSON.parse(rule.proposalChannels)
-									})
-								} catch (e) {
-									log.warn(e)
-								}
-							}
-						})
-					}
-
-					setRules(filteredRules)
-				}
-			})
-
-		setHasFetchedData(true)
-	}, [
-		agreement,
-		sdk,
-		hasFetchedData,
-		discordInfo,
-		twitterUsername,
-		activeStep
-	])
+	const twitterUsername =
+		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
+	const rules = rulesData?.Rules
+	const discordInfo = discordData?.Discords[0]
+	const slackInfo = slackData?.Slacks[0]
+	const hasFetchedData =
+		!!twitterData && !!rulesData && !!discordData && !!slackData
 
 	useEffect(() => {
-		if (twitterUsername.length > 0 && activeStep === 0) {
+		if (twitterUsername && twitterUsername.length > 0 && activeStep === 0) {
 			setActiveStep(1)
+		} else if (!twitterUsername && activeStep !== 0) {
+			setActiveStep(0)
 		}
+
 		if (
 			isInOnboardingMode &&
+			rules &&
 			rules.length === 0 &&
 			twitterUsername &&
-			discordInfo &&
-			hasFetchedData &&
+			discordData?.Discords[0].name &&
 			!hasDismissedSetupComplete
 		) {
 			setShouldShowSetupComplete(true)
@@ -478,12 +424,17 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	}, [
 		twitterUsername,
 		activeStep,
-		discordInfo,
+		discordData,
 		isInOnboardingMode,
-		rules.length,
-		hasFetchedData,
+		rules,
 		hasDismissedSetupComplete
 	])
+
+	const isConnectionEstablished =
+		!!twitterData?.Twitters[0] &&
+		!!twitterData?.Twitters[0].username &&
+		!!discordData?.Discords[0] &&
+		typeof discordData?.Discords[0].name === 'string'
 
 	const customExtensionSettings = () => (
 		<>
@@ -591,7 +542,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 								<div>
 									<Text
 										className={meemTheme.tSmall}
-									>{`Connected as ${slackInfo?.teamName}`}</Text>
+									>{`Connected as ${slackInfo?.name}`}</Text>
 									<Space h={4} />
 									<Text
 										onClick={() => {
@@ -640,15 +591,18 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const customExtensionPermissions = () => (
 		<>
 			{rolesData &&
+				rules &&
 				rules.map(rule => {
-					const roleNames = rule.approverRoles.map(id => {
-						const role = rolesData.roles.find(r => r.id === id)
+					const roleNames = rule.definition.approverRoles.map(
+						(id: string) => {
+							const role = rolesData.roles.find(r => r.id === id)
 
-						return role?.name ?? ''
-					})
+							return role?.name ?? ''
+						}
+					)
 					return (
 						<div
-							key={`rule-${rule.ruleId}`}
+							key={`rule-${rule.definition.ruleId}`}
 							className={meemTheme.gridItem}
 							style={{ marginBottom: 16 }}
 						>
@@ -659,7 +613,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 									>{`Publish to Twitter when users with any of these roles: ${roleNames.join(
 										', '
 									)} react with ${
-										rule.votes
+										rule.definition.votes
 									} of these emoji:`}</Text>
 									<Space h="xs" />
 									<div
@@ -668,16 +622,20 @@ export const SymphonyExtensionSettings: React.FC = () => {
 											flexDirection: 'row'
 										}}
 									>
-										{rule.approverEmojis.map(emojiCode => (
-											<div
-												key={`emoji-${rule.ruleId}-${emojiCode}`}
-												style={{
-													marginRight: '8px'
-												}}
-											>
-												<Emoji unified={emojiCode} />
-											</div>
-										))}
+										{rule.definition.approverEmojis.map(
+											(emojiCode: string) => (
+												<div
+													key={`emoji-${rule.id}-${emojiCode}`}
+													style={{
+														marginRight: '8px'
+													}}
+												>
+													<Emoji
+														unified={emojiCode}
+													/>
+												</div>
+											)
+										)}
 									</div>
 									<Space h="xs" />
 								</div>
@@ -696,7 +654,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 									<Button
 										className={meemTheme.buttonRedBordered}
 										onClick={() => {
-											removeRule(rule.ruleId)
+											removeRule(rule.id)
 										}}
 									>
 										Remove
@@ -1083,16 +1041,14 @@ export const SymphonyExtensionSettings: React.FC = () => {
 												<>{setupCompleteState}</>
 											)}
 
-										{twitterUsername.length > 0 &&
-											discordInfo &&
+										{isConnectionEstablished &&
 											(!isInOnboardingMode ||
 												(isInOnboardingMode &&
 													hasDismissedSetupComplete)) && (
 												<>{mainState}</>
 											)}
 
-										{(twitterUsername.length === 0 ||
-											!discordInfo) && (
+										{!isConnectionEstablished && (
 											<>{onboardingState}</>
 										)}
 									</Container>
