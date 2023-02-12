@@ -1013,10 +1013,12 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
 							{!hasFetchedData && (
-								<>
-									<Space h={40} />
-									<Loader variant={'oval'} color={'cyan'} />
-								</>
+								<Container>
+									<Space h={120} />
+									<Center>
+										<Loader color="cyan" variant="oval" />
+									</Center>
+								</Container>
 							)}
 							{hasFetchedData && (
 								<>
