@@ -1,3 +1,10 @@
+## [1.22.3](https://github.com/meemproject/meem-app/compare/v1.22.2...v1.22.3) (2023-02-12)
+
+
+### Bug Fixes
+
+* loader position ([c4032c0](https://github.com/meemproject/meem-app/commit/c4032c0))
+
 ## [1.22.2](https://github.com/meemproject/meem-app/compare/v1.22.1...v1.22.2) (2023-02-12)
 
 ## [1.22.1](https://github.com/meemproject/meem-app/compare/v1.22.0...v1.22.1) (2023-02-10)
