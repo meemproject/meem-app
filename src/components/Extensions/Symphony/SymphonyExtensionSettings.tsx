@@ -402,7 +402,11 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const discordInfo = discordData?.Discords[0]
 	const slackInfo = slackData?.Slacks[0]
 	const hasFetchedData =
-		!!twitterData && !!rulesData && !!discordData && !!slackData
+		!!twitterData &&
+		!!rulesData &&
+		!!discordData &&
+		(process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
+			!!slackData)
 
 	useEffect(() => {
 		if (twitterUsername && twitterUsername.length > 0 && activeStep === 0) {
