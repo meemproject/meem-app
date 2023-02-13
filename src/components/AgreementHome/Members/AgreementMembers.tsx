@@ -142,8 +142,8 @@ export const AgreementMembersComponent: React.FC = () => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							There was an error loading this community. Please
-							let us know!
+							There was an error loading this community. Contact
+							us using the top-right link on this page.
 						</Text>
 					</Center>
 				</Container>

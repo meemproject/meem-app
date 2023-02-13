@@ -122,7 +122,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					if (!agreement.id) {
 						showErrorNotification(
 							'Error saving community settings',
-							`Please get in touch!`
+							`Contact us using the top-right link on this page.`
 						)
 						completeRequest()
 						return
@@ -191,7 +191,7 @@ export const AgreementAdminChangesModal: React.FC<IProps> = ({
 					completeRequest()
 					showErrorNotification(
 						'Error saving community settings',
-						`Please get in touch!`
+						`Contact us using the top-right link on this page.`
 					)
 				}
 			}

@@ -93,7 +93,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				log.debug(e)
 				showErrorNotification(
 					'Oops!',
-					`There was an error creating your community. Please let us know!`
+					`There was an error creating your community. Contact us using the top-right link on this page.`
 				)
 				if (quietMode) {
 					closeModal()

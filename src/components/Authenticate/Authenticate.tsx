@@ -42,7 +42,7 @@ const MAuthenticate: React.FC = () => {
 			setIsLoading(false)
 			showErrorNotification(
 				'Oops!',
-				'Unable to sign into Meem with your wallet. Please get in touch!'
+				'Unable to sign into Meem with your wallet. Contact us using the top-right link on this page.'
 			)
 			log.crit(e)
 		}
@@ -62,7 +62,7 @@ const MAuthenticate: React.FC = () => {
 						<Text>
 							{wallet.isConnected
 								? `Please sign the message below.`
-								: `Please reconnect your wallet below first.`}
+								: `Connect with your wallet or email address.`}
 						</Text>
 					</div>
 

@@ -44,7 +44,7 @@ export const DeleteAgreementModal: React.FC<IProps> = ({
 				log.debug(e)
 				showErrorNotification(
 					'Error',
-					`Unable to delete this community. Please let us know!`
+					`Unable to delete this community. Contact us using the top-right link on this page.`
 				)
 
 				setIsDeletingAgreement(false)

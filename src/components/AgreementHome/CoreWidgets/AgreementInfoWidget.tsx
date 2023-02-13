@@ -191,7 +191,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					setIsJoiningAgreement(false)
 					showErrorNotification(
 						'Error joining this community.',
-						`Please get in touch!`
+						`Contact us using the top-right link on this page.`
 					)
 				}
 			}
@@ -206,7 +206,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				if (error.code === 'TX_LIMIT_EXCEEDED') {
 					showErrorNotification(
 						'Transaction limit exceeded',
-						`Come back tomorrow or get in touch!`
+						`Come back tomorrow or contact us using the top-right link on this page.`
 					)
 				} else {
 					showErrorNotification(

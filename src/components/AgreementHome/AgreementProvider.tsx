@@ -195,7 +195,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			setIsTransactionInProgress(false)
 			showErrorNotification(
 				'Transactions completed with errors.',
-				`Not all of your changes have saved. Please get in touch!`
+				`Contact us using the top-right link on this page.`
 			)
 		}
 
@@ -206,7 +206,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			setIsTransactionInProgress(false)
 			showErrorNotification(
 				'Error saving community settings',
-				`Please get in touch!`
+				`Contact us using the top-right link on this page.`
 			)
 		}
 
