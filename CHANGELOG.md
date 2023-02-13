@@ -1,3 +1,11 @@
+## [1.22.4](https://github.com/meemproject/meem-app/compare/v1.22.3...v1.22.4) (2023-02-13)
+
+
+### Bug Fixes
+
+* sign in design, typo ([a88618c](https://github.com/meemproject/meem-app/commit/a88618c))
+* Update error copy to specify how to contact us ([7c2c3c1](https://github.com/meemproject/meem-app/commit/7c2c3c1))
+
 ## [1.22.3](https://github.com/meemproject/meem-app/compare/v1.22.2...v1.22.3) (2023-02-12)
 
 
