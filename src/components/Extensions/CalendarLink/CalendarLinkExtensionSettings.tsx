@@ -84,7 +84,6 @@ export const CalendarLinkExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'calendar'} />

@@ -84,7 +84,6 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'discord'} />

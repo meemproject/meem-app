@@ -88,7 +88,6 @@ export const GnosisLinkExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'gnosis'} />

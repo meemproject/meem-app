@@ -88,7 +88,6 @@ export const MirrorLinkExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'mirror'} />

@@ -88,7 +88,6 @@ export const WhatsAppLinkExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'whatsapp'} />

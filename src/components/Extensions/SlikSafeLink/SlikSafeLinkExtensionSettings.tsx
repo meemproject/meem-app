@@ -88,7 +88,6 @@ export const SlikSafeLinkExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'sliksafe'} />
