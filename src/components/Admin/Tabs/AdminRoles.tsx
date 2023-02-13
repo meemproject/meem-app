@@ -60,6 +60,7 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 						>
 							<Link
 								href={`/${agreement.slug}/roles?role=${role.id}`}
+								legacyBehavior
 							>
 								<div className={meemTheme.centeredRow}>
 									{role.isAdminRole && (
@@ -127,6 +128,7 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 									<Menu.Dropdown>
 										<Link
 											href={`/${agreement.slug}/roles?role=${role.id}`}
+											legacyBehavior
 										>
 											<Menu.Item>
 												<Text
@@ -167,7 +169,10 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 						</div>
 					))}
 					<Space h={32} />
-					<Link href={`/${agreement.slug}/roles?createRole=true`}>
+					<Link
+						href={`/${agreement.slug}/roles?createRole=true`}
+						legacyBehavior
+					>
 						<Button className={meemTheme.buttonBlack}>
 							+ Create Role
 						</Button>

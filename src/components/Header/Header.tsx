@@ -107,7 +107,7 @@ export function HeaderMenu() {
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
 					<Space w={8} />
-					<Link href={`/`}>
+					<Link href={`/`} legacyBehavior>
 						<Image
 							className={meemTheme.clickable}
 							src={
@@ -223,7 +223,10 @@ export function HeaderMenu() {
 											</Menu.Item>
 										)}
 
-										<Link href={`/profile?tab=identity`}>
+										<Link
+											href={`/profile?tab=identity`}
+											legacyBehavior
+										>
 											<Menu.Item
 												className={
 													meemTheme.tExtraSmallBold
@@ -234,6 +237,7 @@ export function HeaderMenu() {
 										</Link>
 										<Link
 											href={`/profile?tab=myCommunities`}
+											legacyBehavior
 										>
 											<Menu.Item
 												className={

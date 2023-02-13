@@ -67,6 +67,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 									<Center>
 										<Link
 											href={`${agreement.slug}/admin?tab=extensions`}
+											legacyBehavior
 										>
 											<Button
 												className={meemTheme.buttonAsh}
@@ -109,6 +110,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 										<Center>
 											<Link
 												href={`${agreement.slug}/admin?tab=extensions`}
+												legacyBehavior
 											>
 												<Button
 													className={
@@ -153,6 +155,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 										<Center>
 											<Link
 												href={`${agreement.slug}/admin?tab=extensions`}
+												legacyBehavior
 											>
 												<Button
 													className={
@@ -182,6 +185,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 										<Center>
 											<Link
 												href={`${agreement.slug}/admin?tab=extensions`}
+												legacyBehavior
 											>
 												<Button
 													className={

@@ -129,7 +129,10 @@ export const AgreementAdminComponent: React.FC = () => {
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
 							{agreement.image && (
-								<Link href={`/${agreement.slug}`}>
+								<Link
+									href={`/${agreement.slug}`}
+									legacyBehavior
+								>
 									<div
 										className={meemTheme.pageHeaderImage}
 										style={{ cursor: 'pointer' }}
@@ -175,7 +178,7 @@ export const AgreementAdminComponent: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<Link href={`/${agreement.slug}`}>
+						<Link href={`/${agreement.slug}`} legacyBehavior>
 							<DeleteCircle
 								className={meemTheme.pageHeaderExitButton}
 								width={24}

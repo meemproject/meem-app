@@ -175,7 +175,10 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 						</Center>
 					</div>
 					<Space w={16} />
-					<Link href={`/${agreement?.slug}/e/discussions/${post.id}`}>
+					<Link
+						href={`/${agreement?.slug}/e/discussions/${post.id}`}
+						legacyBehavior
+					>
 						<div style={{ width: '100%', cursor: 'pointer' }}>
 							<div className={meemTheme.row}>
 								{post.attachment && (

@@ -100,6 +100,7 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 							<Center>
 								<Link
 									href={`/${agreement.slug}/admin?tab=extensions`}
+									legacyBehavior
 								>
 									<Button className={meemTheme.buttonGrey}>
 										Enable this extension

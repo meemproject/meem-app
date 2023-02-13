@@ -41,6 +41,7 @@ export const GuildWidget: React.FC<IProps> = ({ agreement }) => {
 							<Space w={8} />
 							<Link
 								href={`/${agreement.slug}/e/example/settings`}
+								legacyBehavior
 							>
 								<Settings className={meemTheme.clickable} />
 							</Link>

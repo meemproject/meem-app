@@ -131,7 +131,10 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 					</div>
 
 					{agreement.isLaunched && (
-						<Link href={`/${agreement.slug}/members`}>
+						<Link
+							href={`/${agreement.slug}/members`}
+							legacyBehavior
+						>
 							<Button className={meemTheme.buttonBlack}>
 								View All
 							</Button>
@@ -209,6 +212,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						<Center>
 							<Link
 								href={`/${agreement.slug}/admin?tab=airdrops`}
+								legacyBehavior
 							>
 								<Button className={meemTheme.buttonAsh}>
 									Invite members

@@ -131,7 +131,10 @@ export const RolesManager: React.FC = () => {
 									className={meemTheme.pageHeaderImage}
 									style={{ cursor: 'pointer' }}
 								>
-									<Link href={`/${agreement.slug}`}>
+									<Link
+										href={`/${agreement.slug}`}
+										legacyBehavior
+									>
 										<Image
 											width={80}
 											height={80}
@@ -182,7 +185,7 @@ export const RolesManager: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<Link href={`/${agreement?.slug}/`}>
+						<Link href={`/${agreement?.slug}/`} legacyBehavior>
 							<DeleteCircle
 								className={meemTheme.pageHeaderExitButton}
 								width={24}
@@ -239,6 +242,7 @@ export const RolesManager: React.FC = () => {
 									>
 										<Link
 											href={`/${agreement?.slug}/admin?tab=roles`}
+											legacyBehavior
 										>
 											<div>
 												<ArrowLeft
