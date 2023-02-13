@@ -63,7 +63,7 @@ export const RemoveMemberModal: React.FC<IProps> = ({
 			log.crit(e)
 			showErrorNotification(
 				'Error removing member',
-				`An error occurred while removing this member from the community. Please let us know!`
+				`An error occurred while removing this member from the community. Contact us using the top-right link on this page.`
 			)
 
 			closeModal()

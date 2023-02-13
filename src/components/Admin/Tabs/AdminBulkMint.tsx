@@ -117,7 +117,7 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 			log.debug(e)
 			showSuccessNotification(
 				'Airdrop send failed.',
-				`Please try again or get in touch!`
+				`Contact us using the top-right link on this page.`
 			)
 			setIsSavingChanges(false)
 			return

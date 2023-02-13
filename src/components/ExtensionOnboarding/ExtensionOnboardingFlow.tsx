@@ -181,7 +181,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 					log.debug('no matching extensions to enable...')
 					showErrorNotification(
 						'Oops!',
-						`There was an error enabling ${extensionName} on this community. Please let us know!`
+						`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
 					)
 					return
 				}
@@ -203,14 +203,14 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 				log.debug(e)
 				showErrorNotification(
 					'Oops!',
-					`There was an error enabling ${extensionName} on this community. Please let us know!`
+					`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
 				)
 			}
 		} else {
 			log.debug('no matching extensions to enable...')
 			showErrorNotification(
 				'Oops!',
-				`There was an error enabling ${extensionName} on this community. Please let us know!`
+				`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
 			)
 		}
 	}

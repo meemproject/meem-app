@@ -299,7 +299,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						log.debug(e)
 						showErrorNotification(
 							'Error',
-							`Unable to save role. Please let us know!`
+							`Unable to save role. Contact us using the top-right link on this page.`
 						)
 						setIsSavingChanges(false)
 						return
@@ -361,7 +361,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 						log.debug(e)
 						showErrorNotification(
 							'Error',
-							`Unable to save role. Please let us know!`
+							`Unable to save role. Contact us using the top-right link on this page.`
 						)
 						setIsSavingChanges(false)
 						closeModal()
@@ -401,7 +401,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				} else if (failed) {
 					showErrorNotification(
 						'Error',
-						`Unable to save role. Please let us know!`
+						`Unable to save role. Contact us using the top-right link on this page.`
 					)
 					setIsSavingChanges(false)
 					closeModal()
@@ -410,7 +410,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				log.debug(JSON.stringify(error))
 				showErrorNotification(
 					'Error',
-					`Unable to save role. Please let us know!`
+					`Unable to save role. Contact us using the top-right link on this page.`
 				)
 				setIsSavingChanges(false)
 				closeModal()

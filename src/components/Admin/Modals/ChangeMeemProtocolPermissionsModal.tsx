@@ -53,7 +53,7 @@ export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
 				if (!bundleData) {
 					showErrorNotification(
 						'Oops!',
-						'Bundle data not found. Please let us know about this!'
+						'Bundle data not found. Contact us using the top-right link on this page.'
 					)
 					closeModal()
 				}

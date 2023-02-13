@@ -312,7 +312,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 								log.crit(e)
 								showErrorNotification(
 									'Error upgrading agreement contract',
-									`Something went wrong during the upgrade.`
+									`Something went wrong during the upgrade. Contact us using the top-right link on this page.`
 								)
 								setIsUpgradingAgreement(false)
 							}
