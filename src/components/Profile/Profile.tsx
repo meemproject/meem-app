@@ -43,7 +43,7 @@ export const ProfileComponent: React.FC = () => {
 
 	const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Profile)
+	const [currentTab, setCurrentTab] = useState<Tab>()
 	const [isMobileNavBarVisible, setIsMobileNavBarVisible] = useState(false)
 	const [hasConnectedExtension, setHasConnectedExtension] = useState(false)
 

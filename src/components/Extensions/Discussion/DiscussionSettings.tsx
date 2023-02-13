@@ -28,7 +28,6 @@ export const DiscussionSettings: React.FC = () => {
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('discussions', agreement)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
 	const [shouldDisplayDashboardWidget, setShouldDisplayDashboardWidget] =
 		useState(false)
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
@@ -261,11 +260,6 @@ export const DiscussionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-	const disableExtension = async () => {
-		setIsDisablingExtension(true)
-		setIsDisablingExtension(false)
-	}
-
 	return (
 		<>
 			<ExtensionBlankSlate extensionSlug={'discussions'} />
@@ -326,7 +320,7 @@ export const DiscussionSettings: React.FC = () => {
 									<Divider />
 								</div>
 								<div>
-									<Space h={4} />
+									<Space h={16} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -349,16 +343,6 @@ export const DiscussionSettings: React.FC = () => {
 									<Space h={16} />
 									<Divider />
 								</div>
-								<Space h={16} />
-
-								<Button
-									disabled={isDisablingExtension}
-									loading={isDisablingExtension}
-									className={meemTheme.buttonAsh}
-									onClick={disableExtension}
-								>
-									Disable extension
-								</Button>
 
 								{customExtensionSettings()}
 								<Space h={32} />
