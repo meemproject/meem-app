@@ -28,7 +28,6 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 	const sdk = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
-	const [isDisablingExtension, setIsDisablingExtension] = useState(false)
 	const [shouldDisplayInSidebar, setShouldDisplayInSidebar] = useState(true)
 	const [shouldDisplayInFavoriteLinks, setShouldDisplayInFavoriteLinks] =
 		useState(true)
@@ -85,11 +84,6 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 		setIsSavingChanges(false)
 	}
 
-	const disableExtension = async () => {
-		setIsDisablingExtension(true)
-		setIsDisablingExtension(false)
-	}
-
 	return (
 		<div>
 			<ExtensionBlankSlate extensionSlug={'discord'} />
@@ -142,7 +136,7 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 									>
 										LINK DISPLAY SETTINGS
 									</Text>
-									<Space h={8} />
+									<Space h={16} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -164,7 +158,7 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 									<Divider />
 								</div>
 								<div>
-									<Space h={4} />
+									<Space h={16} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -190,7 +184,7 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 									<Divider />
 								</div>
 								<div>
-									<Space h={4} />
+									<Space h={16} />
 									<div
 										className={meemTheme.spacedRowCentered}
 									>
@@ -213,16 +207,6 @@ export const DiscordLinkExtensionSettings: React.FC = () => {
 									<Space h={16} />
 									<Divider />
 								</div>
-								<Space h={16} />
-
-								<Button
-									disabled={isDisablingExtension}
-									loading={isDisablingExtension}
-									className={meemTheme.buttonAsh}
-									onClick={disableExtension}
-								>
-									Disable extension
-								</Button>
 
 								<Space h={48} />
 								<Button
