@@ -278,7 +278,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 					<Divider />
 					<Space h={32} />
 					<Text className={meemTheme.tExtraSmallLabel}>
-						UPGRADE COMMMUNITY AGREEMENT CONTRACT
+						UPGRADE COMMUNITY AGREEMENT CONTRACT
 					</Text>
 					<Space h={16} />
 					<div className={meemTheme.row}>

@@ -190,7 +190,7 @@ export const AgreementHome: React.FC = () => {
 								style={{ fontWeight: 700 }}
 								value="community"
 							>
-								COMMMUNITY
+								COMMUNITY
 							</Tabs.Tab>
 						</Tabs.List>
 
