@@ -50,7 +50,7 @@ export const ProfileLinkDiscordModal: React.FC<IProps> = ({
 				log.debug(e)
 				showErrorNotification(
 					'Verification failed',
-					`Please try again or get in touch!`
+					`Please try again or contact us using the top-right link on this page.`
 				)
 				onModalClosed()
 				return

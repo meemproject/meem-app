@@ -67,7 +67,7 @@ export const AgreementHome: React.FC = () => {
 			setIsLaunching(false)
 			showErrorNotification(
 				'Oops!',
-				'Unable to launch this community. Please let us know!'
+				'Unable to launch this community. Contact us using the top-right link on this page.'
 			)
 		}
 	}
@@ -190,7 +190,7 @@ export const AgreementHome: React.FC = () => {
 								style={{ fontWeight: 700 }}
 								value="community"
 							>
-								COMMMUNITY
+								COMMUNITY
 							</Tabs.Tab>
 						</Tabs.List>
 
@@ -230,8 +230,8 @@ export const AgreementHome: React.FC = () => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							There was an error loading this community. Please
-							let us know!
+							There was an error loading this community. Contact
+							us using the top-right link on this page.
 						</Text>
 					</Center>
 				</Container>

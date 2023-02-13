@@ -278,7 +278,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 					<Divider />
 					<Space h={32} />
 					<Text className={meemTheme.tExtraSmallLabel}>
-						UPGRADE COMMMUNITY AGREEMENT CONTRACT
+						UPGRADE COMMUNITY AGREEMENT CONTRACT
 					</Text>
 					<Space h={16} />
 					<div className={meemTheme.row}>
@@ -312,7 +312,7 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 								log.crit(e)
 								showErrorNotification(
 									'Error upgrading agreement contract',
-									`Something went wrong during the upgrade.`
+									`Something went wrong during the upgrade. Contact us using the top-right link on this page.`
 								)
 								setIsUpgradingAgreement(false)
 							}

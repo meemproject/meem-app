@@ -56,7 +56,7 @@ export const CreateSafeModal: React.FC<IProps> = ({
 
 					showErrorNotification(
 						'Error creating community safe',
-						`Please get in touch!`
+						`Contact us using the top-right link on this page.`
 					)
 				}
 			}

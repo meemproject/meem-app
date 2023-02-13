@@ -53,7 +53,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 				log.debug(e)
 				showErrorNotification(
 					'Error',
-					`Unable to delete this role. Please let us know!`
+					`Unable to delete this role. Contact us using the top-right link on this page.!`
 				)
 				setIsDeletingRole(false)
 				return

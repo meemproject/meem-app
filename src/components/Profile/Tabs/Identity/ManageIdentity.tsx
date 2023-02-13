@@ -184,7 +184,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			setIsSavingChanges(false)
 			showErrorNotification(
 				'Oops!',
-				'Unable to save changes to your profile. Please get in touch!'
+				'Unable to save changes to your profile. Contact us using the top-right link on this page.'
 			)
 			return
 		}
@@ -453,7 +453,7 @@ export const ManageIdentityComponent: React.FC = () => {
 				portalButtonText={'Add more accounts'}
 				modalTitle={'Help us add more verified accounts!'}
 				modalText={
-					'We use Auth0 to manage 3rd party account verification. Let us know if you would like to add support for more accounts.'
+					'We use Auth0 to manage 3rd party account verification. Contact us using the top-right link on this page.'
 				}
 				devDocsLink={`https://auth0.com/docs/authenticate/identity-providers`}
 			/>
