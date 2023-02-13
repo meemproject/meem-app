@@ -125,10 +125,10 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 										</div>
 									</Menu.Target>
 									<Menu.Dropdown>
-										<Menu.Item>
-											<Link
-												href={`/${agreement.slug}/roles?role=${role.id}`}
-											>
+										<Link
+											href={`/${agreement.slug}/roles?role=${role.id}`}
+										>
+											<Menu.Item>
 												<Text
 													className={
 														meemTheme.tSmallBold
@@ -136,8 +136,9 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 												>
 													Manage Role
 												</Text>
-											</Link>
-										</Menu.Item>
+											</Menu.Item>
+										</Link>
+
 										{!role.isAdminRole && (
 											<>
 												<Menu.Item
