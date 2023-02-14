@@ -361,6 +361,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									<Space w={8} />
 									<Link
 										href={`/${agreement.slug}/admin?tab=membershiprequirements`}
+										legacyBehavior
 									>
 										<div>
 											<Settings
@@ -428,6 +429,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 						<Center>
 							<Link
 								href={`/${agreement.slug}/admin?tab=membershiprequirements`}
+								legacyBehavior
 							>
 								<Button className={meemTheme.buttonAsh}>
 									Edit requirements

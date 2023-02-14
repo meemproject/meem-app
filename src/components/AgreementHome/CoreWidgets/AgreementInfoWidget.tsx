@@ -330,7 +330,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					<>
 						<Space h={8} />
 						<Center>
-							<Link href={`/${agreement.slug}/admin?tab=icon`}>
+							<Link
+								href={`/${agreement.slug}/admin?tab=icon`}
+								legacyBehavior
+							>
 								<Image
 									className={meemTheme.clickable}
 									height={150}
@@ -357,7 +360,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					<>
 						<Space h={16} />
 						<Center>
-							<Link href={`/${agreement.slug}/admin?tab=details`}>
+							<Link
+								href={`/${agreement.slug}/admin?tab=details`}
+								legacyBehavior
+							>
 								<Button className={meemTheme.buttonAsh}>
 									Edit info
 								</Button>
@@ -582,7 +588,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				)}
 
 				{agreement.isCurrentUserAgreementAdmin && (
-					<Link href={`/${agreement.slug}/admin`}>
+					<Link href={`/${agreement.slug}/admin`} legacyBehavior>
 						<div>
 							<Settings
 								style={{

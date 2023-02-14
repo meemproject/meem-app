@@ -108,8 +108,6 @@ export const GET_AGREEMENT_INFO = gql`
 		Agreements(
 			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
 		) {
-			slug
-			address
 			name
 		}
 	}
@@ -324,7 +322,6 @@ export const SUB_AGREEMENTS = gql`
 				OwnerId
 				tokenId
 				tokenURI
-				mintedAt
 				mintedBy
 			}
 			splits

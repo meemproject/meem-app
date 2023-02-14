@@ -510,7 +510,10 @@ Add your custom extension settings layout here.
 					</Stack>
 					<Group ml="auto">
 						{isAgreementMemberRole ? (
-							<Link href={`/${agreement.slug}/members`}>
+							<Link
+								href={`/${agreement.slug}/members`}
+								legacyBehavior
+							>
 								<Button className={meemTheme.buttonBlack}>
 									Manage Members
 								</Button>
@@ -520,6 +523,7 @@ Add your custom extension settings layout here.
 								{props.agreementRoleId && (
 									<Link
 										href={`/${agreement?.slug}/roles?role=${props.agreementRoleId}`}
+										legacyBehavior
 									>
 										<Button
 											className={meemTheme.buttonBlack}
