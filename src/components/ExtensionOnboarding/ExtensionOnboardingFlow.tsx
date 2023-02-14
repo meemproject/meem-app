@@ -106,7 +106,9 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/onboarding?ext=${extensionSlug}`
+					return: encodeURIComponent(
+						`/onboarding?ext=${extensionSlug}`
+					)
 				}
 			})
 		} else if (!loading && extensionSlug.length === 0) {
@@ -375,7 +377,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 											{isCreatingNewCommunity && (
 												<>
 													<Space h={16} />
-													<Text>{`This might take a moment. While you wait, settle in and listen above... 🎻`}</Text>
+													<Text>{`This will take up to a minute. Please do not close this page or navigate away.`}</Text>
 												</>
 											)}
 
