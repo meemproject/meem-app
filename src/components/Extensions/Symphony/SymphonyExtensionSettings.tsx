@@ -929,7 +929,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						right: 48
 					}}
 				>
-					<Link href={`/${agreement?.slug}`}>
+					<Link href={`/${agreement?.slug}`} legacyBehavior>
 						<DeleteCircle
 							className={meemTheme.clickable}
 							width={24}
@@ -962,7 +962,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				</Center>
 				<Space h={36} />
 				<Center>
-					<Link href={`/${agreement?.slug}`}>
+					<Link href={`/${agreement?.slug}`} legacyBehavior>
 						<Button className={meemTheme.buttonBlack}>
 							Explore meem
 						</Button>

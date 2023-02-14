@@ -270,6 +270,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																		''
 																  }/settings`
 														}
+														legacyBehavior
 													>
 														<Button
 															className={
@@ -300,6 +301,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 															<>
 																<Link
 																	href={`/${agreement.slug}/e/${extension?.Extension?.slug}`}
+																	legacyBehavior
 																>
 																	<Button
 																		className={

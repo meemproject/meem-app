@@ -107,7 +107,7 @@ export function HeaderMenu() {
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
 					<Space w={8} />
-					<Link href={`/`}>
+					<Link href={`/`} legacyBehavior>
 						<Image
 							className={meemTheme.clickable}
 							src={
@@ -222,28 +222,31 @@ export function HeaderMenu() {
 												<Text>My Wallet</Text>
 											</Menu.Item>
 										)}
-										<Menu.Item
-											className={
-												meemTheme.tExtraSmallBold
-											}
+
+										<Link
+											href={`/profile?tab=identity`}
+											legacyBehavior
 										>
-											<Link
-												href={`/profile?tab=identity`}
+											<Menu.Item
+												className={
+													meemTheme.tExtraSmallBold
+												}
 											>
 												<Text>My Profile</Text>
-											</Link>
-										</Menu.Item>
-										<Menu.Item
-											className={
-												meemTheme.tExtraSmallBold
-											}
+											</Menu.Item>
+										</Link>
+										<Link
+											href={`/profile?tab=myCommunities`}
+											legacyBehavior
 										>
-											<Link
-												href={`/profile?tab=myCommunities`}
+											<Menu.Item
+												className={
+													meemTheme.tExtraSmallBold
+												}
 											>
 												<Text>My Communities</Text>
-											</Link>
-										</Menu.Item>
+											</Menu.Item>
+										</Link>
 									</>
 								)}
 								<Menu.Item

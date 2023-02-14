@@ -53,6 +53,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 										? `/${agreement?.slug}/admin?tab=extensions`
 										: `/${agreement?.slug}/e/${extensionSlug}`
 								}
+								legacyBehavior
 							>
 								<div>
 									<ArrowLeft
@@ -67,7 +68,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 					)}
 
 					{agreement?.image && (
-						<Link href={`/${agreement?.slug}`}>
+						<Link href={`/${agreement?.slug}`} legacyBehavior>
 							<div className={meemTheme.row}>
 								<Image
 									style={{ cursor: 'pointer' }}
@@ -119,6 +120,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 							agreement?.isCurrentUserAgreementOwner) && (
 							<Link
 								href={`/${agreement?.slug}/e/${extensionSlug}/settings`}
+								legacyBehavior
 							>
 								<Button
 									leftIcon={<Settings />}
@@ -130,7 +132,7 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 						)}
 					<Space w={16} />
 					<div className={meemTheme.pageHeaderExitButton}>
-						<Link href={`/${agreement?.slug}`}>
+						<Link href={`/${agreement?.slug}`} legacyBehavior>
 							<DeleteCircle width={24} height={24} />
 						</Link>
 					</div>

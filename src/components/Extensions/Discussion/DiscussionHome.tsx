@@ -334,6 +334,7 @@ export const DiscussionHome: React.FC = () => {
 								<Center>
 									<Link
 										href={`/${agreement?.slug}/e/discussions/submit`}
+										legacyBehavior
 									>
 										<Button
 											className={meemTheme.buttonBlack}

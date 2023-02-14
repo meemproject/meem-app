@@ -104,6 +104,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									<>
 										<Link
 											href={`/${agreement.slug}/e/discussions/submit`}
+											legacyBehavior
 										>
 											<Button
 												className={
@@ -119,6 +120,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									<Space w={8} />
 									<Link
 										href={`/${agreement.slug}/e/discussions`}
+										legacyBehavior
 									>
 										<Button
 											className={meemTheme.buttonDarkGrey}
@@ -134,6 +136,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									<Space w={8} />
 									<Link
 										href={`/${agreement.slug}/e/discussions/settings`}
+										legacyBehavior
 									>
 										<div>
 											<Settings
@@ -190,6 +193,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 										<Center>
 											<Link
 												href={`/${agreement.slug}/e/discussions/submit`}
+												legacyBehavior
 											>
 												<Button
 													className={

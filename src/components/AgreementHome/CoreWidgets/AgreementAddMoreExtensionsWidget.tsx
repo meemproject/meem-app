@@ -67,6 +67,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 									<Center>
 										<Link
 											href={`${agreement.slug}/admin?tab=extensions`}
+											legacyBehavior
 										>
 											<Button
 												className={meemTheme.buttonAsh}
@@ -80,48 +81,43 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 							)}
 
 							{/* Extensions enabled but none with widgets */}
-							{totalExtensions > 0 &&
-								extensionsNotSetupWithWidgets === 0 &&
-								extensionsSetupWithWidgets === 0 && (
-									<div
-										className={meemTheme.widgetLight}
-										style={{ marginTop: 16 }}
-									>
-										<Center>
-											<Text
-												className={meemTheme.tLargeBold}
-											>
-												Add your first widget
-											</Text>
-										</Center>
-										<Space h={16} />
-										<Center>
-											<Text className={meemTheme.tSmall}>
-												{`Your community has extensions
+							{totalExtensions === 0 && (
+								<div
+									className={meemTheme.widgetLight}
+									style={{ marginTop: 16 }}
+								>
+									<Center>
+										<Text className={meemTheme.tLargeBold}>
+											Add your first widget
+										</Text>
+									</Center>
+									<Space h={16} />
+									<Center>
+										<Text className={meemTheme.tSmall}>
+											{`Your community has extensions
 												enabled but none of these have any
 												widgets. You can add extensions
 												with widgets by looking for the
 												'widget' badge in your extension settings.`}
-											</Text>
-										</Center>
-										<Space h={32} />
+										</Text>
+									</Center>
+									<Space h={32} />
 
-										<Center>
-											<Link
-												href={`${agreement.slug}/admin?tab=extensions`}
+									<Center>
+										<Link
+											href={`${agreement.slug}/admin?tab=extensions`}
+											legacyBehavior
+										>
+											<Button
+												className={meemTheme.buttonAsh}
 											>
-												<Button
-													className={
-														meemTheme.buttonAsh
-													}
-												>
-													+ Add your first widget
-												</Button>
-											</Link>
-										</Center>
-										<Space h={8} />
-									</div>
-								)}
+												+ Add your first widget
+											</Button>
+										</Link>
+									</Center>
+									<Space h={8} />
+								</div>
+							)}
 
 							{/* Some exts with widgets have not been set up yet	 */}
 							{agreement.extensions &&
@@ -153,6 +149,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 										<Center>
 											<Link
 												href={`${agreement.slug}/admin?tab=extensions`}
+												legacyBehavior
 											>
 												<Button
 													className={
@@ -182,6 +179,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 										<Center>
 											<Link
 												href={`${agreement.slug}/admin?tab=extensions`}
+												legacyBehavior
 											>
 												<Button
 													className={

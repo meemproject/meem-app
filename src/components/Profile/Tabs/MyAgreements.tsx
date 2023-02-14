@@ -142,7 +142,10 @@ export const MyAgreementsComponent: React.FC = () => {
 								xl={6}
 								key={agreement.address}
 							>
-								<Link href={`/${agreement.slug}`}>
+								<Link
+									href={`/${agreement.slug}`}
+									legacyBehavior
+								>
 									<div
 										key={agreement.address}
 										className={meemTheme.gridItem}

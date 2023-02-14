@@ -157,7 +157,10 @@ export const AgreementMembersComponent: React.FC = () => {
 									className={meemTheme.pageHeaderImage}
 									style={{ cursor: 'pointer' }}
 								>
-									<Link href={`/${agreement.slug}`}>
+									<Link
+										href={`/${agreement.slug}`}
+										legacyBehavior
+									>
 										<Image
 											width={80}
 											height={80}
@@ -194,7 +197,7 @@ export const AgreementMembersComponent: React.FC = () => {
 							</div>
 						</div>
 						<div className={meemTheme.pageHeaderExitButton}>
-							<Link href={`/${agreement.slug}`}>
+							<Link href={`/${agreement.slug}`} legacyBehavior>
 								<DeleteCircle width={24} height={24} />
 							</Link>
 						</div>
