@@ -420,7 +420,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			rules &&
 			rules.length === 0 &&
 			twitterUsername &&
-			discordData?.Discords[0].name &&
+			discordData?.Discords[0]?.name &&
 			!hasDismissedSetupComplete
 		) {
 			setShouldShowSetupComplete(true)
