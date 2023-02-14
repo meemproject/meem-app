@@ -102,7 +102,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 		})
 
 	useEffect(() => {
-		if (isJwtError(error)) {
+		if (isJwtError(error) || !wallet.isConnected) {
 			router.push({
 				pathname: '/authenticate',
 				query: {
@@ -114,7 +114,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 				pathname: '/'
 			})
 		}
-	}, [error, extensionSlug, loading, router])
+	}, [error, extensionSlug, loading, router, wallet.isConnected])
 
 	const agreements: Agreement[] = []
 
