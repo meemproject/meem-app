@@ -106,7 +106,9 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 			router.push({
 				pathname: '/authenticate',
 				query: {
-					return: `/onboarding?ext=${extensionSlug}`
+					return: encodeURIComponent(
+						`/onboarding?ext=${extensionSlug}`
+					)
 				}
 			})
 		} else if (!loading && extensionSlug.length === 0) {
