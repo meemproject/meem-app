@@ -332,7 +332,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 											{isCreatingNewCommunity && (
 												<>
 													<Space h={16} />
-													<Text>{`This might take a moment. While you wait, settle in and listen above... 🎻`}</Text>
+													<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute, so please don’t close this window or navigate away.`}</Text>
 												</>
 											)}
 
