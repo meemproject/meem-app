@@ -104,6 +104,13 @@
   dependencies:
     "@auth0/auth0-spa-js" "^1.22.4"
 
+"@auth0/auth0-react@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@auth0/auth0-react/-/auth0-react-2.0.0.tgz#74e4d3662896e71dd95cca70b395715825da3b4e"
+  integrity sha512-3pf41wU6ksm/6uPYAwjX5bZ7ma/K4LethibagTrKkMPuS8UatBvxLDtl3Aq52ZlJi1I+I42ckEfzWqloNxssIg==
+  dependencies:
+    "@auth0/auth0-spa-js" "^2.0.2"
+
 "@auth0/auth0-spa-js@^1.22.4":
   version "1.22.5"
   resolved "https://registry.yarnpkg.com/@auth0/auth0-spa-js/-/auth0-spa-js-1.22.5.tgz#e48be3a6abfa6f63ab6e4b869d04788b4f229f23"
@@ -116,6 +123,11 @@
     fast-text-encoding "^1.0.6"
     promise-polyfill "^8.2.3"
     unfetch "^4.2.0"
+
+"@auth0/auth0-spa-js@^2.0.2":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@auth0/auth0-spa-js/-/auth0-spa-js-2.0.3.tgz#b8b262bf276736ec3734b6c4737b8362aecf8654"
+  integrity sha512-eC3cBJCGOc+k4ZMxvKTo0KhhJJ4/9siA7C2RhDcWqSbrRcjB04RimM4Jp5ExgXtrwFhx8elk7DLxysrhTQYvjQ==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.7":
   version "7.16.7"
