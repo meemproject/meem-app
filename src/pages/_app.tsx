@@ -10,8 +10,8 @@ import { NotificationsProvider } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
 import { default as AbortController } from 'abort-controller'
 import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import { Router, useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import TagManager from 'react-gtm-module'
 import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
 import { App, hostnameToChainId } from '../components/App'
@@ -79,60 +79,95 @@ function MyApp(props: AppProps) {
 			'/settings' || router.pathname.includes('/roles')
 		)
 
+	const [loading, setLoading] = useState(false)
+	useEffect(() => {
+		const start = () => {
+			if (
+				!router.pathname.includes('/admin') &&
+				!router.pathname.includes('profile')
+			) {
+				setLoading(true)
+			}
+		}
+		const end = () => {
+			setLoading(false)
+		}
+		Router.events.on('routeChangeStart', start)
+		Router.events.on('routeChangeComplete', end)
+		Router.events.on('routeChangeError', end)
+		return () => {
+			Router.events.off('routeChangeStart', start)
+			Router.events.off('routeChangeComplete', end)
+			Router.events.off('routeChangeError', end)
+		}
+	}, [router.pathname])
+
 	return (
-		<ColorSchemeProvider
-			colorScheme={colorScheme}
-			toggleColorScheme={toggleColorScheme}
-		>
-			<MantineProvider
-				withGlobalStyles
-				withNormalizeCSS
-				theme={{
-					fontFamily: 'Inter, sans-serif',
-					spacing: { xs: 15, sm: 20, md: 25, lg: 30, xl: 40 },
-					lineHeight: 1,
-					breakpoints: {
-						xs: 500,
-						sm: 800,
-						md: 1000,
-						lg: 1200,
-						xl: 1400
-					},
-					colors: {
-						brand: [
-							'#EFF7FF',
-							'#bed2e2',
-							'#266a9d',
-							'#266a9d',
-							'#266a9d',
-							'#266a9d',
-							'#266a9d',
-							'#495CA8',
-							'#4B588F',
-							'#49537A'
-						]
-					},
-					colorScheme,
-					primaryColor: 'brand'
-				}}
+		<>
+			<MeemProvider
+				chainId={chainId}
+				magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
 			>
-				<MeemProvider
-					chainId={chainId}
-					magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
-				>
-					<NotificationsProvider>
-						<AgreementProvider
-							slug={agreementSlug}
-							isMembersOnly={isMembershipRequired}
+				{(!loading || loading) && (
+					<>
+						<ColorSchemeProvider
+							colorScheme={colorScheme}
+							toggleColorScheme={toggleColorScheme}
 						>
-							<App>
-								<Component {...pageProps} />
-							</App>
-						</AgreementProvider>
-					</NotificationsProvider>
-				</MeemProvider>
-			</MantineProvider>
-		</ColorSchemeProvider>
+							<MantineProvider
+								withGlobalStyles
+								withNormalizeCSS
+								theme={{
+									fontFamily: 'Inter, sans-serif',
+									spacing: {
+										xs: 15,
+										sm: 20,
+										md: 25,
+										lg: 30,
+										xl: 40
+									},
+									lineHeight: 1,
+									breakpoints: {
+										xs: 500,
+										sm: 800,
+										md: 1000,
+										lg: 1200,
+										xl: 1400
+									},
+									colors: {
+										brand: [
+											'#EFF7FF',
+											'#bed2e2',
+											'#266a9d',
+											'#266a9d',
+											'#266a9d',
+											'#266a9d',
+											'#266a9d',
+											'#495CA8',
+											'#4B588F',
+											'#49537A'
+										]
+									},
+									colorScheme,
+									primaryColor: 'brand'
+								}}
+							>
+								<NotificationsProvider>
+									<AgreementProvider
+										slug={agreementSlug}
+										isMembersOnly={isMembershipRequired}
+									>
+										<App>
+											<Component {...pageProps} />
+										</App>
+									</AgreementProvider>
+								</NotificationsProvider>
+							</MantineProvider>
+						</ColorSchemeProvider>
+					</>
+				)}
+			</MeemProvider>
+		</>
 	)
 }
 export default MyApp
