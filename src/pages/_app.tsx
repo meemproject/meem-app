@@ -1,9 +1,12 @@
 import log, { LogLevel } from '@kengoldfarb/log'
 import {
+	Center,
 	// eslint-disable-next-line import/named
 	ColorScheme,
 	ColorSchemeProvider,
-	MantineProvider
+	Loader,
+	MantineProvider,
+	Space
 } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
@@ -17,6 +20,7 @@ import { AgreementProvider } from '../components/AgreementHome/AgreementProvider
 import { App, hostnameToChainId } from '../components/App'
 import '@fontsource/inter'
 import 'isomorphic-fetch'
+import { HeaderMenu } from '../components/Header/Header'
 
 // Fix an issue with SSR / ServerSideProps in NextJS
 Object.assign(globalThis, {
@@ -108,7 +112,60 @@ function MyApp(props: AppProps) {
 				chainId={chainId}
 				magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
 			>
-				{(!loading || loading) && (
+				{loading && (
+					<>
+						<ColorSchemeProvider
+							colorScheme={colorScheme}
+							toggleColorScheme={toggleColorScheme}
+						>
+							<MantineProvider
+								withGlobalStyles
+								withNormalizeCSS
+								theme={{
+									fontFamily: 'Inter, sans-serif',
+									spacing: {
+										xs: 15,
+										sm: 20,
+										md: 25,
+										lg: 30,
+										xl: 40
+									},
+									lineHeight: 1,
+									breakpoints: {
+										xs: 500,
+										sm: 800,
+										md: 1000,
+										lg: 1200,
+										xl: 1400
+									},
+									colors: {
+										brand: [
+											'#EFF7FF',
+											'#bed2e2',
+											'#266a9d',
+											'#266a9d',
+											'#266a9d',
+											'#266a9d',
+											'#266a9d',
+											'#495CA8',
+											'#4B588F',
+											'#49537A'
+										]
+									},
+									colorScheme,
+									primaryColor: 'brand'
+								}}
+							>
+								<HeaderMenu />
+								<Space h={120} />
+								<Center>
+									<Loader variant="oval" color="cyan" />
+								</Center>
+							</MantineProvider>
+						</ColorSchemeProvider>
+					</>
+				)}
+				{!loading && (
 					<>
 						<ColorSchemeProvider
 							colorScheme={colorScheme}
