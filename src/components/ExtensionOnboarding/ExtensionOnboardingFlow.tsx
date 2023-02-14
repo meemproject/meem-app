@@ -375,7 +375,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 											{isCreatingNewCommunity && (
 												<>
 													<Space h={16} />
-													<Text>{`This will take up to a minute. Please wait...`}</Text>
+													<Text>{`This will take up to a minute. Please do not close this page or navigate away.`}</Text>
 												</>
 											)}
 
