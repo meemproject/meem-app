@@ -8,6 +8,7 @@ import {
 import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
+import { default as AbortController } from 'abort-controller'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
@@ -15,7 +16,12 @@ import TagManager from 'react-gtm-module'
 import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
 import { App, hostnameToChainId } from '../components/App'
 import '@fontsource/inter'
-// import { CustomApolloProvider } from '../providers/ApolloProvider'
+import 'isomorphic-fetch'
+
+// Fix an issue with SSR / ServerSideProps in NextJS
+Object.assign(globalThis, {
+	AbortController
+})
 
 function MyApp(props: AppProps) {
 	const { Component, pageProps } = props

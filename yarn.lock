@@ -37,6 +37,25 @@
     tslib "^2.3.0"
     zen-observable-ts "^1.2.5"
 
+"@apollo/client@^3.7.7":
+  version "3.7.7"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.7.7.tgz#5eb6e8af24fb809c97c8f66c3faf9524f83c412b"
+  integrity sha512-Rp/pCWuJSjLN7Xl5Qi2NoeURmZYEU/TIUz0n/LOwEo1tGdU2W7/fGVZ8+5um58JeVYq4UoTGBKFxSVeG4s411A==
+  dependencies:
+    "@graphql-typed-document-node/core" "^3.1.1"
+    "@wry/context" "^0.7.0"
+    "@wry/equality" "^0.5.0"
+    "@wry/trie" "^0.3.0"
+    graphql-tag "^2.12.6"
+    hoist-non-react-statics "^3.3.2"
+    optimism "^0.16.1"
+    prop-types "^15.7.2"
+    response-iterator "^0.2.6"
+    symbol-observable "^4.0.0"
+    ts-invariant "^0.10.3"
+    tslib "^2.3.0"
+    zen-observable-ts "^1.2.5"
+
 "@apollo/federation@0.27.0":
   version "0.27.0"
   resolved "https://registry.npmjs.org/@apollo/federation/-/federation-0.27.0.tgz"
@@ -5104,7 +5123,7 @@ abbrev@1, abbrev@~1.1.1:
 
 abort-controller@^3.0.0:
   version "3.0.0"
-  resolved "https://registry.npmjs.org/abort-controller/-/abort-controller-3.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
   integrity sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==
   dependencies:
     event-target-shim "^5.0.0"
@@ -11718,7 +11737,7 @@ isobject@^3.0.1:
 
 isomorphic-fetch@^3.0.0:
   version "3.0.0"
-  resolved "https://registry.npmjs.org/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#0267b005049046d2421207215d45d6a262b8b8b4"
   integrity sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==
   dependencies:
     node-fetch "^2.6.1"
