@@ -1,3 +1,17 @@
+# [1.23.0](https://github.com/meemproject/meem-app/compare/v1.22.4...v1.23.0) (2023-02-14)
+
+
+### Bug Fixes
+
+* another incorrect link placement ([f03402e](https://github.com/meemproject/meem-app/commit/f03402e))
+* issue with ServerSideProps on NextJS 13 ([0f8d0a7](https://github.com/meemproject/meem-app/commit/0f8d0a7))
+* next link in wrong place, extension link padding ([a6d25c8](https://github.com/meemproject/meem-app/commit/a6d25c8))
+
+
+### Features
+
+* react 18.2.0, nextjs 13 ([5442dce](https://github.com/meemproject/meem-app/commit/5442dce))
+
 ## [1.22.4](https://github.com/meemproject/meem-app/compare/v1.22.3...v1.22.4) (2023-02-13)
 
 
