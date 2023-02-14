@@ -315,8 +315,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 
 		if (slug !== originalSlug) {
 			setAgreement(undefined)
+			if (slug) {
+				setOriginalSlug(slug)
+			}
 			setIsLoadingAgreement(true)
-			log.debug('loading agreement')
 		}
 
 		// User does not have access to this page
