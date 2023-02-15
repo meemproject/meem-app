@@ -5,6 +5,7 @@ import { useMeemApollo, useWallet } from '@meemproject/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetAgreementExistsQuery } from '../../../generated/graphql'
 import { GET_AGREEMENT_EXISTS } from '../../graphql/agreements'
+import { Agreement } from '../../model/agreement/agreements'
 import { showErrorNotification } from '../../utils/notifications'
 import { hostnameToChainId } from '../App'
 import { useMeemTheme } from '../Styles/MeemTheme'
@@ -12,7 +13,7 @@ import { CreationProgressModal } from './CreationProgressModal'
 
 interface IProps {
 	isOpened: boolean
-	onModalClosed: (agreementSlug?: string, agreementId?: string) => void
+	onModalClosed: (agreement?: Agreement) => void
 	// Create the agreement silently and automatically, without a modal.
 	quietMode?: boolean
 	// When using quiet mode, an agreement name is required.
@@ -40,11 +41,11 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 	const { anonClient } = useMeemApollo()
 
 	const closeModal = useCallback(
-		(agreementSlug?: string, agreementId?: string) => {
+		(agreement?: Agreement) => {
 			setAgreementName('')
 			setIsAgreementCreationModalOpened(false)
 			setShouldCheckAgreementName(false)
-			onModalClosed(agreementSlug, agreementId)
+			onModalClosed(agreement)
 		},
 		[onModalClosed]
 	)
@@ -206,11 +207,11 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				agreementName={agreementName}
 				isOpened={isAgreementCreationModalOpened}
 				quietMode={quietMode}
-				onModalClosed={(status, slug, id) => {
+				onModalClosed={(status, agreement) => {
 					setIsAgreementCreationModalOpened(false)
 					if (quietMode) {
 						if (status === 'success') {
-							closeModal(slug, id)
+							closeModal(agreement)
 						} else {
 							closeModal()
 						}

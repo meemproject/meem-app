@@ -18,7 +18,12 @@ import {
 	TextInput,
 	Popover
 } from '@mantine/core'
-import { useWallet, useMeemApollo, useSDK } from '@meemproject/react'
+import {
+	useWallet,
+	useMeemApollo,
+	useSDK,
+	LoginState
+} from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { Group, InfoEmpty } from 'iconoir-react'
 import Cookies from 'js-cookie'
@@ -71,13 +76,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const { anonClient, mutualMembersClient } = useMeemApollo()
 	const [newAgreementName, setNewAgreementName] = useState('')
 	const myAgreements: Agreement[] = []
-	const [hasChosenAgreement, setHasChosenAgreement] = useState(false)
-	const {
-		agreement,
-		isLoadingAgreement,
-		error: agreementError,
-		setSlugManually
-	} = useAgreement()
+	const [chosenAgreement, setChosenAgreement] = useState<Agreement>()
 
 	// Extension vars
 	const extensionSlug = 'symphony'
@@ -150,7 +149,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 	// Authentication check
 	useEffect(() => {
-		if (isJwtError(myAgreementsError) || !wallet.isConnected) {
+		if (
+			isJwtError(myAgreementsError) ||
+			wallet.loginState === LoginState.NotLoggedIn
+		) {
 			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/symphony`)
 			router.push('/authenticate')
 		}
@@ -159,22 +161,16 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		extensionSlug,
 		isLoadingMyAgreements,
 		router,
-		wallet.isConnected
+		wallet.isConnected,
+		wallet.loginState
 	])
 
 	// Handle page state changes
 	useEffect(() => {
 		// Set page state
-		if (
-			isLoadingMyAgreements ||
-			isEnablingExtension ||
-			extensionsLoading ||
-			(hasChosenAgreement && isLoadingAgreement)
-		) {
+		if (isLoadingMyAgreements || isEnablingExtension || extensionsLoading) {
 			setPageState(PageState.Loading)
-			log.debug(
-				`set page state = loading - myagr=${isLoadingMyAgreements}, enablingext=${isEnablingExtension}, extensionsLoading=${extensionsLoading}, hasChosenAgr=${hasChosenAgreement}, isLoadingAgr=${isLoadingAgreement}`
-			)
+			log.debug(`set page state = loading`)
 		} else if (myAgreementsError) {
 			setPageState(PageState.Error)
 			log.debug('set page state = error')
@@ -189,18 +185,18 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			!isLoadingMyAgreements &&
 			!myAgreementsError &&
 			myAgreements.length > 0 &&
-			!agreement
+			!chosenAgreement
 		) {
 			setPageState(PageState.PickCommunity)
 			log.debug('set page state = pickCommunity')
-		} else if (agreement) {
+		} else if (chosenAgreement) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
 		}
 
 		// Set onboarding step
 		if (pageState === PageState.Onboarding) {
-			if (!agreement) {
+			if (!chosenAgreement) {
 				setOnboardingStep(0)
 			}
 		}
@@ -209,30 +205,23 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		isLoadingMyAgreements,
 		myAgreements.length,
 		myAgreementsError,
-		agreement,
 		extensionsLoading,
 		pageState,
-		isLoadingAgreement,
-		hasChosenAgreement
+		chosenAgreement
 	])
 
-	const chooseAgreementAndEnableExtension = async (
-		agreementSlug: string,
-		agreementId: string,
-		chosenAgreement?: Agreement
-	) => {
-		if (chosenAgreement) {
+	const chooseAgreementAndEnableExtension = async (chosen?: Agreement) => {
+		if (chosen) {
 			// Agreement exists already. Let's see if it already has symphony enabled...
 			let isExtensionEnabled = false
-			chosenAgreement.extensions?.forEach(ext => {
+			chosen.extensions?.forEach(ext => {
 				if (ext.Extension?.slug === extensionSlug) {
 					isExtensionEnabled = true
 				}
 			})
 			if (isExtensionEnabled) {
 				log.debug('extension already enabled for this community')
-				setSlugManually(agreementSlug)
-				setHasChosenAgreement(true)
+				setChosenAgreement(chosen)
 				return
 			}
 		}
@@ -257,7 +246,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				}
 
 				await sdk.agreementExtension.createAgreementExtension({
-					agreementId,
+					agreementId: chosen?.id ?? '',
 					extensionId,
 					isInitialized: true,
 					widget: {
@@ -265,8 +254,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							MeemAPI.AgreementExtensionVisibility.TokenHolders
 					}
 				})
-				setSlugManually(agreementSlug)
-				setHasChosenAgreement(true)
+				setChosenAgreement(chosen)
 			} catch (e) {
 				log.debug(e)
 				showErrorNotification(
@@ -415,8 +403,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									<div
 										onClick={() => {
 											chooseAgreementAndEnableExtension(
-												existingAgreement.slug ?? '',
-												existingAgreement.id ?? '',
 												existingAgreement
 											)
 										}}
@@ -543,9 +529,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				isOpened={isCreatingNewCommunity}
 				quietMode={true}
 				quietModeAgreementName={newAgreementName}
-				onModalClosed={function (slug, id): void {
-					if (id && slug) {
-						chooseAgreementAndEnableExtension(slug, id)
+				onModalClosed={function (agreement): void {
+					if (agreement) {
+						chooseAgreementAndEnableExtension(agreement)
 					} else {
 						setIsCreatingNewCommunity(false)
 					}

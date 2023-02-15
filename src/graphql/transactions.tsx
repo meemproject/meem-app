@@ -7,8 +7,50 @@ export const SUB_TRANSACTIONS = gql`
 			hash
 			status
 			Agreements {
-				slug
 				id
+				slug
+				address
+				createdAt
+				OwnerId
+				name
+				metadata
+				isLaunched
+				splits
+				gnosisSafeAddress
+				mintPermissions
+				symbol
+				AgreementExtensions {
+					Extension {
+						slug
+					}
+				}
+				AgreementWallets {
+					role
+					Wallet {
+						ens
+						address
+					}
+				}
+				AgreementRoles {
+					id
+					name
+					isAdminRole
+					address
+					metadata
+					AgreementRoleTokens {
+						OwnerId
+					}
+					Agreement {
+						isTransferrable
+					}
+				}
+				AgreementTokens {
+					Wallet {
+						address
+						ens
+					}
+					OwnerId
+				}
 			}
 		}
 	}

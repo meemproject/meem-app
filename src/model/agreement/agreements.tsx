@@ -118,6 +118,9 @@ export const isJwtError = (error: ApolloError | undefined): boolean => {
 		error.graphQLErrors.length > 0 &&
 		error.graphQLErrors[0].extensions &&
 		error.graphQLErrors[0].extensions.code === 'invalid-jwt'
+	if (isJwt) {
+		log.debug(`jwt error detected, re-authenticating...`)
+	}
 	return isJwt ?? false
 }
 
