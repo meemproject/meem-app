@@ -84,9 +84,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const [hasDismissedSetupComplete, setHasDismissedSetupComplete] =
 		useState(false)
 
-	const [symphonyClient, setSymphonyClient] =
-		useState<ApolloClient<NormalizedCacheObject>>()
-
 	const handleInviteBot = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
 			return
@@ -104,6 +101,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 		window.open(inviteUrl, '_blank')
 	}, [agreement, jwt])
+
+	const [symphonyClient, setSymphonyClient] =
+		useState<ApolloClient<NormalizedCacheObject>>()
 
 	useEffect(() => {
 		const c = createApolloClient({

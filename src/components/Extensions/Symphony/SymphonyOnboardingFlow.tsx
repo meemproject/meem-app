@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useQuery, useSubscription } from '@apollo/client'
+import { ApolloClient, useQuery, useSubscription } from '@apollo/client'
+import type { NormalizedCacheObject } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Text,
@@ -16,23 +17,28 @@ import {
 	Container,
 	Stepper,
 	TextInput,
-	Popover
+	Popover,
+	Code
 } from '@mantine/core'
 import {
 	useWallet,
 	useMeemApollo,
 	useSDK,
-	LoginState
+	LoginState,
+	useAuth
 } from '@meemproject/react'
-import { MeemAPI } from '@meemproject/sdk'
+import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
 import { Group, InfoEmpty } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
 	GetExtensionsQuery,
-	MyAgreementsSubscriptionSubscription
+	MyAgreementsSubscriptionSubscription,
+	SubDiscordSubscription,
+	SubSlackSubscription,
+	SubTwitterSubscription
 } from '../../../../generated/graphql'
 import { GET_EXTENSIONS, SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
 import {
@@ -41,7 +47,10 @@ import {
 	isJwtError
 } from '../../../model/agreement/agreements'
 import { CookieKeys } from '../../../utils/cookies'
-import { showErrorNotification } from '../../../utils/notifications'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../utils/notifications'
 import { toTitleCase } from '../../../utils/strings'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../App'
@@ -54,6 +63,8 @@ import {
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
+import { SUB_DISCORD, SUB_SLACK, SUB_TWITTER } from './symphony.gql'
+import { API } from './symphonyTypes.generated'
 
 enum PageState {
 	Loading,
@@ -69,13 +80,14 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const router = useRouter()
 	const wallet = useWallet()
 	const { sdk } = useSDK()
+	const { jwt } = useAuth()
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
 	// Agreement / network
 	const { anonClient, mutualMembersClient } = useMeemApollo()
 	const [newAgreementName, setNewAgreementName] = useState('')
-	const myAgreements: Agreement[] = []
+	const [myAgreements, setMyAgreements] = useState<Agreement[]>()
 	const [chosenAgreement, setChosenAgreement] = useState<Agreement>()
 
 	// Extension vars
@@ -91,6 +103,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		useState(false)
 	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
 	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
+
+	// Bot code data
+	const [botCode, setBotCode] = useState<string | undefined>()
+	const [shouldActivateBot, setShouldActivateBot] = useState(false)
 
 	// Subscriptions
 	const {
@@ -120,32 +136,80 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			client: anonClient
 		})
 
-	// Parse my existing agreements
-	myAgreementsData?.Agreements.forEach(agr => {
-		const possibleAgreement = agreementSummaryFromDb(
-			agr,
-			wallet.accounts[0]
-		)
+	const [symphonyClient, setSymphonyClient] =
+		useState<ApolloClient<NormalizedCacheObject>>()
 
-		if (possibleAgreement.name) {
-			const alreadyAdded =
-				myAgreements.filter(
-					existingAgreement =>
-						existingAgreement.id === possibleAgreement.id
-				).length > 0
-			if (!alreadyAdded) {
-				let extIsAlreadyEnabled = false
-				possibleAgreement?.extensions?.forEach(ext => {
-					if (ext.Extension?.slug === extensionSlug) {
-						extIsAlreadyEnabled = true
+	useEffect(() => {
+		const c = createApolloClient({
+			httpUrl: `https://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`,
+			wsUri: `wss://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`
+		})
+
+		setSymphonyClient(c)
+	}, [])
+
+	const { data: twitterData, loading: twitterDataLoading } =
+		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
+			variables: {
+				agreementId: chosenAgreement?.id
+			},
+			skip: !symphonyClient || !chosenAgreement?.id,
+			client: symphonyClient
+		})
+
+	const { data: discordData, loading: discordInfoLoading } =
+		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
+			variables: {
+				agreementId: chosenAgreement?.id
+			},
+			skip: !symphonyClient || !chosenAgreement?.id,
+			client: symphonyClient
+		})
+
+	const { data: slackData, loading: slackInfoLoading } =
+		useSubscription<SubSlackSubscription>(SUB_SLACK, {
+			variables: {
+				agreementId: chosenAgreement?.id
+			},
+			skip:
+				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
+				!symphonyClient ||
+				!chosenAgreement?.id,
+			client: symphonyClient
+		})
+
+	useEffect(() => {
+		if (!myAgreements && myAgreementsData) {
+			// Parse my existing agreements
+			const agrs: Agreement[] = []
+			myAgreementsData?.Agreements.forEach(agr => {
+				const possibleAgreement = agreementSummaryFromDb(
+					agr,
+					wallet.accounts[0]
+				)
+
+				if (possibleAgreement.name) {
+					const alreadyAdded =
+						agrs.filter(
+							existingAgreement =>
+								existingAgreement.id === possibleAgreement.id
+						).length > 0
+					if (!alreadyAdded) {
+						let extIsAlreadyEnabled = false
+						possibleAgreement?.extensions?.forEach(ext => {
+							if (ext.Extension?.slug === extensionSlug) {
+								extIsAlreadyEnabled = true
+							}
+						})
+						if (extIsAlreadyEnabled) {
+							agrs.push(possibleAgreement)
+						}
 					}
-				})
-				if (extIsAlreadyEnabled) {
-					myAgreements.push(possibleAgreement)
 				}
-			}
+			})
+			setMyAgreements(agrs)
 		}
-	})
+	}, [myAgreements, myAgreementsData, wallet.accounts])
 
 	// Authentication check
 	useEffect(() => {
@@ -165,10 +229,29 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		wallet.loginState
 	])
 
+	// Intregrations data
+	const twitterUsername =
+		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
+	const discordInfo = discordData?.Discords[0]
+	const slackInfo = slackData?.Slacks[0]
+
 	// Handle page state changes
+
 	useEffect(() => {
+		const twitterAuthRedirectAgreementSlug = Cookies.get(
+			CookieKeys.symphonyOnboardingAgreementSlug
+		)
+
 		// Set page state
-		if (isLoadingMyAgreements || isEnablingExtension || extensionsLoading) {
+		if (
+			isLoadingMyAgreements ||
+			isEnablingExtension ||
+			extensionsLoading ||
+			twitterDataLoading ||
+			discordInfoLoading ||
+			slackInfoLoading ||
+			(!chosenAgreement && twitterAuthRedirectAgreementSlug)
+		) {
 			setPageState(PageState.Loading)
 			log.debug(`set page state = loading`)
 		} else if (myAgreementsError) {
@@ -177,13 +260,14 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		} else if (
 			!isLoadingMyAgreements &&
 			!myAgreementsError &&
-			myAgreements.length === 0
+			myAgreements?.length === 0
 		) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
 		} else if (
 			!isLoadingMyAgreements &&
 			!myAgreementsError &&
+			myAgreements &&
 			myAgreements.length > 0 &&
 			!chosenAgreement
 		) {
@@ -198,16 +282,49 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		if (pageState === PageState.Onboarding) {
 			if (!chosenAgreement) {
 				setOnboardingStep(0)
+			} else if (chosenAgreement) {
+				if (!twitterUsername && !discordInfo) {
+					setOnboardingStep(1)
+				} else if (twitterUsername && !discordInfo) {
+					if (!shouldActivateBot) {
+						setOnboardingStep(2)
+					} else {
+						setOnboardingStep(3)
+					}
+				} else if (twitterUsername && discordInfo) {
+					setOnboardingStep(3)
+				}
 			}
+		}
+
+		if (twitterAuthRedirectAgreementSlug) {
+			myAgreements?.forEach(agr => {
+				if (agr.slug === twitterAuthRedirectAgreementSlug) {
+					log.debug(
+						'found cookie, re-choosing existing agreement to continue flow...'
+					)
+					setChosenAgreement(agr)
+					Cookies.remove(CookieKeys.symphonyOnboardingAgreementSlug)
+				}
+			})
 		}
 	}, [
 		isEnablingExtension,
 		isLoadingMyAgreements,
-		myAgreements.length,
+		myAgreements?.length,
 		myAgreementsError,
 		extensionsLoading,
 		pageState,
-		chosenAgreement
+		chosenAgreement,
+		twitterUsername,
+		discordInfo,
+		shouldActivateBot,
+		myAgreements,
+		slackInfo,
+		router,
+		twitterDataLoading,
+		discordInfoLoading,
+		slackInfoLoading
 	])
 
 	const chooseAgreementAndEnableExtension = async (chosen?: Agreement) => {
@@ -271,6 +388,68 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		}
 	}
 
+	const handleInviteBot = useCallback(async () => {
+		if (!chosenAgreement?.id || !jwt) {
+			return
+		}
+		const { code, inviteUrl } =
+			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
+				`${
+					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+				}${API.v1.InviteDiscordBot.path()}`,
+				{ query: { agreementId: chosenAgreement?.id, jwt } }
+			)
+
+		setBotCode(code)
+
+		window.open(inviteUrl, '_blank')
+	}, [chosenAgreement, jwt])
+
+	const handleAuthTwitter = useCallback(async () => {
+		if (!chosenAgreement?.id || !jwt) {
+			return
+		}
+
+		Cookies.set(
+			CookieKeys.symphonyOnboardingAgreementSlug,
+			chosenAgreement?.slug ?? ''
+		)
+
+		const setCookie = Cookies.get(
+			CookieKeys.symphonyOnboardingAgreementSlug
+		)
+
+		log.debug(`set redirect agreement slug to ${setCookie}`)
+
+		router.push({
+			pathname: `${
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+			}${API.v1.AuthenticateWithTwitter.path()}`,
+			query: {
+				agreementId: chosenAgreement.id,
+				jwt,
+				returnUrl: window.location.toString()
+			}
+		})
+	}, [router, chosenAgreement, jwt])
+
+	const handleAuthSlack = useCallback(async () => {
+		if (!chosenAgreement?.id || !jwt) {
+			return
+		}
+
+		router.push({
+			pathname: `${
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+			}${API.v1.AuthenticateWithSlack.path()}`,
+			query: {
+				agreementId: chosenAgreement.id,
+				jwt,
+				returnUrl: window.location.toString()
+			}
+		})
+	}, [router, chosenAgreement, jwt])
+
 	const pageHeader = (
 		<div className={meemTheme.pageHeaderExtension}>
 			<Container>
@@ -286,10 +465,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	)
 
 	const stepOneAgreementName = (
-		<>
-			<Stepper.Step
-				label="What is your community called?"
-				description={
+		<Stepper.Step
+			label="What is your community called?"
+			description={
+				onboardingStep === 0 ? (
 					<>
 						<Text className={meemTheme.tExtraSmall}>
 							We’ll create an on-chain community agreement so you
@@ -341,9 +520,162 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 						<Space h={16} />
 					</>
-				}
-			></Stepper.Step>
-		</>
+				) : (
+					<Text>{chosenAgreement?.name}</Text>
+				)
+			}
+		/>
+	)
+
+	const stepTwoConnectPublishingAccount = (
+		<Stepper.Step
+			label="Connect publishing account"
+			description={
+				<>
+					<Text
+						className={meemTheme.tExtraSmall}
+					>{`Please connect the account where your community’s posts will be published.`}</Text>
+					{onboardingStep === 1 && (
+						<>
+							<Space h={16} />
+							<div className={meemTheme.row}>
+								<Button
+									onClick={() => {
+										handleAuthTwitter()
+									}}
+									className={meemTheme.buttonBlack}
+									leftIcon={
+										<Image
+											width={16}
+											src={`/integration-twitter-white.png`}
+										/>
+									}
+								>
+									Connect Twitter
+								</Button>
+								{/* <Space w={8} />
+							<Button
+								className={
+									meemTheme.buttonYellowSolidBordered
+								}
+								onClick={() => {}}
+							>
+								Add More Accounts
+							</Button> */}
+							</div>
+						</>
+					)}
+					{onboardingStep === 2 && (
+						<>
+							<Space h={16} />
+							<div className={meemTheme.row}>
+								<Button
+									onClick={() => {
+										handleAuthTwitter()
+									}}
+									className={meemTheme.buttonWhite}
+								>
+									{`Connected as ${twitterUsername}`}
+								</Button>
+							</div>
+						</>
+					)}
+					<Space h={16} />
+				</>
+			}
+		/>
+	)
+
+	const stepThreeInviteBot = (
+		<Stepper.Step
+			label="Invite Symphony bot"
+			description={
+				<>
+					<Text
+						className={meemTheme.tExtraSmall}
+					>{`Please invite the Symphony bot to manage your Discord server.`}</Text>
+					{onboardingStep === 2 && (
+						<>
+							<Space h={16} />
+							<div className={meemTheme.row}>
+								<Button
+									leftIcon={
+										<Image
+											width={16}
+											src={`/integration-discord-white.png`}
+										/>
+									}
+									className={meemTheme.buttonDiscordBlue}
+									onClick={() => {
+										handleInviteBot()
+									}}
+								>
+									{`Invite Symphony Bot`}
+								</Button>
+							</div>
+							<Space h={16} />
+
+							{botCode && (
+								<>
+									<div className={meemTheme.row}>
+										<Button
+											className={meemTheme.buttonBlack}
+											onClick={() => {
+												setShouldActivateBot(true)
+											}}
+										>
+											{`Next`}
+										</Button>
+									</div>
+									<Space h={16} />
+								</>
+							)}
+						</>
+					)}
+				</>
+			}
+		/>
+	)
+
+	const stepFourActivateDiscordBot = (
+		<Stepper.Step
+			label="Activate Symphony"
+			description={
+				<>
+					<Text className={meemTheme.tExtraSmall}>
+						Type{' '}
+						<span style={{ fontWeight: '600' }}>/activate</span> in
+						any public channel of your Discord server, then enter
+						the code below:
+					</Text>
+					{onboardingStep === 3 && (
+						<>
+							<Space h={16} />
+							<Code
+								style={{ cursor: 'pointer' }}
+								onClick={() => {
+									navigator.clipboard.writeText(`${botCode}`)
+									showSuccessNotification(
+										'Copied to clipboard',
+										`The code was copied to your clipboard.`
+									)
+								}}
+								block
+							>{`${botCode}`}</Code>
+							<Space h={16} />
+
+							<div className={meemTheme.centeredRow}>
+								<Loader variant="oval" color="cyan" size={24} />
+								<Space w={8} />
+								<Text className={meemTheme.tExtraExtraSmall}>
+									Waiting for activation...
+								</Text>
+							</div>
+						</>
+					)}
+				</>
+			}
+		></Stepper.Step>
 	)
 
 	return (
@@ -375,6 +707,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							orientation="vertical"
 						>
 							{stepOneAgreementName}
+							{stepTwoConnectPublishingAccount}
+							{stepThreeInviteBot}
+							{stepFourActivateDiscordBot}
 						</Stepper>
 					</Container>
 				</>
@@ -391,7 +726,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 					<Center>
 						<Grid style={{ maxWidth: 800 }}>
-							{myAgreements.map(existingAgreement => (
+							{myAgreements?.map(existingAgreement => (
 								<Grid.Col
 									xs={6}
 									sm={6}
