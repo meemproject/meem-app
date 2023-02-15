@@ -222,7 +222,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			query: {
 				agreementId: agreement.id,
 				jwt,
-				returnUrl: window.location.href
+				returnUrl: window.location.toString()
 			}
 		})
 	}, [router, agreement, jwt])
@@ -239,7 +239,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			query: {
 				agreementId: agreement.id,
 				jwt,
-				returnUrl: window.location.href
+				returnUrl: window.location.toString()
 			}
 		})
 	}, [router, agreement, jwt])

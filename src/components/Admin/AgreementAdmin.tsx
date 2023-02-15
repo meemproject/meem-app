@@ -13,6 +13,7 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { Copy, DeleteCircle } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -23,6 +24,7 @@ import {
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
+import { CookieKeys } from '../../utils/cookies'
 import { showSuccessNotification } from '../../utils/notifications'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
@@ -60,11 +62,9 @@ export const AgreementAdminComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (isJwtError(error)) {
+			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}/admin`)
 			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${agreement?.slug}/admin`
-				}
+				pathname: '/authenticate'
 			})
 		}
 	}, [agreement?.slug, error, router, wallet])

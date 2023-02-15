@@ -1,4 +1,6 @@
 export class CookieKeys {
+	public static authRedirectUrl = 'authRedirectUrl'
+
 	public static agreementName = 'agreementName'
 
 	public static agreementDescription = 'agreementDescription'

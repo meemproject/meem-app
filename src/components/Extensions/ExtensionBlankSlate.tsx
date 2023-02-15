@@ -1,11 +1,13 @@
 import { Text, Space, Container, Loader, Center, Button } from '@mantine/core'
 import { LoginState, useAuth } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useEffect } from 'react'
 import { AgreementExtensions } from '../../../generated/graphql'
 import { Agreement, extensionFromSlug } from '../../model/agreement/agreements'
+import { CookieKeys } from '../../utils/cookies'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
@@ -44,14 +46,10 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 			isMembersOnly &&
 			window
 		) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: window.location.href
-				}
-			})
+			Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
+			router.push('/authenticate')
 		}
-	}, [auth.loginState, isMembersOnly, router])
+	}, [agreement?.slug, auth.loginState, isMembersOnly, router])
 
 	return (
 		<>

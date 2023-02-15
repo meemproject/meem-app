@@ -21,6 +21,7 @@ import {
 import { useWallet, useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { Group, InfoEmpty } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -34,6 +35,7 @@ import {
 	agreementSummaryFromDb,
 	isJwtError
 } from '../../model/agreement/agreements'
+import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
 import { toTitleCase } from '../../utils/strings'
 import { hostnameToChainId } from '../App'
@@ -103,16 +105,10 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 
 	useEffect(() => {
 		if (isJwtError(error) || !wallet.isConnected) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: '/onboard/symphony'
-				}
-			})
+			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/symphony`)
+			router.push('/authenticate')
 		} else if (!loading && extensionSlug.length === 0) {
-			router.push({
-				pathname: '/'
-			})
+			router.push('/')
 		}
 	}, [error, extensionSlug, loading, router, wallet.isConnected])
 
@@ -160,9 +156,7 @@ export const ExtensionOnboardingFlow: React.FC<IProps> = ({
 				log.debug(
 					'extension already enabled for this community, redirecting'
 				)
-				router.push({
-					pathname: `/${agreementSlug}/e/${extensionSlug}/settings`
-				})
+				router.push(`/${agreementSlug}/e/${extensionSlug}/settings`)
 				return
 			}
 		}

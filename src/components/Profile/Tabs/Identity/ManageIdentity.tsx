@@ -408,7 +408,7 @@ export const ManageIdentityComponent: React.FC = () => {
 													connection:
 														extension.connectionName,
 													redirectUri:
-														window.location.href
+														window.location.toString()
 												})
 											}}
 										>

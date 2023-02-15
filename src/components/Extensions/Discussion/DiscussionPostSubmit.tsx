@@ -192,9 +192,7 @@ export const DiscussionPostSubmit: React.FC = () => {
 				key: privateKey
 			})
 
-			router.push({
-				pathname: `/${agreement.slug}/e/discussions/${id}`
-			})
+			router.push(`/${agreement.slug}/e/discussions/${id}`)
 		} catch (e) {
 			log.crit(e)
 			setIsLoading(false)

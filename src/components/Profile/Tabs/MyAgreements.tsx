@@ -13,6 +13,7 @@ import {
 } from '@mantine/core'
 import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -23,6 +24,7 @@ import {
 	agreementSummaryFromDb,
 	isJwtError as isJwtError
 } from '../../../model/agreement/agreements'
+import { CookieKeys } from '../../../utils/cookies'
 import { hostnameToChainId } from '../../App'
 import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
@@ -69,12 +71,11 @@ export const MyAgreementsComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (isJwtError(error)) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/profile?tab=myCommunities`
-				}
-			})
+			Cookies.set(
+				CookieKeys.authRedirectUrl,
+				`/profile?tab=myCommunities`
+			)
+			router.push('/authenticate')
 		}
 	}, [error, router])
 

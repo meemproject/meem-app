@@ -3,6 +3,7 @@ import { ApolloError, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import { hideNotification, showNotification } from '@mantine/notifications'
 import { useWallet, useMeemApollo } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, {
 	useState,
@@ -29,6 +30,7 @@ import agreementFromDb, {
 	Agreement,
 	isJwtError
 } from '../../model/agreement/agreements'
+import { CookieKeys } from '../../utils/cookies'
 import {
 	showErrorNotification,
 	showSuccessNotification
@@ -301,15 +303,14 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		}
 
 		if (isJwtError(errorMemberAgreement)) {
-			const query =
-				window.location.pathname !== '/authenticate'
-					? {
-							return: window.location.pathname
-					  }
-					: {}
+			if (window && !window.location.href.includes('/authenticate')) {
+				Cookies.set(
+					CookieKeys.authRedirectUrl,
+					window.location.toString()
+				)
+			}
 			router.push({
-				pathname: '/authenticate',
-				query
+				pathname: '/authenticate'
 			})
 		}
 
