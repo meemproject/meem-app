@@ -1,3 +1,17 @@
+## [1.23.4](https://github.com/meemproject/meem-app/compare/v1.23.3...v1.23.4) (2023-02-14)
+
+## [1.23.3](https://github.com/meemproject/meem-app/compare/v1.23.2...v1.23.3) (2023-02-14)
+
+## [1.23.2](https://github.com/meemproject/meem-app/compare/v1.23.1...v1.23.2) (2023-02-14)
+
+
+### Bug Fixes
+
+* Remove reference to easter egg ([c4f13eb](https://github.com/meemproject/meem-app/commit/c4f13eb))
+* symphony sign in redirect flow ([1727b9c](https://github.com/meemproject/meem-app/commit/1727b9c))
+
+## [1.23.1](https://github.com/meemproject/meem-app/compare/v1.23.0...v1.23.1) (2023-02-14)
+
 # [1.23.0](https://github.com/meemproject/meem-app/compare/v1.22.4...v1.23.0) (2023-02-14)
 
 
