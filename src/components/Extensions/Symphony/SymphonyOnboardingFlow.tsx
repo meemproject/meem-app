@@ -169,10 +169,12 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			isLoadingMyAgreements ||
 			isEnablingExtension ||
 			extensionsLoading ||
-			isLoadingAgreement
+			(hasChosenAgreement && isLoadingAgreement)
 		) {
 			setPageState(PageState.Loading)
-			log.debug('set page state = loading')
+			log.debug(
+				`set page state = loading - myagr=${isLoadingMyAgreements}, enablingext=${isEnablingExtension}, extensionsLoading=${extensionsLoading}, hasChosenAgr=${hasChosenAgreement}, isLoadingAgr=${isLoadingAgreement}`
+			)
 		} else if (myAgreementsError) {
 			setPageState(PageState.Error)
 			log.debug('set page state = error')
@@ -210,7 +212,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		agreement,
 		extensionsLoading,
 		pageState,
-		isLoadingAgreement
+		isLoadingAgreement,
+		hasChosenAgreement
 	])
 
 	const chooseAgreementAndEnableExtension = async (

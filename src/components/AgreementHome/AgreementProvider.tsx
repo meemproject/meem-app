@@ -45,12 +45,10 @@ const defaultState: {
 	txIds?: string[]
 	isTransactionInProgress: boolean
 	watchTransactions: (txIds: string[]) => void
-	setSlugManually: (slug: string) => void
 } = {
 	isLoadingAgreement: false,
 	isTransactionInProgress: false,
-	watchTransactions: () => {},
-	setSlugManually: () => {}
+	watchTransactions: () => {}
 }
 
 const AgreementContext = createContext(defaultState)
@@ -87,7 +85,6 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 
 	// Has the agreement slug changed? (i.e. from page navigation)
 	const [originalSlug, setOriginalSlug] = useState('')
-	const [agreementSlug, setAgreementSlug] = useState(slug)
 
 	// Subscriptions
 	const {
@@ -98,14 +95,14 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		{
 			variables: {
 				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-				agreementSlug,
+				agreementSlug: slug,
 				chainId:
 					wallet.chainId ??
 					hostnameToChainId(
 						global.window ? global.window.location.host : ''
 					)
 			},
-			skip: !agreementSlug || isMembersOnly,
+			skip: !slug || isMembersOnly,
 			client: anonClient
 		}
 	)
@@ -118,7 +115,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		SUB_AGREEMENT_AS_MEMBER,
 		{
 			variables: {
-				agreementSlug,
+				slug,
 				chainId:
 					wallet.chainId ??
 					hostnameToChainId(
@@ -127,7 +124,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			},
 			client: mutualMembersClient,
 			skip:
-				!agreementSlug ||
+				!slug ||
 				(isMembersOnly && !wallet.isConnected) ||
 				(!isMembersOnly &&
 					(!isCurrentUserAgreementMemberData ||
@@ -142,7 +139,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		data: anonAgreementData
 	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
 		variables: {
-			agreementSlug,
+			slug,
 			chainId:
 				wallet.chainId ??
 				hostnameToChainId(
@@ -151,7 +148,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		},
 		client: anonClient,
 		skip:
-			!agreementSlug ||
+			!slug ||
 			agreement !== undefined ||
 			isMembersOnly ||
 			!isCurrentUserAgreementMemberData ||
@@ -171,14 +168,14 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		if (errorAnonAgreement) {
 			log.debug('Loading anonymous agreement failed:')
 			log.debug(JSON.stringify(errorAnonAgreement))
-			setOriginalSlug(agreementSlug ?? '')
+			setOriginalSlug(slug ?? '')
 			setIsLoadingAgreement(false)
 		}
 
 		if (errorMemberAgreement) {
 			log.debug('Loading member-access agreement failed:')
 			log.debug(JSON.stringify(errorMemberAgreement))
-			setOriginalSlug(agreementSlug ?? '')
+			setOriginalSlug(slug ?? '')
 			setIsLoadingAgreement(false)
 		}
 
@@ -263,7 +260,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				anonAgreementData.Agreements.length === 0
 			) {
 				setIsLoadingAgreement(false)
-				setOriginalSlug(agreementSlug ?? '')
+				setOriginalSlug(slug ?? '')
 				return
 			}
 
@@ -284,7 +281,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			if (possibleAgreement && possibleAgreement.name) {
 				setAgreement(possibleAgreement)
 				setIsLoadingAgreement(false)
-				setOriginalSlug(agreementSlug ?? '')
+				setOriginalSlug(slug ?? '')
 				log.debug('got agreement')
 			}
 
@@ -317,10 +314,10 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			})
 		}
 
-		if (agreementSlug !== originalSlug) {
+		if (slug !== originalSlug) {
 			setAgreement(undefined)
-			if (agreementSlug) {
-				setOriginalSlug(agreementSlug)
+			if (slug) {
+				setOriginalSlug(slug)
 			}
 			setIsLoadingAgreement(true)
 		}
@@ -346,19 +343,13 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		userAgreementMemberError,
 		router,
 		isCurrentUserAgreementMemberData,
-		agreementSlug,
+		slug,
 		originalSlug,
 		isMembersOnly,
 		transactionIds.length,
 		transactions,
 		error
 	])
-
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	function setSlugManually(newSlug: string) {
-		setOriginalSlug(slug ?? '')
-		setAgreementSlug(newSlug)
-	}
 
 	function watchTransactions(txIds: string[]) {
 		setTransactionIds(txIds)
@@ -382,8 +373,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			isMembersOnly,
 			txIds: transactionIds,
 			isTransactionInProgress,
-			watchTransactions,
-			setSlugManually
+			watchTransactions
 		}),
 		[
 			agreement,
@@ -392,7 +382,6 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			isLoadingAgreement,
 			isMembersOnly,
 			isTransactionInProgress,
-			setSlugManually,
 			transactionIds
 		]
 	)
