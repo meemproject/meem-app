@@ -292,7 +292,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 						setOnboardingStep(3)
 					}
 				} else if (twitterUsername && discordInfo) {
-					setOnboardingStep(3)
+					if (botCode) {
+						setOnboardingStep(3)
+					} else {
+						setOnboardingStep(2)
+					}
 				}
 			}
 		}
@@ -324,7 +328,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		router,
 		twitterDataLoading,
 		discordInfoLoading,
-		slackInfoLoading
+		slackInfoLoading,
+		botCode
 	])
 
 	const chooseAgreementAndEnableExtension = async (chosen?: Agreement) => {
