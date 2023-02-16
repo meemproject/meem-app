@@ -175,13 +175,9 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 		form.values.proposalChannels.length > 0
 	) {
 		form.values.proposalChannels.forEach((c: string) => {
-			if (c === 'all') {
+			const channel = channels.find(ch => ch.id === c)
+			if (channel && (!channel.canSend || !channel.canView)) {
 				isProposalChannelGated = true
-			} else {
-				const channel = channels.find(ch => ch.id === c)
-				if (channel && (!channel.canSend || !channel.canView)) {
-					isProposalChannelGated = true
-				}
 			}
 		})
 	}
@@ -233,7 +229,6 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 					<Space h={8} />
 					<MultiSelect
 						data={[
-							{ value: 'all', label: 'All Channels' },
 							...channels.map(c => ({
 								value: c.id,
 								label: c.name
