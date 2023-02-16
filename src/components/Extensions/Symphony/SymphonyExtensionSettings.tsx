@@ -11,7 +11,9 @@ import {
 	Modal,
 	Menu,
 	Loader,
-	useMantineColorScheme
+	useMantineColorScheme,
+	Stepper,
+	Code
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import {
@@ -77,6 +79,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 	// Page state
 	const isInOnboardingMode = router.query.isOnboarding === 'true'
+	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
+		useState(false)
+	const [connectDiscordStep, setConnectDiscordStep] = useState(0)
 	const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
 	const [isRuleBuilderOpen, setIsRuleBuilderOpen] = useState(false)
 	const { colorScheme } = useMantineColorScheme()
@@ -401,6 +406,14 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		(process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
 			!!slackData)
 
+	useEffect(() => {
+		if (discordInfo && typeof discordData?.Discords[0].name === 'string') {
+			// if discord is connected, hide the discord connect modal
+			setIsConnectDiscordModalOpen(false)
+			setConnectDiscordStep(0)
+		}
+	}, [discordData?.Discords, discordInfo])
+
 	const integrationsSection = () => (
 		<>
 			<Space h={24} />
@@ -502,7 +515,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							leftIcon={<Discord height={16} width={16} />}
 							className={meemTheme.buttonWhite}
 							onClick={() => {
-								handleInviteBot()
+								setIsConnectDiscordModalOpen(true)
 							}}
 						>
 							Connect Discord
@@ -547,7 +560,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 													setSelectedConnection(
 														SelectedConnection.ConnectionDiscord
 													)
-													handleReauthenticate()
+													setIsConnectDiscordModalOpen(
+														true
+													)
 												}}
 											>
 												Re-authenticate
@@ -671,6 +686,139 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				)}
 			</div>
 			<Modal
+				opened={isConnectDiscordModalOpen}
+				onClose={() => setIsConnectDiscordModalOpen(false)}
+				overlayBlur={8}
+				withCloseButton={false}
+				radius={16}
+				size={'lg'}
+				padding={'sm'}
+			>
+				<Space h={16} />
+
+				<Center>
+					<Text
+						className={meemTheme.tMediumBold}
+						style={{ textAlign: 'center' }}
+					>
+						{`Connect to Discord`}
+					</Text>
+				</Center>
+				<Space h={24} />
+				<Stepper
+					active={connectDiscordStep}
+					breakpoint="sm"
+					orientation="vertical"
+				>
+					<Stepper.Step
+						label="Invite Symphony bot"
+						description={
+							<>
+								<Text className={meemTheme.tExtraSmall}>
+									{connectDiscordStep === 1
+										? `You've invited the Symphony bot to your Discord server.`
+										: `Please invite the Symphony bot to manage your Discord server.`}
+								</Text>
+								{connectDiscordStep === 0 && (
+									<>
+										<Space h={16} />
+										<div className={meemTheme.row}>
+											<Button
+												leftIcon={
+													<Image
+														width={16}
+														src={`/integration-discord-white.png`}
+													/>
+												}
+												className={
+													meemTheme.buttonDiscordBlue
+												}
+												onClick={() => {
+													handleInviteBot()
+												}}
+											>
+												{`Invite Symphony Bot`}
+											</Button>
+										</div>
+										<Space h={16} />
+
+										{botCode && (
+											<>
+												<div className={meemTheme.row}>
+													<Button
+														className={
+															meemTheme.buttonBlack
+														}
+														onClick={() => {
+															setConnectDiscordStep(
+																1
+															)
+														}}
+													>
+														{`Next`}
+													</Button>
+												</div>
+												<Space h={16} />
+											</>
+										)}
+									</>
+								)}
+							</>
+						}
+					/>
+					<Stepper.Step
+						label="Activate Symphony in Discord"
+						description={
+							<>
+								<Text className={meemTheme.tExtraSmall}>
+									Type{' '}
+									<span style={{ fontWeight: '600' }}>
+										/activate
+									</span>{' '}
+									in any public channel of your Discord
+									server, then enter the code below:
+								</Text>
+								{connectDiscordStep === 1 && (
+									<>
+										<Space h={16} />
+										<Code
+											style={{ cursor: 'pointer' }}
+											onClick={() => {
+												navigator.clipboard.writeText(
+													`${botCode}`
+												)
+												showSuccessNotification(
+													'Copied to clipboard',
+													`The code was copied to your clipboard.`
+												)
+											}}
+											block
+										>{`${botCode}`}</Code>
+										<Space h={16} />
+
+										<div className={meemTheme.centeredRow}>
+											<Loader
+												variant="oval"
+												color="cyan"
+												size={24}
+											/>
+											<Space w={8} />
+											<Text
+												className={
+													meemTheme.tExtraExtraSmall
+												}
+											>
+												Waiting for activation...
+											</Text>
+										</div>
+									</>
+								)}
+							</>
+						}
+					></Stepper.Step>
+				</Stepper>
+			</Modal>
+			<Modal
 				opened={isDisconnectModalOpen}
 				onClose={() => setIsDisconnectModalOpen(false)}
 				overlayBlur={8}
@@ -704,8 +852,13 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						className={meemTheme.tSmallFaded}
 						style={{ textAlign: 'center', lineHeight: 1.4 }}
 					>
-						Symphony will not be able to publish any community
-						tweets unless connection is restored.
+						{`Symphony will not be able to publish any community
+						tweets unless connection is restored. ${
+							selectedConnection ===
+							SelectedConnection.ConnectionDiscord
+								? 'All Discord-related rules will also be deleted.'
+								: ''
+						}`}
 					</Text>
 				</Center>
 				<Space h={24} />
