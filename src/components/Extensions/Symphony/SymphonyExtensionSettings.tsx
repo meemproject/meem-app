@@ -10,9 +10,7 @@ import {
 	Image,
 	Modal,
 	Loader,
-	Stepper,
-	useMantineColorScheme,
-	Code
+	useMantineColorScheme
 } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import {
@@ -64,11 +62,10 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('symphony', agreement)
 	const router = useRouter()
+	const isInOnboardingMode = router.query.isOnboarding === 'true'
 
-	const [activeStep, setActiveStep] = useState(0)
 	const [selectedRule, setSelectedRule] =
 		useState<SubRulesSubscription['Rules'][0]>()
-	const [botCode, setBotCode] = useState<string | undefined>()
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [selectedConnection, setSelectedConnection] =
 		useState<SelectedConnection>()
@@ -78,12 +75,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	const isInOnboardingMode = router.query.isOnboarding === 'true'
-	const [shouldShowSetupComplete, setShouldShowSetupComplete] =
-		useState(false)
-	const [hasDismissedSetupComplete, setHasDismissedSetupComplete] =
-		useState(false)
-
+	const [botCode, setBotCode] = useState<string>('')
 	const handleInviteBot = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
 			return
@@ -97,7 +89,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			)
 
 		setBotCode(code)
-		setActiveStep(2)
 
 		window.open(inviteUrl, '_blank')
 	}, [agreement, jwt])
@@ -290,7 +281,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							}
 						}
 					)
-					setActiveStep(1)
 					showSuccessNotification(
 						'Discord Disconnected',
 						'Discord has been disconnected'
@@ -311,7 +301,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							}
 						}
 					)
-					setActiveStep(0)
 					showSuccessNotification(
 						'Twitter Disconnected',
 						'Twitter has been disconnected'
@@ -407,38 +396,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		!!discordData &&
 		(process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
 			!!slackData)
-
-	useEffect(() => {
-		if (twitterUsername && twitterUsername.length > 0 && activeStep === 0) {
-			setActiveStep(1)
-		} else if (!twitterUsername && activeStep !== 0) {
-			setActiveStep(0)
-		}
-
-		if (
-			isInOnboardingMode &&
-			rules &&
-			rules.length === 0 &&
-			twitterUsername &&
-			discordData?.Discords[0]?.name &&
-			!hasDismissedSetupComplete
-		) {
-			setShouldShowSetupComplete(true)
-		}
-	}, [
-		twitterUsername,
-		activeStep,
-		discordData,
-		isInOnboardingMode,
-		rules,
-		hasDismissedSetupComplete
-	])
-
-	const isConnectionEstablished =
-		!!twitterData?.Twitters[0] &&
-		!!twitterData?.Twitters[0].username &&
-		!!discordData?.Discords[0] &&
-		typeof discordData?.Discords[0].name === 'string'
 
 	const customExtensionSettings = () => (
 		<>
@@ -699,176 +656,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		</>
 	)
 
-	const onboardingState = (
-		<>
-			<Space h={24} />
-			<Text className={meemTheme.tExtraSmallLabel}>{`${
-				isInOnboardingMode ? 'COMPLETE SYMPHONY SETUP' : 'CONFIGURATION'
-			}`}</Text>
-			<Space h={24} />
-			<Stepper active={activeStep} breakpoint="sm" orientation="vertical">
-				<Stepper.Step
-					label="Connect publishing account"
-					description={
-						<>
-							<Text
-								className={meemTheme.tExtraSmall}
-							>{`Please connect the account where your community’s posts will be published.`}</Text>
-							{activeStep === 0 && (
-								<>
-									<Space h={16} />
-									<div className={meemTheme.row}>
-										<Button
-											onClick={() => {
-												handleAuthTwitter()
-											}}
-											className={meemTheme.buttonBlack}
-											leftIcon={
-												<Image
-													width={16}
-													src={`/integration-twitter-white.png`}
-												/>
-											}
-										>
-											Connect Twitter
-										</Button>
-										{/* <Space w={8} />
-										<Button
-											className={
-												meemTheme.buttonYellowSolidBordered
-											}
-											onClick={() => {}}
-										>
-											Add More Accounts
-										</Button> */}
-									</div>
-								</>
-							)}
-							{activeStep === 1 && (
-								<>
-									<Space h={16} />
-									<div className={meemTheme.row}>
-										<Button
-											onClick={() => {
-												handleAuthTwitter()
-											}}
-											className={meemTheme.buttonWhite}
-										>
-											{`Connected as ${twitterUsername}`}
-										</Button>
-									</div>
-								</>
-							)}
-							<Space h={16} />
-						</>
-					}
-				></Stepper.Step>
-				<Stepper.Step
-					label="Invite Symphony bot"
-					description={
-						<>
-							<Text
-								className={meemTheme.tExtraSmall}
-							>{`Please invite the Symphony bot to manage your Discord server.`}</Text>
-							{activeStep === 1 && (
-								<>
-									<Space h={16} />
-									<div className={meemTheme.row}>
-										<Button
-											leftIcon={
-												<Image
-													width={16}
-													src={`/integration-discord-white.png`}
-												/>
-											}
-											className={
-												meemTheme.buttonDiscordBlue
-											}
-											onClick={() => {
-												handleInviteBot()
-											}}
-										>
-											{`Invite Symphony Bot`}
-										</Button>
-									</div>
-									<Space h={16} />
-
-									{botCode && (
-										<>
-											<div className={meemTheme.row}>
-												<Button
-													className={
-														meemTheme.buttonBlack
-													}
-													onClick={() => {
-														setActiveStep(2)
-													}}
-												>
-													{`Next`}
-												</Button>
-											</div>
-											<Space h={16} />
-										</>
-									)}
-								</>
-							)}
-						</>
-					}
-				></Stepper.Step>
-				<Stepper.Step
-					label="Activate Symphony"
-					description={
-						<>
-							<Text className={meemTheme.tExtraSmall}>
-								Type{' '}
-								<span style={{ fontWeight: '600' }}>
-									/activate
-								</span>{' '}
-								in any public channel of your Discord server,
-								then enter the code below:
-							</Text>
-							{activeStep === 2 && (
-								<>
-									<Space h={16} />
-									<Code
-										style={{ cursor: 'pointer' }}
-										onClick={() => {
-											navigator.clipboard.writeText(
-												`${botCode}`
-											)
-											showSuccessNotification(
-												'Copied to clipboard',
-												`The code was copied to your clipboard.`
-											)
-										}}
-										block
-									>{`${botCode}`}</Code>
-									<Space h={16} />
-
-									<div className={meemTheme.centeredRow}>
-										<Loader
-											variant="oval"
-											color="cyan"
-											size={24}
-										/>
-										<Space w={8} />
-										<Text
-											className={
-												meemTheme.tExtraExtraSmall
-											}
-										>
-											Waiting for activation...
-										</Text>
-									</div>
-								</>
-							)}
-						</>
-					}
-				></Stepper.Step>
-			</Stepper>
-		</>
-	)
-
 	const mainState = (
 		<>
 			{customExtensionSettings()}
@@ -885,27 +672,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		</>
 	)
 
-	const setupCompleteState = (
-		<>
-			<Space h={48} />
-			<Center>
-				<Text className={meemTheme.tLargeBold}>Setup Complete!</Text>
-			</Center>
-			<Space h={36} />
-			<Center>
-				<Button
-					size="lg"
-					className={meemTheme.buttonBlack}
-					onClick={() => {
-						setHasDismissedSetupComplete(true)
-					}}
-				>
-					Start using Symphony
-				</Button>
-			</Center>
-		</>
-	)
-
 	const pageHeader = (
 		<>
 			<div
@@ -917,7 +683,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					<Image
 						className={meemTheme.copyIcon}
 						src={`/ext-symphony.png`}
-						width={220}
+						fit={'contain'}
+						width={180}
+						height={40}
 					/>
 				</Center>
 
@@ -1024,39 +792,12 @@ export const SymphonyExtensionSettings: React.FC = () => {
 								<>
 									{/* buckle up...  */}
 									{isInOnboardingMode && (
-										<>
-											{!isConnectionEstablished && (
-												<>{pageHeader}</>
-											)}
-											{isConnectionEstablished &&
-												!hasDismissedSetupComplete && (
-													<>{pageHeader}</>
-												)}
-
-											{isConnectionEstablished &&
-												hasDismissedSetupComplete && (
-													<>{pageHeaderOnboarding}</>
-												)}
-										</>
+										<>{pageHeaderOnboarding}</>
 									)}
 									{!isInOnboardingMode && <>{pageHeader}</>}
 
 									<Container>
-										{shouldShowSetupComplete &&
-											!hasDismissedSetupComplete && (
-												<>{setupCompleteState}</>
-											)}
-
-										{isConnectionEstablished &&
-											(!isInOnboardingMode ||
-												(isInOnboardingMode &&
-													hasDismissedSetupComplete)) && (
-												<>{mainState}</>
-											)}
-
-										{!isConnectionEstablished && (
-											<>{onboardingState}</>
-										)}
+										<>{mainState}</>
 									</Container>
 								</>
 							)}

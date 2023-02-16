@@ -60,6 +60,7 @@ import {
 	colorBlack,
 	colorBlue,
 	colorDarkerGrey,
+	colorGreen,
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -103,6 +104,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		useState(false)
 	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
 	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
+	const [isWaitingForStateChangeDelay, setIsWaitingForStateChangeDelay] =
+		useState(false)
 
 	// Bot code data
 	const [botCode, setBotCode] = useState<string | undefined>()
@@ -233,11 +236,20 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const twitterUsername =
 		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
 	const discordInfo = discordData?.Discords[0]
+	const discordHasName =
+		discordInfo && discordData?.Discords[0]?.name !== undefined
 	const slackInfo = slackData?.Slacks[0]
 
-	// Handle page state changes
+	const isConnectionEstablished =
+		!!twitterData?.Twitters[0] &&
+		!!twitterData?.Twitters[0].username &&
+		!!discordData?.Discords[0] &&
+		typeof discordData?.Discords[0].name === 'string'
 
+	// Handle page state changes
 	useEffect(() => {
+		// Prevent page state flickering when several variables update simultaneously
+
 		const twitterAuthRedirectAgreementSlug = Cookies.get(
 			CookieKeys.symphonyOnboardingAgreementSlug
 		)
@@ -260,7 +272,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		} else if (
 			!isLoadingMyAgreements &&
 			!myAgreementsError &&
-			myAgreements?.length === 0
+			(myAgreements?.length === 0 || shouldShowCreateNewCommunity)
 		) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
@@ -273,7 +285,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		) {
 			setPageState(PageState.PickCommunity)
 			log.debug('set page state = pickCommunity')
-		} else if (chosenAgreement) {
+		} else if (chosenAgreement && isConnectionEstablished) {
+			setPageState(PageState.SetupComplete)
+			log.debug(`set page state = setup complete`)
+		} else if (chosenAgreement && !isConnectionEstablished) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
 		}
@@ -329,7 +344,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		twitterDataLoading,
 		discordInfoLoading,
 		slackInfoLoading,
-		botCode
+		botCode,
+		discordHasName,
+		isWaitingForStateChangeDelay,
+		isConnectionEstablished,
+		shouldShowCreateNewCommunity
 	])
 
 	const chooseAgreementAndEnableExtension = async (chosen?: Agreement) => {
@@ -364,6 +383,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 						'Oops!',
 						`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
 					)
+					setIsEnablingExtension(false)
 					return
 				}
 
@@ -377,12 +397,14 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					}
 				})
 				setChosenAgreement(chosen)
+				setIsEnablingExtension(false)
 			} catch (e) {
 				log.debug(e)
 				showErrorNotification(
 					'Oops!',
 					`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
 				)
+				setIsEnablingExtension(false)
 			}
 		} else {
 			log.debug('no matching extensions to enable...')
@@ -390,6 +412,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				'Oops!',
 				`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
 			)
+			setIsEnablingExtension(false)
 		}
 	}
 
@@ -462,7 +485,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					<Image
 						className={meemTheme.copyIcon}
 						src={`/${extensionIcon}`}
-						width={220}
+						fit={'contain'}
+						width={180}
+						height={40}
 					/>
 				</div>
 			</Container>
@@ -526,7 +551,15 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 						<Space h={16} />
 					</>
 				) : (
-					<Text>{chosenAgreement?.name}</Text>
+					<>
+						<TextInput
+							radius="lg"
+							size="md"
+							value={chosenAgreement?.name ?? ''}
+							disabled
+						/>
+						<Space h={16} />
+					</>
 				)
 			}
 		/>
@@ -596,9 +629,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			label="Invite Symphony bot"
 			description={
 				<>
-					<Text
-						className={meemTheme.tExtraSmall}
-					>{`Please invite the Symphony bot to manage your Discord server.`}</Text>
+					<Text className={meemTheme.tExtraSmall}>
+						{onboardingStep === 3
+							? `You've invited the Symphony bot to your Discord server.`
+							: `Please invite the Symphony bot to manage your Discord server.`}
+					</Text>
 					{onboardingStep === 2 && (
 						<>
 							<Space h={16} />
@@ -683,6 +718,38 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		></Stepper.Step>
 	)
 
+	const setupCompleteState = (
+		<>
+			<Space h={48} />
+			<Center>
+				<Text className={meemTheme.tLargeBold} color={colorGreen}>
+					Installation Complete!
+				</Text>
+			</Center>
+			<Space h={24} />
+			<Center>
+				<Text>
+					Add your first proposal rule to start publishing with
+					Symphony.
+				</Text>
+			</Center>
+			<Space h={36} />
+
+			<Center>
+				<Button
+					className={meemTheme.buttonBlack}
+					onClick={() => {
+						router.push(
+							`/${chosenAgreement?.slug}/e/symphony/settings`
+						)
+					}}
+				>
+					Manage Symphony
+				</Button>
+			</Center>
+		</>
+	)
+
 	return (
 		<>
 			{/* Loading state */}
@@ -697,6 +764,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 			{/* Page header */}
 			{pageState !== PageState.Loading && <>{pageHeader}</>}
+
+			{pageState === PageState.SetupComplete && <>{setupCompleteState}</>}
 
 			{pageState === PageState.Onboarding && (
 				<>
@@ -844,6 +913,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									className={meemTheme.gridItemCenteredAsh}
 									onClick={() => {
 										setShouldShowCreateNewCommunity(true)
+										setPageState(PageState.Onboarding)
 									}}
 								>
 									<Space h={16} />

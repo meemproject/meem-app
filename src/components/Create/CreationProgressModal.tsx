@@ -65,10 +65,12 @@ export const CreationProgressModal: React.FC<IProps> = ({
 	useEffect(() => {
 		if (error) {
 			log.crit(error)
-			showErrorNotification(
-				'Error Fetching Data',
-				'Please reload and try again.'
-			)
+			if (!JSON.stringify(error).includes('OwnerId')) {
+				showErrorNotification(
+					'Error Fetching Data',
+					'Please reload and try again.'
+				)
+			}
 		}
 	}, [error])
 
@@ -208,11 +210,11 @@ export const CreationProgressModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		// Create the agreement
-		if (isOpened && !hasStartedCreating) {
+		if (isOpened && !hasStartedCreating && transactionIds.length === 0) {
 			setHasStartedCreating(true)
 			create()
 		}
-	}, [hasStartedCreating, isOpened, create])
+	}, [hasStartedCreating, isOpened, create, transactionIds.length])
 
 	useEffect(() => {
 		let newActiveStep = 1
