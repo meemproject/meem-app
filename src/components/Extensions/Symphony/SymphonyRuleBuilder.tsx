@@ -16,7 +16,7 @@ import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
 import { SubRulesSubscription } from '../../../../generated/graphql'
-import { useMeemTheme, colorRed } from '../../Styles/MeemTheme'
+import { useMeemTheme, colorOrangeRed } from '../../Styles/MeemTheme'
 import { API } from './symphonyTypes.generated'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -252,7 +252,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 								}}
 							>
 								<WarningCircle
-									color={colorRed}
+									color={colorOrangeRed}
 									height={16}
 									width={16}
 								/>
@@ -260,7 +260,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 								<Text
 									className={meemTheme.tBadgeText}
 									style={{
-										color: colorRed
+										color: colorOrangeRed
 									}}
 								>
 									Please ensure Symphony Bot has full access
@@ -452,7 +452,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 										}}
 									>
 										<WarningCircle
-											color={colorRed}
+											color={colorOrangeRed}
 											height={16}
 											width={16}
 										/>
@@ -460,7 +460,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 										<Text
 											className={meemTheme.tBadgeText}
 											style={{
-												color: colorRed
+												color: colorOrangeRed
 											}}
 										>
 											Please ensure Symphony Bot has full

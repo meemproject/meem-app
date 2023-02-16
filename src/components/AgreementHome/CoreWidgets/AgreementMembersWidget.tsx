@@ -14,7 +14,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
-import { colorRed, useMeemTheme } from '../../Styles/MeemTheme'
+import { colorOrangeRed, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }
@@ -96,7 +96,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 								<Star
 									color={
 										member.isAgreementOwner
-											? colorRed
+											? colorOrangeRed
 											: undefined
 									}
 									style={{

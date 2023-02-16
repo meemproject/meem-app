@@ -15,7 +15,7 @@ import {
 	colorGreen,
 	colorBlue,
 	useMeemTheme,
-	colorRed
+	colorOrangeRed
 } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
@@ -407,7 +407,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 										<DeleteCircle
 											width={24}
 											height={24}
-											color={colorRed}
+											color={colorOrangeRed}
 										/>
 									)}
 									<Space w={12} />

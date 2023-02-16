@@ -19,7 +19,9 @@ export const colorLightYellow = `#FEFFE5`
 export const colorYellow = '#F9FF15'
 export const colorDarkYellow = '#e0e810'
 export const colorDarkerYellow = '#4d4f08'
-export const colorRed = '#FF6651'
+export const colorOrangeRed = '#FF6651'
+export const colorRed = '#D95C4B'
+export const colorDarkRed = '#c35244'
 export const colorAsh = '#BFCDD8'
 export const colorAshHover = '#b0c1cf'
 export const colorAshLight = '#F4F7F8'
@@ -145,6 +147,21 @@ export const useMeemTheme = createStyles(theme => ({
 		},
 		borderRadius: 24
 	},
+	buttonRed: {
+		color: colorWhite,
+		backgroundColor: colorRed,
+		'&:hover': {
+			backgroundColor: colorDarkRed
+		},
+		'&:loading': {
+			backgroundColor: colorDarkRed
+		},
+		'&:disabled': {
+			backgroundColor: colorDarkRed,
+			color: colorBlack
+		},
+		borderRadius: 24
+	},
 	buttonYellowSolidBordered: {
 		color: colorBlack,
 		backgroundColor: colorYellow,
@@ -176,8 +193,8 @@ export const useMeemTheme = createStyles(theme => ({
 		border: `2px solid ${colorYellow}`,
 		borderRadius: 24
 	},
-	buttonRedBordered: {
-		color: colorRed,
+	buttonOrangeRedBordered: {
+		color: colorOrangeRed,
 		backgroundColor: 'transparent',
 		'&:hover': {
 			backgroundColor:
@@ -191,7 +208,7 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor:
 				theme.colorScheme === 'dark' ? colorDarkerGrey : colorLightGrey
 		},
-		border: `2px solid ${colorRed}`,
+		border: `2px solid ${colorOrangeRed}`,
 		borderRadius: 24
 	},
 	buttonWhite: {

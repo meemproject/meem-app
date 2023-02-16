@@ -219,7 +219,7 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 								onClick={() => {
 									setIsConfirmModalOpen(true)
 								}}
-								className={meemTheme.buttonRedBordered}
+								className={meemTheme.buttonOrangeRedBordered}
 							>
 								Remove
 							</Button>

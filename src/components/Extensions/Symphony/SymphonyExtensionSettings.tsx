@@ -55,47 +55,31 @@ export enum SelectedConnection {
 }
 
 export const SymphonyExtensionSettings: React.FC = () => {
-	// Default extension settings / properties - leave these alone if possible!
+	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('symphony', agreement)
 	const router = useRouter()
-	const isInOnboardingMode = router.query.isOnboarding === 'true'
 
-	const [selectedRule, setSelectedRule] =
-		useState<SubRulesSubscription['Rules'][0]>()
-	const [isModalOpen, setIsModalOpen] = useState(false)
+	// Extension data
+	const [symphonyClient, setSymphonyClient] =
+		useState<ApolloClient<NormalizedCacheObject>>()
 	const [selectedConnection, setSelectedConnection] =
 		useState<SelectedConnection>()
+	const [selectedRule, setSelectedRule] =
+		useState<SubRulesSubscription['Rules'][0]>()
+	const [botCode, setBotCode] = useState<string>('')
 
+	// Page state
+	const isInOnboardingMode = router.query.isOnboarding === 'true'
+	const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
 	const [isRuleBuilderOpen, setIsRuleBuilderOpen] = useState(false)
-
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	const [botCode, setBotCode] = useState<string>('')
-	const handleInviteBot = useCallback(async () => {
-		if (!agreement?.id || !jwt) {
-			return
-		}
-		const { code, inviteUrl } =
-			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
-				`${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				}${API.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: agreement?.id, jwt } }
-			)
-
-		setBotCode(code)
-
-		window.open(inviteUrl, '_blank')
-	}, [agreement, jwt])
-
-	const [symphonyClient, setSymphonyClient] =
-		useState<ApolloClient<NormalizedCacheObject>>()
-
+	// GraphQL Subscriptions
 	useEffect(() => {
 		const c = createApolloClient({
 			httpUrl: `https://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`,
@@ -201,6 +185,24 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		}
 	)
 
+	// Handle authentication for different services
+	const handleInviteBot = useCallback(async () => {
+		if (!agreement?.id || !jwt) {
+			return
+		}
+		const { code, inviteUrl } =
+			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
+				`${
+					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+				}${API.v1.InviteDiscordBot.path()}`,
+				{ query: { agreementId: agreement?.id, jwt } }
+			)
+
+		setBotCode(code)
+
+		window.open(inviteUrl, '_blank')
+	}, [agreement, jwt])
+
 	const handleAuthTwitter = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
 			return
@@ -285,7 +287,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						'Discord Disconnected',
 						'Discord has been disconnected'
 					)
-					setIsModalOpen(false)
+					setIsDisconnectModalOpen(false)
 					break
 
 				case SelectedConnection.Twitter:
@@ -305,7 +307,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						'Twitter Disconnected',
 						'Twitter has been disconnected'
 					)
-					setIsModalOpen(false)
+					setIsDisconnectModalOpen(false)
 					break
 
 				default:
@@ -316,18 +318,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			showErrorNotification('Something went wrong', 'Please try again ')
 		}
 	}, [selectedConnection, agreement, jwt])
-
-	const saveCustomChanges = async () => {
-		await sdk.agreementExtension.updateAgreementExtension({
-			agreementId: agreement?.id ?? '',
-			isSetupComplete: true,
-			agreementExtensionId: agreementExtension?.id,
-			widget: {
-				isEnabled: true,
-				visibility: MeemAPI.AgreementExtensionVisibility.TokenHolders
-			}
-		})
-	}
 
 	const handleRuleSave = async (values: IOnSave) => {
 		if (!agreement?.id || !jwt) {
@@ -357,7 +347,17 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 		// If extension is not yet marked as 'setup complete', set as complete
 		if (!agreementExtension?.isSetupComplete) {
-			saveCustomChanges()
+			// Note: we don't need to await this request
+			sdk.agreementExtension.updateAgreementExtension({
+				agreementId: agreement?.id ?? '',
+				isSetupComplete: true,
+				agreementExtensionId: agreementExtension?.id,
+				widget: {
+					isEnabled: true,
+					visibility:
+						MeemAPI.AgreementExtensionVisibility.TokenHolders
+				}
+			})
 		}
 
 		setSelectedRule(undefined)
@@ -385,6 +385,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		)
 	}
 
+	// Integration data states
 	const twitterUsername =
 		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
 	const rules = rulesData?.Rules
@@ -397,7 +398,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		(process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
 			!!slackData)
 
-	const customExtensionSettings = () => (
+	const integrationsSection = () => (
 		<>
 			<Space h={24} />
 
@@ -427,7 +428,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 									setSelectedConnection(
 										SelectedConnection.Twitter
 									)
-									setIsModalOpen(true)
+									setIsDisconnectModalOpen(true)
 								}}
 								className={meemTheme.tSmallBold}
 								style={{
@@ -466,7 +467,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 									setSelectedConnection(
 										SelectedConnection.Discord
 									)
-									setIsModalOpen(true)
+									setIsDisconnectModalOpen(true)
 								}}
 								className={meemTheme.tSmallBold}
 								style={{
@@ -510,7 +511,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 											setSelectedConnection(
 												SelectedConnection.Slack
 											)
-											setIsModalOpen(true)
+											setIsDisconnectModalOpen(true)
 										}}
 										className={meemTheme.tSmallBold}
 										style={{
@@ -529,27 +530,70 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				)}
 			</div>
 			<Modal
-				opened={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				title={'Manage Connection'}
+				opened={isDisconnectModalOpen}
+				onClose={() => setIsDisconnectModalOpen(false)}
+				overlayBlur={8}
+				withCloseButton={false}
+				radius={16}
+				size={'lg'}
+				padding={'sm'}
 			>
-				<div
-					style={{
-						display: 'flex',
-						flexDirection: 'row',
-						justifyContent: 'space-around'
-					}}
-				>
-					<Button onClick={handleReauthenticate}>
-						Reauthenticate
+				<Space h={16} />
+
+				<Center>
+					<Text
+						className={meemTheme.tMediumBold}
+						style={{ textAlign: 'center' }}
+					>
+						{`Are you sure you want to disconnect ${
+							selectedConnection === SelectedConnection.Discord
+								? 'Discord'
+								: selectedConnection ===
+								  SelectedConnection.Twitter
+								? 'Twitter'
+								: 'Slack'
+						} from
+					Symphony?`}
+					</Text>
+				</Center>
+				<Space h={24} />
+				<Center>
+					<Text
+						className={meemTheme.tSmallFaded}
+						style={{ textAlign: 'center', lineHeight: 1.4 }}
+					>
+						Symphony will not be able to publish any community
+						tweets unless connection is restored.
+					</Text>
+				</Center>
+				<Space h={24} />
+				<Center>
+					<Button
+						className={meemTheme.buttonRed}
+						onClick={() => {
+							handleDisconnect()
+						}}
+					>
+						Disconnect
 					</Button>
-					<Button onClick={handleDisconnect}>Disconnect</Button>
-				</div>
+				</Center>
+				<Space h={16} />
+				<Center>
+					<Button
+						className={meemTheme.buttonGrey}
+						onClick={() => {
+							setIsDisconnectModalOpen(false)
+						}}
+					>
+						Cancel
+					</Button>
+				</Center>
+				<Space h={16} />
 			</Modal>
 		</>
 	)
 
-	const customExtensionPermissions = () => (
+	const rulesSection = () => (
 		<>
 			{rolesData &&
 				rules &&
@@ -613,7 +657,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 									</Button>
 									<Space h={8} />
 									<Button
-										className={meemTheme.buttonRedBordered}
+										className={
+											meemTheme.buttonOrangeRedBordered
+										}
 										onClick={() => {
 											removeRule(rule.id)
 										}}
@@ -658,7 +704,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 	const mainState = (
 		<>
-			{customExtensionSettings()}
+			{integrationsSection()}
 			<Space h={40} />
 			<Text className={meemTheme.tExtraSmallLabel}>PERMISSIONS</Text>
 			<Space h={4} />
@@ -667,7 +713,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			</Text>
 			<Space h={16} />
 
-			{customExtensionPermissions()}
+			{rulesSection()}
 			<Space h={48} />
 		</>
 	)
