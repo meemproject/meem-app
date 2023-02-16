@@ -18,7 +18,8 @@ import {
 	Stepper,
 	TextInput,
 	Popover,
-	Code
+	Code,
+	Progress
 } from '@mantine/core'
 import {
 	useWallet,
@@ -35,12 +36,18 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
 	GetExtensionsQuery,
+	GetTransactionsSubscription,
 	MyAgreementsSubscriptionSubscription,
 	SubDiscordSubscription,
 	SubSlackSubscription,
 	SubTwitterSubscription
 } from '../../../../generated/graphql'
-import { GET_EXTENSIONS, SUB_MY_AGREEMENTS } from '../../../graphql/agreements'
+import {
+	GET_AGREEMENT_EXISTS,
+	GET_EXTENSIONS,
+	SUB_MY_AGREEMENTS
+} from '../../../graphql/agreements'
+import { SUB_TRANSACTIONS } from '../../../graphql/transactions'
 import {
 	Agreement,
 	agreementSummaryFromDb,
@@ -102,10 +109,13 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const [isEnablingExtension, setIsEnablingExtension] = useState(false)
 	const [shouldShowCreateNewCommunity, setShouldShowCreateNewCommunity] =
 		useState(false)
-	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
 	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
 	const [isWaitingForStateChangeDelay, setIsWaitingForStateChangeDelay] =
 		useState(false)
+
+	// Agreement creation
+	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
+	const [activeStep, setActiveStep] = useState(1)
 
 	// Bot code data
 	const [botCode, setBotCode] = useState<string | undefined>()
@@ -181,6 +191,24 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			client: symphonyClient
 		})
 
+	const [transactionIds, setTransactionIds] = useState<string[]>([])
+
+	const [transactionState, setTransactionState] = useState<{
+		deployContractTxId?: string
+		cutTxId?: string
+		mintTxId?: string
+	}>({})
+
+	const { error, data: transactions } =
+		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
+			variables: {
+				transactionIds
+			},
+			// @ts-ignore
+			client: anonClient,
+			skip: !isCreatingNewCommunity || transactionIds.length === 0
+		})
+
 	useEffect(() => {
 		if (!myAgreements && myAgreementsData) {
 			// Parse my existing agreements
@@ -213,6 +241,158 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			setMyAgreements(agrs)
 		}
 	}, [myAgreements, myAgreementsData, wallet.accounts])
+
+	async function createAgreement() {
+		if (isCreatingNewCommunity) {
+			log.debug('already creating a new community.')
+			return
+		}
+
+		setIsCreatingNewCommunity(true)
+
+		// Step 1. Some basic validation
+		if (
+			!newAgreementName ||
+			newAgreementName.length < 3 ||
+			newAgreementName.length > 30
+		) {
+			// Agreement name invalid
+			log.debug('agreement name is invalid')
+			setIsCreatingNewCommunity(false)
+			showErrorNotification(
+				'Oops!',
+				'You entered an invalid community name. Please choose a longer or shorter name.'
+			)
+
+			return
+		}
+
+		// Step 2 - check if agreement name already exists
+		let agreementNameExists = false
+		if (anonClient) {
+			const agreementCollisions = await anonClient.query({
+				query: GET_AGREEMENT_EXISTS,
+				variables: {
+					slug: newAgreementName
+						.toString()
+						.replaceAll(' ', '-')
+						.toLowerCase(),
+					chainId: hostnameToChainId(
+						global.window ? global.window.location.host : ''
+					)
+				}
+			})
+
+			if (agreementCollisions.data.Agreements.length > 0) {
+				agreementNameExists = true
+			}
+		}
+
+		if (agreementNameExists) {
+			log.debug('agreement already exists...')
+			setIsCreatingNewCommunity(false)
+			showErrorNotification(
+				'Oops!',
+				`A community by that name already exists. Choose a different name.`
+			)
+			return
+		}
+
+		// Step 3 - Create the agreement
+		log.debug('creating agreement...')
+
+		if (!wallet.web3Provider || !wallet.chainId) {
+			log.debug('no web3 provider, returning.')
+			showErrorNotification(
+				'Error creating community',
+				'Please connect your wallet first.'
+			)
+			setIsCreatingNewCommunity(false)
+			return
+		}
+
+		try {
+			const mintPermissions: MeemAPI.IMeemPermission[] = [
+				{
+					permission: 0,
+					mintStartTimestamp: '0',
+					mintEndTimestamp: '0',
+					addresses: [],
+					costWei: '0x00',
+					numTokens: '0x00',
+					merkleRoot:
+						'0x0000000000000000000000000000000000000000000000000000000000000000'
+				}
+			]
+
+			const data = {
+				shouldMintTokens: true,
+				metadata: {
+					meem_metadata_type: 'Meem_AgreementContract',
+					meem_metadata_version: '20221116',
+					name: newAgreementName,
+					description: '',
+					image: '',
+					associations: [],
+					external_url: ''
+				},
+				shouldCreateAdminRole: true,
+				name: newAgreementName,
+				admins: wallet.accounts,
+				members: wallet.accounts,
+				minters: wallet.accounts,
+				maxSupply: '0x00',
+				mintPermissions,
+				splits: [],
+				tokenMetadata: {
+					meem_metadata_type: 'Meem_AgreementToken',
+					meem_metadata_version: '20221116',
+					description: `Membership token for ${newAgreementName}`,
+					name: `${newAgreementName} membership token`,
+					image: '',
+					associations: [],
+					external_url: ''
+				},
+				chainId:
+					wallet.chainId ??
+					hostnameToChainId(
+						global.window ? global.window.location.host : ''
+					)
+			}
+
+			log.debug(JSON.stringify(data))
+
+			const response = await sdk.agreement.createAgreement({
+				...data
+			})
+
+			log.debug(JSON.stringify(response))
+
+			if (response) {
+				setTransactionState({
+					deployContractTxId: response.deployContractTxId,
+					cutTxId: response.cutTxId,
+					mintTxId: response.mintTxId
+				})
+
+				const tIds = [response.deployContractTxId, response.cutTxId]
+				if (response.mintTxId) {
+					tIds.push(response.mintTxId)
+				}
+
+				setTransactionIds(tIds)
+
+				log.debug('finish fetcher')
+			}
+		} catch (e) {
+			log.crit(e)
+			showErrorNotification(
+				'Error creating community',
+				'An error occurred while creating this community. Please try again.'
+			)
+			setIsCreatingNewCommunity(false)
+		}
+	}
 
 	// Authentication check
 	useEffect(() => {
@@ -257,7 +437,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		// Set page state
 		if (
 			isLoadingMyAgreements ||
-			isEnablingExtension ||
+			isCreatingNewCommunity ||
 			extensionsLoading ||
 			twitterDataLoading ||
 			discordInfoLoading ||
@@ -295,7 +475,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 		// Set onboarding step
 		if (pageState === PageState.Onboarding) {
-			if (!chosenAgreement) {
+			if (!chosenAgreement || isEnablingExtension) {
 				setOnboardingStep(0)
 			} else if (chosenAgreement) {
 				if (!twitterUsername && !discordInfo) {
@@ -348,8 +528,56 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		discordHasName,
 		isWaitingForStateChangeDelay,
 		isConnectionEstablished,
-		shouldShowCreateNewCommunity
+		shouldShowCreateNewCommunity,
+		isCreatingNewCommunity
 	])
+
+	// Handle Transaction state changes
+	useEffect(() => {
+		let newActiveStep = 1
+		const deployTransaction = transactions?.Transactions.find(
+			(t: { id: string | undefined }) =>
+				t.id === transactionState?.deployContractTxId
+		)
+		const cutTransaction = transactions?.Transactions.find(
+			(t: { id: string | undefined }) =>
+				t.id === transactionState?.cutTxId
+		)
+		const mintTransaction = transactions?.Transactions.find(
+			(t: { id: string | undefined }) =>
+				t.id === transactionState?.mintTxId
+		)
+
+		if (deployTransaction?.status === MeemAPI.TransactionStatus.Success) {
+			newActiveStep = 2
+		}
+
+		if (cutTransaction?.status === MeemAPI.TransactionStatus.Success) {
+			newActiveStep = 3
+		}
+
+		if (mintTransaction?.status === MeemAPI.TransactionStatus.Success) {
+			newActiveStep = 4
+			if (cutTransaction?.Agreements[0]) {
+				const possibleAgreement = agreementSummaryFromDb(
+					cutTransaction?.Agreements[0],
+					wallet.accounts[0]
+				)
+				setChosenAgreement(possibleAgreement)
+				setTransactionIds([])
+				setIsCreatingNewCommunity(false)
+			} else {
+				showErrorNotification(
+					'Error creating community',
+					'Please try again.'
+				)
+				setTransactionIds([])
+				setIsCreatingNewCommunity(false)
+			}
+		}
+
+		setActiveStep(newActiveStep)
+	}, [transactionState, setActiveStep, transactions, router, wallet.accounts])
 
 	const chooseAgreementAndEnableExtension = async (chosen?: Agreement) => {
 		if (chosen) {
@@ -531,20 +759,27 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							}}
 						/>
 						<Space h={24} />
-						<Button
-							loading={isCreatingNewCommunity}
-							disabled={isCreatingNewCommunity}
-							className={meemTheme.buttonBlack}
-							onClick={() => {
-								setIsCreatingNewCommunity(true)
-							}}
-						>
-							Next
-						</Button>
+						{!isCreatingNewCommunity && (
+							<Button
+								className={meemTheme.buttonBlack}
+								onClick={() => {
+									createAgreement()
+								}}
+							>
+								Next
+							</Button>
+						)}
+
 						{isCreatingNewCommunity && (
 							<>
-								<Space h={16} />
-								<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute, so please don’t close this window or navigate away.`}</Text>
+								<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute or two, so please don’t close this window or navigate away.`}</Text>
+								<Space h={8} />
+								<Progress
+									value={activeStep * 25}
+									animate
+									radius="xl"
+									size="xl"
+								/>
 							</>
 						)}
 
@@ -897,6 +1132,19 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 													</div>
 												</div>
 											</div>
+											{(isEnablingExtension ||
+												extensionsLoading) &&
+												chosenAgreement &&
+												chosenAgreement.slug ===
+													existingAgreement.slug && (
+													<>
+														<Space h={8} />
+														<Loader
+															variant={'oval'}
+															color={'cyan'}
+														/>
+													</>
+												)}
 										</div>
 									</div>
 								</Grid.Col>
@@ -934,19 +1182,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			)}
 
 			<Space h={60} />
-
-			<CreateAgreementModal
-				isOpened={isCreatingNewCommunity}
-				quietMode={true}
-				quietModeAgreementName={newAgreementName}
-				onModalClosed={function (agreement): void {
-					if (agreement) {
-						chooseAgreementAndEnableExtension(agreement)
-					} else {
-						setIsCreatingNewCommunity(false)
-					}
-				}}
-			/>
 
 			<MeemFAQModal
 				isOpened={isMeemFaqModalOpen}
