@@ -281,7 +281,6 @@ export const MyAgreementsComponent: React.FC = () => {
 			)}
 			<CreateAgreementModal
 				isOpened={isCreationModalOpen}
-				quietMode={false}
 				onModalClosed={function (): void {
 					setIsCreationModalOpen(false)
 				}}

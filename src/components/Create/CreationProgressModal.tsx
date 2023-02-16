@@ -21,14 +21,12 @@ interface IProps {
 	agreementName: string
 	isOpened: boolean
 	onModalClosed: (status: string, agreement?: Agreement) => void
-	quietMode?: boolean
 }
 
 export const CreationProgressModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
-	agreementName,
-	quietMode
+	agreementName
 }) => {
 	const router = useRouter()
 
@@ -89,24 +87,15 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				// Successfully created agreement
 				log.debug('agreement creation complete')
 
-				if (quietMode) {
-					showSuccessNotification(
-						'Success!',
-						`Your community has been created. Let's get you set up.`
-					)
-					closeModal('success', agreement)
-				} else {
-					// Route to the created agreement detail page
-					showSuccessNotification(
-						'Success!',
-						`Your community has been created.`
-					)
+				showSuccessNotification(
+					'Success!',
+					`Your community has been created.`
+				)
 
-					router.push(`/${agreement.slug}`)
-				}
+				router.push(`/${agreement.slug}`)
 			}
 		},
-		[closeModal, hasStartedCreating, quietMode, router]
+		[hasStartedCreating, router]
 	)
 
 	const create = useCallback(async () => {
@@ -352,40 +341,36 @@ export const CreationProgressModal: React.FC<IProps> = ({
 
 	return (
 		<>
-			{!quietMode && (
-				<>
-					<Modal
-						className={meemTheme.visibleDesktopOnly}
-						centered
-						closeOnClickOutside={false}
-						closeOnEscape={false}
-						withCloseButton={false}
-						radius={16}
-						size={'60%'}
-						overlayBlur={8}
-						padding={'lg'}
-						opened={isOpened}
-						onClose={() => closeModal('failure')}
-					>
-						{modalContents}
-					</Modal>
-					<Modal
-						className={meemTheme.visibleMobileOnly}
-						centered
-						closeOnClickOutside={false}
-						closeOnEscape={false}
-						withCloseButton={false}
-						radius={16}
-						fullScreen={true}
-						overlayBlur={8}
-						padding={'lg'}
-						opened={isOpened}
-						onClose={() => closeModal('failure')}
-					>
-						{modalContents}
-					</Modal>
-				</>
-			)}
+			<Modal
+				className={meemTheme.visibleDesktopOnly}
+				centered
+				closeOnClickOutside={false}
+				closeOnEscape={false}
+				withCloseButton={false}
+				radius={16}
+				size={'60%'}
+				overlayBlur={8}
+				padding={'lg'}
+				opened={isOpened}
+				onClose={() => closeModal('failure')}
+			>
+				{modalContents}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				centered
+				closeOnClickOutside={false}
+				closeOnEscape={false}
+				withCloseButton={false}
+				radius={16}
+				fullScreen={true}
+				overlayBlur={8}
+				padding={'lg'}
+				opened={isOpened}
+				onClose={() => closeModal('failure')}
+			>
+				{modalContents}
+			</Modal>
 		</>
 	)
 }

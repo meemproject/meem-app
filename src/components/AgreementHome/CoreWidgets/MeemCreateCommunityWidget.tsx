@@ -51,7 +51,6 @@ export const MeemCreateCommunityWidget: React.FC<IProps> = ({ agreement }) => {
 			)}
 			<CreateAgreementModal
 				isOpened={isCreationModalOpen}
-				quietMode={false}
 				onModalClosed={function (): void {
 					setIsCreationModalOpen(false)
 				}}
