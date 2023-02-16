@@ -9,6 +9,7 @@ import {
 	Button,
 	Image,
 	Modal,
+	Menu,
 	Loader,
 	useMantineColorScheme
 } from '@mantine/core'
@@ -19,8 +20,9 @@ import {
 	makeRequest,
 	MeemAPI
 } from '@meemproject/sdk'
+import { IconBrandSlack } from '@tabler/icons'
 import { Emoji } from 'emoji-picker-react'
-import { DeleteCircle } from 'iconoir-react'
+import { DeleteCircle, Discord, LogOut, Twitter } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -40,6 +42,7 @@ import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
 	colorBlue,
 	colorDarkBlue,
+	colorRed,
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -49,9 +52,9 @@ import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
 import { API } from './symphonyTypes.generated'
 
 export enum SelectedConnection {
-	Discord = 'discord',
-	Twitter = 'twitter',
-	Slack = 'slack'
+	ConnectionDiscord = 'discord',
+	ConnectionTwitter = 'twitter',
+	ConnectionSlack = 'slack'
 }
 
 export const SymphonyExtensionSettings: React.FC = () => {
@@ -239,15 +242,15 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 	const handleReauthenticate = useCallback(async () => {
 		switch (selectedConnection) {
-			case SelectedConnection.Discord:
+			case SelectedConnection.ConnectionDiscord:
 				handleInviteBot()
 				break
 
-			case SelectedConnection.Twitter:
+			case SelectedConnection.ConnectionTwitter:
 				handleAuthTwitter()
 				break
 
-			case SelectedConnection.Slack:
+			case SelectedConnection.ConnectionSlack:
 				handleAuthSlack()
 				break
 
@@ -270,7 +273,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		}
 		try {
 			switch (selectedConnection) {
-				case SelectedConnection.Discord:
+				case SelectedConnection.ConnectionDiscord:
 					await makeRequest<API.v1.DisconnectDiscord.IDefinition>(
 						`${
 							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
@@ -290,7 +293,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					setIsDisconnectModalOpen(false)
 					break
 
-				case SelectedConnection.Twitter:
+				case SelectedConnection.ConnectionTwitter:
 					await makeRequest<API.v1.DisconnectTwitter.IDefinition>(
 						`${
 							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
@@ -408,40 +411,85 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						TWITTER ACCOUNT
 					</Text>
 					<Space h={16} />
-					<div className={meemTheme.centeredRow}>
-						<Image
-							width={24}
-							src={
-								isDarkTheme
-									? `/integration-twitter-white.png`
-									: `/integration-twitter.png`
-							}
-						/>
-						<Space w={16} />
-						<div>
-							<Text
-								className={meemTheme.tSmall}
-							>{`Connected as ${twitterUsername}`}</Text>
-							<Space h={4} />
-							<Text
-								onClick={() => {
-									setSelectedConnection(
-										SelectedConnection.Twitter
-									)
-									setIsDisconnectModalOpen(true)
-								}}
-								className={meemTheme.tSmallBold}
-								style={{
-									cursor: 'pointer',
-									color: isDarkTheme
-										? colorBlue
-										: colorDarkBlue
-								}}
-							>
-								Manage Connection
-							</Text>
-						</div>
-					</div>
+					{!twitterUsername && (
+						<Button
+							leftIcon={<Twitter height={16} width={16} />}
+							className={meemTheme.buttonWhite}
+							onClick={() => {
+								handleAuthTwitter()
+							}}
+						>
+							Connect Twitter
+						</Button>
+					)}
+					{twitterUsername && (
+						<>
+							<div className={meemTheme.centeredRow}>
+								<Image
+									width={24}
+									src={
+										isDarkTheme
+											? `/integration-twitter-white.png`
+											: `/integration-twitter.png`
+									}
+								/>
+								<Space w={16} />
+								<div>
+									<Text
+										className={meemTheme.tSmall}
+									>{`Connected as ${twitterUsername}`}</Text>
+									<Space h={4} />
+									<Menu shadow="md" width={200}>
+										<Menu.Target>
+											<Text
+												className={meemTheme.tSmallBold}
+												style={{
+													cursor: 'pointer',
+													color: isDarkTheme
+														? colorBlue
+														: colorDarkBlue
+												}}
+											>
+												Manage Connection
+											</Text>
+										</Menu.Target>
+
+										<Menu.Dropdown>
+											<Menu.Item
+												onClick={() => {
+													setSelectedConnection(
+														SelectedConnection.ConnectionTwitter
+													)
+													handleReauthenticate()
+												}}
+											>
+												Re-authenticate
+											</Menu.Item>
+											<Menu.Item
+												icon={
+													<LogOut
+														height={14}
+														width={14}
+													/>
+												}
+												color={colorRed}
+												onClick={() => {
+													setSelectedConnection(
+														SelectedConnection.ConnectionTwitter
+													)
+													setIsDisconnectModalOpen(
+														true
+													)
+												}}
+											>
+												Disconnect
+											</Menu.Item>
+										</Menu.Dropdown>
+									</Menu>
+								</div>
+							</div>
+						</>
+					)}
 				</div>
 				<Space w={64} />
 				<div>
@@ -449,38 +497,86 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						DISCORD SERVER
 					</Text>
 					<Space h={16} />
-					<div className={meemTheme.centeredRow}>
-						{discordInfo?.icon && (
-							<>
-								<Image width={24} src={discordInfo?.icon} />
-								<Space w={16} />
-							</>
-						)}
+					{!discordInfo && (
+						<Button
+							leftIcon={<Discord height={16} width={16} />}
+							className={meemTheme.buttonWhite}
+							onClick={() => {
+								handleInviteBot()
+							}}
+						>
+							Connect Discord
+						</Button>
+					)}
+					{discordInfo && (
+						<>
+							<div className={meemTheme.centeredRow}>
+								{discordInfo?.icon && (
+									<>
+										<Image
+											width={24}
+											src={discordInfo?.icon}
+										/>
+										<Space w={16} />
+									</>
+								)}
 
-						<div>
-							<Text
-								className={meemTheme.tSmall}
-							>{`Connected as ${discordInfo?.name}`}</Text>
-							<Space h={4} />
-							<Text
-								onClick={() => {
-									setSelectedConnection(
-										SelectedConnection.Discord
-									)
-									setIsDisconnectModalOpen(true)
-								}}
-								className={meemTheme.tSmallBold}
-								style={{
-									cursor: 'pointer',
-									color: isDarkTheme
-										? colorBlue
-										: colorDarkBlue
-								}}
-							>
-								Manage Connection
-							</Text>
-						</div>
-					</div>
+								<div>
+									<Text
+										className={meemTheme.tSmall}
+									>{`Connected as ${discordInfo?.name}`}</Text>
+									<Space h={4} />
+									<Menu shadow="md" width={200}>
+										<Menu.Target>
+											<Text
+												className={meemTheme.tSmallBold}
+												style={{
+													cursor: 'pointer',
+													color: isDarkTheme
+														? colorBlue
+														: colorDarkBlue
+												}}
+											>
+												Manage Connection
+											</Text>
+										</Menu.Target>
+
+										<Menu.Dropdown>
+											<Menu.Item
+												onClick={() => {
+													setSelectedConnection(
+														SelectedConnection.ConnectionDiscord
+													)
+													handleReauthenticate()
+												}}
+											>
+												Re-authenticate
+											</Menu.Item>
+											<Menu.Item
+												icon={
+													<LogOut
+														height={14}
+														width={14}
+													/>
+												}
+												color={colorRed}
+												onClick={() => {
+													setSelectedConnection(
+														SelectedConnection.ConnectionDiscord
+													)
+													setIsDisconnectModalOpen(
+														true
+													)
+												}}
+											>
+												Disconnect
+											</Menu.Item>
+										</Menu.Dropdown>
+									</Menu>
+								</div>
+							</div>
+						</>
+					)}
 				</div>
 				{process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
 					<>
@@ -490,41 +586,86 @@ export const SymphonyExtensionSettings: React.FC = () => {
 								SLACK SERVER
 							</Text>
 							<Space h={16} />
-							<div className={meemTheme.centeredRow}>
-								{slackInfo?.icon && (
-									<>
-										<Image
-											width={24}
-											src={slackInfo?.icon}
-										/>
-										<Space w={16} />
-									</>
-								)}
+							{!slackInfo && (
+								<Button
+									leftIcon={<IconBrandSlack size={16} />}
+									className={meemTheme.buttonWhite}
+									onClick={() => {
+										handleAuthSlack()
+									}}
+								>
+									Connect Slack
+								</Button>
+							)}
+							{slackInfo && (
+								<div className={meemTheme.centeredRow}>
+									{slackInfo?.icon && (
+										<>
+											<Image
+												width={24}
+												src={slackInfo?.icon}
+											/>
+											<Space w={16} />
+										</>
+									)}
 
-								<div>
-									<Text
-										className={meemTheme.tSmall}
-									>{`Connected as ${slackInfo?.name}`}</Text>
-									<Space h={4} />
-									<Text
-										onClick={() => {
-											setSelectedConnection(
-												SelectedConnection.Slack
-											)
-											setIsDisconnectModalOpen(true)
-										}}
-										className={meemTheme.tSmallBold}
-										style={{
-											cursor: 'pointer',
-											color: isDarkTheme
-												? colorBlue
-												: colorDarkBlue
-										}}
-									>
-										Manage Connection
-									</Text>
+									<div>
+										<Text
+											className={meemTheme.tSmall}
+										>{`Connected as ${slackInfo?.name}`}</Text>
+										<Space h={4} />
+										<Menu shadow="md" width={200}>
+											<Menu.Target>
+												<Text
+													className={
+														meemTheme.tSmallBold
+													}
+													style={{
+														cursor: 'pointer',
+														color: isDarkTheme
+															? colorBlue
+															: colorDarkBlue
+													}}
+												>
+													Manage Connection
+												</Text>
+											</Menu.Target>
+
+											<Menu.Dropdown>
+												<Menu.Item
+													onClick={() => {
+														setSelectedConnection(
+															SelectedConnection.ConnectionSlack
+														)
+														handleReauthenticate()
+													}}
+												>
+													Re-authenticate
+												</Menu.Item>
+												<Menu.Item
+													icon={
+														<LogOut
+															height={14}
+															width={14}
+														/>
+													}
+													color={colorRed}
+													onClick={() => {
+														setSelectedConnection(
+															SelectedConnection.ConnectionSlack
+														)
+														setIsDisconnectModalOpen(
+															true
+														)
+													}}
+												>
+													Disconnect
+												</Menu.Item>
+											</Menu.Dropdown>
+										</Menu>
+									</div>
 								</div>
-							</div>
+							)}
 						</div>
 					</>
 				)}
@@ -546,10 +687,11 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						style={{ textAlign: 'center' }}
 					>
 						{`Are you sure you want to disconnect ${
-							selectedConnection === SelectedConnection.Discord
+							selectedConnection ===
+							SelectedConnection.ConnectionDiscord
 								? 'Discord'
 								: selectedConnection ===
-								  SelectedConnection.Twitter
+								  SelectedConnection.ConnectionTwitter
 								? 'Twitter'
 								: 'Slack'
 						} from
