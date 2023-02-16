@@ -83,7 +83,7 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 			// Set up searched extensions
 			if (currentSearchTerm.length > 0) {
 				available.forEach(ext => {
-					if (ext.name.toLowerCase().includes(search)) {
+					if (ext.name.toLowerCase().includes(search.toLowerCase())) {
 						filteredExtensions.push(ext)
 					}
 				})

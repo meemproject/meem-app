@@ -22,6 +22,7 @@ import {
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode, Settings } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -29,6 +30,7 @@ import QRCode from 'react-qr-code'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
+import { CookieKeys } from '../../../utils/cookies'
 import {
 	showErrorNotification,
 	showSuccessNotification
@@ -82,12 +84,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		}
 
 		if (wallet.loginState !== LoginState.LoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${agreement?.slug}`
-				}
-			})
+			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}`)
+			router.push('/authenticate')
 			return
 		}
 
@@ -241,12 +239,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		}
 
 		if (wallet.loginState !== LoginState.LoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${agreement?.slug}`
-				}
-			})
+			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}`)
+			router.push('/authenticate')
 			return
 		}
 

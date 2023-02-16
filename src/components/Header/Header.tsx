@@ -30,9 +30,11 @@ import {
 	NavArrowDown,
 	SunLight
 } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
@@ -88,17 +90,11 @@ export function HeaderMenu() {
 		if (
 			isConnected &&
 			loginState === LoginState.NotLoggedIn &&
-			router.pathname !== '/authenticate'
+			window &&
+			!window.location.href.includes('/authenticate')
 		) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return:
-						window.location.pathname.length > 5
-							? window.location.pathname
-							: '/'
-				}
-			})
+			Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
+			router.push('/authenticate')
 		}
 	}, [isConnected, loginState, router])
 
@@ -274,12 +270,11 @@ export function HeaderMenu() {
 						>
 							<a
 								onClick={() => {
-									router.push({
-										pathname: '/authenticate',
-										query: {
-											return: window.location.pathname
-										}
-									})
+									Cookies.set(
+										CookieKeys.authRedirectUrl,
+										window.location.toString()
+									)
+									router.push('/authenticate')
 								}}
 							>
 								Join Meem

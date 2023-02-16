@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { ExtensionOnboardingFlow } from '../../components/ExtensionOnboarding/ExtensionOnboardingFlow'
+import { SymphonyOnboardingFlow } from '../../components/Extensions/Symphony/SymphonyOnboardingFlow'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 
@@ -59,7 +59,7 @@ const Home: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<ExtensionOnboardingFlow extensionSlug={'symphony'} />
+			<SymphonyOnboardingFlow />
 			<MeemFooter />
 		</>
 	)

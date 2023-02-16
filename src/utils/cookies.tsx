@@ -1,4 +1,9 @@
 export class CookieKeys {
+	public static authRedirectUrl = 'authRedirectUrl'
+
+	public static symphonyOnboardingAgreementSlug =
+		'symphonyOnboardingAgreementSlug'
+
 	public static agreementName = 'agreementName'
 
 	public static agreementDescription = 'agreementDescription'

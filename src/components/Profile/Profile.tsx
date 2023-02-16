@@ -15,8 +15,10 @@ import {
 import { LoginState, useAuth, useSDK, useMeemUser } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
 import { Copy } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { CookieKeys } from '../../utils/cookies'
 import {
 	showErrorNotification,
 	showSuccessNotification
@@ -53,13 +55,9 @@ export const ProfileComponent: React.FC = () => {
 	] = useState(false)
 
 	useEffect(() => {
-		if (wallet.loginState === LoginState.NotLoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/profile`
-				}
-			})
+		if (wallet.loginState === LoginState.NotLoggedIn && window) {
+			Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
+			router.push('/authenticate')
 		}
 	}, [router, wallet])
 
@@ -67,6 +65,8 @@ export const ProfileComponent: React.FC = () => {
 		if (router.query.tab === 'myCommunities') {
 			setCurrentTab(Tab.MyAgreements)
 		} else if (router.query.tab === 'identity') {
+			setCurrentTab(Tab.Profile)
+		} else {
 			setCurrentTab(Tab.Profile)
 		}
 	}, [router.query.tab])

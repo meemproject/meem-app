@@ -8,6 +8,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { GetTransactionsSubscription } from '../../../generated/graphql'
 import { SUB_TRANSACTIONS } from '../../graphql/transactions'
 import {
+	Agreement,
+	agreementSummaryFromDb
+} from '../../model/agreement/agreements'
+import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../utils/notifications'
@@ -16,11 +20,7 @@ import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	agreementName: string
 	isOpened: boolean
-	onModalClosed: (
-		status: string,
-		agreementSlug: string,
-		agreementId: string
-	) => void
+	onModalClosed: (status: string, agreement?: Agreement) => void
 	quietMode?: boolean
 }
 
@@ -58,30 +58,33 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				transactionIds
 			},
 			// @ts-ignore
-			client: anonClient
+			client: anonClient,
+			skip: !isOpened || transactionIds.length === 0
 		})
 
 	useEffect(() => {
 		if (error) {
 			log.crit(error)
-			showErrorNotification(
-				'Error Fetching Data',
-				'Please reload and try again.'
-			)
+			if (!JSON.stringify(error).includes('OwnerId')) {
+				showErrorNotification(
+					'Error Fetching Data',
+					'Please reload and try again.'
+				)
+			}
 		}
 	}, [error])
 
 	const closeModal = useCallback(
-		(status: string, agreementSlug?: string, agreementId?: string) => {
+		(status: string, agreement?: Agreement) => {
 			setTransactionIds([])
 			setHasStartedCreating(false)
-			onModalClosed(status, agreementSlug ?? '', agreementId ?? '')
+			onModalClosed(status, agreement)
 		},
 		[onModalClosed]
 	)
 
 	const finishAgreementCreation = useCallback(
-		async (slug: string, id: string) => {
+		async (agreement: Agreement) => {
 			if (hasStartedCreating) {
 				// Successfully created agreement
 				log.debug('agreement creation complete')
@@ -91,7 +94,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 						'Success!',
 						`Your community has been created. Let's get you set up.`
 					)
-					closeModal('success', slug, id)
+					closeModal('success', agreement)
 				} else {
 					// Route to the created agreement detail page
 					showSuccessNotification(
@@ -99,9 +102,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 						`Your community has been created.`
 					)
 
-					router.push({
-						pathname: `/${slug}`
-					})
+					router.push(`/${agreement.slug}`)
 				}
 			}
 		},
@@ -117,7 +118,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				'Error creating community',
 				'Please connect your wallet first.'
 			)
-			closeModal('failure', '')
+			closeModal('failure')
 			setHasStartedCreating(false)
 			return
 		}
@@ -209,11 +210,11 @@ export const CreationProgressModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		// Create the agreement
-		if (isOpened && !hasStartedCreating) {
+		if (isOpened && !hasStartedCreating && transactionIds.length === 0) {
 			setHasStartedCreating(true)
 			create()
 		}
-	}, [hasStartedCreating, isOpened, create])
+	}, [hasStartedCreating, isOpened, create, transactionIds.length])
 
 	useEffect(() => {
 		let newActiveStep = 1
@@ -241,10 +242,11 @@ export const CreationProgressModal: React.FC<IProps> = ({
 		if (mintTransaction?.status === MeemAPI.TransactionStatus.Success) {
 			newActiveStep = 4
 			if (cutTransaction?.Agreements[0]) {
-				finishAgreementCreation(
-					cutTransaction.Agreements[0].slug,
-					cutTransaction.Agreements[0].id
+				const possibleAgreement = agreementSummaryFromDb(
+					cutTransaction?.Agreements[0],
+					wallet.accounts[0]
 				)
+				finishAgreementCreation(possibleAgreement)
 			} else {
 				// TODO: Handle edge case error
 				showErrorNotification(
@@ -262,7 +264,8 @@ export const CreationProgressModal: React.FC<IProps> = ({
 		transactions,
 		router,
 		finishAgreementCreation,
-		closeModal
+		closeModal,
+		wallet.accounts
 	])
 
 	const modalContents = (

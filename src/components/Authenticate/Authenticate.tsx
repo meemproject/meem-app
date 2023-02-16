@@ -4,6 +4,7 @@ import { LoginForm, useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
+import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
@@ -26,16 +27,14 @@ const MAuthenticate: React.FC = () => {
 					uri: window.location.href
 				})
 
-				Cookies.set('redirectPath', JSON.stringify(router.asPath ?? ''))
+				const redirect = Cookies.get(CookieKeys.authRedirectUrl)
 
-				if (router.query.return) {
-					router.push({
-						pathname: router.query.return.toString()
-					})
+				if (redirect && !redirect?.includes('authenticate')) {
+					const fixedPathName = redirect.replaceAll('%3F', '?')
+					log.debug(`fixed path name = ${fixedPathName}`)
+					router.push(fixedPathName)
 				} else {
-					router.push({
-						pathname: '/'
-					})
+					router.push('/')
 				}
 			}
 		} catch (e) {
