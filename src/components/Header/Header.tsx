@@ -60,18 +60,6 @@ export function HeaderMenu() {
 
 	const { user } = useMeemUser()
 
-	const handleDiscord = () => {
-		window.open('https://discord.gg/jgxuK6662v')
-	}
-
-	const handleContactUs = () => {
-		window.open('mailto:hello@weareprosocial.com')
-	}
-
-	const handleShareFeedback = () => {
-		window.open('https://airtable.com/shrM296vRoDWmK8Rm')
-	}
-
 	const [isAgreementsFAQModalOpen, setIsAgreementsFAQModalOpen] =
 		useState(false)
 
@@ -349,40 +337,75 @@ export function HeaderMenu() {
 							<Divider />
 							<Space h={4} />
 
-							<Menu.Item
-								onClick={handleDiscord}
-								style={{
-									marginBottom: '-2px',
-									marginTop: '-2px'
-								}}
-								className={meemTheme.tExtraSmallBold}
-								icon={<Discord height={20} width={20} />}
+							<Link
+								href={`https://discord.gg/jgxuK6662v`}
+								legacyBehavior
+								passHref
+								target="_blank"
+								rel="noreferrer"
 							>
-								Our community
-							</Menu.Item>
-							<Menu.Item
-								onClick={handleContactUs}
-								style={{
-									marginBottom: '-2px',
-									marginTop: '-2px'
-								}}
-								className={meemTheme.tExtraSmallBold}
-								icon={<Mail height={20} width={20} />}
+								<a className={meemTheme.unstyledLink}>
+									<Menu.Item
+										style={{
+											marginBottom: '-2px',
+											marginTop: '-2px'
+										}}
+										className={meemTheme.tExtraSmallBold}
+										icon={
+											<Discord height={20} width={20} />
+										}
+									>
+										Our community
+									</Menu.Item>
+								</a>
+							</Link>
+
+							<Link
+								href={`mailto:hello@weareprosocial.com`}
+								legacyBehavior
+								passHref
+								target="_blank"
+								rel="noreferrer"
 							>
-								Contact Us
-							</Menu.Item>
-							<Menu.Item
-								onClick={handleShareFeedback}
-								className={meemTheme.tExtraSmallBold}
-								style={{
-									color: colorDarkBlue,
-									marginBottom: '-2px',
-									marginTop: '-2px'
-								}}
-								icon={<MessageText height={20} width={20} />}
+								<a className={meemTheme.unstyledLink}>
+									<Menu.Item
+										style={{
+											marginBottom: '-2px',
+											marginTop: '-2px'
+										}}
+										className={meemTheme.tExtraSmallBold}
+										icon={<Mail height={20} width={20} />}
+									>
+										Contact Us
+									</Menu.Item>
+								</a>
+							</Link>
+							<Link
+								href={`https://airtable.com/shrM296vRoDWmK8Rm`}
+								legacyBehavior
+								passHref
+								target="_blank"
+								rel="noreferrer"
 							>
-								Share Feedback
-							</Menu.Item>
+								<a className={meemTheme.unstyledLink}>
+									<Menu.Item
+										className={meemTheme.tExtraSmallBold}
+										style={{
+											color: colorDarkBlue,
+											marginBottom: '-2px',
+											marginTop: '-2px'
+										}}
+										icon={
+											<MessageText
+												height={20}
+												width={20}
+											/>
+										}
+									>
+										Share Feedback
+									</Menu.Item>
+								</a>
+							</Link>
 						</Menu.Dropdown>
 					</Menu>
 				</div>
