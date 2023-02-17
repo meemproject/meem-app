@@ -137,16 +137,23 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 										<Link
 											href={`/${agreement.slug}/roles?role=${role.id}`}
 											legacyBehavior
+											passHref
 										>
-											<Menu.Item>
-												<Text
-													className={
-														meemTheme.tSmallBold
-													}
-												>
-													Manage Role
-												</Text>
-											</Menu.Item>
+											<a
+												className={
+													meemTheme.unstyledLink
+												}
+											>
+												<Menu.Item>
+													<Text
+														className={
+															meemTheme.tSmallBold
+														}
+													>
+														Manage Role
+													</Text>
+												</Menu.Item>
+											</a>
 										</Link>
 
 										{!role.isAdminRole && (
@@ -180,10 +187,13 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 					<Link
 						href={`/${agreement.slug}/roles?createRole=true`}
 						legacyBehavior
+						passHref
 					>
-						<Button className={meemTheme.buttonBlack}>
-							+ Create Role
-						</Button>
+						<a className={meemTheme.unstyledLink}>
+							<Button className={meemTheme.buttonBlack}>
+								+ Create Role
+							</Button>
+						</a>
 					</Link>
 				</>
 			)}

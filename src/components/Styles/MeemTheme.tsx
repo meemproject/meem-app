@@ -872,6 +872,9 @@ export const useMeemTheme = createStyles(theme => ({
 			marginRight: 20
 		}
 	},
+	unstyledLink: {
+		all: 'unset'
+	},
 	paragraphIntTextInput: {
 		paddingLeft: 142
 	},

@@ -134,10 +134,13 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						<Link
 							href={`/${agreement.slug}/members`}
 							legacyBehavior
+							passHref
 						>
-							<Button className={meemTheme.buttonBlack}>
-								View All
-							</Button>
+							<a className={meemTheme.unstyledLink}>
+								<Button className={meemTheme.buttonBlack}>
+									View All
+								</Button>
+							</a>
 						</Link>
 					)}
 				</div>
@@ -213,10 +216,13 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 							<Link
 								href={`/${agreement.slug}/admin?tab=airdrops`}
 								legacyBehavior
+								passHref
 							>
-								<Button className={meemTheme.buttonAsh}>
-									Invite members
-								</Button>
+								<a className={meemTheme.unstyledLink}>
+									<Button className={meemTheme.buttonAsh}>
+										Invite members
+									</Button>
+								</a>
 							</Link>
 						</Center>
 					</>

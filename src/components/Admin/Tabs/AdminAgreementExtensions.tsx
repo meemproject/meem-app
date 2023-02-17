@@ -271,20 +271,28 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																  }/settings`
 														}
 														legacyBehavior
+														passHref
 													>
-														<Button
+														<a
 															className={
-																meemTheme.buttonWhite
+																meemTheme.unstyledLink
 															}
 														>
-															<Text
+															<Button
 																className={
-																	meemTheme.tExtraSmall
+																	meemTheme.buttonWhite
 																}
 															>
-																Complete Setup
-															</Text>
-														</Button>
+																<Text
+																	className={
+																		meemTheme.tExtraSmall
+																	}
+																>
+																	Complete
+																	Setup
+																</Text>
+															</Button>
+														</a>
 													</Link>
 												</>
 											)}
@@ -302,30 +310,37 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																<Link
 																	href={`/${agreement.slug}/e/${extension?.Extension?.slug}`}
 																	legacyBehavior
+																	passHref
 																>
-																	<Button
+																	<a
 																		className={
-																			meemTheme.buttonWhite
-																		}
-																		leftIcon={
-																			<Shortcut
-																				height={
-																					20
-																				}
-																				width={
-																					20
-																				}
-																			/>
+																			meemTheme.unstyledLink
 																		}
 																	>
-																		<Text
+																		<Button
 																			className={
-																				meemTheme.tExtraSmall
+																				meemTheme.buttonWhite
+																			}
+																			leftIcon={
+																				<Shortcut
+																					height={
+																						20
+																					}
+																					width={
+																						20
+																					}
+																				/>
 																			}
 																		>
-																			Launch
-																		</Text>
-																	</Button>
+																			<Text
+																				className={
+																					meemTheme.tExtraSmall
+																				}
+																			>
+																				Launch
+																			</Text>
+																		</Button>
+																	</a>
 																</Link>
 
 																<Space w={8} />
@@ -361,30 +376,39 @@ export const AdminAgreementExtensions: React.FC<IProps> = ({ agreement }) => {
 																			''
 																	  }/settings`
 															}
+															passHref
 														>
-															<Button
-																leftIcon={
-																	<Settings
-																		height={
-																			20
-																		}
-																		width={
-																			20
-																		}
-																	/>
-																}
+															<a
 																className={
-																	meemTheme.buttonWhite
+																	meemTheme.unstyledLink
 																}
 															>
-																<Text
+																<Button
+																	leftIcon={
+																		<Settings
+																			height={
+																				20
+																			}
+																			width={
+																				20
+																			}
+																		/>
+																	}
 																	className={
-																		meemTheme.tExtraSmall
+																		meemTheme.buttonWhite
 																	}
 																>
-																	{'Settings'}
-																</Text>
-															</Button>
+																	<Text
+																		className={
+																			meemTheme.tExtraSmall
+																		}
+																	>
+																		{
+																			'Settings'
+																		}
+																	</Text>
+																</Button>
+															</a>
 														</Link>
 													</div>
 												</>

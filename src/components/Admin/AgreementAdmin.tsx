@@ -132,21 +132,26 @@ export const AgreementAdminComponent: React.FC = () => {
 								<Link
 									href={`/${agreement.slug}`}
 									legacyBehavior
+									passHref
 								>
-									<div
-										className={meemTheme.pageHeaderImage}
-										style={{ cursor: 'pointer' }}
-									>
-										<Image
-											width={80}
-											height={80}
-											radius={8}
+									<a className={meemTheme.unstyledLink}>
+										<div
 											className={
-												meemTheme.imageAgreementLogo
+												meemTheme.pageHeaderImage
 											}
-											src={agreement.image}
-										/>
-									</div>
+											style={{ cursor: 'pointer' }}
+										>
+											<Image
+												width={80}
+												height={80}
+												radius={8}
+												className={
+													meemTheme.imageAgreementLogo
+												}
+												src={agreement.image}
+											/>
+										</div>
+									</a>
 								</Link>
 							)}
 
@@ -178,12 +183,18 @@ export const AgreementAdminComponent: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<Link href={`/${agreement.slug}`} legacyBehavior>
-							<DeleteCircle
-								className={meemTheme.pageHeaderExitButton}
-								width={24}
-								height={24}
-							/>
+						<Link
+							href={`/${agreement.slug}`}
+							legacyBehavior
+							passHref
+						>
+							<a className={meemTheme.unstyledLink}>
+								<DeleteCircle
+									className={meemTheme.pageHeaderExitButton}
+									width={24}
+									height={24}
+								/>
+							</a>
 						</Link>
 					</div>
 

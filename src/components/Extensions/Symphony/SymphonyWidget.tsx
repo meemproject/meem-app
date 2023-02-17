@@ -71,13 +71,16 @@ export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 							<Center>
 								<Link
 									href={`/${agreement.slug}/e/symphony/settings`}
+									passHref
 									legacyBehavior
 								>
-									<Button
-										className={meemTheme.buttonDarkGrey}
-									>
-										Continue Symphony setup
-									</Button>
+									<a className={meemTheme.unstyledLink}>
+										<Button
+											className={meemTheme.buttonDarkGrey}
+										>
+											Continue Symphony setup
+										</Button>
+									</a>
 								</Link>
 							</Center>
 						</>
@@ -95,12 +98,15 @@ export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 								<Link
 									href={`/${agreement.slug}/e/symphony/settings`}
 									legacyBehavior
+									passHref
 								>
-									<Button
-										className={meemTheme.buttonDarkGrey}
-									>
-										Configure Symphony
-									</Button>
+									<a className={meemTheme.unstyledLink}>
+										<Button
+											className={meemTheme.buttonDarkGrey}
+										>
+											Configure Symphony
+										</Button>
+									</a>
 								</Link>
 							</Center>
 						</>

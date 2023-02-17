@@ -105,18 +105,20 @@ export function HeaderMenu() {
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
 					<Space w={8} />
-					<Link href={`/`} legacyBehavior>
-						<Image
-							className={meemTheme.clickable}
-							src={
-								isDarkTheme
-									? '/meem-logo-white.svg'
-									: '/meem-logo.svg'
-							}
-							fit={'contain'}
-							height={20}
-							width={80}
-						/>
+					<Link href={`/`} legacyBehavior passHref>
+						<a className={meemTheme.unstyledLink}>
+							<Image
+								className={meemTheme.clickable}
+								src={
+									isDarkTheme
+										? '/meem-logo-white.svg'
+										: '/meem-logo.svg'
+								}
+								fit={'contain'}
+								height={20}
+								width={80}
+							/>
+						</a>
 					</Link>
 					<div className={meemTheme.visibleDesktopOnly}>
 						<div style={{ display: 'flex' }}>
@@ -223,27 +225,41 @@ export function HeaderMenu() {
 
 										<Link
 											href={`/profile?tab=identity`}
+											passHref
 											legacyBehavior
 										>
-											<Menu.Item
+											<a
 												className={
-													meemTheme.tExtraSmallBold
+													meemTheme.unstyledLink
 												}
 											>
-												<Text>My Profile</Text>
-											</Menu.Item>
+												<Menu.Item
+													className={
+														meemTheme.tExtraSmallBold
+													}
+												>
+													<Text>My Profile</Text>
+												</Menu.Item>
+											</a>
 										</Link>
 										<Link
 											href={`/profile?tab=myCommunities`}
 											legacyBehavior
+											passHref
 										>
-											<Menu.Item
+											<a
 												className={
-													meemTheme.tExtraSmallBold
+													meemTheme.unstyledLink
 												}
 											>
-												<Text>My Communities</Text>
-											</Menu.Item>
+												<Menu.Item
+													className={
+														meemTheme.tExtraSmallBold
+													}
+												>
+													<Text>My Communities</Text>
+												</Menu.Item>
+											</a>
 										</Link>
 									</>
 								)}

@@ -54,31 +54,40 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 										: `/${agreement?.slug}/e/${extensionSlug}`
 								}
 								legacyBehavior
+								passHref
 							>
-								<div>
-									<ArrowLeft
-										className={meemTheme.backArrow}
-										width={32}
-										height={32}
-									/>
-								</div>
+								<a className={meemTheme.unstyledLink}>
+									<div>
+										<ArrowLeft
+											className={meemTheme.backArrow}
+											width={32}
+											height={32}
+										/>
+									</div>
+								</a>
 							</Link>
 							<Space w={24} />
 						</>
 					)}
 
 					{agreement?.image && (
-						<Link href={`/${agreement?.slug}`} legacyBehavior>
-							<div className={meemTheme.row}>
-								<Image
-									style={{ cursor: 'pointer' }}
-									radius={8}
-									height={80}
-									width={80}
-									src={agreement?.image}
-								/>
-								<Space w={24} />
-							</div>
+						<Link
+							href={`/${agreement?.slug}`}
+							legacyBehavior
+							passHref
+						>
+							<a className={meemTheme.unstyledLink}>
+								<div className={meemTheme.row}>
+									<Image
+										style={{ cursor: 'pointer' }}
+										radius={8}
+										height={80}
+										width={80}
+										src={agreement?.image}
+									/>
+									<Space w={24} />
+								</div>
+							</a>
 						</Link>
 					)}
 					{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
@@ -121,19 +130,28 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 							<Link
 								href={`/${agreement?.slug}/e/${extensionSlug}/settings`}
 								legacyBehavior
+								passHref
 							>
-								<Button
-									leftIcon={<Settings />}
-									className={meemTheme.buttonWhite}
-								>
-									Settings
-								</Button>
+								<a className={meemTheme.unstyledLink}>
+									<Button
+										leftIcon={<Settings />}
+										className={meemTheme.buttonWhite}
+									>
+										Settings
+									</Button>
+								</a>
 							</Link>
 						)}
 					<Space w={16} />
 					<div className={meemTheme.pageHeaderExitButton}>
-						<Link href={`/${agreement?.slug}`} legacyBehavior>
-							<DeleteCircle width={24} height={24} />
+						<Link
+							href={`/${agreement?.slug}`}
+							legacyBehavior
+							passHref
+						>
+							<a className={meemTheme.unstyledLink}>
+								<DeleteCircle width={24} height={24} />
+							</a>
 						</Link>
 					</div>
 				</div>
