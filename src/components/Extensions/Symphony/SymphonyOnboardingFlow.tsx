@@ -989,7 +989,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					<Space h={32} />
 					<Container>
 						<Text className={meemTheme.tExtraSmallLabel}>
-							CONFIGURE EXTENSION
+							SET UP SYMPHONY
 						</Text>
 						<Space h={24} />
 						<Stepper
