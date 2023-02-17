@@ -208,6 +208,7 @@ export const ProfileComponent: React.FC = () => {
 						</MediaQuery>
 						<Navbar
 							className={meemTheme.pagePanelLayoutNavBar}
+							style={{ zIndex: 0 }}
 							width={{ base: 288 }}
 							height={400}
 							hidden={!isMobileNavBarVisible}
