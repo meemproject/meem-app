@@ -341,10 +341,12 @@ export function HeaderMenu() {
 								href={`https://discord.gg/jgxuK6662v`}
 								legacyBehavior
 								passHref
-								target="_blank"
-								rel="noreferrer"
 							>
-								<a className={meemTheme.unstyledLink}>
+								<a
+									target="_blank"
+									rel="noreferrer noopener"
+									className={meemTheme.unstyledLink}
+								>
 									<Menu.Item
 										style={{
 											marginBottom: '-2px',
@@ -364,10 +366,12 @@ export function HeaderMenu() {
 								href={`mailto:hello@weareprosocial.com`}
 								legacyBehavior
 								passHref
-								target="_blank"
-								rel="noreferrer"
 							>
-								<a className={meemTheme.unstyledLink}>
+								<a
+									target="_blank"
+									rel="noreferrer noopener"
+									className={meemTheme.unstyledLink}
+								>
 									<Menu.Item
 										style={{
 											marginBottom: '-2px',
@@ -384,10 +388,12 @@ export function HeaderMenu() {
 								href={`https://airtable.com/shrM296vRoDWmK8Rm`}
 								legacyBehavior
 								passHref
-								target="_blank"
-								rel="noreferrer"
 							>
-								<a className={meemTheme.unstyledLink}>
+								<a
+									target="_blank"
+									rel="noreferrer noopener"
+									className={meemTheme.unstyledLink}
+								>
 									<Menu.Item
 										className={meemTheme.tExtraSmallBold}
 										style={{
