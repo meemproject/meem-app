@@ -228,6 +228,7 @@ export const RolesManager: React.FC = () => {
 									className={meemTheme.pagePanelLayoutNavBar}
 									width={{ base: 288 }}
 									height={400}
+									style={{ zIndex: 0 }}
 									hidden={!mobileNavBarVisible}
 									hiddenBreakpoint={'sm'}
 									withBorder={false}
