@@ -170,7 +170,7 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 								extensionsNotSetupWithWidgets === 0 &&
 								extensionsSetupWithWidgets > 0 && (
 									<>
-										<Space h={32} />
+										<Space h={8} />
 										<Center>
 											<Text
 												className={meemTheme.tSmall}

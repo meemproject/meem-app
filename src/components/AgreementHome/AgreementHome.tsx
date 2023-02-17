@@ -99,6 +99,37 @@ export const AgreementHome: React.FC = () => {
 						<MeemCreateCommunityWidget agreement={agreement} />
 					)}
 
+					{agreement.extensions && (
+						<>
+							{agreement.extensions
+								.filter(ext => ext.Extension)
+								.map(extension => (
+									// TODO: Developers, make sure you import your extension's widget
+									// TODO: here, checking against the slug you chose for your extension.
+									<div key={extension.id}>
+										{extension.Extension?.slug ===
+											'symphony' && (
+											<>
+												<SymphonyWidget
+													agreement={agreement}
+												/>
+											</>
+										)}
+										{extension.Extension?.slug ===
+											'discussions' && (
+											<DiscussionWidget
+												key="discussion-widget"
+												agreement={agreement}
+											/>
+										)}
+									</div>
+								))}
+							<Space h={24} />
+						</>
+					)}
+
+					<AgreementExtensionLinksWidget agreement={agreement} />
+
 					{agreement.slug !== 'meem' && !agreement.isLaunched && (
 						<AgreementBlankSlateWidget
 							onChosenExtensionsChanged={extensions => {
@@ -108,32 +139,6 @@ export const AgreementHome: React.FC = () => {
 						/>
 					)}
 
-					{agreement.extensions &&
-						agreement.extensions
-							.filter(ext => ext.Extension)
-							.map(extension => (
-								// TODO: Developers, make sure you import your extension's widget
-								// TODO: here, checking against the slug you chose for your extension.
-								<div key={extension.id}>
-									{extension.Extension?.slug ===
-										'symphony' && (
-										<>
-											<SymphonyWidget
-												agreement={agreement}
-											/>
-										</>
-									)}
-									{extension.Extension?.slug ===
-										'discussions' && (
-										<DiscussionWidget
-											key="discussion-widget"
-											agreement={agreement}
-										/>
-									)}
-								</div>
-							))}
-
-					<AgreementExtensionLinksWidget agreement={agreement} />
 					{agreement.isLaunched && (
 						<>
 							<AgreementAddMoreExtensionsWidget

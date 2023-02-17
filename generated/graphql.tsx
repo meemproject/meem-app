@@ -14857,7 +14857,7 @@ export type SubDiscordSubscriptionVariables = Exact<{
 }>;
 
 
-export type SubDiscordSubscription = { __typename?: 'subscription_root', Discords: Array<{ __typename?: 'Discords', id: any, agreementId: any, name?: string | null, icon?: string | null }> };
+export type SubDiscordSubscription = { __typename?: 'subscription_root', Discords: Array<{ __typename?: 'Discords', id: any, agreementId: any, guildId?: string | null, name?: string | null, icon?: string | null }> };
 
 export type SubSlackSubscriptionVariables = Exact<{
   agreementId: Scalars['uuid'];
@@ -15005,7 +15005,7 @@ export type GetTransactionsSubscriptionVariables = Exact<{
 }>;
 
 
-export type GetTransactionsSubscription = { __typename?: 'subscription_root', Transactions: Array<{ __typename?: 'Transactions', id: any, hash?: string | null, status: string, Agreements: Array<{ __typename?: 'Agreements', id: any, slug: string, address: string, createdAt: any, name: string, metadata: any, isLaunched: boolean, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', Extension?: { __typename?: 'Extensions', slug: string } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> }> };
+export type GetTransactionsSubscription = { __typename?: 'subscription_root', Transactions: Array<{ __typename?: 'Transactions', id: any, hash?: string | null, status: string, Agreements: Array<{ __typename?: 'Agreements', id: any, slug: string, address: string, name: string, metadata: any, isLaunched: boolean, splits: any, mintPermissions: any, symbol: string, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', Extension?: { __typename?: 'Extensions', slug: string } | null }> }> }> };
 
 export const MeemPartsFragmentDoc = gql`
     fragment MeemParts on AgreementTokens {
@@ -15064,6 +15064,7 @@ export const SubDiscordDocument = gql`
   Discords(where: {agreementId: {_eq: $agreementId}}) {
     id
     agreementId
+    guildId
     name
     icon
   }
@@ -16039,45 +16040,16 @@ export const GetTransactionsDocument = gql`
       id
       slug
       address
-      createdAt
       name
       metadata
       isLaunched
       splits
-      gnosisSafeAddress
       mintPermissions
       symbol
       AgreementExtensions {
         Extension {
           slug
         }
-      }
-      AgreementWallets {
-        role
-        Wallet {
-          ens
-          address
-        }
-      }
-      AgreementRoles {
-        id
-        name
-        isAdminRole
-        address
-        metadata
-        AgreementRoleTokens {
-          OwnerId
-        }
-        Agreement {
-          isTransferrable
-        }
-      }
-      AgreementTokens {
-        Wallet {
-          address
-          ens
-        }
-        OwnerId
       }
     }
   }

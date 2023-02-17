@@ -117,8 +117,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
 	const [activeStep, setActiveStep] = useState(1)
 
-	// Bot code data
-	const [botCode, setBotCode] = useState<string | undefined>()
+	// Bot code / invite data
+	const [discordInviteUrl, setDiscordInviteUrl] = useState('')
+	const [botCode, setDiscordBotCode] = useState<string | undefined>()
 	const [shouldActivateBot, setShouldActivateBot] = useState(false)
 
 	// Subscriptions
@@ -220,22 +221,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				)
 
 				if (possibleAgreement.name) {
-					const alreadyAdded =
-						agrs.filter(
-							existingAgreement =>
-								existingAgreement.id === possibleAgreement.id
-						).length > 0
-					if (!alreadyAdded) {
-						let extIsAlreadyEnabled = false
-						possibleAgreement?.extensions?.forEach(ext => {
-							if (ext.Extension?.slug === extensionSlug) {
-								extIsAlreadyEnabled = true
-							}
-						})
-						if (extIsAlreadyEnabled) {
-							agrs.push(possibleAgreement)
-						}
-					}
+					agrs.push(possibleAgreement)
 				}
 			})
 			setMyAgreements(agrs)
@@ -412,6 +398,22 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		wallet.loginState
 	])
 
+	const getDiscordInviteAndBotCode = useCallback(async () => {
+		if (!chosenAgreement?.id || !jwt) {
+			return
+		}
+		const { code, inviteUrl } =
+			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
+				`${
+					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+				}${API.v1.InviteDiscordBot.path()}`,
+				{ query: { agreementId: chosenAgreement?.id, jwt } }
+			)
+
+		setDiscordBotCode(code)
+		setDiscordInviteUrl(inviteUrl)
+	}, [chosenAgreement?.id, jwt])
+
 	// Intregrations data
 	const twitterUsername =
 		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
@@ -480,18 +482,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			} else if (chosenAgreement) {
 				if (!twitterUsername && !discordInfo) {
 					setOnboardingStep(1)
-				} else if (twitterUsername && !discordInfo) {
-					if (!shouldActivateBot) {
-						setOnboardingStep(2)
-					} else {
-						setOnboardingStep(3)
+				} else {
+					if (!discordInviteUrl || !botCode) {
+						getDiscordInviteAndBotCode()
 					}
-				} else if (twitterUsername && discordInfo) {
-					if (botCode) {
-						setOnboardingStep(3)
-					} else {
-						setOnboardingStep(2)
-					}
+					setOnboardingStep(2)
 				}
 			}
 		}
@@ -529,7 +524,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		isWaitingForStateChangeDelay,
 		isConnectionEstablished,
 		shouldShowCreateNewCommunity,
-		isCreatingNewCommunity
+		isCreatingNewCommunity,
+		getDiscordInviteAndBotCode,
+		discordInviteUrl
 	])
 
 	// Handle Transaction state changes
@@ -644,23 +641,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		}
 	}
 
-	const handleInviteBot = useCallback(async () => {
-		if (!chosenAgreement?.id || !jwt) {
-			return
-		}
-		const { code, inviteUrl } =
-			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
-				`${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				}${API.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: chosenAgreement?.id, jwt } }
-			)
-
-		setBotCode(code)
-
-		window.open(inviteUrl, '_blank')
-	}, [chosenAgreement, jwt])
-
 	const handleAuthTwitter = useCallback(async () => {
 		if (!chosenAgreement?.id || !jwt) {
 			return
@@ -758,20 +738,25 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								setNewAgreementName(event.target.value)
 							}}
 						/>
-						<Space h={24} />
 						{!isCreatingNewCommunity && (
-							<Button
-								className={meemTheme.buttonBlack}
-								onClick={() => {
-									createAgreement()
-								}}
-							>
-								Next
-							</Button>
+							<>
+								<Space h={16} />
+
+								<Button
+									className={meemTheme.buttonBlack}
+									onClick={() => {
+										createAgreement()
+									}}
+								>
+									Next
+								</Button>
+							</>
 						)}
 
 						{isCreatingNewCommunity && (
 							<>
+								<Space h={24} />
+
 								<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute or two, so please don’t close this window or navigate away.`}</Text>
 								<Space h={8} />
 								<Progress
@@ -861,47 +846,85 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 	const stepThreeInviteBot = (
 		<Stepper.Step
-			label="Invite Symphony bot"
+			label="Invite Symphony bot and activate"
 			description={
 				<>
 					<Text className={meemTheme.tExtraSmall}>
-						{onboardingStep === 3
-							? `You've invited the Symphony bot to your Discord server.`
-							: `Please invite the Symphony bot to manage your Discord server.`}
+						{`Please invite the Symphony bot to manage your Discord server.`}
 					</Text>
 					{onboardingStep === 2 && (
 						<>
-							<Space h={16} />
-							<div className={meemTheme.row}>
-								<Button
-									leftIcon={
-										<Image
-											width={16}
-											src={`/integration-discord-white.png`}
-										/>
-									}
-									className={meemTheme.buttonDiscordBlue}
-									onClick={() => {
-										handleInviteBot()
-									}}
-								>
-									{`Invite Symphony Bot`}
-								</Button>
-							</div>
-							<Space h={16} />
+							<Space h={8} />
 
-							{botCode && (
+							{(!discordInviteUrl || !botCode) && (
+								<Loader variant="oval" color="cyan" />
+							)}
+							{discordInviteUrl && botCode && (
 								<>
 									<div className={meemTheme.row}>
 										<Button
-											className={meemTheme.buttonBlack}
+											leftIcon={
+												<Image
+													width={16}
+													src={`/integration-discord-white.png`}
+												/>
+											}
+											className={
+												meemTheme.buttonDiscordBlue
+											}
 											onClick={() => {
-												setShouldActivateBot(true)
+												window.open(
+													discordInviteUrl,
+													'_blank'
+												)
 											}}
 										>
-											{`Next`}
+											{`Invite Symphony Bot`}
 										</Button>
 									</div>
+									<Space h={24} />
+
+									<Text className={meemTheme.tExtraSmall}>
+										Then type{' '}
+										<span style={{ fontWeight: '600' }}>
+											/activate
+										</span>{' '}
+										in any public channel of your Discord
+										server and enter the code below:
+									</Text>
+
+									<Space h={8} />
+									<Code
+										style={{ cursor: 'pointer' }}
+										onClick={() => {
+											navigator.clipboard.writeText(
+												`${botCode}`
+											)
+											showSuccessNotification(
+												'Copied to clipboard',
+												`The code was copied to your clipboard.`
+											)
+										}}
+										block
+									>{`${botCode}`}</Code>
+									<Space h={16} />
+
+									<div className={meemTheme.centeredRow}>
+										<Loader
+											variant="oval"
+											color="cyan"
+											size={24}
+										/>
+										<Space w={8} />
+										<Text
+											className={
+												meemTheme.tExtraExtraSmall
+											}
+										>
+											Waiting for activation...
+										</Text>
+									</div>
+
 									<Space h={16} />
 								</>
 							)}
@@ -910,47 +933,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				</>
 			}
 		/>
-	)
-
-	const stepFourActivateDiscordBot = (
-		<Stepper.Step
-			label="Activate Symphony"
-			description={
-				<>
-					<Text className={meemTheme.tExtraSmall}>
-						Type{' '}
-						<span style={{ fontWeight: '600' }}>/activate</span> in
-						any public channel of your Discord server, then enter
-						the code below:
-					</Text>
-					{onboardingStep === 3 && (
-						<>
-							<Space h={16} />
-							<Code
-								style={{ cursor: 'pointer' }}
-								onClick={() => {
-									navigator.clipboard.writeText(`${botCode}`)
-									showSuccessNotification(
-										'Copied to clipboard',
-										`The code was copied to your clipboard.`
-									)
-								}}
-								block
-							>{`${botCode}`}</Code>
-							<Space h={16} />
-
-							<div className={meemTheme.centeredRow}>
-								<Loader variant="oval" color="cyan" size={24} />
-								<Space w={8} />
-								<Text className={meemTheme.tExtraExtraSmall}>
-									Waiting for activation...
-								</Text>
-							</div>
-						</>
-					)}
-				</>
-			}
-		></Stepper.Step>
 	)
 
 	const setupCompleteState = (
@@ -1007,7 +989,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					<Space h={32} />
 					<Container>
 						<Text className={meemTheme.tExtraSmallLabel}>
-							CONFIGURE EXTENSION
+							SET UP SYMPHONY
 						</Text>
 						<Space h={24} />
 						<Stepper
@@ -1018,7 +1000,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							{stepOneAgreementName}
 							{stepTwoConnectPublishingAccount}
 							{stepThreeInviteBot}
-							{stepFourActivateDiscordBot}
 						</Stepper>
 					</Container>
 				</>

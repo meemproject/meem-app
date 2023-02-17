@@ -1,4 +1,4 @@
-import { Button, Space } from '@mantine/core'
+import { Button, Modal, Space } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import React from 'react'
 import { useMeemTheme } from './Styles/MeemTheme'
@@ -55,42 +55,41 @@ export const App: React.FC<IProps> = ({ children }) => {
 		expectedChainId = hostnameToChainId(window.location.hostname)
 	}
 
+	const isWrongChainId =
+		typeof window !== 'undefined' &&
+		chainId !== undefined &&
+		chainId !== expectedChainId
+
 	return (
 		<>
-			{typeof window !== 'undefined' &&
-				chainId &&
-				chainId !== expectedChainId && (
-					<div
-						style={{
-							alignItems: 'center',
-							background: 'rgba(255, 255, 255, 1)',
-							display: 'flex',
-							flexDirection: 'column',
-							left: 0,
-							justifyContent: 'space-around',
-							position: 'fixed',
-							height: '100vh',
-							textAlign: 'center',
-							top: 0,
-							width: '100vw',
-							zIndex: 1000
+			<Modal
+				centered
+				withCloseButton={false}
+				closeOnClickOutside={false}
+				radius={16}
+				overlayBlur={8}
+				size={'60%'}
+				padding={'lg'}
+				opened={isWrongChainId}
+				onClose={() => {}}
+			>
+				<Space h={16} />
+				<div>
+					<h2>Please switch your network.</h2>
+					<h3>{`You're currently connected to the wrong network.`}</h3>
+					<Space h={8} />
+					<Button
+						className={meemTheme.buttonBlack}
+						onClick={() => {
+							setChain(expectedChainId)
 						}}
 					>
-						<div>
-							<h2>Please switch your network.</h2>
-							<h3>{`You're currently connected to the wrong network.`}</h3>
-							<Space h={8} />
-							<Button
-								className={meemTheme.buttonBlack}
-								onClick={() => {
-									setChain(expectedChainId)
-								}}
-							>
-								Switch Network
-							</Button>
-						</div>
-					</div>
-				)}
+						Switch Network
+					</Button>
+				</div>
+				<Space h={16} />
+			</Modal>
+
 			{children}
 		</>
 	)
