@@ -68,12 +68,21 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 										<Link
 											href={`${agreement.slug}/admin?tab=extensions`}
 											legacyBehavior
+											passHref
 										>
-											<Button
-												className={meemTheme.buttonAsh}
+											<a
+												className={
+													meemTheme.unstyledLink
+												}
 											>
-												+ Add your first extension
-											</Button>
+												<Button
+													className={
+														meemTheme.buttonAsh
+													}
+												>
+													+ Add your first extension
+												</Button>
+											</a>
 										</Link>
 									</Center>
 									<Space h={8} />
@@ -107,12 +116,21 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 										<Link
 											href={`${agreement.slug}/admin?tab=extensions`}
 											legacyBehavior
+											passHref
 										>
-											<Button
-												className={meemTheme.buttonAsh}
+											<a
+												className={
+													meemTheme.unstyledLink
+												}
 											>
-												+ Add your first widget
-											</Button>
+												<Button
+													className={
+														meemTheme.buttonAsh
+													}
+												>
+													+ Add your first widget
+												</Button>
+											</a>
 										</Link>
 									</Center>
 									<Space h={8} />
@@ -150,14 +168,21 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 											<Link
 												href={`${agreement.slug}/admin?tab=extensions`}
 												legacyBehavior
+												passHref
 											>
-												<Button
+												<a
 													className={
-														meemTheme.buttonAsh
+														meemTheme.unstyledLink
 													}
 												>
-													Complete setup
-												</Button>
+													<Button
+														className={
+															meemTheme.buttonAsh
+														}
+													>
+														Complete setup
+													</Button>
+												</a>
 											</Link>
 										</Center>
 										<Space h={8} />
@@ -180,14 +205,21 @@ export const AgreementAddMoreExtensionsWidget: React.FC<IProps> = ({
 											<Link
 												href={`${agreement.slug}/admin?tab=extensions`}
 												legacyBehavior
+												passHref
 											>
-												<Button
+												<a
 													className={
-														meemTheme.buttonGrey
+														meemTheme.unstyledLink
 													}
 												>
-													+ Add an extension
-												</Button>
+													<Button
+														className={
+															meemTheme.buttonGrey
+														}
+													>
+														+ Add an extension
+													</Button>
+												</a>
 											</Link>
 										</Center>
 										<Space h={32} />

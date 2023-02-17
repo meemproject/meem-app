@@ -105,28 +105,40 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 										<Link
 											href={`/${agreement.slug}/e/discussions/submit`}
 											legacyBehavior
+											passHref
 										>
-											<Button
+											<a
 												className={
-													meemTheme.buttonDarkGrey
+													meemTheme.unstyledLink
 												}
 											>
-												<div>
-													<Plus />
-												</div>
-											</Button>
+												<Button
+													className={
+														meemTheme.buttonDarkGrey
+													}
+												>
+													<div>
+														<Plus />
+													</div>
+												</Button>
+											</a>
 										</Link>
 									</>
 									<Space w={8} />
 									<Link
 										href={`/${agreement.slug}/e/discussions`}
 										legacyBehavior
+										passHref
 									>
-										<Button
-											className={meemTheme.buttonDarkGrey}
-										>
-											View All
-										</Button>
+										<a className={meemTheme.unstyledLink}>
+											<Button
+												className={
+													meemTheme.buttonDarkGrey
+												}
+											>
+												View All
+											</Button>
+										</a>
 									</Link>
 								</>
 							)}
@@ -137,12 +149,17 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 									<Link
 										href={`/${agreement.slug}/e/discussions/settings`}
 										legacyBehavior
+										passHref
 									>
-										<div>
-											<Settings
-												className={meemTheme.clickable}
-											/>
-										</div>
+										<a className={meemTheme.unstyledLink}>
+											<div>
+												<Settings
+													className={
+														meemTheme.clickable
+													}
+												/>
+											</div>
+										</a>
 									</Link>
 								</div>
 							)}
@@ -194,14 +211,21 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 											<Link
 												href={`/${agreement.slug}/e/discussions/submit`}
 												legacyBehavior
+												passHref
 											>
-												<Button
+												<a
 													className={
-														meemTheme.buttonDarkGrey
+														meemTheme.unstyledLink
 													}
 												>
-													+ Create a discussion
-												</Button>
+													<Button
+														className={
+															meemTheme.buttonDarkGrey
+														}
+													>
+														+ Create a discussion
+													</Button>
+												</a>
 											</Link>
 										</Center>
 										<Space h={8} />

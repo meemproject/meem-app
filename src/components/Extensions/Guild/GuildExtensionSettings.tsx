@@ -513,10 +513,13 @@ Add your custom extension settings layout here.
 							<Link
 								href={`/${agreement.slug}/members`}
 								legacyBehavior
+								passHref
 							>
-								<Button className={meemTheme.buttonBlack}>
-									Manage Members
-								</Button>
+								<a className={meemTheme.unstyledLink}>
+									<Button className={meemTheme.buttonBlack}>
+										Manage Members
+									</Button>
+								</a>
 							</Link>
 						) : props.guildRoleId ? (
 							<>
@@ -524,12 +527,17 @@ Add your custom extension settings layout here.
 									<Link
 										href={`/${agreement?.slug}/roles?role=${props.agreementRoleId}`}
 										legacyBehavior
+										passHref
 									>
-										<Button
-											className={meemTheme.buttonBlack}
-										>
-											Manage Members
-										</Button>
+										<a className={meemTheme.unstyledLink}>
+											<Button
+												className={
+													meemTheme.buttonBlack
+												}
+											>
+												Manage Members
+											</Button>
+										</a>
 									</Link>
 								)}
 								<Button

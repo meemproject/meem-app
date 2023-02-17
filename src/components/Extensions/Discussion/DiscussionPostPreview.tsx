@@ -178,121 +178,128 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 					<Link
 						href={`/${agreement?.slug}/e/discussions/${post.id}`}
 						legacyBehavior
+						passHref
 					>
-						<div style={{ width: '100%', cursor: 'pointer' }}>
-							<div className={meemTheme.row}>
-								{post.attachment && (
-									<>
-										<Image
-											src={post.attachment}
-											height={80}
-											width={80}
-											radius={4}
-										/>
-										<Space w={12} />
-									</>
-								)}
-								<div>
-									<Text className={meemTheme.tSmallBold}>
-										{post.title}
-									</Text>
-									<Text
-										className={meemTheme.tExtraSmall}
-										dangerouslySetInnerHTML={{
-											// TODO: Sanitize html. Possible XSS vulnerability
-											__html: post.body
-										}}
-									/>
-									{post.tags &&
-										post.tags.length > 0 &&
-										post.tags.map(tag => {
-											return (
-												<Badge
-													style={{
-														marginRight: 4
-													}}
-													key={`post-tag-${post.id}-${tag}`}
-													size={'xs'}
-													gradient={{
-														from: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														to: isDarkTheme
-															? colorDarkerGrey
-															: '#DCDCDC',
-														deg: 35
-													}}
-													classNames={{
-														inner: meemTheme.tBadgeTextSmall
-													}}
-													variant={'gradient'}
-												>
-													{tag.length > 0
-														? tag
-														: 'UNTAGGED'}
-												</Badge>
-											)
-
-											return null
-										})}
-
-									<Space h={12} />
-								</div>
-							</div>
-
-							<div className={meemTheme.spacedRowCentered}>
-								<div className={meemTheme.centeredRow}>
-									<Image
-										src={
-											post?.profilePicUrl
-												? normalizeImageUrl(
-														post.profilePicUrl
-												  )
-												: `/meem-icon.png`
-										}
-										height={32}
-										width={32}
-										radius={16}
-									/>
-									<Space w={8} />
+						<a className={meemTheme.unstyledLink}>
+							<div style={{ width: '100%', cursor: 'pointer' }}>
+								<div className={meemTheme.row}>
+									{post.attachment && (
+										<>
+											<Image
+												src={post.attachment}
+												height={80}
+												width={80}
+												radius={4}
+											/>
+											<Space w={12} />
+										</>
+									)}
 									<div>
-										<Text
-											className={
-												meemTheme.tExtraSmallBold
-											}
-										>
-											{post?.displayName ??
-												post?.walletAddress}
+										<Text className={meemTheme.tSmallBold}>
+											{post.title}
 										</Text>
 										<Text
-											className={
-												meemTheme.tExtraExtraSmall
-											}
-										>
-											{typeof post.createdAt === 'number'
-												? DateTime.fromSeconds(
-														post.createdAt
-												  ).toRelative()
-												: ''}
-										</Text>
+											className={meemTheme.tExtraSmall}
+											dangerouslySetInnerHTML={{
+												// TODO: Sanitize html. Possible XSS vulnerability
+												__html: post.body
+											}}
+										/>
+										{post.tags &&
+											post.tags.length > 0 &&
+											post.tags.map(tag => {
+												return (
+													<Badge
+														style={{
+															marginRight: 4
+														}}
+														key={`post-tag-${post.id}-${tag}`}
+														size={'xs'}
+														gradient={{
+															from: isDarkTheme
+																? colorDarkerGrey
+																: '#DCDCDC',
+															to: isDarkTheme
+																? colorDarkerGrey
+																: '#DCDCDC',
+															deg: 35
+														}}
+														classNames={{
+															inner: meemTheme.tBadgeTextSmall
+														}}
+														variant={'gradient'}
+													>
+														{tag.length > 0
+															? tag
+															: 'UNTAGGED'}
+													</Badge>
+												)
+
+												return null
+											})}
+
+										<Space h={12} />
 									</div>
 								</div>
-								<div
-									className={meemTheme.row}
-									style={{ marginTop: 16 }}
-								>
-									<div
-										className={meemTheme.centeredRow}
-										style={{ cursor: 'pointer' }}
-									>
-										<Message width={20} height={20} />
-										<Space w={4} />
-										<Text className={meemTheme.tExtraSmall}>
-											{commentCount}
-										</Text>
+
+								<div className={meemTheme.spacedRowCentered}>
+									<div className={meemTheme.centeredRow}>
+										<Image
+											src={
+												post?.profilePicUrl
+													? normalizeImageUrl(
+															post.profilePicUrl
+													  )
+													: `/meem-icon.png`
+											}
+											height={32}
+											width={32}
+											radius={16}
+										/>
+										<Space w={8} />
+										<div>
+											<Text
+												className={
+													meemTheme.tExtraSmallBold
+												}
+											>
+												{post?.displayName ??
+													post?.walletAddress}
+											</Text>
+											<Text
+												className={
+													meemTheme.tExtraExtraSmall
+												}
+											>
+												{typeof post.createdAt ===
+												'number'
+													? DateTime.fromSeconds(
+															post.createdAt
+													  ).toRelative()
+													: ''}
+											</Text>
+										</div>
 									</div>
-									<Space w={16} />
-									{/* <div
+									<div
+										className={meemTheme.row}
+										style={{ marginTop: 16 }}
+									>
+										<div
+											className={meemTheme.centeredRow}
+											style={{ cursor: 'pointer' }}
+										>
+											<Message width={20} height={20} />
+											<Space w={4} />
+											<Text
+												className={
+													meemTheme.tExtraSmall
+												}
+											>
+												{commentCount}
+											</Text>
+										</div>
+										<Space w={16} />
+										{/* <div
 										className={meemTheme.centeredRow}
 										style={{ cursor: 'pointer' }}
 									>
@@ -303,9 +310,10 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 										</Text>
 									</div>
 									<Space w={16} /> */}
+									</div>
 								</div>
 							</div>
-						</div>
+						</a>
 					</Link>
 				</div>
 			</>

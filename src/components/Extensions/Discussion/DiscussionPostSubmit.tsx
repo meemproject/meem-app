@@ -227,15 +227,18 @@ export const DiscussionPostSubmit: React.FC = () => {
 							<Link
 								href={`/${agreement?.slug}/e/discussions`}
 								legacyBehavior
+								passHref
 							>
-								<div>
-									<ArrowLeft
-										style={{ marginTop: 35 }}
-										className={meemTheme.backArrow}
-										height={32}
-										width={32}
-									/>
-								</div>
+								<a className={meemTheme.unstyledLink}>
+									<div>
+										<ArrowLeft
+											style={{ marginTop: 35 }}
+											className={meemTheme.backArrow}
+											height={32}
+											width={32}
+										/>
+									</div>
+								</a>
 							</Link>
 							<Space w={16} />
 							<div>

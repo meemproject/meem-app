@@ -327,14 +327,17 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							<Link
 								href={`/${agreement.slug}/admin?tab=icon`}
 								legacyBehavior
+								passHref
 							>
-								<Image
-									className={meemTheme.clickable}
-									height={150}
-									width={150}
-									radius={16}
-									src={'/community-no-icon.png'}
-								/>
+								<a className={meemTheme.unstyledLink}>
+									<Image
+										className={meemTheme.clickable}
+										height={150}
+										width={150}
+										radius={16}
+										src={'/community-no-icon.png'}
+									/>
+								</a>
 							</Link>
 						</Center>
 					</>
@@ -357,10 +360,13 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							<Link
 								href={`/${agreement.slug}/admin?tab=details`}
 								legacyBehavior
+								passHref
 							>
-								<Button className={meemTheme.buttonAsh}>
-									Edit info
-								</Button>
+								<a className={meemTheme.unstyledLink}>
+									<Button className={meemTheme.buttonAsh}>
+										Edit info
+									</Button>
+								</a>
 							</Link>
 						</Center>
 						<Space h={16} />
@@ -582,17 +588,23 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				)}
 
 				{agreement.isCurrentUserAgreementAdmin && (
-					<Link href={`/${agreement.slug}/admin`} legacyBehavior>
-						<div>
-							<Settings
-								style={{
-									position: 'absolute',
-									top: 16,
-									right: 16,
-									cursor: 'pointer'
-								}}
-							/>
-						</div>
+					<Link
+						href={`/${agreement.slug}/admin`}
+						legacyBehavior
+						passHref
+					>
+						<a className={meemTheme.unstyledLink}>
+							<div>
+								<Settings
+									style={{
+										position: 'absolute',
+										top: 16,
+										right: 16,
+										cursor: 'pointer'
+									}}
+								/>
+							</div>
+						</a>
 					</Link>
 				)}
 			</div>

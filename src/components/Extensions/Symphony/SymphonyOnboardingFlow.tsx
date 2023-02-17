@@ -64,10 +64,12 @@ import { hostnameToChainId } from '../../App'
 import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import { MeemFAQModal } from '../../Header/MeemFAQModal'
 import {
+	colorAshLight,
 	colorBlack,
 	colorBlue,
 	colorDarkerGrey,
 	colorGreen,
+	colorGrey,
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -988,19 +990,70 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<>
 					<Space h={32} />
 					<Container>
-						<Text className={meemTheme.tExtraSmallLabel}>
-							SET UP SYMPHONY
-						</Text>
-						<Space h={24} />
-						<Stepper
-							active={onboardingStep}
-							breakpoint="sm"
-							orientation="vertical"
-						>
-							{stepOneAgreementName}
-							{stepTwoConnectPublishingAccount}
-							{stepThreeInviteBot}
-						</Stepper>
+						<div className={meemTheme.rowResponsive}>
+							<div className={meemTheme.pageLeftWideColumn}>
+								<Text className={meemTheme.tExtraSmallLabel}>
+									SET UP SYMPHONY
+								</Text>
+								<Space h={24} />
+								<Stepper
+									active={onboardingStep}
+									breakpoint="sm"
+									orientation="vertical"
+								>
+									{stepOneAgreementName}
+									{stepTwoConnectPublishingAccount}
+									{stepThreeInviteBot}
+								</Stepper>
+							</div>
+							<div
+								className={meemTheme.pageRightNarrowColumnInner}
+							>
+								<div
+									style={{
+										padding: 24,
+										borderRadius: 16,
+										backgroundColor: isDarkTheme
+											? colorBlack
+											: colorAshLight
+									}}
+								>
+									<Text className={meemTheme.tExtraSmallBold}>
+										Symphony lets your community use Discord
+										to decide what to Tweet from a shared
+										account.
+									</Text>
+									<Space h={16} />
+									<Text className={meemTheme.tExtraSmallBold}>
+										How it works:
+									</Text>
+									<Space h={16} />
+
+									<Text className={meemTheme.tExtraSmall}>
+										1. You decide rules for how your
+										community wants to publish
+									</Text>
+									<Space h={8} />
+									<Text className={meemTheme.tExtraSmall}>
+										2. Community members propose Tweets on
+										Discord
+									</Text>
+									<Space h={8} />
+
+									<Text className={meemTheme.tExtraSmall}>
+										3. Your community decides what to
+										publish based on the rules you’ve set
+									</Text>
+									<Space h={8} />
+
+									<Text className={meemTheme.tExtraSmall}>
+										4. Tweets are published to your shared
+										Twitter account based on community
+										members’ input
+									</Text>
+								</div>
+							</div>
+						</div>
 					</Container>
 				</>
 			)}
@@ -1008,7 +1061,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<>
 					<Space h={32} />
 					<Center>
-						<Text className={meemTheme.tLargeBold}>
+						<Text
+							style={{ paddingLeft: 16, paddingRight: 16 }}
+							className={meemTheme.tLargeBold}
+						>
 							{`Which community will use ${extensionName}?`}
 						</Text>
 					</Center>

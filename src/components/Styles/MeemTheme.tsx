@@ -583,6 +583,14 @@ export const useMeemTheme = createStyles(theme => ({
 			paddingRight: 0
 		}
 	},
+	pageLeftWideColumn: {
+		width: 680,
+		paddingRight: 32,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: '100%',
+			paddingRight: 0
+		}
+	},
 	pageRightColumn: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? 'transparent' : colorLightestGrey
@@ -594,6 +602,14 @@ export const useMeemTheme = createStyles(theme => ({
 		paddingLeft: 40,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%'
+		}
+	},
+	pageRightNarrowColumnInner: {
+		width: 320,
+		paddingLeft: 40,
+		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+			width: '100%',
+			paddingLeft: 0
 		}
 	},
 
@@ -855,6 +871,9 @@ export const useMeemTheme = createStyles(theme => ({
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			marginRight: 20
 		}
+	},
+	unstyledLink: {
+		all: 'unset'
 	},
 	paragraphIntTextInput: {
 		paddingLeft: 142

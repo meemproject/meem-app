@@ -146,105 +146,119 @@ export const MyAgreementsComponent: React.FC = () => {
 								<Link
 									href={`/${agreement.slug}`}
 									legacyBehavior
+									passHref
 								>
-									<div
-										key={agreement.address}
-										className={meemTheme.gridItem}
-									>
-										<div className={meemTheme.row}>
-											{agreement.image && (
-												<>
-													<Image
-														className={
-															meemTheme.imageAgreementLogo
-														}
-														style={{
-															width: '56px',
-															height: '56px'
-														}}
-														src={agreement.image}
-														radius={8}
-														fit={'cover'}
-													/>
-													<Space w={24} />
-												</>
-											)}
+									<a className={meemTheme.unstyledLink}>
+										<div
+											key={agreement.address}
+											className={meemTheme.gridItem}
+										>
+											<div className={meemTheme.row}>
+												{agreement.image && (
+													<>
+														<Image
+															className={
+																meemTheme.imageAgreementLogo
+															}
+															style={{
+																width: '56px',
+																height: '56px'
+															}}
+															src={
+																agreement.image
+															}
+															radius={8}
+															fit={'cover'}
+														/>
+														<Space w={24} />
+													</>
+												)}
 
-											<div
-												className={meemTheme.tEllipsis}
-											>
-												<Text
-													style={{
-														fontWeight: 500,
-														fontSize: 18
-													}}
+												<div
+													className={
+														meemTheme.tEllipsis
+													}
 												>
-													{agreement.name}
-												</Text>
+													<Text
+														style={{
+															fontWeight: 500,
+															fontSize: 18
+														}}
+													>
+														{agreement.name}
+													</Text>
 
-												<Space h={20} />
-												<div className={meemTheme.row}>
-													<Badge
-														gradient={{
-															from: isDarkTheme
-																? colorDarkerGrey
-																: '#DCDCDC',
-															to: isDarkTheme
-																? colorDarkerGrey
-																: '#DCDCDC',
-															deg: 35
-														}}
-														classNames={{
-															inner: meemTheme.tBadgeText
-														}}
-														variant={'gradient'}
-														leftSection={
-															<>
-																<Group
-																	style={{
-																		color: isDarkTheme
-																			? colorWhite
-																			: colorBlack,
-																		marginTop: 5
-																	}}
-																/>
-															</>
+													<Space h={20} />
+													<div
+														className={
+															meemTheme.row
 														}
 													>
-														{
-															agreement.members
-																?.length
-														}
-													</Badge>
-													{!agreement.isLaunched &&
-														agreement.isCurrentUserAgreementAdmin && (
-															<>
-																<Space w={8} />
-																<Badge
-																	gradient={{
-																		from: isDarkTheme
-																			? colorDarkerYellow
-																			: colorYellow,
-																		to: isDarkTheme
-																			? colorDarkerYellow
-																			: colorYellow,
-																		deg: 35
-																	}}
-																	classNames={{
-																		inner: meemTheme.tBadgeText
-																	}}
-																	variant={
-																		'gradient'
-																	}
-																>
-																	Draft
-																</Badge>
-															</>
-														)}
+														<Badge
+															gradient={{
+																from: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																to: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																deg: 35
+															}}
+															classNames={{
+																inner: meemTheme.tBadgeText
+															}}
+															variant={'gradient'}
+															leftSection={
+																<>
+																	<Group
+																		style={{
+																			color: isDarkTheme
+																				? colorWhite
+																				: colorBlack,
+																			marginTop: 5
+																		}}
+																	/>
+																</>
+															}
+														>
+															{
+																agreement
+																	.members
+																	?.length
+															}
+														</Badge>
+														{!agreement.isLaunched &&
+															agreement.isCurrentUserAgreementAdmin && (
+																<>
+																	<Space
+																		w={8}
+																	/>
+																	<Badge
+																		gradient={{
+																			from: isDarkTheme
+																				? colorDarkerYellow
+																				: colorYellow,
+																			to: isDarkTheme
+																				? colorDarkerYellow
+																				: colorYellow,
+																			deg: 35
+																		}}
+																		classNames={{
+																			inner: meemTheme.tBadgeText
+																		}}
+																		variant={
+																			'gradient'
+																		}
+																	>
+																		Draft
+																	</Badge>
+																</>
+															)}
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
+									</a>
 								</Link>
 							</Grid.Col>
 						))}
