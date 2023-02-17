@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import {
 	Header,
 	Text,
@@ -86,17 +88,17 @@ export function HeaderMenu() {
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	useEffect(() => {
-		if (
-			isConnected &&
-			loginState === LoginState.NotLoggedIn &&
-			window &&
-			!window.location.href.includes('/authenticate')
-		) {
-			Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
-			router.push('/authenticate')
-		}
-	}, [isConnected, loginState, router])
+	// useEffect(() => {
+	// 	if (
+	// 		isConnected &&
+	// 		loginState === LoginState.NotLoggedIn &&
+	// 		window &&
+	// 		!window.location.href.includes('/authenticate')
+	// 	) {
+	// 		Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
+	// 		router.push('/authenticate')
+	// 	}
+	// }, [isConnected, loginState, router])
 
 	return (
 		<Header className={meemTheme.siteHeader} height={56}>
