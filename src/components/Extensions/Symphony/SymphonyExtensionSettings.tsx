@@ -510,7 +510,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						DISCORD SERVER
 					</Text>
 					<Space h={16} />
-					{!discordInfo && (
+					{(!discordInfo || !discordInfo.guildId) && (
 						<Button
 							leftIcon={<Discord height={16} width={16} />}
 							className={meemTheme.buttonWhite}
@@ -521,7 +521,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							Connect Discord
 						</Button>
 					)}
-					{discordInfo && (
+					{discordInfo && discordInfo.guildId && (
 						<>
 							<div className={meemTheme.centeredRow}>
 								{discordInfo?.icon && (
