@@ -355,7 +355,12 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				<Space h={16} />
 				{!agreement.isLaunched && (
 					<>
-						<Space h={16} />
+						<Space
+							h={16}
+							className={meemTheme.visibleDesktopOnly}
+						/>
+						<Space h={4} className={meemTheme.visibleMobileOnly} />
+
 						<Center>
 							<Link
 								href={`/${agreement.slug}/admin?tab=details`}
@@ -369,7 +374,11 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 								</a>
 							</Link>
 						</Center>
-						<Space h={16} />
+						<Space
+							h={16}
+							className={meemTheme.visibleDesktopOnly}
+						/>
+						<Space h={4} className={meemTheme.visibleMobileOnly} />
 					</>
 				)}
 				{agreement.isLaunched && (

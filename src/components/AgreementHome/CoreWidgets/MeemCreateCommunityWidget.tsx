@@ -20,10 +20,7 @@ export const MeemCreateCommunityWidget: React.FC<IProps> = ({ agreement }) => {
 		<div>
 			{shouldShowWidget && (
 				<>
-					<div
-						className={meemTheme.widgetMeem}
-						style={{ marginTop: 4 }}
-					>
+					<div className={meemTheme.widgetMeem}>
 						<Space h={16} />
 
 						<Center>

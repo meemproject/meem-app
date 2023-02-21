@@ -264,7 +264,6 @@ export const AgreementHome: React.FC = () => {
 					<div>
 						{!agreement.isLaunched && (
 							<div className={meemTheme.communityLaunchHeader}>
-								<Space h={40} />
 								<Center>
 									<Text
 										className={meemTheme.tMediumBold}
@@ -277,7 +276,7 @@ export const AgreementHome: React.FC = () => {
 
 								<Center>
 									<Text
-										className={meemTheme.tMedium}
+										className={meemTheme.tExtraSmall}
 										style={{
 											paddingLeft: 16,
 											paddingRight: 16,
@@ -290,7 +289,8 @@ export const AgreementHome: React.FC = () => {
 										experience.
 									</Text>
 								</Center>
-								<Space h={24} />
+
+								<Space h={16} />
 
 								<Center>
 									<Button
@@ -304,7 +304,6 @@ export const AgreementHome: React.FC = () => {
 										Launch
 									</Button>
 								</Center>
-								<Space h={40} />
 							</div>
 						)}
 						<div className={meemTheme.visibleMobileOnly}>
