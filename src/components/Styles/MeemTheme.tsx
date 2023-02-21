@@ -371,6 +371,16 @@ export const useMeemTheme = createStyles(theme => ({
 		display: 'flex',
 		alignItems: 'center'
 	},
+	gridResponsive800Width: {
+		[`@media (min-width: ${theme.breakpoints.sm}px)`]: {
+			width: 800
+		},
+		[`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+			maxWidth: 800,
+			marginLeft: 16,
+			marginRight: 16
+		}
+	},
 	greyContentBox: {
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey,

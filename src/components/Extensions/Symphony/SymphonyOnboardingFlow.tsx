@@ -1062,7 +1062,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					<Space h={32} />
 					<Center>
 						<Text
-							style={{ paddingLeft: 16, paddingRight: 16 }}
+							style={{ paddingLeft: 24, paddingRight: 24 }}
 							className={meemTheme.tLargeBold}
 						>
 							{`Which community will use ${extensionName}?`}
@@ -1071,7 +1071,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					<Space h={48} />
 
 					<Center>
-						<Grid style={{ maxWidth: 800 }}>
+						<Grid className={meemTheme.gridResponsive800Width}>
 							{myAgreements?.map(existingAgreement => (
 								<Grid.Col
 									xs={6}
