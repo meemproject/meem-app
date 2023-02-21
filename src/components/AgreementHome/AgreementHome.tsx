@@ -14,13 +14,12 @@ import {
 import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
-import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
+import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
 import { SymphonyWidget } from '../Extensions/Symphony/SymphonyWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
 import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
 import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
-import { AgreementExtensionLinksWidget } from './CoreWidgets/AgreementExtensionLinksWidget'
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
 import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
@@ -127,8 +126,6 @@ export const AgreementHome: React.FC = () => {
 							<Space h={24} />
 						</>
 					)}
-
-					<AgreementExtensionLinksWidget agreement={agreement} />
 
 					{agreement.slug !== 'meem' && !agreement.isLaunched && (
 						<AgreementBlankSlateWidget

@@ -8,7 +8,6 @@ import {
 	Center,
 	Modal,
 	Divider,
-	useMantineColorScheme,
 	Loader
 } from '@mantine/core'
 import { cleanNotifications } from '@mantine/notifications'
@@ -63,9 +62,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 	const [isAgreementDetailsModalOpen, setIsAgreementDetailsModalOpen] =
 		useState(false)
-
-	const { colorScheme } = useMantineColorScheme()
-	const isDarkTheme = colorScheme === 'dark'
 
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
@@ -504,82 +500,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 								</Button>
 							</div>
 						</Center>
-						{agreement.extensions &&
-							agreement.extensions?.filter(
-								ext =>
-									ext.AgreementExtensionLinks.length > 0 &&
-									ext.isSetupComplete &&
-									ext.metadata.sidebarVisible
-							).length > 0 && <Space h={12} />}
-						{agreement.extensions &&
-							agreement.extensions?.filter(
-								ext =>
-									ext.AgreementExtensionLinks.length > 0 &&
-									ext.isSetupComplete &&
-									ext.metadata.sidebarVisible
-							).length > 0 && (
-								<>
-									<Center>
-										<div
-											className={meemTheme.row}
-											style={{ flexWrap: 'wrap' }}
-										>
-											{agreement.extensions
-												?.filter(
-													ext =>
-														ext
-															.AgreementExtensionLinks
-															.length > 0 &&
-														ext.metadata
-															.sidebarVisible
-												)
-												.map(extension => (
-													<div key={extension.id}>
-														<Button
-															style={{
-																margin: 3
-															}}
-															className={
-																meemTheme.buttonWhite
-															}
-															onClick={() => {
-																if (
-																	extension
-																		.AgreementExtensionLinks[0]
-																) {
-																	window.open(
-																		extension
-																			.AgreementExtensionLinks[0]
-																			.url
-																	)
-																}
-															}}
-														>
-															<Image
-																width={20}
-																src={`/${
-																	isDarkTheme
-																		? `${(
-																				extension
-																					.Extension
-																					?.icon ??
-																				''
-																		  ).replace(
-																				'.png',
-																				'-white.png'
-																		  )}`
-																		: extension
-																				.Extension
-																				?.icon
-																}`}
-															/>
-														</Button>
-													</div>
-												))}
-										</div>
-									</Center>
-								</>
-							)}
 
 						<Space h={32} />
 						<Center>
