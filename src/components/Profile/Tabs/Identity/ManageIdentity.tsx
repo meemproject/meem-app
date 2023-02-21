@@ -465,7 +465,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			>
 				Save Changes
 			</Button>
-			<Space h={'xl'} />
+			<Space h={96} />
 
 			<ManageLinkedAccountModal
 				userIdentity={userIdentityCurrentlyEditing}

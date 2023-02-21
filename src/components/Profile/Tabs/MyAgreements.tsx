@@ -102,8 +102,10 @@ export const MyAgreementsComponent: React.FC = () => {
 		<>
 			{loading && (
 				<>
-					<Space h={16} />
-					<Loader variant="oval" color="cyan" />
+					<Space h={56} />
+					<Center>
+						<Loader variant="oval" color="cyan" />
+					</Center>
 				</>
 			)}
 			{agreements.length === 0 && !loading && (
@@ -156,21 +158,58 @@ export const MyAgreementsComponent: React.FC = () => {
 											<div className={meemTheme.row}>
 												{agreement.image && (
 													<>
-														<Image
+														<div
 															className={
-																meemTheme.imageAgreementLogo
+																meemTheme.visibleDesktopOnly
 															}
-															style={{
-																width: '56px',
-																height: '56px'
-															}}
-															src={
-																agreement.image
+														>
+															<Image
+																className={
+																	meemTheme.imageAgreementLogo
+																}
+																style={{
+																	width: '56px',
+																	height: '56px'
+																}}
+																src={
+																	agreement.image
+																}
+																radius={8}
+																fit={'cover'}
+															/>
+														</div>
+														<div
+															className={
+																meemTheme.visibleMobileOnly
 															}
-															radius={8}
-															fit={'cover'}
+														>
+															<Image
+																className={
+																	meemTheme.imageAgreementLogo
+																}
+																style={{
+																	width: '24px',
+																	height: '24px'
+																}}
+																src={
+																	agreement.image
+																}
+																radius={8}
+																fit={'cover'}
+															/>
+														</div>
+														<Space
+															w={24}
+															className={
+																meemTheme.visibleDesktopOnly
+															}
 														/>
-														<Space w={24} />
+														<Space
+															w={16}
+															className={
+																meemTheme.visibleMobileOnly
+															}
+														/>
 													</>
 												)}
 

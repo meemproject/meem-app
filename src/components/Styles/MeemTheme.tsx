@@ -629,7 +629,7 @@ export const useMeemTheme = createStyles(theme => ({
 		maxWidth: 800,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			paddingTop: 8,
-			width: '85%'
+			width: '83%'
 		}
 	},
 	pagePanelLayoutNavBar: {

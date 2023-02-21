@@ -128,16 +128,42 @@ export const ProfileComponent: React.FC = () => {
 						<div className={meemTheme.spacedRowCentered}>
 							{user.profilePicUrl && (
 								<>
-									<Image
-										radius={8}
-										height={80}
-										width={80}
-										fit={'cover'}
-										className={meemTheme.imageAgreementLogo}
-										src={normalizeImageUrl(
-											user.profilePicUrl
-										)}
-									/>
+									<div
+										className={meemTheme.visibleDesktopOnly}
+									>
+										<Image
+											radius={8}
+											height={80}
+											width={80}
+											fit={'cover'}
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											src={normalizeImageUrl(
+												user.profilePicUrl
+											)}
+										/>
+									</div>
+									<div
+										className={meemTheme.visibleMobileOnly}
+									>
+										<Image
+											radius={8}
+											height={56}
+											width={56}
+											fit={'cover'}
+											className={
+												meemTheme.imageAgreementLogo
+											}
+											style={{
+												marginTop: -16,
+												marginLeft: 12
+											}}
+											src={normalizeImageUrl(
+												user.profilePicUrl
+											)}
+										/>
+									</div>
 									<Space w={24} />
 								</>
 							)}
@@ -148,7 +174,9 @@ export const ProfileComponent: React.FC = () => {
 								style={{ paddingBottom: 4 }}
 							>
 								<Text className={meemTheme.tLargeBold}>
-									{'My Profile'}
+									{user.displayName
+										? user.displayName
+										: 'My Profile'}
 								</Text>
 								<Space h={8} />
 								<div className={meemTheme.row}>
@@ -197,7 +225,7 @@ export const ProfileComponent: React.FC = () => {
 							styles={{ display: 'none' }}
 						>
 							<Burger
-								style={{ marginLeft: 24 }}
+								style={{ marginLeft: 24, marginTop: -8 }}
 								opened={isMobileNavBarVisible}
 								onClick={() =>
 									setIsMobileNavBarVisible(o => !o)

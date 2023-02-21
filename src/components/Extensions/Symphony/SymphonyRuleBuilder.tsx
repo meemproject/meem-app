@@ -473,6 +473,8 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 			<Text className={meemTheme.tExtraSmallLabel}>VETOES</Text>
 			<Space h={4} />
 			<Text className={meemTheme.tExtraSmall}>Can posts be vetoed?</Text>
+			<Space h={8} />
+
 			<Switch
 				label="Yes, posts can be vetoed"
 				{...form.getInputProps('canVeto', { type: 'checkbox' })}
@@ -553,12 +555,13 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 				Would you like Symphony to reply to approved proposals with a
 				link to the published tweet?
 			</Text>
+			<Space h={8} />
 			<Switch
 				label="Yes, reply with a link"
 				{...form.getInputProps('shouldReply', { type: 'checkbox' })}
 			/>
 			<Modal
-				withCloseButton={false}
+				withCloseButton={true}
 				closeOnClickOutside={false}
 				padding={8}
 				overlayBlur={8}
