@@ -78,7 +78,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const [botCode, setBotCode] = useState<string>('')
 
 	// Page state
-	const isInOnboardingMode = router.query.isOnboarding === 'true'
+	// const isInOnboardingMode = router.query.isOnboarding === 'true'
 	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
 		useState(false)
 	const [connectDiscordStep, setConnectDiscordStep] = useState(0)
@@ -416,9 +416,9 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 	const integrationsSection = () => (
 		<>
-			<Space h={24} />
+			<Space h={24} className={meemTheme.visibleDesktopOnly} />
 
-			<div className={meemTheme.row}>
+			<div className={meemTheme.rowResponsive}>
 				<div>
 					<Text className={meemTheme.tExtraSmallLabel}>
 						TWITTER ACCOUNT
@@ -505,6 +505,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 					)}
 				</div>
 				<Space w={64} />
+				<Space h={32} />
 				<div>
 					<Text className={meemTheme.tExtraSmallLabel}>
 						DISCORD SERVER
@@ -596,6 +597,8 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				{process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
 					<>
 						<Space w={64} />
+						<Space h={32} />
+
 						<div>
 							<Text className={meemTheme.tExtraSmallLabel}>
 								SLACK SERVER
@@ -969,6 +972,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			{rolesData && <Space h={16} />}
 			<Button
 				className={meemTheme.buttonWhite}
+				disabled={!discordInfo}
 				onClick={() => setIsRuleBuilderOpen(true)}
 			>
 				+ Add Rule
@@ -977,9 +981,31 @@ export const SymphonyExtensionSettings: React.FC = () => {
 				title={
 					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
 				}
+				className={meemTheme.visibleDesktopOnly}
 				padding={24}
 				overlayBlur={8}
 				radius={16}
+				size={'lg'}
+				opened={isRuleBuilderOpen}
+				onClose={() => {
+					setSelectedRule(undefined)
+					setIsRuleBuilderOpen(false)
+				}}
+			>
+				<SymphonyRuleBuilder
+					channels={channelsData?.channels}
+					selectedRule={selectedRule}
+					roles={rolesData?.roles}
+					onSave={handleRuleSave}
+				/>
+			</Modal>
+			<Modal
+				title={
+					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
+				}
+				className={meemTheme.visibleMobileOnly}
+				padding={24}
+				fullScreen
 				size={'lg'}
 				opened={isRuleBuilderOpen}
 				onClose={() => {
@@ -1003,13 +1029,24 @@ export const SymphonyExtensionSettings: React.FC = () => {
 			<Space h={40} />
 			<Text className={meemTheme.tExtraSmallLabel}>PERMISSIONS</Text>
 			<Space h={4} />
-			<Text className={meemTheme.tExtraSmall}>
-				{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process. `}
-			</Text>
+			{discordInfo && (
+				<Text className={meemTheme.tExtraSmall}>
+					{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
+				</Text>
+			)}
+			{!discordInfo && (
+				<Text className={meemTheme.tExtraSmall}>
+					<span style={{ fontWeight: 600 }}>
+						Connect a Discord server to add your first rule.
+					</span>{' '}
+					Rules are logic to dictate how new posts will be proposed
+					and published, as well as which community members will
+					manage each part of the process.
+				</Text>
+			)}
 			<Space h={16} />
 
 			{rulesSection()}
-			<Space h={48} />
 		</>
 	)
 
@@ -1017,87 +1054,35 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		<>
 			<div
 				className={meemTheme.pageHeaderExtension}
-				style={{ position: 'relative' }}
+				style={{ paddingLeft: 24, paddingRight: 24 }}
 			>
-				<Space h={8} />
 				<Center>
-					<Image
-						className={meemTheme.copyIcon}
-						src={`/ext-symphony.png`}
-						fit={'contain'}
-						width={180}
-						height={40}
-					/>
+					<div>
+						<Space h={8} />
+
+						<Image
+							className={meemTheme.copyIcon}
+							src={`/ext-symphony.png`}
+							fit={'contain'}
+							width={180}
+							height={40}
+						/>
+
+						<Space h={8} />
+					</div>
 				</Center>
 
-				<Space h={8} />
-				<div
-					style={{
-						position: 'absolute',
-						top: 50,
-						right: 48
-					}}
-				>
-					<Link href={`/${agreement?.slug}`} legacyBehavior passHref>
-						<a className={meemTheme.unstyledLink}>
-							<DeleteCircle
-								className={meemTheme.clickable}
-								width={24}
-								height={24}
-								color={colorWhite}
-							/>
-						</a>
-					</Link>
-				</div>
+				<Link href={`/${agreement?.slug}`} legacyBehavior passHref>
+					<a className={meemTheme.unstyledLink}>
+						<DeleteCircle
+							className={meemTheme.clickable}
+							width={24}
+							height={24}
+							color={colorWhite}
+						/>
+					</a>
+				</Link>
 			</div>
-		</>
-	)
-
-	const pageHeaderOnboarding = (
-		<>
-			<div className={meemTheme.widgetMeemFlat}>
-				<Space h={24} />
-
-				<Center>
-					<Text className={meemTheme.tLargeBold}>
-						Publishing is just one of the many things communities
-						can do together on meem.
-					</Text>
-				</Center>
-				<Space h={24} />
-				<Center>
-					<Text className={meemTheme.tMedium}>
-						Tap below to customize your community page and browse
-						our other extensions.
-					</Text>
-				</Center>
-				<Space h={36} />
-				<Center>
-					<Link href={`/${agreement?.slug}`} legacyBehavior passHref>
-						<a className={meemTheme.unstyledLink}>
-							<Button className={meemTheme.buttonBlack}>
-								Explore meem
-							</Button>
-						</a>
-					</Link>
-				</Center>
-				<Space h={24} />
-			</div>
-			<Space h={32} />
-			<Container>
-				<div className={meemTheme.centeredRow}>
-					<Image
-						height={24}
-						width={24}
-						src={'/integration-symphony.png'}
-					/>
-					<Space w={16} />
-					<Text className={meemTheme.tLargeBold}>
-						Symphony Settings
-					</Text>
-				</div>
-			</Container>
-			<Space h={32} />
 		</>
 	)
 
@@ -1135,11 +1120,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							)}
 							{hasFetchedData && (
 								<>
-									{/* buckle up...  */}
-									{isInOnboardingMode && (
-										<>{pageHeaderOnboarding}</>
-									)}
-									{!isInOnboardingMode && <>{pageHeader}</>}
+									<>{pageHeader}</>
 
 									<Container>
 										<>{mainState}</>

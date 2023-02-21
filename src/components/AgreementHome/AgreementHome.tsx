@@ -14,13 +14,12 @@ import {
 import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
-import { DiscussionWidget } from '../Extensions/Discussion/DiscussionWidget'
+import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
 import { SymphonyWidget } from '../Extensions/Symphony/SymphonyWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
 import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
 import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
-import { AgreementExtensionLinksWidget } from './CoreWidgets/AgreementExtensionLinksWidget'
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
 import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
@@ -127,8 +126,6 @@ export const AgreementHome: React.FC = () => {
 							<Space h={24} />
 						</>
 					)}
-
-					<AgreementExtensionLinksWidget agreement={agreement} />
 
 					{agreement.slug !== 'meem' && !agreement.isLaunched && (
 						<AgreementBlankSlateWidget
@@ -264,7 +261,6 @@ export const AgreementHome: React.FC = () => {
 					<div>
 						{!agreement.isLaunched && (
 							<div className={meemTheme.communityLaunchHeader}>
-								<Space h={40} />
 								<Center>
 									<Text
 										className={meemTheme.tMediumBold}
@@ -277,7 +273,7 @@ export const AgreementHome: React.FC = () => {
 
 								<Center>
 									<Text
-										className={meemTheme.tMedium}
+										className={meemTheme.tExtraSmall}
 										style={{
 											paddingLeft: 16,
 											paddingRight: 16,
@@ -290,7 +286,8 @@ export const AgreementHome: React.FC = () => {
 										experience.
 									</Text>
 								</Center>
-								<Space h={24} />
+
+								<Space h={16} />
 
 								<Center>
 									<Button
@@ -304,7 +301,6 @@ export const AgreementHome: React.FC = () => {
 										Launch
 									</Button>
 								</Center>
-								<Space h={40} />
 							</div>
 						)}
 						<div className={meemTheme.visibleMobileOnly}>
