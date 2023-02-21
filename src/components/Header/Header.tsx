@@ -93,7 +93,11 @@ export function HeaderMenu() {
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
 					<Space w={8} />
-					<Link href={`/`} legacyBehavior passHref>
+					<Link
+						href={`https://build.meem.wtf`}
+						legacyBehavior
+						passHref
+					>
 						<a className={meemTheme.unstyledLink}>
 							<Image
 								className={meemTheme.clickable}
