@@ -1,31 +1,18 @@
-import { Button, Center, Space, Text } from '@mantine/core'
-import Link from 'next/link'
+import { Space, Text } from '@mantine/core'
 import React from 'react'
-import {
-	Agreement,
-	extensionFromSlug
-} from '../../../model/agreement/agreements'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-
-/*
-Access agreement-level data using the 'agreement' object.
-*/
-interface IProps {
-	agreement: Agreement
-}
+import { SymphonyExtensionSettings } from './SymphonyExtensionSettings'
 
 /*
 Be sure to import your widget in AgreementHome.tsx to ensure it is displayed
 when enabled.
 */
-export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
+export const SymphonyWidget: React.FC = () => {
 	/*
 	Use the meemTheme object to access agreements styles
 	such as colors, fonts and layouts
 	*/
 	const { classes: meemTheme } = useMeemTheme()
-
-	const agreementExtension = extensionFromSlug('symphony', agreement)
 
 	return (
 		/*
@@ -51,69 +38,7 @@ export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
 				</div> */}
 			</div>
 			<Space h={24} />
-			{!agreement.isCurrentUserAgreementAdmin && (
-				<Center>
-					<Text
-						className={meemTheme.tSmallBold}
-					>{`${agreement.name} is using Symphony to publish together on Twitter!`}</Text>
-				</Center>
-			)}
-			{agreement.isCurrentUserAgreementMember && (
-				<>
-					{!agreementExtension?.isSetupComplete && (
-						<>
-							<Center>
-								<Text className={meemTheme.tSmallBold}>
-									You have not yet set up any Symphony rules.
-								</Text>
-							</Center>
-							<Space h={12} />
-							<Center>
-								<Link
-									href={`/${agreement.slug}/e/symphony/settings`}
-									passHref
-									legacyBehavior
-								>
-									<a className={meemTheme.unstyledLink}>
-										<Button
-											className={meemTheme.buttonDarkGrey}
-										>
-											Continue Symphony setup
-										</Button>
-									</a>
-								</Link>
-							</Center>
-						</>
-					)}
-					{agreementExtension?.isSetupComplete && (
-						<>
-							<Center>
-								<Text className={meemTheme.tSmallBold}>
-									Your Symphony rules are set up. Click below
-									to change them.
-								</Text>
-							</Center>
-							<Space h={12} />
-							<Center>
-								<Link
-									href={`/${agreement.slug}/e/symphony/settings`}
-									legacyBehavior
-									passHref
-								>
-									<a className={meemTheme.unstyledLink}>
-										<Button
-											className={meemTheme.buttonDarkGrey}
-										>
-											Configure Symphony
-										</Button>
-									</a>
-								</Link>
-							</Center>
-						</>
-					)}
-					<Space h={8} />
-				</>
-			)}
+			<SymphonyExtensionSettings />
 		</div>
 	)
 }

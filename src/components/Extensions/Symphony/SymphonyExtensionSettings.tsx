@@ -22,7 +22,6 @@ import {
 	makeRequest,
 	MeemAPI
 } from '@meemproject/sdk'
-import { IconBrandSlack } from '@tabler/icons'
 import { Emoji } from 'emoji-picker-react'
 import { DeleteCircle, Discord, LogOut, Twitter } from 'iconoir-react'
 import Link from 'next/link'
@@ -398,7 +397,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
 	const rules = rulesData?.Rules
 	const discordInfo = discordData?.Discords[0]
-	const slackInfo = slackData?.Slacks[0]
+	// const slackInfo = slackData?.Slacks[0]
 	const hasFetchedData =
 		!!twitterData &&
 		!!rulesData &&
@@ -594,7 +593,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						</>
 					)}
 				</div>
-				{process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
+				{/* {process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
 					<>
 						<Space w={64} />
 						<Space h={32} />
@@ -686,7 +685,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							)}
 						</div>
 					</>
-				)}
+				)} */}
 			</div>
 			<Modal
 				opened={isConnectDiscordModalOpen}
