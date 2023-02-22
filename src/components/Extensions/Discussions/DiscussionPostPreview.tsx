@@ -288,7 +288,8 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 											className={meemTheme.centeredRow}
 											style={{ cursor: 'pointer' }}
 										>
-											<Message width={20} height={20} />
+											<Space w={16} />
+											<Message width={16} height={16} />
 											<Space w={4} />
 											<Text
 												className={

@@ -1,11 +1,5 @@
-import {
-	Text,
-	Space,
-	Image,
-	Button,
-	useMantineColorScheme
-} from '@mantine/core'
-import { ArrowLeft, DeleteCircle, Settings } from 'iconoir-react'
+import { Text, Space, Image, useMantineColorScheme } from '@mantine/core'
+import { ArrowLeft, DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
@@ -28,31 +22,17 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 
 	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
-	const isSettingsPage =
-		(window && window.location.pathname.includes('settings')) ?? false
-
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
-
-	// Hide the back arrow for extensions with no widgets - presumably they
-	// have no homepage either (i.e. are link extensions)
-	const hasNoWidget =
-		agreement &&
-		agreementExtension &&
-		agreementExtension.AgreementExtensionWidgets.length === 0
 
 	return (
 		<>
 			<div className={meemTheme.pageHeader}>
 				<div className={meemTheme.spacedRowCentered}>
-					{(hasNoWidget || isSettingsPage || isSubPage) && (
+					{isSubPage && (
 						<>
 							<Link
-								href={
-									hasNoWidget
-										? `/${agreement?.slug}/admin?tab=extensions`
-										: `/${agreement?.slug}/e/${extensionSlug}`
-								}
+								href={`/${agreement?.slug}/e/${extensionSlug}`}
 								legacyBehavior
 								passHref
 							>
@@ -110,39 +90,13 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 								width={16}
 							/>
 							<Space w={8} />
-							<Text className={meemTheme.tMedium}>{`${
-								agreementExtension?.Extension?.name
-							} ${
-								isSettingsPage
-									? ' Settings'
-									: hasNoWidget
-									? ' Settings'
-									: ''
-							}`}</Text>
+							<Text
+								className={meemTheme.tMedium}
+							>{`${agreementExtension?.Extension?.name}`}</Text>
 						</div>
 					</div>
 				</div>
 				<div className={meemTheme.centeredRow}>
-					{!isSettingsPage &&
-						!hasNoWidget &&
-						(agreement?.isCurrentUserAgreementAdmin ||
-							agreement?.isCurrentUserAgreementOwner) && (
-							<Link
-								href={`/${agreement?.slug}/e/${extensionSlug}/settings`}
-								legacyBehavior
-								passHref
-							>
-								<a className={meemTheme.unstyledLink}>
-									<Button
-										leftIcon={<Settings />}
-										className={meemTheme.buttonWhite}
-									>
-										Settings
-									</Button>
-								</a>
-							</Link>
-						)}
-					<Space w={16} />
 					<div className={meemTheme.pageHeaderExitButton}>
 						<Link
 							href={`/${agreement?.slug}`}

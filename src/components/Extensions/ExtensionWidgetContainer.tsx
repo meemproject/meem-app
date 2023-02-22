@@ -8,6 +8,7 @@ import {
 import { Settings } from 'iconoir-react'
 import React from 'react'
 import { toTitleCase } from '../../utils/strings'
+import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { colorDarkerGrey, useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
@@ -24,6 +25,8 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 	const { classes: meemTheme } = useMeemTheme()
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
+
+	const { agreement } = useAgreement()
 
 	const extensionName = toTitleCase(extensionSlug.replaceAll('-', ' '))
 
@@ -67,12 +70,14 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 									</Text>
 								</div>
 							</Accordion.Control>
-							<Settings
-								className={meemTheme.clickable}
-								onClick={() => {
-									onSettingsOpened()
-								}}
-							/>
+							{agreement?.isCurrentUserAgreementAdmin && (
+								<Settings
+									className={meemTheme.clickable}
+									onClick={() => {
+										onSettingsOpened()
+									}}
+								/>
+							)}
 							<Space w={16} />
 						</div>
 
