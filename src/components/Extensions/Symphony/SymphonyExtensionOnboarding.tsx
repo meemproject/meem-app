@@ -1,4 +1,4 @@
-import { Space, Center, Image } from '@mantine/core'
+import { Space, Center, Image, Container } from '@mantine/core'
 import { DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import React from 'react'
@@ -56,7 +56,9 @@ export const SymphonyExtensionOnboarding: React.FC = () => {
 	return (
 		<div>
 			{pageHeader}
-			<SymphonyExtension />
+			<Container>
+				<SymphonyExtension />
+			</Container>
 		</div>
 	)
 }

@@ -100,7 +100,8 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor: colorDarkerGrey
 		},
 		'&:disabled': {
-			backgroundColor: colorDarkerGrey
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey
 		},
 		color: colorWhite,
 		borderRadius: 24

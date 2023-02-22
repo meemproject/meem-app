@@ -115,9 +115,21 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 													post={post}
 												/>
 											))}
+											{agreement.isCurrentUserAgreementMember && (
+												<>
+													<Space h={16} />
+													<Button
+														className={
+															meemTheme.buttonDarkGrey
+														}
+													>
+														+ Create a discussion
+													</Button>
+												</>
+											)}
 										</>
 									)}
-									{posts.length == 0 && (
+									{posts.length === 0 && (
 										<>
 											{!agreement.isCurrentUserAgreementMember && (
 												<Center>

@@ -969,11 +969,11 @@ export const SymphonyExtension: React.FC = () => {
 				})}
 			{rolesData && <Space h={16} />}
 			<Button
-				className={meemTheme.buttonWhite}
+				className={meemTheme.buttonDarkGrey}
 				disabled={!discordInfo}
 				onClick={() => setIsRuleBuilderOpen(true)}
 			>
-				+ Add Rule
+				+ Add rule
 			</Button>
 			<Modal
 				title={

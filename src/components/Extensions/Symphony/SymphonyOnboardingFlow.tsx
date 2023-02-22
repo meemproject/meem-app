@@ -958,9 +958,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<Button
 					className={meemTheme.buttonBlack}
 					onClick={() => {
-						router.push(
-							`/${chosenAgreement?.slug}/e/symphony/settings?isOnboarding=true`
-						)
+						router.push(`/${chosenAgreement?.slug}/e/symphony`)
 					}}
 				>
 					Manage Symphony

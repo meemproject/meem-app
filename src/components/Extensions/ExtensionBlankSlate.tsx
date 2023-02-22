@@ -31,8 +31,7 @@ export const extensionIsReady = (
 export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const { agreement, isLoadingAgreement, error, isMembersOnly } =
-		useAgreement()
+	const { agreement, isLoadingAgreement, isMembersOnly } = useAgreement()
 
 	const auth = useAuth()
 
@@ -55,34 +54,13 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 		<>
 			{isLoadingAgreement && (
 				<Container>
-					<Space h={120} />
+					<Space h={16} />
 					<Center>
 						<Loader color="cyan" variant="oval" />
 					</Center>
 				</Container>
 			)}
-			{!isLoadingAgreement && !error && !agreement?.name && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							Sorry, either this community does not exist or you
-							do not have permission to view this page.
-						</Text>
-					</Center>
-				</Container>
-			)}
-			{!isLoadingAgreement && error && (
-				<Container>
-					<Space h={120} />
-					<Center>
-						<Text>
-							There was an error loading this community. Contact
-							us using the top-right link on this page.
-						</Text>
-					</Center>
-				</Container>
-			)}
+
 			{!isLoadingAgreement && agreement?.name && !agreementExtension && (
 				<Container>
 					<Space h={120} />

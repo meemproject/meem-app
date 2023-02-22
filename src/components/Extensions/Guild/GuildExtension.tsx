@@ -8,7 +8,6 @@ import {
 } from '@guildxyz/sdk'
 import log from '@kengoldfarb/log'
 import {
-	Container,
 	Text,
 	Space,
 	Center,
@@ -673,12 +672,12 @@ export const GuildExtension: React.FC = () => {
 					<Space h={0} />
 					<Button
 						mt="lg"
-						className={meemTheme.buttonBlack}
+						className={meemTheme.buttonDarkGrey}
 						onClick={() => {
 							createGuild()
 						}}
 					>
-						Create a New Guild
+						+ Create a new Guild
 					</Button>
 				</>
 			)}
@@ -695,30 +694,15 @@ export const GuildExtension: React.FC = () => {
 				agreementExtension
 			) && (
 				<>
-					{!agreement?.isCurrentUserAgreementAdmin && (
-						<Container>
-							<Space h={120} />
+					<div>
+						{isSavingChanges ? (
 							<Center>
-								<Text>
-									Sorry, you do not have permission to view
-									this page. Contact the community owner for
-									help.
-								</Text>
+								<Loader />
 							</Center>
-						</Container>
-					)}
-
-					{agreement?.isCurrentUserAgreementAdmin && (
-						<div>
-							{isSavingChanges ? (
-								<Center>
-									<Loader />
-								</Center>
-							) : (
-								customExtensionSettings()
-							)}
-						</div>
-					)}
+						) : (
+							customExtensionSettings()
+						)}
+					</div>
 				</>
 			)}
 		</div>
