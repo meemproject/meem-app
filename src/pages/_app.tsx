@@ -34,7 +34,7 @@ function MyApp(props: AppProps) {
 	const router = useRouter()
 
 	useEffect(() => {
-		TagManager.initialize({ gtmId: 'G-0TBQZ0HQLV' })
+		TagManager.initialize({ gtmId: 'GTM-WPJD3LN' })
 		const jssStyles = document.querySelector('#jss-server-side')
 		if (jssStyles) {
 			jssStyles.parentElement?.removeChild(jssStyles)

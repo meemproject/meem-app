@@ -471,6 +471,15 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		} else if (chosenAgreement && isConnectionEstablished) {
 			setPageState(PageState.SetupComplete)
 			log.debug(`set page state = setup complete`)
+
+			const dataLayer = (window as any).dataLayer
+
+			dataLayer.push({
+				event: 'event',
+				eventProps: {
+					category: 'Symphony Onboarding - Setup Complete'
+				}
+			})
 		} else if (chosenAgreement && !isConnectionEstablished) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
@@ -763,6 +772,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									className={meemTheme.buttonBlack}
 									onClick={() => {
 										createAgreement()
+										const dataLayer = (window as any)
+											.dataLayer
+
+										dataLayer.push({
+											event: 'event',
+											eventProps: {
+												category:
+													'Symphony Onboarding - Setup',
+												action: 'Create Community'
+											}
+										})
 									}}
 								>
 									Next
@@ -817,6 +837,18 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								<Button
 									onClick={() => {
 										handleAuthTwitter()
+
+										const dataLayer = (window as any)
+											.dataLayer
+
+										dataLayer.push({
+											event: 'event',
+											eventProps: {
+												category:
+													'Symphony Onboarding - Setup',
+												action: 'Authenticate Twitter'
+											}
+										})
 									}}
 									className={meemTheme.buttonBlack}
 									leftIcon={
@@ -894,6 +926,18 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 													discordInviteUrl,
 													'_blank'
 												)
+												const dataLayer = (
+													window as any
+												).dataLayer
+
+												dataLayer.push({
+													event: 'event',
+													eventProps: {
+														category:
+															'Symphony Onboarding - Setup',
+														action: 'Invite Symphony Bot'
+													}
+												})
 											}}
 										>
 											{`Invite Symphony Bot`}
@@ -921,6 +965,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 												'Copied to clipboard',
 												`The code was copied to your clipboard.`
 											)
+											const dataLayer = (window as any)
+												.dataLayer
+
+											dataLayer.push({
+												event: 'event',
+												eventProps: {
+													category:
+														'Symphony Onboarding - Setup',
+													action: 'Copied Activate Code'
+												}
+											})
 										}}
 										block
 									>{`${botCode}`}</Code>
@@ -1099,6 +1154,18 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 											chooseAgreementAndEnableExtension(
 												existingAgreement
 											)
+
+											const dataLayer = (window as any)
+												.dataLayer
+
+											dataLayer.push({
+												event: 'event',
+												eventProps: {
+													category:
+														'Symphony Onboarding - Pick Community',
+													action: 'Select Existing Community'
+												}
+											})
 										}}
 									>
 										<div
@@ -1212,6 +1279,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									onClick={() => {
 										setShouldShowCreateNewCommunity(true)
 										setPageState(PageState.Onboarding)
+										const dataLayer = (window as any)
+											.dataLayer
+
+										dataLayer.push({
+											event: 'event',
+											eventProps: {
+												category:
+													'Symphony Onboarding - Pick Community',
+												action: 'Selected Create New Community'
+											}
+										})
 									}}
 								>
 									<Space h={16} />
