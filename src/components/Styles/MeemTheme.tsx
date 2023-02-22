@@ -85,7 +85,8 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor: colorLightGrey
 		},
 		'&:disabled': {
-			backgroundColor: colorLightGrey
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey
 		},
 		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
 		borderRadius: 24
@@ -227,7 +228,7 @@ export const useMeemTheme = createStyles(theme => ({
 		},
 		'&:disabled': {
 			backgroundColor:
-				theme.colorScheme === 'dark' ? colorBlack : colorLightGrey
+				theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey
 		}
 	},
 
@@ -753,7 +754,8 @@ export const useMeemTheme = createStyles(theme => ({
 				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
 		borderRadius: 16,
 		width: '100%',
-		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkerGrey : colorWhite,
 		marginBottom: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,

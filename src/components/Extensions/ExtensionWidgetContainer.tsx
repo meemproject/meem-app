@@ -8,7 +8,7 @@ import {
 import { Settings } from 'iconoir-react'
 import React from 'react'
 import { toTitleCase } from '../../utils/strings'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorDarkerGrey, useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	children: React.ReactNode
@@ -38,7 +38,12 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 				variant="filled"
 				defaultValue="1"
 			>
-				<Accordion.Item value="1" style={{ backgroundColor: 'white' }}>
+				<Accordion.Item
+					value="1"
+					style={{
+						backgroundColor: isDarkTheme ? colorDarkerGrey : 'white'
+					}}
+				>
 					<div className={meemTheme.centeredRow}>
 						<Accordion.Control>
 							<div className={meemTheme.centeredRow}>
