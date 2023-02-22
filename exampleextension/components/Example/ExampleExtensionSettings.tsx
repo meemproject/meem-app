@@ -13,7 +13,6 @@ import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const ExampleExtensionSettings: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -115,7 +114,6 @@ export const ExampleExtensionSettings: React.FC = () => {
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'example'} />
 
 							<Container>
 								<div>

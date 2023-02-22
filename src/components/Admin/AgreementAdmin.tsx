@@ -20,7 +20,6 @@ import React, { useEffect, useState } from 'react'
 import { isJwtError } from '../../model/agreement/agreements'
 import {
 	userHasPermissionEditProfile,
-	userHasPermissionManageApps,
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
@@ -29,7 +28,6 @@ import { showSuccessNotification } from '../../utils/notifications'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { AdminAgreementDetails } from './Tabs/AdminAgreementDetails'
-import { AdminAgreementExtensions } from './Tabs/AdminAgreementExtensions'
 import { AdminAgreementIcon } from './Tabs/AdminAgreementIcon'
 import { AdminBulkMint } from './Tabs/AdminBulkMint'
 import { AdminContractManagement } from './Tabs/AdminContractManagement'
@@ -44,7 +42,6 @@ enum Tab {
 	Roles,
 	Details,
 	Icon,
-	Extensions,
 	Airdrops,
 	DeleteAgreement
 }
@@ -57,7 +54,7 @@ export const AgreementAdminComponent: React.FC = () => {
 
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Extensions)
+	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	useEffect(() => {
@@ -83,9 +80,6 @@ export const AgreementAdminComponent: React.FC = () => {
 				break
 			case 'contractmanagement':
 				setCurrentTab(Tab.ContractManagement)
-				break
-			case 'extensions':
-				setCurrentTab(Tab.Extensions)
 				break
 			case 'membershiprequirements':
 				setCurrentTab(Tab.MembershipRequirements)
@@ -340,29 +334,6 @@ export const AgreementAdminComponent: React.FC = () => {
 									/>
 								)} */}
 
-								{userHasPermissionManageApps(agreement) && (
-									<>
-										<NavLink
-											className={
-												meemTheme.pagePanelLayoutNavItem
-											}
-											active={
-												currentTab === Tab.Extensions
-											}
-											label={'Extensions'}
-											onClick={() => {
-												setCurrentTab(Tab.Extensions)
-												router.push(
-													`/${agreement.slug}/admin?tab=extensions`,
-													undefined,
-													{ shallow: true }
-												)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</>
-								)}
-
 								<NavLink
 									className={meemTheme.pagePanelLayoutNavItem}
 									active={currentTab === Tab.Airdrops}
@@ -466,14 +437,6 @@ export const AgreementAdminComponent: React.FC = () => {
 											agreement
 										) && (
 											<AdminAgreementIcon
-												agreement={agreement}
-											/>
-										)}
-									{currentTab === Tab.Extensions &&
-										userHasPermissionManageApps(
-											agreement
-										) && (
-											<AdminAgreementExtensions
 												agreement={agreement}
 											/>
 										)}

@@ -6,7 +6,6 @@ import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 export const ExampleExtensionHome: React.FC = () => {
 	/*
@@ -55,7 +54,6 @@ export const ExampleExtensionHome: React.FC = () => {
 			) && (
 				<>
 
-					<ExtensionPageHeader extensionSlug={'example'} />
 
 					<Text className={meemTheme.tSmall}>
 						This is the homepage for an example extension.

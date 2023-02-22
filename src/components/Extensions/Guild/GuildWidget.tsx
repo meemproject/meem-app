@@ -1,61 +1,50 @@
-import { Space, Text } from '@mantine/core'
-import { Settings } from 'iconoir-react'
-import Link from 'next/link'
-import React from 'react'
-import { Agreement } from '../../../model/agreement/agreements'
+import { Center, Text } from '@mantine/core'
+import React, { useState } from 'react'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionSettingsModal } from '../ExtensionSettingsModal'
+import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
+import { GuildExtension } from './GuildExtension'
 
-/*
-Access agreement-level data using the 'agreement' object.
-*/
-interface IProps {
-	agreement: Agreement
-}
-
-/*
-Be sure to import your widget in AgreementHome.tsx to ensure it is displayed
-when enabled.
-*/
-export const GuildWidget: React.FC<IProps> = ({ agreement }) => {
-	/*
-	Use the meemTheme object to access agreements styles
-	such as colors, fonts and layouts
-	*/
+export const GuildWidget: React.FC = () => {
+	const extensionSlug = 'guild'
+	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
+	const { agreement } = useAgreement()
 	const { classes: meemTheme } = useMeemTheme()
 
 	return (
-		/*
-		Ensure your widget's UI is contained entirely within the parent <div> element.
-		*/
-		<div className={meemTheme.widgetLight}>
-			<div className={meemTheme.spacedRowCentered}>
-				<div className={meemTheme.centeredRow}>
-					<Text className={meemTheme.tMediumBold}>
-						Example Extension Widget
-					</Text>
-					<Space w={6} />
-				</div>
-				<div className={meemTheme.centeredRow}>
-					{agreement.isCurrentUserAgreementAdmin && (
-						<div className={meemTheme.row}>
-							<Space w={8} />
-							<Link
-								href={`/${agreement.slug}/e/example/settings`}
-								legacyBehavior
-								passHref
-							>
-								<a className={meemTheme.unstyledLink}>
-									<Settings className={meemTheme.clickable} />
-								</a>
-							</Link>
-						</div>
+		<>
+			<ExtensionWidgetContainer
+				extensionSlug={extensionSlug}
+				onSettingsOpened={function (): void {
+					setIsSettingsModalOpened(true)
+				}}
+			>
+				<>
+					{agreement?.isCurrentUserAgreementAdmin && (
+						<>
+							<GuildExtension />
+						</>
 					)}
-				</div>
-			</div>
-			<Space h={24} />
-			<Text className={meemTheme.tSmall}>
-				{`This is an example Community Extension Widget for ${agreement.name}`}
-			</Text>
-		</div>
+					{!agreement?.isCurrentUserAgreementAdmin && (
+						<>
+							<Center>
+								<Text className={meemTheme.tSmallBold}>
+									Guild settings for this community are only
+									visible to community admins.
+								</Text>
+							</Center>
+						</>
+					)}
+				</>
+			</ExtensionWidgetContainer>
+			<ExtensionSettingsModal
+				extensionSlug={extensionSlug}
+				isOpened={isSettingsModalOpened}
+				onModalClosed={function (): void {
+					setIsSettingsModalOpened(false)
+				}}
+			/>
+		</>
 	)
 }

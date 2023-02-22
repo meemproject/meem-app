@@ -814,7 +814,7 @@ export default async function agreementFromDb(
 
 		const endTime = Date.now()
 		const timeTaken = endTime - startTime
-		log.debug(`club model processing took ${timeTaken}ms`)
+		log.debug(`agreement model processing took ${timeTaken}ms`)
 
 		return {
 			id: agreementData.id,

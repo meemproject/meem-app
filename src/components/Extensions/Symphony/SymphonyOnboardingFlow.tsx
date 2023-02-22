@@ -440,12 +440,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 		// Set page state
 		if (
-			isLoadingMyAgreements ||
-			isCreatingNewCommunity ||
-			extensionsLoading ||
-			twitterDataLoading ||
-			discordInfoLoading ||
-			slackInfoLoading ||
+			(!myAgreements && isLoadingMyAgreements) ||
+			(!availableExtensionsData && extensionsLoading) ||
+			(!twitterData && twitterDataLoading) ||
+			(!discordData && discordInfoLoading) ||
+			(!slackData && slackInfoLoading) ||
 			(!chosenAgreement && twitterAuthRedirectAgreementSlug)
 		) {
 			setPageState(PageState.Loading)
@@ -528,8 +527,81 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		shouldShowCreateNewCommunity,
 		isCreatingNewCommunity,
 		getDiscordInviteAndBotCode,
-		discordInviteUrl
+		discordInviteUrl,
+		availableExtensionsData,
+		twitterData,
+		discordData,
+		slackData
 	])
+
+	const chooseAgreementAndEnableExtension = useCallback(
+		async (chosen?: Agreement) => {
+			if (chosen) {
+				// Agreement exists already. Let's see if it already has symphony enabled...
+				let isExtensionEnabled = false
+				chosen.extensions?.forEach(ext => {
+					if (ext.Extension?.slug === extensionSlug) {
+						isExtensionEnabled = true
+					}
+				})
+				if (isExtensionEnabled) {
+					log.debug('extension already enabled for this community')
+					setChosenAgreement(chosen)
+					return
+				}
+			}
+
+			if (availableExtensionsData) {
+				setIsEnablingExtension(true)
+				try {
+					let extensionId = ''
+					availableExtensionsData.Extensions.forEach(ext => {
+						if (ext.slug === extensionSlug) {
+							extensionId = ext.id
+						}
+					})
+
+					if (extensionId.length === 0) {
+						log.debug('no matching extensions to enable...')
+						showErrorNotification(
+							'Oops!',
+							`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+						)
+						setIsEnablingExtension(false)
+						return
+					}
+
+					await sdk.agreementExtension.createAgreementExtension({
+						agreementId: chosen?.id ?? '',
+						extensionId,
+						isInitialized: true,
+						widget: {
+							visibility:
+								MeemAPI.AgreementExtensionVisibility
+									.TokenHolders
+						}
+					})
+					setChosenAgreement(chosen)
+					setIsEnablingExtension(false)
+				} catch (e) {
+					log.debug(e)
+					showErrorNotification(
+						'Oops!',
+						`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+					)
+					setIsEnablingExtension(false)
+				}
+			} else {
+				log.debug('no matching extensions to enable...')
+				showErrorNotification(
+					'Oops!',
+					`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+				)
+				setIsEnablingExtension(false)
+			}
+		},
+		[availableExtensionsData, extensionName, sdk.agreementExtension]
+	)
 
 	// Handle Transaction state changes
 	useEffect(() => {
@@ -565,6 +637,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				setChosenAgreement(possibleAgreement)
 				setTransactionIds([])
 				setIsCreatingNewCommunity(false)
+				chooseAgreementAndEnableExtension(possibleAgreement)
 			} else {
 				showErrorNotification(
 					'Error creating community',
@@ -576,72 +649,14 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		}
 
 		setActiveStep(newActiveStep)
-	}, [transactionState, setActiveStep, transactions, router, wallet.accounts])
-
-	const chooseAgreementAndEnableExtension = async (chosen?: Agreement) => {
-		if (chosen) {
-			// Agreement exists already. Let's see if it already has symphony enabled...
-			let isExtensionEnabled = false
-			chosen.extensions?.forEach(ext => {
-				if (ext.Extension?.slug === extensionSlug) {
-					isExtensionEnabled = true
-				}
-			})
-			if (isExtensionEnabled) {
-				log.debug('extension already enabled for this community')
-				setChosenAgreement(chosen)
-				return
-			}
-		}
-
-		if (availableExtensionsData) {
-			setIsEnablingExtension(true)
-			try {
-				let extensionId = ''
-				availableExtensionsData.Extensions.forEach(ext => {
-					if (ext.slug === extensionSlug) {
-						extensionId = ext.id
-					}
-				})
-
-				if (extensionId.length === 0) {
-					log.debug('no matching extensions to enable...')
-					showErrorNotification(
-						'Oops!',
-						`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
-					)
-					setIsEnablingExtension(false)
-					return
-				}
-
-				await sdk.agreementExtension.createAgreementExtension({
-					agreementId: chosen?.id ?? '',
-					extensionId,
-					isInitialized: true,
-					widget: {
-						visibility:
-							MeemAPI.AgreementExtensionVisibility.TokenHolders
-					}
-				})
-				setChosenAgreement(chosen)
-				setIsEnablingExtension(false)
-			} catch (e) {
-				log.debug(e)
-				showErrorNotification(
-					'Oops!',
-					`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
-				)
-				setIsEnablingExtension(false)
-			}
-		} else {
-			log.debug('no matching extensions to enable...')
-			showErrorNotification(
-				'Oops!',
-				`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
-			)
-			setIsEnablingExtension(false)
-		}
-	}
+	}, [
+		transactionState,
+		setActiveStep,
+		transactions,
+		router,
+		wallet.accounts,
+		chooseAgreementAndEnableExtension
+	])
 
 	const handleAuthTwitter = useCallback(async () => {
 		if (!chosenAgreement?.id || !jwt) {
@@ -958,9 +973,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<Button
 					className={meemTheme.buttonBlack}
 					onClick={() => {
-						router.push(
-							`/${chosenAgreement?.slug}/e/symphony/settings?isOnboarding=true`
-						)
+						router.push(`/${chosenAgreement?.slug}/e/symphony`)
 					}}
 				>
 					Manage Symphony

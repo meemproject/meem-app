@@ -1,6 +1,5 @@
 import { Text, Button, Space, Center, Loader } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
-import { Plus, Settings } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import {
@@ -9,6 +8,8 @@ import {
 } from '../../../model/agreement/agreements'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionSettingsModal } from '../ExtensionSettingsModal'
+import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
 import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 import { useDiscussions } from './DiscussionProvider'
@@ -25,12 +26,13 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	const { sdk } = useSDK()
 	const { privateKey } = useDiscussions()
 
-	const agreementExtension = extensionFromSlug('discussions', agreement)
+	const extensionSlug = 'discussions'
+	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
+	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchedData || !sdk.id.hasInitialized || !privateKey) {
-				setHasFetchedData(true)
+			if (hasFetchedData) {
 				return
 			}
 
@@ -78,146 +80,44 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 			setHasFetchedData(true)
 		}
 
-		fetchData()
+		if (agreementExtension && sdk.id.hasInitialized && privateKey) {
+			fetchData()
+		}
 	}, [hasFetchedData, agreement, sdk, privateKey, agreementExtension])
 
 	return (
 		<>
-			<div className={meemTheme.widgetLight}>
-				<div className={meemTheme.spacedRowCentered}>
-					<div className={meemTheme.centeredRow}>
-						<Text className={meemTheme.tMediumBold}>
-							Discussions
-						</Text>
-						<Space w={6} />
-						{hasFetchedData &&
+			<ExtensionWidgetContainer
+				extensionSlug="discussions"
+				onSettingsOpened={function (): void {
+					setIsSettingsModalOpened(true)
+				}}
+			>
+				{agreement?.isCurrentUserAgreementMember && (
+					<>
+						{!hasFetchedData &&
 							agreementExtension?.isInitialized && (
-								<Text className={meemTheme.tMedium}>
-									{`(${posts.length})`}
-								</Text>
-							)}
-					</div>
-					{agreementExtension?.isInitialized && (
-						<div className={meemTheme.centeredRow}>
-							{posts.length > 0 && (
 								<>
-									<>
-										<Link
-											href={`/${agreement.slug}/e/discussions/submit`}
-											legacyBehavior
-											passHref
-										>
-											<a
-												className={
-													meemTheme.unstyledLink
-												}
-											>
-												<Button
-													className={
-														meemTheme.buttonDarkGrey
-													}
-												>
-													<div>
-														<Plus />
-													</div>
-												</Button>
-											</a>
-										</Link>
-									</>
-									<Space w={8} />
-									<Link
-										href={`/${agreement.slug}/e/discussions`}
-										legacyBehavior
-										passHref
-									>
-										<a className={meemTheme.unstyledLink}>
-											<Button
-												className={
-													meemTheme.buttonDarkGrey
-												}
-											>
-												View All
-											</Button>
-										</a>
-									</Link>
+									<Center>
+										<Loader variant="oval" color="cyan" />
+									</Center>
+									<Space h={8} />
 								</>
 							)}
-
-							{agreement.isCurrentUserAgreementAdmin && (
-								<div className={meemTheme.row}>
-									<Space w={8} />
-									<Link
-										href={`/${agreement.slug}/e/discussions/settings`}
-										legacyBehavior
-										passHref
-									>
-										<a className={meemTheme.unstyledLink}>
-											<div>
-												<Settings
-													className={
-														meemTheme.clickable
-													}
+						{hasFetchedData &&
+							agreementExtension?.isInitialized && (
+								<>
+									{posts.length > 0 && (
+										<>
+											{posts.map(post => (
+												<DiscussionPostPreview
+													key={post.id}
+													post={post}
 												/>
-											</div>
-										</a>
-									</Link>
-								</div>
-							)}
-						</div>
-					)}
-				</div>
-				<Space h={24} />
-				{!hasFetchedData && agreementExtension?.isInitialized && (
-					<>
-						<Center>
-							<Loader variant="oval" color="cyan" />
-						</Center>
-						<Space h={8} />
-					</>
-				)}
-				{hasFetchedData && agreementExtension?.isInitialized && (
-					<>
-						{posts.length > 0 && (
-							<>
-								{posts.map(post => (
-									<DiscussionPostPreview
-										key={post.id}
-										post={post}
-									/>
-								))}
-							</>
-						)}
-						{posts.length == 0 && (
-							<>
-								{!agreement.isCurrentUserAgreementMember && (
-									<Center>
-										<Text className={meemTheme.tSmallBold}>
-											Join this community to view its
-											discussions.
-										</Text>
-									</Center>
-								)}
-								{agreement.isCurrentUserAgreementMember && (
-									<>
-										<Center>
-											<Text
-												className={meemTheme.tSmallBold}
-											>
-												There are no discussions yet.
-											</Text>
-										</Center>
-										<Space h={12} />
-										<Center>
-											<Link
-												href={`/${agreement.slug}/e/discussions/submit`}
-												legacyBehavior
-												passHref
-											>
-												<a
-													className={
-														meemTheme.unstyledLink
-													}
-												>
+											))}
+											{agreement.isCurrentUserAgreementMember && (
+												<>
+													<Space h={16} />
 													<Button
 														className={
 															meemTheme.buttonDarkGrey
@@ -225,24 +125,93 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 													>
 														+ Create a discussion
 													</Button>
-												</a>
-											</Link>
-										</Center>
-										<Space h={8} />
-									</>
-								)}
-							</>
+												</>
+											)}
+										</>
+									)}
+									{posts.length === 0 && (
+										<>
+											{!agreement.isCurrentUserAgreementMember && (
+												<Center>
+													<Text
+														className={
+															meemTheme.tSmallBold
+														}
+													>
+														Join this community to
+														view its discussions.
+													</Text>
+												</Center>
+											)}
+											{agreement.isCurrentUserAgreementMember && (
+												<>
+													<Center>
+														<Text
+															className={
+																meemTheme.tSmallBold
+															}
+														>
+															There are no
+															discussions yet.
+														</Text>
+													</Center>
+													<Space h={12} />
+													<Center>
+														<Link
+															href={`/${agreement.slug}/e/discussions/submit`}
+															legacyBehavior
+															passHref
+														>
+															<a
+																className={
+																	meemTheme.unstyledLink
+																}
+															>
+																<Button
+																	className={
+																		meemTheme.buttonDarkGrey
+																	}
+																>
+																	+ Create a
+																	discussion
+																</Button>
+															</a>
+														</Link>
+													</Center>
+													<Space h={8} />
+												</>
+											)}
+										</>
+									)}
+								</>
+							)}
+						{!agreementExtension?.isInitialized && (
+							<Center>
+								<Text
+									className={meemTheme.tMedium}
+								>{`${agreementExtension?.Extension?.name} is being set up. Come back in a few minutes!`}</Text>
+							</Center>
 						)}
 					</>
 				)}
-				{!agreementExtension?.isInitialized && (
-					<Center>
-						<Text
-							className={meemTheme.tMedium}
-						>{`${agreementExtension?.Extension?.name} is being set up. Come back in a few minutes!`}</Text>
-					</Center>
+				{!agreement?.isCurrentUserAgreementMember && (
+					<>
+						<Center>
+							<Text className={meemTheme.tSmallBold}>
+								Discussions are only available for community
+								members.
+							</Text>
+						</Center>
+					</>
 				)}
-			</div>
+			</ExtensionWidgetContainer>
+			<ExtensionSettingsModal
+				extensionSlug={extensionSlug}
+				isOpened={isSettingsModalOpened}
+				onModalClosed={function (): void {
+					setIsSettingsModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }

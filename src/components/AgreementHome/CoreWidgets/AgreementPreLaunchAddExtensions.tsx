@@ -6,17 +6,16 @@ import {
 	Space,
 	Text,
 	Image,
-	useMantineColorScheme,
-	Badge
+	useMantineColorScheme
 } from '@mantine/core'
 import { useMeemApollo } from '@meemproject/react'
-import { Check } from 'iconoir-react'
+import { CheckCircle } from 'iconoir-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import { colorAsh, colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
+import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 	onChosenExtensionsChanged: (chosenExtensions: string[]) => void
@@ -27,7 +26,7 @@ interface ExtensionCategory {
 	extensions: Extension[]
 }
 
-export const AgreementBlankSlateWidget: React.FC<IProps> = ({
+export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 	agreement,
 	onChosenExtensionsChanged
 }) => {
@@ -132,7 +131,7 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 	])
 
 	return (
-		<div className={meemTheme.widgetLight}>
+		<div className={meemTheme.widgetExtension} style={{ padding: 32 }}>
 			<Text className={meemTheme.tMediumBold}>Add extensions</Text>
 			{loading && (
 				<>
@@ -145,7 +144,7 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 			)}
 			{!loading && availableExtensionsData && (
 				<>
-					<Space h={24} />
+					<Space h={32} />
 
 					{extensionCategories.map(cat => (
 						<div key={cat.title}>
@@ -211,48 +210,19 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 												>
 													{extension.description}
 												</Text>
-
-												{extension.capabilities.includes(
-													'widget'
-												) && (
-													<Badge
-														gradient={{
-															from: isDarkTheme
-																? colorDarkerGrey
-																: colorAsh,
-															to: isDarkTheme
-																? colorDarkerGrey
-																: colorAsh,
-															deg: 35
-														}}
-														classNames={{
-															inner: meemTheme.tBadgeText
-														}}
-														style={{
-															position:
-																'absolute',
-															top: 16,
-															right: 16
-														}}
-														variant={'gradient'}
-													>
-														Widget
-													</Badge>
-												)}
 											</div>
 											<div
 												style={{
 													position: 'absolute',
-													top: -6,
-													left: -6
+													top: 8,
+													right: 8
 												}}
 											>
 												{chosenExtensions.includes(
 													extension.id
 												) && (
-													<Check
-														width={18}
-														height={18}
+													<CheckCircle
+														color={colorGreen}
 													/>
 												)}
 											</div>

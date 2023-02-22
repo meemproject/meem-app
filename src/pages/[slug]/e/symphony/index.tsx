@@ -3,10 +3,9 @@ import log from '@kengoldfarb/log'
 import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { hostnameToChainId } from '../../../../components/App'
-import { SymphonyExtensionHome } from '../../../../components/Extensions/Symphony/SymphonyExtensionHome'
+import { SymphonyExtensionOnboarding } from '../../../../components/Extensions/Symphony/SymphonyExtensionOnboarding'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
@@ -22,30 +21,23 @@ interface IProps {
 	agreement: AgreementPropViewModel
 }
 
-const AgreementSymphonyExtensionPage: NextPage<IProps> = ({ agreement }) => {
-	const router = useRouter()
-
-	useEffect(() => {
-		if (agreement && agreement.responseBody) {
-			router.push(
-				`/${agreement.responseBody.Agreements[0].slug}/e/symphony/settings`
-			)
-		}
-	})
+const AgreementSymphonyExtensionSettingsPage: NextPage<IProps> = ({
+	agreement
+}) => {
 	return (
 		<>
 			<Head>
 				<title>
 					{agreement === undefined || agreement.isError
 						? 'Not found'
-						: `${agreement.responseBody.Agreements[0].name} | Symphony Extension | Meem`}
+						: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`}
 				</title>
 				<meta
 					name="title"
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`
 					}
 				/>
 				<meta name="description" content={agreement.description} />
@@ -56,7 +48,7 @@ const AgreementSymphonyExtensionPage: NextPage<IProps> = ({ agreement }) => {
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -70,7 +62,7 @@ const AgreementSymphonyExtensionPage: NextPage<IProps> = ({ agreement }) => {
 					content={
 						agreement === undefined || agreement.isError
 							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension | Meem`
+							: `${agreement.responseBody.Agreements[0].name} | Symphony Extension Settings | Meem`
 					}
 				/>
 				<meta
@@ -99,7 +91,7 @@ const AgreementSymphonyExtensionPage: NextPage<IProps> = ({ agreement }) => {
 			</Head>
 			<HeaderMenu />
 
-			<SymphonyExtensionHome />
+			<SymphonyExtensionOnboarding />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -141,7 +133,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 				props: {
 					agreement,
 					isError: !!errors,
-					description: 'There was an error fetching community data'
+					description: 'There was an error fetching agreement data'
 				}
 			}
 		}
@@ -162,4 +154,4 @@ export const getServerSideProps: GetServerSideProps = async ({
 	}
 }
 
-export default AgreementSymphonyExtensionPage
+export default AgreementSymphonyExtensionSettingsPage

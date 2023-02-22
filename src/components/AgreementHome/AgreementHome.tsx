@@ -12,16 +12,18 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
+import { GuildWidget } from '../Extensions/Guild/GuildWidget'
 import { SymphonyWidget } from '../Extensions/Symphony/SymphonyWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
-import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
-import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
+import { AgreementAddExtensionsWidget } from './CoreWidgets/AgreementAddExtensionsWidget'
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
 import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
+import { AgreementPreLaunchAddExtensions } from './CoreWidgets/AgreementPreLaunchAddExtensions'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
 import { MeemCreateCommunityWidget } from './CoreWidgets/MeemCreateCommunityWidget'
 
@@ -53,7 +55,11 @@ export const AgreementHome: React.FC = () => {
 				await sdk.agreementExtension.createAgreementExtension({
 					agreementId,
 					extensionId: ext,
-					isInitialized: true
+					isInitialized: true,
+					widget: {
+						visibility:
+							MeemAPI.AgreementExtensionVisibility.TokenHolders
+					}
 				})
 			}
 			log.debug(`launching agreement...`)
@@ -101,7 +107,18 @@ export const AgreementHome: React.FC = () => {
 					{agreement.extensions && (
 						<>
 							{agreement.extensions
-								.filter(ext => ext.Extension)
+								.filter(ext =>
+									agreement.isCurrentUserAgreementMember
+										? ext
+										: ext.AgreementExtensionWidgets &&
+										  ext.AgreementExtensionWidgets.length >
+												0 &&
+										  ext.AgreementExtensionWidgets[0]
+												.visibility ===
+												MeemAPI
+													.AgreementExtensionVisibility
+													.Anyone
+								)
 								.map(extension => (
 									// TODO: Developers, make sure you import your extension's widget
 									// TODO: here, checking against the slug you chose for your extension.
@@ -109,9 +126,7 @@ export const AgreementHome: React.FC = () => {
 										{extension.Extension?.slug ===
 											'symphony' && (
 											<>
-												<SymphonyWidget
-													agreement={agreement}
-												/>
+												<SymphonyWidget />
 											</>
 										)}
 										{extension.Extension?.slug ===
@@ -121,14 +136,29 @@ export const AgreementHome: React.FC = () => {
 												agreement={agreement}
 											/>
 										)}
+
+										{extension.Extension?.slug ===
+											'guild' && (
+											<GuildWidget key="guild-widget" />
+										)}
 									</div>
 								))}
-							<Space h={24} />
+							{agreement.extensions.filter(ext =>
+								agreement.isCurrentUserAgreementMember
+									? ext
+									: ext.AgreementExtensionWidgets &&
+									  ext.AgreementExtensionWidgets.length >
+											0 &&
+									  ext.AgreementExtensionWidgets[0]
+											.visibility ===
+											MeemAPI.AgreementExtensionVisibility
+												.Anyone
+							).length > 0 && <Space h={24} />}
 						</>
 					)}
 
 					{agreement.slug !== 'meem' && !agreement.isLaunched && (
-						<AgreementBlankSlateWidget
+						<AgreementPreLaunchAddExtensions
 							onChosenExtensionsChanged={extensions => {
 								setChosenExtensions(extensions)
 							}}
@@ -138,7 +168,7 @@ export const AgreementHome: React.FC = () => {
 
 					{agreement.isLaunched && (
 						<>
-							<AgreementAddMoreExtensionsWidget
+							<AgreementAddExtensionsWidget
 								agreement={agreement}
 							/>
 						</>

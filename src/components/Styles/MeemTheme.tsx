@@ -85,7 +85,8 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor: colorLightGrey
 		},
 		'&:disabled': {
-			backgroundColor: colorLightGrey
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey
 		},
 		color: theme.colorScheme === 'dark' ? colorWhite : colorBlack,
 		borderRadius: 24
@@ -99,7 +100,8 @@ export const useMeemTheme = createStyles(theme => ({
 			backgroundColor: colorDarkerGrey
 		},
 		'&:disabled': {
-			backgroundColor: colorDarkerGrey
+			backgroundColor:
+				theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey
 		},
 		color: colorWhite,
 		borderRadius: 24
@@ -227,7 +229,7 @@ export const useMeemTheme = createStyles(theme => ({
 		},
 		'&:disabled': {
 			backgroundColor:
-				theme.colorScheme === 'dark' ? colorBlack : colorLightGrey
+				theme.colorScheme === 'dark' ? colorDarkGrey : colorLightGrey
 		}
 	},
 
@@ -746,15 +748,15 @@ export const useMeemTheme = createStyles(theme => ({
 			}`
 		}
 	},
-	widgetLight: {
+	widgetExtension: {
 		boxShadow:
 			theme.colorScheme === 'dark'
 				? ''
 				: '5px 5px 30px rgba(0, 0, 0, 0.1)',
 		borderRadius: 16,
 		width: '100%',
-		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
-		padding: 24,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkerGrey : colorWhite,
 		marginBottom: 24,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			borderRadius: 0,
@@ -806,6 +808,14 @@ export const useMeemTheme = createStyles(theme => ({
 		background:
 			'linear-gradient(117deg, rgba(227,255,191,1) 0%, rgba(229,255,183,0.8477984943977591) 3%, rgba(247,254,113,0.8534007352941176) 31%, rgba(177,220,255,0.8505996148459384) 66%, rgba(133,139,33,0.4724483543417367) 100%)',
 		padding: 24
+	},
+	widgetAccordion: {
+		paddingLeft: 8,
+		paddingRight: 8
+	},
+	widgetAccordionBackground: {
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkerGrey : colorWhite
 	},
 
 	// Images

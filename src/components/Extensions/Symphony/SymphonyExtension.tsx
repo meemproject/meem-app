@@ -22,10 +22,8 @@ import {
 	makeRequest,
 	MeemAPI
 } from '@meemproject/sdk'
-import { IconBrandSlack } from '@tabler/icons'
 import { Emoji } from 'emoji-picker-react'
-import { DeleteCircle, Discord, LogOut, Twitter } from 'iconoir-react'
-import Link from 'next/link'
+import { Discord, LogOut, Twitter } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
@@ -45,7 +43,6 @@ import {
 	colorBlue,
 	colorDarkBlue,
 	colorRed,
-	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
@@ -59,7 +56,7 @@ export enum SelectedConnection {
 	ConnectionSlack = 'slack'
 }
 
-export const SymphonyExtensionSettings: React.FC = () => {
+export const SymphonyExtension: React.FC = () => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()
@@ -78,7 +75,6 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	const [botCode, setBotCode] = useState<string>('')
 
 	// Page state
-	// const isInOnboardingMode = router.query.isOnboarding === 'true'
 	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
 		useState(false)
 	const [connectDiscordStep, setConnectDiscordStep] = useState(0)
@@ -398,7 +394,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
 	const rules = rulesData?.Rules
 	const discordInfo = discordData?.Discords[0]
-	const slackInfo = slackData?.Slacks[0]
+	// const slackInfo = slackData?.Slacks[0]
 	const hasFetchedData =
 		!!twitterData &&
 		!!rulesData &&
@@ -594,7 +590,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						</>
 					)}
 				</div>
-				{process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
+				{/* {process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
 					<>
 						<Space w={64} />
 						<Space h={32} />
@@ -686,7 +682,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							)}
 						</div>
 					</>
-				)}
+				)} */}
 			</div>
 			<Modal
 				opened={isConnectDiscordModalOpen}
@@ -943,39 +939,41 @@ export const SymphonyExtensionSettings: React.FC = () => {
 									<Space h="xs" />
 								</div>
 								<Space w={24} />
-								<div>
-									<Button
-										className={meemTheme.buttonWhite}
-										onClick={() => {
-											setSelectedRule(rule)
-											setIsRuleBuilderOpen(true)
-										}}
-									>
-										Edit
-									</Button>
-									<Space h={8} />
-									<Button
-										className={
-											meemTheme.buttonOrangeRedBordered
-										}
-										onClick={() => {
-											removeRule(rule.id)
-										}}
-									>
-										Remove
-									</Button>
-								</div>
+								{agreement?.isCurrentUserAgreementAdmin && (
+									<div>
+										<Button
+											className={meemTheme.buttonWhite}
+											onClick={() => {
+												setSelectedRule(rule)
+												setIsRuleBuilderOpen(true)
+											}}
+										>
+											Edit
+										</Button>
+										<Space h={8} />
+										<Button
+											className={
+												meemTheme.buttonOrangeRedBordered
+											}
+											onClick={() => {
+												removeRule(rule.id)
+											}}
+										>
+											Remove
+										</Button>
+									</div>
+								)}
 							</div>
 						</div>
 					)
 				})}
 			{rolesData && <Space h={16} />}
 			<Button
-				className={meemTheme.buttonWhite}
+				className={meemTheme.buttonDarkGrey}
 				disabled={!discordInfo}
 				onClick={() => setIsRuleBuilderOpen(true)}
 			>
-				+ Add Rule
+				+ Add rule
 			</Button>
 			<Modal
 				title={
@@ -1025,64 +1023,44 @@ export const SymphonyExtensionSettings: React.FC = () => {
 
 	const mainState = (
 		<>
-			{integrationsSection()}
-			<Space h={40} />
-			<Text className={meemTheme.tExtraSmallLabel}>PERMISSIONS</Text>
-			<Space h={4} />
-			{discordInfo && (
-				<Text className={meemTheme.tExtraSmall}>
-					{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
-				</Text>
+			{agreement?.isCurrentUserAgreementAdmin && (
+				<>
+					{integrationsSection()}
+					<Space h={40} />
+					<Text className={meemTheme.tExtraSmallLabel}>
+						PERMISSIONS
+					</Text>
+					<Space h={4} />
+					{discordInfo && (
+						<Text className={meemTheme.tExtraSmall}>
+							{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
+						</Text>
+					)}
+					{!discordInfo && (
+						<Text className={meemTheme.tExtraSmall}>
+							<span style={{ fontWeight: 600 }}>
+								Connect a Discord server to add your first rule.
+							</span>{' '}
+							Rules are logic to dictate how new posts will be
+							proposed and published, as well as which community
+							members will manage each part of the process.
+						</Text>
+					)}
+					<Space h={16} />
+				</>
 			)}
-			{!discordInfo && (
-				<Text className={meemTheme.tExtraSmall}>
-					<span style={{ fontWeight: 600 }}>
-						Connect a Discord server to add your first rule.
-					</span>{' '}
-					Rules are logic to dictate how new posts will be proposed
-					and published, as well as which community members will
-					manage each part of the process.
-				</Text>
+
+			{agreement?.isCurrentUserAgreementMember && <>{rulesSection()}</>}
+			{!agreement?.isCurrentUserAgreementMember && (
+				<>
+					<Center>
+						<Text className={meemTheme.tSmallBold}>
+							Symphony rules are only available to community
+							members.
+						</Text>
+					</Center>
+				</>
 			)}
-			<Space h={16} />
-
-			{rulesSection()}
-		</>
-	)
-
-	const pageHeader = (
-		<>
-			<div
-				className={meemTheme.pageHeaderExtension}
-				style={{ paddingLeft: 24, paddingRight: 24 }}
-			>
-				<Center>
-					<div>
-						<Space h={8} />
-
-						<Image
-							className={meemTheme.copyIcon}
-							src={`/ext-symphony.png`}
-							fit={'contain'}
-							width={180}
-							height={40}
-						/>
-
-						<Space h={8} />
-					</div>
-				</Center>
-
-				<Link href={`/${agreement?.slug}`} legacyBehavior passHref>
-					<a className={meemTheme.unstyledLink}>
-						<DeleteCircle
-							className={meemTheme.clickable}
-							width={24}
-							height={24}
-							color={colorWhite}
-						/>
-					</a>
-				</Link>
-			</div>
 		</>
 	)
 
@@ -1112,7 +1090,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 						<div>
 							{!hasFetchedData && (
 								<Container>
-									<Space h={120} />
+									<Space h={16} />
 									<Center>
 										<Loader color="cyan" variant="oval" />
 									</Center>
@@ -1120,11 +1098,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 							)}
 							{hasFetchedData && (
 								<>
-									<>{pageHeader}</>
-
-									<Container>
-										<>{mainState}</>
-									</Container>
+									<>{mainState}</>
 								</>
 							)}
 						</div>

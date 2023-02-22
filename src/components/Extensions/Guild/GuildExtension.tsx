@@ -8,7 +8,6 @@ import {
 } from '@guildxyz/sdk'
 import log from '@kengoldfarb/log'
 import {
-	Container,
 	Text,
 	Space,
 	Center,
@@ -34,7 +33,6 @@ import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 interface ISyncedGuildRole {
 	name: string
@@ -43,7 +41,7 @@ interface ISyncedGuildRole {
 	agreementRoleId?: string
 }
 
-export const GuildExtensionSettings: React.FC = () => {
+export const GuildExtension: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()
@@ -485,11 +483,6 @@ export const GuildExtensionSettings: React.FC = () => {
 		setUnsyncedRoles(unsyncedRolesData ?? [])
 	}, [agreementGuild, agreement])
 
-	/*
-TODO
-Add your custom extension settings layout here.
-*/
-
 	const roleComponent = (props: {
 		name: string
 		tokenAddress: string
@@ -572,9 +565,6 @@ Add your custom extension settings layout here.
 
 	const customExtensionSettings = () => (
 		<>
-			<Space h={40} />
-			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
-			<Space h={16} />
 			{agreementGuild ? (
 				<>
 					<Group>
@@ -646,9 +636,6 @@ Add your custom extension settings layout here.
 				</>
 			) : (
 				<>
-					<Title order={5} mt={'xl'}>
-						Guilds
-					</Title>
 					{userGuilds && (
 						<Select
 							mt="sm"
@@ -672,7 +659,7 @@ Add your custom extension settings layout here.
 						/>
 					)}
 					<Button
-						mt="lg"
+						className={meemTheme.buttonGrey}
 						disabled={!userSelectedGuildId}
 						onClick={() => {
 							if (userSelectedGuildId) {
@@ -682,51 +669,21 @@ Add your custom extension settings layout here.
 					>
 						Sync Guild
 					</Button>
-					<Divider mt="lg" />
+					<Space h={0} />
 					<Button
 						mt="lg"
+						className={meemTheme.buttonDarkGrey}
 						onClick={() => {
 							createGuild()
 						}}
 					>
-						Create a New Guild
+						+ Create a new Guild
 					</Button>
 				</>
 			)}
 			<Space h={8} />
 		</>
 	)
-
-	/*
-		TODO
-		Add your custom extension permissions layout here.
-		*/
-	// const customExtensionPermissions = () => (
-	// 	<>This extension does not provide any permissions.</>
-	// )
-
-	/*
-TODO
-Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
-*/
-
-	// const saveCustomChanges = async () => {}
-
-	/*
-		Boilerplate area - please don't edit the below code!
-===============================================================
-*/
-
-	// const saveChanges = async () => {
-	// 	setIsSavingChanges(true)
-	// 	await saveCustomChanges()
-	// 	setIsSavingChanges(false)
-	// }
-
-	// const disableExtension = async () => {
-	// 	setIsDisablingExtension(true)
-	// 	setIsDisablingExtension(false)
-	// }
 
 	return (
 		<div>
@@ -737,34 +694,15 @@ Use this function to save any specific settings you have created for this extens
 				agreementExtension
 			) && (
 				<>
-					{!agreement?.isCurrentUserAgreementAdmin && (
-						<Container>
-							<Space h={120} />
+					<div>
+						{isSavingChanges ? (
 							<Center>
-								<Text>
-									Sorry, you do not have permission to view
-									this page. Contact the community owner for
-									help.
-								</Text>
+								<Loader />
 							</Center>
-						</Container>
-					)}
-
-					{agreement?.isCurrentUserAgreementAdmin && (
-						<div>
-							<ExtensionPageHeader extensionSlug={'guild'} />
-
-							<Container>
-								<Space h={16} />
-
-								{isSavingChanges ? (
-									<Loader />
-								) : (
-									customExtensionSettings()
-								)}
-							</Container>
-						</div>
-					)}
+						) : (
+							customExtensionSettings()
+						)}
+					</div>
 				</>
 			)}
 		</div>
