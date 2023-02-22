@@ -1,3 +1,53 @@
+# [1.24.0](https://github.com/meemproject/meem-app/compare/v1.23.4...v1.24.0) (2023-02-22)
+
+
+### Bug Fixes
+
+* better handling of mobile on community homepage ([1bf5ead](https://github.com/meemproject/meem-app/commit/1bf5ead))
+* case-sensitive search throughout the site ([c3256fb](https://github.com/meemproject/meem-app/commit/c3256fb))
+* creating agreement copy ([9dc36a5](https://github.com/meemproject/meem-app/commit/9dc36a5))
+* dark mode colors for extensions widget containers ([4cb7125](https://github.com/meemproject/meem-app/commit/4cb7125))
+* enable extensions with widgets by default ([c12ac18](https://github.com/meemproject/meem-app/commit/c12ac18))
+* further extension cleanup + theme fixes ([312b4d1](https://github.com/meemproject/meem-app/commit/312b4d1))
+* handle an edge case where existing community picker grid was squashed on large screen sizes ([8efba13](https://github.com/meemproject/meem-app/commit/8efba13))
+* linkify header external links ([627fac9](https://github.com/meemproject/meem-app/commit/627fac9))
+* links can now be right-clicked / opened in new tabs ([8fbadc7](https://github.com/meemproject/meem-app/commit/8fbadc7))
+* loading state during creating community ([e6041cf](https://github.com/meemproject/meem-app/commit/e6041cf))
+* make it a little easier to choose a role from the role admin page ([50a6e60](https://github.com/meemproject/meem-app/commit/50a6e60))
+* make sure some external links open in a new tab ([5ccced9](https://github.com/meemproject/meem-app/commit/5ccced9))
+* meem logo in header now links to meem website homepage ([b38926e](https://github.com/meemproject/meem-app/commit/b38926e))
+* nav bar visible above modals + switch network dialog ([55c6564](https://github.com/meemproject/meem-app/commit/55c6564))
+* only show 'connected' state in symphony settings if guildId !== null ([5fc3f8a](https://github.com/meemproject/meem-app/commit/5fc3f8a))
+* Refactor authentication to use cookies rather than return query (more reliable) ([7005f7b](https://github.com/meemproject/meem-app/commit/7005f7b))
+* remove 'all' as option for selecting channels ([f804cbd](https://github.com/meemproject/meem-app/commit/f804cbd))
+* remove onboarding state from symphony settings page ([50ee094](https://github.com/meemproject/meem-app/commit/50ee094))
+* responsive extension settings modal ([f66fca1](https://github.com/meemproject/meem-app/commit/f66fca1))
+* selected extensions check icon ([0cf5f63](https://github.com/meemproject/meem-app/commit/0cf5f63))
+* use a different calculation of what extensions are visible to the public ([4d9c708](https://github.com/meemproject/meem-app/commit/4d9c708))
+* z-index issue when adding role members ([53266a1](https://github.com/meemproject/meem-app/commit/53266a1))
+
+
+### Features
+
+* add extensions modal, simplified logic and renamed ext related files for clarity ([7e265b8](https://github.com/meemproject/meem-app/commit/7e265b8))
+* basic extension settings ([1457879](https://github.com/meemproject/meem-app/commit/1457879))
+* combine steps 3 and 4 of onboarding ([56fafcf](https://github.com/meemproject/meem-app/commit/56fafcf))
+* discussions and guild using new widget architecture ([90f079e](https://github.com/meemproject/meem-app/commit/90f079e))
+* expandable widget accordion container, useful for all extension widgets ([c69f1cd](https://github.com/meemproject/meem-app/commit/c69f1cd))
+* handle reconnecting discord from the symphony settings page ([d6a7c30](https://github.com/meemproject/meem-app/commit/d6a7c30))
+* hide extension settings access for non-admins ([6d23bd2](https://github.com/meemproject/meem-app/commit/6d23bd2))
+* hide some widget content for non-members / non-admins ([01f45f5](https://github.com/meemproject/meem-app/commit/01f45f5))
+* hide symphony settings from community members, hide symphony rules from non members ([6729d33](https://github.com/meemproject/meem-app/commit/6729d33))
+* onboarding sidebar ([016281a](https://github.com/meemproject/meem-app/commit/016281a))
+* refactor symphony onboarding agreement creation to use internal logic, revert modals to original state (no quiet mode) ([f5b3c29](https://github.com/meemproject/meem-app/commit/f5b3c29))
+* remember expanded / collapsed state of every widget for every community ([2c6bf78](https://github.com/meemproject/meem-app/commit/2c6bf78))
+* remove all support for link extensions ([fd5daa6](https://github.com/meemproject/meem-app/commit/fd5daa6))
+* remove extension settings from admin page ([ce90862](https://github.com/meemproject/meem-app/commit/ce90862))
+* responsive symphony settings + rules ([c5f12ed](https://github.com/meemproject/meem-app/commit/c5f12ed))
+* single-page symphony onboarding ([4ef440d](https://github.com/meemproject/meem-app/commit/4ef440d))
+* switch network screen is now a modal ([d1daddc](https://github.com/meemproject/meem-app/commit/d1daddc))
+* symphony extension settings now extracted into its own component ([5616142](https://github.com/meemproject/meem-app/commit/5616142))
+
 ## [1.23.4](https://github.com/meemproject/meem-app/compare/v1.23.3...v1.23.4) (2023-02-14)
 
 ## [1.23.3](https://github.com/meemproject/meem-app/compare/v1.23.2...v1.23.3) (2023-02-14)
