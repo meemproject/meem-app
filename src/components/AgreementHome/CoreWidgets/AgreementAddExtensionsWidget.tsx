@@ -1,4 +1,5 @@
 import { Button, Center, Space, Text } from '@mantine/core'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { AddExtensionModal } from '../../Extensions/AddExtensionModal'
@@ -18,7 +19,14 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 		useState(false)
 
 	// Total extensions, including links and other integrations
-	const totalExtensions = agreement.extensions?.length ?? 0
+	const totalExtensions = agreement.extensions?.filter(ext =>
+		agreement.isCurrentUserAgreementMember
+			? ext
+			: ext.AgreementExtensionWidgets &&
+			  ext.AgreementExtensionWidgets.length > 0 &&
+			  ext.AgreementExtensionWidgets[0].visibility ===
+					MeemAPI.AgreementExtensionVisibility.Anyone
+	).length
 
 	return (
 		<div>
@@ -29,6 +37,8 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 							{/* No extensions at all */}
 							{totalExtensions === 0 && (
 								<div className={meemTheme.widgetExtension}>
+									<Space h={16} />
+
 									<Center>
 										<Text className={meemTheme.tLargeBold}>
 											Get started
@@ -57,32 +67,36 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 											+ Add your first extension
 										</Button>
 									</Center>
-									<Space h={8} />
+									<Space h={24} />
 								</div>
 							)}
 
 							{/* There's already at least one widget that has been set up  */}
-							{agreement.extensions && totalExtensions > 0 && (
-								<>
-									<Space h={8} />
-									<Center>
-										<Text
-											className={meemTheme.tSmall}
-										></Text>
-									</Center>
-									<Center>
-										<Button
-											className={meemTheme.buttonGrey}
-											onClick={() => {
-												setIsAddExtensionModalOpen(true)
-											}}
-										>
-											+ Add an extension
-										</Button>
-									</Center>
-									<Space h={32} />
-								</>
-							)}
+							{agreement.extensions &&
+								totalExtensions &&
+								totalExtensions > 0 && (
+									<>
+										<Space h={8} />
+										<Center>
+											<Text
+												className={meemTheme.tSmall}
+											></Text>
+										</Center>
+										<Center>
+											<Button
+												className={meemTheme.buttonGrey}
+												onClick={() => {
+													setIsAddExtensionModalOpen(
+														true
+													)
+												}}
+											>
+												+ Add an extension
+											</Button>
+										</Center>
+										<Space h={32} />
+									</>
+								)}
 						</>
 					)}
 
@@ -91,8 +105,9 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 							{totalExtensions === 0 && (
 								<div
 									className={meemTheme.widgetExtension}
-									style={{ marginTop: 26 }}
+									style={{ marginTop: -20 }}
 								>
+									<Space h={16} />
 									<Center>
 										<Text className={meemTheme.tMediumBold}>
 											Under construction
@@ -105,6 +120,7 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 											extensions yet. Check back later!
 										</Text>
 									</Center>
+									<Space h={16} />
 								</div>
 							)}
 						</>
