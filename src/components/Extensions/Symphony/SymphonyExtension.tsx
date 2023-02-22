@@ -56,7 +56,7 @@ export enum SelectedConnection {
 	ConnectionSlack = 'slack'
 }
 
-export const SymphonyExtensionSettingsContent: React.FC = () => {
+export const SymphonyExtension: React.FC = () => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()

@@ -42,7 +42,7 @@ interface ISyncedGuildRole {
 	agreementRoleId?: string
 }
 
-export const GuildExtensionSettings: React.FC = () => {
+export const GuildExtension: React.FC = () => {
 	// Default extension settings / properties - leave these alone if possible!
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement, isLoadingAgreement } = useAgreement()

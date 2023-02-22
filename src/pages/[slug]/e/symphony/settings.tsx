@@ -5,7 +5,7 @@ import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { hostnameToChainId } from '../../../../components/App'
-import { SymphonyExtensionSettings } from '../../../../components/Extensions/Symphony/SymphonyExtensionSettings'
+import { SymphonyExtensionOnboarding } from '../../../../components/Extensions/Symphony/SymphonyExtensionSettings'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { GET_AGREEMENT_INFO } from '../../../../graphql/agreements'
@@ -91,7 +91,7 @@ const AgreementSymphonyExtensionSettingsPage: NextPage<IProps> = ({
 			</Head>
 			<HeaderMenu />
 
-			<SymphonyExtensionSettings />
+			<SymphonyExtensionOnboarding />
 			<Space h={64} />
 			<MeemFooter />
 		</>

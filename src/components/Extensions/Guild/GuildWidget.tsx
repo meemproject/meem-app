@@ -1,11 +1,11 @@
 import React from 'react'
 import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
-import { GuildExtensionSettings } from './GuildExtensionSettings'
+import { GuildExtension } from './GuildExtension'
 
 export const GuildWidget: React.FC = () => {
 	return (
 		<ExtensionWidgetContainer extensionSlug="guild">
-			<GuildExtensionSettings />
+			<GuildExtension />
 		</ExtensionWidgetContainer>
 	)
 }

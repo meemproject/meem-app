@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
-import { SymphonyExtensionSettingsContent } from './SymphonyExtensionSettingsContent'
+import { SymphonyExtension } from './SymphonyExtension'
 
 export enum SelectedConnection {
 	ConnectionDiscord = 'discord',
@@ -12,7 +12,7 @@ export enum SelectedConnection {
 	ConnectionSlack = 'slack'
 }
 
-export const SymphonyExtensionSettings: React.FC = () => {
+export const SymphonyExtensionOnboarding: React.FC = () => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement } = useAgreement()
@@ -56,7 +56,7 @@ export const SymphonyExtensionSettings: React.FC = () => {
 	return (
 		<div>
 			{pageHeader}
-			<SymphonyExtensionSettingsContent />
+			<SymphonyExtension />
 		</div>
 	)
 }
