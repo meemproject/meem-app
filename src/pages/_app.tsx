@@ -14,6 +14,7 @@ import { MeemProvider } from '@meemproject/react'
 import { default as AbortController } from 'abort-controller'
 import type { AppProps } from 'next/app'
 import { Router, useRouter } from 'next/router'
+import Script from 'next/script'
 import React, { useEffect, useState } from 'react'
 import TagManager from 'react-gtm-module'
 import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
@@ -224,6 +225,7 @@ function MyApp(props: AppProps) {
 					</>
 				)}
 			</MeemProvider>
+			<Script src="https://desk.zoho.com/portal/api/web/inapp/829537000000317001?orgId=803188851" />
 		</>
 	)
 }
