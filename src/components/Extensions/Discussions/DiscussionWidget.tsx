@@ -1,6 +1,5 @@
 import { Text, Button, Space, Center, Loader } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
-import { Plus, Settings } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import {
@@ -9,6 +8,7 @@ import {
 } from '../../../model/agreement/agreements'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
 import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 import { useDiscussions } from './DiscussionProvider'
@@ -83,90 +83,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 
 	return (
 		<>
-			<div className={meemTheme.widgetExtension}>
-				<div className={meemTheme.spacedRowCentered}>
-					<div className={meemTheme.centeredRow}>
-						<Text className={meemTheme.tMediumBold}>
-							Discussions
-						</Text>
-						<Space w={6} />
-						{hasFetchedData &&
-							agreementExtension?.isInitialized && (
-								<Text className={meemTheme.tMedium}>
-									{`(${posts.length})`}
-								</Text>
-							)}
-					</div>
-					{agreementExtension?.isInitialized && (
-						<div className={meemTheme.centeredRow}>
-							{posts.length > 0 && (
-								<>
-									<>
-										<Link
-											href={`/${agreement.slug}/e/discussions/submit`}
-											legacyBehavior
-											passHref
-										>
-											<a
-												className={
-													meemTheme.unstyledLink
-												}
-											>
-												<Button
-													className={
-														meemTheme.buttonDarkGrey
-													}
-												>
-													<div>
-														<Plus />
-													</div>
-												</Button>
-											</a>
-										</Link>
-									</>
-									<Space w={8} />
-									<Link
-										href={`/${agreement.slug}/e/discussions`}
-										legacyBehavior
-										passHref
-									>
-										<a className={meemTheme.unstyledLink}>
-											<Button
-												className={
-													meemTheme.buttonDarkGrey
-												}
-											>
-												View All
-											</Button>
-										</a>
-									</Link>
-								</>
-							)}
-
-							{agreement.isCurrentUserAgreementAdmin && (
-								<div className={meemTheme.row}>
-									<Space w={8} />
-									<Link
-										href={`/${agreement.slug}/e/discussions/settings`}
-										legacyBehavior
-										passHref
-									>
-										<a className={meemTheme.unstyledLink}>
-											<div>
-												<Settings
-													className={
-														meemTheme.clickable
-													}
-												/>
-											</div>
-										</a>
-									</Link>
-								</div>
-							)}
-						</div>
-					)}
-				</div>
-				<Space h={24} />
+			<ExtensionWidgetContainer extensionSlug="discussions">
 				{!hasFetchedData && agreementExtension?.isInitialized && (
 					<>
 						<Center>
@@ -242,7 +159,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 						>{`${agreementExtension?.Extension?.name} is being set up. Come back in a few minutes!`}</Text>
 					</Center>
 				)}
-			</div>
+			</ExtensionWidgetContainer>
 		</>
 	)
 }

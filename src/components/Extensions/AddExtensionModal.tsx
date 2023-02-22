@@ -273,6 +273,7 @@ export const AddExtensionModal: React.FC<IProps> = ({
 									this community.
 								</Text>
 							</Center>
+							<Space h={48} />
 						</>
 					)}
 					{loading && (
@@ -292,13 +293,15 @@ export const AddExtensionModal: React.FC<IProps> = ({
 						</>
 					)}
 
-					<DeveloperPortalButton
-						portalButtonText={`Don't see your app?`}
-						modalTitle={'Build your own apps and extensions'}
-						modalText={`We're always looking for more 3rd party apps and extensions to integrate with us. Meem is open source and ready for contributions! Pull Requests are always welcome.`}
-						devDocsLink={`https://docs.meem.wtf/meem-protocol/meem-web-app/developers/building-an-extension`}
-						githubLink={`https://github.com/meemproject/meem-app`}
-					/>
+					<Center>
+						<DeveloperPortalButton
+							portalButtonText={`Don't see your app?`}
+							modalTitle={'Build your own apps and extensions'}
+							modalText={`We're always looking for more 3rd party apps and extensions to integrate with us. Meem is open source and ready for contributions! Pull Requests are always welcome.`}
+							devDocsLink={`https://docs.meem.wtf/meem-protocol/meem-web-app/developers/building-an-extension`}
+							githubLink={`https://github.com/meemproject/meem-app`}
+						/>
+					</Center>
 
 					<Modal
 						centered

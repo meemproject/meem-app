@@ -15,6 +15,7 @@ import { useSDK } from '@meemproject/react'
 import React, { useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
+import { GuildWidget } from '../Extensions/Guild/GuildWidget'
 import { SymphonyWidget } from '../Extensions/Symphony/SymphonyWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
@@ -118,6 +119,11 @@ export const AgreementHome: React.FC = () => {
 												key="discussion-widget"
 												agreement={agreement}
 											/>
+										)}
+
+										{extension.Extension?.slug ===
+											'guild' && (
+											<GuildWidget key="guild-widget" />
 										)}
 									</div>
 								))}

@@ -34,7 +34,6 @@ import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { ExtensionPageHeader } from '../ExtensionPageHeader'
 
 interface ISyncedGuildRole {
 	name: string
@@ -485,11 +484,6 @@ export const GuildExtensionSettings: React.FC = () => {
 		setUnsyncedRoles(unsyncedRolesData ?? [])
 	}, [agreementGuild, agreement])
 
-	/*
-TODO
-Add your custom extension settings layout here.
-*/
-
 	const roleComponent = (props: {
 		name: string
 		tokenAddress: string
@@ -572,9 +566,6 @@ Add your custom extension settings layout here.
 
 	const customExtensionSettings = () => (
 		<>
-			<Space h={40} />
-			<Text className={meemTheme.tExtraSmallLabel}>CONFIGURATION</Text>
-			<Space h={16} />
 			{agreementGuild ? (
 				<>
 					<Group>
@@ -646,9 +637,6 @@ Add your custom extension settings layout here.
 				</>
 			) : (
 				<>
-					<Title order={5} mt={'xl'}>
-						Guilds
-					</Title>
 					{userGuilds && (
 						<Select
 							mt="sm"
@@ -672,7 +660,7 @@ Add your custom extension settings layout here.
 						/>
 					)}
 					<Button
-						mt="lg"
+						className={meemTheme.buttonGrey}
 						disabled={!userSelectedGuildId}
 						onClick={() => {
 							if (userSelectedGuildId) {
@@ -682,9 +670,10 @@ Add your custom extension settings layout here.
 					>
 						Sync Guild
 					</Button>
-					<Divider mt="lg" />
+					<Space h={0} />
 					<Button
 						mt="lg"
+						className={meemTheme.buttonBlack}
 						onClick={() => {
 							createGuild()
 						}}
@@ -696,37 +685,6 @@ Add your custom extension settings layout here.
 			<Space h={8} />
 		</>
 	)
-
-	/*
-		TODO
-		Add your custom extension permissions layout here.
-		*/
-	// const customExtensionPermissions = () => (
-	// 	<>This extension does not provide any permissions.</>
-	// )
-
-	/*
-TODO
-Use this function to save any specific settings you have created for this extension and make any calls you need to external APIs.
-*/
-
-	// const saveCustomChanges = async () => {}
-
-	/*
-		Boilerplate area - please don't edit the below code!
-===============================================================
-*/
-
-	// const saveChanges = async () => {
-	// 	setIsSavingChanges(true)
-	// 	await saveCustomChanges()
-	// 	setIsSavingChanges(false)
-	// }
-
-	// const disableExtension = async () => {
-	// 	setIsDisablingExtension(true)
-	// 	setIsDisablingExtension(false)
-	// }
 
 	return (
 		<div>
@@ -752,17 +710,13 @@ Use this function to save any specific settings you have created for this extens
 
 					{agreement?.isCurrentUserAgreementAdmin && (
 						<div>
-							<ExtensionPageHeader extensionSlug={'guild'} />
-
-							<Container>
-								<Space h={16} />
-
-								{isSavingChanges ? (
+							{isSavingChanges ? (
+								<Center>
 									<Loader />
-								) : (
-									customExtensionSettings()
-								)}
-							</Container>
+								</Center>
+							) : (
+								customExtensionSettings()
+							)}
 						</div>
 					)}
 				</>
