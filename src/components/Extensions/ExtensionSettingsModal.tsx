@@ -64,23 +64,8 @@ export const ExtensionSettingsModal: React.FC<IProps> = ({
 		}
 	}, [agreementExtension, isOpened])
 
-	return (
-		<Modal
-			centered
-			radius={16}
-			overlayBlur={8}
-			size={'60%'}
-			padding={'lg'}
-			opened={isOpened}
-			title={
-				<Text
-					className={meemTheme.tMediumBold}
-				>{`${extensionName} Settings`}</Text>
-			}
-			onClose={() => {
-				onModalClosed()
-			}}
-		>
+	const modalContent = (
+		<>
 			<Divider />
 			<Space h={16} />
 
@@ -138,6 +123,46 @@ export const ExtensionSettingsModal: React.FC<IProps> = ({
 			>
 				Save Changes
 			</Button>
-		</Modal>
+		</>
+	)
+
+	return (
+		<>
+			<Modal
+				className={meemTheme.visibleDesktopOnly}
+				centered
+				radius={16}
+				overlayBlur={8}
+				size={'60%'}
+				padding={'lg'}
+				opened={isOpened}
+				title={
+					<Text
+						className={meemTheme.tMediumBold}
+					>{`${extensionName} Settings`}</Text>
+				}
+				onClose={() => {
+					onModalClosed()
+				}}
+			>
+				{modalContent}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				fullScreen
+				padding={'lg'}
+				opened={isOpened}
+				title={
+					<Text
+						className={meemTheme.tMediumBold}
+					>{`${extensionName} Settings`}</Text>
+				}
+				onClose={() => {
+					onModalClosed()
+				}}
+			>
+				{modalContent}
+			</Modal>
+		</>
 	)
 }
