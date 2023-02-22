@@ -939,28 +939,30 @@ export const SymphonyExtension: React.FC = () => {
 									<Space h="xs" />
 								</div>
 								<Space w={24} />
-								<div>
-									<Button
-										className={meemTheme.buttonWhite}
-										onClick={() => {
-											setSelectedRule(rule)
-											setIsRuleBuilderOpen(true)
-										}}
-									>
-										Edit
-									</Button>
-									<Space h={8} />
-									<Button
-										className={
-											meemTheme.buttonOrangeRedBordered
-										}
-										onClick={() => {
-											removeRule(rule.id)
-										}}
-									>
-										Remove
-									</Button>
-								</div>
+								{agreement?.isCurrentUserAgreementAdmin && (
+									<div>
+										<Button
+											className={meemTheme.buttonWhite}
+											onClick={() => {
+												setSelectedRule(rule)
+												setIsRuleBuilderOpen(true)
+											}}
+										>
+											Edit
+										</Button>
+										<Space h={8} />
+										<Button
+											className={
+												meemTheme.buttonOrangeRedBordered
+											}
+											onClick={() => {
+												removeRule(rule.id)
+											}}
+										>
+											Remove
+										</Button>
+									</div>
+								)}
 							</div>
 						</div>
 					)
@@ -1021,28 +1023,44 @@ export const SymphonyExtension: React.FC = () => {
 
 	const mainState = (
 		<>
-			{integrationsSection()}
-			<Space h={40} />
-			<Text className={meemTheme.tExtraSmallLabel}>PERMISSIONS</Text>
-			<Space h={4} />
-			{discordInfo && (
-				<Text className={meemTheme.tExtraSmall}>
-					{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
-				</Text>
+			{agreement?.isCurrentUserAgreementAdmin && (
+				<>
+					{integrationsSection()}
+					<Space h={40} />
+					<Text className={meemTheme.tExtraSmallLabel}>
+						PERMISSIONS
+					</Text>
+					<Space h={4} />
+					{discordInfo && (
+						<Text className={meemTheme.tExtraSmall}>
+							{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
+						</Text>
+					)}
+					{!discordInfo && (
+						<Text className={meemTheme.tExtraSmall}>
+							<span style={{ fontWeight: 600 }}>
+								Connect a Discord server to add your first rule.
+							</span>{' '}
+							Rules are logic to dictate how new posts will be
+							proposed and published, as well as which community
+							members will manage each part of the process.
+						</Text>
+					)}
+					<Space h={16} />
+				</>
 			)}
-			{!discordInfo && (
-				<Text className={meemTheme.tExtraSmall}>
-					<span style={{ fontWeight: 600 }}>
-						Connect a Discord server to add your first rule.
-					</span>{' '}
-					Rules are logic to dictate how new posts will be proposed
-					and published, as well as which community members will
-					manage each part of the process.
-				</Text>
-			)}
-			<Space h={16} />
 
-			{rulesSection()}
+			{agreement?.isCurrentUserAgreementMember && <>{rulesSection()}</>}
+			{!agreement?.isCurrentUserAgreementMember && (
+				<>
+					<Center>
+						<Text className={meemTheme.tSmallBold}>
+							Symphony rules are only available to community
+							members.
+						</Text>
+					</Center>
+				</>
+			)}
 		</>
 	)
 
@@ -1072,7 +1090,7 @@ export const SymphonyExtension: React.FC = () => {
 						<div>
 							{!hasFetchedData && (
 								<Container>
-									<Space h={32} />
+									<Space h={16} />
 									<Center>
 										<Loader color="cyan" variant="oval" />
 									</Center>
