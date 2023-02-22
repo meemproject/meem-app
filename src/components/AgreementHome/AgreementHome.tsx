@@ -139,7 +139,17 @@ export const AgreementHome: React.FC = () => {
 										)}
 									</div>
 								))}
-							<Space h={24} />
+							{agreement.extensions.filter(ext =>
+								agreement.isCurrentUserAgreementMember
+									? ext
+									: ext.AgreementExtensionWidgets &&
+									  ext.AgreementExtensionWidgets.length >
+											0 &&
+									  ext.AgreementExtensionWidgets[0]
+											.visibility ===
+											MeemAPI.AgreementExtensionVisibility
+												.Anyone
+							).length > 0 && <Space h={24} />}
 						</>
 					)}
 

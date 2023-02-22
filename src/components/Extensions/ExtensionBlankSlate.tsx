@@ -66,7 +66,7 @@ export const ExtensionBlankSlate: React.FC<IProps> = ({ extensionSlug }) => {
 					<Space h={120} />
 					<Center>
 						<Text>
-							This extension is not enabled for this club.
+							This extension is not enabled for this community.
 						</Text>
 					</Center>
 					{(agreement.isCurrentUserAgreementOwner ||

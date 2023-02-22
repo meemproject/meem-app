@@ -441,7 +441,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		// Set page state
 		if (
 			isLoadingMyAgreements ||
-			isCreatingNewCommunity ||
 			extensionsLoading ||
 			twitterDataLoading ||
 			discordInfoLoading ||

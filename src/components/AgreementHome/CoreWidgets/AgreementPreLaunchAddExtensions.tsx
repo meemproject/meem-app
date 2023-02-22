@@ -137,7 +137,7 @@ export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 	])
 
 	return (
-		<div className={meemTheme.widgetExtension}>
+		<div className={meemTheme.widgetExtension} style={{ padding: 32 }}>
 			<Text className={meemTheme.tMediumBold}>Add extensions</Text>
 			{loading && (
 				<>
@@ -150,7 +150,7 @@ export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 			)}
 			{!loading && availableExtensionsData && (
 				<>
-					<Space h={24} />
+					<Space h={32} />
 
 					{extensionCategories.map(cat => (
 						<div key={cat.title}>
