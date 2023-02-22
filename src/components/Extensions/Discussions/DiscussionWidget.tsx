@@ -83,7 +83,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 
 	return (
 		<>
-			<div className={meemTheme.widgetLight}>
+			<div className={meemTheme.widgetExtension}>
 				<div className={meemTheme.spacedRowCentered}>
 					<div className={meemTheme.centeredRow}>
 						<Text className={meemTheme.tMediumBold}>

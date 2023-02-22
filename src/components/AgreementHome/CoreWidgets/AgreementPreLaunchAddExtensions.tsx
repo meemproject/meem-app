@@ -137,7 +137,7 @@ export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 	])
 
 	return (
-		<div className={meemTheme.widgetLight}>
+		<div className={meemTheme.widgetExtension}>
 			<Text className={meemTheme.tMediumBold}>Add extensions</Text>
 			{loading && (
 				<>

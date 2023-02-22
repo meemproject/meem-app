@@ -27,7 +27,7 @@ export const GuildWidget: React.FC<IProps> = ({ agreement }) => {
 		/*
 		Ensure your widget's UI is contained entirely within the parent <div> element.
 		*/
-		<div className={meemTheme.widgetLight}>
+		<div className={meemTheme.widgetExtension}>
 			<div className={meemTheme.spacedRowCentered}>
 				<div className={meemTheme.centeredRow}>
 					<Text className={meemTheme.tMediumBold}>
