@@ -1,6 +1,10 @@
-import { Text, Modal, Divider } from '@mantine/core'
-import React from 'react'
+import { Text, Modal, Divider, Space, Switch, Button } from '@mantine/core'
+import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
+import React, { useEffect, useState } from 'react'
+import { extensionFromSlug } from '../../model/agreement/agreements'
 import { toTitleCase } from '../../utils/strings'
+import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
@@ -18,7 +22,47 @@ export const ExtensionSettingsModal: React.FC<IProps> = ({
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
+	const sdk = useSDK()
+
+	const { agreement } = useAgreement()
+
+	const [isSavingChanges, setIsSavingChanges] = useState(false)
+	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
+
 	const extensionName = toTitleCase(extensionSlug.replaceAll('-', ' '))
+	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
+
+	const saveChanges = async () => {
+		setIsSavingChanges(true)
+		await sdk.sdk.agreementExtension.updateAgreementExtension({
+			agreementId: agreement?.id ?? '',
+			agreementExtensionId: agreementExtension?.id,
+			isSetupComplete: true,
+			widget: {
+				visibility: isPrivateExtension
+					? MeemAPI.AgreementExtensionVisibility.TokenHolders
+					: MeemAPI.AgreementExtensionVisibility.Anyone
+			}
+		})
+		setIsSavingChanges(false)
+	}
+
+	useEffect(() => {
+		if (isOpened && agreementExtension) {
+			if (
+				agreementExtension.AgreementExtensionWidgets &&
+				agreementExtension.AgreementExtensionWidgets.length > 0
+			) {
+				const widget = agreementExtension.AgreementExtensionWidgets[0]
+				if (
+					widget.visibility ===
+					MeemAPI.AgreementExtensionVisibility.TokenHolders
+				) {
+					setIsPrivateExtension(true)
+				}
+			}
+		}
+	}, [agreementExtension, isOpened])
 
 	return (
 		<Modal
@@ -38,7 +82,62 @@ export const ExtensionSettingsModal: React.FC<IProps> = ({
 			}}
 		>
 			<Divider />
+			<Space h={16} />
+
+			<Text className={meemTheme.tExtraSmallLabel}>DISPLAY SETTINGS</Text>
+
+			{/* <div>
+				<Space h={16} />
+				<div className={meemTheme.spacedRowCentered}>
+					<Switch
+						color={'green'}
+						label={'Display dashboard widget'}
+						checked={shouldDisplayDashboardWidget}
+						onChange={value => {
+							if (value) {
+								setShouldDisplayDashboardWidget(
+									value.currentTarget.checked
+								)
+							}
+						}}
+					/>
+				</div>
+				<Space h={16} />
+				<Divider />
+			</div> */}
+			<div>
+				<Space h={16} />
+				<div className={meemTheme.spacedRowCentered}>
+					<Switch
+						color={'green'}
+						label={
+							'Hide widget if viewer is not a community member'
+						}
+						checked={isPrivateExtension}
+						onChange={value => {
+							if (value) {
+								setIsPrivateExtension(
+									value.currentTarget.checked
+								)
+							}
+						}}
+					/>
+				</div>
+				<Space h={16} />
+				<Divider />
+			</div>
 			{children}
+			<Space h={32} />
+			<Button
+				disabled={isSavingChanges}
+				loading={isSavingChanges}
+				onClick={() => {
+					saveChanges()
+				}}
+				className={meemTheme.buttonBlack}
+			>
+				Save Changes
+			</Button>
 		</Modal>
 	)
 }

@@ -8,6 +8,7 @@ import {
 } from '../../../model/agreement/agreements'
 import { DiscussionPost } from '../../../model/agreement/extensions/discussion/discussionPost'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { ExtensionSettingsModal } from '../ExtensionSettingsModal'
 import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
 import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
@@ -25,7 +26,9 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	const { sdk } = useSDK()
 	const { privateKey } = useDiscussions()
 
-	const agreementExtension = extensionFromSlug('discussions', agreement)
+	const extensionSlug = 'discussions'
+	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
+	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -83,7 +86,12 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 
 	return (
 		<>
-			<ExtensionWidgetContainer extensionSlug="discussions">
+			<ExtensionWidgetContainer
+				extensionSlug="discussions"
+				onSettingsOpened={function (): void {
+					setIsSettingsModalOpened(true)
+				}}
+			>
 				{!hasFetchedData && agreementExtension?.isInitialized && (
 					<>
 						<Center>
@@ -160,6 +168,13 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					</Center>
 				)}
 			</ExtensionWidgetContainer>
+			<ExtensionSettingsModal
+				extensionSlug={extensionSlug}
+				isOpened={isSettingsModalOpened}
+				onModalClosed={function (): void {
+					setIsSettingsModalOpened(false)
+				}}
+			/>
 		</>
 	)
 }

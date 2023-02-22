@@ -12,6 +12,7 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
 import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
@@ -102,7 +103,18 @@ export const AgreementHome: React.FC = () => {
 					{agreement.extensions && (
 						<>
 							{agreement.extensions
-								.filter(ext => ext.Extension)
+								.filter(ext =>
+									agreement.isCurrentUserAgreementMember
+										? ext
+										: ext.AgreementExtensionWidgets &&
+										  ext.AgreementExtensionWidgets.length >
+												0 &&
+										  ext.AgreementExtensionWidgets[0]
+												.visibility ===
+												MeemAPI
+													.AgreementExtensionVisibility
+													.Anyone
+								)
 								.map(extension => (
 									// TODO: Developers, make sure you import your extension's widget
 									// TODO: here, checking against the slug you chose for your extension.

@@ -13,11 +13,13 @@ import { colorDarkerGrey, useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	children: React.ReactNode
 	extensionSlug: string
+	onSettingsOpened: () => void
 }
 
 export const ExtensionWidgetContainer: React.FC<IProps> = ({
 	children,
-	extensionSlug
+	extensionSlug,
+	onSettingsOpened
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { colorScheme } = useMantineColorScheme()
@@ -65,7 +67,12 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 									</Text>
 								</div>
 							</Accordion.Control>
-							<Settings />
+							<Settings
+								className={meemTheme.clickable}
+								onClick={() => {
+									onSettingsOpened()
+								}}
+							/>
 							<Space w={16} />
 						</div>
 
