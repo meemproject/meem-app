@@ -18,10 +18,10 @@ import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
 import { SymphonyWidget } from '../Extensions/Symphony/SymphonyWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
-import { AgreementAddMoreExtensionsWidget } from './CoreWidgets/AgreementAddMoreExtensionsWidget'
-import { AgreementBlankSlateWidget } from './CoreWidgets/AgreementBlankSlateWidget'
+import { AgreementAddExtensionsWidget } from './CoreWidgets/AgreementAddExtensionsWidget'
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
 import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
+import { AgreementPreLaunchAddExtensions } from './CoreWidgets/AgreementPreLaunchAddExtensions'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
 import { MeemCreateCommunityWidget } from './CoreWidgets/MeemCreateCommunityWidget'
 
@@ -126,7 +126,7 @@ export const AgreementHome: React.FC = () => {
 					)}
 
 					{agreement.slug !== 'meem' && !agreement.isLaunched && (
-						<AgreementBlankSlateWidget
+						<AgreementPreLaunchAddExtensions
 							onChosenExtensionsChanged={extensions => {
 								setChosenExtensions(extensions)
 							}}
@@ -136,7 +136,7 @@ export const AgreementHome: React.FC = () => {
 
 					{agreement.isLaunched && (
 						<>
-							<AgreementAddMoreExtensionsWidget
+							<AgreementAddExtensionsWidget
 								agreement={agreement}
 							/>
 						</>

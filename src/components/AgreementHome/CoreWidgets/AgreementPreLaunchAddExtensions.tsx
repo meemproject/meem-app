@@ -32,7 +32,7 @@ interface ExtensionCategory {
 	extensions: Extension[]
 }
 
-export const AgreementBlankSlateWidget: React.FC<IProps> = ({
+export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 	agreement,
 	onChosenExtensionsChanged
 }) => {
