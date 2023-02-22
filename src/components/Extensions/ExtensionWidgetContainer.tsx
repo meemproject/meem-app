@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	Accordion,
 	Space,
@@ -6,6 +7,7 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { Settings } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import React from 'react'
 import { toTitleCase } from '../../utils/strings'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
@@ -30,19 +32,28 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 
 	const extensionName = toTitleCase(extensionSlug.replaceAll('-', ' '))
 
+	const accordionCookie = `${agreement?.slug}-${extensionSlug}-accordion`
+	const value = Cookies.get(accordionCookie) ?? '1'
+
 	return (
 		<>
 			<div className={meemTheme.widgetExtension}>
 				<Accordion
+					defaultValue={value}
 					radius="md"
 					className={meemTheme.widgetAccordion}
 					classNames={{
 						panel: meemTheme.widgetAccordionBackground,
 						control: meemTheme.widgetAccordionBackground
 					}}
+					onChange={newValue => {
+						const position = newValue === null ? '0' : '1'
+						log.debug(`onChange pos = ${position}`)
+
+						Cookies.set(accordionCookie, position)
+					}}
 					chevronPosition="left"
 					variant="filled"
-					defaultValue="1"
 				>
 					<Accordion.Item
 						value="1"
