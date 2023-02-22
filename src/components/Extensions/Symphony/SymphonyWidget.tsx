@@ -1,7 +1,7 @@
 import { Space, Text } from '@mantine/core'
 import React from 'react'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { SymphonyExtensionSettings } from './SymphonyExtensionSettings'
+import { SymphonyExtensionSettingsContent } from './SymphonyExtensionSettingsContent'
 
 /*
 Be sure to import your widget in AgreementHome.tsx to ensure it is displayed
@@ -37,8 +37,10 @@ export const SymphonyWidget: React.FC = () => {
 					)}
 				</div> */}
 			</div>
-			<Space h={24} />
-			<SymphonyExtensionSettings />
+			<Space h={16} />
+
+			<SymphonyExtensionSettingsContent />
+			<Space h={16} />
 		</div>
 	)
 }
