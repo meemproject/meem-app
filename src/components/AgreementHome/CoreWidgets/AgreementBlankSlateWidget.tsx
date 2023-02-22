@@ -10,13 +10,18 @@ import {
 	Badge
 } from '@mantine/core'
 import { useMeemApollo } from '@meemproject/react'
-import { Check } from 'iconoir-react'
+import { CheckCircle } from 'iconoir-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import { colorAsh, colorDarkerGrey, useMeemTheme } from '../../Styles/MeemTheme'
+import {
+	colorAsh,
+	colorDarkerGrey,
+	colorGreen,
+	useMeemTheme
+} from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 	onChosenExtensionsChanged: (chosenExtensions: string[]) => void
@@ -243,16 +248,15 @@ export const AgreementBlankSlateWidget: React.FC<IProps> = ({
 											<div
 												style={{
 													position: 'absolute',
-													top: -6,
-													left: -6
+													top: 76,
+													right: 8
 												}}
 											>
 												{chosenExtensions.includes(
 													extension.id
 												) && (
-													<Check
-														width={18}
-														height={18}
+													<CheckCircle
+														color={colorGreen}
 													/>
 												)}
 											</div>

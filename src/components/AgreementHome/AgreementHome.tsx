@@ -109,9 +109,7 @@ export const AgreementHome: React.FC = () => {
 										{extension.Extension?.slug ===
 											'symphony' && (
 											<>
-												<SymphonyWidget
-													agreement={agreement}
-												/>
+												<SymphonyWidget />
 											</>
 										)}
 										{extension.Extension?.slug ===
