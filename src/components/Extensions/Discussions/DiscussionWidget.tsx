@@ -32,8 +32,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (hasFetchedData || !sdk.id.hasInitialized || !privateKey) {
-				setHasFetchedData(true)
+			if (hasFetchedData) {
 				return
 			}
 
@@ -81,7 +80,9 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 			setHasFetchedData(true)
 		}
 
-		fetchData()
+		if (agreementExtension && sdk.id.hasInitialized && privateKey) {
+			fetchData()
+		}
 	}, [hasFetchedData, agreement, sdk, privateKey, agreementExtension])
 
 	return (
@@ -92,80 +93,104 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 					setIsSettingsModalOpened(true)
 				}}
 			>
-				{!hasFetchedData && agreementExtension?.isInitialized && (
+				{agreement?.isCurrentUserAgreementMember && (
 					<>
-						<Center>
-							<Loader variant="oval" color="cyan" />
-						</Center>
-						<Space h={8} />
-					</>
-				)}
-				{hasFetchedData && agreementExtension?.isInitialized && (
-					<>
-						{posts.length > 0 && (
-							<>
-								{posts.map(post => (
-									<DiscussionPostPreview
-										key={post.id}
-										post={post}
-									/>
-								))}
-							</>
-						)}
-						{posts.length == 0 && (
-							<>
-								{!agreement.isCurrentUserAgreementMember && (
+						{!hasFetchedData &&
+							agreementExtension?.isInitialized && (
+								<>
 									<Center>
-										<Text className={meemTheme.tSmallBold}>
-											Join this community to view its
-											discussions.
-										</Text>
+										<Loader variant="oval" color="cyan" />
 									</Center>
-								)}
-								{agreement.isCurrentUserAgreementMember && (
-									<>
-										<Center>
-											<Text
-												className={meemTheme.tSmallBold}
-											>
-												There are no discussions yet.
-											</Text>
-										</Center>
-										<Space h={12} />
-										<Center>
-											<Link
-												href={`/${agreement.slug}/e/discussions/submit`}
-												legacyBehavior
-												passHref
-											>
-												<a
-													className={
-														meemTheme.unstyledLink
-													}
-												>
-													<Button
+									<Space h={8} />
+								</>
+							)}
+						{hasFetchedData &&
+							agreementExtension?.isInitialized && (
+								<>
+									{posts.length > 0 && (
+										<>
+											{posts.map(post => (
+												<DiscussionPostPreview
+													key={post.id}
+													post={post}
+												/>
+											))}
+										</>
+									)}
+									{posts.length == 0 && (
+										<>
+											{!agreement.isCurrentUserAgreementMember && (
+												<Center>
+													<Text
 														className={
-															meemTheme.buttonDarkGrey
+															meemTheme.tSmallBold
 														}
 													>
-														+ Create a discussion
-													</Button>
-												</a>
-											</Link>
-										</Center>
-										<Space h={8} />
-									</>
-								)}
-							</>
+														Join this community to
+														view its discussions.
+													</Text>
+												</Center>
+											)}
+											{agreement.isCurrentUserAgreementMember && (
+												<>
+													<Center>
+														<Text
+															className={
+																meemTheme.tSmallBold
+															}
+														>
+															There are no
+															discussions yet.
+														</Text>
+													</Center>
+													<Space h={12} />
+													<Center>
+														<Link
+															href={`/${agreement.slug}/e/discussions/submit`}
+															legacyBehavior
+															passHref
+														>
+															<a
+																className={
+																	meemTheme.unstyledLink
+																}
+															>
+																<Button
+																	className={
+																		meemTheme.buttonDarkGrey
+																	}
+																>
+																	+ Create a
+																	discussion
+																</Button>
+															</a>
+														</Link>
+													</Center>
+													<Space h={8} />
+												</>
+											)}
+										</>
+									)}
+								</>
+							)}
+						{!agreementExtension?.isInitialized && (
+							<Center>
+								<Text
+									className={meemTheme.tMedium}
+								>{`${agreementExtension?.Extension?.name} is being set up. Come back in a few minutes!`}</Text>
+							</Center>
 						)}
 					</>
 				)}
-				{!agreementExtension?.isInitialized && (
-					<Center>
-						<Text
-							className={meemTheme.tMedium}
-						>{`${agreementExtension?.Extension?.name} is being set up. Come back in a few minutes!`}</Text>
-					</Center>
+				{!agreement?.isCurrentUserAgreementMember && (
+					<>
+						<Center>
+							<Text className={meemTheme.tSmallBold}>
+								Discussions are only available for community
+								members.
+							</Text>
+						</Center>
+					</>
 				)}
 			</ExtensionWidgetContainer>
 			<ExtensionSettingsModal
