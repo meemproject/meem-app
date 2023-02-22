@@ -51,7 +51,7 @@ export const RemoveMemberConfirmationModal: React.FC<IProps> = ({
 							onOptionChosen(true)
 							onModalClosed()
 						}}
-						className={meemTheme.buttonRedBordered}
+						className={meemTheme.buttonOrangeRedBordered}
 					>
 						Remove
 					</Button>

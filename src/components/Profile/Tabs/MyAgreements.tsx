@@ -13,6 +13,7 @@ import {
 } from '@mantine/core'
 import { useWallet, useMeemApollo } from '@meemproject/react'
 import { Group } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -23,6 +24,7 @@ import {
 	agreementSummaryFromDb,
 	isJwtError as isJwtError
 } from '../../../model/agreement/agreements'
+import { CookieKeys } from '../../../utils/cookies'
 import { hostnameToChainId } from '../../App'
 import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
@@ -69,12 +71,11 @@ export const MyAgreementsComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (isJwtError(error)) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/profile?tab=myCommunities`
-				}
-			})
+			Cookies.set(
+				CookieKeys.authRedirectUrl,
+				`/profile?tab=myCommunities`
+			)
+			router.push('/authenticate')
 		}
 	}, [error, router])
 
@@ -101,8 +102,10 @@ export const MyAgreementsComponent: React.FC = () => {
 		<>
 			{loading && (
 				<>
-					<Space h={16} />
-					<Loader variant="oval" color="cyan" />
+					<Space h={56} />
+					<Center>
+						<Loader variant="oval" color="cyan" />
+					</Center>
 				</>
 			)}
 			{agreements.length === 0 && !loading && (
@@ -145,105 +148,156 @@ export const MyAgreementsComponent: React.FC = () => {
 								<Link
 									href={`/${agreement.slug}`}
 									legacyBehavior
+									passHref
 								>
-									<div
-										key={agreement.address}
-										className={meemTheme.gridItem}
-									>
-										<div className={meemTheme.row}>
-											{agreement.image && (
-												<>
-													<Image
-														className={
-															meemTheme.imageAgreementLogo
-														}
-														style={{
-															width: '56px',
-															height: '56px'
-														}}
-														src={agreement.image}
-														radius={8}
-														fit={'cover'}
-													/>
-													<Space w={24} />
-												</>
-											)}
+									<a className={meemTheme.unstyledLink}>
+										<div
+											key={agreement.address}
+											className={meemTheme.gridItem}
+										>
+											<div className={meemTheme.row}>
+												{agreement.image && (
+													<>
+														<div
+															className={
+																meemTheme.visibleDesktopOnly
+															}
+														>
+															<Image
+																className={
+																	meemTheme.imageAgreementLogo
+																}
+																style={{
+																	width: '56px',
+																	height: '56px'
+																}}
+																src={
+																	agreement.image
+																}
+																radius={8}
+																fit={'cover'}
+															/>
+														</div>
+														<div
+															className={
+																meemTheme.visibleMobileOnly
+															}
+														>
+															<Image
+																className={
+																	meemTheme.imageAgreementLogo
+																}
+																style={{
+																	width: '24px',
+																	height: '24px'
+																}}
+																src={
+																	agreement.image
+																}
+																radius={8}
+																fit={'cover'}
+															/>
+														</div>
+														<Space
+															w={24}
+															className={
+																meemTheme.visibleDesktopOnly
+															}
+														/>
+														<Space
+															w={16}
+															className={
+																meemTheme.visibleMobileOnly
+															}
+														/>
+													</>
+												)}
 
-											<div
-												className={meemTheme.tEllipsis}
-											>
-												<Text
-													style={{
-														fontWeight: 500,
-														fontSize: 18
-													}}
+												<div
+													className={
+														meemTheme.tEllipsis
+													}
 												>
-													{agreement.name}
-												</Text>
+													<Text
+														style={{
+															fontWeight: 500,
+															fontSize: 18
+														}}
+													>
+														{agreement.name}
+													</Text>
 
-												<Space h={20} />
-												<div className={meemTheme.row}>
-													<Badge
-														gradient={{
-															from: isDarkTheme
-																? colorDarkerGrey
-																: '#DCDCDC',
-															to: isDarkTheme
-																? colorDarkerGrey
-																: '#DCDCDC',
-															deg: 35
-														}}
-														classNames={{
-															inner: meemTheme.tBadgeText
-														}}
-														variant={'gradient'}
-														leftSection={
-															<>
-																<Group
-																	style={{
-																		color: isDarkTheme
-																			? colorWhite
-																			: colorBlack,
-																		marginTop: 5
-																	}}
-																/>
-															</>
+													<Space h={20} />
+													<div
+														className={
+															meemTheme.row
 														}
 													>
-														{
-															agreement.members
-																?.length
-														}
-													</Badge>
-													{!agreement.isLaunched &&
-														agreement.isCurrentUserAgreementAdmin && (
-															<>
-																<Space w={8} />
-																<Badge
-																	gradient={{
-																		from: isDarkTheme
-																			? colorDarkerYellow
-																			: colorYellow,
-																		to: isDarkTheme
-																			? colorDarkerYellow
-																			: colorYellow,
-																		deg: 35
-																	}}
-																	classNames={{
-																		inner: meemTheme.tBadgeText
-																	}}
-																	variant={
-																		'gradient'
-																	}
-																>
-																	Draft
-																</Badge>
-															</>
-														)}
+														<Badge
+															gradient={{
+																from: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																to: isDarkTheme
+																	? colorDarkerGrey
+																	: '#DCDCDC',
+																deg: 35
+															}}
+															classNames={{
+																inner: meemTheme.tBadgeText
+															}}
+															variant={'gradient'}
+															leftSection={
+																<>
+																	<Group
+																		style={{
+																			color: isDarkTheme
+																				? colorWhite
+																				: colorBlack,
+																			marginTop: 5
+																		}}
+																	/>
+																</>
+															}
+														>
+															{
+																agreement
+																	.members
+																	?.length
+															}
+														</Badge>
+														{!agreement.isLaunched &&
+															agreement.isCurrentUserAgreementAdmin && (
+																<>
+																	<Space
+																		w={8}
+																	/>
+																	<Badge
+																		gradient={{
+																			from: isDarkTheme
+																				? colorDarkerYellow
+																				: colorYellow,
+																			to: isDarkTheme
+																				? colorDarkerYellow
+																				: colorYellow,
+																			deg: 35
+																		}}
+																		classNames={{
+																			inner: meemTheme.tBadgeText
+																		}}
+																		variant={
+																			'gradient'
+																		}
+																	>
+																		Draft
+																	</Badge>
+																</>
+															)}
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
+									</a>
 								</Link>
 							</Grid.Col>
 						))}
@@ -280,7 +334,6 @@ export const MyAgreementsComponent: React.FC = () => {
 			)}
 			<CreateAgreementModal
 				isOpened={isCreationModalOpen}
-				quietMode={false}
 				onModalClosed={function (): void {
 					setIsCreationModalOpen(false)
 				}}

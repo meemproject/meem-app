@@ -41,15 +41,22 @@ export const ExampleWidget: React.FC<IProps> = ({ agreement }) => {
 					{agreement.isCurrentUserAgreementAdmin && (
 						<div className={meemTheme.row}>
 							<Space w={8} />
-							<Link href={`/${agreement.slug}/e/example/settings`} legacyBehavior>
+							<Link href={`/${agreement.slug}/e/example/settings`} legacyBehavior passHref>
+							<a
+												className={
+													meemTheme.unstyledLink
+												}
+											>
 								<div>
 									<Settings
 										className={meemTheme.clickable}
 									/>
 								</div>
+							</a>
 							</Link>
 							
 						</div>
+					
 					)}
 				</div>
 			</div>

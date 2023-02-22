@@ -1,11 +1,5 @@
-import {
-	Text,
-	Space,
-	Image,
-	Button,
-	useMantineColorScheme
-} from '@mantine/core'
-import { ArrowLeft, DeleteCircle, Settings } from 'iconoir-react'
+import { Text, Space, Image, useMantineColorScheme } from '@mantine/core'
+import { ArrowLeft, DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
@@ -28,57 +22,52 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 
 	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
-	const isSettingsPage =
-		(window && window.location.pathname.includes('settings')) ?? false
-
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
-
-	// Hide the back arrow for extensions with no widgets - presumably they
-	// have no homepage either (i.e. are link extensions)
-	const hasNoWidget =
-		agreement &&
-		agreementExtension &&
-		agreementExtension.AgreementExtensionWidgets.length === 0
 
 	return (
 		<>
 			<div className={meemTheme.pageHeader}>
 				<div className={meemTheme.spacedRowCentered}>
-					{(hasNoWidget || isSettingsPage || isSubPage) && (
+					{isSubPage && (
 						<>
 							<Link
-								href={
-									hasNoWidget
-										? `/${agreement?.slug}/admin?tab=extensions`
-										: `/${agreement?.slug}/e/${extensionSlug}`
-								}
+								href={`/${agreement?.slug}/e/${extensionSlug}`}
 								legacyBehavior
+								passHref
 							>
-								<div>
-									<ArrowLeft
-										className={meemTheme.backArrow}
-										width={32}
-										height={32}
-									/>
-								</div>
+								<a className={meemTheme.unstyledLink}>
+									<div>
+										<ArrowLeft
+											className={meemTheme.backArrow}
+											width={32}
+											height={32}
+										/>
+									</div>
+								</a>
 							</Link>
 							<Space w={24} />
 						</>
 					)}
 
 					{agreement?.image && (
-						<Link href={`/${agreement?.slug}`} legacyBehavior>
-							<div className={meemTheme.row}>
-								<Image
-									style={{ cursor: 'pointer' }}
-									radius={8}
-									height={80}
-									width={80}
-									src={agreement?.image}
-								/>
-								<Space w={24} />
-							</div>
+						<Link
+							href={`/${agreement?.slug}`}
+							legacyBehavior
+							passHref
+						>
+							<a className={meemTheme.unstyledLink}>
+								<div className={meemTheme.row}>
+									<Image
+										style={{ cursor: 'pointer' }}
+										radius={8}
+										height={80}
+										width={80}
+										src={agreement?.image}
+									/>
+									<Space w={24} />
+								</div>
+							</a>
 						</Link>
 					)}
 					{/* <Text className={classes.headerAgreementName}>{agreementName}</Text> */}
@@ -101,39 +90,22 @@ export const ExtensionPageHeader: React.FC<IProps> = ({
 								width={16}
 							/>
 							<Space w={8} />
-							<Text className={meemTheme.tMedium}>{`${
-								agreementExtension?.Extension?.name
-							} ${
-								isSettingsPage
-									? ' Settings'
-									: hasNoWidget
-									? ' Settings'
-									: ''
-							}`}</Text>
+							<Text
+								className={meemTheme.tMedium}
+							>{`${agreementExtension?.Extension?.name}`}</Text>
 						</div>
 					</div>
 				</div>
 				<div className={meemTheme.centeredRow}>
-					{!isSettingsPage &&
-						!hasNoWidget &&
-						(agreement?.isCurrentUserAgreementAdmin ||
-							agreement?.isCurrentUserAgreementOwner) && (
-							<Link
-								href={`/${agreement?.slug}/e/${extensionSlug}/settings`}
-								legacyBehavior
-							>
-								<Button
-									leftIcon={<Settings />}
-									className={meemTheme.buttonWhite}
-								>
-									Settings
-								</Button>
-							</Link>
-						)}
-					<Space w={16} />
 					<div className={meemTheme.pageHeaderExitButton}>
-						<Link href={`/${agreement?.slug}`} legacyBehavior>
-							<DeleteCircle width={24} height={24} />
+						<Link
+							href={`/${agreement?.slug}`}
+							legacyBehavior
+							passHref
+						>
+							<a className={meemTheme.unstyledLink}>
+								<DeleteCircle width={24} height={24} />
+							</a>
 						</Link>
 					</div>
 				</div>

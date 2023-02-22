@@ -118,6 +118,9 @@ export const isJwtError = (error: ApolloError | undefined): boolean => {
 		error.graphQLErrors.length > 0 &&
 		error.graphQLErrors[0].extensions &&
 		error.graphQLErrors[0].extensions.code === 'invalid-jwt'
+	if (isJwt) {
+		log.debug(`jwt error detected, re-authenticating...`)
+	}
 	return isJwt ?? false
 }
 
@@ -811,7 +814,7 @@ export default async function agreementFromDb(
 
 		const endTime = Date.now()
 		const timeTaken = endTime - startTime
-		log.debug(`club model processing took ${timeTaken}ms`)
+		log.debug(`agreement model processing took ${timeTaken}ms`)
 
 		return {
 			id: agreementData.id,

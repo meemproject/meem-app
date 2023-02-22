@@ -134,16 +134,19 @@ export const RolesManager: React.FC = () => {
 									<Link
 										href={`/${agreement.slug}`}
 										legacyBehavior
+										passHref
 									>
-										<Image
-											width={80}
-											height={80}
-											radius={8}
-											className={
-												meemTheme.imageAgreementLogo
-											}
-											src={agreement.image}
-										/>
+										<a className={meemTheme.unstyledLink}>
+											<Image
+												width={80}
+												height={80}
+												radius={8}
+												className={
+													meemTheme.imageAgreementLogo
+												}
+												src={agreement.image}
+											/>
+										</a>
 									</Link>
 								</div>
 							)}
@@ -185,12 +188,18 @@ export const RolesManager: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<Link href={`/${agreement?.slug}/`} legacyBehavior>
-							<DeleteCircle
-								className={meemTheme.pageHeaderExitButton}
-								width={24}
-								height={24}
-							/>
+						<Link
+							href={`/${agreement?.slug}/`}
+							legacyBehavior
+							passHref
+						>
+							<a className={meemTheme.unstyledLink}>
+								<DeleteCircle
+									className={meemTheme.pageHeaderExitButton}
+									width={24}
+									height={24}
+								/>
+							</a>
 						</Link>
 					</div>
 
@@ -228,6 +237,7 @@ export const RolesManager: React.FC = () => {
 									className={meemTheme.pagePanelLayoutNavBar}
 									width={{ base: 288 }}
 									height={400}
+									style={{ zIndex: 0 }}
 									hidden={!mobileNavBarVisible}
 									hiddenBreakpoint={'sm'}
 									withBorder={false}
@@ -243,14 +253,21 @@ export const RolesManager: React.FC = () => {
 										<Link
 											href={`/${agreement?.slug}/admin?tab=roles`}
 											legacyBehavior
+											passHref
 										>
-											<div>
-												<ArrowLeft
-													className={
-														meemTheme.clickable
-													}
-												/>
-											</div>
+											<a
+												className={
+													meemTheme.unstyledLink
+												}
+											>
+												<div>
+													<ArrowLeft
+														className={
+															meemTheme.clickable
+														}
+													/>
+												</div>
+											</a>
 										</Link>
 
 										<Space w={8} />

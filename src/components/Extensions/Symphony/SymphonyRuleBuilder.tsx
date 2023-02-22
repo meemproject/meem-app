@@ -16,7 +16,7 @@ import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
 import { SubRulesSubscription } from '../../../../generated/graphql'
-import { useMeemTheme, colorRed } from '../../Styles/MeemTheme'
+import { useMeemTheme, colorOrangeRed } from '../../Styles/MeemTheme'
 import { API } from './symphonyTypes.generated'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -175,13 +175,9 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 		form.values.proposalChannels.length > 0
 	) {
 		form.values.proposalChannels.forEach((c: string) => {
-			if (c === 'all') {
+			const channel = channels.find(ch => ch.id === c)
+			if (channel && (!channel.canSend || !channel.canView)) {
 				isProposalChannelGated = true
-			} else {
-				const channel = channels.find(ch => ch.id === c)
-				if (channel && (!channel.canSend || !channel.canView)) {
-					isProposalChannelGated = true
-				}
 			}
 		})
 	}
@@ -233,7 +229,6 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 					<Space h={8} />
 					<MultiSelect
 						data={[
-							{ value: 'all', label: 'All Channels' },
 							...channels.map(c => ({
 								value: c.id,
 								label: c.name
@@ -252,7 +247,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 								}}
 							>
 								<WarningCircle
-									color={colorRed}
+									color={colorOrangeRed}
 									height={16}
 									width={16}
 								/>
@@ -260,7 +255,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 								<Text
 									className={meemTheme.tBadgeText}
 									style={{
-										color: colorRed
+										color: colorOrangeRed
 									}}
 								>
 									Please ensure Symphony Bot has full access
@@ -452,7 +447,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 										}}
 									>
 										<WarningCircle
-											color={colorRed}
+											color={colorOrangeRed}
 											height={16}
 											width={16}
 										/>
@@ -460,7 +455,7 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 										<Text
 											className={meemTheme.tBadgeText}
 											style={{
-												color: colorRed
+												color: colorOrangeRed
 											}}
 										>
 											Please ensure Symphony Bot has full
@@ -478,6 +473,8 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 			<Text className={meemTheme.tExtraSmallLabel}>VETOES</Text>
 			<Space h={4} />
 			<Text className={meemTheme.tExtraSmall}>Can posts be vetoed?</Text>
+			<Space h={8} />
+
 			<Switch
 				label="Yes, posts can be vetoed"
 				{...form.getInputProps('canVeto', { type: 'checkbox' })}
@@ -558,12 +555,13 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 				Would you like Symphony to reply to approved proposals with a
 				link to the published tweet?
 			</Text>
+			<Space h={8} />
 			<Switch
 				label="Yes, reply with a link"
 				{...form.getInputProps('shouldReply', { type: 'checkbox' })}
 			/>
 			<Modal
-				withCloseButton={false}
+				withCloseButton={true}
 				closeOnClickOutside={false}
 				padding={8}
 				overlayBlur={8}

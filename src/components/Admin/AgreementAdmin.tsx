@@ -13,21 +13,21 @@ import {
 } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { Copy, DeleteCircle } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { isJwtError } from '../../model/agreement/agreements'
 import {
 	userHasPermissionEditProfile,
-	userHasPermissionManageApps,
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
+import { CookieKeys } from '../../utils/cookies'
 import { showSuccessNotification } from '../../utils/notifications'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { AdminAgreementDetails } from './Tabs/AdminAgreementDetails'
-import { AdminAgreementExtensions } from './Tabs/AdminAgreementExtensions'
 import { AdminAgreementIcon } from './Tabs/AdminAgreementIcon'
 import { AdminBulkMint } from './Tabs/AdminBulkMint'
 import { AdminContractManagement } from './Tabs/AdminContractManagement'
@@ -42,7 +42,6 @@ enum Tab {
 	Roles,
 	Details,
 	Icon,
-	Extensions,
 	Airdrops,
 	DeleteAgreement
 }
@@ -55,16 +54,14 @@ export const AgreementAdminComponent: React.FC = () => {
 
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Extensions)
+	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	useEffect(() => {
 		if (isJwtError(error)) {
+			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}/admin`)
 			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${agreement?.slug}/admin`
-				}
+				pathname: '/authenticate'
 			})
 		}
 	}, [agreement?.slug, error, router, wallet])
@@ -83,9 +80,6 @@ export const AgreementAdminComponent: React.FC = () => {
 				break
 			case 'contractmanagement':
 				setCurrentTab(Tab.ContractManagement)
-				break
-			case 'extensions':
-				setCurrentTab(Tab.Extensions)
 				break
 			case 'membershiprequirements':
 				setCurrentTab(Tab.MembershipRequirements)
@@ -132,21 +126,26 @@ export const AgreementAdminComponent: React.FC = () => {
 								<Link
 									href={`/${agreement.slug}`}
 									legacyBehavior
+									passHref
 								>
-									<div
-										className={meemTheme.pageHeaderImage}
-										style={{ cursor: 'pointer' }}
-									>
-										<Image
-											width={80}
-											height={80}
-											radius={8}
+									<a className={meemTheme.unstyledLink}>
+										<div
 											className={
-												meemTheme.imageAgreementLogo
+												meemTheme.pageHeaderImage
 											}
-											src={agreement.image}
-										/>
-									</div>
+											style={{ cursor: 'pointer' }}
+										>
+											<Image
+												width={80}
+												height={80}
+												radius={8}
+												className={
+													meemTheme.imageAgreementLogo
+												}
+												src={agreement.image}
+											/>
+										</div>
+									</a>
 								</Link>
 							)}
 
@@ -178,12 +177,18 @@ export const AgreementAdminComponent: React.FC = () => {
 								</div>
 							</div>
 						</div>
-						<Link href={`/${agreement.slug}`} legacyBehavior>
-							<DeleteCircle
-								className={meemTheme.pageHeaderExitButton}
-								width={24}
-								height={24}
-							/>
+						<Link
+							href={`/${agreement.slug}`}
+							legacyBehavior
+							passHref
+						>
+							<a className={meemTheme.unstyledLink}>
+								<DeleteCircle
+									className={meemTheme.pageHeaderExitButton}
+									width={24}
+									height={24}
+								/>
+							</a>
 						</Link>
 					</div>
 
@@ -219,6 +224,7 @@ export const AgreementAdminComponent: React.FC = () => {
 								className={meemTheme.pagePanelLayoutNavBar}
 								width={{ base: 288 }}
 								height={400}
+								style={{ zIndex: 0 }}
 								hidden={!mobileNavBarVisible}
 								hiddenBreakpoint={'sm'}
 								withBorder={false}
@@ -328,29 +334,6 @@ export const AgreementAdminComponent: React.FC = () => {
 									/>
 								)} */}
 
-								{userHasPermissionManageApps(agreement) && (
-									<>
-										<NavLink
-											className={
-												meemTheme.pagePanelLayoutNavItem
-											}
-											active={
-												currentTab === Tab.Extensions
-											}
-											label={'Extensions'}
-											onClick={() => {
-												setCurrentTab(Tab.Extensions)
-												router.push(
-													`/${agreement.slug}/admin?tab=extensions`,
-													undefined,
-													{ shallow: true }
-												)
-												setMobileNavBarVisible(false)
-											}}
-										/>
-									</>
-								)}
-
 								<NavLink
 									className={meemTheme.pagePanelLayoutNavItem}
 									active={currentTab === Tab.Airdrops}
@@ -454,14 +437,6 @@ export const AgreementAdminComponent: React.FC = () => {
 											agreement
 										) && (
 											<AdminAgreementIcon
-												agreement={agreement}
-											/>
-										)}
-									{currentTab === Tab.Extensions &&
-										userHasPermissionManageApps(
-											agreement
-										) && (
-											<AdminAgreementExtensions
 												agreement={agreement}
 											/>
 										)}

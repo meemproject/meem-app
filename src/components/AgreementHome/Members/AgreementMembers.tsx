@@ -45,10 +45,17 @@ export const AgreementMembersComponent: React.FC = () => {
 			allMembers.forEach(member => {
 				if (
 					(member.displayName &&
-						member.displayName.toLowerCase().includes(search)) ||
-					(member.ens && member.ens.toLowerCase().includes(search)) ||
+						member.displayName
+							.toLowerCase()
+							.includes(search.toLowerCase())) ||
+					(member.ens &&
+						member.ens
+							.toLowerCase()
+							.includes(search.toLowerCase())) ||
 					(member.wallet &&
-						member.wallet.toLowerCase().includes(search))
+						member.wallet
+							.toLowerCase()
+							.includes(search.toLowerCase()))
 				) {
 					newFiltered.push(member)
 				}
@@ -160,16 +167,19 @@ export const AgreementMembersComponent: React.FC = () => {
 									<Link
 										href={`/${agreement.slug}`}
 										legacyBehavior
+										passHref
 									>
-										<Image
-											width={80}
-											height={80}
-											radius={8}
-											className={
-												meemTheme.imageAgreementLogo
-											}
-											src={agreement.image}
-										/>
+										<a className={meemTheme.unstyledLink}>
+											<Image
+												width={80}
+												height={80}
+												radius={8}
+												className={
+													meemTheme.imageAgreementLogo
+												}
+												src={agreement.image}
+											/>
+										</a>
 									</Link>
 								</div>
 							)}
@@ -197,8 +207,14 @@ export const AgreementMembersComponent: React.FC = () => {
 							</div>
 						</div>
 						<div className={meemTheme.pageHeaderExitButton}>
-							<Link href={`/${agreement.slug}`} legacyBehavior>
-								<DeleteCircle width={24} height={24} />
+							<Link
+								href={`/${agreement.slug}`}
+								legacyBehavior
+								passHref
+							>
+								<a className={meemTheme.unstyledLink}>
+									<DeleteCircle width={24} height={24} />
+								</a>
 							</Link>
 						</div>
 					</div>

@@ -15,6 +15,7 @@ export const SUB_DISCORD = gql`
 		Discords(where: { agreementId: { _eq: $agreementId } }) {
 			id
 			agreementId
+			guildId
 			name
 			icon
 		}

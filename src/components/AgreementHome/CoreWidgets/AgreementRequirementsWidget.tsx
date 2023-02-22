@@ -15,7 +15,7 @@ import {
 	colorGreen,
 	colorBlue,
 	useMeemTheme,
-	colorRed
+	colorOrangeRed
 } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
@@ -362,12 +362,17 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 									<Link
 										href={`/${agreement.slug}/admin?tab=membershiprequirements`}
 										legacyBehavior
+										passHref
 									>
-										<div>
-											<Settings
-												className={meemTheme.clickable}
-											/>
-										</div>
+										<a className={meemTheme.unstyledLink}>
+											<div>
+												<Settings
+													className={
+														meemTheme.clickable
+													}
+												/>
+											</div>
+										</a>
 									</Link>
 								</div>
 							)}
@@ -407,7 +412,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 										<DeleteCircle
 											width={24}
 											height={24}
-											color={colorRed}
+											color={colorOrangeRed}
 										/>
 									)}
 									<Space w={12} />
@@ -430,10 +435,13 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 							<Link
 								href={`/${agreement.slug}/admin?tab=membershiprequirements`}
 								legacyBehavior
+								passHref
 							>
-								<Button className={meemTheme.buttonAsh}>
-									Edit requirements
-								</Button>
+								<a className={meemTheme.unstyledLink}>
+									<Button className={meemTheme.buttonAsh}>
+										Edit requirements
+									</Button>
+								</a>
 							</Link>
 						</Center>
 					</>

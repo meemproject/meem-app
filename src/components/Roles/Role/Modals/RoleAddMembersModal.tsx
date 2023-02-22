@@ -98,10 +98,17 @@ export const RoleAddMembersModal: React.FC<IProps> = ({
 			allMembers.forEach(member => {
 				if (
 					(member.displayName &&
-						member.displayName.toLowerCase().includes(search)) ||
-					(member.ens && member.ens.toLowerCase().includes(search)) ||
+						member.displayName
+							.toLowerCase()
+							.includes(search.toLowerCase())) ||
+					(member.ens &&
+						member.ens
+							.toLowerCase()
+							.includes(search.toLowerCase())) ||
 					(member.wallet &&
-						member.wallet.toLowerCase().includes(search))
+						member.wallet
+							.toLowerCase()
+							.includes(search.toLowerCase()))
 				) {
 					newFiltered.push(member)
 				}

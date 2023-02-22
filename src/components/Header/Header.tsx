@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import {
 	Header,
 	Text,
@@ -30,9 +32,11 @@ import {
 	NavArrowDown,
 	SunLight
 } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
@@ -56,18 +60,6 @@ export function HeaderMenu() {
 
 	const { user } = useMeemUser()
 
-	const handleDiscord = () => {
-		window.open('https://discord.gg/jgxuK6662v')
-	}
-
-	const handleContactUs = () => {
-		window.open('mailto:hello@weareprosocial.com')
-	}
-
-	const handleShareFeedback = () => {
-		window.open('https://airtable.com/shrM296vRoDWmK8Rm')
-	}
-
 	const [isAgreementsFAQModalOpen, setIsAgreementsFAQModalOpen] =
 		useState(false)
 
@@ -84,41 +76,41 @@ export function HeaderMenu() {
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
-	useEffect(() => {
-		if (
-			isConnected &&
-			loginState === LoginState.NotLoggedIn &&
-			router.pathname !== '/authenticate'
-		) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return:
-						window.location.pathname.length > 5
-							? window.location.pathname
-							: '/'
-				}
-			})
-		}
-	}, [isConnected, loginState, router])
+	// useEffect(() => {
+	// 	if (
+	// 		isConnected &&
+	// 		loginState === LoginState.NotLoggedIn &&
+	// 		window &&
+	// 		!window.location.href.includes('/authenticate')
+	// 	) {
+	// 		Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
+	// 		router.push('/authenticate')
+	// 	}
+	// }, [isConnected, loginState, router])
 
 	return (
 		<Header className={meemTheme.siteHeader} height={56}>
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
 					<Space w={8} />
-					<Link href={`/`} legacyBehavior>
-						<Image
-							className={meemTheme.clickable}
-							src={
-								isDarkTheme
-									? '/meem-logo-white.svg'
-									: '/meem-logo.svg'
-							}
-							fit={'contain'}
-							height={20}
-							width={80}
-						/>
+					<Link
+						href={`https://build.meem.wtf`}
+						legacyBehavior
+						passHref
+					>
+						<a className={meemTheme.unstyledLink}>
+							<Image
+								className={meemTheme.clickable}
+								src={
+									isDarkTheme
+										? '/meem-logo-white.svg'
+										: '/meem-logo.svg'
+								}
+								fit={'contain'}
+								height={20}
+								width={80}
+							/>
+						</a>
 					</Link>
 					<div className={meemTheme.visibleDesktopOnly}>
 						<div style={{ display: 'flex' }}>
@@ -225,27 +217,41 @@ export function HeaderMenu() {
 
 										<Link
 											href={`/profile?tab=identity`}
+											passHref
 											legacyBehavior
 										>
-											<Menu.Item
+											<a
 												className={
-													meemTheme.tExtraSmallBold
+													meemTheme.unstyledLink
 												}
 											>
-												<Text>My Profile</Text>
-											</Menu.Item>
+												<Menu.Item
+													className={
+														meemTheme.tExtraSmallBold
+													}
+												>
+													<Text>My Profile</Text>
+												</Menu.Item>
+											</a>
 										</Link>
 										<Link
 											href={`/profile?tab=myCommunities`}
 											legacyBehavior
+											passHref
 										>
-											<Menu.Item
+											<a
 												className={
-													meemTheme.tExtraSmallBold
+													meemTheme.unstyledLink
 												}
 											>
-												<Text>My Communities</Text>
-											</Menu.Item>
+												<Menu.Item
+													className={
+														meemTheme.tExtraSmallBold
+													}
+												>
+													<Text>My Communities</Text>
+												</Menu.Item>
+											</a>
 										</Link>
 									</>
 								)}
@@ -274,12 +280,11 @@ export function HeaderMenu() {
 						>
 							<a
 								onClick={() => {
-									router.push({
-										pathname: '/authenticate',
-										query: {
-											return: window.location.pathname
-										}
-									})
+									Cookies.set(
+										CookieKeys.authRedirectUrl,
+										window.location.toString()
+									)
+									router.push('/authenticate')
 								}}
 							>
 								Join Meem
@@ -336,40 +341,81 @@ export function HeaderMenu() {
 							<Divider />
 							<Space h={4} />
 
-							<Menu.Item
-								onClick={handleDiscord}
-								style={{
-									marginBottom: '-2px',
-									marginTop: '-2px'
-								}}
-								className={meemTheme.tExtraSmallBold}
-								icon={<Discord height={20} width={20} />}
+							<Link
+								href={`https://discord.gg/jgxuK6662v`}
+								legacyBehavior
+								passHref
 							>
-								Our community
-							</Menu.Item>
-							<Menu.Item
-								onClick={handleContactUs}
-								style={{
-									marginBottom: '-2px',
-									marginTop: '-2px'
-								}}
-								className={meemTheme.tExtraSmallBold}
-								icon={<Mail height={20} width={20} />}
+								<a
+									target="_blank"
+									rel="noreferrer noopener"
+									className={meemTheme.unstyledLink}
+								>
+									<Menu.Item
+										style={{
+											marginBottom: '-2px',
+											marginTop: '-2px'
+										}}
+										className={meemTheme.tExtraSmallBold}
+										icon={
+											<Discord height={20} width={20} />
+										}
+									>
+										Our community
+									</Menu.Item>
+								</a>
+							</Link>
+
+							<Link
+								href={`mailto:hello@weareprosocial.com`}
+								legacyBehavior
+								passHref
 							>
-								Contact Us
-							</Menu.Item>
-							<Menu.Item
-								onClick={handleShareFeedback}
-								className={meemTheme.tExtraSmallBold}
-								style={{
-									color: colorDarkBlue,
-									marginBottom: '-2px',
-									marginTop: '-2px'
-								}}
-								icon={<MessageText height={20} width={20} />}
+								<a
+									target="_blank"
+									rel="noreferrer noopener"
+									className={meemTheme.unstyledLink}
+								>
+									<Menu.Item
+										style={{
+											marginBottom: '-2px',
+											marginTop: '-2px'
+										}}
+										className={meemTheme.tExtraSmallBold}
+										icon={<Mail height={20} width={20} />}
+									>
+										Contact Us
+									</Menu.Item>
+								</a>
+							</Link>
+							<Link
+								href={`https://airtable.com/shrM296vRoDWmK8Rm`}
+								legacyBehavior
+								passHref
 							>
-								Share Feedback
-							</Menu.Item>
+								<a
+									target="_blank"
+									rel="noreferrer noopener"
+									className={meemTheme.unstyledLink}
+								>
+									<Menu.Item
+										className={meemTheme.tExtraSmallBold}
+										style={{
+											color: colorDarkBlue,
+											marginBottom: '-2px',
+											marginTop: '-2px'
+										}}
+										icon={
+											<MessageText
+												height={20}
+												width={20}
+											/>
+										}
+									>
+										Share Feedback
+									</Menu.Item>
+								</a>
+							</Link>
 						</Menu.Dropdown>
 					</Menu>
 				</div>

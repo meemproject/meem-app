@@ -20,10 +20,7 @@ export const MeemCreateCommunityWidget: React.FC<IProps> = ({ agreement }) => {
 		<div>
 			{shouldShowWidget && (
 				<>
-					<div
-						className={meemTheme.widgetMeem}
-						style={{ marginTop: 4 }}
-					>
+					<div className={meemTheme.widgetMeem}>
 						<Space h={16} />
 
 						<Center>
@@ -51,7 +48,6 @@ export const MeemCreateCommunityWidget: React.FC<IProps> = ({ agreement }) => {
 			)}
 			<CreateAgreementModal
 				isOpened={isCreationModalOpen}
-				quietMode={false}
 				onModalClosed={function (): void {
 					setIsCreationModalOpen(false)
 				}}

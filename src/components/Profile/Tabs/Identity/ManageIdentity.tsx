@@ -408,7 +408,7 @@ export const ManageIdentityComponent: React.FC = () => {
 													connection:
 														extension.connectionName,
 													redirectUri:
-														window.location.href
+														window.location.toString()
 												})
 											}}
 										>
@@ -465,7 +465,7 @@ export const ManageIdentityComponent: React.FC = () => {
 			>
 				Save Changes
 			</Button>
-			<Space h={'xl'} />
+			<Space h={96} />
 
 			<ManageLinkedAccountModal
 				userIdentity={userIdentityCurrentlyEditing}

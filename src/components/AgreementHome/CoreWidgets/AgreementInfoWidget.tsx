@@ -8,7 +8,6 @@ import {
 	Center,
 	Modal,
 	Divider,
-	useMantineColorScheme,
 	Loader
 } from '@mantine/core'
 import { cleanNotifications } from '@mantine/notifications'
@@ -22,6 +21,7 @@ import {
 import { getAgreementContract, MeemAPI } from '@meemproject/sdk'
 import { Contract, ethers } from 'ethers'
 import { QrCode, Settings } from 'iconoir-react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
@@ -29,6 +29,7 @@ import QRCode from 'react-qr-code'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
 import { Agreement } from '../../../model/agreement/agreements'
+import { CookieKeys } from '../../../utils/cookies'
 import {
 	showErrorNotification,
 	showSuccessNotification
@@ -62,9 +63,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	const [isAgreementDetailsModalOpen, setIsAgreementDetailsModalOpen] =
 		useState(false)
 
-	const { colorScheme } = useMantineColorScheme()
-	const isDarkTheme = colorScheme === 'dark'
-
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
 		{
@@ -82,12 +80,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		}
 
 		if (wallet.loginState !== LoginState.LoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${agreement?.slug}`
-				}
-			})
+			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}`)
+			router.push('/authenticate')
 			return
 		}
 
@@ -241,12 +235,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 		}
 
 		if (wallet.loginState !== LoginState.LoggedIn) {
-			router.push({
-				pathname: '/authenticate',
-				query: {
-					return: `/${agreement?.slug}`
-				}
-			})
+			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}`)
+			router.push('/authenticate')
 			return
 		}
 
@@ -333,14 +323,17 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 							<Link
 								href={`/${agreement.slug}/admin?tab=icon`}
 								legacyBehavior
+								passHref
 							>
-								<Image
-									className={meemTheme.clickable}
-									height={150}
-									width={150}
-									radius={16}
-									src={'/community-no-icon.png'}
-								/>
+								<a className={meemTheme.unstyledLink}>
+									<Image
+										className={meemTheme.clickable}
+										height={150}
+										width={150}
+										radius={16}
+										src={'/community-no-icon.png'}
+									/>
+								</a>
 							</Link>
 						</Center>
 					</>
@@ -358,18 +351,30 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				<Space h={16} />
 				{!agreement.isLaunched && (
 					<>
-						<Space h={16} />
+						<Space
+							h={16}
+							className={meemTheme.visibleDesktopOnly}
+						/>
+						<Space h={4} className={meemTheme.visibleMobileOnly} />
+
 						<Center>
 							<Link
 								href={`/${agreement.slug}/admin?tab=details`}
 								legacyBehavior
+								passHref
 							>
-								<Button className={meemTheme.buttonAsh}>
-									Edit info
-								</Button>
+								<a className={meemTheme.unstyledLink}>
+									<Button className={meemTheme.buttonAsh}>
+										Edit info
+									</Button>
+								</a>
 							</Link>
 						</Center>
-						<Space h={16} />
+						<Space
+							h={16}
+							className={meemTheme.visibleDesktopOnly}
+						/>
+						<Space h={4} className={meemTheme.visibleMobileOnly} />
 					</>
 				)}
 				{agreement.isLaunched && (
@@ -495,82 +500,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 								</Button>
 							</div>
 						</Center>
-						{agreement.extensions &&
-							agreement.extensions?.filter(
-								ext =>
-									ext.AgreementExtensionLinks.length > 0 &&
-									ext.isSetupComplete &&
-									ext.metadata.sidebarVisible
-							).length > 0 && <Space h={12} />}
-						{agreement.extensions &&
-							agreement.extensions?.filter(
-								ext =>
-									ext.AgreementExtensionLinks.length > 0 &&
-									ext.isSetupComplete &&
-									ext.metadata.sidebarVisible
-							).length > 0 && (
-								<>
-									<Center>
-										<div
-											className={meemTheme.row}
-											style={{ flexWrap: 'wrap' }}
-										>
-											{agreement.extensions
-												?.filter(
-													ext =>
-														ext
-															.AgreementExtensionLinks
-															.length > 0 &&
-														ext.metadata
-															.sidebarVisible
-												)
-												.map(extension => (
-													<div key={extension.id}>
-														<Button
-															style={{
-																margin: 3
-															}}
-															className={
-																meemTheme.buttonWhite
-															}
-															onClick={() => {
-																if (
-																	extension
-																		.AgreementExtensionLinks[0]
-																) {
-																	window.open(
-																		extension
-																			.AgreementExtensionLinks[0]
-																			.url
-																	)
-																}
-															}}
-														>
-															<Image
-																width={20}
-																src={`/${
-																	isDarkTheme
-																		? `${(
-																				extension
-																					.Extension
-																					?.icon ??
-																				''
-																		  ).replace(
-																				'.png',
-																				'-white.png'
-																		  )}`
-																		: extension
-																				.Extension
-																				?.icon
-																}`}
-															/>
-														</Button>
-													</div>
-												))}
-										</div>
-									</Center>
-								</>
-							)}
 
 						<Space h={32} />
 						<Center>
@@ -588,17 +517,23 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				)}
 
 				{agreement.isCurrentUserAgreementAdmin && (
-					<Link href={`/${agreement.slug}/admin`} legacyBehavior>
-						<div>
-							<Settings
-								style={{
-									position: 'absolute',
-									top: 16,
-									right: 16,
-									cursor: 'pointer'
-								}}
-							/>
-						</div>
+					<Link
+						href={`/${agreement.slug}/admin`}
+						legacyBehavior
+						passHref
+					>
+						<a className={meemTheme.unstyledLink}>
+							<div>
+								<Settings
+									style={{
+										position: 'absolute',
+										top: 16,
+										right: 16,
+										cursor: 'pointer'
+									}}
+								/>
+							</div>
+						</a>
 					</Link>
 				)}
 			</div>

@@ -1,113 +1,33 @@
-import { Button, Center, Space, Text } from '@mantine/core'
-import Link from 'next/link'
-import React from 'react'
-import {
-	Agreement,
-	extensionFromSlug
-} from '../../../model/agreement/agreements'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { Space } from '@mantine/core'
+import React, { useState } from 'react'
+import { ExtensionSettingsModal } from '../ExtensionSettingsModal'
+import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
+import { SymphonyExtension } from './SymphonyExtension'
 
-/*
-Access agreement-level data using the 'agreement' object.
-*/
-interface IProps {
-	agreement: Agreement
-}
-
-/*
-Be sure to import your widget in AgreementHome.tsx to ensure it is displayed
-when enabled.
-*/
-export const SymphonyWidget: React.FC<IProps> = ({ agreement }) => {
-	/*
-	Use the meemTheme object to access agreements styles
-	such as colors, fonts and layouts
-	*/
-	const { classes: meemTheme } = useMeemTheme()
-
-	const agreementExtension = extensionFromSlug('symphony', agreement)
+export const SymphonyWidget: React.FC = () => {
+	const extensionSlug = 'symphony'
+	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
 
 	return (
-		/*
-		Ensure your widget's UI is contained entirely within the parent <div> element.
-		*/
-		<div className={meemTheme.widgetLight}>
-			<div className={meemTheme.spacedRowCentered}>
-				<div className={meemTheme.centeredRow}>
-					<Text className={meemTheme.tMediumBold}>Symphony</Text>
-					<Space w={6} />
+		<>
+			<ExtensionWidgetContainer
+				extensionSlug={extensionSlug}
+				onSettingsOpened={function (): void {
+					setIsSettingsModalOpened(true)
+				}}
+			>
+				<div>
+					<SymphonyExtension />
+					<Space h={16} />
 				</div>
-				{/* <div className={meemTheme.centeredRow}>
-					{agreement.isCurrentUserAgreementAdmin && (
-						<div className={meemTheme.row}>
-							<Space w={8} />
-							<Link
-								href={`/${agreement.slug}/e/symphony/settings`}
-							>
-								<Settings className={meemTheme.clickable} />
-							</Link>
-						</div>
-					)}
-				</div> */}
-			</div>
-			<Space h={24} />
-			{!agreement.isCurrentUserAgreementAdmin && (
-				<Center>
-					<Text
-						className={meemTheme.tSmallBold}
-					>{`${agreement.name} is using Symphony to publish together on Twitter!`}</Text>
-				</Center>
-			)}
-			{agreement.isCurrentUserAgreementMember && (
-				<>
-					{!agreementExtension?.isSetupComplete && (
-						<>
-							<Center>
-								<Text className={meemTheme.tSmallBold}>
-									You have not yet set up any Symphony rules.
-								</Text>
-							</Center>
-							<Space h={12} />
-							<Center>
-								<Link
-									href={`/${agreement.slug}/e/symphony/settings`}
-									legacyBehavior
-								>
-									<Button
-										className={meemTheme.buttonDarkGrey}
-									>
-										Continue Symphony setup
-									</Button>
-								</Link>
-							</Center>
-						</>
-					)}
-					{agreementExtension?.isSetupComplete && (
-						<>
-							<Center>
-								<Text className={meemTheme.tSmallBold}>
-									Your Symphony rules are set up. Click below
-									to change them.
-								</Text>
-							</Center>
-							<Space h={12} />
-							<Center>
-								<Link
-									href={`/${agreement.slug}/e/symphony/settings`}
-									legacyBehavior
-								>
-									<Button
-										className={meemTheme.buttonDarkGrey}
-									>
-										Configure Symphony
-									</Button>
-								</Link>
-							</Center>
-						</>
-					)}
-					<Space h={8} />
-				</>
-			)}
-		</div>
+			</ExtensionWidgetContainer>
+			<ExtensionSettingsModal
+				extensionSlug={extensionSlug}
+				isOpened={isSettingsModalOpened}
+				onModalClosed={function (): void {
+					setIsSettingsModalOpened(false)
+				}}
+			/>
+		</>
 	)
 }

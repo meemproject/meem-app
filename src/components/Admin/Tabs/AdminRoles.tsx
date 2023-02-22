@@ -11,6 +11,7 @@ import {
 } from '@mantine/core'
 import { Group, Lock, MoreHorizCircle } from 'iconoir-react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Agreement, AgreementRole } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
@@ -30,6 +31,7 @@ interface IProps {
 export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
+	const router = useRouter()
 	const [isDeleteRoleModalOpen, setIsDeleteRoleModalOpened] = useState(false)
 
 	const [roleToDelete, setRoleToDelete] = useState<AgreementRole>()
@@ -58,60 +60,66 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 							}}
 							key={role.id}
 						>
-							<Link
-								href={`/${agreement.slug}/roles?role=${role.id}`}
-								legacyBehavior
+							<div
+								className={meemTheme.centeredRow}
+								style={{
+									width: '100%',
+									paddingTop: 8,
+									paddingBottom: 8
+								}}
+								onClick={() => {
+									router.push(
+										`/${agreement.slug}/roles?role=${role.id}`
+									)
+								}}
 							>
-								<div className={meemTheme.centeredRow}>
-									{role.isAdminRole && (
+								{role.isAdminRole && (
+									<>
+										<Lock
+											height={16}
+											width={16}
+											style={{ marginBottom: 1 }}
+										/>
+										<Space w={4} />
+									</>
+								)}
+								<Text>{role.name}</Text>
+								<Space w={8} />
+								<Badge
+									gradient={{
+										from: isDarkTheme
+											? colorDarkerGrey
+											: '#DCDCDC',
+										to: isDarkTheme
+											? colorDarkerGrey
+											: '#DCDCDC',
+										deg: 35
+									}}
+									classNames={{
+										inner: meemTheme.tBadgeText
+									}}
+									variant={'gradient'}
+									leftSection={
 										<>
-											<Lock
-												height={16}
-												width={16}
-												style={{ marginBottom: 1 }}
+											<Group
+												color={
+													isDarkTheme
+														? colorWhite
+														: colorBlack
+												}
+												style={{
+													marginTop: 5
+												}}
 											/>
-											<Space w={4} />
 										</>
-									)}
-									<Text>{role.name}</Text>
-									<Space w={8} />
-									<Badge
-										gradient={{
-											from: isDarkTheme
-												? colorDarkerGrey
-												: '#DCDCDC',
-											to: isDarkTheme
-												? colorDarkerGrey
-												: '#DCDCDC',
-											deg: 35
-										}}
-										classNames={{
-											inner: meemTheme.tBadgeText
-										}}
-										variant={'gradient'}
-										leftSection={
-											<>
-												<Group
-													color={
-														isDarkTheme
-															? colorWhite
-															: colorBlack
-													}
-													style={{
-														marginTop: 5
-													}}
-												/>
-											</>
-										}
-									>
-										{
-											agreement.memberRolesMap?.get(
-												role.id
-											)?.length
-										}
-									</Badge>
-								</div>
-							</Link>
+									}
+								>
+									{
+										agreement.memberRolesMap?.get(role.id)
+											?.length
+									}
+								</Badge>
+							</div>
 							<div
 								style={{
 									width: 32,
@@ -129,16 +137,23 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 										<Link
 											href={`/${agreement.slug}/roles?role=${role.id}`}
 											legacyBehavior
+											passHref
 										>
-											<Menu.Item>
-												<Text
-													className={
-														meemTheme.tSmallBold
-													}
-												>
-													Manage Role
-												</Text>
-											</Menu.Item>
+											<a
+												className={
+													meemTheme.unstyledLink
+												}
+											>
+												<Menu.Item>
+													<Text
+														className={
+															meemTheme.tSmallBold
+														}
+													>
+														Manage Role
+													</Text>
+												</Menu.Item>
+											</a>
 										</Link>
 
 										{!role.isAdminRole && (
@@ -172,10 +187,13 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 					<Link
 						href={`/${agreement.slug}/roles?createRole=true`}
 						legacyBehavior
+						passHref
 					>
-						<Button className={meemTheme.buttonBlack}>
-							+ Create Role
-						</Button>
+						<a className={meemTheme.unstyledLink}>
+							<Button className={meemTheme.buttonBlack}>
+								+ Create Role
+							</Button>
+						</a>
 					</Link>
 				</>
 			)}
