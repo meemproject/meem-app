@@ -12,6 +12,7 @@ import {
 	Modal
 } from '@mantine/core'
 import { useMeemApollo, useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../generated/graphql'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../graphql/agreements'
@@ -139,7 +140,10 @@ export const AddExtensionModal: React.FC<IProps> = ({
 			agreementId: agreement?.id ?? '',
 			extensionId: extension.id,
 			isInitialized: true,
-			isSetupComplete: !extension.isSetupRequired
+			isSetupComplete: !extension.isSetupRequired,
+			widget: {
+				visibility: MeemAPI.AgreementExtensionVisibility.TokenHolders
+			}
 		})
 		// Required to avoid a race condition where the extension has not
 		// yet been enabled on the database

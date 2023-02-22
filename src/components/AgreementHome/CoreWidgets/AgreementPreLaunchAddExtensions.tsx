@@ -6,8 +6,7 @@ import {
 	Space,
 	Text,
 	Image,
-	useMantineColorScheme,
-	Badge
+	useMantineColorScheme
 } from '@mantine/core'
 import { useMeemApollo } from '@meemproject/react'
 import { CheckCircle } from 'iconoir-react'
@@ -16,12 +15,7 @@ import { GetExtensionsQuery } from '../../../../generated/graphql'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
-import {
-	colorAsh,
-	colorDarkerGrey,
-	colorGreen,
-	useMeemTheme
-} from '../../Styles/MeemTheme'
+import { colorGreen, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 	onChosenExtensionsChanged: (chosenExtensions: string[]) => void
@@ -216,39 +210,11 @@ export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 												>
 													{extension.description}
 												</Text>
-
-												{extension.capabilities.includes(
-													'widget'
-												) && (
-													<Badge
-														gradient={{
-															from: isDarkTheme
-																? colorDarkerGrey
-																: colorAsh,
-															to: isDarkTheme
-																? colorDarkerGrey
-																: colorAsh,
-															deg: 35
-														}}
-														classNames={{
-															inner: meemTheme.tBadgeText
-														}}
-														style={{
-															position:
-																'absolute',
-															top: 16,
-															right: 16
-														}}
-														variant={'gradient'}
-													>
-														Widget
-													</Badge>
-												)}
 											</div>
 											<div
 												style={{
 													position: 'absolute',
-													top: 76,
+													top: 8,
 													right: 8
 												}}
 											>

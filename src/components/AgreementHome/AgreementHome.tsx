@@ -55,7 +55,11 @@ export const AgreementHome: React.FC = () => {
 				await sdk.agreementExtension.createAgreementExtension({
 					agreementId,
 					extensionId: ext,
-					isInitialized: true
+					isInitialized: true,
+					widget: {
+						visibility:
+							MeemAPI.AgreementExtensionVisibility.TokenHolders
+					}
 				})
 			}
 			log.debug(`launching agreement...`)
