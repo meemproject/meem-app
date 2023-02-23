@@ -108,7 +108,7 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 							{totalExtensions === 0 && (
 								<div
 									className={meemTheme.widgetExtension}
-									style={{ marginTop: -20, padding: 32 }}
+									style={{ padding: 32 }}
 								>
 									<Space h={16} />
 									<Center>
