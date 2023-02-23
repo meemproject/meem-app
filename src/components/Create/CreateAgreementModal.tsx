@@ -163,6 +163,15 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 					className={meemTheme.buttonBlack}
 					onClick={() => {
 						checkName(agreementName)
+						const dataLayer = (window as any).dataLayer ?? null
+
+						dataLayer?.push({
+							event: 'event',
+							eventProps: {
+								category: 'Create Your Community',
+								action: 'Create Community'
+							}
+						})
 					}}
 				>
 					Next

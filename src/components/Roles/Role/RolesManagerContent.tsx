@@ -111,6 +111,15 @@ export const RolesManagerContent: React.FC<IProps> = ({
 		// 2. Save changes
 		// 3. When change detected, refresh the page, ideally to where the previous tab was
 		setIsSaveChangesModalOpened(true)
+		const dataLayer = (window as any).dataLayer ?? null
+
+		dataLayer?.push({
+			event: 'event',
+			eventProps: {
+				category: 'Add Role',
+				action: 'Create New Role'
+			}
+		})
 	}
 
 	return (

@@ -242,17 +242,43 @@ export const SymphonyExtension: React.FC = () => {
 	}, [router, agreement, jwt])
 
 	const handleReauthenticate = useCallback(async () => {
+		const dataLayer = (window as any).dataLayer ?? null
+
 		switch (selectedConnection) {
 			case SelectedConnection.ConnectionDiscord:
 				handleInviteBot()
+				dataLayer?.push({
+					event: 'event',
+					eventProps: {
+						category: 'Symphony Extension',
+						action: 'Manage Connection',
+						label: 'Reconnect Discord'
+					}
+				})
 				break
 
 			case SelectedConnection.ConnectionTwitter:
 				handleAuthTwitter()
+				dataLayer?.push({
+					event: 'event',
+					eventProps: {
+						category: 'Symphony Extension',
+						action: 'Manage Connection',
+						label: 'Reconnect Twitter'
+					}
+				})
 				break
 
 			case SelectedConnection.ConnectionSlack:
 				handleAuthSlack()
+				dataLayer?.push({
+					event: 'event',
+					eventProps: {
+						category: 'Symphony Extension',
+						action: 'Manage Connection',
+						label: 'Reconnect Slack'
+					}
+				})
 				break
 
 			default:
@@ -269,6 +295,8 @@ export const SymphonyExtension: React.FC = () => {
 	])
 
 	const handleDisconnect = useCallback(async () => {
+		const dataLayer = (window as any).dataLayer ?? null
+
 		if (!jwt || !agreement?.id) {
 			return
 		}
@@ -292,6 +320,15 @@ export const SymphonyExtension: React.FC = () => {
 						'Discord has been disconnected'
 					)
 					setIsDisconnectModalOpen(false)
+
+					dataLayer?.push({
+						event: 'event',
+						eventProps: {
+							category: 'Symphony Extension',
+							action: 'Manage Connection',
+							label: 'Disconnect Discord'
+						}
+					})
 					break
 
 				case SelectedConnection.ConnectionTwitter:
@@ -312,6 +349,14 @@ export const SymphonyExtension: React.FC = () => {
 						'Twitter has been disconnected'
 					)
 					setIsDisconnectModalOpen(false)
+					dataLayer?.push({
+						event: 'event',
+						eventProps: {
+							category: 'Symphony Extension',
+							action: 'Manage Connection',
+							label: 'Disconnect Twitter'
+						}
+					})
 					break
 
 				default:
@@ -971,7 +1016,18 @@ export const SymphonyExtension: React.FC = () => {
 			<Button
 				className={meemTheme.buttonDarkGrey}
 				disabled={!discordInfo}
-				onClick={() => setIsRuleBuilderOpen(true)}
+				onClick={() => {
+					setIsRuleBuilderOpen(true)
+					const dataLayer = (window as any).dataLayer ?? null
+
+					dataLayer?.push({
+						event: 'event',
+						eventProps: {
+							category: 'Symphony Extension',
+							action: 'Add Rule'
+						}
+					})
+				}}
 			>
 				+ Add rule
 			</Button>
