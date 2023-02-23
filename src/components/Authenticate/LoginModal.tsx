@@ -38,42 +38,47 @@ export const LoginForm: React.FC<ILoginFormProps> = ({ onRequestClose }) => {
 			<div>
 				<Center>
 					<div className={meemTheme.rowResponsive}>
-						<div
-							className={meemTheme.connectMethodGridItem}
-							style={{
-								position: 'relative'
-							}}
-							onClick={() => {
-								connectWallet('injected')
-								if (onRequestClose) {
-									onRequestClose()
-								}
-							}}
-						>
+						<div className={meemTheme.visibleDesktopOnly}>
 							<div
-								className={
-									meemTheme.connectMethodGridItemContent
-								}
+								className={meemTheme.connectMethodGridItem}
+								style={{
+									position: 'relative'
+								}}
+								onClick={() => {
+									connectWallet('injected')
+									if (onRequestClose) {
+										onRequestClose()
+									}
+								}}
 							>
-								<Center>
-									<Image
-										src={`/connect-metamask.svg`}
-										height={24}
-										fit={'contain'}
-									/>
-								</Center>
+								<div
+									className={
+										meemTheme.connectMethodGridItemContent
+									}
+								>
+									<Center>
+										<Image
+											src={`/connect-metamask.svg`}
+											height={24}
+											fit={'contain'}
+										/>
+									</Center>
 
-								<Space h={16} />
+									<Space h={16} />
 
-								<Center>
-									<Text className={meemTheme.tSmallBold}>
-										Metamask
-									</Text>
-								</Center>
+									<Center>
+										<Text className={meemTheme.tSmallBold}>
+											Metamask
+										</Text>
+									</Center>
+								</div>
 							</div>
 						</div>
-						<Space w={24} />
-						<Space h={16} />
+						<Space
+							w={24}
+							className={meemTheme.visibleDesktopOnly}
+						/>
+
 						<div
 							className={meemTheme.connectMethodGridItem}
 							style={{
