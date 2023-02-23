@@ -1,5 +1,5 @@
 
-echo Meem Extension Creator v1.0
+echo Meem Extension Creator v2.0
 
 # Get some user input
 echo ' '
@@ -21,24 +21,6 @@ then
     exit 
 fi
 
-echo What kind of Extension are you building?
-echo ' '
-
-PS3='Enter your choice: '
-extensionTypes=("Standard" "Link")
-select extType in "${extensionTypes[@]}"
-do
-    case $extType in
-        "Standard (This Extension has a homepage and/or Widget)")
-            break
-            ;;
-        "Link (This Extension is just a link to another website)")
-            break
-            ;;
-    esac
-    break
-done
-
 # Derive extension slug from extension name
 extUpperCamelCase=`echo ${extensionName// /_}`
 extUpperCamelCase=`echo $extUpperCamelCase | perl -pe 's/(^|_)./uc($&)/ge;s/_//g'`
@@ -47,61 +29,27 @@ extSlug=`echo ${extSlug// /-}`
 
 # Copy files and replace their contents where necessary
 echo ' '
-echo Setting up $extensionName Extension, which is a $extType Extension...
+echo Setting up $extensionName Extension...
 echo ' '
-if [ $extType = "Standard" ]
-then
-    echo 'Copying Standard Extension files...'
-    cp -R $PWD/exampleextension/components/Example $PWD/src/components/Extensions
-    cp -R $PWD/exampleextension/pages/example $PWD/src/pages/[slug]/e
-    echo 'Setting up Extension files...'
 
-    # Rename variables within extension files
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleExtensionHome.tsx
-    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleExtensionHome.tsx
+echo 'Copying Standard Extension files...'
+cp -R $PWD/exampleextension/components/Example $PWD/src/components/Extensions
+echo 'Setting up Extension files...'
 
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleExtensionSettings.tsx
-    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleExtensionSettings.tsx
+# Rename variables within extension files
+perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleExtension.tsx
+perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleExtension.tsx
 
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleWidget.tsx
-    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleWidget.tsx
-    
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/pages/[slug]/e/example/index.tsx
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/pages/[slug]/e/example/index.tsx
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/pages/[slug]/e/example/settings.tsx
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/pages/[slug]/e/example/settings.tsx
+perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/Example/ExampleWidget.tsx
+perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/Example/ExampleWidget.tsx
 
-    # Rename directories
-    mv $PWD/src/components/Extensions/Example/ExampleExtensionHome.tsx $PWD/src/components/Extensions/Example/${extUpperCamelCase}ExtensionHome.tsx
-    mv $PWD/src/components/Extensions/Example/ExampleExtensionSettings.tsx $PWD/src/components/Extensions/Example/${extUpperCamelCase}ExtensionSettings.tsx
-    mv $PWD/src/components/Extensions/Example/ExampleWidget.tsx $PWD/src/components/Extensions/Example/${extUpperCamelCase}Widget.tsx
-    mv $PWD/src/components/Extensions/Example $PWD/src/components/Extensions/$extUpperCamelCase
-    mv $PWD/src/pages/[slug]/e/example $PWD/src/pages/[slug]/e/$extSlug
+# Rename directories
+mv $PWD/src/components/Extensions/Example/ExampleExtension.tsx $PWD/src/components/Extensions/Example/${extUpperCamelCase}Extension.tsx
+mv $PWD/src/components/Extensions/Example/ExampleWidget.tsx $PWD/src/components/Extensions/Example/${extUpperCamelCase}Widget.tsx
+mv $PWD/src/components/Extensions/Example $PWD/src/components/Extensions/$extUpperCamelCase
+mv $PWD/src/pages/[slug]/e/example $PWD/src/pages/[slug]/e/$extSlug
 
-    echo 'All done. Get coding!'
-    exit 
-fi
+echo 'All done. Get coding!'
 
-if [ $extType = "Link" ]
-then
-    echo 'Copying Link Extension files...'
-        cp -R $PWD/exampleextension/components/ExampleLink $PWD/src/components/Extensions
-        cp -R $PWD/exampleextension/pages/examplelink $PWD/src/pages/[slug]/e
-    echo 'Setting up Extension files...'
-     
-    # Rename variables within extension files
-    perl -pi -e "s/Example/$extUpperCamelCase/g" $PWD/src/components/Extensions/ExampleLink/ExampleLinkExtensionSettings.tsx
-    perl -pi -e "s/example/$extSlug/g" $PWD/src/components/Extensions/ExampleLink/ExampleLinkExtensionSettings.tsx
-    perl -pi -e "s/ExampleLinkExtensionSettings/${extUpperCamelCase}LinkExtensionSettings/g" $PWD/src/pages/[slug]/e/examplelink/index.tsx
-    perl -pi -e "s/ExampleLink/${extUpperCamelCase}Link/g" $PWD/src/pages/[slug]/e/examplelink/index.tsx
-    perl -pi -e "s/Example Extension Settings/${extensionName} Settings/g" $PWD/src/pages/[slug]/e/examplelink/index.tsx
-
-    # Rename directories
-    mv $PWD/src/components/Extensions/ExampleLink/ExampleLinkExtensionSettings.tsx $PWD/src/components/Extensions/ExampleLink/${extUpperCamelCase}LinkExtensionSettings.tsx
-    mv $PWD/src/components/Extensions/ExampleLink $PWD/src/components/Extensions/${extUpperCamelCase}Link
-    mv $PWD/src/pages/[slug]/e/examplelink $PWD/src/pages/[slug]/e/$extSlug
-    echo 'All done. Get coding!'
-    exit 
-fi
 
 echo `$PWD/exampleextension/components/Example`
