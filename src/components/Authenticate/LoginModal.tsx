@@ -7,6 +7,7 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
+import { IconBrowser } from '@tabler/icons'
 import React from 'react'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
@@ -74,10 +75,7 @@ export const LoginForm: React.FC<ILoginFormProps> = ({ onRequestClose }) => {
 								</div>
 							</div>
 						</div>
-						<Space
-							w={24}
-							className={meemTheme.visibleDesktopOnly}
-						/>
+						<Space w={24} />
 
 						<div
 							className={meemTheme.connectMethodGridItem}
@@ -111,6 +109,40 @@ export const LoginForm: React.FC<ILoginFormProps> = ({ onRequestClose }) => {
 										WalletConnect
 									</Text>
 								</Center>
+							</div>
+						</div>
+						<div className={meemTheme.visibleMobileOnly}>
+							<Space h={16} />
+
+							<div
+								className={meemTheme.connectMethodGridItem}
+								style={{
+									position: 'relative'
+								}}
+								onClick={() => {
+									connectWallet('injected')
+									if (onRequestClose) {
+										onRequestClose()
+									}
+								}}
+							>
+								<div
+									className={
+										meemTheme.connectMethodGridItemContent
+									}
+								>
+									<Center>
+										<IconBrowser />
+									</Center>
+
+									<Space h={16} />
+
+									<Center>
+										<Text className={meemTheme.tSmallBold}>
+											Browser Wallet
+										</Text>
+									</Center>
+								</div>
 							</div>
 						</div>
 						<Space w={24} />
