@@ -60,7 +60,9 @@ const MAuthenticate: React.FC = () => {
 		<Center>
 			<Container>
 				<div className={meemTheme.centered}>
-					<Space h={80} />
+					<Space h={80} className={meemTheme.visibleDesktopOnly} />
+					<Space h={32} className={meemTheme.visibleMobileOnly} />
+
 					<Center>
 						<Image src={'/meem-icon.png'} height={64} width={64} />
 					</Center>
