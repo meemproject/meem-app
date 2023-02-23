@@ -36,7 +36,10 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 						<>
 							{/* No extensions at all */}
 							{totalExtensions === 0 && (
-								<div className={meemTheme.widgetExtension}>
+								<div
+									className={meemTheme.widgetExtension}
+									style={{ padding: 32 }}
+								>
 									<Space h={16} />
 
 									<Center>
@@ -105,7 +108,7 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 							{totalExtensions === 0 && (
 								<div
 									className={meemTheme.widgetExtension}
-									style={{ marginTop: -20 }}
+									style={{ marginTop: -20, padding: 32 }}
 								>
 									<Space h={16} />
 									<Center>
