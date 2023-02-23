@@ -1,3 +1,20 @@
+## [1.24.1](https://github.com/meemproject/meem-app/compare/v1.24.0...v1.24.1) (2023-02-23)
+
+
+### Bug Fixes
+
+* add meem logo to sign in page ([9bb5b00](https://github.com/meemproject/meem-app/commit/9bb5b00))
+* agreement join button doesn't work if not signed in, excess padding on mobile auth screen ([3d15d88](https://github.com/meemproject/meem-app/commit/3d15d88))
+* hide metamask option on mobile ([13222e7](https://github.com/meemproject/meem-app/commit/13222e7))
+* improve handling of switch network dialog on mobile ([579ac6a](https://github.com/meemproject/meem-app/commit/579ac6a))
+* mobile only layout includes 'browser wallet' for brave browser etc ([62df732](https://github.com/meemproject/meem-app/commit/62df732))
+* move 'setup complete' analytics event to button event to prevent duplicates ([655ba5f](https://github.com/meemproject/meem-app/commit/655ba5f))
+* padding issue ([326ba66](https://github.com/meemproject/meem-app/commit/326ba66))
+* responsive 'faq' modal ([e5db7c4](https://github.com/meemproject/meem-app/commit/e5db7c4))
+* switch network modal is now responsive ([c7d902d](https://github.com/meemproject/meem-app/commit/c7d902d))
+* temporarily move login form into meem-app to fix dark mode issues for now ([8369e53](https://github.com/meemproject/meem-app/commit/8369e53))
+* unnecessary loading state when creating an agreement in symph onboarding flow, padding on 'add extension' widget ([ac38486](https://github.com/meemproject/meem-app/commit/ac38486))
+
 # [1.24.0](https://github.com/meemproject/meem-app/compare/v1.23.4...v1.24.0) (2023-02-22)
 
 
