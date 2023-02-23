@@ -72,7 +72,7 @@ export const AgreementHome: React.FC = () => {
 			setIsLaunching(false)
 			showErrorNotification(
 				'Oops!',
-				'Unable to launch this community. Contact us using the top-right link on this page.'
+				'Unable to publish this community. Contact us using the top-right link on this page.'
 			)
 		}
 	}
@@ -271,14 +271,14 @@ export const AgreementHome: React.FC = () => {
 			{!isLoadingAgreement &&
 				agreement?.name &&
 				!agreement.isLaunched &&
-				!agreement.isCurrentUserAgreementAdmin && (
+				!agreement.isCurrentUserAgreementMember && (
 					<>
 						<Container>
 							<Space h={120} />
 							<Center>
 								<Text>
-									This community is not yet available to the
-									public. Check back later!
+									This community has not been published yet.
+									Check back later!
 								</Text>
 							</Center>
 						</Container>
