@@ -1,3 +1,16 @@
+# [1.25.0](https://github.com/meemproject/meem-app/compare/v1.24.1...v1.25.0) (2023-02-23)
+
+
+### Bug Fixes
+
+* Allow community members to view unpublished communities, update copy ([cc8219e](https://github.com/meemproject/meem-app/commit/cc8219e))
+* update publish copy ([784ccea](https://github.com/meemproject/meem-app/commit/784ccea))
+
+
+### Features
+
+* createExtension script is updated to support new extensions structure, updated example files, fixed some issues with ExtensionBlankSlate ([cc13f7e](https://github.com/meemproject/meem-app/commit/cc13f7e))
+
 ## [1.24.1](https://github.com/meemproject/meem-app/compare/v1.24.0...v1.24.1) (2023-02-23)
 
 
