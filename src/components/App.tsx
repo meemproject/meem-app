@@ -1,4 +1,4 @@
-import { Button, Modal, Space } from '@mantine/core'
+import { Button, Modal, Space, Image, Center } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import React from 'react'
 import { useMeemTheme } from './Styles/MeemTheme'
@@ -60,9 +60,39 @@ export const App: React.FC<IProps> = ({ children }) => {
 		chainId !== undefined &&
 		chainId !== expectedChainId
 
+	const switchNetworkModalContents = (
+		<>
+			<Space h={16} />
+			<div>
+				<Center>
+					<Image src={'/meem-icon.png'} height={64} width={64} />
+				</Center>
+				<Center>
+					<h2>Please switch your network.</h2>
+				</Center>
+				<Center>
+					<h3>{`You're currently connected to the wrong network.`}</h3>
+				</Center>
+				<Space h={8} />
+				<Center>
+					<Button
+						className={meemTheme.buttonBlack}
+						onClick={() => {
+							setChain(expectedChainId)
+						}}
+					>
+						Switch Network
+					</Button>
+				</Center>
+			</div>
+			<Space h={16} />
+		</>
+	)
+
 	return (
 		<>
 			<Modal
+				className={meemTheme.visibleDesktopOnly}
 				centered
 				withCloseButton={false}
 				closeOnClickOutside={false}
@@ -73,23 +103,19 @@ export const App: React.FC<IProps> = ({ children }) => {
 				opened={isWrongChainId}
 				onClose={() => {}}
 			>
-				<Space h={16} />
-				<div>
-					<h2>Please switch your network.</h2>
-					<h3>{`You're currently connected to the wrong network.`}</h3>
-					<Space h={8} />
-					<Button
-						className={meemTheme.buttonBlack}
-						onClick={() => {
-							setChain(expectedChainId)
-						}}
-					>
-						Switch Network
-					</Button>
-				</div>
-				<Space h={16} />
+				{switchNetworkModalContents}
 			</Modal>
-
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				withCloseButton={false}
+				closeOnClickOutside={false}
+				fullScreen
+				padding={'lg'}
+				opened={isWrongChainId}
+				onClose={() => {}}
+			>
+				{switchNetworkModalContents}
+			</Modal>
 			{children}
 		</>
 	)
