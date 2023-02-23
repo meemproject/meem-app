@@ -479,6 +479,15 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		} else if (chosenAgreement && isConnectionEstablished) {
 			setPageState(PageState.SetupComplete)
 			log.debug(`set page state = setup complete`)
+
+			const dataLayer = (window as any).dataLayer
+
+			dataLayer.push({
+				event: 'event',
+				eventProps: {
+					category: 'Symphony Onboarding - Setup Complete'
+				}
+			})
 		} else if (chosenAgreement && !isConnectionEstablished) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
@@ -1027,14 +1036,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<Button
 					className={meemTheme.buttonBlack}
 					onClick={() => {
-						const dataLayer = (window as any).dataLayer
-
-						dataLayer.push({
-							event: 'event',
-							eventProps: {
-								category: 'Symphony Onboarding - Setup Complete'
-							}
-						})
 						router.push(`/${chosenAgreement?.slug}/e/symphony`)
 					}}
 				>
