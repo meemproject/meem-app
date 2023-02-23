@@ -1066,7 +1066,7 @@ export const SymphonyExtension: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'symphony'} />
+			<ExtensionBlankSlate />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,

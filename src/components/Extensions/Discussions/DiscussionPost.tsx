@@ -263,7 +263,7 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'discussions'} />
+			<ExtensionBlankSlate />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,

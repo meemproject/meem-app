@@ -293,7 +293,7 @@ export const DiscussionHome: React.FC = () => {
 
 	return (
 		<>
-			<ExtensionBlankSlate extensionSlug={'discussions'} />
+			<ExtensionBlankSlate />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,
