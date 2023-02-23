@@ -151,6 +151,16 @@ export const AddExtensionModal: React.FC<IProps> = ({
 		onModalClosed()
 		setHasSetInitialSearchTerm(false)
 		setIsEnablingExtension(false)
+		const dataLayer = (window as any).dataLayer ?? null
+
+		dataLayer?.push({
+			event: 'event',
+			eventProps: {
+				category: 'Community Homepag',
+				action: 'Enable Extension',
+				label: extension.name
+			}
+		})
 	}
 
 	return (
