@@ -440,15 +440,23 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 		// Set page state
 		if (
-			(!myAgreements && isLoadingMyAgreements) ||
-			(!availableExtensionsData && extensionsLoading) ||
-			(!twitterData && twitterDataLoading) ||
-			(!discordData && discordInfoLoading) ||
-			(!slackData && slackInfoLoading) ||
+			isLoadingMyAgreements ||
+			extensionsLoading ||
+			(pageState !== PageState.Onboarding &&
+				(twitterDataLoading ||
+					discordInfoLoading ||
+					slackInfoLoading)) ||
 			(!chosenAgreement && twitterAuthRedirectAgreementSlug)
 		) {
 			setPageState(PageState.Loading)
 			log.debug(`set page state = loading`)
+			log.debug(
+				`reason: isLoadingMyAgreements: ${isLoadingMyAgreements}, extLoad=${extensionsLoading} twitterLoad=${twitterDataLoading} discordLoad=${discordInfoLoading} slackLoad=${slackInfoLoading} chosenAgr=${
+					chosenAgreement !== undefined
+				} twitterAuthSlug=${
+					twitterAuthRedirectAgreementSlug !== undefined
+				}`
+			)
 		} else if (myAgreementsError) {
 			setPageState(PageState.Error)
 			log.debug('set page state = error')

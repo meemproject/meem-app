@@ -1,5 +1,6 @@
-import { Button, Modal, Space } from '@mantine/core'
+import { Button, Modal, Space, Image, Center, Text } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
+import Link from 'next/link'
 import React from 'react'
 import { useMeemTheme } from './Styles/MeemTheme'
 
@@ -60,9 +61,99 @@ export const App: React.FC<IProps> = ({ children }) => {
 		chainId !== undefined &&
 		chainId !== expectedChainId
 
+	const correctChainIdName =
+		expectedChainId === 137
+			? 'Polygon'
+			: expectedChainId === 80001
+			? 'Mumbai'
+			: expectedChainId === 10
+			? 'Optimism'
+			: 'The correct network'
+
+	const switchNetworkModalContents = (
+		<>
+			<Space h={16} />
+			<div>
+				<Center>
+					<Image src={'/meem-icon.png'} height={64} width={64} />
+				</Center>
+				<Space h={32} />
+
+				<Center>
+					<Text className={meemTheme.tLargeBold}>
+						Please switch your network.
+					</Text>
+				</Center>
+				<Space h={8} />
+
+				<Center>
+					<Text
+						className={meemTheme.tMedium}
+					>{`You're currently connected to the wrong network.`}</Text>
+				</Center>
+				<Space h={16} />
+				<Center>
+					<Button
+						className={meemTheme.buttonBlack}
+						onClick={() => {
+							setChain(expectedChainId)
+						}}
+					>
+						{`Switch Network to ${correctChainIdName}`}
+					</Button>
+				</Center>
+			</div>
+			<Space h={16} />
+		</>
+	)
+
+	const switchNetworkMobileModalContents = (
+		<>
+			<Space h={16} />
+			<div>
+				<Center>
+					<Image src={'/meem-icon.png'} height={64} width={64} />
+				</Center>
+				<Space h={32} />
+				<Center>
+					<Text className={meemTheme.tLargeBold}>
+						Please switch your network.
+					</Text>
+				</Center>
+				<Space h={16} />
+				<Center>
+					<Text
+						className={meemTheme.tMedium}
+						style={{ textAlign: 'center' }}
+					>{`You're currently connected to the wrong network. Please connect to ${correctChainIdName} to continue.`}</Text>
+				</Center>
+				<Space h={16} />
+				<Center>
+					<Link
+						href={
+							'https://www.google.com/search?q=how+to+switch+ethereum+network+on+mobile'
+						}
+						target="_blank"
+						rel="noreferrer noopener"
+						passHref
+						legacyBehavior
+					>
+						<a>
+							<Button className={meemTheme.buttonWhite}>
+								How do I change networks?
+							</Button>
+						</a>
+					</Link>
+				</Center>
+			</div>
+			<Space h={16} />
+		</>
+	)
+
 	return (
 		<>
 			<Modal
+				className={meemTheme.visibleDesktopOnly}
 				centered
 				withCloseButton={false}
 				closeOnClickOutside={false}
@@ -73,23 +164,19 @@ export const App: React.FC<IProps> = ({ children }) => {
 				opened={isWrongChainId}
 				onClose={() => {}}
 			>
-				<Space h={16} />
-				<div>
-					<h2>Please switch your network.</h2>
-					<h3>{`You're currently connected to the wrong network.`}</h3>
-					<Space h={8} />
-					<Button
-						className={meemTheme.buttonBlack}
-						onClick={() => {
-							setChain(expectedChainId)
-						}}
-					>
-						Switch Network
-					</Button>
-				</div>
-				<Space h={16} />
+				{switchNetworkModalContents}
 			</Modal>
-
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				withCloseButton={false}
+				closeOnClickOutside={false}
+				fullScreen
+				padding={'lg'}
+				opened={isWrongChainId}
+				onClose={() => {}}
+			>
+				{switchNetworkMobileModalContents}
+			</Modal>
 			{children}
 		</>
 	)

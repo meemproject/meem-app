@@ -1,12 +1,21 @@
 import log from '@kengoldfarb/log'
-import { Text, Button, Space, Container, Loader, Center } from '@mantine/core'
-import { LoginForm, useAuth, useSDK } from '@meemproject/react'
+import {
+	Text,
+	Button,
+	Space,
+	Container,
+	Loader,
+	Center,
+	Image
+} from '@mantine/core'
+import { useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
+import { LoginForm } from './LoginModal'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useAuth()
@@ -51,7 +60,14 @@ const MAuthenticate: React.FC = () => {
 		<Center>
 			<Container>
 				<div className={meemTheme.centered}>
-					<Space h={80} />
+					<Space h={80} className={meemTheme.visibleDesktopOnly} />
+					<Space h={32} className={meemTheme.visibleMobileOnly} />
+
+					<Center>
+						<Image src={'/meem-icon.png'} height={64} width={64} />
+					</Center>
+					<Space h={16} />
+
 					<Text
 						className={meemTheme.tLargeBold}
 					>{`Sign in with Meem`}</Text>
