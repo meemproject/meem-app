@@ -8,13 +8,14 @@ import {
 	Center,
 	Image
 } from '@mantine/core'
-import { LoginForm, useAuth, useSDK } from '@meemproject/react'
+import { useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
+import { LoginForm } from './LoginModal'
 
 const MAuthenticate: React.FC = () => {
 	const wallet = useAuth()
