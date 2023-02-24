@@ -22,10 +22,7 @@ export function quickTruncate(address?: string): string {
 
 	const walletAddressLength = address.length
 	if (walletAddressLength > 15) {
-		const truncatedWallet = `${address.substring(
-			0,
-			5
-		)}...${address.substring(walletAddressLength - 5, walletAddressLength)}`
+		const truncatedWallet = `${address.substring(0, 7)}...`
 		return truncatedWallet.toLowerCase()
 	} else {
 		return address.toLowerCase()

@@ -1027,16 +1027,17 @@ export const SymphonyExtension: React.FC = () => {
 					)
 				})}
 			{rolesData && <Space h={16} />}
+
 			{!agreement?.isCurrentUserAgreementAdmin &&
 				agreement?.isCurrentUserAgreementMember &&
-				rules &&
-				rules.length === 0 && (
+				(!rolesData || !rules || (rules && rules.length === 0)) && (
 					<Center>
 						<Text className={meemTheme.tSmallBold}>
 							This community has no Symphony rules set up yet.
 						</Text>
 					</Center>
 				)}
+
 			{agreement?.isCurrentUserAgreementAdmin && (
 				<Button
 					className={meemTheme.buttonDarkGrey}

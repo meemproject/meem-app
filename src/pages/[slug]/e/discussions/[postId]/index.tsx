@@ -13,8 +13,7 @@ import { deslugify } from '../../../../../utils/strings'
 const DiscussionPostPage: NextPage = () => {
 	const router = useRouter()
 
-	const postId: string =
-		router.query.postId === undefined ? '' : `${router.query.postId}`
+	const postId: string = router.asPath.split('/')[1]
 
 	const agreementSlug =
 		router.query.slug === undefined ? undefined : `${router.query.slug}`
