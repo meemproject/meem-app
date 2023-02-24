@@ -17,12 +17,14 @@ interface IProps {
 	children: React.ReactNode
 	extensionSlug: string
 	onSettingsOpened: () => void
+	customIcon?: string
 }
 
 export const ExtensionWidgetContainer: React.FC<IProps> = ({
 	children,
 	extensionSlug,
-	onSettingsOpened
+	onSettingsOpened,
+	customIcon
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { colorScheme } = useMantineColorScheme()
@@ -30,7 +32,9 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 
 	const { agreement } = useAgreement()
 
-	const extensionName = deslugify(extensionSlug)
+	const extensionName = extensionSlug.includes('Meem')
+		? extensionSlug
+		: deslugify(extensionSlug)
 
 	const accordionCookie = `${agreement?.slug}-${extensionSlug}-accordion`
 	const value = Cookies.get(accordionCookie) ?? '1'
@@ -68,7 +72,9 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 								<div className={meemTheme.centeredRow}>
 									<Image
 										src={
-											isDarkTheme
+											customIcon
+												? customIcon
+												: isDarkTheme
 												? `/integration-${extensionSlug}-white.png`
 												: `/integration-${extensionSlug}.png`
 										}
@@ -81,14 +87,15 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 									</Text>
 								</div>
 							</Accordion.Control>
-							{agreement?.isCurrentUserAgreementAdmin && (
-								<Settings
-									className={meemTheme.clickable}
-									onClick={() => {
-										onSettingsOpened()
-									}}
-								/>
-							)}
+							{agreement?.isCurrentUserAgreementAdmin &&
+								!extensionSlug.includes('Meem') && (
+									<Settings
+										className={meemTheme.clickable}
+										onClick={() => {
+											onSettingsOpened()
+										}}
+									/>
+								)}
 							<Space w={16} />
 						</div>
 
