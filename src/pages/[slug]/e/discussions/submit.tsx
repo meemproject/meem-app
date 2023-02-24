@@ -13,8 +13,7 @@ import { deslugify } from '../../../../utils/strings'
 
 const DiscussionPostSubmitPage: NextPage = () => {
 	const router = useRouter()
-	const agreementSlug =
-		router.query.slug === undefined ? undefined : `${router.query.slug}`
+	const agreementSlug = router.asPath.split('/')[1]
 	const agreementName = deslugify(agreementSlug ?? '')
 	const pageTitle = `Submit Post | Discussions | ${agreementName} | Meem`
 
