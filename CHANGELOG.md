@@ -1,3 +1,16 @@
+# [1.27.0](https://github.com/meemproject/meem-app/compare/v1.26.0...v1.27.0) (2023-02-24)
+
+
+### Bug Fixes
+
+* attempt to fix og tags using a more failsafe way to get the current slug ([9dd48f8](https://github.com/meemproject/meem-app/commit/9dd48f8))
+* display of text in symphony ext for non-admins when there are no symphony rules ([fe7ee8f](https://github.com/meemproject/meem-app/commit/fe7ee8f))
+
+
+### Features
+
+* meem promo content on homepage for signed out users ([a12bfe2](https://github.com/meemproject/meem-app/commit/a12bfe2))
+
 # [1.26.0](https://github.com/meemproject/meem-app/compare/v1.25.0...v1.26.0) (2023-02-24)
 
 
