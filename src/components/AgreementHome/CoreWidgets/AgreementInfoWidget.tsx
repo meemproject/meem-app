@@ -380,7 +380,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				{agreement.isLaunched && (
 					<>
 						<Center>
-							<Text className={meemTheme.tSmall}>
+							<Text
+								className={meemTheme.tSmall}
+								style={{ textAlign: 'center' }}
+							>
 								{agreement.description &&
 								agreement.description?.length > 0
 									? agreement.description

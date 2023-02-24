@@ -7,9 +7,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import {
 	Agreement,
 	MembershipRequirementToMeemPermission
-} from '../../model/agreement/agreements'
-import { showErrorNotification } from '../../utils/notifications'
-import { useAgreement } from '../AgreementHome/AgreementProvider'
+} from '../../../model/agreement/agreements'
+import { showErrorNotification } from '../../../utils/notifications'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 
 interface IProps {
 	agreement?: Agreement
@@ -17,7 +17,7 @@ interface IProps {
 	onRequestComplete: () => void
 }
 
-export const AgreementAdminChangesModal: React.FC<IProps> = ({
+export const AgreementAdminChangesComponent: React.FC<IProps> = ({
 	agreement,
 	isRequestInProgress,
 	onRequestComplete

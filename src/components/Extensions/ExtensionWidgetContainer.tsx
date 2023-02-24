@@ -9,7 +9,7 @@ import {
 import { Settings } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import React from 'react'
-import { toTitleCase } from '../../utils/strings'
+import { deslugify } from '../../utils/strings'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { colorDarkerGrey, useMeemTheme } from '../Styles/MeemTheme'
 
@@ -30,7 +30,7 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 
 	const { agreement } = useAgreement()
 
-	const extensionName = toTitleCase(extensionSlug.replaceAll('-', ' '))
+	const extensionName = deslugify(extensionSlug)
 
 	const accordionCookie = `${agreement?.slug}-${extensionSlug}-accordion`
 	const value = Cookies.get(accordionCookie) ?? '1'

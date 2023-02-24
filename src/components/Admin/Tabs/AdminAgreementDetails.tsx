@@ -12,7 +12,7 @@ import { showErrorNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
+import { AgreementAdminChangesComponent } from '../ChangesComponents/AgreementAdminChangesModal'
 interface IProps {
 	agreement: Agreement
 }
@@ -130,7 +130,7 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 				githubLink={`https://github.com/meemproject/meem-app`}
 			/>
 			<Space h={64} />
-			<AgreementAdminChangesModal
+			<AgreementAdminChangesComponent
 				agreement={newAgreementData}
 				isRequestInProgress={isSavingChanges}
 				onRequestComplete={() => {

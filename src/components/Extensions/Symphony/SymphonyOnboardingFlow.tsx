@@ -58,7 +58,7 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
-import { toTitleCase } from '../../../utils/strings'
+import { deslugify } from '../../../utils/strings'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { hostnameToChainId } from '../../App'
 import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
@@ -102,7 +102,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 	// Extension vars
 	const extensionSlug = 'symphony'
-	const extensionName = toTitleCase('symphony'.replaceAll('-', ' '))
+	const extensionName = 'Symphony'
 	const extensionIcon = `ext-symphony.png`
 
 	// Page state

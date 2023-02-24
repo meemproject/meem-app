@@ -18,8 +18,8 @@ import {
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { colorBlue, useMeemTheme } from '../../Styles/MeemTheme'
-import { ChangeMeemProtocolPermissionsModal } from '../Modals/ChangeMeemProtocolPermissionsModal'
-import { CreateSafeModal } from '../Modals/CreateSafeModal'
+import { ChangeMeemProtocolPermissionsComponent } from '../ChangesComponents/ChangeMeemProtocolPermissionsComponent'
+import { CreateSafeComponent } from '../ChangesComponents/CreateSafeModalComponent'
 
 interface IProps {
 	agreement: Agreement
@@ -408,14 +408,14 @@ export const AdminContractManagement: React.FC<IProps> = ({ agreement }) => {
 
 			<Space h={64} />
 
-			<CreateSafeModal
+			<CreateSafeComponent
 				agreement={agreement}
 				isRequestInProgress={isCreatingSafe}
 				onRequestComplete={() => {
 					setIsCreatingSafe(false)
 				}}
 			/>
-			<ChangeMeemProtocolPermissionsModal
+			<ChangeMeemProtocolPermissionsComponent
 				agreement={agreement}
 				isOpened={isSavingMeemPermission}
 				onModalClosed={() => {

@@ -18,36 +18,52 @@ export const JoinLeaveAgreementModal: React.FC<IProps> = ({
 		onModalClosed()
 	}, [onModalClosed])
 
+	const modalContent = (
+		<>
+			<div className={meemTheme.modalHeader}>
+				<Loader color="cyan" variant="oval" />
+				<Space h={24} />
+
+				<Text
+					className={meemTheme.tMediumBold}
+					styles={{ textAlign: 'center' }}
+				>{`Please wait while we add you to this on-chain community!\nThis could take a minute.`}</Text>
+			</div>
+			<Space h={8} />
+		</>
+	)
+
 	return (
 		<>
 			<Modal
-				fullScreen
+				className={meemTheme.visibleDesktopOnly}
 				withCloseButton={false}
 				closeOnClickOutside={false}
 				closeOnEscape={false}
+				radius={16}
+				overlayBlur={8}
 				size={'lg'}
-				padding={'sm'}
+				padding={'lg'}
 				opened={isOpened}
 				onClose={() => {
 					closeModal()
 				}}
 			>
-				<div className={meemTheme.modalHeader}>
-					<Space h={128} />
-
-					<Loader color="cyan" variant="oval" />
-					<Space h={24} />
-					<Text
-						className={meemTheme.tLargeBold}
-					>{`There's magic happening on the blockchain.`}</Text>
-					<Space h={24} />
-
-					<Text
-						className={meemTheme.tMediumBold}
-						styles={{ textAlign: 'center' }}
-					>{`Please wait while your request is confirmed.\nThis could take up to a few minutes.`}</Text>
-				</div>
-				<Space h={16} />
+				{modalContent}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				fullScreen
+				withCloseButton={false}
+				closeOnClickOutside={false}
+				closeOnEscape={false}
+				padding={'lg'}
+				opened={isOpened}
+				onClose={() => {
+					closeModal()
+				}}
+			>
+				{modalContent}
 			</Modal>
 		</>
 	)

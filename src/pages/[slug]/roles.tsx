@@ -1,73 +1,37 @@
 /* eslint-disable react/prop-types */
-import log from '@kengoldfarb/log'
-import type { GetServerSideProps, NextPage } from 'next'
+import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import React from 'react'
-import { hostnameToChainId } from '../../components/App'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { RolesManager } from '../../components/Roles/RolesManager'
-import { GET_AGREEMENT_INFO } from '../../graphql/agreements'
-import { ssrGraphqlClient } from '../../utils/ssr_graphql'
-import { AgreementPropViewModel } from '.'
+import { meemCommunityDescription } from '../../utils/sitedescriptions'
+import { deslugify } from '../../utils/strings'
 
-interface IProps {
-	agreement: AgreementPropViewModel
-}
+const AgreementRolesPage: NextPage = () => {
+	const router = useRouter()
+	const agreementSlug =
+		router.query.slug === undefined ? undefined : `${router.query.slug}`
+	const agreementName = deslugify(agreementSlug ?? '')
+	const pageTitle = `Roles | ${agreementName} | Meem`
 
-const AgreementRolesPage: NextPage<IProps> = ({ agreement }) => {
 	return (
 		<>
 			<Head>
-				<title>
-					{agreement === undefined || agreement.isError
-						? 'Not found'
-						: `${agreement.responseBody.Agreements[0].name} | Roles | Meem`}
-				</title>
-				<meta
-					name="title"
-					content={
-						agreement === undefined || agreement.isError
-							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Roles | Meem`
-					}
-				/>
-				<meta
-					name="description"
-					content={`Roles page for ${
-						agreement === undefined || agreement.isError
-							? 'an unknown agreement'
-							: agreement.responseBody.Agreements[0].name
-					}`}
-				/>
+				<title>{pageTitle}</title>
+				<meta name="title" content={pageTitle} />
+				<meta name="description" content={meemCommunityDescription} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://app.meem.wtf/" />
-				<meta
-					property="og:title"
-					content={
-						agreement === undefined || agreement.isError
-							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Roles | Meem`
-					}
-				/>
+				<meta property="og:title" content={pageTitle} />
 				<meta
 					property="og:description"
-					content={`Roles page for ${
-						agreement === undefined || agreement.isError
-							? 'an unknown agreement'
-							: agreement.responseBody.Agreements[0].name
-					}`}
+					content={meemCommunityDescription}
 				/>
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://app.meem.wtf/" />
-				<meta
-					property="twitter:title"
-					content={
-						agreement === undefined || agreement.isError
-							? 'Not found'
-							: `${agreement.responseBody.Agreements[0].name} | Roles | Meem`
-					}
-				/>
+				<meta property="twitter:title" content={pageTitle} />
 				<meta
 					name="viewport"
 					content="initial-scale=1, width=device-width"
@@ -99,62 +63,6 @@ const AgreementRolesPage: NextPage<IProps> = ({ agreement }) => {
 			<MeemFooter />
 		</>
 	)
-}
-
-export const getServerSideProps: GetServerSideProps = async ({
-	params,
-	req
-}) => {
-	let agreement: AgreementPropViewModel | undefined
-	const client = ssrGraphqlClient
-
-	try {
-		if (params?.slug) {
-			const { data, errors } = await client.query({
-				query: GET_AGREEMENT_INFO,
-				variables: {
-					slug: params.slug,
-					chainId: hostnameToChainId(req.headers.host ?? '')
-				}
-			})
-
-			if (data.Agreements.length === 0) {
-				agreement = {
-					isError: true,
-					description: 'This community does not exist. Yet.',
-					responseBody: null
-				}
-			} else {
-				agreement = {
-					isError: false,
-					responseBody: data,
-					description: `Effortless access management and collaborative
-					publishing tools for your online community`
-				}
-			}
-			return {
-				props: {
-					agreement,
-					isError: !!errors,
-					description: 'There was an error fetching community data'
-				}
-			}
-		}
-
-		return { props: {} }
-	} catch (e) {
-		log.debug(e)
-		agreement = {
-			isError: true,
-			responseBody: null,
-			description: 'This community does not exist. Yet.'
-		}
-		return {
-			props: {
-				agreement
-			}
-		}
-	}
 }
 
 export default AgreementRolesPage
