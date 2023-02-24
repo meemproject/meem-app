@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
@@ -9,10 +8,11 @@ import { RolesManager } from '../../components/Roles/RolesManager'
 import { meemCommunityDescription } from '../../utils/sitedescriptions'
 import { deslugify } from '../../utils/strings'
 
-const AgreementRolesPage: NextPage = () => {
-	const router = useRouter()
-	const agreementSlug = router.asPath.split('/')[1]
-	const agreementName = deslugify(agreementSlug ?? '')
+interface IProps {
+	agreementName: string
+}
+
+const AgreementRolesPage: NextPage<IProps> = ({ agreementName }) => {
 	const pageTitle = `Roles | ${agreementName} | Meem`
 
 	return (
@@ -62,6 +62,14 @@ const AgreementRolesPage: NextPage = () => {
 			<MeemFooter />
 		</>
 	)
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+	return {
+		props: {
+			agreementName: deslugify(params?.slug?.toString() ?? '')
+		}
+	}
 }
 
 export default AgreementRolesPage

@@ -13,7 +13,10 @@ import {
 } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
+import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
 import { GuildWidget } from '../Extensions/Guild/GuildWidget'
@@ -31,6 +34,7 @@ import { MeemPromoWidgets } from './MeemPromoWidgets'
 export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const { classes: meemTheme } = useMeemTheme()
+	const router = useRouter()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -266,10 +270,32 @@ export const AgreementHome: React.FC = () => {
 				<Container>
 					<Space h={120} />
 					<Center>
-						<Text>
-							There was an error loading this community. Contact
-							us using the top-right link on this page.
+						<Text className={meemTheme.tMediumBold}>
+							{`There was an error loading this community.`}
 						</Text>
+					</Center>
+					<Space h={16} />
+					<Center>
+						<Text className={meemTheme.tMedium}>
+							{`You may
+							need to sign in again. Or, contact us using the
+							top-right link on this page.`}
+						</Text>
+					</Center>
+					<Space h={24} />
+					<Center>
+						<Button
+							className={meemTheme.buttonBlack}
+							onClick={() => {
+								Cookies.set(
+									CookieKeys.authRedirectUrl,
+									`/${agreement?.slug}`
+								)
+								router.push('/authenticate')
+							}}
+						>
+							Sign In
+						</Button>
 					</Center>
 				</Container>
 			)}
