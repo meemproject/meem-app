@@ -1,3 +1,17 @@
+# [1.26.0](https://github.com/meemproject/meem-app/compare/v1.25.0...v1.26.0) (2023-02-24)
+
+
+### Bug Fixes
+
+* hide 'under construction' message if viewing meem homepage and not a member of the community ([600d494](https://github.com/meemproject/meem-app/commit/600d494))
+* reconnect discord event ([8f94cde](https://github.com/meemproject/meem-app/commit/8f94cde))
+
+
+### Features
+
+* much faster page load times by removing GetServerSideProps, update site og description and standardize page title naming convention ([4ec321c](https://github.com/meemproject/meem-app/commit/4ec321c))
+* responsive modals throughout the site ([c2b0de0](https://github.com/meemproject/meem-app/commit/c2b0de0))
+
 # [1.25.0](https://github.com/meemproject/meem-app/compare/v1.24.1...v1.25.0) (2023-02-23)
 
 
