@@ -23,7 +23,7 @@ import { showErrorNotification } from '../../../utils/notifications'
 import { quickTruncate } from '../../../utils/truncated_wallet'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
+import { AgreementAdminChangesComponent } from '../ChangesComponents/AgreementAdminChangesModal'
 
 interface IProps {
 	agreement?: Agreement
@@ -667,7 +667,7 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 						Done
 					</Button>
 				</Modal>
-				<AgreementAdminChangesModal
+				<AgreementAdminChangesComponent
 					agreement={newAgreementData}
 					isRequestInProgress={isSaveChangesModalOpened}
 					onRequestComplete={() => {

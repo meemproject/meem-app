@@ -20,7 +20,7 @@ interface IProps {
 	smartContractPermission: string
 }
 
-export const ChangeMeemProtocolPermissionsModal: React.FC<IProps> = ({
+export const ChangeMeemProtocolPermissionsComponent: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
 	agreement,

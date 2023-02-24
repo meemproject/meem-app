@@ -362,9 +362,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				closeOnClickOutside={false}
 				closeOnEscape={false}
 				withCloseButton={false}
-				radius={16}
 				fullScreen={true}
-				overlayBlur={8}
 				padding={'lg'}
 				opened={isOpened}
 				onClose={() => closeModal('failure')}

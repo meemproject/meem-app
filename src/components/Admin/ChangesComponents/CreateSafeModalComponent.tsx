@@ -13,7 +13,7 @@ interface IProps {
 	onRequestComplete: () => void
 }
 
-export const CreateSafeModal: React.FC<IProps> = ({
+export const CreateSafeComponent: React.FC<IProps> = ({
 	isRequestInProgress,
 	onRequestComplete,
 	agreement

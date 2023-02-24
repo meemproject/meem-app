@@ -122,9 +122,40 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 		shouldCheckAgreementName
 	])
 
+	const modalContent = (
+		<>
+			<Text className={meemTheme.tExtraSmallLabel}>
+				{`What is your community called?`.toUpperCase()}
+			</Text>
+			<Space h={12} />
+			<TextInput
+				radius="lg"
+				size="md"
+				value={agreementName ?? ''}
+				onChange={(event: {
+					target: { value: React.SetStateAction<string> }
+				}) => {
+					setAgreementName(event.target.value)
+				}}
+			/>
+			<Space h={24} />
+			<Button
+				loading={isCheckingName || isAgreementCreationModalOpened}
+				disabled={isCheckingName || isAgreementCreationModalOpened}
+				className={meemTheme.buttonBlack}
+				onClick={() => {
+					checkName(agreementName)
+				}}
+			>
+				Next
+			</Button>
+		</>
+	)
+
 	return (
 		<>
 			<Modal
+				className={meemTheme.visibleDesktopOnly}
 				centered
 				closeOnEscape={false}
 				withCloseButton={true}
@@ -142,31 +173,26 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 					closeModal()
 				}}
 			>
-				<Text className={meemTheme.tExtraSmallLabel}>
-					{`What is your community called?`.toUpperCase()}
-				</Text>
-				<Space h={12} />
-				<TextInput
-					radius="lg"
-					size="md"
-					value={agreementName ?? ''}
-					onChange={(event: {
-						target: { value: React.SetStateAction<string> }
-					}) => {
-						setAgreementName(event.target.value)
-					}}
-				/>
-				<Space h={24} />
-				<Button
-					loading={isCheckingName || isAgreementCreationModalOpened}
-					disabled={isCheckingName || isAgreementCreationModalOpened}
-					className={meemTheme.buttonBlack}
-					onClick={() => {
-						checkName(agreementName)
-					}}
-				>
-					Next
-				</Button>
+				{modalContent}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				centered
+				closeOnEscape={false}
+				withCloseButton={true}
+				fullScreen
+				padding={'sm'}
+				opened={isOpened && !isAgreementCreationModalOpened}
+				title={
+					<Text className={meemTheme.tMediumBold}>
+						Create Your Community
+					</Text>
+				}
+				onClose={() => {
+					closeModal()
+				}}
+			>
+				{modalContent}
 			</Modal>
 			<CreationProgressModal
 				agreementName={agreementName}
