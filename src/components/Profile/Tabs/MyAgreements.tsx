@@ -313,6 +313,16 @@ export const MyAgreementsComponent: React.FC = () => {
 								className={meemTheme.gridItemCenteredAsh}
 								onClick={() => {
 									setIsCreationModalOpen(true)
+									const dataLayer =
+										(window as any).dataLayer ?? null
+
+									dataLayer?.push({
+										event: 'event',
+										eventProps: {
+											category: 'My Communities',
+											action: 'Launch a New Community'
+										}
+									})
 								}}
 							>
 								<Space h={16} />
