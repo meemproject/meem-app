@@ -26,6 +26,7 @@ import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
 import { AgreementPreLaunchAddExtensions } from './CoreWidgets/AgreementPreLaunchAddExtensions'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
 import { MeemCreateCommunityWidget } from './CoreWidgets/MeemCreateCommunityWidget'
+import { MeemPromoWidgets } from './MeemPromoWidgets'
 
 export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
@@ -101,7 +102,11 @@ export const AgreementHome: React.FC = () => {
 			{agreement && (
 				<>
 					{agreement.slug === 'meem' && (
-						<MeemCreateCommunityWidget agreement={agreement} />
+						<>
+							<MeemCreateCommunityWidget agreement={agreement} />
+							{/* // Meem promo content here! */}
+							<MeemPromoWidgets />
+						</>
 					)}
 
 					{agreement.extensions && (

@@ -342,7 +342,7 @@ export function HeaderMenu() {
 							<Space h={4} />
 
 							<Link
-								href={`https://discord.gg/jgxuK6662v`}
+								href={`https://discord.gg/8YcCFZjmnz`}
 								legacyBehavior
 								passHref
 							>
@@ -366,28 +366,6 @@ export function HeaderMenu() {
 								</a>
 							</Link>
 
-							<Link
-								href={`mailto:hello@weareprosocial.com`}
-								legacyBehavior
-								passHref
-							>
-								<a
-									target="_blank"
-									rel="noreferrer noopener"
-									className={meemTheme.unstyledLink}
-								>
-									<Menu.Item
-										style={{
-											marginBottom: '-2px',
-											marginTop: '-2px'
-										}}
-										className={meemTheme.tExtraSmallBold}
-										icon={<Mail height={20} width={20} />}
-									>
-										Contact Us
-									</Menu.Item>
-								</a>
-							</Link>
 							<Link
 								href={`https://airtable.com/shrM296vRoDWmK8Rm`}
 								legacyBehavior
