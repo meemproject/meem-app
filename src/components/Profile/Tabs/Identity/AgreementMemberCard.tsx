@@ -14,8 +14,8 @@ import {
 	AgreementMember
 } from '../../../../model/agreement/agreements'
 import { showSuccessNotification } from '../../../../utils/notifications'
+import { RemoveMemberComponent } from '../../../Admin/ChangesComponents/RemoveMemberComponent'
 import { RemoveMemberConfirmationModal } from '../../../Admin/Modals/RemoveMemberConfirmationModal'
-import { RemoveMemberModal } from '../../../Admin/Modals/RemoveMemberModal'
 import {
 	colorBlack,
 	colorBlue,
@@ -237,7 +237,7 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 					setIsConfirmModalOpen(false)
 				}}
 			/>
-			<RemoveMemberModal
+			<RemoveMemberComponent
 				agreement={agreement}
 				member={member}
 				isRequestInProgress={isDeletionModalOpen}

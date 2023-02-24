@@ -11,7 +11,7 @@ interface IProps {
 	onRequestComplete: () => void
 }
 
-export const RemoveMemberModal: React.FC<IProps> = ({
+export const RemoveMemberComponent: React.FC<IProps> = ({
 	isRequestInProgress,
 	onRequestComplete,
 	agreement,

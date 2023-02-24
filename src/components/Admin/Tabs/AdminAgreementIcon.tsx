@@ -12,7 +12,7 @@ import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
-import { AgreementAdminChangesModal } from '../AgreementAdminChangesModal'
+import { AgreementAdminChangesComponent } from '../ChangesComponents/AgreementAdminChangesModal'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -219,7 +219,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 				Save Changes
 			</Button>
 			<Space h={64} />
-			<AgreementAdminChangesModal
+			<AgreementAdminChangesComponent
 				agreement={newAgreementData}
 				isRequestInProgress={isSavingChanges}
 				onRequestComplete={() => {

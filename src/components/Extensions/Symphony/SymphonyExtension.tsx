@@ -1027,24 +1027,36 @@ export const SymphonyExtension: React.FC = () => {
 					)
 				})}
 			{rolesData && <Space h={16} />}
-			<Button
-				className={meemTheme.buttonDarkGrey}
-				disabled={!discordInfo}
-				onClick={() => {
-					setIsRuleBuilderOpen(true)
-					const dataLayer = (window as any).dataLayer ?? null
+			{!agreement?.isCurrentUserAgreementAdmin &&
+				agreement?.isCurrentUserAgreementMember &&
+				rules &&
+				rules.length === 0 && (
+					<Center>
+						<Text className={meemTheme.tSmallBold}>
+							This community has no Symphony rules set up yet.
+						</Text>
+					</Center>
+				)}
+			{agreement?.isCurrentUserAgreementAdmin && (
+				<Button
+					className={meemTheme.buttonDarkGrey}
+					disabled={!discordInfo}
+					onClick={() => {
+						setIsRuleBuilderOpen(true)
+						const dataLayer = (window as any).dataLayer ?? null
 
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Add Rule'
-						}
-					})
-				}}
-			>
-				+ Add rule
-			</Button>
+						dataLayer?.push({
+							event: 'event',
+							eventProps: {
+								category: 'Symphony Extension',
+								action: 'Add Rule'
+							}
+						})
+					}}
+				>
+					+ Add rule
+				</Button>
+			)}
 			<Modal
 				title={
 					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
@@ -1143,36 +1155,21 @@ export const SymphonyExtension: React.FC = () => {
 				agreementExtension
 			) && (
 				<>
-					{!agreement?.isCurrentUserAgreementAdmin && (
-						<Container>
-							<Space h={120} />
-							<Center>
-								<Text>
-									Sorry, you do not have permission to view
-									this page. Contact the community owner for
-									help.
-								</Text>
-							</Center>
-						</Container>
-					)}
-
-					{agreement?.isCurrentUserAgreementAdmin && (
-						<div>
-							{!hasFetchedData && (
-								<Container>
-									<Space h={16} />
-									<Center>
-										<Loader color="cyan" variant="oval" />
-									</Center>
-								</Container>
-							)}
-							{hasFetchedData && (
-								<>
-									<>{mainState}</>
-								</>
-							)}
-						</div>
-					)}
+					<div>
+						{!hasFetchedData && (
+							<Container>
+								<Space h={16} />
+								<Center>
+									<Loader color="cyan" variant="oval" />
+								</Center>
+							</Container>
+						)}
+						{hasFetchedData && (
+							<>
+								<>{mainState}</>
+							</>
+						)}
+					</div>
 				</>
 			)}
 		</div>
