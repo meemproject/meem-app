@@ -687,7 +687,7 @@ export const GuildExtension: React.FC = () => {
 
 	return (
 		<div>
-			<ExtensionBlankSlate extensionSlug={'guild'} />
+			<ExtensionBlankSlate />
 			{extensionIsReady(
 				isLoadingAgreement,
 				agreement,

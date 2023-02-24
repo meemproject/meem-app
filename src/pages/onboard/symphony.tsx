@@ -6,37 +6,23 @@ import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 
 const Home: NextPage = () => {
+	const pageTitle = `Symphony | Meem`
+	const pageDescription =
+		'Collaborative publishing tools for portable communities'
+
 	return (
 		<>
 			<Head>
-				<title>Onboarding | Symphony</title>
-				<meta name="title" content="Onboarding | Symphony" />
-				<meta
-					name="description"
-					content="Effortless access management and collaborative
-							publishing tools for your online community"
-				/>
+				<title>{pageTitle}</title>
+				<meta name="title" content={pageTitle} />
+				<meta name="description" content={pageDescription} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://app.meem.wtf/" />
-				<meta property="og:title" content="Onboarding | Symphony" />
-				<meta
-					property="og:description"
-					content="Effortless access management and collaborative
-							publishing tools for your online community"
-				/>
-
+				<meta property="og:title" content={pageTitle} />
+				<meta property="og:description" content={pageDescription} />
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://app.meem.wtf/" />
-				<meta
-					property="twitter:title"
-					content="Onboarding | Symphony"
-				/>
-				<meta
-					property="twitter:title"
-					content="Effortless access management and collaborative
-							publishing tools for your online community"
-				/>
-
+				<meta property="twitter:title" content={pageTitle} />
 				<meta
 					name="viewport"
 					content="initial-scale=1, width=device-width"

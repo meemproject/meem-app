@@ -1,27 +1,23 @@
 import log, { LogLevel } from '@kengoldfarb/log'
 import {
-	Center,
 	// eslint-disable-next-line import/named
 	ColorScheme,
 	ColorSchemeProvider,
-	Loader,
-	MantineProvider,
-	Space
+	MantineProvider
 } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { NotificationsProvider } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
 import { default as AbortController } from 'abort-controller'
 import type { AppProps } from 'next/app'
-import { Router, useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import Script from 'next/script'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
 import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
 import { App, hostnameToChainId } from '../components/App'
 import '@fontsource/inter'
 import 'isomorphic-fetch'
-import { HeaderMenu } from '../components/Header/Header'
 
 // Fix an issue with SSR / ServerSideProps in NextJS
 Object.assign(globalThis, {
@@ -84,146 +80,68 @@ function MyApp(props: AppProps) {
 			'/settings' || router.pathname.includes('/roles')
 		)
 
-	const [loading, setLoading] = useState(false)
-	useEffect(() => {
-		const start = () => {
-			if (
-				!router.pathname.includes('/admin') &&
-				!router.pathname.includes('profile')
-			) {
-				setLoading(true)
-			}
-		}
-		const end = () => {
-			setLoading(false)
-		}
-		Router.events.on('routeChangeStart', start)
-		Router.events.on('routeChangeComplete', end)
-		Router.events.on('routeChangeError', end)
-		return () => {
-			Router.events.off('routeChangeStart', start)
-			Router.events.off('routeChangeComplete', end)
-			Router.events.off('routeChangeError', end)
-		}
-	}, [router.pathname])
-
 	return (
 		<>
 			<MeemProvider
 				chainId={chainId}
 				magicApiKey={process.env.NEXT_PUBLIC_MAGIC_API_KEY ?? ''}
 			>
-				{loading && (
-					<>
-						<ColorSchemeProvider
-							colorScheme={colorScheme}
-							toggleColorScheme={toggleColorScheme}
+				<>
+					<ColorSchemeProvider
+						colorScheme={colorScheme}
+						toggleColorScheme={toggleColorScheme}
+					>
+						<MantineProvider
+							withGlobalStyles
+							withNormalizeCSS
+							theme={{
+								fontFamily: 'Inter, sans-serif',
+								spacing: {
+									xs: 15,
+									sm: 20,
+									md: 25,
+									lg: 30,
+									xl: 40
+								},
+								lineHeight: 1,
+								breakpoints: {
+									xs: 500,
+									sm: 800,
+									md: 1000,
+									lg: 1200,
+									xl: 1400
+								},
+								colors: {
+									brand: [
+										'#EFF7FF',
+										'#bed2e2',
+										'#266a9d',
+										'#266a9d',
+										'#266a9d',
+										'#266a9d',
+										'#266a9d',
+										'#495CA8',
+										'#4B588F',
+										'#49537A'
+									]
+								},
+								colorScheme,
+								primaryColor: 'brand'
+							}}
 						>
-							<MantineProvider
-								withGlobalStyles
-								withNormalizeCSS
-								theme={{
-									fontFamily: 'Inter, sans-serif',
-									spacing: {
-										xs: 15,
-										sm: 20,
-										md: 25,
-										lg: 30,
-										xl: 40
-									},
-									lineHeight: 1,
-									breakpoints: {
-										xs: 500,
-										sm: 800,
-										md: 1000,
-										lg: 1200,
-										xl: 1400
-									},
-									colors: {
-										brand: [
-											'#EFF7FF',
-											'#bed2e2',
-											'#266a9d',
-											'#266a9d',
-											'#266a9d',
-											'#266a9d',
-											'#266a9d',
-											'#495CA8',
-											'#4B588F',
-											'#49537A'
-										]
-									},
-									colorScheme,
-									primaryColor: 'brand'
-								}}
-							>
-								<HeaderMenu />
-								<Space h={120} />
-								<Center>
-									<Loader variant="oval" color="cyan" />
-								</Center>
-							</MantineProvider>
-						</ColorSchemeProvider>
-					</>
-				)}
-				{!loading && (
-					<>
-						<ColorSchemeProvider
-							colorScheme={colorScheme}
-							toggleColorScheme={toggleColorScheme}
-						>
-							<MantineProvider
-								withGlobalStyles
-								withNormalizeCSS
-								theme={{
-									fontFamily: 'Inter, sans-serif',
-									spacing: {
-										xs: 15,
-										sm: 20,
-										md: 25,
-										lg: 30,
-										xl: 40
-									},
-									lineHeight: 1,
-									breakpoints: {
-										xs: 500,
-										sm: 800,
-										md: 1000,
-										lg: 1200,
-										xl: 1400
-									},
-									colors: {
-										brand: [
-											'#EFF7FF',
-											'#bed2e2',
-											'#266a9d',
-											'#266a9d',
-											'#266a9d',
-											'#266a9d',
-											'#266a9d',
-											'#495CA8',
-											'#4B588F',
-											'#49537A'
-										]
-									},
-									colorScheme,
-									primaryColor: 'brand'
-								}}
-							>
-								<NotificationsProvider>
-									<AgreementProvider
-										slug={agreementSlug}
-										isMembersOnly={isMembershipRequired}
-									>
-										<App>
-											<Component {...pageProps} />
-										</App>
-									</AgreementProvider>
-								</NotificationsProvider>
-							</MantineProvider>
-						</ColorSchemeProvider>
-					</>
-				)}
+							<NotificationsProvider>
+								<AgreementProvider
+									slug={agreementSlug}
+									isMembersOnly={isMembershipRequired}
+								>
+									<App>
+										<Component {...pageProps} />
+									</App>
+								</AgreementProvider>
+							</NotificationsProvider>
+						</MantineProvider>
+					</ColorSchemeProvider>
+				</>
 			</MeemProvider>
 			<Script src="https://desk.zoho.com/portal/api/web/inapp/829537000000317001?orgId=803188851" />
 		</>

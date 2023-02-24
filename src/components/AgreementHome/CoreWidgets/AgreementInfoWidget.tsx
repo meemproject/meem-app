@@ -74,12 +74,12 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	)
 
 	const joinAgreement = async () => {
-		if (!wallet.web3Provider || !wallet.isConnected || !wallet.signer) {
-			await wallet.connectWallet()
-			return
-		}
-
-		if (wallet.loginState !== LoginState.LoggedIn) {
+		if (
+			!wallet.web3Provider ||
+			!wallet.isConnected ||
+			!wallet.signer ||
+			wallet.loginState !== LoginState.LoggedIn
+		) {
 			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}`)
 			router.push('/authenticate')
 			return
