@@ -1,6 +1,7 @@
 import { Button, Modal, Space, Image, Center, Text } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useMeemTheme } from './Styles/MeemTheme'
 
@@ -47,6 +48,7 @@ export function hostnameToChainId(hostname: string): number {
 export const App: React.FC<IProps> = ({ children }) => {
 	const { chainId, setChain } = useAuth()
 	const { classes: meemTheme } = useMeemTheme()
+	const router = useRouter()
 
 	let expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID
 		? +process.env.NEXT_PUBLIC_CHAIN_ID
@@ -95,8 +97,9 @@ export const App: React.FC<IProps> = ({ children }) => {
 				<Center>
 					<Button
 						className={meemTheme.buttonBlack}
-						onClick={() => {
-							setChain(expectedChainId)
+						onClick={async () => {
+							await setChain(expectedChainId)
+							router.reload()
 						}}
 					>
 						{`Switch Network to ${correctChainIdName}`}
@@ -125,7 +128,7 @@ export const App: React.FC<IProps> = ({ children }) => {
 					<Text
 						className={meemTheme.tMedium}
 						style={{ textAlign: 'center' }}
-					>{`You're currently connected to the wrong network. Please connect to ${correctChainIdName} to continue.`}</Text>
+					>{`You're currently connected to the wrong network. Please connect to ${correctChainIdName} and refresh this page to continue.`}</Text>
 				</Center>
 				<Space h={16} />
 				<Center>
