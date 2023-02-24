@@ -3,7 +3,7 @@ import { useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { extensionFromSlug } from '../../model/agreement/agreements'
-import { toTitleCase } from '../../utils/strings'
+import { deslugify } from '../../utils/strings'
 import { useAgreement } from '../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
@@ -29,7 +29,7 @@ export const ExtensionSettingsModal: React.FC<IProps> = ({
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [isPrivateExtension, setIsPrivateExtension] = useState(false)
 
-	const extensionName = toTitleCase(extensionSlug.replaceAll('-', ' '))
+	const extensionName = deslugify(extensionSlug)
 	const agreementExtension = extensionFromSlug(extensionSlug, agreement)
 
 	const saveChanges = async () => {
