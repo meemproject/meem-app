@@ -1,5 +1,5 @@
 import { Space } from '@mantine/core'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -10,14 +10,15 @@ import { HeaderMenu } from '../../../../../components/Header/Header'
 import { meemCommunityDescription } from '../../../../../utils/sitedescriptions'
 import { deslugify } from '../../../../../utils/strings'
 
-const DiscussionPostPage: NextPage = () => {
+interface IProps {
+	agreementName: string
+}
+
+const DiscussionPostPage: NextPage<IProps> = ({ agreementName }) => {
 	const router = useRouter()
+	const postId: string =
+		router.query.postId === undefined ? '' : `${router.query.postId}`
 
-	const postId: string = router.asPath.split('/')[1]
-
-	const agreementSlug =
-		router.query.slug === undefined ? undefined : `${router.query.slug}`
-	const agreementName = deslugify(agreementSlug ?? '')
 	const pageTitle = `Discussions | ${agreementName} | Meem`
 
 	return (
@@ -69,6 +70,14 @@ const DiscussionPostPage: NextPage = () => {
 			<MeemFooter />
 		</>
 	)
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+	return {
+		props: {
+			agreementName: deslugify(params?.slug?.toString() ?? '')
+		}
+	}
 }
 
 export default DiscussionPostPage
