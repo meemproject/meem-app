@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Space } from '@mantine/core'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { DiscussionPostSubmit } from '../../../../components/Extensions/Discussions/DiscussionPostSubmit'
 import { DiscussionsProvider } from '../../../../components/Extensions/Discussions/DiscussionProvider'
@@ -11,10 +10,11 @@ import { HeaderMenu } from '../../../../components/Header/Header'
 import { meemCommunityDescription } from '../../../../utils/sitedescriptions'
 import { deslugify } from '../../../../utils/strings'
 
-const DiscussionPostSubmitPage: NextPage = () => {
-	const router = useRouter()
-	const agreementSlug = router.asPath.split('/')[1]
-	const agreementName = deslugify(agreementSlug ?? '')
+interface IProps {
+	agreementName: string
+}
+
+const DiscussionPostSubmitPage: NextPage<IProps> = ({ agreementName }) => {
 	const pageTitle = `Submit Post | Discussions | ${agreementName} | Meem`
 
 	return (
@@ -66,6 +66,14 @@ const DiscussionPostSubmitPage: NextPage = () => {
 			<MeemFooter />
 		</>
 	)
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+	return {
+		props: {
+			agreementName: deslugify(params?.slug?.toString() ?? '')
+		}
+	}
 }
 
 export default DiscussionPostSubmitPage

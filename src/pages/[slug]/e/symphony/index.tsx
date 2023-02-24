@@ -1,18 +1,18 @@
 /* eslint-disable react/prop-types */
 import { Space } from '@mantine/core'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { SymphonyExtensionOnboarding } from '../../../../components/Extensions/Symphony/SymphonyExtensionOnboarding'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { deslugify } from '../../../../utils/strings'
 
-const AgreementSymphonyExtensionSettingsPage: NextPage = () => {
-	const router = useRouter()
-	const agreementSlug = router.asPath.split('/')[1]
-	const agreementName = deslugify(agreementSlug ?? '')
+interface IProps {
+	agreementName: string
+}
+
+const SymphonySetupPage: NextPage<IProps> = ({ agreementName }) => {
 	const pageTitle = `Symphony Setup | ${agreementName} | Meem`
 	const pageDescription =
 		'Collaborative publishing tools for portable communities'
@@ -63,4 +63,12 @@ const AgreementSymphonyExtensionSettingsPage: NextPage = () => {
 	)
 }
 
-export default AgreementSymphonyExtensionSettingsPage
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+	return {
+		props: {
+			agreementName: deslugify(params?.slug?.toString() ?? '')
+		}
+	}
+}
+
+export default SymphonySetupPage

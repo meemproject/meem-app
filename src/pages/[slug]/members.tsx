@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Space } from '@mantine/core'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { AgreementMembersComponent } from '../../components/AgreementHome/Members/AgreementMembers'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
@@ -10,10 +9,11 @@ import { HeaderMenu } from '../../components/Header/Header'
 import { meemCommunityDescription } from '../../utils/sitedescriptions'
 import { deslugify } from '../../utils/strings'
 
-const AgreementMembersPage: NextPage = () => {
-	const router = useRouter()
-	const agreementSlug = router.asPath.split('/')[1]
-	const agreementName = deslugify(agreementSlug ?? '')
+interface IProps {
+	agreementName: string
+}
+
+const AgreementMembersPage: NextPage<IProps> = ({ agreementName }) => {
 	const pageTitle = `Members | ${agreementName} | Meem`
 
 	return (
@@ -64,6 +64,14 @@ const AgreementMembersPage: NextPage = () => {
 			<MeemFooter />
 		</>
 	)
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+	return {
+		props: {
+			agreementName: deslugify(params?.slug?.toString() ?? '')
+		}
+	}
 }
 
 export default AgreementMembersPage
