@@ -605,6 +605,20 @@ export const SymphonyExtension: React.FC = () => {
 													setIsConnectDiscordModalOpen(
 														true
 													)
+
+													const dataLayer =
+														(window as any)
+															.dataLayer ?? null
+
+													dataLayer?.push({
+														event: 'event',
+														eventProps: {
+															category:
+																'Symphony Extension',
+															action: 'Manage Connection',
+															label: 'Reconnect Discord'
+														}
+													})
 												}}
 											>
 												Re-authenticate
