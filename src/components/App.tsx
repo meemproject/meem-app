@@ -1,8 +1,10 @@
 import { Button, Modal, Space, Image, Center, Text } from '@mantine/core'
-import { useAuth } from '@meemproject/react'
+import { useAuth, useWallet } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { CookieKeys } from '../utils/cookies'
 import { useMeemTheme } from './Styles/MeemTheme'
 
 export interface IProps {
@@ -49,6 +51,7 @@ export const App: React.FC<IProps> = ({ children }) => {
 	const { chainId, setChain } = useAuth()
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
+	const wallet = useWallet()
 
 	let expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID
 		? +process.env.NEXT_PUBLIC_CHAIN_ID
@@ -71,6 +74,12 @@ export const App: React.FC<IProps> = ({ children }) => {
 			: expectedChainId === 10
 			? 'Optimism'
 			: 'The correct network'
+
+	function reAuth() {
+		wallet.disconnectWallet()
+		Cookies.set(CookieKeys.authRedirectUrl, window.location.href)
+		router.push('/authenticate')
+	}
 
 	const switchNetworkModalContents = (
 		<>
@@ -105,6 +114,15 @@ export const App: React.FC<IProps> = ({ children }) => {
 						{`Switch Network to ${correctChainIdName}`}
 					</Button>
 				</Center>
+				<Space h={16} />
+				<Button
+					className={meemTheme.buttonWhite}
+					onClick={() => {
+						reAuth()
+					}}
+				>
+					Sign in again
+				</Button>
 			</div>
 			<Space h={16} />
 		</>
@@ -148,6 +166,15 @@ export const App: React.FC<IProps> = ({ children }) => {
 						</a>
 					</Link>
 				</Center>
+				<Space h={16} />
+				<Button
+					className={meemTheme.buttonBlack}
+					onClick={() => {
+						reAuth()
+					}}
+				>
+					Sign in again
+				</Button>
 			</div>
 			<Space h={16} />
 		</>
