@@ -1,4 +1,4 @@
-import { Center, Space, Text, Image } from '@mantine/core'
+import { Space, Text } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { ExtensionWidgetContainer } from '../Extensions/ExtensionWidgetContainer'
@@ -11,40 +11,6 @@ export const MeemPromoWidgets: React.FC = () => {
 	return (
 		<div>
 			<>
-				<ExtensionWidgetContainer
-					extensionSlug={'Meem @ ETHDenver'}
-					customIcon={'/pin-alt.svg'}
-					onSettingsOpened={function (): void {}}
-				>
-					<Center>
-						<Image src="/ethdenver.png" width={100} height={100} />
-					</Center>
-					<Space h={16} />
-
-					<Center>
-						<Text
-							className={meemTheme.tSmall}
-							style={{ textAlign: 'center' }}
-						>
-							The Meem team will be at ETHDenver from Monday,
-							February 27th to Sunday, March 5th.{' '}
-							<span
-								style={{
-									fontWeight: 'bold',
-									cursor: 'pointer',
-									color: colorBlue
-								}}
-								onClick={() => {
-									router.push(
-										'https://form.typeform.com/to/ER2kBg3I'
-									)
-								}}
-							>
-								Come say hi!
-							</span>
-						</Text>
-					</Center>
-				</ExtensionWidgetContainer>
 				<ExtensionWidgetContainer
 					extensionSlug={'What is Meem?'}
 					customIcon={'/chat-bubble-question.svg'}
