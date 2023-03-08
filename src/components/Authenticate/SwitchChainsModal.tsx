@@ -1,21 +1,34 @@
+import log from '@kengoldfarb/log'
 import { Button, Modal, Space, Image, Center, Text } from '@mantine/core'
-import { useAuth, useWallet } from '@meemproject/react'
-import Cookies from 'js-cookie'
+import { useAuth } from '@meemproject/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { CookieKeys } from '../../utils/cookies'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 export function isWrongChainId(chainId: number) {
 	const expectedChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
 
-	const isWrong =
-		typeof window !== 'undefined' &&
-		chainId !== undefined &&
-		chainId !== expectedChainId
+	log.debug(`expected = ${expectedChainId}`)
+	log.debug(`current chain id = ${chainId}`)
+
+	const isWrong = chainId !== undefined && chainId !== expectedChainId
 
 	return isWrong
+}
+
+export function correctChainIdName(): string {
+	const expectedChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
+
+	const correctChain =
+		expectedChainId === 137
+			? 'Polygon'
+			: expectedChainId === 80001
+			? 'Mumbai'
+			: expectedChainId === 10
+			? 'Optimism'
+			: 'The correct network'
+	return correctChain
 }
 
 interface IProps {
@@ -30,26 +43,10 @@ export const SwitchChainsModal: React.FC<IProps> = ({
 	const { setChain } = useAuth()
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
-	const wallet = useWallet()
 
 	const expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID
 		? +process.env.NEXT_PUBLIC_CHAIN_ID
 		: 0
-
-	const correctChainIdName =
-		expectedChainId === 137
-			? 'Polygon'
-			: expectedChainId === 80001
-			? 'Mumbai'
-			: expectedChainId === 10
-			? 'Optimism'
-			: 'The correct network'
-
-	function reAuth() {
-		wallet.disconnectWallet()
-		Cookies.set(CookieKeys.authRedirectUrl, window.location.href)
-		router.push('/authenticate')
-	}
 
 	const switchNetworkModalContents = (
 		<>
@@ -81,18 +78,9 @@ export const SwitchChainsModal: React.FC<IProps> = ({
 							router.reload()
 						}}
 					>
-						{`Switch Network to ${correctChainIdName}`}
+						{`Switch Network to ${correctChainIdName()}`}
 					</Button>
 				</Center>
-				<Space h={16} />
-				<Button
-					className={meemTheme.buttonWhite}
-					onClick={() => {
-						reAuth()
-					}}
-				>
-					Sign in again
-				</Button>
 			</div>
 			<Space h={16} />
 		</>
@@ -136,15 +124,6 @@ export const SwitchChainsModal: React.FC<IProps> = ({
 						</a>
 					</Link>
 				</Center>
-				<Space h={16} />
-				<Button
-					className={meemTheme.buttonBlack}
-					onClick={() => {
-						reAuth()
-					}}
-				>
-					Sign in again
-				</Button>
 			</div>
 			<Space h={16} />
 		</>
