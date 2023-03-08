@@ -12,6 +12,7 @@ import {
 import { showErrorNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import {
+	correctChainIdName,
 	isWrongChainId,
 	SwitchChainsModal
 } from '../../Authenticate/SwitchChainsModal'
@@ -51,6 +52,10 @@ export const ChangeMeemProtocolPermissionsComponent: React.FC<IProps> = ({
 		async function changeMeemProtocolPermissions() {
 			if (!wallet.web3Provider || !agreement) {
 				log.debug('no web3provider or agreement')
+				showErrorNotification(
+					'Unable to change Meem protocol permissions.',
+					`Make sure you are connected to the ${correctChainIdName()} network.`
+				)
 				return
 			}
 
