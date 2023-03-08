@@ -15,7 +15,6 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../utils/notifications'
-import { hostnameToChainId } from '../App'
 import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	agreementName: string
@@ -154,11 +153,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 					associations: [],
 					external_url: ''
 				},
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+				chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID)
 			}
 
 			log.debug(JSON.stringify(data))

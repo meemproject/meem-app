@@ -17,7 +17,6 @@ import {
 	Container,
 	Stepper,
 	TextInput,
-	Popover,
 	Code,
 	Progress
 } from '@mantine/core'
@@ -29,9 +28,8 @@ import {
 	useAuth
 } from '@meemproject/react'
 import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
-import { Group, InfoEmpty } from 'iconoir-react'
+import { Group } from 'iconoir-react'
 import Cookies from 'js-cookie'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
@@ -58,10 +56,6 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
-import { deslugify } from '../../../utils/strings'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { hostnameToChainId } from '../../App'
-import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import { MeemFAQModal } from '../../Header/MeemFAQModal'
 import {
 	colorAshLight,
@@ -69,7 +63,6 @@ import {
 	colorBlue,
 	colorDarkerGrey,
 	colorGreen,
-	colorGrey,
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -133,11 +126,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		SUB_MY_AGREEMENTS,
 		{
 			variables: {
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					),
+				chainId: process.env.NEXT_PUBLIC_CHAIN_ID,
 				walletAddress:
 					wallet.accounts &&
 					wallet.accounts[0] &&
@@ -265,9 +254,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 						.toString()
 						.replaceAll(' ', '-')
 						.toLowerCase(),
-					chainId: hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+					chainId: process.env.NEXT_PUBLIC_CHAIN_ID
 				}
 			})
 
@@ -341,11 +328,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					associations: [],
 					external_url: ''
 				},
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+				chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID)
 			}
 
 			log.debug(JSON.stringify(data))

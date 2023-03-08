@@ -6,7 +6,6 @@ import React, { useEffect } from 'react'
 // eslint-disable-next-line import/namespace
 import { GetIsMemberOfAgreementQuery } from '../../../generated/graphql'
 import { GET_IS_MEMBER_OF_AGREEMENT } from '../../graphql/agreements'
-import { hostnameToChainId } from '../App'
 
 export function HomeComponent() {
 	const router = useRouter()
@@ -21,11 +20,7 @@ export function HomeComponent() {
 		variables: {
 			walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
 			agreementSlug: 'meem',
-			chainId:
-				wallet.chainId ??
-				hostnameToChainId(
-					global.window ? global.window.location.host : ''
-				)
+			chainId: process.env.NEXT_PUBLIC_CHAIN_ID
 		},
 		client: anonClient
 	})

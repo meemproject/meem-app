@@ -15,7 +15,7 @@ import Script from 'next/script'
 import React, { useEffect } from 'react'
 import TagManager from 'react-gtm-module'
 import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
-import { App, hostnameToChainId } from '../components/App'
+import { App } from '../components/App'
 import '@fontsource/inter'
 import 'isomorphic-fetch'
 
@@ -61,15 +61,7 @@ function MyApp(props: AppProps) {
 	const toggleColorScheme = (value?: ColorScheme) =>
 		setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
 
-	let chainId
-
-	if (process.env.NEXT_PUBLIC_CHAIN_ID) {
-		chainId = +process.env.NEXT_PUBLIC_CHAIN_ID
-	} else if (typeof window !== 'undefined') {
-		chainId = hostnameToChainId(window.location.hostname)
-	} else {
-		chainId = 5
-	}
+	const chainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
 
 	const agreementSlug =
 		router.query.slug === undefined ? undefined : `${router.query.slug}`

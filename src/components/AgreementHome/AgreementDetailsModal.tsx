@@ -3,7 +3,6 @@ import { Copy } from 'iconoir-react'
 import React, { useState } from 'react'
 import { Agreement } from '../../model/agreement/agreements'
 import { showSuccessNotification } from '../../utils/notifications'
-import { hostnameToChainId } from '../App'
 import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
@@ -66,7 +65,7 @@ export const AgreementDetailsModal: React.FC<IProps> = ({
 			<Space h={8} />
 			<Center>
 				<div className={meemTheme.row}>
-					<Text>{hostnameToChainId(window?.location.hostname)}</Text>
+					<Text>{process.env.NEXT_PUBLIC_CHAIN_ID}</Text>
 					<Space w={4} />
 					<Copy
 						className={meemTheme.copyIcon}
@@ -75,9 +74,7 @@ export const AgreementDetailsModal: React.FC<IProps> = ({
 						color={colorBlue}
 						onClick={() => {
 							navigator.clipboard.writeText(
-								`${hostnameToChainId(
-									window?.location.hostname
-								)}`
+								`${process.env.NEXT_PUBLIC_CHAIN_ID}`
 							)
 							showSuccessNotification(
 								'Chain ID copied!',

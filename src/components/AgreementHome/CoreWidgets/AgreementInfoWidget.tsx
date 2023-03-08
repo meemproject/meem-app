@@ -34,6 +34,11 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
+import {
+	correctChainIdName,
+	isWrongChainId,
+	SwitchChainsModal
+} from '../../Authenticate/SwitchChainsModal'
 import { colorLightGrey, useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementDetailsModal } from '../AgreementDetailsModal'
 import { JoinLeaveAgreementModal } from '../JoinLeaveAgreementModal'
@@ -63,6 +68,9 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	const [isAgreementDetailsModalOpen, setIsAgreementDetailsModalOpen] =
 		useState(false)
 
+	const [isSwitchChainsModalOpened, setIsSwitchChainsModalOpened] =
+		useState(false)
+
 	const { data: bundleData } = useQuery<GetBundleByIdQuery>(
 		GET_BUNDLE_BY_ID,
 		{
@@ -74,6 +82,16 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	)
 
 	const joinAgreement = async () => {
+		const doesRequireMembershipFee =
+			typeof agreement?.membershipSettings?.costToJoin === 'number' &&
+			agreement.membershipSettings.costToJoin > 0
+
+		if (doesRequireMembershipFee && isWrongChainId(wallet.chainId ?? 0)) {
+			log.debug(`wrong chain id for action.`)
+			setIsSwitchChainsModalOpened(true)
+			return
+		}
+
 		if (
 			!wallet.web3Provider ||
 			!wallet.isConnected ||
@@ -111,11 +129,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				agreement.id &&
 				agreement.address
 			) {
-				if (
-					typeof agreement?.membershipSettings?.costToJoin ===
-						'number' &&
-					agreement.membershipSettings.costToJoin > 0
-				) {
+				if (doesRequireMembershipFee) {
 					const { proof } = await sdk.agreement.getMintingProof({
 						to: wallet.accounts[0],
 						agreementId: agreement.id
@@ -215,10 +229,18 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 	}
 
 	const leaveAgreement = async () => {
+		const network = await wallet.web3Provider?.getNetwork()
+
+		if (network && isWrongChainId(network.chainId)) {
+			log.debug(`wrong chain id for action.`)
+			setIsSwitchChainsModalOpened(true)
+			return
+		}
+
 		if (!wallet.web3Provider || !wallet.isConnected) {
 			showErrorNotification(
 				'Unable to leave this community.',
-				`Did you connect your wallet?`
+				`Make sure you are connected to the ${correctChainIdName()} network.`
 			)
 			return
 		}
@@ -570,6 +592,12 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				isOpened={isAgreementDetailsModalOpen}
 				onModalClosed={() => {
 					setIsAgreementDetailsModalOpen(false)
+				}}
+			/>
+			<SwitchChainsModal
+				isOpened={isSwitchChainsModalOpened}
+				onModalClosed={function (): void {
+					setIsSwitchChainsModalOpened(false)
 				}}
 			/>
 		</>
