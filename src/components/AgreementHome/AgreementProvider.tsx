@@ -35,7 +35,6 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../utils/notifications'
-import { hostnameToChainId } from '../App'
 
 const defaultState: {
 	agreement?: Agreement
@@ -96,11 +95,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			variables: {
 				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
 				agreementSlug: slug,
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+				chainId: process.env.NEXT_PUBLIC_CHAIN_ID
 			},
 			skip: !slug || isMembersOnly,
 			client: anonClient
@@ -116,11 +111,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		{
 			variables: {
 				slug,
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+				chainId: process.env.NEXT_PUBLIC_CHAIN_ID
 			},
 			client: mutualMembersClient,
 			skip:
@@ -140,11 +131,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 	} = useSubscription<GetAgreementSubscriptionSubscription>(SUB_AGREEMENT, {
 		variables: {
 			slug,
-			chainId:
-				wallet.chainId ??
-				hostnameToChainId(
-					global.window ? global.window.location.host : ''
-				)
+			chainId: process.env.NEXT_PUBLIC_CHAIN_ID
 		},
 		client: anonClient,
 		skip:

@@ -7,50 +7,8 @@ import React from 'react'
 import { CookieKeys } from '../../utils/cookies'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
-export function hostnameToChainId(hostname: string): number {
-	if (process.env.NEXT_PUBLIC_CHAIN_ID) {
-		return +process.env.NEXT_PUBLIC_CHAIN_ID
-	}
-
-	const subHostname = hostname.split('.')[0]
-	let expectedChainId = 0
-
-	switch (subHostname) {
-		case 'rinkeby':
-			expectedChainId = 4
-			break
-
-		case 'goerli':
-			expectedChainId = 5
-			break
-
-		case 'mumbai':
-			expectedChainId = 80001
-			break
-
-		case 'arbitrum-goerli':
-			expectedChainId = 421613
-			break
-
-		case 'optimism-goerli':
-			expectedChainId = 420
-			break
-
-		default:
-			break
-	}
-
-	return expectedChainId
-}
-
 export function isWrongChainId(chainId: number) {
-	let expectedChainId = process.env.NEXT_PUBLIC_CHAIN_ID
-		? +process.env.NEXT_PUBLIC_CHAIN_ID
-		: 0
-
-	if (typeof window !== 'undefined' && !expectedChainId) {
-		expectedChainId = hostnameToChainId(window.location.hostname)
-	}
+	const expectedChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
 
 	const isWrong =
 		typeof window !== 'undefined' &&
