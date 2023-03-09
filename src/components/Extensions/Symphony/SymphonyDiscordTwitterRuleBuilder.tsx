@@ -15,8 +15,8 @@ import { WarningCircle } from 'iconoir-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
-import { SubRulesSubscription } from '../../../../generated/graphql'
 import { useMeemTheme, colorOrangeRed } from '../../Styles/MeemTheme'
+import { SymphonyRule } from './Model/symphony'
 import { API } from './symphonyTypes.generated'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -24,9 +24,7 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 })
 
 export interface IProps {
-	channels?: API.IDiscordChannel[]
-	roles?: API.IDiscordRole[]
-	selectedRule?: SubRulesSubscription['Rules'][0]
+	rule?: SymphonyRule
 	onSave: (values: IOnSave) => void
 }
 
@@ -53,10 +51,8 @@ export interface IOnSave extends IFormValues {
 	vetoerEmojis: string[]
 }
 
-export const SymphonyRuleBuilder: React.FC<IProps> = ({
-	channels,
-	roles,
-	selectedRule,
+export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
+	rule,
 	onSave
 }) => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -65,17 +61,16 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 	const form = useForm({
 		initialValues: {
 			publishType: API.PublishType.PublishImmediately,
-			proposerRoles: selectedRule?.definition.proposerRoles ?? [],
-			approverRoles: selectedRule?.definition.approverRoles ?? [],
-			vetoerRoles: selectedRule?.definition.vetoerRoles ?? [],
-			proposalChannels: selectedRule?.definition.proposalChannels ?? [],
-			proposalShareChannel:
-				selectedRule?.definition.proposalShareChannel ?? '',
-			votes: selectedRule?.definition.votes ?? 1,
-			vetoVotes: selectedRule?.definition.vetoVotes ?? 1,
-			proposeVotes: selectedRule?.definition.proposeVotes ?? 1,
-			shouldReply: selectedRule?.definition.shouldReply ?? true,
-			canVeto: selectedRule?.definition.canVeto ?? false
+			proposerRoles: rule?.definition.proposerRoles ?? [],
+			approverRoles: rule?.definition.approverRoles ?? [],
+			vetoerRoles: rule?.definition.vetoerRoles ?? [],
+			proposalChannels: rule?.definition.proposalChannels ?? [],
+			proposalShareChannel: rule?.definition.proposalShareChannel ?? '',
+			votes: rule?.definition.votes ?? 1,
+			vetoVotes: rule?.definition.vetoVotes ?? 1,
+			proposeVotes: rule?.definition.proposeVotes ?? 1,
+			shouldReply: rule?.definition.shouldReply ?? true,
+			canVeto: rule?.definition.canVeto ?? false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -101,13 +96,13 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 	})
 
 	const [approverEmojis, setApproverEmojis] = useState<string[]>(
-		selectedRule?.definition.approverEmojis ?? []
+		rule?.definition.approverEmojis ?? []
 	)
 	const [proposerEmojis, setProposerEmojis] = useState<string[]>(
-		selectedRule?.definition.proposerEmojis ?? []
+		rule?.definition.proposerEmojis ?? []
 	)
 	const [vetoerEmojis, setVetoerEmojis] = useState<string[]>(
-		selectedRule?.definition.vetoerEmojis ?? []
+		rule?.definition.vetoerEmojis ?? []
 	)
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
 		EmojiSelectType.Approver
@@ -161,30 +156,32 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 	useEffect(() => {
 		form.setValues({
 			publishType:
-				selectedRule?.definition.publishType ??
+				rule?.definition.publishType ??
 				API.PublishType.PublishImmediately,
-			proposerRoles: selectedRule?.definition.proposerRoles,
-			approverRoles: selectedRule?.definition.approverRoles,
-			proposalChannels: selectedRule?.definition.proposalChannels,
-			proposalShareChannel: selectedRule?.definition.proposalShareChannel,
-			votes: selectedRule?.definition.votes,
-			vetoVotes: selectedRule?.definition.vetoVotes,
-			proposeVotes: selectedRule?.definition.proposeVotes,
-			shouldReply: selectedRule?.definition.shouldReply,
-			canVeto: selectedRule?.definition.canVeto
+			proposerRoles: rule?.definition.proposerRoles,
+			approverRoles: rule?.definition.approverRoles,
+			proposalChannels: rule?.definition.proposalChannels,
+			proposalShareChannel: rule?.definition.proposalShareChannel,
+			votes: rule?.definition.votes,
+			vetoVotes: rule?.definition.vetoVotes,
+			proposeVotes: rule?.definition.proposeVotes,
+			shouldReply: rule?.definition.shouldReply,
+			canVeto: rule?.definition.canVeto
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedRule])
+	}, [rule])
 
 	let isProposalChannelGated = false
 
 	if (
-		channels &&
+		rule?.input.discordChannels &&
 		form.values.proposalChannels &&
 		form.values.proposalChannels.length > 0
 	) {
 		form.values.proposalChannels.forEach((c: string) => {
-			const channel = channels.find(ch => ch.id === c)
+			const channel = rule?.input?.discordChannels?.find(
+				ch => ch.id === c
+			)
 			if (channel && (!channel.canSend || !channel.canView)) {
 				isProposalChannelGated = true
 			}
@@ -193,8 +190,8 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 
 	let isShareChannelGated = false
 
-	if (channels && form.values.proposalShareChannel) {
-		const channel = channels.find(
+	if (rule?.input?.discordChannels && form.values.proposalShareChannel) {
+		const channel = rule?.input?.discordChannels.find(
 			ch => ch.id === form.values.proposalShareChannel
 		)
 		if (channel && (!channel.canSend || !channel.canView)) {
@@ -233,12 +230,12 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 					: 'In what channels can a proposal be submitted?'}
 			</Text>
 
-			{channels && (
+			{rule?.input?.discordChannels && (
 				<>
 					<Space h={8} />
 					<MultiSelect
 						data={[
-							...channels.map(c => ({
+							...rule.input.discordChannels.map(c => ({
 								value: c.id,
 								label: c.name
 							}))
@@ -286,13 +283,13 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 					<Text className={meemTheme.tExtraSmall}>
 						Who can propose a post?
 					</Text>
-					{roles && (
+					{rule?.input?.discordRoles && (
 						<>
 							<Space h={8} />
 
 							<MultiSelect
 								multiple
-								data={roles.map(c => ({
+								data={rule?.input?.discordRoles.map(c => ({
 									value: c.id,
 									label: c.name
 								}))}
@@ -363,10 +360,10 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 				Who can vote to approve new posts for publication?
 			</Text>
 			<Space h={8} />
-			{roles && (
+			{rule?.input?.discordRoles && (
 				<MultiSelect
 					multiple
-					data={roles.map(c => ({
+					data={rule?.input?.discordRoles.map(c => ({
 						value: c.id,
 						label: c.name
 					}))}
@@ -433,12 +430,12 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 					<Text className={meemTheme.tExtraSmall}>
 						What Discord channel will new proposals be shared in?
 					</Text>
-					{channels && (
+					{rule?.input?.discordChannels && (
 						<>
 							<Space h={8} />
 
 							<Select
-								data={channels.map(c => ({
+								data={rule?.input?.discordChannels.map(c => ({
 									value: c.id,
 									label: c.name
 								}))}
@@ -494,10 +491,10 @@ export const SymphonyRuleBuilder: React.FC<IProps> = ({
 
 					<Text className={meemTheme.tExtraSmall}>Who can veto?</Text>
 					<Space h={8} />
-					{roles && (
+					{rule?.input?.discordRoles && (
 						<MultiSelect
 							multiple
-							data={roles.map(c => ({
+							data={rule?.input?.discordRoles.map(c => ({
 								value: c.id,
 								label: c.name
 							}))}

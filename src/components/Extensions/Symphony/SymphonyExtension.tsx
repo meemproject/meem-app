@@ -46,8 +46,12 @@ import {
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { SymphonyRule } from './Model/symphony'
 import { SUB_DISCORD, SUB_RULES, SUB_SLACK, SUB_TWITTER } from './symphony.gql'
-import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
+import {
+	IOnSave,
+	SymphonyDiscordTwitterRulesBuilder
+} from './SymphonyDiscordTwitterRuleBuilder'
 import { API } from './symphonyTypes.generated'
 
 export enum SelectedConnection {
@@ -70,8 +74,10 @@ export const SymphonyExtension: React.FC = () => {
 		useState<ApolloClient<NormalizedCacheObject>>()
 	const [selectedConnection, setSelectedConnection] =
 		useState<SelectedConnection>()
-	const [selectedRule, setSelectedRule] =
-		useState<SubRulesSubscription['Rules'][0]>()
+
+	const [previousRulesDataString, setPreviousRulesDataString] = useState('')
+	const [rules, setRules] = useState<SymphonyRule[]>()
+	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
 	const [botCode, setBotCode] = useState<string>('')
 
 	// Page state
@@ -188,6 +194,20 @@ export const SymphonyExtension: React.FC = () => {
 			shouldRetryOnError: false
 		}
 	)
+
+	// Parse rules from subscription
+	useEffect(() => {
+		// TODO: Will need to be refactored to support per-rule connections
+
+		const newRules: SymphonyRule[] = []
+		if (rulesData && discordData && twitterData) {
+			rulesData.Rules.forEach(rule => {})
+		}
+
+		if (previousRulesDataString) {
+			const rulesToJson = JSON.stringify(newRules)
+		}
+	}, [])
 
 	// Handle authentication for different services
 	const handleInviteBot = useCallback(async () => {
@@ -437,7 +457,6 @@ export const SymphonyExtension: React.FC = () => {
 	// Integration data states
 	const twitterUsername =
 		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
-	const rules = rulesData?.Rules
 	const discordInfo = discordData?.Discords[0]
 	// const slackInfo = slackData?.Slacks[0]
 	const hasFetchedData =
@@ -1073,10 +1092,8 @@ export const SymphonyExtension: React.FC = () => {
 					setIsRuleBuilderOpen(false)
 				}}
 			>
-				<SymphonyRuleBuilder
-					channels={channelsData?.channels}
-					selectedRule={selectedRule}
-					roles={rolesData?.roles}
+				<SymphonyDiscordTwitterRulesBuilder
+					rule={selectedRule}
 					onSave={handleRuleSave}
 				/>
 			</Modal>
@@ -1094,10 +1111,8 @@ export const SymphonyExtension: React.FC = () => {
 					setIsRuleBuilderOpen(false)
 				}}
 			>
-				<SymphonyRuleBuilder
-					channels={channelsData?.channels}
-					selectedRule={selectedRule}
-					roles={rolesData?.roles}
+				<SymphonyDiscordTwitterRulesBuilder
+					rule={selectedRule}
 					onSave={handleRuleSave}
 				/>
 			</Modal>
