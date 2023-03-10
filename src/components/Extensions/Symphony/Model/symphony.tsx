@@ -20,19 +20,13 @@ export interface SymphonyConnection {
 	platform: SymphonyConnectionPlatform
 
 	// Twitter
-	twitterUserId?: string
 	twitterUsername?: string
 
 	// Discord
 	discordServerId?: string
-	discordServerName?: string
-	discordChannels?: API.IDiscordChannel[]
-	discordRoles?: API.IDiscordRole[]
 
 	// Slack
 	slackWorkspaceId?: string
-	slackWorkspaceName?: string
-	// TODO: add slack channels / roles here
 
 	// WebHook
 	webHookUrl?: string
