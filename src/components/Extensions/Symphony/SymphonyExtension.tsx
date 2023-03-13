@@ -7,33 +7,30 @@ import {
 	Space,
 	Center,
 	Button,
-	Modal,
-	Loader
+	Loader,
+	Divider
 } from '@mantine/core'
-import { useAuth, useSDK } from '@meemproject/react'
-import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
+import { useAuth } from '@meemproject/react'
+import { createApolloClient, makeRequest } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { SubRulesSubscription } from '../../../../generated/graphql'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
+import { SymphonyConnectionsModal } from './Modals/SymphonyConnectionsModal'
+import { SymphonyInputOutputModal } from './Modals/SymphonyInputOutputModal'
 import {
 	SymphonyConnectionPlatform,
 	SymphonyConnectionType,
 	SymphonyRule
 } from './Model/symphony'
-import {
-	IOnSave,
-	SymphonyDiscordTwitterRulesBuilder
-} from './RuleBuilders/SymphonyDiscordTwitterRuleBuilder'
 import { SUB_RULES } from './symphony.gql'
 import { API } from './symphonyTypes.generated'
 
 export const SymphonyExtension: React.FC = () => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
-	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('symphony', agreement)
@@ -56,8 +53,9 @@ export const SymphonyExtension: React.FC = () => {
 	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
 
 	// Page state
-
-	const [isRuleBuilderOpen, setIsRuleBuilderOpen] = useState(false)
+	const [isManageConnectionsModalOpen, setIsManageConnectionsModalOpen] =
+		useState(false)
+	const [isNewRuleModalOpen, setIsNewRuleModalOpen] = useState(false)
 
 	const { data: rulesData } = useSubscription<SubRulesSubscription>(
 		SUB_RULES,
@@ -111,51 +109,6 @@ export const SymphonyExtension: React.FC = () => {
 		}
 	}, [previousRulesDataString, rulesData])
 
-	const handleRuleSave = async (values: IOnSave) => {
-		if (!agreement?.id || !jwt) {
-			return
-		}
-
-		await makeRequest<API.v1.SaveRules.IDefinition>(
-			`${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.SaveRules.path()}`,
-			{
-				method: API.v1.SaveRules.method,
-				body: {
-					jwt,
-					agreementId: agreement.id,
-					rules: [
-						{
-							...values,
-							action: API.PublishAction.Tweet,
-							isEnabled: true,
-							ruleId: selectedRule?.id
-						}
-					]
-				}
-			}
-		)
-
-		// If extension is not yet marked as 'setup complete', set as complete
-		if (!agreementExtension?.isSetupComplete) {
-			// Note: we don't need to await this request
-			sdk.agreementExtension.updateAgreementExtension({
-				agreementId: agreement?.id ?? '',
-				isSetupComplete: true,
-				agreementExtensionId: agreementExtension?.id,
-				widget: {
-					isEnabled: true,
-					visibility:
-						MeemAPI.AgreementExtensionVisibility.TokenHolders
-				}
-			})
-		}
-
-		setSelectedRule(undefined)
-		setIsRuleBuilderOpen(false)
-	}
-
 	const removeRule = async (ruleId: string) => {
 		if (!agreement?.id || !jwt) {
 			log.warn('Invalid agreement or jwt')
@@ -175,6 +128,8 @@ export const SymphonyExtension: React.FC = () => {
 				}
 			}
 		)
+
+		setSelectedRule(undefined)
 	}
 
 	// Integration data states
@@ -203,7 +158,7 @@ export const SymphonyExtension: React.FC = () => {
 											className={meemTheme.buttonWhite}
 											onClick={() => {
 												setSelectedRule(rule)
-												setIsRuleBuilderOpen(true)
+												setIsNewRuleModalOpen(true)
 											}}
 										>
 											Edit
@@ -241,7 +196,7 @@ export const SymphonyExtension: React.FC = () => {
 				<Button
 					className={meemTheme.buttonDarkGrey}
 					onClick={() => {
-						setIsRuleBuilderOpen(true)
+						setIsNewRuleModalOpen(true)
 						const dataLayer = (window as any).dataLayer ?? null
 
 						dataLayer?.push({
@@ -256,67 +211,40 @@ export const SymphonyExtension: React.FC = () => {
 					+ Add rule
 				</Button>
 			)}
-			<Modal
-				title={
-					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
-				}
-				className={meemTheme.visibleDesktopOnly}
-				padding={24}
-				overlayBlur={8}
-				radius={16}
-				size={'lg'}
-				opened={isRuleBuilderOpen}
-				onClose={() => {
-					setSelectedRule(undefined)
-					setIsRuleBuilderOpen(false)
-				}}
-			>
-				<SymphonyDiscordTwitterRulesBuilder
-					rule={selectedRule}
-					onSave={handleRuleSave}
-				/>
-			</Modal>
-			<Modal
-				title={
-					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
-				}
-				className={meemTheme.visibleMobileOnly}
-				padding={24}
-				fullScreen
-				size={'lg'}
-				opened={isRuleBuilderOpen}
-				onClose={() => {
-					setSelectedRule(undefined)
-					setIsRuleBuilderOpen(false)
-				}}
-			>
-				<SymphonyDiscordTwitterRulesBuilder
-					rule={selectedRule}
-					onSave={handleRuleSave}
-				/>
-			</Modal>
 		</>
 	)
 
 	const mainState = (
 		<>
-			{agreement?.isCurrentUserAgreementAdmin && (
+			{agreement?.isCurrentUserAgreementMember && (
 				<>
-					<Text></Text>
-					<Space h={40} />
+					<Text className={meemTheme.tMediumBold}>Connections</Text>
+					<Space h={24} />
 					<Text className={meemTheme.tExtraSmallLabel}>
-						PUBLISHING FLOWS
+						CONNECTED ACCOUNTS
 					</Text>
+					<Space h={24} />
+					<Button className={meemTheme.buttonWhite}>
+						Manage Connections
+					</Button>
+					<Space h={32} />
+
+					<Divider />
+					<Space h={32} />
+					<Text className={meemTheme.tMediumBold}>
+						Publishing Flows
+					</Text>
+					<Space h={24} />
+					<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
 					<Space h={4} />
 					<Text className={meemTheme.tExtraSmall}>
 						{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
 					</Text>
 
 					<Space h={16} />
+					{rulesSection()}
 				</>
 			)}
-
-			{agreement?.isCurrentUserAgreementMember && <>{rulesSection()}</>}
 			{!agreement?.isCurrentUserAgreementMember && (
 				<>
 					<Center>
@@ -354,6 +282,19 @@ export const SymphonyExtension: React.FC = () => {
 							</>
 						)}
 					</div>
+					<SymphonyConnectionsModal
+						isOpened={isManageConnectionsModalOpen}
+						onModalClosed={function (): void {
+							setIsManageConnectionsModalOpen(false)
+						}}
+					/>
+
+					<SymphonyInputOutputModal
+						isOpened={isNewRuleModalOpen}
+						onModalClosed={function (): void {
+							setIsNewRuleModalOpen(false)
+						}}
+					/>
 				</>
 			)}
 		</div>
