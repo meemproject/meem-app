@@ -296,6 +296,7 @@ export const SymphonyExtension: React.FC = () => {
 
 					<SymphonyInputOutputModal
 						isOpened={isNewRuleModalOpen}
+						existingRule={selectedRule}
 						onModalClosed={function (): void {
 							setIsNewRuleModalOpen(false)
 						}}

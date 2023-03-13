@@ -1,15 +1,11 @@
-import { Modal, Text } from '@mantine/core'
+import { Modal, Select, Space, Text } from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
 import { makeRequest, MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import {
-	SymphonyConnection,
-	SymphonyConnectionPlatform,
-	SymphonyRule
-} from '../Model/symphony'
+import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
 import {
 	IOnSave,
 	SymphonyDiscordTwitterRulesBuilder
@@ -92,7 +88,53 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		onModalClosed()
 	}
 
-	const modalContents = <></>
+	const modalContents = (
+		<>
+			<Text className={meemTheme.tExtraSmallLabel}>PROPOSALS</Text>
+			<Space h={24} />
+			<Text className={meemTheme.tSmallBold}>
+				Where will proposals be made?
+			</Text>
+			<Space h={8} />
+			<Text className={meemTheme.tSmall}>
+				Rules can only be made for one account at a time. Create
+				additional rules to accept proposals on multiple platforms or
+				accounts.
+			</Text>
+			<Space h={8} />
+			<Select
+				placeholder="Pick proposal source"
+				data={[
+					{ value: 'react', label: 'React' },
+					{ value: 'ng', label: 'Angular' },
+					{ value: 'svelte', label: 'Svelte' },
+					{ value: 'vue', label: 'Vue' }
+				]}
+			/>
+			<Space h={40} />
+
+			<Text className={meemTheme.tExtraSmallLabel}>PUBLISHING</Text>
+			<Space h={24} />
+			<Text className={meemTheme.tSmallBold}>
+				Where will posts be published?
+			</Text>
+			<Space h={8} />
+			<Text className={meemTheme.tSmall}>
+				Rules can only be made for one account at a time. Create
+				additional rules to publish on multiple platforms or accounts.
+			</Text>
+			<Space h={8} />
+			<Select
+				placeholder="Pick publishing destination"
+				data={[
+					{ value: 'react', label: 'React' },
+					{ value: 'ng', label: 'Angular' },
+					{ value: 'svelte', label: 'Svelte' },
+					{ value: 'vue', label: 'Vue' }
+				]}
+			/>
+		</>
+	)
 
 	return (
 		<>
