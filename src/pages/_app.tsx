@@ -18,6 +18,7 @@ import { AgreementProvider } from '../components/AgreementHome/AgreementProvider
 import { App } from '../components/App'
 import '@fontsource/inter'
 import 'isomorphic-fetch'
+import { AnalyticsProvider } from '../contexts/AnalyticsProvider'
 
 // Fix an issue with SSR / ServerSideProps in NextJS
 Object.assign(globalThis, {
@@ -126,9 +127,17 @@ function MyApp(props: AppProps) {
 									slug={agreementSlug}
 									isMembersOnly={isMembershipRequired}
 								>
-									<App>
-										<Component {...pageProps} />
-									</App>
+									<AnalyticsProvider
+										writeKey={
+											process.env
+												.NEXT_PUBLIC_SEGMENT_WRITE_KEY ??
+											''
+										}
+									>
+										<App>
+											<Component {...pageProps} />
+										</App>
+									</AnalyticsProvider>
 								</AgreementProvider>
 							</NotificationsProvider>
 						</MantineProvider>
