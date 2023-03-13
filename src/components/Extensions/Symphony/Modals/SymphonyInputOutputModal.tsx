@@ -2,10 +2,10 @@ import { Space, Center, Image, Container, Modal, Text } from '@mantine/core'
 import { DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
-import { SymphonyConnection } from './Model/symphony'
-import { SymphonyExtension } from './SymphonyExtension'
+import { useAgreement } from '../../../AgreementHome/AgreementProvider'
+import { colorWhite, useMeemTheme } from '../../../Styles/MeemTheme'
+import { SymphonyConnection } from '../Model/symphony'
+import { SymphonyExtension } from '../SymphonyExtension'
 
 interface IProps {
 	isOpened: boolean
