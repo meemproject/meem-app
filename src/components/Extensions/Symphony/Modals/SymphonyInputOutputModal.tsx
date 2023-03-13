@@ -41,6 +41,12 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	// The complete rule to save (returned from the rule builder)
 	const [rule, setRule] = useState<SymphonyRule>()
 
+	// Rule builder modal states
+	const [
+		isDiscordTwitterRuleBuilderOpened,
+		setIsDiscordTwitterRuleBuilderOpened
+	] = useState(false)
+
 	const handleRuleSave = async (values: IOnSave) => {
 		if (!agreement?.id || !jwt) {
 			return
@@ -129,18 +135,18 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 					</Modal>
 				</>
 			)}
-			{existingRule && (
+
+			{isOpened && (
 				<>
-					{existingRule.input.platform ===
-						SymphonyConnectionPlatform.Discord &&
-						existingRule.output.platform ===
-							SymphonyConnectionPlatform.Twitter && (
-							<SymphonyDiscordTwitterRulesBuilder
-								onSave={function (values: IOnSave): void {
-									handleRuleSave(values)
-								}}
-							/>
-						)}
+					<SymphonyDiscordTwitterRulesBuilder
+						onSave={function (values: IOnSave): void {
+							handleRuleSave(values)
+						}}
+						isOpened={isDiscordTwitterRuleBuilderOpened}
+						onModalClosed={function (): void {
+							setIsDiscordTwitterRuleBuilderOpened(false)
+						}}
+					/>
 				</>
 			)}
 		</>

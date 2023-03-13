@@ -42,6 +42,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export interface IProps {
 	rule?: SymphonyRule
+	isOpened: boolean
+	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
 }
 
@@ -70,6 +72,8 @@ export interface IOnSave extends IFormValues {
 
 export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
+	isOpened,
+	onModalClosed,
 	onSave
 }) => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -301,7 +305,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 
 	let isShareChannelGated = false
 
-	if (channelsData.channels && form.values.proposalShareChannel) {
+	if (channelsData?.channels && form.values.proposalShareChannel) {
 		const channel = channelsData.channels.find(
 			ch => ch.id === form.values.proposalShareChannel
 		)
@@ -310,7 +314,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		}
 	}
 
-	return (
+	const modalContents = (
 		<>
 			{loadingChannelsData ||
 				loadingDiscordData ||
@@ -757,6 +761,42 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					</form>
 				</>
 			)}
+		</>
+	)
+
+	return (
+		<>
+			<Modal
+				className={meemTheme.visibleDesktopOnly}
+				centered
+				radius={16}
+				overlayBlur={8}
+				size={'60%'}
+				padding={'lg'}
+				opened={isOpened}
+				title={
+					<Text className={meemTheme.tMediumBold}>Add New Flow</Text>
+				}
+				onClose={() => {
+					onModalClosed()
+				}}
+			>
+				{modalContents}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				fullScreen
+				padding={'lg'}
+				opened={isOpened}
+				title={
+					<Text className={meemTheme.tMediumBold}>Add New Flow</Text>
+				}
+				onClose={() => {
+					onModalClosed()
+				}}
+			>
+				{modalContents}
+			</Modal>
 		</>
 	)
 }

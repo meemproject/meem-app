@@ -208,7 +208,7 @@ export const SymphonyExtension: React.FC = () => {
 						})
 					}}
 				>
-					+ Add rule
+					+ Add New Flow
 				</Button>
 			)}
 		</>
@@ -224,7 +224,12 @@ export const SymphonyExtension: React.FC = () => {
 						CONNECTED ACCOUNTS
 					</Text>
 					<Space h={24} />
-					<Button className={meemTheme.buttonWhite}>
+					<Button
+						className={meemTheme.buttonWhite}
+						onClick={() => {
+							setIsManageConnectionsModalOpen(true)
+						}}
+					>
 						Manage Connections
 					</Button>
 					<Space h={32} />
