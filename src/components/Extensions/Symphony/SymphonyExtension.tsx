@@ -100,12 +100,10 @@ export const SymphonyExtension: React.FC = () => {
 			})
 		}
 
-		if (previousRulesDataString) {
-			const rulesToJson = JSON.stringify(newRules)
-			if (rulesToJson !== previousRulesDataString) {
-				setRules(newRules)
-				setPreviousRulesDataString(rulesToJson)
-			}
+		const rulesToJson = JSON.stringify(newRules)
+		if (rulesToJson !== previousRulesDataString) {
+			setRules(newRules)
+			setPreviousRulesDataString(rulesToJson)
 		}
 	}, [previousRulesDataString, rulesData])
 

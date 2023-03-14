@@ -11,7 +11,7 @@ import {
 } from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
 import { makeRequest, MeemAPI } from '@meemproject/sdk'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useAnalytics } from '../../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
@@ -61,6 +61,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		string | null
 	>(null)
 	const [hasFetchedIO, setHasFetchedIO] = useState(false)
+	const [isSavingRule, setIsSavingRule] = useState(false)
 
 	// The complete rule to save (returned from the rule builder)
 	const [rule, setRule] = useState<SymphonyRule>()
@@ -77,6 +78,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			return
 		}
 
+		setIsSavingRule(true)
+
 		await makeRequest<API.v1.SaveRules.IDefinition>(
 			`${
 				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
@@ -91,7 +94,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 							...values,
 							action: API.PublishAction.Tweet,
 							isEnabled: true,
-							ruleId: rule?.id
+							ruleId: existingRule?.id ?? rule?.id
 						}
 					]
 				}
@@ -132,9 +135,31 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 		setRule(undefined)
 		onModalClosed()
+		setIsSavingRule(false)
 	}
 
+	const openRuleBuilder = useCallback(() => {
+		if (selectedInput && selectedOutput) {
+			if (
+				selectedInput.platform === SymphonyConnectionPlatform.Discord &&
+				selectedOutput.platform ===
+					SymphonyConnectionPlatform.Twitter &&
+				!isDiscordTwitterRuleBuilderOpened
+			) {
+				// Discord to Twitter flow
+				setIsDiscordTwitterRuleBuilderOpened(true)
+			}
+		}
+	}, [isDiscordTwitterRuleBuilderOpened, selectedInput, selectedOutput])
+
 	useEffect(() => {
+		// Handle editing
+		if (isOpened && existingRule) {
+			setSelectedInput(existingRule.input)
+			setSelectedOutput(existingRule.output)
+			openRuleBuilder()
+		}
+
 		// Reset state so that new data can be fetched upon refresh
 		if (!isOpened && hasFetchedIO) {
 			setHasFetchedIO(false)
@@ -188,28 +213,16 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			setOutputs(fetchedOutputs)
 			setOutputValues(fetchedOutputValues)
 		}
-	}, [hasFetchedIO, isOpened])
-
-	const openRuleBuilder = () => {
-		if (selectedInput && selectedOutput) {
-			if (
-				selectedInput.platform === SymphonyConnectionPlatform.Discord &&
-				selectedOutput.platform === SymphonyConnectionPlatform.Twitter
-			) {
-				// Discord to Twitter flow
-				setIsDiscordTwitterRuleBuilderOpened(true)
-			}
-		}
-	}
+	}, [existingRule, hasFetchedIO, isOpened, openRuleBuilder])
 
 	const modalContents = (
 		<>
-			{!hasFetchedIO && (
+			{(!hasFetchedIO || isSavingRule) && (
 				<Center>
 					<Loader variant="oval" color="cyan" />
 				</Center>
 			)}
-			{hasFetchedIO && (
+			{hasFetchedIO && !isSavingRule && (
 				<>
 					<Text className={meemTheme.tExtraSmallLabel}>
 						PROPOSALS
@@ -337,6 +350,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						onSave={function (values: IOnSave): void {
 							handleRuleSave(values)
 						}}
+						rule={existingRule}
 						isOpened={isDiscordTwitterRuleBuilderOpened}
 						onModalClosed={function (): void {
 							setIsDiscordTwitterRuleBuilderOpened(false)
