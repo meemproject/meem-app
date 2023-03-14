@@ -126,7 +126,12 @@ export function HeaderMenu() {
 								target="_blank"
 								rel="noreferrer"
 							>
-								<Text className={meemTheme.tExtraSmallBold}>
+								<Text
+									className={meemTheme.tExtraSmallBold}
+									onClick={() => {
+										analytics.track('Dev Docs Viewed')
+									}}
+								>
 									Dev Docs
 								</Text>
 							</a>

@@ -33,8 +33,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 	const { agreement } = useAgreement()
 	const { jwt } = useAuth()
 
-	const handleDisconnect = useCallback(async () => 
-
+	const handleDisconnect = useCallback(async () => {
 		if (!jwt || !agreement?.id || !connection) {
 			return
 		}
