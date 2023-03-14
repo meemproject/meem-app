@@ -105,7 +105,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	// 		skip:
 	// 			process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
 	// 			!symphonyClient ||
-	// 			!agreement?.id,
+	// 			!agreement?.id || !isOpened,
 	// 		client: symphonyClient
 	// 	}
 	// )
@@ -115,7 +115,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			variables: {
 				agreementId: agreement?.id
 			},
-			skip: !symphonyClient || !agreement?.id,
+			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
 		})
 
@@ -124,7 +124,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			variables: {
 				agreementId: agreement?.id
 			},
-			skip: !symphonyClient || !agreement?.id,
+			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
 		})
 
@@ -152,28 +152,29 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			}
 		)
 
-	const { data: rolesData } = useSWR<API.v1.GetDiscordRoles.IResponseBody>(
-		agreement?.id && jwt
-			? `${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			  }${API.v1.GetDiscordRoles.path()}`
-			: null,
-		url => {
-			return makeFetcher<
-				API.v1.GetDiscordRoles.IQueryParams,
-				API.v1.GetDiscordRoles.IRequestBody,
-				API.v1.GetDiscordRoles.IResponseBody
-			>({
-				method: API.v1.GetDiscordRoles.method
-			})(url, {
-				jwt: jwt as string,
-				agreementId: agreement?.id as string
-			})
-		},
-		{
-			shouldRetryOnError: false
-		}
-	)
+	const { data: rolesData, isLoading: loadingRolesData } =
+		useSWR<API.v1.GetDiscordRoles.IResponseBody>(
+			agreement?.id && jwt
+				? `${
+						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+				  }${API.v1.GetDiscordRoles.path()}`
+				: null,
+			url => {
+				return makeFetcher<
+					API.v1.GetDiscordRoles.IQueryParams,
+					API.v1.GetDiscordRoles.IRequestBody,
+					API.v1.GetDiscordRoles.IResponseBody
+				>({
+					method: API.v1.GetDiscordRoles.method
+				})(url, {
+					jwt: jwt as string,
+					agreementId: agreement?.id as string
+				})
+			},
+			{
+				shouldRetryOnError: false
+			}
+		)
 
 	const form = useForm({
 		initialValues: {
@@ -307,16 +308,19 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 
 	const modalContents = (
 		<>
-			{loadingChannelsData ||
+			{(loadingChannelsData ||
 				loadingDiscordData ||
-				(loadingTwitterData && (
-					<>
-						<Center>
-							<Loader variant={'oval'} color={'cyan'} />
-						</Center>
-					</>
-				))}
-			{discordData && channelsData && twitterData && (
+				loadingTwitterData ||
+				loadingRolesData) && (
+				<>
+					<Space h={32} />
+					<Center>
+						<Loader variant={'oval'} color={'cyan'} />
+					</Center>
+					<Space h={32} />
+				</>
+			)}
+			{discordData && channelsData && twitterData && rolesData && (
 				<>
 					<form
 						onSubmit={form.onSubmit(values =>
@@ -410,7 +414,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 								<Text className={meemTheme.tExtraSmall}>
 									Who can propose a post?
 								</Text>
-								{rolesData.roles && (
+								{rolesData?.roles && (
 									<>
 										<Space h={8} />
 

@@ -1,12 +1,27 @@
-import { Modal, Select, Space, Text } from '@mantine/core'
+import {
+	Button,
+	Center,
+	Loader,
+	Modal,
+	Select,
+	// eslint-disable-next-line import/named
+	SelectItem,
+	Space,
+	Text
+} from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
 import { makeRequest, MeemAPI } from '@meemproject/sdk'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAnalytics } from '../../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
+import {
+	SymphonyConnection,
+	SymphonyConnectionPlatform,
+	SymphonyConnectionType,
+	SymphonyRule
+} from '../Model/symphony'
 import {
 	IOnSave,
 	SymphonyDiscordTwitterRulesBuilder
@@ -34,7 +49,18 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 	// Inputs and outputs for the provisional publishing flow (rule)
 	const [inputs, setInputs] = useState<SymphonyConnection[]>([])
+	const [inputValues, setInputValues] = useState<SelectItem[]>([])
+	const [selectedInput, setSelectedInput] = useState<SymphonyConnection>()
+	const [selectedInputValue, setSelectedInputValue] = useState<string | null>(
+		null
+	)
 	const [outputs, setOutputs] = useState<SymphonyConnection[]>([])
+	const [outputValues, setOutputValues] = useState<SelectItem[]>([])
+	const [selectedOutput, setSelectedOutput] = useState<SymphonyConnection>()
+	const [selectedOutputValue, setSelectedOutputValue] = useState<
+		string | null
+	>(null)
+	const [hasFetchedIO, setHasFetchedIO] = useState(false)
 
 	// The complete rule to save (returned from the rule builder)
 	const [rule, setRule] = useState<SymphonyRule>()
@@ -45,6 +71,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		setIsDiscordTwitterRuleBuilderOpened
 	] = useState(false)
 
+	// Save the rule
 	const handleRuleSave = async (values: IOnSave) => {
 		if (!agreement?.id || !jwt) {
 			return
@@ -107,51 +134,158 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		onModalClosed()
 	}
 
+	useEffect(() => {
+		// Reset state so that new data can be fetched upon refresh
+		if (!isOpened && hasFetchedIO) {
+			setHasFetchedIO(false)
+		}
+
+		if (!hasFetchedIO) {
+			// TODO: This is mock data obviously
+			setHasFetchedIO(true)
+
+			const fetchedInputs = [
+				{
+					id: 'discord',
+					name: `Discord: (serverName)`, // todo
+					type: SymphonyConnectionType.InputOnly,
+					platform: SymphonyConnectionPlatform.Discord,
+					discordServerId: '' // todo
+				}
+			]
+
+			const fetchedInputValues: SelectItem[] = []
+			fetchedInputs.forEach(inp => {
+				const inputVal = {
+					value: inp.id,
+					label: inp.name
+				}
+				fetchedInputValues.push(inputVal)
+			})
+
+			setInputs(fetchedInputs)
+			setInputValues(fetchedInputValues)
+
+			const fetchedOutputs = [
+				{
+					id: 'twitter',
+					name: `Twitter: (username)`, // todo
+					type: SymphonyConnectionType.OutputOnly,
+					platform: SymphonyConnectionPlatform.Twitter,
+					twitterUsername: '' // todo
+				}
+			]
+
+			const fetchedOutputValues: SelectItem[] = []
+			fetchedOutputs.forEach(out => {
+				const outVal = {
+					value: out.id,
+					label: out.name
+				}
+				fetchedOutputValues.push(outVal)
+			})
+
+			setOutputs(fetchedOutputs)
+			setOutputValues(fetchedOutputValues)
+		}
+	}, [hasFetchedIO, isOpened])
+
+	const openRuleBuilder = () => {
+		if (selectedInput && selectedOutput) {
+			if (
+				selectedInput.platform === SymphonyConnectionPlatform.Discord &&
+				selectedOutput.platform === SymphonyConnectionPlatform.Twitter
+			) {
+				// Discord to Twitter flow
+				setIsDiscordTwitterRuleBuilderOpened(true)
+			}
+		}
+	}
+
 	const modalContents = (
 		<>
-			<Text className={meemTheme.tExtraSmallLabel}>PROPOSALS</Text>
-			<Space h={24} />
-			<Text className={meemTheme.tSmallBold}>
-				Where will proposals be made?
-			</Text>
-			<Space h={8} />
-			<Text className={meemTheme.tSmall}>
-				Rules can only be made for one account at a time. Create
-				additional rules to accept proposals on multiple platforms or
-				accounts.
-			</Text>
-			<Space h={8} />
-			<Select
-				placeholder="Pick proposal source"
-				data={[
-					{ value: 'react', label: 'React' },
-					{ value: 'ng', label: 'Angular' },
-					{ value: 'svelte', label: 'Svelte' },
-					{ value: 'vue', label: 'Vue' }
-				]}
-			/>
-			<Space h={40} />
+			{!hasFetchedIO && (
+				<Center>
+					<Loader variant="oval" color="cyan" />
+				</Center>
+			)}
+			{hasFetchedIO && (
+				<>
+					<Text className={meemTheme.tExtraSmallLabel}>
+						PROPOSALS
+					</Text>
+					<Space h={24} />
+					<Text className={meemTheme.tSmallBold}>
+						Where will proposals be made?
+					</Text>
+					<Space h={8} />
+					<Text className={meemTheme.tSmall}>
+						Rules can only be made for one account at a time. Create
+						additional rules to accept proposals on multiple
+						platforms or accounts.
+					</Text>
+					<Space h={8} />
+					<Select
+						placeholder="Pick proposal source"
+						data={inputValues}
+						value={selectedInputValue}
+						onChange={event => {
+							if (event) {
+								setSelectedInputValue(event)
+								inputs.forEach(i => {
+									if (i.id === event) {
+										setSelectedInput(i)
+									}
+								})
+							}
+						}}
+					/>
+					<Space h={40} />
 
-			<Text className={meemTheme.tExtraSmallLabel}>PUBLISHING</Text>
-			<Space h={24} />
-			<Text className={meemTheme.tSmallBold}>
-				Where will posts be published?
-			</Text>
-			<Space h={8} />
-			<Text className={meemTheme.tSmall}>
-				Rules can only be made for one account at a time. Create
-				additional rules to publish on multiple platforms or accounts.
-			</Text>
-			<Space h={8} />
-			<Select
-				placeholder="Pick publishing destination"
-				data={[
-					{ value: 'react', label: 'React' },
-					{ value: 'ng', label: 'Angular' },
-					{ value: 'svelte', label: 'Svelte' },
-					{ value: 'vue', label: 'Vue' }
-				]}
-			/>
+					<Text className={meemTheme.tExtraSmallLabel}>
+						PUBLISHING
+					</Text>
+					<Space h={24} />
+					<Text className={meemTheme.tSmallBold}>
+						Where will posts be published?
+					</Text>
+					<Space h={8} />
+					<Text className={meemTheme.tSmall}>
+						Rules can only be made for one account at a time. Create
+						additional rules to publish on multiple platforms or
+						accounts.
+					</Text>
+					<Space h={8} />
+					<Select
+						placeholder="Pick publishing destination"
+						data={outputValues}
+						value={selectedOutputValue}
+						onChange={event => {
+							if (event) {
+								setSelectedOutputValue(event)
+								outputs.forEach(o => {
+									if (o.id === event) {
+										setSelectedOutput(o)
+									}
+								})
+							}
+						}}
+					/>
+					{selectedInput && selectedOutput && (
+						<>
+							<Space h={24} />
+							<Button
+								className={meemTheme.buttonBlack}
+								onClick={() => {
+									openRuleBuilder()
+								}}
+							>
+								Next
+							</Button>
+						</>
+					)}
+				</>
+			)}
 		</>
 	)
 
