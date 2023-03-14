@@ -2,6 +2,7 @@ import { Modal, Select, Space, Text } from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
 import { makeRequest, MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
+import { useAnalytics } from '../../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
@@ -29,6 +30,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const { jwt } = useAuth()
 	const { agreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('symphony', agreement)
+	const analytics = useAnalytics()
 
 	// Inputs and outputs for the provisional publishing flow (rule)
 	const [inputs, setInputs] = useState<SymphonyConnection[]>([])
@@ -68,6 +70,23 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				}
 			}
 		)
+
+		if (!existingRule) {
+			analytics.track('Symphony Flow Created', {
+				communityId: agreement?.id,
+				communityName: agreement?.name,
+				inputType: 'Discord',
+				outputType: 'Twitter'
+			})
+		} else {
+			analytics.track('Symphony Flow Edited', {
+				communityId: agreement?.id,
+				communityName: agreement?.name,
+				inputType: 'Discord',
+				outputType: 'Twitter',
+				ruleId: existingRule.id
+			})
+		}
 
 		// If extension is not yet marked as 'setup complete', set as complete
 		if (!agreementExtension?.isSetupComplete) {
