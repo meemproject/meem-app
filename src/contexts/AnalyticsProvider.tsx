@@ -1,5 +1,6 @@
-import { IMeemUserContextState, useMeemUser } from '@meemproject/react'
-import { AnalyticsBrowser, User } from '@segment/analytics-next'
+import { useMeemUser } from '@meemproject/react'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { AnalyticsBrowser } from '@segment/analytics-next'
 import { NextRouter, useRouter } from 'next/router'
 import React, { useCallback, useEffect } from 'react'
 
@@ -38,18 +39,18 @@ function useRouteChangeAnalytics(
  */
 function useUserAnalytics(
 	analytics: AnalyticsBrowser,
-	meemUser?: IMeemUserContextState
+	meemUser?: { id: string }
 ) {
 	// Whenever the user changes call analytics.identify so that all
 	// track and page calls will be associated with that user.
 	useEffect(() => {
-		if (meemUser?.user) {
+		if (meemUser) {
 			// We should only call identify if the user is logged in. For anonymous users
 			// this should never be called. Segment will create an anonymous ID for the user
 			// and store that in local storage.
 			// Calling identify in analytics.js will automatically associate all future track
 			// calls with this user. This is not have the node client works.
-			analytics.identify(meemUser.user.id)
+			analytics.identify(meemUser.id)
 		}
 	}, [analytics, meemUser])
 }
@@ -72,7 +73,7 @@ export const AnalyticsProvider = ({
 	const meemUser = useMeemUser()
 
 	useRouteChangeAnalytics(analytics, router)
-	useUserAnalytics(analytics, meemUser)
+	useUserAnalytics(analytics, meemUser.user)
 
 	useEffect(() => {
 		// Capture initial page load

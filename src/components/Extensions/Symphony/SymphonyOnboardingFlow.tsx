@@ -40,6 +40,7 @@ import {
 	SubSlackSubscription,
 	SubTwitterSubscription
 } from '../../../../generated/graphql'
+import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import {
 	GET_AGREEMENT_EXISTS,
 	GET_EXTENSIONS,
@@ -82,6 +83,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const analytics = useAnalytics()
 	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { colorScheme } = useMantineColorScheme()
@@ -754,17 +756,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									className={meemTheme.buttonBlack}
 									onClick={() => {
 										createAgreement()
-										const dataLayer =
-											(window as any).dataLayer ?? null
-
-										dataLayer?.push({
-											event: 'event',
-											eventProps: {
-												category:
-													'Symphony Onboarding - Setup',
-												action: 'Create Community'
-											}
-										})
 									}}
 								>
 									Next

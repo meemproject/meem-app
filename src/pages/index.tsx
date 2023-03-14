@@ -1,10 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { MeemFooter } from '../components/Footer/MeemFooter'
 import { HeaderMenu } from '../components/Header/Header'
 import { HomeComponent } from '../components/Home/Home'
-import { useAnalytics } from '../contexts/AnalyticsProvider'
 import { meemSiteDescription } from '../utils/sitedescriptions'
 
 const Home: NextPage = () => {
