@@ -40,6 +40,7 @@ import {
 	SubSlackSubscription,
 	SubTwitterSubscription
 } from '../../../../generated/graphql'
+import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import {
 	GET_AGREEMENT_EXISTS,
 	GET_EXTENSIONS,
@@ -82,6 +83,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
 	const wallet = useWallet()
+	const analytics = useAnalytics()
 	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { colorScheme } = useMantineColorScheme()
@@ -754,17 +756,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									className={meemTheme.buttonBlack}
 									onClick={() => {
 										createAgreement()
-										const dataLayer =
-											(window as any).dataLayer ?? null
-
-										dataLayer?.push({
-											event: 'event',
-											eventProps: {
-												category:
-													'Symphony Onboarding - Setup',
-												action: 'Create Community'
-											}
-										})
 									}}
 								>
 									Next
@@ -820,17 +811,16 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									onClick={() => {
 										handleAuthTwitter()
 
-										const dataLayer =
-											(window as any).dataLayer ?? null
-
-										dataLayer?.push({
-											event: 'event',
-											eventProps: {
-												category:
-													'Symphony Onboarding - Setup',
-												action: 'Authenticate Twitter'
+										analytics.track(
+											'Symphony Output Connected',
+											{
+												communityId:
+													chosenAgreement?.id,
+												communityName:
+													chosenAgreement?.name,
+												outputType: 'Twitter'
 											}
-										})
+										)
 									}}
 									className={meemTheme.buttonBlack}
 									leftIcon={
@@ -908,18 +898,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 													discordInviteUrl,
 													'_blank'
 												)
-												const dataLayer = (
-													window as any
-												).dataLayer
 
-												dataLayer?.push({
-													event: 'event',
-													eventProps: {
-														category:
-															'Symphony Onboarding - Setup',
-														action: 'Invite Symphony Bot'
+												analytics.track(
+													'Symphony Input Connected',
+													{
+														communityId:
+															chosenAgreement?.id,
+														communityName:
+															chosenAgreement?.name,
+														inputType: 'Discord'
 													}
-												})
+												)
 											}}
 										>
 											{`Invite Symphony Bot`}
@@ -947,17 +936,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 												'Copied to clipboard',
 												`The code was copied to your clipboard.`
 											)
-											const dataLayer = (window as any)
-												.dataLayer
-
-											dataLayer?.push({
-												event: 'event',
-												eventProps: {
-													category:
-														'Symphony Onboarding - Setup',
-													action: 'Copied Activate Code'
-												}
-											})
 										}}
 										block
 									>{`${botCode}`}</Code>
@@ -1010,15 +988,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<Button
 					className={meemTheme.buttonBlack}
 					onClick={() => {
-						const dataLayer = (window as any).dataLayer ?? null
-
-						dataLayer?.push({
-							event: 'event',
-							eventProps: {
-								category:
-									'Symphony Onboarding - Setup Complete',
-								action: 'Clicked Manage Symphony'
-							}
+						analytics.track('Symphony Onboarding Completed', {
+							communityId: chosenAgreement?.id,
+							communityName: chosenAgreement?.name
 						})
 						router.push(`/${chosenAgreement?.slug}/e/symphony`)
 					}}
@@ -1146,18 +1118,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 											chooseAgreementAndEnableExtension(
 												existingAgreement
 											)
-
-											const dataLayer = (window as any)
-												.dataLayer
-
-											dataLayer?.push({
-												event: 'event',
-												eventProps: {
-													category:
-														'Symphony Onboarding - Pick Community',
-													action: 'Select Existing Community'
-												}
-											})
 										}}
 									>
 										<div
@@ -1271,17 +1231,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									onClick={() => {
 										setShouldShowCreateNewCommunity(true)
 										setPageState(PageState.Onboarding)
-										const dataLayer =
-											(window as any).dataLayer ?? null
-
-										dataLayer?.push({
-											event: 'event',
-											eventProps: {
-												category:
-													'Symphony Onboarding - Pick Community',
-												action: 'Selected Create New Community'
-											}
-										})
 									}}
 								>
 									<Space h={16} />

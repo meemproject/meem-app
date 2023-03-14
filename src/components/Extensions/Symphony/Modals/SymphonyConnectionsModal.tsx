@@ -75,44 +75,18 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	}, [router, agreement, jwt])
 
 	const handleReauthenticate = useCallback(async () => {
-		const dataLayer = (window as any).dataLayer ?? null
-
 		if (selectedConnection) {
 			switch (selectedConnection.platform) {
 				case SymphonyConnectionPlatform.Discord:
 					setIsConnectDiscordModalOpen(true)
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Manage Connection',
-							label: 'Reconnect Discord'
-						}
-					})
 					break
 
 				case SymphonyConnectionPlatform.Twitter:
 					handleAuthTwitter()
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Manage Connection',
-							label: 'Reconnect Twitter'
-						}
-					})
 					break
 
 				case SymphonyConnectionPlatform.Slack:
 					handleAuthSlack()
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Manage Connection',
-							label: 'Reconnect Slack'
-						}
-					})
 					break
 
 				default:

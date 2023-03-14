@@ -15,6 +15,7 @@ import { useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../generated/graphql'
+import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { GET_EXTENSIONS as GET_EXTENSIONS } from '../../graphql/agreements'
 import { Agreement, Extension } from '../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../Developer/DeveloperPortalButton'
@@ -38,6 +39,7 @@ export const AddExtensionModal: React.FC<IProps> = ({
 	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()
 	const { anonClient } = useMeemApollo()
+	const analytics = useAnalytics()
 
 	// Fetch a list of available extensions.
 	const {
@@ -151,15 +153,10 @@ export const AddExtensionModal: React.FC<IProps> = ({
 		onModalClosed()
 		setHasSetInitialSearchTerm(false)
 		setIsEnablingExtension(false)
-		const dataLayer = (window as any).dataLayer ?? null
-
-		dataLayer?.push({
-			event: 'event',
-			eventProps: {
-				category: 'Community Homepag',
-				action: 'Enable Extension',
-				label: extension.name
-			}
+		analytics.track('Extension Enabled', {
+			communityId: agreement.id,
+			communityName: agreement.name,
+			extensionName: extension.name
 		})
 	}
 

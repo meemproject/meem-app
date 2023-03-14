@@ -197,15 +197,6 @@ export const SymphonyExtension: React.FC = () => {
 					className={meemTheme.buttonDarkGrey}
 					onClick={() => {
 						setIsNewRuleModalOpen(true)
-						const dataLayer = (window as any).dataLayer ?? null
-
-						dataLayer?.push({
-							event: 'event',
-							eventProps: {
-								category: 'Symphony Extension',
-								action: 'Add Rule'
-							}
-						})
 					}}
 				>
 					+ Add New Flow
