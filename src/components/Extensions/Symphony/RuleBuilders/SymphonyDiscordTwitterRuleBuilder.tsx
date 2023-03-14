@@ -259,15 +259,6 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			vetoerEmojis,
 			proposerEmojis
 		})
-		const dataLayer = (window as any).dataLayer ?? null
-
-		dataLayer?.push({
-			event: 'event',
-			eventProps: {
-				category: 'Symphony Extension',
-				action: 'Save Rule'
-			}
-		})
 	}
 
 	useEffect(() => {

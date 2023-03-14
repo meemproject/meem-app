@@ -36,6 +36,7 @@ import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
@@ -47,6 +48,7 @@ export function HeaderMenu() {
 		useState(false)
 	const { classes: meemTheme, cx } = useMeemTheme()
 	const router = useRouter()
+	const analytics = useAnalytics()
 
 	const {
 		loginState,

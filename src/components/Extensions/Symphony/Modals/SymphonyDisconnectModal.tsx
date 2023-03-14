@@ -33,8 +33,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 	const { agreement } = useAgreement()
 	const { jwt } = useAuth()
 
-	const handleDisconnect = useCallback(async () => {
-		const dataLayer = (window as any).dataLayer ?? null
+	const handleDisconnect = useCallback(async () => 
 
 		if (!jwt || !agreement?.id || !connection) {
 			return
@@ -61,14 +60,6 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 					)
 					onModalClosed()
 
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Manage Connection',
-							label: 'Disconnect Discord'
-						}
-					})
 					break
 
 				case SymphonyConnectionPlatform.Twitter:
@@ -89,14 +80,6 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 						'Twitter has been disconnected'
 					)
 					onModalClosed()
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Manage Connection',
-							label: 'Disconnect Twitter'
-						}
-					})
 					break
 
 				default:

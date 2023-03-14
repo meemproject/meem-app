@@ -14,6 +14,7 @@ import { useAuth } from '@meemproject/react'
 import { createApolloClient, makeRequest } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import { SubRulesSubscription } from '../../../../generated/graphql'
+import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
@@ -34,6 +35,7 @@ export const SymphonyExtension: React.FC = () => {
 	const { jwt } = useAuth()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('symphony', agreement)
+	const analytics = useAnalytics()
 
 	// Extension data
 	const [symphonyClient, setSymphonyClient] =
@@ -197,15 +199,6 @@ export const SymphonyExtension: React.FC = () => {
 					className={meemTheme.buttonDarkGrey}
 					onClick={() => {
 						setIsNewRuleModalOpen(true)
-						const dataLayer = (window as any).dataLayer ?? null
-
-						dataLayer?.push({
-							event: 'event',
-							eventProps: {
-								category: 'Symphony Extension',
-								action: 'Add Rule'
-							}
-						})
 					}}
 				>
 					+ Add New Flow
