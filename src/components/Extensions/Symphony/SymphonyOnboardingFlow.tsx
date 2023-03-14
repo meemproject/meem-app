@@ -814,7 +814,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 										analytics.track(
 											'Symphony Output Connected',
 											{
-												userId: wallet.me?.user.id,
 												communityId:
 													chosenAgreement?.id,
 												communityName:
@@ -903,8 +902,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 												analytics.track(
 													'Symphony Input Connected',
 													{
-														userId: wallet.me?.user
-															.id,
 														communityId:
 															chosenAgreement?.id,
 														communityName:
@@ -992,7 +989,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					className={meemTheme.buttonBlack}
 					onClick={() => {
 						analytics.track('Symphony Onboarding Completed', {
-							userId: wallet.me?.user.id,
 							communityId: chosenAgreement?.id,
 							communityName: chosenAgreement?.name
 						})
