@@ -22,6 +22,7 @@ import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { SymphonyConnectionsModal } from './Modals/SymphonyConnectionsModal'
 import { SymphonyInputOutputModal } from './Modals/SymphonyInputOutputModal'
 import {
+	SymphonyConnection,
 	SymphonyConnectionPlatform,
 	SymphonyConnectionType,
 	SymphonyRule
@@ -54,6 +55,12 @@ export const SymphonyExtension: React.FC = () => {
 	const [rules, setRules] = useState<SymphonyRule[]>()
 	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
 
+	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
+	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
+	const [symphonyConnections, setSymphonyConnections] = useState<
+		SymphonyConnection[]
+	>([])
+
 	// Page state
 	const [isManageConnectionsModalOpen, setIsManageConnectionsModalOpen] =
 		useState(false)
@@ -69,6 +76,38 @@ export const SymphonyExtension: React.FC = () => {
 			client: symphonyClient
 		}
 	)
+
+	// Parse connections from subscription
+	useEffect(() => {
+		if (!isFetchingConnections && !hasFetchedConnections) {
+			//TODO use real data
+			const conns: SymphonyConnection[] = []
+			const con1: SymphonyConnection = {
+				id: '1',
+				name: 'Twitter: (username)',
+				type: SymphonyConnectionType.OutputOnly,
+				platform: SymphonyConnectionPlatform.Twitter
+			}
+			const con3: SymphonyConnection = {
+				id: '3',
+				name: 'Twitter: (username)',
+				type: SymphonyConnectionType.OutputOnly,
+				platform: SymphonyConnectionPlatform.Twitter
+			}
+			conns.push(con1)
+			conns.push(con3)
+			const con2: SymphonyConnection = {
+				id: '2',
+				name: 'Discord: (server name)',
+				type: SymphonyConnectionType.InputOnly,
+				platform: SymphonyConnectionPlatform.Discord
+			}
+			conns.push(con2)
+			setSymphonyConnections(conns)
+			setHasFetchedConnections(true)
+			setIsFetchingConnections(true)
+		}
+	}, [hasFetchedConnections, isFetchingConnections])
 
 	// Parse rules from subscription
 	useEffect(() => {
@@ -283,6 +322,7 @@ export const SymphonyExtension: React.FC = () => {
 						)}
 					</div>
 					<SymphonyConnectionsModal
+						connections={symphonyConnections}
 						isOpened={isManageConnectionsModalOpen}
 						onModalClosed={function (): void {
 							setIsManageConnectionsModalOpen(false)
