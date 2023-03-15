@@ -144,7 +144,9 @@ export const SymphonyExtension: React.FC = () => {
 
 	const { data: channelsData } =
 		useSWR<API.v1.GetDiscordChannels.IResponseBody>(
-			agreement?.id && jwt
+			discordData?.AgreementDiscords[0] &&
+				discordData?.AgreementDiscords[0].id &&
+				jwt
 				? `${
 						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 				  }${API.v1.GetDiscordChannels.path()}`
@@ -158,7 +160,8 @@ export const SymphonyExtension: React.FC = () => {
 					method: API.v1.GetDiscordChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementId: agreement?.id as string
+					agreementDiscordId: discordData?.AgreementDiscords[0]
+						.id as string
 				})
 			},
 			{
@@ -167,7 +170,9 @@ export const SymphonyExtension: React.FC = () => {
 		)
 
 	const { data: rolesData } = useSWR<API.v1.GetDiscordRoles.IResponseBody>(
-		agreement?.id && jwt
+		discordData?.AgreementDiscords[0] &&
+			discordData?.AgreementDiscords[0].id &&
+			jwt
 			? `${
 					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 			  }${API.v1.GetDiscordRoles.path()}`
@@ -181,7 +186,7 @@ export const SymphonyExtension: React.FC = () => {
 				method: API.v1.GetDiscordRoles.method
 			})(url, {
 				jwt: jwt as string,
-				agreementId: agreement?.id as string
+				agreementDiscordId: discordData?.AgreementDiscords[0].id
 			})
 		},
 		{
@@ -311,7 +316,8 @@ export const SymphonyExtension: React.FC = () => {
 							method: API.v1.DisconnectDiscord.method,
 							body: {
 								jwt,
-								agreementId: agreement?.id
+								agreementDiscordId:
+									discordData?.AgreementDiscords[0].id
 							}
 						}
 					)
@@ -340,7 +346,8 @@ export const SymphonyExtension: React.FC = () => {
 							method: API.v1.DisconnectTwitter.method,
 							body: {
 								jwt,
-								agreementId: agreement?.id
+								agreementTwitterId:
+									twitterData?.AgreementTwitters[0].id
 							}
 						}
 					)
@@ -366,7 +373,7 @@ export const SymphonyExtension: React.FC = () => {
 		} catch (e) {
 			showErrorNotification('Something went wrong', 'Please try again ')
 		}
-	}, [selectedConnection, agreement, jwt])
+	}, [selectedConnection, agreement, discordData, twitterData, jwt])
 
 	const handleRuleSave = async (values: IOnSave) => {
 		if (!agreement?.id || !jwt) {
@@ -385,7 +392,8 @@ export const SymphonyExtension: React.FC = () => {
 					rules: [
 						{
 							...values,
-							action: API.PublishAction.Tweet,
+							input: API.RuleIo.Discord,
+							output: API.RuleIo.Twitter,
 							isEnabled: true,
 							ruleId: selectedRule?.id
 						}
@@ -436,9 +444,12 @@ export const SymphonyExtension: React.FC = () => {
 
 	// Integration data states
 	const twitterUsername =
-		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
+		twitterData?.AgreementTwitters[0] &&
+		twitterData?.AgreementTwitters[0].Twitter?.username
 	const rules = rulesData?.Rules
-	const discordInfo = discordData?.Discords[0]
+	const discordInfo =
+		discordData?.AgreementDiscords[0] &&
+		discordData?.AgreementDiscords[0].Discord
 	// const slackInfo = slackData?.Slacks[0]
 	const hasFetchedData =
 		!!twitterData &&
@@ -448,12 +459,15 @@ export const SymphonyExtension: React.FC = () => {
 			!!slackData)
 
 	useEffect(() => {
-		if (discordInfo && typeof discordData?.Discords[0].name === 'string') {
+		if (
+			discordInfo &&
+			typeof discordData?.AgreementDiscords[0].Discord?.name === 'string'
+		) {
 			// if discord is connected, hide the discord connect modal
 			setIsConnectDiscordModalOpen(false)
 			setConnectDiscordStep(0)
 		}
-	}, [discordData?.Discords, discordInfo])
+	}, [discordData, discordInfo])
 
 	const integrationsSection = () => (
 		<>

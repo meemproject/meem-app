@@ -47,8 +47,21 @@ export namespace API {
 		limit?: number
 	}
 
-	export enum PublishAction {
-		Tweet = 'tweet'
+	// export enum PublishAction {
+	// 	Tweet = 'tweet',
+	// 	Webhook = 'webhook'
+	// }
+
+	// export enum RuleInput {
+	// 	Discord = 'discord',
+	// 	Slack = 'slack'
+	// }
+
+	export enum RuleIo {
+		Discord = 'discord',
+		Slack = 'slack',
+		Webhook = 'webhook',
+		Twitter = 'twitter'
 	}
 
 	// export enum RequirementType {
@@ -91,7 +104,8 @@ export namespace API {
 	}
 
 	export interface IRule {
-		action: PublishAction
+		input: RuleIo
+		output: RuleIo
 		publishType: PublishType
 		proposerRoles: string[]
 		proposerEmojis: string[]
@@ -106,7 +120,7 @@ export namespace API {
 		vetoVotes: number
 		proposeVotes: number
 		shouldReply: boolean
-		ruleId: string
+		ruleId?: string
 		isEnabled: boolean
 	}
 
@@ -147,6 +161,23 @@ export namespace API {
 		name: string
 		canSend: boolean
 		canView: boolean
+	}
+
+	export interface ISlackChannel {
+		id: string
+		name: string
+		isMember: boolean
+		numMembers: number
+	}
+
+	export enum MessageType {
+		Discord = 'discord',
+		Slack = 'slack'
+	}
+
+	export enum MessageStatus {
+		Pending = 'pending',
+		Handled = 'handled'
 	}
 
 	export interface IEventDefinition {
@@ -245,8 +276,39 @@ export namespace API {
 			export interface IQueryParams {}
 
 			export interface IRequestBody {
-				/** The agreement to disconnect twitter from */
-				agreementId: string
+				/** The agreement discord to disconnect */
+				agreementDiscordId: string
+
+				/** The jwt to authenticate the user with */
+				jwt: string
+			}
+
+			export interface IResponseBody extends IApiResponseBody {
+				status: 'success'
+			}
+
+			export interface IDefinition {
+				pathParams: IPathParams
+				queryParams: IQueryParams
+				requestBody: IRequestBody
+				responseBody: IResponseBody
+			}
+
+			export type Response = IResponseBody | IError
+		}
+
+		export namespace DisconnectSlack {
+			export interface IPathParams {}
+
+			export const path = () => '/api/1.0/slack'
+
+			export const method = HttpMethod.Delete
+
+			export interface IQueryParams {}
+
+			export interface IRequestBody {
+				/** The agreement slack to disconnect */
+				agreementSlackId: string
 
 				/** The jwt to authenticate the user with */
 				jwt: string
@@ -276,8 +338,8 @@ export namespace API {
 			export interface IQueryParams {}
 
 			export interface IRequestBody {
-				/** The agreement to disconnect twitter from */
-				agreementId: string
+				/** The agreement twitter to disconnect */
+				agreementTwitterId: string
 
 				/** The jwt to authenticate the user with */
 				jwt: string
@@ -329,7 +391,7 @@ export namespace API {
 			export const method = HttpMethod.Get
 
 			export interface IQueryParams {
-				agreementId: string
+				agreementDiscordId: string
 				jwt: string
 			}
 
@@ -357,7 +419,7 @@ export namespace API {
 			export const method = HttpMethod.Get
 
 			export interface IQueryParams {
-				agreementId: string
+				agreementDiscordId: string
 				jwt: string
 			}
 
@@ -388,7 +450,7 @@ export namespace API {
 			export const method = HttpMethod.Get
 
 			export interface IQueryParams {
-				agreementId: string
+				agreementDiscordId: string
 				jwt: string
 			}
 
@@ -396,6 +458,34 @@ export namespace API {
 
 			export interface IResponseBody extends IApiResponseBody {
 				roles: IDiscordRole[]
+			}
+
+			export interface IDefinition {
+				pathParams: IPathParams
+				queryParams: IQueryParams
+				requestBody: IRequestBody
+				responseBody: IResponseBody
+			}
+
+			export type Response = IResponseBody | IError
+		}
+
+		export namespace GetSlackChannels {
+			export interface IPathParams {}
+
+			export const path = () => '/api/1.0/slack/channels'
+
+			export const method = HttpMethod.Get
+
+			export interface IQueryParams {
+				agreementId: string
+				jwt: string
+			}
+
+			export interface IRequestBody {}
+
+			export interface IResponseBody extends IApiResponseBody {
+				channels: ISlackChannel[]
 			}
 
 			export interface IDefinition {
