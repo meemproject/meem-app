@@ -420,6 +420,16 @@ export const useMeemTheme = createStyles(theme => ({
 		alignItems: 'center',
 		textAlign: 'center'
 	},
+	gridItemFlat: {
+		cursor: 'pointer',
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
+		borderRadius: 8,
+		padding: 16
+	},
 	extensionGridItem: {
 		display: 'flex',
 		flexDirection: 'column',

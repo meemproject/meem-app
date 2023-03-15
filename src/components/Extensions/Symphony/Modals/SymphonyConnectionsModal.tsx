@@ -1,13 +1,15 @@
 import log from '@kengoldfarb/log'
-import { Space, Modal, Text } from '@mantine/core'
+import { Space, Modal, Text, Grid, Image } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
+import { MoreVert } from 'iconoir-react'
 import { useRouter } from 'next/router'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import {
 	SymphonyConnection,
-	SymphonyConnectionPlatform
+	SymphonyConnectionPlatform,
+	SymphonyConnectionType
 } from '../Model/symphony'
 import { API } from '../symphonyTypes.generated'
 import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
@@ -28,6 +30,8 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	const { jwt } = useAuth()
 	const router = useRouter()
 
+	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
+	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
 	const [symphonyConnections, setSymphonyConnections] = useState<
 		SymphonyConnection[]
 	>([])
@@ -38,6 +42,37 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
 		useState(false)
 	const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
+
+	useEffect(() => {
+		if (!isFetchingConnections && !hasFetchedConnections) {
+			//TODO use real data
+			const connections: SymphonyConnection[] = []
+			const con1: SymphonyConnection = {
+				id: '1',
+				name: 'Twitter: (username)',
+				type: SymphonyConnectionType.OutputOnly,
+				platform: SymphonyConnectionPlatform.Twitter
+			}
+			const con3: SymphonyConnection = {
+				id: '1',
+				name: 'Twitter: (username)',
+				type: SymphonyConnectionType.OutputOnly,
+				platform: SymphonyConnectionPlatform.Twitter
+			}
+			connections.push(con1)
+			connections.push(con3)
+			const con2: SymphonyConnection = {
+				id: '2',
+				name: 'Discord: (server name)',
+				type: SymphonyConnectionType.InputOnly,
+				platform: SymphonyConnectionPlatform.Discord
+			}
+			connections.push(con2)
+			setSymphonyConnections(connections)
+			setHasFetchedConnections(true)
+			setIsFetchingConnections(true)
+		}
+	}, [hasFetchedConnections, isFetchingConnections])
 
 	// Handle authentication for different services
 	const handleAuthTwitter = useCallback(async () => {
@@ -98,13 +133,127 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 		}
 	}, [selectedConnection, handleAuthTwitter, handleAuthSlack])
 
+	interface SectionHeaderProps {
+		icon: string
+		text: string
+	}
+
+	const SectionHeader = ({ icon, text }: SectionHeaderProps) => {
+		return (
+			<div
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+					paddingBottom: 8
+				}}
+			>
+				<Image
+					src={icon}
+					width={18}
+					height={18}
+					style={{ marginRight: 8 }}
+				/>
+				<Text
+					className={meemTheme.tExtraSmallFaded}
+				>{`${text.toUpperCase()}`}</Text>
+			</div>
+		)
+	}
+
+	const ConnectionTile = ({ connection }: ConnectionTileProps) => {
+		return (
+			<div className={meemTheme.gridItemFlat}>
+				<div className={meemTheme.spacedRowCentered}>
+					<div className={meemTheme.centeredRow}>
+						<Image
+							src={'/meem-icon.png'}
+							width={36}
+							height={36}
+							style={{ marginRight: 12 }}
+						/>
+						<Text weight={500} style={{ marginRight: 'auto' }}>
+							{connection.name}
+						</Text>
+					</div>
+					<MoreVert />
+				</div>
+			</div>
+		)
+	}
+
+	interface ConnectionsGridProps {
+		connections: SymphonyConnection[]
+	}
+
+	const ConnectionsGrid = ({ connections }: ConnectionsGridProps) => {
+		return (
+			<Grid>
+				{connections.map(connection => (
+					<Grid.Col xs={12} md={6} key={connection.id}>
+						<ConnectionTile connection={connection} />
+					</Grid.Col>
+				))}
+			</Grid>
+		)
+	}
+
+	interface ConnectionTileProps {
+		connection: SymphonyConnection
+	}
+
+	const ConnectionsList = () => {
+		const twitterConnections = symphonyConnections.filter(
+			c => c.platform === SymphonyConnectionPlatform.Twitter
+		)
+
+		const discordConnections = symphonyConnections.filter(
+			c => c.platform === SymphonyConnectionPlatform.Discord
+		)
+
+		const slackConnections = symphonyConnections.filter(
+			c => c.platform === SymphonyConnectionPlatform.Slack
+		)
+
+		return (
+			<>
+				{twitterConnections.length > 0 && (
+					<>
+						<SectionHeader
+							icon="/connect-twitter.png"
+							text="Twitter Accounts"
+						/>
+						<ConnectionsGrid connections={twitterConnections} />
+					</>
+				)}
+
+				{discordConnections.length > 0 && (
+					<>
+						<Space h={24} />
+						<SectionHeader
+							icon="/connect-discord.png"
+							text="Discord Servers"
+						/>
+						<ConnectionsGrid connections={discordConnections} />
+					</>
+				)}
+
+				{slackConnections.length > 0 && (
+					<>
+						<Space h={24} />
+						<SectionHeader
+							icon="/connect-slack.png"
+							text="Slack Workspaces"
+						/>
+						<ConnectionsGrid connections={slackConnections} />
+					</>
+				)}
+			</>
+		)
+	}
+
 	const modalContents = (
 		<>
-			<Space h={24} className={meemTheme.visibleDesktopOnly} />
-
-			<div className={meemTheme.rowResponsive}>
-				<Text>Hello world</Text>
-			</div>
+			<ConnectionsList />
 
 			<SymphonyDiscordConnectionModal
 				isOpened={isConnectDiscordModalOpen}
