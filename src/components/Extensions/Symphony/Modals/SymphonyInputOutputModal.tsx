@@ -154,7 +154,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		// Handle editing
-		if (isOpened && existingRule) {
+		if (isOpened && !selectedInput && !selectedOutput && existingRule) {
 			setSelectedInput(existingRule.input)
 			setSelectedOutput(existingRule.output)
 			openRuleBuilder()
@@ -165,7 +165,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			setHasFetchedIO(false)
 		}
 
-		if (!hasFetchedIO) {
+		if (isOpened && !hasFetchedIO) {
 			// TODO: This is mock data obviously
 			setHasFetchedIO(true)
 
@@ -213,7 +213,14 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			setOutputs(fetchedOutputs)
 			setOutputValues(fetchedOutputValues)
 		}
-	}, [existingRule, hasFetchedIO, isOpened, openRuleBuilder])
+	}, [
+		existingRule,
+		hasFetchedIO,
+		isOpened,
+		openRuleBuilder,
+		selectedInput,
+		selectedOutput
+	])
 
 	const modalContents = (
 		<>
