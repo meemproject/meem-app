@@ -42,6 +42,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export interface IProps {
 	rule?: SymphonyRule
+	discordId: string
+	twitterId: string
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -72,6 +74,8 @@ export interface IOnSave extends IFormValues {
 
 export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
+	discordId,
+	twitterId,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -113,7 +117,8 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	const { data: twitterData, loading: loadingTwitterData } =
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
 			variables: {
-				agreementId: agreement?.id
+				agreementId: agreement?.id,
+				twitterId
 			},
 			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
@@ -122,7 +127,8 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	const { data: discordData, loading: loadingDiscordData } =
 		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
 			variables: {
-				agreementId: agreement?.id
+				agreementId: agreement?.id,
+				discordId
 			},
 			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
@@ -144,7 +150,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetDiscordChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementId: agreement?.id as string
+					agreementDiscordId: discordId
 				})
 			},
 			{
@@ -168,7 +174,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetDiscordRoles.method
 				})(url, {
 					jwt: jwt as string,
-					agreementId: agreement?.id as string
+					agreementDiscordId: discordId
 				})
 			},
 			{
@@ -283,7 +289,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	let isProposalChannelGated = false
 
 	if (
-		discordData?.Discords[0] &&
+		discordData?.AgreementDiscords[0] &&
 		form.values.proposalChannels &&
 		form.values.proposalChannels.length > 0
 	) {

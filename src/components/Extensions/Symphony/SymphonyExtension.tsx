@@ -8,12 +8,19 @@ import {
 	Center,
 	Button,
 	Loader,
-	Divider
+	Divider,
+	Grid,
+	Image
 } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import { createApolloClient, makeRequest } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
-import { SubRulesSubscription } from '../../../../generated/graphql'
+import {
+	SubDiscordsSubscription,
+	SubRulesSubscription,
+	SubSlacksSubscription,
+	SubTwittersSubscription
+} from '../../../../generated/graphql'
 import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -22,11 +29,17 @@ import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { SymphonyConnectionsModal } from './Modals/SymphonyConnectionsModal'
 import { SymphonyInputOutputModal } from './Modals/SymphonyInputOutputModal'
 import {
+	SymphonyConnection,
 	SymphonyConnectionPlatform,
 	SymphonyConnectionType,
 	SymphonyRule
 } from './Model/symphony'
-import { SUB_RULES } from './symphony.gql'
+import {
+	SUB_DISCORDS,
+	SUB_RULES,
+	SUB_SLACKS,
+	SUB_TWITTERS
+} from './symphony.gql'
 import { API } from './symphonyTypes.generated'
 
 export const SymphonyExtension: React.FC = () => {
@@ -54,6 +67,14 @@ export const SymphonyExtension: React.FC = () => {
 	const [rules, setRules] = useState<SymphonyRule[]>()
 	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
 
+	const [previousConnectionsDataString, setPreviousConnectionsDataString] =
+		useState('')
+	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
+	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
+	const [symphonyConnections, setSymphonyConnections] = useState<
+		SymphonyConnection[]
+	>([])
+
 	// Page state
 	const [isManageConnectionsModalOpen, setIsManageConnectionsModalOpen] =
 		useState(false)
@@ -69,6 +90,89 @@ export const SymphonyExtension: React.FC = () => {
 			client: symphonyClient
 		}
 	)
+
+	const { data: discordConnectionData } =
+		useSubscription<SubDiscordsSubscription>(SUB_DISCORDS, {
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		})
+
+	const { data: twitterConnectionData } =
+		useSubscription<SubTwittersSubscription>(SUB_TWITTERS, {
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		})
+
+	const { data: slackConnectionData } =
+		useSubscription<SubSlacksSubscription>(SUB_SLACKS, {
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		})
+
+	// Parse connections from subscription
+	useEffect(() => {
+		if (
+			discordConnectionData &&
+			twitterConnectionData &&
+			slackConnectionData
+		) {
+			const conns: SymphonyConnection[] = []
+			discordConnectionData.AgreementDiscords.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Discord: ${c.Discord?.name}`,
+					type: SymphonyConnectionType.InputOnly,
+					platform: SymphonyConnectionPlatform.Discord,
+					icon: c.Discord?.icon ?? ''
+				}
+				conns.push(con)
+			})
+
+			twitterConnectionData.AgreementTwitters.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Twitter: ${c.Twitter?.username}`,
+					type: SymphonyConnectionType.OutputOnly,
+					platform: SymphonyConnectionPlatform.Twitter
+				}
+				conns.push(con)
+			})
+
+			slackConnectionData.AgreementSlacks.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Slack: ${c.Slack?.name}`,
+					type: SymphonyConnectionType.OutputOnly,
+					platform: SymphonyConnectionPlatform.Twitter
+				}
+				conns.push(con)
+			})
+
+			const jsonConns = JSON.stringify(conns)
+			if (jsonConns !== previousConnectionsDataString) {
+				setPreviousConnectionsDataString(jsonConns)
+				setSymphonyConnections(conns)
+				setHasFetchedConnections(true)
+				setIsFetchingConnections(true)
+			}
+		}
+	}, [
+		discordConnectionData,
+		hasFetchedConnections,
+		isFetchingConnections,
+		previousConnectionsDataString,
+		slackConnectionData,
+		twitterConnectionData
+	])
 
 	// Parse rules from subscription
 	useEffect(() => {
@@ -141,7 +245,7 @@ export const SymphonyExtension: React.FC = () => {
 				rules.map(rule => {
 					return (
 						<div
-							key={`rule-${rule.definition.ruleId}`}
+							key={`rule-${rule.id}`}
 							className={meemTheme.gridItem}
 							style={{ marginBottom: 16 }}
 						>
@@ -205,6 +309,67 @@ export const SymphonyExtension: React.FC = () => {
 		</>
 	)
 
+	const connectionSummaryGridItem = (
+		connectionPlatform: SymphonyConnectionPlatform,
+		connectionCount: number
+	) => (
+		<>
+			<div className={meemTheme.gridItemFlat} style={{ cursor: 'auto' }}>
+				<div className={meemTheme.centeredRow}>
+					<Image
+						src={
+							connectionPlatform ===
+							SymphonyConnectionPlatform.Discord
+								? '/connect-discord.png'
+								: connectionPlatform ===
+								  SymphonyConnectionPlatform.Slack
+								? '/connect-slack.png'
+								: '/connect-twitter.png'
+						}
+						width={24}
+						height={24}
+						style={{
+							marginRight: 8
+						}}
+					/>
+					<Text className={meemTheme.tSmallBold}>
+						{connectionPlatform ===
+						SymphonyConnectionPlatform.Discord
+							? 'Discord'
+							: connectionPlatform ===
+							  SymphonyConnectionPlatform.Slack
+							? 'Slack'
+							: 'Twitter'}
+					</Text>
+				</div>
+				<Space h={16} />
+				<Text
+					className={meemTheme.tExtraSmallFaded}
+				>{`${connectionCount} ${
+					connectionCount === 1 ? `account` : 'accounts'
+				} connected`}</Text>
+			</div>
+		</>
+	)
+
+	const connectedDiscordAccounts = symphonyConnections
+		? symphonyConnections.filter(
+				c => c.platform === SymphonyConnectionPlatform.Discord
+		  ).length
+		: 0
+
+	const connectedTwitterAccounts = symphonyConnections
+		? symphonyConnections.filter(
+				c => c.platform === SymphonyConnectionPlatform.Twitter
+		  ).length
+		: 0
+
+	const connectedSlackAccounts = symphonyConnections
+		? symphonyConnections.filter(
+				c => c.platform === SymphonyConnectionPlatform.Slack
+		  ).length
+		: 0
+
 	const mainState = (
 		<>
 			{agreement?.isCurrentUserAgreementMember && (
@@ -214,6 +379,51 @@ export const SymphonyExtension: React.FC = () => {
 					<Text className={meemTheme.tExtraSmallLabel}>
 						CONNECTED ACCOUNTS
 					</Text>
+
+					{symphonyConnections && (
+						<>
+							<Space h={24} />
+							<Grid>
+								{connectedDiscordAccounts > 0 && (
+									<Grid.Col
+										xs={12}
+										md={6}
+										key={SymphonyConnectionPlatform.Discord.toString()}
+									>
+										{connectionSummaryGridItem(
+											SymphonyConnectionPlatform.Discord,
+											connectedDiscordAccounts
+										)}
+									</Grid.Col>
+								)}
+								{connectedTwitterAccounts > 0 && (
+									<Grid.Col
+										xs={12}
+										md={6}
+										key={SymphonyConnectionPlatform.Twitter.toString()}
+									>
+										{connectionSummaryGridItem(
+											SymphonyConnectionPlatform.Twitter,
+											connectedTwitterAccounts
+										)}
+									</Grid.Col>
+								)}
+								{connectedSlackAccounts > 0 && (
+									<Grid.Col
+										xs={12}
+										md={6}
+										key={SymphonyConnectionPlatform.Slack.toString()}
+									>
+										{connectionSummaryGridItem(
+											SymphonyConnectionPlatform.Slack,
+											connectedSlackAccounts
+										)}
+									</Grid.Col>
+								)}
+							</Grid>
+						</>
+					)}
+
 					<Space h={24} />
 					<Button
 						className={meemTheme.buttonWhite}
@@ -283,19 +493,25 @@ export const SymphonyExtension: React.FC = () => {
 						)}
 					</div>
 					<SymphonyConnectionsModal
+						connections={symphonyConnections}
 						isOpened={isManageConnectionsModalOpen}
 						onModalClosed={function (): void {
 							setIsManageConnectionsModalOpen(false)
 						}}
 					/>
 
-					<SymphonyInputOutputModal
-						isOpened={isNewRuleModalOpen}
-						existingRule={selectedRule}
-						onModalClosed={function (): void {
-							setIsNewRuleModalOpen(false)
-						}}
-					/>
+					{isNewRuleModalOpen && (
+						<>
+							<SymphonyInputOutputModal
+								isOpened={isNewRuleModalOpen}
+								connections={symphonyConnections}
+								existingRule={selectedRule}
+								onModalClosed={function (): void {
+									setIsNewRuleModalOpen(false)
+								}}
+							/>
+						</>
+					)}
 				</>
 			)}
 		</div>

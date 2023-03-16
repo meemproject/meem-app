@@ -30,12 +30,14 @@ import { API } from '../symphonyTypes.generated'
 
 interface IProps {
 	existingRule?: SymphonyRule
+	connections?: SymphonyConnection[]
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	existingRule,
+	connections,
 	isOpened,
 	onModalClosed
 }) => {
@@ -92,7 +94,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 					rules: [
 						{
 							...values,
-							action: API.PublishAction.Tweet,
+							input: API.RuleIo.Discord,
+							output: API.RuleIo.Twitter,
 							isEnabled: true,
 							ruleId: existingRule?.id ?? rule?.id
 						}
@@ -154,7 +157,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 	useEffect(() => {
 		// Handle editing
-		if (isOpened && existingRule) {
+		if (isOpened && !selectedInput && !selectedOutput && existingRule) {
 			setSelectedInput(existingRule.input)
 			setSelectedOutput(existingRule.output)
 			openRuleBuilder()
@@ -165,55 +168,49 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			setHasFetchedIO(false)
 		}
 
-		if (!hasFetchedIO) {
-			// TODO: This is mock data obviously
-			setHasFetchedIO(true)
+		if (isOpened && !hasFetchedIO && connections) {
+			const filteredInputs = connections.filter(
+				c => c.type === SymphonyConnectionType.InputOnly
+			)
 
-			const fetchedInputs = [
-				{
-					id: 'discord',
-					name: `Discord: (serverName)`, // todo
-					type: SymphonyConnectionType.InputOnly,
-					platform: SymphonyConnectionPlatform.Discord,
-					discordServerId: '' // todo
-				}
-			]
-
-			const fetchedInputValues: SelectItem[] = []
-			fetchedInputs.forEach(inp => {
+			const filteredInputValues: SelectItem[] = []
+			filteredInputs.forEach(inp => {
 				const inputVal = {
 					value: inp.id,
 					label: inp.name
 				}
-				fetchedInputValues.push(inputVal)
+				filteredInputValues.push(inputVal)
 			})
 
-			setInputs(fetchedInputs)
-			setInputValues(fetchedInputValues)
+			setInputs(filteredInputs)
+			setInputValues(filteredInputValues)
 
-			const fetchedOutputs = [
-				{
-					id: 'twitter',
-					name: `Twitter: (username)`, // todo
-					type: SymphonyConnectionType.OutputOnly,
-					platform: SymphonyConnectionPlatform.Twitter,
-					twitterUsername: '' // todo
-				}
-			]
+			const filteredOutputs = connections.filter(
+				c => c.type === SymphonyConnectionType.OutputOnly
+			)
 
-			const fetchedOutputValues: SelectItem[] = []
-			fetchedOutputs.forEach(out => {
+			const filteredOutputValues: SelectItem[] = []
+			filteredOutputs.forEach(out => {
 				const outVal = {
 					value: out.id,
 					label: out.name
 				}
-				fetchedOutputValues.push(outVal)
+				filteredOutputValues.push(outVal)
 			})
 
-			setOutputs(fetchedOutputs)
-			setOutputValues(fetchedOutputValues)
+			setOutputs(filteredOutputs)
+			setOutputValues(filteredOutputValues)
+			setHasFetchedIO(true)
 		}
-	}, [existingRule, hasFetchedIO, isOpened, openRuleBuilder])
+	}, [
+		connections,
+		existingRule,
+		hasFetchedIO,
+		isOpened,
+		openRuleBuilder,
+		selectedInput,
+		selectedOutput
+	])
 
 	const modalContents = (
 		<>
@@ -344,12 +341,18 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				</>
 			)}
 
-			{isOpened && (
+			{isOpened && isDiscordTwitterRuleBuilderOpened && (
 				<>
 					<SymphonyDiscordTwitterRulesBuilder
 						onSave={function (values: IOnSave): void {
 							handleRuleSave(values)
 						}}
+						discordId={
+							existingRule?.input.id ?? selectedInput?.id ?? ''
+						}
+						twitterId={
+							existingRule?.output.id ?? selectedOutput?.id ?? ''
+						}
 						rule={existingRule}
 						isOpened={isDiscordTwitterRuleBuilderOpened}
 						onModalClosed={function (): void {

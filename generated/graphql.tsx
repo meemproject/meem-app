@@ -18,6 +18,97 @@ export type Scalars = {
   uuid: any;
 };
 
+/** columns and relationships of "AgreementDiscords" */
+export type AgreementDiscords = {
+  __typename?: 'AgreementDiscords';
+  /** An object relationship */
+  Discord?: Maybe<Discords>;
+  DiscordId?: Maybe<Scalars['uuid']>;
+  agreementId: Scalars['uuid'];
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** order by aggregate values of table "AgreementDiscords" */
+export type AgreementDiscords_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<AgreementDiscords_Max_Order_By>;
+  min?: InputMaybe<AgreementDiscords_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementDiscords". All fields are combined with a logical 'AND'. */
+export type AgreementDiscords_Bool_Exp = {
+  Discord?: InputMaybe<Discords_Bool_Exp>;
+  DiscordId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementDiscords_Bool_Exp>>;
+  _not?: InputMaybe<AgreementDiscords_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementDiscords_Bool_Exp>>;
+  agreementId?: InputMaybe<Uuid_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** order by max() on columns of table "AgreementDiscords" */
+export type AgreementDiscords_Max_Order_By = {
+  DiscordId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "AgreementDiscords" */
+export type AgreementDiscords_Min_Order_By = {
+  DiscordId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "AgreementDiscords". */
+export type AgreementDiscords_Order_By = {
+  Discord?: InputMaybe<Discords_Order_By>;
+  DiscordId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "AgreementDiscords" */
+export enum AgreementDiscords_Select_Column {
+  /** column name */
+  DiscordId = 'DiscordId',
+  /** column name */
+  AgreementId = 'agreementId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** Streaming cursor of the table "AgreementDiscords" */
+export type AgreementDiscords_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementDiscords_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementDiscords_Stream_Cursor_Value_Input = {
+  DiscordId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** columns and relationships of "AgreementExtensionLinks" */
 export type AgreementExtensionLinks = {
   __typename?: 'AgreementExtensionLinks';
@@ -3531,6 +3622,97 @@ export type AgreementRoles_Variance_Order_By = {
   chainId?: InputMaybe<Order_By>;
 };
 
+/** columns and relationships of "AgreementSlacks" */
+export type AgreementSlacks = {
+  __typename?: 'AgreementSlacks';
+  /** An object relationship */
+  Slack?: Maybe<Slacks>;
+  SlackId?: Maybe<Scalars['uuid']>;
+  agreementId: Scalars['uuid'];
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** order by aggregate values of table "AgreementSlacks" */
+export type AgreementSlacks_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<AgreementSlacks_Max_Order_By>;
+  min?: InputMaybe<AgreementSlacks_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementSlacks". All fields are combined with a logical 'AND'. */
+export type AgreementSlacks_Bool_Exp = {
+  Slack?: InputMaybe<Slacks_Bool_Exp>;
+  SlackId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementSlacks_Bool_Exp>>;
+  _not?: InputMaybe<AgreementSlacks_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementSlacks_Bool_Exp>>;
+  agreementId?: InputMaybe<Uuid_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** order by max() on columns of table "AgreementSlacks" */
+export type AgreementSlacks_Max_Order_By = {
+  SlackId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "AgreementSlacks" */
+export type AgreementSlacks_Min_Order_By = {
+  SlackId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "AgreementSlacks". */
+export type AgreementSlacks_Order_By = {
+  Slack?: InputMaybe<Slacks_Order_By>;
+  SlackId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "AgreementSlacks" */
+export enum AgreementSlacks_Select_Column {
+  /** column name */
+  SlackId = 'SlackId',
+  /** column name */
+  AgreementId = 'agreementId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** Streaming cursor of the table "AgreementSlacks" */
+export type AgreementSlacks_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementSlacks_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementSlacks_Stream_Cursor_Value_Input = {
+  SlackId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** columns and relationships of "AgreementTokenTransfers" */
 export type AgreementTokenTransfers = {
   __typename?: 'AgreementTokenTransfers';
@@ -4173,6 +4355,97 @@ export type AgreementTokens_Updates = {
   _set?: InputMaybe<AgreementTokens_Set_Input>;
   /** filter the rows which have to be updated */
   where: AgreementTokens_Bool_Exp;
+};
+
+/** columns and relationships of "AgreementTwitters" */
+export type AgreementTwitters = {
+  __typename?: 'AgreementTwitters';
+  /** An object relationship */
+  Twitter?: Maybe<Twitters>;
+  TwitterId?: Maybe<Scalars['uuid']>;
+  agreementId: Scalars['uuid'];
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  updatedAt: Scalars['timestamptz'];
+};
+
+/** order by aggregate values of table "AgreementTwitters" */
+export type AgreementTwitters_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<AgreementTwitters_Max_Order_By>;
+  min?: InputMaybe<AgreementTwitters_Min_Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "AgreementTwitters". All fields are combined with a logical 'AND'. */
+export type AgreementTwitters_Bool_Exp = {
+  Twitter?: InputMaybe<Twitters_Bool_Exp>;
+  TwitterId?: InputMaybe<Uuid_Comparison_Exp>;
+  _and?: InputMaybe<Array<AgreementTwitters_Bool_Exp>>;
+  _not?: InputMaybe<AgreementTwitters_Bool_Exp>;
+  _or?: InputMaybe<Array<AgreementTwitters_Bool_Exp>>;
+  agreementId?: InputMaybe<Uuid_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** order by max() on columns of table "AgreementTwitters" */
+export type AgreementTwitters_Max_Order_By = {
+  TwitterId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** order by min() on columns of table "AgreementTwitters" */
+export type AgreementTwitters_Min_Order_By = {
+  TwitterId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** Ordering options when selecting data from "AgreementTwitters". */
+export type AgreementTwitters_Order_By = {
+  Twitter?: InputMaybe<Twitters_Order_By>;
+  TwitterId?: InputMaybe<Order_By>;
+  agreementId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "AgreementTwitters" */
+export enum AgreementTwitters_Select_Column {
+  /** column name */
+  TwitterId = 'TwitterId',
+  /** column name */
+  AgreementId = 'agreementId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+/** Streaming cursor of the table "AgreementTwitters" */
+export type AgreementTwitters_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: AgreementTwitters_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type AgreementTwitters_Stream_Cursor_Value_Input = {
+  TwitterId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** columns and relationships of "AgreementWallets" */
@@ -7165,38 +7438,55 @@ export type Contracts_Variance_Order_By = {
 /** columns and relationships of "Discords" */
 export type Discords = {
   __typename?: 'Discords';
-  agreementId: Scalars['uuid'];
+  /** An array relationship */
+  AgreementDiscords: Array<AgreementDiscords>;
+  createdAt: Scalars['timestamptz'];
   guildId?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
   name?: Maybe<Scalars['String']>;
+  updatedAt: Scalars['timestamptz'];
+};
+
+
+/** columns and relationships of "Discords" */
+export type DiscordsAgreementDiscordsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementDiscords_Order_By>>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
 };
 
 /** Boolean expression to filter rows from the table "Discords". All fields are combined with a logical 'AND'. */
 export type Discords_Bool_Exp = {
+  AgreementDiscords?: InputMaybe<AgreementDiscords_Bool_Exp>;
   _and?: InputMaybe<Array<Discords_Bool_Exp>>;
   _not?: InputMaybe<Discords_Bool_Exp>;
   _or?: InputMaybe<Array<Discords_Bool_Exp>>;
-  agreementId?: InputMaybe<Uuid_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   guildId?: InputMaybe<String_Comparison_Exp>;
   icon?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
+  updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
 /** Ordering options when selecting data from "Discords". */
 export type Discords_Order_By = {
-  agreementId?: InputMaybe<Order_By>;
+  AgreementDiscords_aggregate?: InputMaybe<AgreementDiscords_Aggregate_Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   guildId?: InputMaybe<Order_By>;
   icon?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
+  updatedAt?: InputMaybe<Order_By>;
 };
 
 /** select columns of table "Discords" */
 export enum Discords_Select_Column {
   /** column name */
-  AgreementId = 'agreementId',
+  CreatedAt = 'createdAt',
   /** column name */
   GuildId = 'guildId',
   /** column name */
@@ -7204,7 +7494,9 @@ export enum Discords_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  Name = 'name'
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updatedAt'
 }
 
 /** Streaming cursor of the table "Discords" */
@@ -7217,11 +7509,12 @@ export type Discords_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Discords_Stream_Cursor_Value_Input = {
-  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   guildId?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
 };
 
 /** columns and relationships of "Extensions" */
@@ -8047,6 +8340,10 @@ export type Rules = {
   createdAt: Scalars['timestamptz'];
   definition: Scalars['jsonb'];
   id: Scalars['uuid'];
+  input?: Maybe<Scalars['String']>;
+  inputRef?: Maybe<Scalars['uuid']>;
+  output?: Maybe<Scalars['String']>;
+  outputRef?: Maybe<Scalars['uuid']>;
   updatedAt: Scalars['timestamptz'];
   version: Scalars['String'];
 };
@@ -8066,6 +8363,10 @@ export type Rules_Bool_Exp = {
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   definition?: InputMaybe<Jsonb_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  input?: InputMaybe<String_Comparison_Exp>;
+  inputRef?: InputMaybe<Uuid_Comparison_Exp>;
+  output?: InputMaybe<String_Comparison_Exp>;
+  outputRef?: InputMaybe<Uuid_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   version?: InputMaybe<String_Comparison_Exp>;
 };
@@ -8076,6 +8377,10 @@ export type Rules_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   definition?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  input?: InputMaybe<Order_By>;
+  inputRef?: InputMaybe<Order_By>;
+  output?: InputMaybe<Order_By>;
+  outputRef?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
   version?: InputMaybe<Order_By>;
 };
@@ -8090,6 +8395,14 @@ export enum Rules_Select_Column {
   Definition = 'definition',
   /** column name */
   Id = 'id',
+  /** column name */
+  Input = 'input',
+  /** column name */
+  InputRef = 'inputRef',
+  /** column name */
+  Output = 'output',
+  /** column name */
+  OutputRef = 'outputRef',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -8110,6 +8423,10 @@ export type Rules_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   definition?: InputMaybe<Scalars['jsonb']>;
   id?: InputMaybe<Scalars['uuid']>;
+  input?: InputMaybe<Scalars['String']>;
+  inputRef?: InputMaybe<Scalars['uuid']>;
+  output?: InputMaybe<Scalars['String']>;
+  outputRef?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
   version?: InputMaybe<Scalars['String']>;
 };
@@ -8239,7 +8556,8 @@ export type SequelizeMeta_Updates = {
 /** columns and relationships of "Slacks" */
 export type Slacks = {
   __typename?: 'Slacks';
-  agreementId: Scalars['uuid'];
+  /** An array relationship */
+  AgreementSlacks: Array<AgreementSlacks>;
   createdAt: Scalars['timestamptz'];
   icon?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
@@ -8248,12 +8566,22 @@ export type Slacks = {
   updatedAt: Scalars['timestamptz'];
 };
 
+
+/** columns and relationships of "Slacks" */
+export type SlacksAgreementSlacksArgs = {
+  distinct_on?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementSlacks_Order_By>>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
 /** Boolean expression to filter rows from the table "Slacks". All fields are combined with a logical 'AND'. */
 export type Slacks_Bool_Exp = {
+  AgreementSlacks?: InputMaybe<AgreementSlacks_Bool_Exp>;
   _and?: InputMaybe<Array<Slacks_Bool_Exp>>;
   _not?: InputMaybe<Slacks_Bool_Exp>;
   _or?: InputMaybe<Array<Slacks_Bool_Exp>>;
-  agreementId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   icon?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -8264,7 +8592,7 @@ export type Slacks_Bool_Exp = {
 
 /** Ordering options when selecting data from "Slacks". */
 export type Slacks_Order_By = {
-  agreementId?: InputMaybe<Order_By>;
+  AgreementSlacks_aggregate?: InputMaybe<AgreementSlacks_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   icon?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -8275,8 +8603,6 @@ export type Slacks_Order_By = {
 
 /** select columns of table "Slacks" */
 export enum Slacks_Select_Column {
-  /** column name */
-  AgreementId = 'agreementId',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -8301,7 +8627,6 @@ export type Slacks_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Slacks_Stream_Cursor_Value_Input = {
-  agreementId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -9098,30 +9423,44 @@ export type Transfers_Updates = {
 /** columns and relationships of "Twitters" */
 export type Twitters = {
   __typename?: 'Twitters';
-  agreementId: Scalars['uuid'];
+  /** An array relationship */
+  AgreementTwitters: Array<AgreementTwitters>;
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
+  twitterId: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
   username?: Maybe<Scalars['String']>;
 };
 
+
+/** columns and relationships of "Twitters" */
+export type TwittersAgreementTwittersArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTwitters_Order_By>>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
+};
+
 /** Boolean expression to filter rows from the table "Twitters". All fields are combined with a logical 'AND'. */
 export type Twitters_Bool_Exp = {
+  AgreementTwitters?: InputMaybe<AgreementTwitters_Bool_Exp>;
   _and?: InputMaybe<Array<Twitters_Bool_Exp>>;
   _not?: InputMaybe<Twitters_Bool_Exp>;
   _or?: InputMaybe<Array<Twitters_Bool_Exp>>;
-  agreementId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  twitterId?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   username?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** Ordering options when selecting data from "Twitters". */
 export type Twitters_Order_By = {
-  agreementId?: InputMaybe<Order_By>;
+  AgreementTwitters_aggregate?: InputMaybe<AgreementTwitters_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  twitterId?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
   username?: InputMaybe<Order_By>;
 };
@@ -9129,11 +9468,11 @@ export type Twitters_Order_By = {
 /** select columns of table "Twitters" */
 export enum Twitters_Select_Column {
   /** column name */
-  AgreementId = 'agreementId',
-  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
+  /** column name */
+  TwitterId = 'twitterId',
   /** column name */
   UpdatedAt = 'updatedAt',
   /** column name */
@@ -9150,9 +9489,9 @@ export type Twitters_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Twitters_Stream_Cursor_Value_Input = {
-  agreementId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
+  twitterId?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
   username?: InputMaybe<Scalars['String']>;
 };
@@ -12691,6 +13030,10 @@ export enum Order_By {
 export type Query_Root = {
   __typename?: 'query_root';
   /** An array relationship */
+  AgreementDiscords: Array<AgreementDiscords>;
+  /** fetch data from the table: "AgreementDiscords" using primary key columns */
+  AgreementDiscords_by_pk?: Maybe<AgreementDiscords>;
+  /** An array relationship */
   AgreementExtensionLinks: Array<AgreementExtensionLinks>;
   /** An aggregate relationship */
   AgreementExtensionLinks_aggregate: AgreementExtensionLinks_Aggregate;
@@ -12751,6 +13094,10 @@ export type Query_Root = {
   /** fetch data from the table: "AgreementRoles" using primary key columns */
   AgreementRoles_by_pk?: Maybe<AgreementRoles>;
   /** An array relationship */
+  AgreementSlacks: Array<AgreementSlacks>;
+  /** fetch data from the table: "AgreementSlacks" using primary key columns */
+  AgreementSlacks_by_pk?: Maybe<AgreementSlacks>;
+  /** An array relationship */
   AgreementTokenTransfers: Array<AgreementTokenTransfers>;
   /** An aggregate relationship */
   AgreementTokenTransfers_aggregate: AgreementTokenTransfers_Aggregate;
@@ -12762,6 +13109,10 @@ export type Query_Root = {
   AgreementTokens_aggregate: AgreementTokens_Aggregate;
   /** fetch data from the table: "AgreementTokens" using primary key columns */
   AgreementTokens_by_pk?: Maybe<AgreementTokens>;
+  /** An array relationship */
+  AgreementTwitters: Array<AgreementTwitters>;
+  /** fetch data from the table: "AgreementTwitters" using primary key columns */
+  AgreementTwitters_by_pk?: Maybe<AgreementTwitters>;
   /** An array relationship */
   AgreementWallets: Array<AgreementWallets>;
   /** An aggregate relationship */
@@ -12880,6 +13231,20 @@ export type Query_Root = {
   Wallets_aggregate: Wallets_Aggregate;
   /** fetch data from the table: "Wallets" using primary key columns */
   Wallets_by_pk?: Maybe<Wallets>;
+};
+
+
+export type Query_RootAgreementDiscordsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementDiscords_Order_By>>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementDiscords_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
@@ -13113,6 +13478,20 @@ export type Query_RootAgreementRoles_By_PkArgs = {
 };
 
 
+export type Query_RootAgreementSlacksArgs = {
+  distinct_on?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementSlacks_Order_By>>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementSlacks_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
 export type Query_RootAgreementTokenTransfersArgs = {
   distinct_on?: InputMaybe<Array<AgreementTokenTransfers_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -13155,6 +13534,20 @@ export type Query_RootAgreementTokens_AggregateArgs = {
 
 
 export type Query_RootAgreementTokens_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootAgreementTwittersArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTwitters_Order_By>>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementTwitters_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -13608,6 +14001,12 @@ export type Query_RootWallets_By_PkArgs = {
 export type Subscription_Root = {
   __typename?: 'subscription_root';
   /** An array relationship */
+  AgreementDiscords: Array<AgreementDiscords>;
+  /** fetch data from the table: "AgreementDiscords" using primary key columns */
+  AgreementDiscords_by_pk?: Maybe<AgreementDiscords>;
+  /** fetch data from the table in a streaming manner: "AgreementDiscords" */
+  AgreementDiscords_stream: Array<AgreementDiscords>;
+  /** An array relationship */
   AgreementExtensionLinks: Array<AgreementExtensionLinks>;
   /** An aggregate relationship */
   AgreementExtensionLinks_aggregate: AgreementExtensionLinks_Aggregate;
@@ -13688,6 +14087,12 @@ export type Subscription_Root = {
   /** fetch data from the table in a streaming manner: "AgreementRoles" */
   AgreementRoles_stream: Array<AgreementRoles>;
   /** An array relationship */
+  AgreementSlacks: Array<AgreementSlacks>;
+  /** fetch data from the table: "AgreementSlacks" using primary key columns */
+  AgreementSlacks_by_pk?: Maybe<AgreementSlacks>;
+  /** fetch data from the table in a streaming manner: "AgreementSlacks" */
+  AgreementSlacks_stream: Array<AgreementSlacks>;
+  /** An array relationship */
   AgreementTokenTransfers: Array<AgreementTokenTransfers>;
   /** An aggregate relationship */
   AgreementTokenTransfers_aggregate: AgreementTokenTransfers_Aggregate;
@@ -13703,6 +14108,12 @@ export type Subscription_Root = {
   AgreementTokens_by_pk?: Maybe<AgreementTokens>;
   /** fetch data from the table in a streaming manner: "AgreementTokens" */
   AgreementTokens_stream: Array<AgreementTokens>;
+  /** An array relationship */
+  AgreementTwitters: Array<AgreementTwitters>;
+  /** fetch data from the table: "AgreementTwitters" using primary key columns */
+  AgreementTwitters_by_pk?: Maybe<AgreementTwitters>;
+  /** fetch data from the table in a streaming manner: "AgreementTwitters" */
+  AgreementTwitters_stream: Array<AgreementTwitters>;
   /** An array relationship */
   AgreementWallets: Array<AgreementWallets>;
   /** An aggregate relationship */
@@ -13863,6 +14274,27 @@ export type Subscription_Root = {
   Wallets_by_pk?: Maybe<Wallets>;
   /** fetch data from the table in a streaming manner: "Wallets" */
   Wallets_stream: Array<Wallets>;
+};
+
+
+export type Subscription_RootAgreementDiscordsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementDiscords_Order_By>>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementDiscords_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementDiscords_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementDiscords_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
 };
 
 
@@ -14166,6 +14598,27 @@ export type Subscription_RootAgreementRoles_StreamArgs = {
 };
 
 
+export type Subscription_RootAgreementSlacksArgs = {
+  distinct_on?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementSlacks_Order_By>>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementSlacks_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementSlacks_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementSlacks_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
+
 export type Subscription_RootAgreementTokenTransfersArgs = {
   distinct_on?: InputMaybe<Array<AgreementTokenTransfers_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -14223,6 +14676,27 @@ export type Subscription_RootAgreementTokens_StreamArgs = {
   batch_size: Scalars['Int'];
   cursor: Array<InputMaybe<AgreementTokens_Stream_Cursor_Input>>;
   where?: InputMaybe<AgreementTokens_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementTwittersArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTwitters_Order_By>>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementTwitters_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootAgreementTwitters_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<AgreementTwitters_Stream_Cursor_Input>>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
 };
 
 
@@ -14845,29 +15319,53 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
-export type SubTwitterSubscriptionVariables = Exact<{
-  agreementId: Scalars['uuid'];
+export type SubTwittersSubscriptionVariables = Exact<{
+  agreementId?: InputMaybe<Scalars['uuid']>;
 }>;
 
 
-export type SubTwitterSubscription = { __typename?: 'subscription_root', Twitters: Array<{ __typename?: 'Twitters', id: any, agreementId: any, username?: string | null }> };
+export type SubTwittersSubscription = { __typename?: 'subscription_root', AgreementTwitters: Array<{ __typename?: 'AgreementTwitters', id: any, agreementId: any, Twitter?: { __typename?: 'Twitters', username?: string | null } | null }> };
+
+export type SubTwitterSubscriptionVariables = Exact<{
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  twitterId?: InputMaybe<Scalars['uuid']>;
+}>;
+
+
+export type SubTwitterSubscription = { __typename?: 'subscription_root', AgreementTwitters: Array<{ __typename?: 'AgreementTwitters', id: any, agreementId: any, Twitter?: { __typename?: 'Twitters', username?: string | null } | null }> };
+
+export type SubDiscordsSubscriptionVariables = Exact<{
+  agreementId?: InputMaybe<Scalars['uuid']>;
+}>;
+
+
+export type SubDiscordsSubscription = { __typename?: 'subscription_root', AgreementDiscords: Array<{ __typename?: 'AgreementDiscords', id: any, agreementId: any, Discord?: { __typename?: 'Discords', guildId?: string | null, name?: string | null, icon?: string | null } | null }> };
 
 export type SubDiscordSubscriptionVariables = Exact<{
-  agreementId: Scalars['uuid'];
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  discordId?: InputMaybe<Scalars['uuid']>;
 }>;
 
 
-export type SubDiscordSubscription = { __typename?: 'subscription_root', Discords: Array<{ __typename?: 'Discords', id: any, agreementId: any, guildId?: string | null, name?: string | null, icon?: string | null }> };
+export type SubDiscordSubscription = { __typename?: 'subscription_root', AgreementDiscords: Array<{ __typename?: 'AgreementDiscords', id: any, agreementId: any, Discord?: { __typename?: 'Discords', guildId?: string | null, name?: string | null, icon?: string | null } | null }> };
+
+export type SubSlacksSubscriptionVariables = Exact<{
+  agreementId?: InputMaybe<Scalars['uuid']>;
+}>;
+
+
+export type SubSlacksSubscription = { __typename?: 'subscription_root', AgreementSlacks: Array<{ __typename?: 'AgreementSlacks', id: any, agreementId: any, Slack?: { __typename?: 'Slacks', name?: string | null, teamId?: string | null, icon?: string | null } | null }> };
 
 export type SubSlackSubscriptionVariables = Exact<{
-  agreementId: Scalars['uuid'];
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  slackId?: InputMaybe<Scalars['uuid']>;
 }>;
 
 
-export type SubSlackSubscription = { __typename?: 'subscription_root', Slacks: Array<{ __typename?: 'Slacks', id: any, agreementId: any, name?: string | null, teamId?: string | null, icon?: string | null }> };
+export type SubSlackSubscription = { __typename?: 'subscription_root', AgreementSlacks: Array<{ __typename?: 'AgreementSlacks', id: any, agreementId: any, Slack?: { __typename?: 'Slacks', name?: string | null, teamId?: string | null, icon?: string | null } | null }> };
 
 export type SubRulesSubscriptionVariables = Exact<{
-  agreementId: Scalars['uuid'];
+  agreementId?: InputMaybe<Scalars['uuid']>;
 }>;
 
 
@@ -15027,12 +15525,50 @@ export const AgreementPartsFragmentDoc = gql`
   name
 }
     `;
-export const SubTwitterDocument = gql`
-    subscription SubTwitter($agreementId: uuid!) {
-  Twitters(where: {agreementId: {_eq: $agreementId}}) {
+export const SubTwittersDocument = gql`
+    subscription SubTwitters($agreementId: uuid) {
+  AgreementTwitters(where: {agreementId: {_eq: $agreementId}}) {
     id
     agreementId
-    username
+    Twitter {
+      username
+    }
+  }
+}
+    `;
+
+/**
+ * __useSubTwittersSubscription__
+ *
+ * To run a query within a React component, call `useSubTwittersSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubTwittersSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubTwittersSubscription({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *   },
+ * });
+ */
+export function useSubTwittersSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubTwittersSubscription, SubTwittersSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubTwittersSubscription, SubTwittersSubscriptionVariables>(SubTwittersDocument, options);
+      }
+export type SubTwittersSubscriptionHookResult = ReturnType<typeof useSubTwittersSubscription>;
+export type SubTwittersSubscriptionResult = Apollo.SubscriptionResult<SubTwittersSubscription>;
+export const SubTwitterDocument = gql`
+    subscription SubTwitter($agreementId: uuid, $twitterId: uuid) {
+  AgreementTwitters(
+    where: {agreementId: {_eq: $agreementId}, id: {_eq: $twitterId}}
+  ) {
+    id
+    agreementId
+    Twitter {
+      username
+    }
   }
 }
     `;
@@ -15050,23 +15586,64 @@ export const SubTwitterDocument = gql`
  * const { data, loading, error } = useSubTwitterSubscription({
  *   variables: {
  *      agreementId: // value for 'agreementId'
+ *      twitterId: // value for 'twitterId'
  *   },
  * });
  */
-export function useSubTwitterSubscription(baseOptions: Apollo.SubscriptionHookOptions<SubTwitterSubscription, SubTwitterSubscriptionVariables>) {
+export function useSubTwitterSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubTwitterSubscription, SubTwitterSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useSubscription<SubTwitterSubscription, SubTwitterSubscriptionVariables>(SubTwitterDocument, options);
       }
 export type SubTwitterSubscriptionHookResult = ReturnType<typeof useSubTwitterSubscription>;
 export type SubTwitterSubscriptionResult = Apollo.SubscriptionResult<SubTwitterSubscription>;
-export const SubDiscordDocument = gql`
-    subscription SubDiscord($agreementId: uuid!) {
-  Discords(where: {agreementId: {_eq: $agreementId}}) {
+export const SubDiscordsDocument = gql`
+    subscription SubDiscords($agreementId: uuid) {
+  AgreementDiscords(where: {agreementId: {_eq: $agreementId}}) {
     id
     agreementId
-    guildId
-    name
-    icon
+    Discord {
+      guildId
+      name
+      icon
+    }
+  }
+}
+    `;
+
+/**
+ * __useSubDiscordsSubscription__
+ *
+ * To run a query within a React component, call `useSubDiscordsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubDiscordsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubDiscordsSubscription({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *   },
+ * });
+ */
+export function useSubDiscordsSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubDiscordsSubscription, SubDiscordsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubDiscordsSubscription, SubDiscordsSubscriptionVariables>(SubDiscordsDocument, options);
+      }
+export type SubDiscordsSubscriptionHookResult = ReturnType<typeof useSubDiscordsSubscription>;
+export type SubDiscordsSubscriptionResult = Apollo.SubscriptionResult<SubDiscordsSubscription>;
+export const SubDiscordDocument = gql`
+    subscription SubDiscord($agreementId: uuid, $discordId: uuid) {
+  AgreementDiscords(
+    where: {agreementId: {_eq: $agreementId}, id: {_eq: $discordId}}
+  ) {
+    id
+    agreementId
+    Discord {
+      guildId
+      name
+      icon
+    }
   }
 }
     `;
@@ -15084,23 +15661,62 @@ export const SubDiscordDocument = gql`
  * const { data, loading, error } = useSubDiscordSubscription({
  *   variables: {
  *      agreementId: // value for 'agreementId'
+ *      discordId: // value for 'discordId'
  *   },
  * });
  */
-export function useSubDiscordSubscription(baseOptions: Apollo.SubscriptionHookOptions<SubDiscordSubscription, SubDiscordSubscriptionVariables>) {
+export function useSubDiscordSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubDiscordSubscription, SubDiscordSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useSubscription<SubDiscordSubscription, SubDiscordSubscriptionVariables>(SubDiscordDocument, options);
       }
 export type SubDiscordSubscriptionHookResult = ReturnType<typeof useSubDiscordSubscription>;
 export type SubDiscordSubscriptionResult = Apollo.SubscriptionResult<SubDiscordSubscription>;
-export const SubSlackDocument = gql`
-    subscription SubSlack($agreementId: uuid!) {
-  Slacks(where: {agreementId: {_eq: $agreementId}}) {
+export const SubSlacksDocument = gql`
+    subscription SubSlacks($agreementId: uuid) {
+  AgreementSlacks(where: {agreementId: {_eq: $agreementId}}) {
     id
     agreementId
-    name
-    teamId
-    icon
+    Slack {
+      name
+      teamId
+      icon
+    }
+  }
+}
+    `;
+
+/**
+ * __useSubSlacksSubscription__
+ *
+ * To run a query within a React component, call `useSubSlacksSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useSubSlacksSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSubSlacksSubscription({
+ *   variables: {
+ *      agreementId: // value for 'agreementId'
+ *   },
+ * });
+ */
+export function useSubSlacksSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubSlacksSubscription, SubSlacksSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<SubSlacksSubscription, SubSlacksSubscriptionVariables>(SubSlacksDocument, options);
+      }
+export type SubSlacksSubscriptionHookResult = ReturnType<typeof useSubSlacksSubscription>;
+export type SubSlacksSubscriptionResult = Apollo.SubscriptionResult<SubSlacksSubscription>;
+export const SubSlackDocument = gql`
+    subscription SubSlack($agreementId: uuid, $slackId: uuid) {
+  AgreementSlacks(where: {agreementId: {_eq: $agreementId}, id: {_eq: $slackId}}) {
+    id
+    agreementId
+    Slack {
+      name
+      teamId
+      icon
+    }
   }
 }
     `;
@@ -15118,17 +15734,18 @@ export const SubSlackDocument = gql`
  * const { data, loading, error } = useSubSlackSubscription({
  *   variables: {
  *      agreementId: // value for 'agreementId'
+ *      slackId: // value for 'slackId'
  *   },
  * });
  */
-export function useSubSlackSubscription(baseOptions: Apollo.SubscriptionHookOptions<SubSlackSubscription, SubSlackSubscriptionVariables>) {
+export function useSubSlackSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubSlackSubscription, SubSlackSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useSubscription<SubSlackSubscription, SubSlackSubscriptionVariables>(SubSlackDocument, options);
       }
 export type SubSlackSubscriptionHookResult = ReturnType<typeof useSubSlackSubscription>;
 export type SubSlackSubscriptionResult = Apollo.SubscriptionResult<SubSlackSubscription>;
 export const SubRulesDocument = gql`
-    subscription SubRules($agreementId: uuid!) {
+    subscription SubRules($agreementId: uuid) {
   Rules(where: {agreementId: {_eq: $agreementId}}) {
     id
     agreementId
@@ -15153,7 +15770,7 @@ export const SubRulesDocument = gql`
  *   },
  * });
  */
-export function useSubRulesSubscription(baseOptions: Apollo.SubscriptionHookOptions<SubRulesSubscription, SubRulesSubscriptionVariables>) {
+export function useSubRulesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<SubRulesSubscription, SubRulesSubscriptionVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useSubscription<SubRulesSubscription, SubRulesSubscriptionVariables>(SubRulesDocument, options);
       }

@@ -18,6 +18,7 @@ export interface SymphonyConnection {
 	name: string
 	type: SymphonyConnectionType
 	platform: SymphonyConnectionPlatform
+	icon?: string
 
 	// Twitter
 	twitterUsername?: string
