@@ -16,6 +16,7 @@ import { MeemAPI } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
 import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
@@ -35,6 +36,7 @@ export const AgreementHome: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
+	const analytics = useAnalytics()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -71,6 +73,11 @@ export const AgreementHome: React.FC = () => {
 			await sdk.agreement.updateAgreement({
 				isLaunched: true,
 				agreementId
+			})
+
+			analytics.track('Community Launched', {
+				communityId: agreementId,
+				communityName: agreement?.name
 			})
 		} catch (e) {
 			log.debug(e)

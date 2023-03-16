@@ -36,6 +36,7 @@ import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate } from '../../utils/truncated_wallet'
 import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
@@ -47,6 +48,7 @@ export function HeaderMenu() {
 		useState(false)
 	const { classes: meemTheme, cx } = useMeemTheme()
 	const router = useRouter()
+	const analytics = useAnalytics()
 
 	const {
 		loginState,
@@ -124,7 +126,12 @@ export function HeaderMenu() {
 								target="_blank"
 								rel="noreferrer"
 							>
-								<Text className={meemTheme.tExtraSmallBold}>
+								<Text
+									className={meemTheme.tExtraSmallBold}
+									onClick={() => {
+										analytics.track('Dev Docs Viewed')
+									}}
+								>
 									Dev Docs
 								</Text>
 							</a>

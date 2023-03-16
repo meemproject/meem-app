@@ -12,6 +12,7 @@ import { useMeemApollo } from '@meemproject/react'
 import { CheckCircle } from 'iconoir-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetExtensionsQuery } from '../../../../generated/graphql'
+import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { GET_EXTENSIONS } from '../../../graphql/agreements'
 import { Agreement, Extension } from '../../../model/agreement/agreements'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
@@ -31,6 +32,7 @@ export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 	onChosenExtensionsChanged
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
+	const analytics = useAnalytics()
 
 	useEffect(() => {}, [agreement])
 
@@ -60,11 +62,21 @@ export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 			}
 			setChosenExtensions(newExtensionsList)
 			onChosenExtensionsChanged(newExtensionsList)
+			analytics.track('Pre-Launch Extension Deselected', {
+				communityId: agreement.id,
+				communityName: agreement.name,
+				extensionName: extension.name
+			})
 		} else {
 			const newExtensionsList = [...chosenExtensions]
 			newExtensionsList.push(extension.id)
 			setChosenExtensions(newExtensionsList)
 			onChosenExtensionsChanged(newExtensionsList)
+			analytics.track('Pre-Launch Extension Selected', {
+				communityId: agreement.id,
+				communityName: agreement.name,
+				extensionName: extension.name
+			})
 		}
 	}
 
