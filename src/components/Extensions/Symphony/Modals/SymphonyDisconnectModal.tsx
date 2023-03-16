@@ -49,7 +49,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 							method: API.v1.DisconnectDiscord.method,
 							body: {
 								jwt,
-								agreementId: agreement?.id
+								agreementDiscordId: connection.id
 							}
 						}
 					)
@@ -70,7 +70,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 							method: API.v1.DisconnectTwitter.method,
 							body: {
 								jwt,
-								agreementId: agreement?.id
+								agreementTwitterId: connection.id
 							}
 						}
 					)

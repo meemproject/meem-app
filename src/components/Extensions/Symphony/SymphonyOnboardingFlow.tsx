@@ -403,17 +403,19 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 	// Intregrations data
 	const twitterUsername =
-		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
-	const discordInfo = discordData?.Discords[0]
+		twitterData?.AgreementTwitters[0] &&
+		twitterData?.AgreementTwitters[0].Twitter?.username
+	const discordInfo = discordData?.AgreementDiscords[0]
 	const discordHasName =
-		discordInfo && discordData?.Discords[0]?.name !== undefined
-	const slackInfo = slackData?.Slacks[0]
+		discordInfo &&
+		discordData?.AgreementDiscords[0].Discord?.name !== undefined
+	const slackInfo = slackData?.AgreementSlacks[0]
 
 	const isConnectionEstablished =
-		!!twitterData?.Twitters[0] &&
-		!!twitterData?.Twitters[0].username &&
-		!!discordData?.Discords[0] &&
-		typeof discordData?.Discords[0].name === 'string'
+		!!twitterData?.AgreementTwitters[0] &&
+		!!twitterData?.AgreementTwitters[0].Twitter?.username &&
+		!!discordData?.AgreementDiscords[0] &&
+		typeof discordData?.AgreementDiscords[0].Discord?.name === 'string'
 
 	// Handle page state changes
 	useEffect(() => {

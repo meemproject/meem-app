@@ -92,7 +92,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 					rules: [
 						{
 							...values,
-							action: API.PublishAction.Tweet,
+							input: API.RuleIo.Discord,
+							output: API.RuleIo.Twitter,
 							isEnabled: true,
 							ruleId: existingRule?.id ?? rule?.id
 						}

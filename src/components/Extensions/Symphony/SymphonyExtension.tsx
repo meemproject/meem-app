@@ -15,7 +15,12 @@ import {
 import { useAuth } from '@meemproject/react'
 import { createApolloClient, makeRequest } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
-import { SubRulesSubscription } from '../../../../generated/graphql'
+import {
+	SubDiscordSubscription,
+	SubRulesSubscription,
+	SubSlackSubscription,
+	SubTwitterSubscription
+} from '../../../../generated/graphql'
 import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
@@ -29,7 +34,7 @@ import {
 	SymphonyConnectionType,
 	SymphonyRule
 } from './Model/symphony'
-import { SUB_RULES } from './symphony.gql'
+import { SUB_DISCORD, SUB_RULES, SUB_SLACK, SUB_TWITTER } from './symphony.gql'
 import { API } from './symphonyTypes.generated'
 
 export const SymphonyExtension: React.FC = () => {
@@ -57,6 +62,8 @@ export const SymphonyExtension: React.FC = () => {
 	const [rules, setRules] = useState<SymphonyRule[]>()
 	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
 
+	const [previousConnectionsDataString, setPreviousConnectionsDataString] =
+		useState('')
 	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
 	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
 	const [symphonyConnections, setSymphonyConnections] = useState<
@@ -79,37 +86,90 @@ export const SymphonyExtension: React.FC = () => {
 		}
 	)
 
+	const { data: discordConnectionData } =
+		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		})
+
+	const { data: twitterConnectionData } =
+		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		})
+
+	const { data: slackConnectionData } = useSubscription<SubSlackSubscription>(
+		SUB_SLACK,
+		{
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !symphonyClient || !agreement?.id,
+			client: symphonyClient
+		}
+	)
+
 	// Parse connections from subscription
 	useEffect(() => {
-		if (!isFetchingConnections && !hasFetchedConnections) {
-			//TODO use real data
+		if (
+			discordConnectionData &&
+			twitterConnectionData &&
+			slackConnectionData
+		) {
 			const conns: SymphonyConnection[] = []
-			const con1: SymphonyConnection = {
-				id: '1',
-				name: 'Twitter: (username)',
-				type: SymphonyConnectionType.OutputOnly,
-				platform: SymphonyConnectionPlatform.Twitter
+			discordConnectionData.AgreementDiscords.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Discord: ${c.Discord?.name}`,
+					type: SymphonyConnectionType.InputOnly,
+					platform: SymphonyConnectionPlatform.Discord,
+					icon: c.Discord?.icon ?? ''
+				}
+				conns.push(con)
+			})
+
+			twitterConnectionData.AgreementTwitters.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Twitter: ${c.Twitter?.username}`,
+					type: SymphonyConnectionType.OutputOnly,
+					platform: SymphonyConnectionPlatform.Twitter
+				}
+				conns.push(con)
+			})
+
+			slackConnectionData.AgreementSlacks.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Slack: ${c.Slack?.name}`,
+					type: SymphonyConnectionType.OutputOnly,
+					platform: SymphonyConnectionPlatform.Twitter
+				}
+				conns.push(con)
+			})
+
+			const jsonConns = JSON.stringify(conns)
+			if (jsonConns !== previousConnectionsDataString) {
+				setPreviousConnectionsDataString(jsonConns)
+				setSymphonyConnections(conns)
+				setHasFetchedConnections(true)
+				setIsFetchingConnections(true)
 			}
-			const con3: SymphonyConnection = {
-				id: '3',
-				name: 'Twitter: (username)',
-				type: SymphonyConnectionType.OutputOnly,
-				platform: SymphonyConnectionPlatform.Twitter
-			}
-			conns.push(con1)
-			conns.push(con3)
-			const con2: SymphonyConnection = {
-				id: '2',
-				name: 'Discord: (server name)',
-				type: SymphonyConnectionType.InputOnly,
-				platform: SymphonyConnectionPlatform.Discord
-			}
-			conns.push(con2)
-			setSymphonyConnections(conns)
-			setHasFetchedConnections(true)
-			setIsFetchingConnections(true)
 		}
-	}, [hasFetchedConnections, isFetchingConnections])
+	}, [
+		discordConnectionData,
+		hasFetchedConnections,
+		isFetchingConnections,
+		previousConnectionsDataString,
+		slackConnectionData,
+		twitterConnectionData
+	])
 
 	// Parse rules from subscription
 	useEffect(() => {

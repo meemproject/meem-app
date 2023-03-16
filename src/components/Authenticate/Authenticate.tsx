@@ -44,7 +44,11 @@ const MAuthenticate: React.FC = () => {
 
 				const redirect = Cookies.get(CookieKeys.authRedirectUrl)
 
-				if (redirect && !redirect?.includes('authenticate')) {
+				if (
+					redirect &&
+					!redirect?.includes('authenticate') &&
+					!redirect?.includes('undefined')
+				) {
 					const fixedPathName = redirect.replaceAll('%3F', '?')
 					log.debug(`fixed path name = ${fixedPathName}`)
 					router.push(fixedPathName)

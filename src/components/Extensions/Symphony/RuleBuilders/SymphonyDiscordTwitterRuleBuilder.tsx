@@ -144,7 +144,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetDiscordChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementId: agreement?.id as string
+					agreementDiscordId: rule?.input.id ?? ''
 				})
 			},
 			{
@@ -168,7 +168,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetDiscordRoles.method
 				})(url, {
 					jwt: jwt as string,
-					agreementId: agreement?.id as string
+					agreementDiscordId: rule?.input.id ?? ''
 				})
 			},
 			{
@@ -283,7 +283,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	let isProposalChannelGated = false
 
 	if (
-		discordData?.Discords[0] &&
+		discordData?.AgreementDiscords[0] &&
 		form.values.proposalChannels &&
 		form.values.proposalChannels.length > 0
 	) {
