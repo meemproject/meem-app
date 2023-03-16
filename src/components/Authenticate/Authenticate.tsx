@@ -60,7 +60,7 @@ const MAuthenticate: React.FC = () => {
 			)
 			log.crit(e)
 		}
-	}, [wallet, router, login])
+	}, [wallet, router, login, analytics])
 
 	return (
 		<Center>
