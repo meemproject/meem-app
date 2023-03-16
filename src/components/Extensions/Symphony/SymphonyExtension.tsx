@@ -16,10 +16,10 @@ import { useAuth } from '@meemproject/react'
 import { createApolloClient, makeRequest } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import {
-	SubDiscordSubscription,
+	SubDiscordsSubscription,
 	SubRulesSubscription,
-	SubSlackSubscription,
-	SubTwitterSubscription
+	SubSlacksSubscription,
+	SubTwittersSubscription
 } from '../../../../generated/graphql'
 import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
@@ -34,7 +34,12 @@ import {
 	SymphonyConnectionType,
 	SymphonyRule
 } from './Model/symphony'
-import { SUB_DISCORD, SUB_RULES, SUB_SLACK, SUB_TWITTER } from './symphony.gql'
+import {
+	SUB_DISCORDS,
+	SUB_RULES,
+	SUB_SLACKS,
+	SUB_TWITTERS
+} from './symphony.gql'
 import { API } from './symphonyTypes.generated'
 
 export const SymphonyExtension: React.FC = () => {
@@ -87,7 +92,7 @@ export const SymphonyExtension: React.FC = () => {
 	)
 
 	const { data: discordConnectionData } =
-		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
+		useSubscription<SubDiscordsSubscription>(SUB_DISCORDS, {
 			variables: {
 				agreementId: agreement?.id
 			},
@@ -96,7 +101,7 @@ export const SymphonyExtension: React.FC = () => {
 		})
 
 	const { data: twitterConnectionData } =
-		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
+		useSubscription<SubTwittersSubscription>(SUB_TWITTERS, {
 			variables: {
 				agreementId: agreement?.id
 			},
@@ -104,16 +109,14 @@ export const SymphonyExtension: React.FC = () => {
 			client: symphonyClient
 		})
 
-	const { data: slackConnectionData } = useSubscription<SubSlackSubscription>(
-		SUB_SLACK,
-		{
+	const { data: slackConnectionData } =
+		useSubscription<SubSlacksSubscription>(SUB_SLACKS, {
 			variables: {
 				agreementId: agreement?.id
 			},
 			skip: !symphonyClient || !agreement?.id,
 			client: symphonyClient
-		}
-	)
+		})
 
 	// Parse connections from subscription
 	useEffect(() => {
@@ -242,7 +245,7 @@ export const SymphonyExtension: React.FC = () => {
 				rules.map(rule => {
 					return (
 						<div
-							key={`rule-${rule.definition.ruleId}`}
+							key={`rule-${rule.id}`}
 							className={meemTheme.gridItem}
 							style={{ marginBottom: 16 }}
 						>
@@ -499,6 +502,7 @@ export const SymphonyExtension: React.FC = () => {
 
 					<SymphonyInputOutputModal
 						isOpened={isNewRuleModalOpen}
+						connections={symphonyConnections}
 						existingRule={selectedRule}
 						onModalClosed={function (): void {
 							setIsNewRuleModalOpen(false)

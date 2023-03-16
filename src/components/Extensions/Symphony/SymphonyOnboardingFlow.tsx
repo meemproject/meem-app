@@ -67,7 +67,7 @@ import {
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
-import { SUB_DISCORD, SUB_SLACK, SUB_TWITTER } from './symphony.gql'
+import { SUB_DISCORDS, SUB_SLACKS, SUB_TWITTERS } from './symphony.gql'
 import { API } from './symphonyTypes.generated'
 
 enum PageState {
@@ -156,7 +156,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	}, [])
 
 	const { data: twitterData, loading: twitterDataLoading } =
-		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
+		useSubscription<SubTwitterSubscription>(SUB_TWITTERS, {
 			variables: {
 				agreementId: chosenAgreement?.id
 			},
@@ -165,7 +165,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		})
 
 	const { data: discordData, loading: discordInfoLoading } =
-		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
+		useSubscription<SubDiscordSubscription>(SUB_DISCORDS, {
 			variables: {
 				agreementId: chosenAgreement?.id
 			},
@@ -174,7 +174,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		})
 
 	const { data: slackData, loading: slackInfoLoading } =
-		useSubscription<SubSlackSubscription>(SUB_SLACK, {
+		useSubscription<SubSlackSubscription>(SUB_SLACKS, {
 			variables: {
 				agreementId: chosenAgreement?.id
 			},
