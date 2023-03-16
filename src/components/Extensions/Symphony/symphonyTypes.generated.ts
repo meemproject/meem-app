@@ -104,8 +104,6 @@ export namespace API {
 	}
 
 	export interface IRule {
-		input: RuleIo
-		output: RuleIo
 		publishType: PublishType
 		proposerRoles: string[]
 		proposerEmojis: string[]
@@ -124,8 +122,9 @@ export namespace API {
 		isEnabled: boolean
 	}
 
-	export interface IRuleToSave extends Omit<IRule, 'ruleId'> {
-		ruleId?: string
+	export interface IRuleToSave extends IRule {
+		input: RuleIo
+		output: RuleIo
 	}
 
 	export interface ISavedRule
