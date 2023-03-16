@@ -8,7 +8,9 @@ import {
 	Center,
 	Button,
 	Loader,
-	Divider
+	Divider,
+	Grid,
+	Image
 } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import { createApolloClient, makeRequest } from '@meemproject/sdk'
@@ -244,6 +246,67 @@ export const SymphonyExtension: React.FC = () => {
 		</>
 	)
 
+	const connectionSummaryGridItem = (
+		connectionPlatform: SymphonyConnectionPlatform,
+		connectionCount: number
+	) => (
+		<>
+			<div className={meemTheme.gridItemFlat} style={{ cursor: 'auto' }}>
+				<div className={meemTheme.centeredRow}>
+					<Image
+						src={
+							connectionPlatform ===
+							SymphonyConnectionPlatform.Discord
+								? '/connect-discord.png'
+								: connectionPlatform ===
+								  SymphonyConnectionPlatform.Slack
+								? '/connect-slack.png'
+								: '/connect-twitter.png'
+						}
+						width={24}
+						height={24}
+						style={{
+							marginRight: 8
+						}}
+					/>
+					<Text className={meemTheme.tSmallBold}>
+						{connectionPlatform ===
+						SymphonyConnectionPlatform.Discord
+							? 'Discord'
+							: connectionPlatform ===
+							  SymphonyConnectionPlatform.Slack
+							? 'Slack'
+							: 'Twitter'}
+					</Text>
+				</div>
+				<Space h={16} />
+				<Text
+					className={meemTheme.tExtraSmallFaded}
+				>{`${connectionCount} ${
+					connectionCount === 1 ? `account` : 'accounts'
+				} connected`}</Text>
+			</div>
+		</>
+	)
+
+	const connectedDiscordAccounts = symphonyConnections
+		? symphonyConnections.filter(
+				c => c.platform === SymphonyConnectionPlatform.Discord
+		  ).length
+		: 0
+
+	const connectedTwitterAccounts = symphonyConnections
+		? symphonyConnections.filter(
+				c => c.platform === SymphonyConnectionPlatform.Twitter
+		  ).length
+		: 0
+
+	const connectedSlackAccounts = symphonyConnections
+		? symphonyConnections.filter(
+				c => c.platform === SymphonyConnectionPlatform.Slack
+		  ).length
+		: 0
+
 	const mainState = (
 		<>
 			{agreement?.isCurrentUserAgreementMember && (
@@ -253,6 +316,51 @@ export const SymphonyExtension: React.FC = () => {
 					<Text className={meemTheme.tExtraSmallLabel}>
 						CONNECTED ACCOUNTS
 					</Text>
+
+					{symphonyConnections && (
+						<>
+							<Space h={24} />
+							<Grid>
+								{connectedDiscordAccounts > 0 && (
+									<Grid.Col
+										xs={12}
+										md={6}
+										key={SymphonyConnectionPlatform.Discord.toString()}
+									>
+										{connectionSummaryGridItem(
+											SymphonyConnectionPlatform.Discord,
+											connectedDiscordAccounts
+										)}
+									</Grid.Col>
+								)}
+								{connectedTwitterAccounts > 0 && (
+									<Grid.Col
+										xs={12}
+										md={6}
+										key={SymphonyConnectionPlatform.Twitter.toString()}
+									>
+										{connectionSummaryGridItem(
+											SymphonyConnectionPlatform.Twitter,
+											connectedTwitterAccounts
+										)}
+									</Grid.Col>
+								)}
+								{connectedSlackAccounts > 0 && (
+									<Grid.Col
+										xs={12}
+										md={6}
+										key={SymphonyConnectionPlatform.Slack.toString()}
+									>
+										{connectionSummaryGridItem(
+											SymphonyConnectionPlatform.Slack,
+											connectedSlackAccounts
+										)}
+									</Grid.Col>
+								)}
+							</Grid>
+						</>
+					)}
+
 					<Space h={24} />
 					<Button
 						className={meemTheme.buttonWhite}
