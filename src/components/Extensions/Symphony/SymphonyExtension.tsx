@@ -500,14 +500,18 @@ export const SymphonyExtension: React.FC = () => {
 						}}
 					/>
 
-					<SymphonyInputOutputModal
-						isOpened={isNewRuleModalOpen}
-						connections={symphonyConnections}
-						existingRule={selectedRule}
-						onModalClosed={function (): void {
-							setIsNewRuleModalOpen(false)
-						}}
-					/>
+					{isNewRuleModalOpen && (
+						<>
+							<SymphonyInputOutputModal
+								isOpened={isNewRuleModalOpen}
+								connections={symphonyConnections}
+								existingRule={selectedRule}
+								onModalClosed={function (): void {
+									setIsNewRuleModalOpen(false)
+								}}
+							/>
+						</>
+					)}
 				</>
 			)}
 		</div>

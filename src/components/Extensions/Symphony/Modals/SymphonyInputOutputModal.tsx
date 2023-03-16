@@ -341,32 +341,24 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				</>
 			)}
 
-			{isOpened && (
+			{isOpened && isDiscordTwitterRuleBuilderOpened && (
 				<>
-					{isDiscordTwitterRuleBuilderOpened && (
-						<>
-							<SymphonyDiscordTwitterRulesBuilder
-								onSave={function (values: IOnSave): void {
-									handleRuleSave(values)
-								}}
-								discordId={
-									existingRule?.input.id ??
-									selectedInput?.id ??
-									''
-								}
-								twitterId={
-									existingRule?.output.id ??
-									selectedOutput?.id ??
-									''
-								}
-								rule={existingRule}
-								isOpened={isDiscordTwitterRuleBuilderOpened}
-								onModalClosed={function (): void {
-									setIsDiscordTwitterRuleBuilderOpened(false)
-								}}
-							/>
-						</>
-					)}
+					<SymphonyDiscordTwitterRulesBuilder
+						onSave={function (values: IOnSave): void {
+							handleRuleSave(values)
+						}}
+						discordId={
+							existingRule?.input.id ?? selectedInput?.id ?? ''
+						}
+						twitterId={
+							existingRule?.output.id ?? selectedOutput?.id ?? ''
+						}
+						rule={existingRule}
+						isOpened={isDiscordTwitterRuleBuilderOpened}
+						onModalClosed={function (): void {
+							setIsDiscordTwitterRuleBuilderOpened(false)
+						}}
+					/>
 				</>
 			)}
 		</>
