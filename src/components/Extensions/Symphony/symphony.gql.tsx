@@ -2,34 +2,40 @@ import { gql } from '@apollo/client'
 
 export const SUB_TWITTER = gql`
 	subscription SubTwitter($agreementId: uuid!) {
-		Twitters(where: { agreementId: { _eq: $agreementId } }) {
+		AgreementTwitters(where: { agreementId: { _eq: $agreementId } }) {
 			id
 			agreementId
-			username
+			Twitter {
+				username
+			}
 		}
 	}
 `
 
 export const SUB_DISCORD = gql`
 	subscription SubDiscord($agreementId: uuid!) {
-		Discords(where: { agreementId: { _eq: $agreementId } }) {
+		AgreementDiscords(where: { agreementId: { _eq: $agreementId } }) {
 			id
 			agreementId
-			guildId
-			name
-			icon
+			Discord {
+				guildId
+				name
+				icon
+			}
 		}
 	}
 `
 
 export const SUB_SLACK = gql`
 	subscription SubSlack($agreementId: uuid!) {
-		Slacks(where: { agreementId: { _eq: $agreementId } }) {
+		AgreementSlacks(where: { agreementId: { _eq: $agreementId } }) {
 			id
 			agreementId
-			name
-			teamId
-			icon
+			Slack {
+				name
+				teamId
+				icon
+			}
 		}
 	}
 `
