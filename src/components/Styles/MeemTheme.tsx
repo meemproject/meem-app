@@ -430,6 +430,16 @@ export const useMeemTheme = createStyles(theme => ({
 		borderRadius: 8,
 		padding: 16
 	},
+	gridItemFlatSelected: {
+		cursor: 'pointer',
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorWhite : colorBlack
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
+		borderRadius: 8,
+		padding: 16
+	},
 	extensionGridItem: {
 		display: 'flex',
 		flexDirection: 'column',
