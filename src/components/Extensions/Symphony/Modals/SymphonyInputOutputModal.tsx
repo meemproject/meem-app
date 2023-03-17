@@ -88,24 +88,22 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 		setIsSavingRule(true)
 
-		await makeRequest<API.v1.SaveRules.IDefinition>(
+		await makeRequest<API.v1.SaveRule.IDefinition>(
 			`${
 				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.SaveRules.path()}`,
+			}${API.v1.SaveRule.path()}`,
 			{
-				method: API.v1.SaveRules.method,
+				method: API.v1.SaveRule.method,
 				body: {
 					jwt,
 					agreementId: agreement.id,
-					rules: [
-						{
-							...values,
-							input: API.RuleIo.Discord,
-							output: API.RuleIo.Twitter,
-							isEnabled: true,
-							ruleId: existingRule?.id ?? rule?.id
-						}
-					]
+					rule: {
+						...values,
+						input: API.RuleIo.Discord,
+						output: API.RuleIo.Twitter,
+						isEnabled: true,
+						ruleId: existingRule?.id ?? rule?.id
+					}
 				}
 			}
 		)
