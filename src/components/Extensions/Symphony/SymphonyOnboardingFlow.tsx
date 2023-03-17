@@ -28,6 +28,7 @@ import {
 	useAuth
 } from '@meemproject/react'
 import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
+import { IconBrandSlack } from '@tabler/icons'
 import { Group } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
@@ -111,12 +112,15 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		useState(false)
 
 	// Which input connections have been selected?
+	const [haveOutputsBeenSelected, setHaveOutputsBeenSelected] =
+		useState(false)
 	const [isDiscordInputEnabled, setIsDiscordInputEnabled] = useState(false)
 	const [isSlackInputEnabled, setIsSlackInputEnabled] = useState(false)
 
 	// Which output connections have been selected?
 	const [isTwitterOutputEnabled, setIsTwitterOutputEnabled] = useState(false)
 	const [isWebhookOutputEnabled, setIsWebhookOutputEnabled] = useState(false)
+	const [isSkippingTwitterAuth, setIsSkippingTwitterAuth] = useState(false)
 
 	// Agreement creation
 	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
@@ -431,11 +435,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		!!slackData?.AgreementSlacks[0] &&
 		typeof slackData?.AgreementSlacks[0].Slack?.name === 'string'
 
-	// TODO: might need webhook cookie when returning from twitter or slack auth
-	const isConnectionEstablished: boolean =
-		(discordConnExists || slackConnExists) &&
-		(twitterConnExists || isWebhookOutputEnabled)
-
 	// Handle page state changes
 	useEffect(() => {
 		// Prevent page state flickering when several variables update simultaneously
@@ -482,10 +481,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		) {
 			setPageState(PageState.PickCommunity)
 			log.debug('set page state = pickCommunity')
-		} else if (chosenAgreement && isConnectionEstablished) {
-			setPageState(PageState.SetupComplete)
-			log.debug(`set page state = setup complete`)
-		} else if (chosenAgreement && !isConnectionEstablished) {
+		} else if (chosenAgreement) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
 		}
@@ -495,13 +491,20 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			if (!chosenAgreement || isEnablingExtension) {
 				setOnboardingStep(0)
 			} else if (chosenAgreement) {
-				if (!twitterUsername && !discordInfo) {
+				if (!twitterUsername && !isSkippingTwitterAuth) {
 					setOnboardingStep(1)
 				} else {
-					if (!discordInviteUrl || !botCode) {
-						getDiscordInviteAndBotCode()
+					if (!haveOutputsBeenSelected) {
+						setOnboardingStep(2)
+					} else {
+						if (
+							isDiscordInputEnabled &&
+							(!discordInviteUrl || !botCode)
+						) {
+							getDiscordInviteAndBotCode()
+						}
+						setOnboardingStep(3)
 					}
-					setOnboardingStep(2)
 				}
 			}
 		}
@@ -537,7 +540,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		botCode,
 		discordHasName,
 		isWaitingForStateChangeDelay,
-		isConnectionEstablished,
 		shouldShowCreateNewCommunity,
 		isCreatingNewCommunity,
 		getDiscordInviteAndBotCode,
@@ -545,7 +547,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		availableExtensionsData,
 		twitterData,
 		discordData,
-		slackData
+		slackData,
+		isSkippingTwitterAuth,
+		isDiscordInputEnabled,
+		haveOutputsBeenSelected
 	])
 
 	const chooseAgreementAndEnableExtension = useCallback(
@@ -942,6 +947,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 										<Space h={16} />
 										<Button
 											onClick={() => {
+												setIsSkippingTwitterAuth(true)
 												analytics.track(
 													'Webhook Output Connected',
 													{
@@ -965,13 +971,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 						<>
 							<Space h={16} />
 							<div className={meemTheme.row}>
-								<Button
-									onClick={() => {
-										handleAuthTwitter()
-									}}
-									className={meemTheme.buttonWhite}
-								>
-									{`Connected as ${twitterUsername}`}
+								<Button className={meemTheme.buttonWhite}>
+									{isTwitterOutputEnabled
+										? `Connected as ${twitterUsername}`
+										: `Custom Webhook`}
 								</Button>
 							</div>
 						</>
@@ -983,60 +986,80 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		/>
 	)
 
-	const stepConnectPublishingAccount = (
+	const stepThreeSelectProposalAccounts = (
 		<Stepper.Step
-			label="Please select the platform(s) where your community’s posts will be published."
+			label="Please select the platform(s) you’ll use to draft posts with Symphony."
 			description={
 				<>
-					<Text
-						className={meemTheme.tExtraSmall}
-					>{`More publishing channels coming soon!`}</Text>
-					{onboardingStep === 1 && (
-						<>
-							<Space h={16} />
-							<div className={meemTheme.row}>
-								{/* <Space w={8} />
-							<Button
-								className={
-									meemTheme.buttonYellowSolidBordered
-								}
-								onClick={() => {}}
-							>
-								Add More Accounts
-							</Button> */}
-							</div>
-						</>
-					)}
+					{
+						<Text
+							className={meemTheme.tExtraSmall}
+						>{`More proposal channels coming soon!`}</Text>
+					}
 					{onboardingStep === 2 && (
 						<>
 							<Space h={16} />
-							<div className={meemTheme.row}>
-								<Button
-									onClick={() => {
-										handleAuthTwitter()
-									}}
-									className={meemTheme.buttonWhite}
-								>
-									{`Connected as ${twitterUsername}`}
-								</Button>
+							<div className={meemTheme.rowResponsive}>
+								{connectionGridItem(
+									'Discord',
+									'/connect-discord.png',
+									'You’ll need Discord permissions that allow you to add the Symphony bot to your server.',
+									isDiscordInputEnabled,
+									() => {
+										setIsDiscordInputEnabled(
+											!isDiscordInputEnabled
+										)
+									}
+								)}
+								<Space w={16} h={16} />
+								{connectionGridItem(
+									'Slack',
+									'/connect-slack.png',
+									'You’ll need Slack admin permissions that allow you to manage your workspace.',
+									isSlackInputEnabled,
+									() => {
+										setIsSlackInputEnabled(
+											!isSlackInputEnabled
+										)
+									}
+								)}
 							</div>
+							{(isDiscordInputEnabled || isSlackInputEnabled) && (
+								<>
+									<Space h={16} />
+									<Button
+										onClick={() => {
+											setHaveOutputsBeenSelected(true)
+										}}
+										className={meemTheme.buttonBlack}
+									>
+										Next
+									</Button>
+								</>
+							)}
 						</>
 					)}
+
 					<Space h={16} />
 				</>
 			}
 		/>
 	)
 
-	const stepThreeInviteBot = (
+	const stepFourInviteBot = (
 		<Stepper.Step
-			label="Invite Symphony bot and activate"
+			label={'Invite Symphony bot and activate'}
 			description={
 				<>
 					<Text className={meemTheme.tExtraSmall}>
-						{`Please invite the Symphony bot to manage your Discord server.`}
+						{isDiscordInputEnabled
+							? `Please invite the Symphony bot to manage your Discord server.`
+							: onboardingStep < 4
+							? 'Select Discord to use this functionality'
+							: 'This step has been skipped'}
 					</Text>
-					{onboardingStep === 2 && (
+
+					{onboardingStep === 3 && (
 						<>
 							<Space h={8} />
 
@@ -1125,43 +1148,83 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							)}
 						</>
 					)}
+					{onboardingStep > 3 && discordInfo && (
+						<>
+							<>
+								<Space h={16} />
+								<div className={meemTheme.row}>
+									<Button className={meemTheme.buttonWhite}>
+										{`Bot added to ${discordInfo?.Discord?.name}`}
+									</Button>
+								</div>
+							</>
+						</>
+					)}
 				</>
 			}
 		/>
 	)
 
-	const setupCompleteState = (
-		<>
-			<Space h={48} />
-			<Center>
-				<Text className={meemTheme.tLargeBold} color={colorGreen}>
-					Installation Complete!
-				</Text>
-			</Center>
-			<Space h={24} />
-			<Center>
-				<Text>
-					Add your first proposal rule to start publishing with
-					Symphony.
-				</Text>
-			</Center>
-			<Space h={36} />
+	const stepFiveConnectSlack = (
+		<Stepper.Step
+			label={'Connect Slack'}
+			description={
+				<>
+					<Text className={meemTheme.tExtraSmall}>
+						{isSlackInputEnabled
+							? `Please authorize Symphony to manage your Slack workspace.`
+							: onboardingStep < 4
+							? 'Select Slack to use this functionality'
+							: 'This step has been skipped'}
+					</Text>
 
-			<Center>
-				<Button
-					className={meemTheme.buttonBlack}
-					onClick={() => {
-						analytics.track('Symphony Onboarding Completed', {
-							communityId: chosenAgreement?.id,
-							communityName: chosenAgreement?.name
-						})
-						router.push(`/${chosenAgreement?.slug}/e/symphony`)
-					}}
-				>
-					Manage Symphony
-				</Button>
-			</Center>
-		</>
+					{onboardingStep === 4 && (
+						<>
+							<Space h={8} />
+							<Button
+								className={meemTheme.buttonBlack}
+								onClick={() => {
+									handleAuthSlack()
+								}}
+								leftIcon={<IconBrandSlack />}
+							>
+								{`Connect Symphony`}
+							</Button>
+						</>
+					)}
+					{onboardingStep > 4 && slackInfo && (
+						<>
+							<Space h={8} />
+							<div className={meemTheme.row}>
+								<Button className={meemTheme.buttonWhite}>
+									{`Connected to ${slackInfo?.Slack?.name}`}
+								</Button>
+							</div>
+						</>
+					)}
+				</>
+			}
+		/>
+	)
+
+	const stepSixSetupComplete = (
+		<Stepper.Step
+			label={'Installation complete!'}
+			description={
+				<>
+					{onboardingStep === 5 && (
+						<>
+							<Space h={16} />
+							<div className={meemTheme.row}>
+								<Button className={meemTheme.buttonWhite}>
+									{`Start using Symphony`}
+								</Button>
+							</div>
+						</>
+					)}
+				</>
+			}
+		/>
 	)
 
 	return (
@@ -1178,8 +1241,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 			{/* Page header */}
 			{pageState !== PageState.Loading && <>{pageHeader}</>}
-
-			{pageState === PageState.SetupComplete && <>{setupCompleteState}</>}
 
 			{pageState === PageState.Onboarding && (
 				<>
@@ -1198,9 +1259,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								>
 									{stepOneAgreementName}
 									{stepTwoSelectPublishingAccount}
-									{onboardingStep === 3 && (
-										<>{stepThreeInviteBot}</>
-									)}
+									{stepThreeSelectProposalAccounts}
+									{stepFourInviteBot}
+									{stepFiveConnectSlack}
+									{stepSixSetupComplete}
 								</Stepper>
 							</div>
 							<div
