@@ -151,8 +151,8 @@ export const SymphonyExtension: React.FC = () => {
 				const con: SymphonyConnection = {
 					id: c.id,
 					name: `Slack: ${c.Slack?.name}`,
-					type: SymphonyConnectionType.OutputOnly,
-					platform: SymphonyConnectionPlatform.Twitter
+					type: SymphonyConnectionType.InputOnly,
+					platform: SymphonyConnectionPlatform.Slack
 				}
 				conns.push(con)
 			})
