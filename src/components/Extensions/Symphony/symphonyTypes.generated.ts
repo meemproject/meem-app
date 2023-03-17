@@ -125,6 +125,10 @@ export namespace API {
 	export interface IRuleToSave extends IRule {
 		input: RuleIo
 		output: RuleIo
+		inputRef?: string
+		outputRef?: string
+		webhookUrl?: string
+		webhookSecret?: string
 	}
 
 	export interface ISavedRule
@@ -558,10 +562,10 @@ export namespace API {
 			export type Response = IResponseBody | IError
 		}
 
-		export namespace SaveRules {
+		export namespace SaveRule {
 			export interface IPathParams {}
 
-			export const path = () => '/api/1.0/saveRules'
+			export const path = () => '/api/1.0/saveRule'
 
 			export const method = HttpMethod.Post
 
@@ -570,7 +574,7 @@ export namespace API {
 			export interface IRequestBody {
 				agreementId: string
 				jwt: string
-				rules: IRuleToSave[]
+				rule: IRuleToSave
 			}
 
 			export interface IResponseBody extends IApiResponseBody {
