@@ -26,6 +26,7 @@ import {
 	IOnSave,
 	SymphonyDiscordTwitterRulesBuilder
 } from '../RuleBuilders/SymphonyDiscordTwitterRuleBuilder'
+import { SymphonySlackTwitterRulesBuilder } from '../RuleBuilders/SymphonySlackTwitterRuleBuilder'
 import { API } from '../symphonyTypes.generated'
 
 interface IProps {
@@ -72,6 +73,11 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const [
 		isDiscordTwitterRuleBuilderOpened,
 		setIsDiscordTwitterRuleBuilderOpened
+	] = useState(false)
+
+	const [
+		isSlackTwitterRuleBuilderOpened,
+		setIsSlackTwitterRuleBuilderOpened
 	] = useState(false)
 
 	// Save the rule
@@ -149,9 +155,22 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			) {
 				// Discord to Twitter flow
 				setIsDiscordTwitterRuleBuilderOpened(true)
+			} else if (
+				selectedInput.platform === SymphonyConnectionPlatform.Slack &&
+				selectedOutput.platform ===
+					SymphonyConnectionPlatform.Twitter &&
+				!isSlackTwitterRuleBuilderOpened
+			) {
+				// Discord to Twitter flow
+				setIsSlackTwitterRuleBuilderOpened(true)
 			}
 		}
-	}, [isDiscordTwitterRuleBuilderOpened, selectedInput, selectedOutput])
+	}, [
+		isDiscordTwitterRuleBuilderOpened,
+		isSlackTwitterRuleBuilderOpened,
+		selectedInput,
+		selectedOutput
+	])
 
 	useEffect(() => {
 		// Handle editing
@@ -346,6 +365,27 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 							handleRuleSave(values)
 						}}
 						discordId={
+							existingRule?.input.id ?? selectedInput?.id ?? ''
+						}
+						twitterId={
+							existingRule?.output.id ?? selectedOutput?.id ?? ''
+						}
+						rule={existingRule}
+						isOpened={isDiscordTwitterRuleBuilderOpened}
+						onModalClosed={function (): void {
+							setIsDiscordTwitterRuleBuilderOpened(false)
+						}}
+					/>
+				</>
+			)}
+
+			{isOpened && isSlackTwitterRuleBuilderOpened && (
+				<>
+					<SymphonySlackTwitterRulesBuilder
+						onSave={function (values: IOnSave): void {
+							handleRuleSave(values)
+						}}
+						slackId={
 							existingRule?.input.id ?? selectedInput?.id ?? ''
 						}
 						twitterId={
