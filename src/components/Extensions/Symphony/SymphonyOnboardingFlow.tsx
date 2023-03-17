@@ -1064,26 +1064,26 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									<Space h={16} />
 
 									<Text className={meemTheme.tExtraSmall}>
-										1. You decide rules for how your
-										community wants to publish
+										1. Set logic to automate your
+										community’s publishing flows
 									</Text>
 									<Space h={8} />
 									<Text className={meemTheme.tExtraSmall}>
-										2. Community members propose Tweets on
-										Discord
-									</Text>
-									<Space h={8} />
-
-									<Text className={meemTheme.tExtraSmall}>
-										3. Your community decides what to
-										publish based on the rules you’ve set
+										2. Propose posts on the platforms you’re
+										already using (Discord, Slack)
 									</Text>
 									<Space h={8} />
 
 									<Text className={meemTheme.tExtraSmall}>
-										4. Tweets are published to your shared
-										Twitter account based on community
-										members’ input
+										3. Use emoji reactions to weigh in on
+										what get’s published
+									</Text>
+									<Space h={8} />
+
+									<Text className={meemTheme.tExtraSmall}>
+										4. When the conditions you set are met,
+										posts are automatically published to the
+										community accounts you choose
 									</Text>
 								</div>
 							</div>
