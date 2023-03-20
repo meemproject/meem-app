@@ -22,7 +22,6 @@ import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import {
 	SymphonyConnection,
-	SymphonyConnectionPlatform,
 	SymphonyConnectionType,
 	SymphonyRule
 } from '../Model/symphony'
@@ -88,7 +87,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 	// Save the rule
 	const handleRuleSave = async (values: IOnSave) => {
-		if (!agreement?.id || !jwt) {
+		if (!agreement?.id || !jwt || !selectedInput || !selectedOutput) {
 			return
 		}
 
@@ -105,10 +104,10 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 					agreementId: agreement.id,
 					rule: {
 						...values,
-						input: API.RuleIo.Discord,
+						input: selectedInput.platform,
 						inputRef:
 							existingRule?.input.id ?? selectedInput?.id ?? '',
-						output: API.RuleIo.Twitter,
+						output: selectedOutput.platform,
 						outputRef:
 							existingRule?.output.id ?? selectedOutput?.id ?? '',
 						isEnabled: true,
@@ -158,17 +157,15 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const openRuleBuilder = useCallback(() => {
 		if (selectedInput && selectedOutput) {
 			if (
-				selectedInput.platform === SymphonyConnectionPlatform.Discord &&
-				selectedOutput.platform ===
-					SymphonyConnectionPlatform.Twitter &&
+				selectedInput.platform === API.RuleIo.Discord &&
+				selectedOutput.platform === API.RuleIo.Twitter &&
 				!isDiscordTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
 				setIsDiscordTwitterRuleBuilderOpened(true)
 			} else if (
-				selectedInput.platform === SymphonyConnectionPlatform.Slack &&
-				selectedOutput.platform ===
-					SymphonyConnectionPlatform.Twitter &&
+				selectedInput.platform === API.RuleIo.Slack &&
+				selectedOutput.platform === API.RuleIo.Twitter &&
 				!isSlackTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
@@ -245,7 +242,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const shouldShowNext =
 		selectedInput &&
 		selectedOutput &&
-		(selectedOutput.platform !== SymphonyConnectionPlatform.WebHook ||
+		(selectedOutput.platform !== API.RuleIo.Webhook ||
 			(webhookUrl && webhookUrl.includes('https://')))
 
 	const modalContents = (
@@ -318,8 +315,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						}}
 					/>
 					{selectedOutput &&
-						selectedOutput.platform ===
-							SymphonyConnectionPlatform.WebHook && (
+						selectedOutput.platform === API.RuleIo.Webhook && (
 							<>
 								<Space h={24} />
 								<Text className={meemTheme.tSmallBold}>
@@ -463,16 +459,12 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						onSave={function (values: IOnSave): void {
 							handleRuleSave(values)
 						}}
-						slackId={
-							existingRule?.input.id ?? selectedInput?.id ?? ''
-						}
-						twitterId={
-							existingRule?.output.id ?? selectedOutput?.id ?? ''
-						}
+						input={existingRule?.input ?? selectedInput}
+						output={existingRule?.output ?? selectedOutput}
 						rule={existingRule}
-						isOpened={isDiscordTwitterRuleBuilderOpened}
+						isOpened={isSlackTwitterRuleBuilderOpened}
 						onModalClosed={function (): void {
-							setIsDiscordTwitterRuleBuilderOpened(false)
+							setIsSlackTwitterRuleBuilderOpened(false)
 						}}
 					/>
 				</>

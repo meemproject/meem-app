@@ -6,18 +6,18 @@ export enum SymphonyConnectionType {
 	OutputOnly
 }
 
-export enum SymphonyConnectionPlatform {
-	Twitter,
-	Discord,
-	Slack,
-	WebHook
-}
+// export enum SymphonyConnectionPlatform {
+// 	Twitter,
+// 	Discord,
+// 	Slack,
+// 	WebHook
+// }
 
 export interface SymphonyConnection {
 	id: string
 	name: string
 	type: SymphonyConnectionType
-	platform: SymphonyConnectionPlatform
+	platform: API.RuleIo
 	icon?: string
 
 	// Twitter
@@ -39,4 +39,6 @@ export interface SymphonyRule {
 	output: SymphonyConnection
 	agreementId: string
 	definition: API.IRule
+	description?: string | null
+	abridgedDescription?: string | null
 }

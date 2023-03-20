@@ -25,9 +25,43 @@ export type AgreementDiscords = {
   Discord?: Maybe<Discords>;
   DiscordId?: Maybe<Scalars['uuid']>;
   agreementId: Scalars['uuid'];
+  code?: Maybe<Scalars['uuid']>;
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
   updatedAt: Scalars['timestamptz'];
+};
+
+/** aggregated selection of "AgreementDiscords" */
+export type AgreementDiscords_Aggregate = {
+  __typename?: 'AgreementDiscords_aggregate';
+  aggregate?: Maybe<AgreementDiscords_Aggregate_Fields>;
+  nodes: Array<AgreementDiscords>;
+};
+
+export type AgreementDiscords_Aggregate_Bool_Exp = {
+  count?: InputMaybe<AgreementDiscords_Aggregate_Bool_Exp_Count>;
+};
+
+export type AgreementDiscords_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementDiscords_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "AgreementDiscords" */
+export type AgreementDiscords_Aggregate_Fields = {
+  __typename?: 'AgreementDiscords_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementDiscords_Max_Fields>;
+  min?: Maybe<AgreementDiscords_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementDiscords" */
+export type AgreementDiscords_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** order by aggregate values of table "AgreementDiscords" */
@@ -35,6 +69,13 @@ export type AgreementDiscords_Aggregate_Order_By = {
   count?: InputMaybe<Order_By>;
   max?: InputMaybe<AgreementDiscords_Max_Order_By>;
   min?: InputMaybe<AgreementDiscords_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "AgreementDiscords" */
+export type AgreementDiscords_Arr_Rel_Insert_Input = {
+  data: Array<AgreementDiscords_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<AgreementDiscords_On_Conflict>;
 };
 
 /** Boolean expression to filter rows from the table "AgreementDiscords". All fields are combined with a logical 'AND'. */
@@ -45,27 +86,85 @@ export type AgreementDiscords_Bool_Exp = {
   _not?: InputMaybe<AgreementDiscords_Bool_Exp>;
   _or?: InputMaybe<Array<AgreementDiscords_Bool_Exp>>;
   agreementId?: InputMaybe<Uuid_Comparison_Exp>;
+  code?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "AgreementDiscords" */
+export enum AgreementDiscords_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementDiscordsPkey = 'AgreementDiscords_pkey'
+}
+
+/** input type for inserting data into table "AgreementDiscords" */
+export type AgreementDiscords_Insert_Input = {
+  Discord?: InputMaybe<Discords_Obj_Rel_Insert_Input>;
+  DiscordId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  code?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type AgreementDiscords_Max_Fields = {
+  __typename?: 'AgreementDiscords_max_fields';
+  DiscordId?: Maybe<Scalars['uuid']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  code?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** order by max() on columns of table "AgreementDiscords" */
 export type AgreementDiscords_Max_Order_By = {
   DiscordId?: InputMaybe<Order_By>;
   agreementId?: InputMaybe<Order_By>;
+  code?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type AgreementDiscords_Min_Fields = {
+  __typename?: 'AgreementDiscords_min_fields';
+  DiscordId?: Maybe<Scalars['uuid']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  code?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** order by min() on columns of table "AgreementDiscords" */
 export type AgreementDiscords_Min_Order_By = {
   DiscordId?: InputMaybe<Order_By>;
   agreementId?: InputMaybe<Order_By>;
+  code?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "AgreementDiscords" */
+export type AgreementDiscords_Mutation_Response = {
+  __typename?: 'AgreementDiscords_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementDiscords>;
+};
+
+/** on_conflict condition type for table "AgreementDiscords" */
+export type AgreementDiscords_On_Conflict = {
+  constraint: AgreementDiscords_Constraint;
+  update_columns?: Array<AgreementDiscords_Update_Column>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
 };
 
 /** Ordering options when selecting data from "AgreementDiscords". */
@@ -73,9 +172,15 @@ export type AgreementDiscords_Order_By = {
   Discord?: InputMaybe<Discords_Order_By>;
   DiscordId?: InputMaybe<Order_By>;
   agreementId?: InputMaybe<Order_By>;
+  code?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementDiscords */
+export type AgreementDiscords_Pk_Columns_Input = {
+  id: Scalars['uuid'];
 };
 
 /** select columns of table "AgreementDiscords" */
@@ -85,12 +190,24 @@ export enum AgreementDiscords_Select_Column {
   /** column name */
   AgreementId = 'agreementId',
   /** column name */
+  Code = 'code',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
   /** column name */
   UpdatedAt = 'updatedAt'
 }
+
+/** input type for updating data in table "AgreementDiscords" */
+export type AgreementDiscords_Set_Input = {
+  DiscordId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  code?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
 
 /** Streaming cursor of the table "AgreementDiscords" */
 export type AgreementDiscords_Stream_Cursor_Input = {
@@ -104,9 +221,33 @@ export type AgreementDiscords_Stream_Cursor_Input = {
 export type AgreementDiscords_Stream_Cursor_Value_Input = {
   DiscordId?: InputMaybe<Scalars['uuid']>;
   agreementId?: InputMaybe<Scalars['uuid']>;
+  code?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "AgreementDiscords" */
+export enum AgreementDiscords_Update_Column {
+  /** column name */
+  DiscordId = 'DiscordId',
+  /** column name */
+  AgreementId = 'agreementId',
+  /** column name */
+  Code = 'code',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type AgreementDiscords_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementDiscords_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: AgreementDiscords_Bool_Exp;
 };
 
 /** columns and relationships of "AgreementExtensionLinks" */
@@ -3634,11 +3775,51 @@ export type AgreementSlacks = {
   updatedAt: Scalars['timestamptz'];
 };
 
+/** aggregated selection of "AgreementSlacks" */
+export type AgreementSlacks_Aggregate = {
+  __typename?: 'AgreementSlacks_aggregate';
+  aggregate?: Maybe<AgreementSlacks_Aggregate_Fields>;
+  nodes: Array<AgreementSlacks>;
+};
+
+export type AgreementSlacks_Aggregate_Bool_Exp = {
+  count?: InputMaybe<AgreementSlacks_Aggregate_Bool_Exp_Count>;
+};
+
+export type AgreementSlacks_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementSlacks_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "AgreementSlacks" */
+export type AgreementSlacks_Aggregate_Fields = {
+  __typename?: 'AgreementSlacks_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementSlacks_Max_Fields>;
+  min?: Maybe<AgreementSlacks_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementSlacks" */
+export type AgreementSlacks_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
 /** order by aggregate values of table "AgreementSlacks" */
 export type AgreementSlacks_Aggregate_Order_By = {
   count?: InputMaybe<Order_By>;
   max?: InputMaybe<AgreementSlacks_Max_Order_By>;
   min?: InputMaybe<AgreementSlacks_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "AgreementSlacks" */
+export type AgreementSlacks_Arr_Rel_Insert_Input = {
+  data: Array<AgreementSlacks_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<AgreementSlacks_On_Conflict>;
 };
 
 /** Boolean expression to filter rows from the table "AgreementSlacks". All fields are combined with a logical 'AND'. */
@@ -3654,6 +3835,32 @@ export type AgreementSlacks_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "AgreementSlacks" */
+export enum AgreementSlacks_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementSlacksPkey = 'AgreementSlacks_pkey'
+}
+
+/** input type for inserting data into table "AgreementSlacks" */
+export type AgreementSlacks_Insert_Input = {
+  Slack?: InputMaybe<Slacks_Obj_Rel_Insert_Input>;
+  SlackId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type AgreementSlacks_Max_Fields = {
+  __typename?: 'AgreementSlacks_max_fields';
+  SlackId?: Maybe<Scalars['uuid']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
 /** order by max() on columns of table "AgreementSlacks" */
 export type AgreementSlacks_Max_Order_By = {
   SlackId?: InputMaybe<Order_By>;
@@ -3661,6 +3868,16 @@ export type AgreementSlacks_Max_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type AgreementSlacks_Min_Fields = {
+  __typename?: 'AgreementSlacks_min_fields';
+  SlackId?: Maybe<Scalars['uuid']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** order by min() on columns of table "AgreementSlacks" */
@@ -3672,6 +3889,22 @@ export type AgreementSlacks_Min_Order_By = {
   updatedAt?: InputMaybe<Order_By>;
 };
 
+/** response of any mutation on the table "AgreementSlacks" */
+export type AgreementSlacks_Mutation_Response = {
+  __typename?: 'AgreementSlacks_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementSlacks>;
+};
+
+/** on_conflict condition type for table "AgreementSlacks" */
+export type AgreementSlacks_On_Conflict = {
+  constraint: AgreementSlacks_Constraint;
+  update_columns?: Array<AgreementSlacks_Update_Column>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
 /** Ordering options when selecting data from "AgreementSlacks". */
 export type AgreementSlacks_Order_By = {
   Slack?: InputMaybe<Slacks_Order_By>;
@@ -3680,6 +3913,11 @@ export type AgreementSlacks_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementSlacks */
+export type AgreementSlacks_Pk_Columns_Input = {
+  id: Scalars['uuid'];
 };
 
 /** select columns of table "AgreementSlacks" */
@@ -3696,6 +3934,15 @@ export enum AgreementSlacks_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** input type for updating data in table "AgreementSlacks" */
+export type AgreementSlacks_Set_Input = {
+  SlackId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** Streaming cursor of the table "AgreementSlacks" */
 export type AgreementSlacks_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -3711,6 +3958,27 @@ export type AgreementSlacks_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "AgreementSlacks" */
+export enum AgreementSlacks_Update_Column {
+  /** column name */
+  SlackId = 'SlackId',
+  /** column name */
+  AgreementId = 'agreementId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type AgreementSlacks_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementSlacks_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: AgreementSlacks_Bool_Exp;
 };
 
 /** columns and relationships of "AgreementTokenTransfers" */
@@ -4369,11 +4637,51 @@ export type AgreementTwitters = {
   updatedAt: Scalars['timestamptz'];
 };
 
+/** aggregated selection of "AgreementTwitters" */
+export type AgreementTwitters_Aggregate = {
+  __typename?: 'AgreementTwitters_aggregate';
+  aggregate?: Maybe<AgreementTwitters_Aggregate_Fields>;
+  nodes: Array<AgreementTwitters>;
+};
+
+export type AgreementTwitters_Aggregate_Bool_Exp = {
+  count?: InputMaybe<AgreementTwitters_Aggregate_Bool_Exp_Count>;
+};
+
+export type AgreementTwitters_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<AgreementTwitters_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "AgreementTwitters" */
+export type AgreementTwitters_Aggregate_Fields = {
+  __typename?: 'AgreementTwitters_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<AgreementTwitters_Max_Fields>;
+  min?: Maybe<AgreementTwitters_Min_Fields>;
+};
+
+
+/** aggregate fields of "AgreementTwitters" */
+export type AgreementTwitters_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
 /** order by aggregate values of table "AgreementTwitters" */
 export type AgreementTwitters_Aggregate_Order_By = {
   count?: InputMaybe<Order_By>;
   max?: InputMaybe<AgreementTwitters_Max_Order_By>;
   min?: InputMaybe<AgreementTwitters_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "AgreementTwitters" */
+export type AgreementTwitters_Arr_Rel_Insert_Input = {
+  data: Array<AgreementTwitters_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<AgreementTwitters_On_Conflict>;
 };
 
 /** Boolean expression to filter rows from the table "AgreementTwitters". All fields are combined with a logical 'AND'. */
@@ -4389,6 +4697,32 @@ export type AgreementTwitters_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "AgreementTwitters" */
+export enum AgreementTwitters_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  AgreementTwittersPkey = 'AgreementTwitters_pkey'
+}
+
+/** input type for inserting data into table "AgreementTwitters" */
+export type AgreementTwitters_Insert_Input = {
+  Twitter?: InputMaybe<Twitters_Obj_Rel_Insert_Input>;
+  TwitterId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type AgreementTwitters_Max_Fields = {
+  __typename?: 'AgreementTwitters_max_fields';
+  TwitterId?: Maybe<Scalars['uuid']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
 /** order by max() on columns of table "AgreementTwitters" */
 export type AgreementTwitters_Max_Order_By = {
   TwitterId?: InputMaybe<Order_By>;
@@ -4396,6 +4730,16 @@ export type AgreementTwitters_Max_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type AgreementTwitters_Min_Fields = {
+  __typename?: 'AgreementTwitters_min_fields';
+  TwitterId?: Maybe<Scalars['uuid']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
 };
 
 /** order by min() on columns of table "AgreementTwitters" */
@@ -4407,6 +4751,22 @@ export type AgreementTwitters_Min_Order_By = {
   updatedAt?: InputMaybe<Order_By>;
 };
 
+/** response of any mutation on the table "AgreementTwitters" */
+export type AgreementTwitters_Mutation_Response = {
+  __typename?: 'AgreementTwitters_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<AgreementTwitters>;
+};
+
+/** on_conflict condition type for table "AgreementTwitters" */
+export type AgreementTwitters_On_Conflict = {
+  constraint: AgreementTwitters_Constraint;
+  update_columns?: Array<AgreementTwitters_Update_Column>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
+};
+
 /** Ordering options when selecting data from "AgreementTwitters". */
 export type AgreementTwitters_Order_By = {
   Twitter?: InputMaybe<Twitters_Order_By>;
@@ -4415,6 +4775,11 @@ export type AgreementTwitters_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: AgreementTwitters */
+export type AgreementTwitters_Pk_Columns_Input = {
+  id: Scalars['uuid'];
 };
 
 /** select columns of table "AgreementTwitters" */
@@ -4431,6 +4796,15 @@ export enum AgreementTwitters_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** input type for updating data in table "AgreementTwitters" */
+export type AgreementTwitters_Set_Input = {
+  TwitterId?: InputMaybe<Scalars['uuid']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** Streaming cursor of the table "AgreementTwitters" */
 export type AgreementTwitters_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -4446,6 +4820,27 @@ export type AgreementTwitters_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "AgreementTwitters" */
+export enum AgreementTwitters_Update_Column {
+  /** column name */
+  TwitterId = 'TwitterId',
+  /** column name */
+  AgreementId = 'agreementId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type AgreementTwitters_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<AgreementTwitters_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: AgreementTwitters_Bool_Exp;
 };
 
 /** columns and relationships of "AgreementWallets" */
@@ -7440,6 +7835,8 @@ export type Discords = {
   __typename?: 'Discords';
   /** An array relationship */
   AgreementDiscords: Array<AgreementDiscords>;
+  /** An aggregate relationship */
+  AgreementDiscords_aggregate: AgreementDiscords_Aggregate;
   createdAt: Scalars['timestamptz'];
   guildId?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
@@ -7458,9 +7855,42 @@ export type DiscordsAgreementDiscordsArgs = {
   where?: InputMaybe<AgreementDiscords_Bool_Exp>;
 };
 
+
+/** columns and relationships of "Discords" */
+export type DiscordsAgreementDiscords_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementDiscords_Order_By>>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
+};
+
+/** aggregated selection of "Discords" */
+export type Discords_Aggregate = {
+  __typename?: 'Discords_aggregate';
+  aggregate?: Maybe<Discords_Aggregate_Fields>;
+  nodes: Array<Discords>;
+};
+
+/** aggregate fields of "Discords" */
+export type Discords_Aggregate_Fields = {
+  __typename?: 'Discords_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Discords_Max_Fields>;
+  min?: Maybe<Discords_Min_Fields>;
+};
+
+
+/** aggregate fields of "Discords" */
+export type Discords_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Discords_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
 /** Boolean expression to filter rows from the table "Discords". All fields are combined with a logical 'AND'. */
 export type Discords_Bool_Exp = {
   AgreementDiscords?: InputMaybe<AgreementDiscords_Bool_Exp>;
+  AgreementDiscords_aggregate?: InputMaybe<AgreementDiscords_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Discords_Bool_Exp>>;
   _not?: InputMaybe<Discords_Bool_Exp>;
   _or?: InputMaybe<Array<Discords_Bool_Exp>>;
@@ -7472,6 +7902,68 @@ export type Discords_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "Discords" */
+export enum Discords_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  DiscordsPkey = 'Discords_pkey'
+}
+
+/** input type for inserting data into table "Discords" */
+export type Discords_Insert_Input = {
+  AgreementDiscords?: InputMaybe<AgreementDiscords_Arr_Rel_Insert_Input>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  guildId?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type Discords_Max_Fields = {
+  __typename?: 'Discords_max_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  guildId?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type Discords_Min_Fields = {
+  __typename?: 'Discords_min_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  guildId?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "Discords" */
+export type Discords_Mutation_Response = {
+  __typename?: 'Discords_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Discords>;
+};
+
+/** input type for inserting object relation for remote table "Discords" */
+export type Discords_Obj_Rel_Insert_Input = {
+  data: Discords_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Discords_On_Conflict>;
+};
+
+/** on_conflict condition type for table "Discords" */
+export type Discords_On_Conflict = {
+  constraint: Discords_Constraint;
+  update_columns?: Array<Discords_Update_Column>;
+  where?: InputMaybe<Discords_Bool_Exp>;
+};
+
 /** Ordering options when selecting data from "Discords". */
 export type Discords_Order_By = {
   AgreementDiscords_aggregate?: InputMaybe<AgreementDiscords_Aggregate_Order_By>;
@@ -7481,6 +7973,11 @@ export type Discords_Order_By = {
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: Discords */
+export type Discords_Pk_Columns_Input = {
+  id: Scalars['uuid'];
 };
 
 /** select columns of table "Discords" */
@@ -7499,6 +7996,16 @@ export enum Discords_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** input type for updating data in table "Discords" */
+export type Discords_Set_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  guildId?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** Streaming cursor of the table "Discords" */
 export type Discords_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -7515,6 +8022,29 @@ export type Discords_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "Discords" */
+export enum Discords_Update_Column {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  GuildId = 'guildId',
+  /** column name */
+  Icon = 'icon',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type Discords_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Discords_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Discords_Bool_Exp;
 };
 
 /** columns and relationships of "Extensions" */
@@ -8336,9 +8866,11 @@ export type Integrations_Updates = {
 /** columns and relationships of "Rules" */
 export type Rules = {
   __typename?: 'Rules';
+  abridgedDescription?: Maybe<Scalars['String']>;
   agreementId: Scalars['uuid'];
   createdAt: Scalars['timestamptz'];
   definition: Scalars['jsonb'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
   input?: Maybe<Scalars['String']>;
   inputRef?: Maybe<Scalars['uuid']>;
@@ -8354,14 +8886,43 @@ export type RulesDefinitionArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
+/** aggregated selection of "Rules" */
+export type Rules_Aggregate = {
+  __typename?: 'Rules_aggregate';
+  aggregate?: Maybe<Rules_Aggregate_Fields>;
+  nodes: Array<Rules>;
+};
+
+/** aggregate fields of "Rules" */
+export type Rules_Aggregate_Fields = {
+  __typename?: 'Rules_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Rules_Max_Fields>;
+  min?: Maybe<Rules_Min_Fields>;
+};
+
+
+/** aggregate fields of "Rules" */
+export type Rules_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Rules_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Rules_Append_Input = {
+  definition?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** Boolean expression to filter rows from the table "Rules". All fields are combined with a logical 'AND'. */
 export type Rules_Bool_Exp = {
   _and?: InputMaybe<Array<Rules_Bool_Exp>>;
   _not?: InputMaybe<Rules_Bool_Exp>;
   _or?: InputMaybe<Array<Rules_Bool_Exp>>;
+  abridgedDescription?: InputMaybe<String_Comparison_Exp>;
   agreementId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   definition?: InputMaybe<Jsonb_Comparison_Exp>;
+  description?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   input?: InputMaybe<String_Comparison_Exp>;
   inputRef?: InputMaybe<Uuid_Comparison_Exp>;
@@ -8371,11 +8932,98 @@ export type Rules_Bool_Exp = {
   version?: InputMaybe<String_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "Rules" */
+export enum Rules_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  RulesPkey = 'Rules_pkey'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Rules_Delete_At_Path_Input = {
+  definition?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Rules_Delete_Elem_Input = {
+  definition?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Rules_Delete_Key_Input = {
+  definition?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for inserting data into table "Rules" */
+export type Rules_Insert_Input = {
+  abridgedDescription?: InputMaybe<Scalars['String']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  definition?: InputMaybe<Scalars['jsonb']>;
+  description?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  input?: InputMaybe<Scalars['String']>;
+  inputRef?: InputMaybe<Scalars['uuid']>;
+  output?: InputMaybe<Scalars['String']>;
+  outputRef?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  version?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Rules_Max_Fields = {
+  __typename?: 'Rules_max_fields';
+  abridgedDescription?: Maybe<Scalars['String']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  input?: Maybe<Scalars['String']>;
+  inputRef?: Maybe<Scalars['uuid']>;
+  output?: Maybe<Scalars['String']>;
+  outputRef?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  version?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Rules_Min_Fields = {
+  __typename?: 'Rules_min_fields';
+  abridgedDescription?: Maybe<Scalars['String']>;
+  agreementId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  input?: Maybe<Scalars['String']>;
+  inputRef?: Maybe<Scalars['uuid']>;
+  output?: Maybe<Scalars['String']>;
+  outputRef?: Maybe<Scalars['uuid']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  version?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "Rules" */
+export type Rules_Mutation_Response = {
+  __typename?: 'Rules_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Rules>;
+};
+
+/** on_conflict condition type for table "Rules" */
+export type Rules_On_Conflict = {
+  constraint: Rules_Constraint;
+  update_columns?: Array<Rules_Update_Column>;
+  where?: InputMaybe<Rules_Bool_Exp>;
+};
+
 /** Ordering options when selecting data from "Rules". */
 export type Rules_Order_By = {
+  abridgedDescription?: InputMaybe<Order_By>;
   agreementId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   definition?: InputMaybe<Order_By>;
+  description?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   input?: InputMaybe<Order_By>;
   inputRef?: InputMaybe<Order_By>;
@@ -8385,14 +9033,28 @@ export type Rules_Order_By = {
   version?: InputMaybe<Order_By>;
 };
 
+/** primary key columns input for table: Rules */
+export type Rules_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Rules_Prepend_Input = {
+  definition?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** select columns of table "Rules" */
 export enum Rules_Select_Column {
+  /** column name */
+  AbridgedDescription = 'abridgedDescription',
   /** column name */
   AgreementId = 'agreementId',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Definition = 'definition',
+  /** column name */
+  Description = 'description',
   /** column name */
   Id = 'id',
   /** column name */
@@ -8409,6 +9071,22 @@ export enum Rules_Select_Column {
   Version = 'version'
 }
 
+/** input type for updating data in table "Rules" */
+export type Rules_Set_Input = {
+  abridgedDescription?: InputMaybe<Scalars['String']>;
+  agreementId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  definition?: InputMaybe<Scalars['jsonb']>;
+  description?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  input?: InputMaybe<Scalars['String']>;
+  inputRef?: InputMaybe<Scalars['uuid']>;
+  output?: InputMaybe<Scalars['String']>;
+  outputRef?: InputMaybe<Scalars['uuid']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  version?: InputMaybe<Scalars['String']>;
+};
+
 /** Streaming cursor of the table "Rules" */
 export type Rules_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -8419,9 +9097,11 @@ export type Rules_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Rules_Stream_Cursor_Value_Input = {
+  abridgedDescription?: InputMaybe<Scalars['String']>;
   agreementId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   definition?: InputMaybe<Scalars['jsonb']>;
+  description?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   input?: InputMaybe<Scalars['String']>;
   inputRef?: InputMaybe<Scalars['uuid']>;
@@ -8429,6 +9109,51 @@ export type Rules_Stream_Cursor_Value_Input = {
   outputRef?: InputMaybe<Scalars['uuid']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
   version?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "Rules" */
+export enum Rules_Update_Column {
+  /** column name */
+  AbridgedDescription = 'abridgedDescription',
+  /** column name */
+  AgreementId = 'agreementId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Definition = 'definition',
+  /** column name */
+  Description = 'description',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Input = 'input',
+  /** column name */
+  InputRef = 'inputRef',
+  /** column name */
+  Output = 'output',
+  /** column name */
+  OutputRef = 'outputRef',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Version = 'version'
+}
+
+export type Rules_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Rules_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Rules_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Rules_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Rules_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Rules_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Rules_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Rules_Bool_Exp;
 };
 
 /** columns and relationships of "SequelizeMeta" */
@@ -8558,7 +9283,10 @@ export type Slacks = {
   __typename?: 'Slacks';
   /** An array relationship */
   AgreementSlacks: Array<AgreementSlacks>;
+  /** An aggregate relationship */
+  AgreementSlacks_aggregate: AgreementSlacks_Aggregate;
   createdAt: Scalars['timestamptz'];
+  encryptedAccessToken: Scalars['String'];
   icon?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
   name?: Maybe<Scalars['String']>;
@@ -8576,13 +9304,47 @@ export type SlacksAgreementSlacksArgs = {
   where?: InputMaybe<AgreementSlacks_Bool_Exp>;
 };
 
+
+/** columns and relationships of "Slacks" */
+export type SlacksAgreementSlacks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementSlacks_Order_By>>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
+/** aggregated selection of "Slacks" */
+export type Slacks_Aggregate = {
+  __typename?: 'Slacks_aggregate';
+  aggregate?: Maybe<Slacks_Aggregate_Fields>;
+  nodes: Array<Slacks>;
+};
+
+/** aggregate fields of "Slacks" */
+export type Slacks_Aggregate_Fields = {
+  __typename?: 'Slacks_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Slacks_Max_Fields>;
+  min?: Maybe<Slacks_Min_Fields>;
+};
+
+
+/** aggregate fields of "Slacks" */
+export type Slacks_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Slacks_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
 /** Boolean expression to filter rows from the table "Slacks". All fields are combined with a logical 'AND'. */
 export type Slacks_Bool_Exp = {
   AgreementSlacks?: InputMaybe<AgreementSlacks_Bool_Exp>;
+  AgreementSlacks_aggregate?: InputMaybe<AgreementSlacks_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Slacks_Bool_Exp>>;
   _not?: InputMaybe<Slacks_Bool_Exp>;
   _or?: InputMaybe<Array<Slacks_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  encryptedAccessToken?: InputMaybe<String_Comparison_Exp>;
   icon?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
@@ -8590,10 +9352,76 @@ export type Slacks_Bool_Exp = {
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "Slacks" */
+export enum Slacks_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  SlacksPkey = 'Slacks_pkey'
+}
+
+/** input type for inserting data into table "Slacks" */
+export type Slacks_Insert_Input = {
+  AgreementSlacks?: InputMaybe<AgreementSlacks_Arr_Rel_Insert_Input>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  teamId?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type Slacks_Max_Fields = {
+  __typename?: 'Slacks_max_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  teamId?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type Slacks_Min_Fields = {
+  __typename?: 'Slacks_min_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  name?: Maybe<Scalars['String']>;
+  teamId?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "Slacks" */
+export type Slacks_Mutation_Response = {
+  __typename?: 'Slacks_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Slacks>;
+};
+
+/** input type for inserting object relation for remote table "Slacks" */
+export type Slacks_Obj_Rel_Insert_Input = {
+  data: Slacks_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Slacks_On_Conflict>;
+};
+
+/** on_conflict condition type for table "Slacks" */
+export type Slacks_On_Conflict = {
+  constraint: Slacks_Constraint;
+  update_columns?: Array<Slacks_Update_Column>;
+  where?: InputMaybe<Slacks_Bool_Exp>;
+};
+
 /** Ordering options when selecting data from "Slacks". */
 export type Slacks_Order_By = {
   AgreementSlacks_aggregate?: InputMaybe<AgreementSlacks_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  encryptedAccessToken?: InputMaybe<Order_By>;
   icon?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -8601,10 +9429,17 @@ export type Slacks_Order_By = {
   updatedAt?: InputMaybe<Order_By>;
 };
 
+/** primary key columns input for table: Slacks */
+export type Slacks_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
 /** select columns of table "Slacks" */
 export enum Slacks_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  EncryptedAccessToken = 'encryptedAccessToken',
   /** column name */
   Icon = 'icon',
   /** column name */
@@ -8617,6 +9452,17 @@ export enum Slacks_Select_Column {
   UpdatedAt = 'updatedAt'
 }
 
+/** input type for updating data in table "Slacks" */
+export type Slacks_Set_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: InputMaybe<Scalars['String']>;
+  icon?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
+  teamId?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
 /** Streaming cursor of the table "Slacks" */
 export type Slacks_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -8628,11 +9474,37 @@ export type Slacks_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Slacks_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: InputMaybe<Scalars['String']>;
   icon?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
   teamId?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** update columns of table "Slacks" */
+export enum Slacks_Update_Column {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  EncryptedAccessToken = 'encryptedAccessToken',
+  /** column name */
+  Icon = 'icon',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  TeamId = 'teamId',
+  /** column name */
+  UpdatedAt = 'updatedAt'
+}
+
+export type Slacks_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Slacks_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Slacks_Bool_Exp;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -9425,7 +10297,10 @@ export type Twitters = {
   __typename?: 'Twitters';
   /** An array relationship */
   AgreementTwitters: Array<AgreementTwitters>;
+  /** An aggregate relationship */
+  AgreementTwitters_aggregate: AgreementTwitters_Aggregate;
   createdAt: Scalars['timestamptz'];
+  encryptedAccessToken: Scalars['String'];
   id: Scalars['uuid'];
   twitterId: Scalars['String'];
   updatedAt: Scalars['timestamptz'];
@@ -9442,33 +10317,137 @@ export type TwittersAgreementTwittersArgs = {
   where?: InputMaybe<AgreementTwitters_Bool_Exp>;
 };
 
+
+/** columns and relationships of "Twitters" */
+export type TwittersAgreementTwitters_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTwitters_Order_By>>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
+};
+
+/** aggregated selection of "Twitters" */
+export type Twitters_Aggregate = {
+  __typename?: 'Twitters_aggregate';
+  aggregate?: Maybe<Twitters_Aggregate_Fields>;
+  nodes: Array<Twitters>;
+};
+
+/** aggregate fields of "Twitters" */
+export type Twitters_Aggregate_Fields = {
+  __typename?: 'Twitters_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Twitters_Max_Fields>;
+  min?: Maybe<Twitters_Min_Fields>;
+};
+
+
+/** aggregate fields of "Twitters" */
+export type Twitters_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Twitters_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
 /** Boolean expression to filter rows from the table "Twitters". All fields are combined with a logical 'AND'. */
 export type Twitters_Bool_Exp = {
   AgreementTwitters?: InputMaybe<AgreementTwitters_Bool_Exp>;
+  AgreementTwitters_aggregate?: InputMaybe<AgreementTwitters_Aggregate_Bool_Exp>;
   _and?: InputMaybe<Array<Twitters_Bool_Exp>>;
   _not?: InputMaybe<Twitters_Bool_Exp>;
   _or?: InputMaybe<Array<Twitters_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  encryptedAccessToken?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   twitterId?: InputMaybe<String_Comparison_Exp>;
   updatedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   username?: InputMaybe<String_Comparison_Exp>;
 };
 
+/** unique or primary key constraints on table "Twitters" */
+export enum Twitters_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  TwittersPkey = 'Twitters_pkey'
+}
+
+/** input type for inserting data into table "Twitters" */
+export type Twitters_Insert_Input = {
+  AgreementTwitters?: InputMaybe<AgreementTwitters_Arr_Rel_Insert_Input>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  twitterId?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  username?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Twitters_Max_Fields = {
+  __typename?: 'Twitters_max_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  twitterId?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  username?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Twitters_Min_Fields = {
+  __typename?: 'Twitters_min_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['uuid']>;
+  twitterId?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['timestamptz']>;
+  username?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "Twitters" */
+export type Twitters_Mutation_Response = {
+  __typename?: 'Twitters_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Twitters>;
+};
+
+/** input type for inserting object relation for remote table "Twitters" */
+export type Twitters_Obj_Rel_Insert_Input = {
+  data: Twitters_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Twitters_On_Conflict>;
+};
+
+/** on_conflict condition type for table "Twitters" */
+export type Twitters_On_Conflict = {
+  constraint: Twitters_Constraint;
+  update_columns?: Array<Twitters_Update_Column>;
+  where?: InputMaybe<Twitters_Bool_Exp>;
+};
+
 /** Ordering options when selecting data from "Twitters". */
 export type Twitters_Order_By = {
   AgreementTwitters_aggregate?: InputMaybe<AgreementTwitters_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  encryptedAccessToken?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   twitterId?: InputMaybe<Order_By>;
   updatedAt?: InputMaybe<Order_By>;
   username?: InputMaybe<Order_By>;
 };
 
+/** primary key columns input for table: Twitters */
+export type Twitters_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
 /** select columns of table "Twitters" */
 export enum Twitters_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  EncryptedAccessToken = 'encryptedAccessToken',
   /** column name */
   Id = 'id',
   /** column name */
@@ -9478,6 +10457,16 @@ export enum Twitters_Select_Column {
   /** column name */
   Username = 'username'
 }
+
+/** input type for updating data in table "Twitters" */
+export type Twitters_Set_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  twitterId?: InputMaybe<Scalars['String']>;
+  updatedAt?: InputMaybe<Scalars['timestamptz']>;
+  username?: InputMaybe<Scalars['String']>;
+};
 
 /** Streaming cursor of the table "Twitters" */
 export type Twitters_Stream_Cursor_Input = {
@@ -9490,10 +10479,34 @@ export type Twitters_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Twitters_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
+  encryptedAccessToken?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
   twitterId?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
   username?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "Twitters" */
+export enum Twitters_Update_Column {
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  EncryptedAccessToken = 'encryptedAccessToken',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  TwitterId = 'twitterId',
+  /** column name */
+  UpdatedAt = 'updatedAt',
+  /** column name */
+  Username = 'username'
+}
+
+export type Twitters_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Twitters_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Twitters_Bool_Exp;
 };
 
 /** columns and relationships of "UserIdentities" */
@@ -11093,6 +12106,10 @@ export type Jsonb_Comparison_Exp = {
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
+  /** delete data from the table: "AgreementDiscords" */
+  delete_AgreementDiscords?: Maybe<AgreementDiscords_Mutation_Response>;
+  /** delete single row from the table: "AgreementDiscords" */
+  delete_AgreementDiscords_by_pk?: Maybe<AgreementDiscords>;
   /** delete data from the table: "AgreementExtensionLinks" */
   delete_AgreementExtensionLinks?: Maybe<AgreementExtensionLinks_Mutation_Response>;
   /** delete single row from the table: "AgreementExtensionLinks" */
@@ -11133,6 +12150,10 @@ export type Mutation_Root = {
   delete_AgreementRoles?: Maybe<AgreementRoles_Mutation_Response>;
   /** delete single row from the table: "AgreementRoles" */
   delete_AgreementRoles_by_pk?: Maybe<AgreementRoles>;
+  /** delete data from the table: "AgreementSlacks" */
+  delete_AgreementSlacks?: Maybe<AgreementSlacks_Mutation_Response>;
+  /** delete single row from the table: "AgreementSlacks" */
+  delete_AgreementSlacks_by_pk?: Maybe<AgreementSlacks>;
   /** delete data from the table: "AgreementTokenTransfers" */
   delete_AgreementTokenTransfers?: Maybe<AgreementTokenTransfers_Mutation_Response>;
   /** delete single row from the table: "AgreementTokenTransfers" */
@@ -11141,6 +12162,10 @@ export type Mutation_Root = {
   delete_AgreementTokens?: Maybe<AgreementTokens_Mutation_Response>;
   /** delete single row from the table: "AgreementTokens" */
   delete_AgreementTokens_by_pk?: Maybe<AgreementTokens>;
+  /** delete data from the table: "AgreementTwitters" */
+  delete_AgreementTwitters?: Maybe<AgreementTwitters_Mutation_Response>;
+  /** delete single row from the table: "AgreementTwitters" */
+  delete_AgreementTwitters_by_pk?: Maybe<AgreementTwitters>;
   /** delete data from the table: "AgreementWallets" */
   delete_AgreementWallets?: Maybe<AgreementWallets_Mutation_Response>;
   /** delete single row from the table: "AgreementWallets" */
@@ -11169,6 +12194,10 @@ export type Mutation_Root = {
   delete_Contracts?: Maybe<Contracts_Mutation_Response>;
   /** delete single row from the table: "Contracts" */
   delete_Contracts_by_pk?: Maybe<Contracts>;
+  /** delete data from the table: "Discords" */
+  delete_Discords?: Maybe<Discords_Mutation_Response>;
+  /** delete single row from the table: "Discords" */
+  delete_Discords_by_pk?: Maybe<Discords>;
   /** delete data from the table: "Extensions" */
   delete_Extensions?: Maybe<Extensions_Mutation_Response>;
   /** delete single row from the table: "Extensions" */
@@ -11181,10 +12210,18 @@ export type Mutation_Root = {
   delete_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** delete single row from the table: "Integrations" */
   delete_Integrations_by_pk?: Maybe<Integrations>;
+  /** delete data from the table: "Rules" */
+  delete_Rules?: Maybe<Rules_Mutation_Response>;
+  /** delete single row from the table: "Rules" */
+  delete_Rules_by_pk?: Maybe<Rules>;
   /** delete data from the table: "SequelizeMeta" */
   delete_SequelizeMeta?: Maybe<SequelizeMeta_Mutation_Response>;
   /** delete single row from the table: "SequelizeMeta" */
   delete_SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
+  /** delete data from the table: "Slacks" */
+  delete_Slacks?: Maybe<Slacks_Mutation_Response>;
+  /** delete single row from the table: "Slacks" */
+  delete_Slacks_by_pk?: Maybe<Slacks>;
   /** delete data from the table: "Transactions" */
   delete_Transactions?: Maybe<Transactions_Mutation_Response>;
   /** delete single row from the table: "Transactions" */
@@ -11193,6 +12230,10 @@ export type Mutation_Root = {
   delete_Transfers?: Maybe<Transfers_Mutation_Response>;
   /** delete single row from the table: "Transfers" */
   delete_Transfers_by_pk?: Maybe<Transfers>;
+  /** delete data from the table: "Twitters" */
+  delete_Twitters?: Maybe<Twitters_Mutation_Response>;
+  /** delete single row from the table: "Twitters" */
+  delete_Twitters_by_pk?: Maybe<Twitters>;
   /** delete data from the table: "UserIdentities" */
   delete_UserIdentities?: Maybe<UserIdentities_Mutation_Response>;
   /** delete single row from the table: "UserIdentities" */
@@ -11209,6 +12250,10 @@ export type Mutation_Root = {
   delete_Wallets?: Maybe<Wallets_Mutation_Response>;
   /** delete single row from the table: "Wallets" */
   delete_Wallets_by_pk?: Maybe<Wallets>;
+  /** insert data into the table: "AgreementDiscords" */
+  insert_AgreementDiscords?: Maybe<AgreementDiscords_Mutation_Response>;
+  /** insert a single row into the table: "AgreementDiscords" */
+  insert_AgreementDiscords_one?: Maybe<AgreementDiscords>;
   /** insert data into the table: "AgreementExtensionLinks" */
   insert_AgreementExtensionLinks?: Maybe<AgreementExtensionLinks_Mutation_Response>;
   /** insert a single row into the table: "AgreementExtensionLinks" */
@@ -11249,6 +12294,10 @@ export type Mutation_Root = {
   insert_AgreementRoles?: Maybe<AgreementRoles_Mutation_Response>;
   /** insert a single row into the table: "AgreementRoles" */
   insert_AgreementRoles_one?: Maybe<AgreementRoles>;
+  /** insert data into the table: "AgreementSlacks" */
+  insert_AgreementSlacks?: Maybe<AgreementSlacks_Mutation_Response>;
+  /** insert a single row into the table: "AgreementSlacks" */
+  insert_AgreementSlacks_one?: Maybe<AgreementSlacks>;
   /** insert data into the table: "AgreementTokenTransfers" */
   insert_AgreementTokenTransfers?: Maybe<AgreementTokenTransfers_Mutation_Response>;
   /** insert a single row into the table: "AgreementTokenTransfers" */
@@ -11257,6 +12306,10 @@ export type Mutation_Root = {
   insert_AgreementTokens?: Maybe<AgreementTokens_Mutation_Response>;
   /** insert a single row into the table: "AgreementTokens" */
   insert_AgreementTokens_one?: Maybe<AgreementTokens>;
+  /** insert data into the table: "AgreementTwitters" */
+  insert_AgreementTwitters?: Maybe<AgreementTwitters_Mutation_Response>;
+  /** insert a single row into the table: "AgreementTwitters" */
+  insert_AgreementTwitters_one?: Maybe<AgreementTwitters>;
   /** insert data into the table: "AgreementWallets" */
   insert_AgreementWallets?: Maybe<AgreementWallets_Mutation_Response>;
   /** insert a single row into the table: "AgreementWallets" */
@@ -11285,6 +12338,10 @@ export type Mutation_Root = {
   insert_Contracts?: Maybe<Contracts_Mutation_Response>;
   /** insert a single row into the table: "Contracts" */
   insert_Contracts_one?: Maybe<Contracts>;
+  /** insert data into the table: "Discords" */
+  insert_Discords?: Maybe<Discords_Mutation_Response>;
+  /** insert a single row into the table: "Discords" */
+  insert_Discords_one?: Maybe<Discords>;
   /** insert data into the table: "Extensions" */
   insert_Extensions?: Maybe<Extensions_Mutation_Response>;
   /** insert a single row into the table: "Extensions" */
@@ -11297,10 +12354,18 @@ export type Mutation_Root = {
   insert_Integrations?: Maybe<Integrations_Mutation_Response>;
   /** insert a single row into the table: "Integrations" */
   insert_Integrations_one?: Maybe<Integrations>;
+  /** insert data into the table: "Rules" */
+  insert_Rules?: Maybe<Rules_Mutation_Response>;
+  /** insert a single row into the table: "Rules" */
+  insert_Rules_one?: Maybe<Rules>;
   /** insert data into the table: "SequelizeMeta" */
   insert_SequelizeMeta?: Maybe<SequelizeMeta_Mutation_Response>;
   /** insert a single row into the table: "SequelizeMeta" */
   insert_SequelizeMeta_one?: Maybe<SequelizeMeta>;
+  /** insert data into the table: "Slacks" */
+  insert_Slacks?: Maybe<Slacks_Mutation_Response>;
+  /** insert a single row into the table: "Slacks" */
+  insert_Slacks_one?: Maybe<Slacks>;
   /** insert data into the table: "Transactions" */
   insert_Transactions?: Maybe<Transactions_Mutation_Response>;
   /** insert a single row into the table: "Transactions" */
@@ -11309,6 +12374,10 @@ export type Mutation_Root = {
   insert_Transfers?: Maybe<Transfers_Mutation_Response>;
   /** insert a single row into the table: "Transfers" */
   insert_Transfers_one?: Maybe<Transfers>;
+  /** insert data into the table: "Twitters" */
+  insert_Twitters?: Maybe<Twitters_Mutation_Response>;
+  /** insert a single row into the table: "Twitters" */
+  insert_Twitters_one?: Maybe<Twitters>;
   /** insert data into the table: "UserIdentities" */
   insert_UserIdentities?: Maybe<UserIdentities_Mutation_Response>;
   /** insert a single row into the table: "UserIdentities" */
@@ -11325,6 +12394,12 @@ export type Mutation_Root = {
   insert_Wallets?: Maybe<Wallets_Mutation_Response>;
   /** insert a single row into the table: "Wallets" */
   insert_Wallets_one?: Maybe<Wallets>;
+  /** update data of the table: "AgreementDiscords" */
+  update_AgreementDiscords?: Maybe<AgreementDiscords_Mutation_Response>;
+  /** update single row of the table: "AgreementDiscords" */
+  update_AgreementDiscords_by_pk?: Maybe<AgreementDiscords>;
+  /** update multiples rows of table: "AgreementDiscords" */
+  update_AgreementDiscords_many?: Maybe<Array<Maybe<AgreementDiscords_Mutation_Response>>>;
   /** update data of the table: "AgreementExtensionLinks" */
   update_AgreementExtensionLinks?: Maybe<AgreementExtensionLinks_Mutation_Response>;
   /** update single row of the table: "AgreementExtensionLinks" */
@@ -11385,6 +12460,12 @@ export type Mutation_Root = {
   update_AgreementRoles_by_pk?: Maybe<AgreementRoles>;
   /** update multiples rows of table: "AgreementRoles" */
   update_AgreementRoles_many?: Maybe<Array<Maybe<AgreementRoles_Mutation_Response>>>;
+  /** update data of the table: "AgreementSlacks" */
+  update_AgreementSlacks?: Maybe<AgreementSlacks_Mutation_Response>;
+  /** update single row of the table: "AgreementSlacks" */
+  update_AgreementSlacks_by_pk?: Maybe<AgreementSlacks>;
+  /** update multiples rows of table: "AgreementSlacks" */
+  update_AgreementSlacks_many?: Maybe<Array<Maybe<AgreementSlacks_Mutation_Response>>>;
   /** update data of the table: "AgreementTokenTransfers" */
   update_AgreementTokenTransfers?: Maybe<AgreementTokenTransfers_Mutation_Response>;
   /** update single row of the table: "AgreementTokenTransfers" */
@@ -11397,6 +12478,12 @@ export type Mutation_Root = {
   update_AgreementTokens_by_pk?: Maybe<AgreementTokens>;
   /** update multiples rows of table: "AgreementTokens" */
   update_AgreementTokens_many?: Maybe<Array<Maybe<AgreementTokens_Mutation_Response>>>;
+  /** update data of the table: "AgreementTwitters" */
+  update_AgreementTwitters?: Maybe<AgreementTwitters_Mutation_Response>;
+  /** update single row of the table: "AgreementTwitters" */
+  update_AgreementTwitters_by_pk?: Maybe<AgreementTwitters>;
+  /** update multiples rows of table: "AgreementTwitters" */
+  update_AgreementTwitters_many?: Maybe<Array<Maybe<AgreementTwitters_Mutation_Response>>>;
   /** update data of the table: "AgreementWallets" */
   update_AgreementWallets?: Maybe<AgreementWallets_Mutation_Response>;
   /** update single row of the table: "AgreementWallets" */
@@ -11439,6 +12526,12 @@ export type Mutation_Root = {
   update_Contracts_by_pk?: Maybe<Contracts>;
   /** update multiples rows of table: "Contracts" */
   update_Contracts_many?: Maybe<Array<Maybe<Contracts_Mutation_Response>>>;
+  /** update data of the table: "Discords" */
+  update_Discords?: Maybe<Discords_Mutation_Response>;
+  /** update single row of the table: "Discords" */
+  update_Discords_by_pk?: Maybe<Discords>;
+  /** update multiples rows of table: "Discords" */
+  update_Discords_many?: Maybe<Array<Maybe<Discords_Mutation_Response>>>;
   /** update data of the table: "Extensions" */
   update_Extensions?: Maybe<Extensions_Mutation_Response>;
   /** update single row of the table: "Extensions" */
@@ -11457,12 +12550,24 @@ export type Mutation_Root = {
   update_Integrations_by_pk?: Maybe<Integrations>;
   /** update multiples rows of table: "Integrations" */
   update_Integrations_many?: Maybe<Array<Maybe<Integrations_Mutation_Response>>>;
+  /** update data of the table: "Rules" */
+  update_Rules?: Maybe<Rules_Mutation_Response>;
+  /** update single row of the table: "Rules" */
+  update_Rules_by_pk?: Maybe<Rules>;
+  /** update multiples rows of table: "Rules" */
+  update_Rules_many?: Maybe<Array<Maybe<Rules_Mutation_Response>>>;
   /** update data of the table: "SequelizeMeta" */
   update_SequelizeMeta?: Maybe<SequelizeMeta_Mutation_Response>;
   /** update single row of the table: "SequelizeMeta" */
   update_SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
   /** update multiples rows of table: "SequelizeMeta" */
   update_SequelizeMeta_many?: Maybe<Array<Maybe<SequelizeMeta_Mutation_Response>>>;
+  /** update data of the table: "Slacks" */
+  update_Slacks?: Maybe<Slacks_Mutation_Response>;
+  /** update single row of the table: "Slacks" */
+  update_Slacks_by_pk?: Maybe<Slacks>;
+  /** update multiples rows of table: "Slacks" */
+  update_Slacks_many?: Maybe<Array<Maybe<Slacks_Mutation_Response>>>;
   /** update data of the table: "Transactions" */
   update_Transactions?: Maybe<Transactions_Mutation_Response>;
   /** update single row of the table: "Transactions" */
@@ -11475,6 +12580,12 @@ export type Mutation_Root = {
   update_Transfers_by_pk?: Maybe<Transfers>;
   /** update multiples rows of table: "Transfers" */
   update_Transfers_many?: Maybe<Array<Maybe<Transfers_Mutation_Response>>>;
+  /** update data of the table: "Twitters" */
+  update_Twitters?: Maybe<Twitters_Mutation_Response>;
+  /** update single row of the table: "Twitters" */
+  update_Twitters_by_pk?: Maybe<Twitters>;
+  /** update multiples rows of table: "Twitters" */
+  update_Twitters_many?: Maybe<Array<Maybe<Twitters_Mutation_Response>>>;
   /** update data of the table: "UserIdentities" */
   update_UserIdentities?: Maybe<UserIdentities_Mutation_Response>;
   /** update single row of the table: "UserIdentities" */
@@ -11499,6 +12610,18 @@ export type Mutation_Root = {
   update_Wallets_by_pk?: Maybe<Wallets>;
   /** update multiples rows of table: "Wallets" */
   update_Wallets_many?: Maybe<Array<Maybe<Wallets_Mutation_Response>>>;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementDiscordsArgs = {
+  where: AgreementDiscords_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementDiscords_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
@@ -11623,6 +12746,18 @@ export type Mutation_RootDelete_AgreementRoles_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_AgreementSlacksArgs = {
+  where: AgreementSlacks_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementSlacks_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_AgreementTokenTransfersArgs = {
   where: AgreementTokenTransfers_Bool_Exp;
 };
@@ -11642,6 +12777,18 @@ export type Mutation_RootDelete_AgreementTokensArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_AgreementTokens_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementTwittersArgs = {
+  where: AgreementTwitters_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_AgreementTwitters_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -11731,6 +12878,18 @@ export type Mutation_RootDelete_Contracts_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_DiscordsArgs = {
+  where: Discords_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Discords_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_ExtensionsArgs = {
   where: Extensions_Bool_Exp;
 };
@@ -11767,6 +12926,18 @@ export type Mutation_RootDelete_Integrations_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_RulesArgs = {
+  where: Rules_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Rules_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_SequelizeMetaArgs = {
   where: SequelizeMeta_Bool_Exp;
 };
@@ -11775,6 +12946,18 @@ export type Mutation_RootDelete_SequelizeMetaArgs = {
 /** mutation root */
 export type Mutation_RootDelete_SequelizeMeta_By_PkArgs = {
   name: Scalars['String'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_SlacksArgs = {
+  where: Slacks_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Slacks_By_PkArgs = {
+  id: Scalars['uuid'];
 };
 
 
@@ -11798,6 +12981,18 @@ export type Mutation_RootDelete_TransfersArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Transfers_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_TwittersArgs = {
+  where: Twitters_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Twitters_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -11847,6 +13042,20 @@ export type Mutation_RootDelete_WalletsArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Wallets_By_PkArgs = {
   id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementDiscordsArgs = {
+  objects: Array<AgreementDiscords_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementDiscords_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementDiscords_OneArgs = {
+  object: AgreementDiscords_Insert_Input;
+  on_conflict?: InputMaybe<AgreementDiscords_On_Conflict>;
 };
 
 
@@ -11991,6 +13200,20 @@ export type Mutation_RootInsert_AgreementRoles_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_AgreementSlacksArgs = {
+  objects: Array<AgreementSlacks_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementSlacks_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementSlacks_OneArgs = {
+  object: AgreementSlacks_Insert_Input;
+  on_conflict?: InputMaybe<AgreementSlacks_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_AgreementTokenTransfersArgs = {
   objects: Array<AgreementTokenTransfers_Insert_Input>;
   on_conflict?: InputMaybe<AgreementTokenTransfers_On_Conflict>;
@@ -12015,6 +13238,20 @@ export type Mutation_RootInsert_AgreementTokensArgs = {
 export type Mutation_RootInsert_AgreementTokens_OneArgs = {
   object: AgreementTokens_Insert_Input;
   on_conflict?: InputMaybe<AgreementTokens_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementTwittersArgs = {
+  objects: Array<AgreementTwitters_Insert_Input>;
+  on_conflict?: InputMaybe<AgreementTwitters_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_AgreementTwitters_OneArgs = {
+  object: AgreementTwitters_Insert_Input;
+  on_conflict?: InputMaybe<AgreementTwitters_On_Conflict>;
 };
 
 
@@ -12117,6 +13354,20 @@ export type Mutation_RootInsert_Contracts_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_DiscordsArgs = {
+  objects: Array<Discords_Insert_Input>;
+  on_conflict?: InputMaybe<Discords_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Discords_OneArgs = {
+  object: Discords_Insert_Input;
+  on_conflict?: InputMaybe<Discords_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_ExtensionsArgs = {
   objects: Array<Extensions_Insert_Input>;
   on_conflict?: InputMaybe<Extensions_On_Conflict>;
@@ -12159,6 +13410,20 @@ export type Mutation_RootInsert_Integrations_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_RulesArgs = {
+  objects: Array<Rules_Insert_Input>;
+  on_conflict?: InputMaybe<Rules_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Rules_OneArgs = {
+  object: Rules_Insert_Input;
+  on_conflict?: InputMaybe<Rules_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_SequelizeMetaArgs = {
   objects: Array<SequelizeMeta_Insert_Input>;
   on_conflict?: InputMaybe<SequelizeMeta_On_Conflict>;
@@ -12169,6 +13434,20 @@ export type Mutation_RootInsert_SequelizeMetaArgs = {
 export type Mutation_RootInsert_SequelizeMeta_OneArgs = {
   object: SequelizeMeta_Insert_Input;
   on_conflict?: InputMaybe<SequelizeMeta_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_SlacksArgs = {
+  objects: Array<Slacks_Insert_Input>;
+  on_conflict?: InputMaybe<Slacks_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Slacks_OneArgs = {
+  object: Slacks_Insert_Input;
+  on_conflict?: InputMaybe<Slacks_On_Conflict>;
 };
 
 
@@ -12197,6 +13476,20 @@ export type Mutation_RootInsert_TransfersArgs = {
 export type Mutation_RootInsert_Transfers_OneArgs = {
   object: Transfers_Insert_Input;
   on_conflict?: InputMaybe<Transfers_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_TwittersArgs = {
+  objects: Array<Twitters_Insert_Input>;
+  on_conflict?: InputMaybe<Twitters_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Twitters_OneArgs = {
+  object: Twitters_Insert_Input;
+  on_conflict?: InputMaybe<Twitters_On_Conflict>;
 };
 
 
@@ -12253,6 +13546,26 @@ export type Mutation_RootInsert_WalletsArgs = {
 export type Mutation_RootInsert_Wallets_OneArgs = {
   object: Wallets_Insert_Input;
   on_conflict?: InputMaybe<Wallets_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementDiscordsArgs = {
+  _set?: InputMaybe<AgreementDiscords_Set_Input>;
+  where: AgreementDiscords_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementDiscords_By_PkArgs = {
+  _set?: InputMaybe<AgreementDiscords_Set_Input>;
+  pk_columns: AgreementDiscords_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementDiscords_ManyArgs = {
+  updates: Array<AgreementDiscords_Updates>;
 };
 
 
@@ -12539,6 +13852,26 @@ export type Mutation_RootUpdate_AgreementRoles_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_AgreementSlacksArgs = {
+  _set?: InputMaybe<AgreementSlacks_Set_Input>;
+  where: AgreementSlacks_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementSlacks_By_PkArgs = {
+  _set?: InputMaybe<AgreementSlacks_Set_Input>;
+  pk_columns: AgreementSlacks_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementSlacks_ManyArgs = {
+  updates: Array<AgreementSlacks_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_AgreementTokenTransfersArgs = {
   _set?: InputMaybe<AgreementTokenTransfers_Set_Input>;
   where: AgreementTokenTransfers_Bool_Exp;
@@ -12585,6 +13918,26 @@ export type Mutation_RootUpdate_AgreementTokens_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_AgreementTokens_ManyArgs = {
   updates: Array<AgreementTokens_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementTwittersArgs = {
+  _set?: InputMaybe<AgreementTwitters_Set_Input>;
+  where: AgreementTwitters_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementTwitters_By_PkArgs = {
+  _set?: InputMaybe<AgreementTwitters_Set_Input>;
+  pk_columns: AgreementTwitters_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_AgreementTwitters_ManyArgs = {
+  updates: Array<AgreementTwitters_Updates>;
 };
 
 
@@ -12779,6 +14132,26 @@ export type Mutation_RootUpdate_Contracts_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_DiscordsArgs = {
+  _set?: InputMaybe<Discords_Set_Input>;
+  where: Discords_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Discords_By_PkArgs = {
+  _set?: InputMaybe<Discords_Set_Input>;
+  pk_columns: Discords_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Discords_ManyArgs = {
+  updates: Array<Discords_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_ExtensionsArgs = {
   _append?: InputMaybe<Extensions_Append_Input>;
   _delete_at_path?: InputMaybe<Extensions_Delete_At_Path_Input>;
@@ -12849,6 +14222,36 @@ export type Mutation_RootUpdate_Integrations_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_RulesArgs = {
+  _append?: InputMaybe<Rules_Append_Input>;
+  _delete_at_path?: InputMaybe<Rules_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Rules_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Rules_Delete_Key_Input>;
+  _prepend?: InputMaybe<Rules_Prepend_Input>;
+  _set?: InputMaybe<Rules_Set_Input>;
+  where: Rules_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Rules_By_PkArgs = {
+  _append?: InputMaybe<Rules_Append_Input>;
+  _delete_at_path?: InputMaybe<Rules_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Rules_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Rules_Delete_Key_Input>;
+  _prepend?: InputMaybe<Rules_Prepend_Input>;
+  _set?: InputMaybe<Rules_Set_Input>;
+  pk_columns: Rules_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Rules_ManyArgs = {
+  updates: Array<Rules_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_SequelizeMetaArgs = {
   _set?: InputMaybe<SequelizeMeta_Set_Input>;
   where: SequelizeMeta_Bool_Exp;
@@ -12865,6 +14268,26 @@ export type Mutation_RootUpdate_SequelizeMeta_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_SequelizeMeta_ManyArgs = {
   updates: Array<SequelizeMeta_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_SlacksArgs = {
+  _set?: InputMaybe<Slacks_Set_Input>;
+  where: Slacks_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Slacks_By_PkArgs = {
+  _set?: InputMaybe<Slacks_Set_Input>;
+  pk_columns: Slacks_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Slacks_ManyArgs = {
+  updates: Array<Slacks_Updates>;
 };
 
 
@@ -12917,6 +14340,26 @@ export type Mutation_RootUpdate_Transfers_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Transfers_ManyArgs = {
   updates: Array<Transfers_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_TwittersArgs = {
+  _set?: InputMaybe<Twitters_Set_Input>;
+  where: Twitters_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Twitters_By_PkArgs = {
+  _set?: InputMaybe<Twitters_Set_Input>;
+  pk_columns: Twitters_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Twitters_ManyArgs = {
+  updates: Array<Twitters_Updates>;
 };
 
 
@@ -13031,6 +14474,8 @@ export type Query_Root = {
   __typename?: 'query_root';
   /** An array relationship */
   AgreementDiscords: Array<AgreementDiscords>;
+  /** An aggregate relationship */
+  AgreementDiscords_aggregate: AgreementDiscords_Aggregate;
   /** fetch data from the table: "AgreementDiscords" using primary key columns */
   AgreementDiscords_by_pk?: Maybe<AgreementDiscords>;
   /** An array relationship */
@@ -13095,6 +14540,8 @@ export type Query_Root = {
   AgreementRoles_by_pk?: Maybe<AgreementRoles>;
   /** An array relationship */
   AgreementSlacks: Array<AgreementSlacks>;
+  /** An aggregate relationship */
+  AgreementSlacks_aggregate: AgreementSlacks_Aggregate;
   /** fetch data from the table: "AgreementSlacks" using primary key columns */
   AgreementSlacks_by_pk?: Maybe<AgreementSlacks>;
   /** An array relationship */
@@ -13111,6 +14558,8 @@ export type Query_Root = {
   AgreementTokens_by_pk?: Maybe<AgreementTokens>;
   /** An array relationship */
   AgreementTwitters: Array<AgreementTwitters>;
+  /** An aggregate relationship */
+  AgreementTwitters_aggregate: AgreementTwitters_Aggregate;
   /** fetch data from the table: "AgreementTwitters" using primary key columns */
   AgreementTwitters_by_pk?: Maybe<AgreementTwitters>;
   /** An array relationship */
@@ -13157,6 +14606,8 @@ export type Query_Root = {
   Contracts_by_pk?: Maybe<Contracts>;
   /** fetch data from the table: "Discords" */
   Discords: Array<Discords>;
+  /** fetch aggregated fields from the table: "Discords" */
+  Discords_aggregate: Discords_Aggregate;
   /** fetch data from the table: "Discords" using primary key columns */
   Discords_by_pk?: Maybe<Discords>;
   /** fetch data from the table: "Extensions" */
@@ -13179,6 +14630,8 @@ export type Query_Root = {
   Integrations_by_pk?: Maybe<Integrations>;
   /** fetch data from the table: "Rules" */
   Rules: Array<Rules>;
+  /** fetch aggregated fields from the table: "Rules" */
+  Rules_aggregate: Rules_Aggregate;
   /** fetch data from the table: "Rules" using primary key columns */
   Rules_by_pk?: Maybe<Rules>;
   /** fetch data from the table: "SequelizeMeta" */
@@ -13189,6 +14642,8 @@ export type Query_Root = {
   SequelizeMeta_by_pk?: Maybe<SequelizeMeta>;
   /** fetch data from the table: "Slacks" */
   Slacks: Array<Slacks>;
+  /** fetch aggregated fields from the table: "Slacks" */
+  Slacks_aggregate: Slacks_Aggregate;
   /** fetch data from the table: "Slacks" using primary key columns */
   Slacks_by_pk?: Maybe<Slacks>;
   /** An array relationship */
@@ -13205,6 +14660,8 @@ export type Query_Root = {
   Transfers_by_pk?: Maybe<Transfers>;
   /** fetch data from the table: "Twitters" */
   Twitters: Array<Twitters>;
+  /** fetch aggregated fields from the table: "Twitters" */
+  Twitters_aggregate: Twitters_Aggregate;
   /** fetch data from the table: "Twitters" using primary key columns */
   Twitters_by_pk?: Maybe<Twitters>;
   /** An array relationship */
@@ -13235,6 +14692,15 @@ export type Query_Root = {
 
 
 export type Query_RootAgreementDiscordsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementDiscords_Order_By>>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementDiscords_AggregateArgs = {
   distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -13487,6 +14953,15 @@ export type Query_RootAgreementSlacksArgs = {
 };
 
 
+export type Query_RootAgreementSlacks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementSlacks_Order_By>>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
+
 export type Query_RootAgreementSlacks_By_PkArgs = {
   id: Scalars['uuid'];
 };
@@ -13539,6 +15014,15 @@ export type Query_RootAgreementTokens_By_PkArgs = {
 
 
 export type Query_RootAgreementTwittersArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTwitters_Order_By>>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
+};
+
+
+export type Query_RootAgreementTwitters_AggregateArgs = {
   distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -13722,6 +15206,15 @@ export type Query_RootDiscordsArgs = {
 };
 
 
+export type Query_RootDiscords_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Discords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Discords_Order_By>>;
+  where?: InputMaybe<Discords_Bool_Exp>;
+};
+
+
 export type Query_RootDiscords_By_PkArgs = {
   id: Scalars['uuid'];
 };
@@ -13805,6 +15298,15 @@ export type Query_RootRulesArgs = {
 };
 
 
+export type Query_RootRules_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Rules_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Rules_Order_By>>;
+  where?: InputMaybe<Rules_Bool_Exp>;
+};
+
+
 export type Query_RootRules_By_PkArgs = {
   id: Scalars['uuid'];
 };
@@ -13834,6 +15336,15 @@ export type Query_RootSequelizeMeta_By_PkArgs = {
 
 
 export type Query_RootSlacksArgs = {
+  distinct_on?: InputMaybe<Array<Slacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Slacks_Order_By>>;
+  where?: InputMaybe<Slacks_Bool_Exp>;
+};
+
+
+export type Query_RootSlacks_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Slacks_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -13894,6 +15405,15 @@ export type Query_RootTransfers_By_PkArgs = {
 
 
 export type Query_RootTwittersArgs = {
+  distinct_on?: InputMaybe<Array<Twitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Twitters_Order_By>>;
+  where?: InputMaybe<Twitters_Bool_Exp>;
+};
+
+
+export type Query_RootTwitters_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Twitters_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -14002,6 +15522,8 @@ export type Subscription_Root = {
   __typename?: 'subscription_root';
   /** An array relationship */
   AgreementDiscords: Array<AgreementDiscords>;
+  /** An aggregate relationship */
+  AgreementDiscords_aggregate: AgreementDiscords_Aggregate;
   /** fetch data from the table: "AgreementDiscords" using primary key columns */
   AgreementDiscords_by_pk?: Maybe<AgreementDiscords>;
   /** fetch data from the table in a streaming manner: "AgreementDiscords" */
@@ -14088,6 +15610,8 @@ export type Subscription_Root = {
   AgreementRoles_stream: Array<AgreementRoles>;
   /** An array relationship */
   AgreementSlacks: Array<AgreementSlacks>;
+  /** An aggregate relationship */
+  AgreementSlacks_aggregate: AgreementSlacks_Aggregate;
   /** fetch data from the table: "AgreementSlacks" using primary key columns */
   AgreementSlacks_by_pk?: Maybe<AgreementSlacks>;
   /** fetch data from the table in a streaming manner: "AgreementSlacks" */
@@ -14110,6 +15634,8 @@ export type Subscription_Root = {
   AgreementTokens_stream: Array<AgreementTokens>;
   /** An array relationship */
   AgreementTwitters: Array<AgreementTwitters>;
+  /** An aggregate relationship */
+  AgreementTwitters_aggregate: AgreementTwitters_Aggregate;
   /** fetch data from the table: "AgreementTwitters" using primary key columns */
   AgreementTwitters_by_pk?: Maybe<AgreementTwitters>;
   /** fetch data from the table in a streaming manner: "AgreementTwitters" */
@@ -14172,6 +15698,8 @@ export type Subscription_Root = {
   Contracts_stream: Array<Contracts>;
   /** fetch data from the table: "Discords" */
   Discords: Array<Discords>;
+  /** fetch aggregated fields from the table: "Discords" */
+  Discords_aggregate: Discords_Aggregate;
   /** fetch data from the table: "Discords" using primary key columns */
   Discords_by_pk?: Maybe<Discords>;
   /** fetch data from the table in a streaming manner: "Discords" */
@@ -14202,6 +15730,8 @@ export type Subscription_Root = {
   Integrations_stream: Array<Integrations>;
   /** fetch data from the table: "Rules" */
   Rules: Array<Rules>;
+  /** fetch aggregated fields from the table: "Rules" */
+  Rules_aggregate: Rules_Aggregate;
   /** fetch data from the table: "Rules" using primary key columns */
   Rules_by_pk?: Maybe<Rules>;
   /** fetch data from the table in a streaming manner: "Rules" */
@@ -14216,6 +15746,8 @@ export type Subscription_Root = {
   SequelizeMeta_stream: Array<SequelizeMeta>;
   /** fetch data from the table: "Slacks" */
   Slacks: Array<Slacks>;
+  /** fetch aggregated fields from the table: "Slacks" */
+  Slacks_aggregate: Slacks_Aggregate;
   /** fetch data from the table: "Slacks" using primary key columns */
   Slacks_by_pk?: Maybe<Slacks>;
   /** fetch data from the table in a streaming manner: "Slacks" */
@@ -14238,6 +15770,8 @@ export type Subscription_Root = {
   Transfers_stream: Array<Transfers>;
   /** fetch data from the table: "Twitters" */
   Twitters: Array<Twitters>;
+  /** fetch aggregated fields from the table: "Twitters" */
+  Twitters_aggregate: Twitters_Aggregate;
   /** fetch data from the table: "Twitters" using primary key columns */
   Twitters_by_pk?: Maybe<Twitters>;
   /** fetch data from the table in a streaming manner: "Twitters" */
@@ -14278,6 +15812,15 @@ export type Subscription_Root = {
 
 
 export type Subscription_RootAgreementDiscordsArgs = {
+  distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementDiscords_Order_By>>;
+  where?: InputMaybe<AgreementDiscords_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementDiscords_AggregateArgs = {
   distinct_on?: InputMaybe<Array<AgreementDiscords_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -14607,6 +16150,15 @@ export type Subscription_RootAgreementSlacksArgs = {
 };
 
 
+export type Subscription_RootAgreementSlacks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<AgreementSlacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementSlacks_Order_By>>;
+  where?: InputMaybe<AgreementSlacks_Bool_Exp>;
+};
+
+
 export type Subscription_RootAgreementSlacks_By_PkArgs = {
   id: Scalars['uuid'];
 };
@@ -14680,6 +16232,15 @@ export type Subscription_RootAgreementTokens_StreamArgs = {
 
 
 export type Subscription_RootAgreementTwittersArgs = {
+  distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<AgreementTwitters_Order_By>>;
+  where?: InputMaybe<AgreementTwitters_Bool_Exp>;
+};
+
+
+export type Subscription_RootAgreementTwitters_AggregateArgs = {
   distinct_on?: InputMaybe<Array<AgreementTwitters_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -14919,6 +16480,15 @@ export type Subscription_RootDiscordsArgs = {
 };
 
 
+export type Subscription_RootDiscords_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Discords_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Discords_Order_By>>;
+  where?: InputMaybe<Discords_Bool_Exp>;
+};
+
+
 export type Subscription_RootDiscords_By_PkArgs = {
   id: Scalars['uuid'];
 };
@@ -15030,6 +16600,15 @@ export type Subscription_RootRulesArgs = {
 };
 
 
+export type Subscription_RootRules_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Rules_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Rules_Order_By>>;
+  where?: InputMaybe<Rules_Bool_Exp>;
+};
+
+
 export type Subscription_RootRules_By_PkArgs = {
   id: Scalars['uuid'];
 };
@@ -15073,6 +16652,15 @@ export type Subscription_RootSequelizeMeta_StreamArgs = {
 
 
 export type Subscription_RootSlacksArgs = {
+  distinct_on?: InputMaybe<Array<Slacks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Slacks_Order_By>>;
+  where?: InputMaybe<Slacks_Bool_Exp>;
+};
+
+
+export type Subscription_RootSlacks_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Slacks_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -15154,6 +16742,15 @@ export type Subscription_RootTransfers_StreamArgs = {
 
 
 export type Subscription_RootTwittersArgs = {
+  distinct_on?: InputMaybe<Array<Twitters_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Twitters_Order_By>>;
+  where?: InputMaybe<Twitters_Bool_Exp>;
+};
+
+
+export type Subscription_RootTwitters_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Twitters_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -15369,7 +16966,7 @@ export type SubRulesSubscriptionVariables = Exact<{
 }>;
 
 
-export type SubRulesSubscription = { __typename?: 'subscription_root', Rules: Array<{ __typename?: 'Rules', id: any, agreementId: any, definition: any }> };
+export type SubRulesSubscription = { __typename?: 'subscription_root', Rules: Array<{ __typename?: 'Rules', id: any, agreementId: any, definition: any, description?: string | null, abridgedDescription?: string | null }> };
 
 export type MeemPartsFragment = { __typename?: 'AgreementTokens', tokenId: string, AgreementId?: any | null, Agreement?: { __typename?: 'Agreements', address: string, name: string, symbol: string } | null };
 
@@ -15750,6 +17347,8 @@ export const SubRulesDocument = gql`
     id
     agreementId
     definition
+    description
+    abridgedDescription
   }
 }
     `;
