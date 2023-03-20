@@ -91,25 +91,29 @@ export const SymphonyExtension: React.FC = () => {
 		}
 	)
 
-	const { data: discordConnectionData } =
-		useSubscription<SubDiscordsSubscription>(SUB_DISCORDS, {
-			variables: {
-				agreementId: agreement?.id
-			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
-		})
+	const {
+		data: discordConnectionData,
+		loading: isFetchingDiscordConnections
+	} = useSubscription<SubDiscordsSubscription>(SUB_DISCORDS, {
+		variables: {
+			agreementId: agreement?.id
+		},
+		skip: !symphonyClient || !agreement?.id,
+		client: symphonyClient
+	})
 
-	const { data: twitterConnectionData } =
-		useSubscription<SubTwittersSubscription>(SUB_TWITTERS, {
-			variables: {
-				agreementId: agreement?.id
-			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
-		})
+	const {
+		data: twitterConnectionData,
+		loading: isFetchingTwitterConnections
+	} = useSubscription<SubTwittersSubscription>(SUB_TWITTERS, {
+		variables: {
+			agreementId: agreement?.id
+		},
+		skip: !symphonyClient || !agreement?.id,
+		client: symphonyClient
+	})
 
-	const { data: slackConnectionData } =
+	const { data: slackConnectionData, loading: isFetchingSlackConnections } =
 		useSubscription<SubSlacksSubscription>(SUB_SLACKS, {
 			variables: {
 				agreementId: agreement?.id
@@ -171,7 +175,7 @@ export const SymphonyExtension: React.FC = () => {
 				setPreviousConnectionsDataString(jsonConns)
 				setSymphonyConnections(conns)
 				setHasFetchedConnections(true)
-				setIsFetchingConnections(true)
+				setIsFetchingConnections(false)
 			}
 		}
 	}, [
@@ -379,49 +383,63 @@ export const SymphonyExtension: React.FC = () => {
 						CONNECTED ACCOUNTS
 					</Text>
 
-					{symphonyConnections && (
+					{(isFetchingDiscordConnections ||
+						isFetchingSlackConnections ||
+						isFetchingTwitterConnections ||
+						isFetchingConnections) && (
 						<>
 							<Space h={24} />
-							<Grid>
-								{connectedDiscordAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={API.RuleIo.Discord.toString()}
-									>
-										{connectionSummaryGridItem(
-											API.RuleIo.Discord,
-											connectedDiscordAccounts
-										)}
-									</Grid.Col>
-								)}
-								{connectedTwitterAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={API.RuleIo.Twitter.toString()}
-									>
-										{connectionSummaryGridItem(
-											API.RuleIo.Twitter,
-											connectedTwitterAccounts
-										)}
-									</Grid.Col>
-								)}
-								{connectedSlackAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={API.RuleIo.Slack.toString()}
-									>
-										{connectionSummaryGridItem(
-											API.RuleIo.Slack,
-											connectedSlackAccounts
-										)}
-									</Grid.Col>
-								)}
-							</Grid>
+							<Loader variant="oval" color="cyan" />
 						</>
 					)}
+
+					{symphonyConnections &&
+						!isFetchingConnections &&
+						!isFetchingDiscordConnections &&
+						!isFetchingSlackConnections &&
+						!isFetchingTwitterConnections && (
+							<>
+								<Space h={24} />
+								<Grid>
+									{connectedDiscordAccounts > 0 && (
+										<Grid.Col
+											xs={12}
+											md={6}
+											key={API.RuleIo.Discord.toString()}
+										>
+											{connectionSummaryGridItem(
+												API.RuleIo.Discord,
+												connectedDiscordAccounts
+											)}
+										</Grid.Col>
+									)}
+									{connectedTwitterAccounts > 0 && (
+										<Grid.Col
+											xs={12}
+											md={6}
+											key={API.RuleIo.Twitter.toString()}
+										>
+											{connectionSummaryGridItem(
+												API.RuleIo.Twitter,
+												connectedTwitterAccounts
+											)}
+										</Grid.Col>
+									)}
+									{connectedSlackAccounts > 0 && (
+										<Grid.Col
+											xs={12}
+											md={6}
+											key={API.RuleIo.Slack.toString()}
+										>
+											{connectionSummaryGridItem(
+												API.RuleIo.Slack,
+												connectedSlackAccounts
+											)}
+										</Grid.Col>
+									)}
+								</Grid>
+							</>
+						)}
 
 					<Space h={24} />
 					<Button
