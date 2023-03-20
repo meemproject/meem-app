@@ -39,4 +39,6 @@ export interface SymphonyRule {
 	output: SymphonyConnection
 	agreementId: string
 	definition: API.IRule
+	description?: string | null
+	abridgedDescription?: string | null
 }

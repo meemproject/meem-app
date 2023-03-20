@@ -459,6 +459,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						onSave={function (values: IOnSave): void {
 							handleRuleSave(values)
 						}}
+						input={existingRule?.input ?? selectedInput}
+						output={existingRule?.output ?? selectedOutput}
 						rule={existingRule}
 						isOpened={isSlackTwitterRuleBuilderOpened}
 						onModalClosed={function (): void {

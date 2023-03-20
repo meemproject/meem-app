@@ -4,10 +4,8 @@ import { Space, Modal, Text, Grid, Image } from '@mantine/core'
 import { MoreVert } from 'iconoir-react'
 import React, { useState } from 'react'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import {
-	SymphonyConnection,
-	SymphonyConnectionPlatform
-} from '../Model/symphony'
+import { SymphonyConnection } from '../Model/symphony'
+import { API } from '../symphonyTypes.generated'
 // import { API } from '../symphonyTypes.generated'
 import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
 import { SymphonyDiscordConnectionModal } from './SymphonyDiscordConnectionModal'
@@ -75,15 +73,15 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	// const handleReauthenticate = useCallback(async () => {
 	// 	if (selectedConnection) {
 	// 		switch (selectedConnection.platform) {
-	// 			case SymphonyConnectionPlatform.Discord:
+	// 			case API.RuleIo.Discord:
 	// 				setIsConnectDiscordModalOpen(true)
 	// 				break
 
-	// 			case SymphonyConnectionPlatform.Twitter:
+	// 			case API.RuleIo.Twitter:
 	// 				handleAuthTwitter()
 	// 				break
 
-	// 			case SymphonyConnectionPlatform.Slack:
+	// 			case API.RuleIo.Slack:
 	// 				handleAuthSlack()
 	// 				break
 
@@ -166,15 +164,15 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 	const ConnectionsList = () => {
 		const twitterConnections = connections?.filter(
-			c => c.platform === SymphonyConnectionPlatform.Twitter
+			c => c.platform === API.RuleIo.Twitter
 		)
 
 		const discordConnections = connections?.filter(
-			c => c.platform === SymphonyConnectionPlatform.Discord
+			c => c.platform === API.RuleIo.Discord
 		)
 
 		const slackConnections = connections?.filter(
-			c => c.platform === SymphonyConnectionPlatform.Slack
+			c => c.platform === API.RuleIo.Slack
 		)
 
 		return (

@@ -194,6 +194,8 @@ export const SymphonyExtension: React.FC = () => {
 					id: rule.id,
 					agreementId: rule.agreementId,
 					definition: rule.definition,
+					description: rule.description,
+					abridgedDescription: rule.abridgedDescription,
 					input: {
 						id: 'discord',
 						name: `Discord: (serverName)`, // todo
@@ -262,6 +264,10 @@ export const SymphonyExtension: React.FC = () => {
 									<Text
 										className={meemTheme.tSmallBold}
 									>{`Discord to Twitter flow`}</Text>
+									<Space h={8} />
+									<Text className={meemTheme.tSmall}>
+										{rule.abridgedDescription}
+									</Text>
 								</div>
 								<Space w={24} />
 								{agreement?.isCurrentUserAgreementAdmin && (

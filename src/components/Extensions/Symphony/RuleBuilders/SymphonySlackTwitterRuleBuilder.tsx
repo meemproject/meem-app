@@ -101,22 +101,20 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	}, [])
 
 	// TODO: Use this for SymphonyDiscordSlackRuleBuilder
-	const {
-		data: slackData,
-		loading: isLoadingSlackData,
-		error
-	} = useSubscription<SubSlackSubscription>(SUB_SLACK, {
-		variables: {
-			agreementId: agreement?.id,
-			slackId: rule?.input.id
-		},
-		skip:
-			process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-			!symphonyClient ||
-			!agreement?.id ||
-			!isOpened,
-		client: symphonyClient
-	})
+	const { data: slackData, loading: isLoadingSlackData } =
+		useSubscription<SubSlackSubscription>(SUB_SLACK, {
+			variables: {
+				agreementId: agreement?.id,
+				slackId: input?.id
+			},
+			skip:
+				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
+				!symphonyClient ||
+				!agreement?.id ||
+				!isOpened ||
+				!input?.id,
+			client: symphonyClient
+		})
 
 	const { data: twitterData, loading: isLoadingTwitterData } =
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
@@ -124,14 +122,14 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 				agreementId: agreement?.id,
 				twitterId: rule?.output?.id ?? output?.id ?? ''
 			},
-			skip: !symphonyClient || !agreement?.id || !isOpened,
+			skip: !symphonyClient || !agreement?.id || !isOpened || !output?.id,
 			client: symphonyClient
 		})
 
 	// TODO: update these to use slack roles + channels
 	const { data: channelsData, isLoading: isLoadingChannelsData } =
 		useSWR<API.v1.GetSlackChannels.IResponseBody>(
-			agreement?.id && jwt && rule?.input.id
+			agreement?.id && jwt && input?.id
 				? `${
 						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 				  }${API.v1.GetSlackChannels.path()}`
@@ -145,22 +143,13 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetSlackChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementSlackId: rule?.input.id as string
+					agreementSlackId: input?.id ?? ''
 				})
 			},
 			{
 				shouldRetryOnError: false
 			}
 		)
-
-	console.log({
-		error,
-		isOpened,
-		agreement,
-		slackData,
-		twitterData,
-		channelsData
-	})
 
 	const form = useForm({
 		initialValues: {
@@ -266,31 +255,31 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule])
 
-	let isProposalChannelGated = false
+	const isProposalChannelGated = false
 
-	if (
-		slackData?.AgreementSlacks[0] &&
-		form.values.proposalChannels &&
-		form.values.proposalChannels.length > 0
-	) {
-		form.values.proposalChannels.forEach((c: string) => {
-			const channel = channelsData.channels?.find(ch => ch.id === c)
-			if (channel && (!channel.canSend || !channel.canView)) {
-				isProposalChannelGated = true
-			}
-		})
-	}
+	// if (
+	// 	slackData?.AgreementSlacks[0] &&
+	// 	form.values.proposalChannels &&
+	// 	form.values.proposalChannels.length > 0
+	// ) {
+	// 	form.values.proposalChannels.forEach((c: string) => {
+	// 		const channel = channelsData.channels?.find(ch => ch.id === c)
+	// 		if (channel && (!channel.canSend || !channel.canView)) {
+	// 			isProposalChannelGated = true
+	// 		}
+	// 	})
+	// }
 
-	let isShareChannelGated = false
+	const isShareChannelGated = false
 
-	if (channelsData?.channels && form.values.proposalShareChannel) {
-		const channel = channelsData.channels.find(
-			ch => ch.id === form.values.proposalShareChannel
-		)
-		if (channel && (!channel.canSend || !channel.canView)) {
-			isShareChannelGated = true
-		}
-	}
+	// if (channelsData?.channels && form.values.proposalShareChannel) {
+	// 	const channel = channelsData.channels.find(
+	// 		ch => ch.id === form.values.proposalShareChannel
+	// 	)
+	// 	if (channel && (!channel.canSend || !channel.canView)) {
+	// 		isShareChannelGated = true
+	// 	}
+	// }
 
 	const modalContents = (
 		<>

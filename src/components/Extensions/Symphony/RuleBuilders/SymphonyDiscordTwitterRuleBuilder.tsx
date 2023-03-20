@@ -121,7 +121,11 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				agreementId: agreement?.id,
 				twitterId: rule?.output?.id ?? output?.id ?? ''
 			},
-			skip: !symphonyClient || !agreement?.id || !isOpened,
+			skip:
+				!symphonyClient ||
+				!agreement?.id ||
+				!isOpened ||
+				!rule?.output?.id,
 			client: symphonyClient
 		})
 
@@ -131,7 +135,11 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				agreementId: agreement?.id,
 				discordId: rule?.input?.id ?? input?.id ?? ''
 			},
-			skip: !symphonyClient || !agreement?.id || !isOpened,
+			skip:
+				!symphonyClient ||
+				!agreement?.id ||
+				!isOpened ||
+				!rule?.input?.id,
 			client: symphonyClient
 		})
 
