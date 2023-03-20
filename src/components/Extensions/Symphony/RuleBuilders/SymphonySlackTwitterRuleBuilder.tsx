@@ -100,23 +100,24 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	}, [])
 
 	// TODO: Use this for SymphonyDiscordSlackRuleBuilder
-	const { data: slackData } = useSubscription<SubSlackSubscription>(
-		SUB_SLACK,
-		{
-			variables: {
-				agreementId: agreement?.id,
-				slackId
-			},
-			skip:
-				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-				!symphonyClient ||
-				!agreement?.id ||
-				!isOpened,
-			client: symphonyClient
-		}
-	)
+	const {
+		data: slackData,
+		loading: isLoadingSlackData,
+		error
+	} = useSubscription<SubSlackSubscription>(SUB_SLACK, {
+		variables: {
+			agreementId: agreement?.id,
+			slackId
+		},
+		skip:
+			process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
+			!symphonyClient ||
+			!agreement?.id ||
+			!isOpened,
+		client: symphonyClient
+	})
 
-	const { data: twitterData, loading: loadingTwitterData } =
+	const { data: twitterData, loading: isLoadingTwitterData } =
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
 			variables: {
 				agreementId: agreement?.id,
@@ -127,53 +128,38 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 		})
 
 	// TODO: update these to use slack roles + channels
-	// const { data: channelsData, isLoading: loadingChannelsData } =
-	// 	useSWR<API.v1.GetDiscordChannels.IResponseBody>(
-	// 		agreement?.id && jwt
-	// 			? `${
-	// 					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-	// 			  }${API.v1.GetDiscordChannels.path()}`
-	// 			: null,
-	// 		url => {
-	// 			return makeFetcher<
-	// 				API.v1.GetDiscordChannels.IQueryParams,
-	// 				API.v1.GetDiscordChannels.IRequestBody,
-	// 				API.v1.GetDiscordChannels.IResponseBody
-	// 			>({
-	// 				method: API.v1.GetDiscordChannels.method
-	// 			})(url, {
-	// 				jwt: jwt as string,
-	// 				agreementDiscordId: discordId
-	// 			})
-	// 		},
-	// 		{
-	// 			shouldRetryOnError: false
-	// 		}
-	// 	)
+	const { data: channelsData, isLoading: isLoadingChannelsData } =
+		useSWR<API.v1.GetSlackChannels.IResponseBody>(
+			agreement?.id && jwt
+				? `${
+						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+				  }${API.v1.GetSlackChannels.path()}`
+				: null,
+			url => {
+				return makeFetcher<
+					API.v1.GetSlackChannels.IQueryParams,
+					API.v1.GetSlackChannels.IRequestBody,
+					API.v1.GetSlackChannels.IResponseBody
+				>({
+					method: API.v1.GetSlackChannels.method
+				})(url, {
+					jwt: jwt as string,
+					agreementSlackId: slackId
+				})
+			},
+			{
+				shouldRetryOnError: false
+			}
+		)
 
-	// const { data: rolesData, isLoading: loadingRolesData } =
-	// 	useSWR<API.v1.GetDiscordRoles.IResponseBody>(
-	// 		agreement?.id && jwt
-	// 			? `${
-	// 					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-	// 			  }${API.v1.GetDiscordRoles.path()}`
-	// 			: null,
-	// 		url => {
-	// 			return makeFetcher<
-	// 				API.v1.GetDiscordRoles.IQueryParams,
-	// 				API.v1.GetDiscordRoles.IRequestBody,
-	// 				API.v1.GetDiscordRoles.IResponseBody
-	// 			>({
-	// 				method: API.v1.GetDiscordRoles.method
-	// 			})(url, {
-	// 				jwt: jwt as string,
-	// 				agreementDiscordId: discordId
-	// 			})
-	// 		},
-	// 		{
-	// 			shouldRetryOnError: false
-	// 		}
-	// 	)
+	console.log({
+		error,
+		isOpened,
+		agreement,
+		slackData,
+		twitterData,
+		channelsData
+	})
 
 	const form = useForm({
 		initialValues: {
@@ -195,8 +181,8 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 				val.length === 0
 					? 'Proposer is required'
 					: null,
-			approverRoles: val =>
-				val.length === 0 ? 'Approver is required' : null,
+			// approverRoles: val =>
+			// 	val.length === 0 ? 'Approver is required' : null,
 			proposalChannels: (val, current) =>
 				current.publishType === API.PublishType.Proposal &&
 				val.length === 0
@@ -282,7 +268,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	let isProposalChannelGated = false
 
 	if (
-		discordData?.AgreementDiscords[0] &&
+		slackData?.AgreementSlacks[0] &&
 		form.values.proposalChannels &&
 		form.values.proposalChannels.length > 0
 	) {
@@ -307,10 +293,9 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 
 	const modalContents = (
 		<>
-			{(loadingChannelsData ||
-				loadingDiscordData ||
-				loadingTwitterData ||
-				loadingRolesData) && (
+			{(isLoadingChannelsData ||
+				isLoadingSlackData ||
+				isLoadingTwitterData) && (
 				<>
 					<Space h={32} />
 					<Center>
@@ -319,7 +304,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 					<Space h={32} />
 				</>
 			)}
-			{discordData && channelsData && twitterData && rolesData && (
+			{slackData && channelsData && twitterData && (
 				<>
 					<form
 						onSubmit={form.onSubmit(values =>
@@ -409,11 +394,11 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 								<Text className={meemTheme.tExtraSmallLabel}>
 									PROPOSALS
 								</Text>
-								<Space h={4} />
+								{/* <Space h={4} />
 								<Text className={meemTheme.tExtraSmall}>
 									Who can propose a post?
-								</Text>
-								{rolesData?.roles && (
+								</Text> */}
+								{/* {rolesData?.roles && (
 									<>
 										<Space h={8} />
 
@@ -428,7 +413,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 											)}
 										/>
 									</>
-								)}
+								)} */}
 								<Space h={'lg'} />
 								<Text className={meemTheme.tExtraSmall}>
 									Which emojis will create a proposal?
@@ -497,7 +482,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 						</Text>
 						<Space h={4} />
 
-						<Text className={meemTheme.tExtraSmall}>
+						{/* <Text className={meemTheme.tExtraSmall}>
 							Who can vote to approve new posts for publication?
 						</Text>
 						<Space h={8} />
@@ -511,7 +496,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 								{...form.getInputProps('approverRoles')}
 							/>
 						)}
-						<Space h="lg" />
+						<Space h="lg" /> */}
 						<Text className={meemTheme.tExtraSmall}>
 							Which emojis will count as affirmative votes?
 						</Text>
@@ -647,7 +632,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 							<>
 								<Space h={'lg'} />
 
-								<Text className={meemTheme.tExtraSmall}>
+								{/* <Text className={meemTheme.tExtraSmall}>
 									Who can veto?
 								</Text>
 								<Space h={8} />
@@ -661,7 +646,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 										{...form.getInputProps('vetoerRoles')}
 									/>
 								)}
-								<Space h="lg" />
+								<Space h="lg" /> */}
 								<Text className={meemTheme.tExtraSmall}>
 									Which emojis will count as a veto?
 								</Text>

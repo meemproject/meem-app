@@ -10,11 +10,7 @@ import {
 } from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import {
-	SymphonyConnection,
-	SymphonyConnectionPlatform,
-	SymphonyConnectionType
-} from '../Model/symphony'
+import { SymphonyConnection, SymphonyConnectionType } from '../Model/symphony'
 import { API } from '../symphonyTypes.generated'
 
 interface IProps {
@@ -40,7 +36,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 		try {
 			// TODO: Slack
 			switch (connection.platform) {
-				case SymphonyConnectionPlatform.Discord:
+				case API.RuleIo.Discord:
 					await makeRequest<API.v1.DisconnectDiscord.IDefinition>(
 						`${
 							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
@@ -61,7 +57,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 
 					break
 
-				case SymphonyConnectionPlatform.Twitter:
+				case API.RuleIo.Twitter:
 					await makeRequest<API.v1.DisconnectTwitter.IDefinition>(
 						`${
 							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
@@ -117,11 +113,10 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 								style={{ textAlign: 'center' }}
 							>
 								{`Are you sure you want to disconnect ${
-									connection.platform ===
-									SymphonyConnectionPlatform.Discord
+									connection.platform === API.RuleIo.Discord
 										? 'Discord'
 										: connection.platform ===
-										  SymphonyConnectionPlatform.Twitter
+										  API.RuleIo.Twitter
 										? 'Twitter'
 										: 'Slack'
 								} from
