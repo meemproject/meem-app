@@ -100,32 +100,13 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		setSymphonyClient(c)
 	}, [])
 
-	// TODO: Use this for SymphonyDiscordSlackRuleBuilder
-	// const { data: slackData } = useSubscription<SubSlackSubscription>(
-	// 	SUB_SLACK,
-	// 	{
-	// 		variables: {
-	// 			agreementId: agreement?.id
-	// 		},
-	// 		skip:
-	// 			process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-	// 			!symphonyClient ||
-	// 			!agreement?.id || !isOpened,
-	// 		client: symphonyClient
-	// 	}
-	// )
-
 	const { data: twitterData, loading: loadingTwitterData } =
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
 			variables: {
 				agreementId: agreement?.id,
 				twitterId: rule?.output?.id ?? output?.id ?? ''
 			},
-			skip:
-				!symphonyClient ||
-				!agreement?.id ||
-				!isOpened ||
-				!rule?.output?.id,
+			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
 		})
 
@@ -135,11 +116,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				agreementId: agreement?.id,
 				discordId: rule?.input?.id ?? input?.id ?? ''
 			},
-			skip:
-				!symphonyClient ||
-				!agreement?.id ||
-				!isOpened ||
-				!rule?.input?.id,
+			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
 		})
 

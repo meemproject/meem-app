@@ -6,13 +6,6 @@ export enum SymphonyConnectionType {
 	OutputOnly
 }
 
-// export enum SymphonyConnectionPlatform {
-// 	Twitter,
-// 	Discord,
-// 	Slack,
-// 	WebHook
-// }
-
 export interface SymphonyConnection {
 	id: string
 	name: string
@@ -35,8 +28,12 @@ export interface SymphonyConnection {
 
 export interface SymphonyRule {
 	id: string
-	input: SymphonyConnection
-	output: SymphonyConnection
+	input?: SymphonyConnection
+	inputId?: string
+	inputPlatformString?: string
+	output?: SymphonyConnection
+	outputId?: string
+	outputPlatformString?: string
 	agreementId: string
 	definition: API.IRule
 	description?: string | null

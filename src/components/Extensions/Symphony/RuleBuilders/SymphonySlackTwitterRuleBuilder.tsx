@@ -143,7 +143,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetSlackChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementSlackId: input?.id ?? ''
+					agreementSlackId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
 			{

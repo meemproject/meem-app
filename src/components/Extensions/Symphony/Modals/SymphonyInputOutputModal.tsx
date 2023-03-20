@@ -17,7 +17,10 @@ import { IconCopy } from '@tabler/icons'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAnalytics } from '../../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
-import { showSuccessNotification } from '../../../../utils/notifications'
+import {
+	showErrorNotification,
+	showSuccessNotification
+} from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import {
@@ -106,10 +109,12 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						...values,
 						input: selectedInput.platform,
 						inputRef:
-							existingRule?.input.id ?? selectedInput?.id ?? '',
+							existingRule?.input?.id ?? selectedInput?.id ?? '',
 						output: selectedOutput.platform,
 						outputRef:
-							existingRule?.output.id ?? selectedOutput?.id ?? '',
+							existingRule?.output?.id ??
+							selectedOutput?.id ??
+							'',
 						isEnabled: true,
 						ruleId: existingRule?.id ?? rule?.id
 					}
@@ -180,19 +185,10 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	])
 
 	useEffect(() => {
-		// Handle editing
-		if (isOpened && !selectedInput && !selectedOutput && existingRule) {
-			setSelectedInput(existingRule.input)
-			setSelectedOutput(existingRule.output)
-			openRuleBuilder()
-		}
-
-		// Reset state so that new data can be fetched upon refresh
-		if (!isOpened && hasFetchedIO) {
-			setHasFetchedIO(false)
-		}
-
-		if (isOpened && !hasFetchedIO && connections) {
+		function fetchConnectionsForNewRule() {
+			if (!connections) {
+				return
+			}
 			// TODO: fetch private key
 			setWebhookPrivateKey('private key')
 
@@ -229,11 +225,55 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			setOutputValues(filteredOutputValues)
 			setHasFetchedIO(true)
 		}
+
+		function fetchConnectionsForExistingRule() {
+			if (!connections) {
+				onModalClosed()
+				return
+			}
+			setHasFetchedIO(true)
+
+			// Find input
+			const filteredInput = connections.filter(
+				c => c.id === existingRule?.inputId
+			)
+			const filteredOutput = connections.filter(
+				c => c.id === existingRule?.outputId
+			)
+			// TODO: Set webhook url and private key for existing rules here
+			if (filteredInput.length > 0 && filteredOutput.length > 0) {
+				// Find output
+				setSelectedInput(filteredInput[0])
+				setSelectedOutput(filteredOutput[0])
+				openRuleBuilder()
+			} else {
+				showErrorNotification(
+					'Oops!',
+					'This rule is invalid. Please delete it and create a new one.'
+				)
+				onModalClosed()
+			}
+		}
+
+		// Handle editing
+		if (isOpened && !hasFetchedIO && existingRule && connections) {
+			fetchConnectionsForExistingRule()
+		}
+
+		// Reset state so that new data can be fetched upon refresh
+		if (!isOpened && hasFetchedIO) {
+			setHasFetchedIO(false)
+		}
+
+		if (isOpened && !hasFetchedIO && connections) {
+			fetchConnectionsForNewRule()
+		}
 	}, [
 		connections,
 		existingRule,
 		hasFetchedIO,
 		isOpened,
+		onModalClosed,
 		openRuleBuilder,
 		selectedInput,
 		selectedOutput
@@ -448,6 +488,9 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						isOpened={isDiscordTwitterRuleBuilderOpened}
 						onModalClosed={function (): void {
 							setIsDiscordTwitterRuleBuilderOpened(false)
+							if (existingRule) {
+								onModalClosed()
+							}
 						}}
 					/>
 				</>
@@ -465,6 +508,9 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						isOpened={isSlackTwitterRuleBuilderOpened}
 						onModalClosed={function (): void {
 							setIsSlackTwitterRuleBuilderOpened(false)
+							if (existingRule) {
+								onModalClosed()
+							}
 						}}
 					/>
 				</>

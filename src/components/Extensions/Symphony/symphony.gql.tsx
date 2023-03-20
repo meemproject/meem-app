@@ -100,6 +100,10 @@ export const SUB_RULES = gql`
 			definition
 			description
 			abridgedDescription
+			input
+			inputRef
+			output
+			outputRef
 		}
 	}
 `
