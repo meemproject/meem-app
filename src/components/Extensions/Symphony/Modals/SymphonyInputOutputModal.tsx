@@ -100,7 +100,11 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 					rule: {
 						...values,
 						input: API.RuleIo.Discord,
+						inputRef:
+							existingRule?.input.id ?? selectedInput?.id ?? '',
 						output: API.RuleIo.Twitter,
+						outputRef:
+							existingRule?.output.id ?? selectedOutput?.id ?? '',
 						isEnabled: true,
 						ruleId: existingRule?.id ?? rule?.id
 					}
