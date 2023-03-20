@@ -28,12 +28,12 @@ import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import {
 	SubTwitterSubscription,
-	SubDiscordSubscription
+	SubSlackSubscription
 } from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme, colorOrangeRed } from '../../../Styles/MeemTheme'
 import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
-import { SUB_TWITTER, SUB_DISCORD } from '../symphony.gql'
+import { SUB_TWITTER, SUB_SLACK } from '../symphony.gql'
 import { API } from '../symphonyTypes.generated'
 import { SymphonyRuleBuilderConnections } from './SymphonyRuleBuilderConnections'
 
@@ -73,7 +73,7 @@ export interface IOnSave extends IFormValues {
 	vetoerEmojis: string[]
 }
 
-export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
+export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
 	input,
 	output,
@@ -101,19 +101,21 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	}, [])
 
 	// TODO: Use this for SymphonyDiscordSlackRuleBuilder
-	// const { data: slackData } = useSubscription<SubSlackSubscription>(
-	// 	SUB_SLACK,
-	// 	{
-	// 		variables: {
-	// 			agreementId: agreement?.id
-	// 		},
-	// 		skip:
-	// 			process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-	// 			!symphonyClient ||
-	// 			!agreement?.id || !isOpened,
-	// 		client: symphonyClient
-	// 	}
-	// )
+	const { data: slackData } = useSubscription<SubSlackSubscription>(
+		SUB_SLACK,
+		{
+			variables: {
+				agreementId: agreement?.id,
+				slackId: rule?.input?.id ?? input?.id ?? ''
+			},
+			skip:
+				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
+				!symphonyClient ||
+				!agreement?.id ||
+				!isOpened,
+			client: symphonyClient
+		}
+	)
 
 	const { data: twitterData, loading: loadingTwitterData } =
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
@@ -125,63 +127,54 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			client: symphonyClient
 		})
 
-	const { data: discordData, loading: loadingDiscordData } =
-		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
-			variables: {
-				agreementId: agreement?.id,
-				discordId: rule?.input?.id ?? input?.id ?? ''
-			},
-			skip: !symphonyClient || !agreement?.id || !isOpened,
-			client: symphonyClient
-		})
+	// TODO: update these to use slack roles + channels
+	// const { data: channelsData, isLoading: loadingChannelsData } =
+	// 	useSWR<API.v1.GetDiscordChannels.IResponseBody>(
+	// 		agreement?.id && jwt
+	// 			? `${
+	// 					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+	// 			  }${API.v1.GetDiscordChannels.path()}`
+	// 			: null,
+	// 		url => {
+	// 			return makeFetcher<
+	// 				API.v1.GetDiscordChannels.IQueryParams,
+	// 				API.v1.GetDiscordChannels.IRequestBody,
+	// 				API.v1.GetDiscordChannels.IResponseBody
+	// 			>({
+	// 				method: API.v1.GetDiscordChannels.method
+	// 			})(url, {
+	// 				jwt: jwt as string,
+	// 				agreementDiscordId: discordId
+	// 			})
+	// 		},
+	// 		{
+	// 			shouldRetryOnError: false
+	// 		}
+	// 	)
 
-	const { data: channelsData, isLoading: loadingChannelsData } =
-		useSWR<API.v1.GetDiscordChannels.IResponseBody>(
-			agreement?.id && jwt
-				? `${
-						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				  }${API.v1.GetDiscordChannels.path()}`
-				: null,
-			url => {
-				return makeFetcher<
-					API.v1.GetDiscordChannels.IQueryParams,
-					API.v1.GetDiscordChannels.IRequestBody,
-					API.v1.GetDiscordChannels.IResponseBody
-				>({
-					method: API.v1.GetDiscordChannels.method
-				})(url, {
-					jwt: jwt as string,
-					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
-				})
-			},
-			{
-				shouldRetryOnError: false
-			}
-		)
-
-	const { data: rolesData, isLoading: loadingRolesData } =
-		useSWR<API.v1.GetDiscordRoles.IResponseBody>(
-			agreement?.id && jwt
-				? `${
-						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				  }${API.v1.GetDiscordRoles.path()}`
-				: null,
-			url => {
-				return makeFetcher<
-					API.v1.GetDiscordRoles.IQueryParams,
-					API.v1.GetDiscordRoles.IRequestBody,
-					API.v1.GetDiscordRoles.IResponseBody
-				>({
-					method: API.v1.GetDiscordRoles.method
-				})(url, {
-					jwt: jwt as string,
-					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
-				})
-			},
-			{
-				shouldRetryOnError: false
-			}
-		)
+	// const { data: rolesData, isLoading: loadingRolesData } =
+	// 	useSWR<API.v1.GetDiscordRoles.IResponseBody>(
+	// 		agreement?.id && jwt
+	// 			? `${
+	// 					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+	// 			  }${API.v1.GetDiscordRoles.path()}`
+	// 			: null,
+	// 		url => {
+	// 			return makeFetcher<
+	// 				API.v1.GetDiscordRoles.IQueryParams,
+	// 				API.v1.GetDiscordRoles.IRequestBody,
+	// 				API.v1.GetDiscordRoles.IResponseBody
+	// 			>({
+	// 				method: API.v1.GetDiscordRoles.method
+	// 			})(url, {
+	// 				jwt: jwt as string,
+	// 				agreementDiscordId: discordId
+	// 			})
+	// 		},
+	// 		{
+	// 			shouldRetryOnError: false
+	// 		}
+	// 	)
 
 	const form = useForm({
 		initialValues: {
@@ -362,7 +355,6 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 								onModalClosed()
 							}}
 						/>
-
 						<Text className={meemTheme.tExtraSmallLabel}>
 							CHANNELS
 						</Text>

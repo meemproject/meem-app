@@ -29,6 +29,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	// const { jwt } = useAuth()
 	// const router = useRouter()
 
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 	const [selectedConnection, setSelectedConnection] =
 		useState<SymphonyConnection>()
 

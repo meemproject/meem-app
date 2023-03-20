@@ -28,6 +28,7 @@ import {
 	useAuth
 } from '@meemproject/react'
 import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
+import { IconBrandSlack } from '@tabler/icons'
 import { Group } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
@@ -109,6 +110,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
 	const [isWaitingForStateChangeDelay, setIsWaitingForStateChangeDelay] =
 		useState(false)
+
+	// Which input connections have been selected?
+	const [haveOutputsBeenSelected, setHaveOutputsBeenSelected] =
+		useState(false)
+	const [isDiscordInputEnabled, setIsDiscordInputEnabled] = useState(false)
+	const [isSlackInputEnabled, setIsSlackInputEnabled] = useState(false)
+
+	// Which output connections have been selected?
+	const [isTwitterOutputEnabled, setIsTwitterOutputEnabled] = useState(false)
+	const [isWebhookOutputEnabled, setIsWebhookOutputEnabled] = useState(false)
+	const [isSkippingTwitterAuth, setIsSkippingTwitterAuth] = useState(false)
 
 	// Agreement creation
 	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
@@ -411,11 +423,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		discordData?.AgreementDiscords[0].Discord?.name !== undefined
 	const slackInfo = slackData?.AgreementSlacks[0]
 
-	const isConnectionEstablished =
+	const twitterConnExists =
 		!!twitterData?.AgreementTwitters[0] &&
-		!!twitterData?.AgreementTwitters[0].Twitter?.username &&
+		!!twitterData?.AgreementTwitters[0].Twitter?.username
+
+	const discordConnExists =
 		!!discordData?.AgreementDiscords[0] &&
 		typeof discordData?.AgreementDiscords[0].Discord?.name === 'string'
+
+	const slackConnExists =
+		!!slackData?.AgreementSlacks[0] &&
+		typeof slackData?.AgreementSlacks[0].Slack?.name === 'string'
 
 	// Handle page state changes
 	useEffect(() => {
@@ -463,10 +481,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		) {
 			setPageState(PageState.PickCommunity)
 			log.debug('set page state = pickCommunity')
-		} else if (chosenAgreement && isConnectionEstablished) {
-			setPageState(PageState.SetupComplete)
-			log.debug(`set page state = setup complete`)
-		} else if (chosenAgreement && !isConnectionEstablished) {
+		} else if (chosenAgreement) {
 			setPageState(PageState.Onboarding)
 			log.debug('set page state = onboarding')
 		}
@@ -476,13 +491,20 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			if (!chosenAgreement || isEnablingExtension) {
 				setOnboardingStep(0)
 			} else if (chosenAgreement) {
-				if (!twitterUsername && !discordInfo) {
+				if (!twitterUsername && !isSkippingTwitterAuth) {
 					setOnboardingStep(1)
 				} else {
-					if (!discordInviteUrl || !botCode) {
-						getDiscordInviteAndBotCode()
+					if (!haveOutputsBeenSelected) {
+						setOnboardingStep(2)
+					} else {
+						if (
+							isDiscordInputEnabled &&
+							(!discordInviteUrl || !botCode)
+						) {
+							getDiscordInviteAndBotCode()
+						}
+						setOnboardingStep(3)
 					}
-					setOnboardingStep(2)
 				}
 			}
 		}
@@ -518,7 +540,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		botCode,
 		discordHasName,
 		isWaitingForStateChangeDelay,
-		isConnectionEstablished,
 		shouldShowCreateNewCommunity,
 		isCreatingNewCommunity,
 		getDiscordInviteAndBotCode,
@@ -526,7 +547,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		availableExtensionsData,
 		twitterData,
 		discordData,
-		slackData
+		slackData,
+		isSkippingTwitterAuth,
+		isDiscordInputEnabled,
+		haveOutputsBeenSelected
 	])
 
 	const chooseAgreementAndEnableExtension = useCallback(
@@ -797,85 +821,245 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		/>
 	)
 
-	const stepTwoConnectPublishingAccount = (
+	const connectionGridItem = (
+		name: string,
+		icon: string,
+		description: string,
+		isEnabled: boolean,
+		onClick: () => void
+	) => (
+		<>
+			<div
+				style={{ minWidth: 250 }}
+				onClick={onClick}
+				className={
+					isEnabled
+						? meemTheme.gridItemFlatSelected
+						: meemTheme.gridItemFlat
+				}
+			>
+				<div className={meemTheme.centeredRow}>
+					<Image
+						src={icon}
+						width={24}
+						height={24}
+						style={{
+							marginRight: 8
+						}}
+					/>
+					<Text
+						className={meemTheme.tSmallBold}
+						style={{ color: isDarkTheme ? colorWhite : colorBlack }}
+					>
+						{name}
+					</Text>
+				</div>
+				<Space h={16} />
+				<Text className={meemTheme.tExtraSmallFaded}>
+					{description}
+				</Text>
+			</div>
+		</>
+	)
+
+	const stepTwoSelectPublishingAccount = (
 		<Stepper.Step
-			label="Connect publishing account"
+			label="Please select the platform(s) where your community’s posts will be published."
 			description={
 				<>
 					<Text
 						className={meemTheme.tExtraSmall}
-					>{`Please connect the account where your community’s posts will be published.`}</Text>
+					>{`More publishing channels coming soon!`}</Text>
 					{onboardingStep === 1 && (
 						<>
 							<Space h={16} />
-							<div className={meemTheme.row}>
-								<Button
-									onClick={() => {
-										handleAuthTwitter()
-
-										analytics.track(
-											'Symphony Output Connected',
-											{
-												communityId:
-													chosenAgreement?.id,
-												communityName:
-													chosenAgreement?.name,
-												outputType: 'Twitter'
-											}
+							<div className={meemTheme.rowResponsive}>
+								{connectionGridItem(
+									'Twitter',
+									'/connect-twitter.png',
+									'You’ll need to log into Twitter to connect Symphony.',
+									isTwitterOutputEnabled,
+									() => {
+										setIsTwitterOutputEnabled(
+											!isTwitterOutputEnabled
 										)
-									}}
-									className={meemTheme.buttonBlack}
-									leftIcon={
-										<Image
-											width={16}
-											src={`/integration-twitter-white.png`}
-										/>
 									}
-								>
-									Connect Twitter
-								</Button>
-								{/* <Space w={8} />
-							<Button
-								className={
-									meemTheme.buttonYellowSolidBordered
-								}
-								onClick={() => {}}
-							>
-								Add More Accounts
-							</Button> */}
+								)}
+								<Space w={16} h={16} />
+								{connectionGridItem(
+									'Add a Custom Webhook',
+									'/connect-webhook.png',
+									'You’ll be able to configure your webhook when setting up your publishing flows later.',
+									isWebhookOutputEnabled,
+									() => {
+										setIsWebhookOutputEnabled(
+											!isWebhookOutputEnabled
+										)
+									}
+								)}
 							</div>
+							{isTwitterOutputEnabled && (
+								<>
+									<Space h={16} />
+									<Button
+										onClick={() => {
+											handleAuthTwitter()
+
+											analytics.track(
+												'Symphony Output Connected',
+												{
+													communityId:
+														chosenAgreement?.id,
+													communityName:
+														chosenAgreement?.name,
+													outputType: 'Twitter'
+												}
+											)
+
+											if (isWebhookOutputEnabled) {
+												analytics.track(
+													'Webhook Output Connected',
+													{
+														communityId:
+															chosenAgreement?.id,
+														communityName:
+															chosenAgreement?.name,
+														outputType: 'Twitter'
+													}
+												)
+											}
+										}}
+										className={meemTheme.buttonBlack}
+										leftIcon={
+											<Image
+												width={16}
+												src={`/integration-twitter-white.png`}
+											/>
+										}
+									>
+										Connect Twitter
+									</Button>
+								</>
+							)}
+							{!isTwitterOutputEnabled &&
+								isWebhookOutputEnabled && (
+									<>
+										<Space h={16} />
+										<Button
+											onClick={() => {
+												setIsSkippingTwitterAuth(true)
+												analytics.track(
+													'Webhook Output Connected',
+													{
+														communityId:
+															chosenAgreement?.id,
+														communityName:
+															chosenAgreement?.name,
+														outputType: 'Twitter'
+													}
+												)
+											}}
+											className={meemTheme.buttonBlack}
+										>
+											Next
+										</Button>
+									</>
+								)}
 						</>
 					)}
 					{onboardingStep === 2 && (
 						<>
 							<Space h={16} />
 							<div className={meemTheme.row}>
-								<Button
-									onClick={() => {
-										handleAuthTwitter()
-									}}
-									className={meemTheme.buttonWhite}
-								>
-									{`Connected as ${twitterUsername}`}
+								<Button className={meemTheme.buttonWhite}>
+									{isTwitterOutputEnabled
+										? `Connected as ${twitterUsername}`
+										: `Custom Webhook`}
 								</Button>
 							</div>
 						</>
 					)}
+
 					<Space h={16} />
 				</>
 			}
 		/>
 	)
 
-	const stepThreeInviteBot = (
+	const stepThreeSelectProposalAccounts = (
 		<Stepper.Step
-			label="Invite Symphony bot and activate"
+			label="Please select the platform(s) you’ll use to draft posts with Symphony."
+			description={
+				<>
+					{
+						<Text
+							className={meemTheme.tExtraSmall}
+						>{`More proposal channels coming soon!`}</Text>
+					}
+					{onboardingStep === 2 && (
+						<>
+							<Space h={16} />
+							<div className={meemTheme.rowResponsive}>
+								{connectionGridItem(
+									'Discord',
+									'/connect-discord.png',
+									'You’ll need Discord permissions that allow you to add the Symphony bot to your server.',
+									isDiscordInputEnabled,
+									() => {
+										setIsDiscordInputEnabled(
+											!isDiscordInputEnabled
+										)
+									}
+								)}
+								<Space w={16} h={16} />
+								{connectionGridItem(
+									'Slack',
+									'/connect-slack.png',
+									'You’ll need Slack admin permissions that allow you to manage your workspace.',
+									isSlackInputEnabled,
+									() => {
+										setIsSlackInputEnabled(
+											!isSlackInputEnabled
+										)
+									}
+								)}
+							</div>
+							{(isDiscordInputEnabled || isSlackInputEnabled) && (
+								<>
+									<Space h={16} />
+									<Button
+										onClick={() => {
+											setHaveOutputsBeenSelected(true)
+										}}
+										className={meemTheme.buttonBlack}
+									>
+										Next
+									</Button>
+								</>
+							)}
+						</>
+					)}
+
+					<Space h={16} />
+				</>
+			}
+		/>
+	)
+
+	const stepFourInviteBot = (
+		<Stepper.Step
+			label={'Invite Symphony bot and activate'}
 			description={
 				<>
 					<Text className={meemTheme.tExtraSmall}>
-						{`Please invite the Symphony bot to manage your Discord server.`}
+						{isDiscordInputEnabled
+							? `Please invite the Symphony bot to manage your Discord server.`
+							: onboardingStep < 4
+							? 'Select Discord to use this functionality'
+							: 'This step has been skipped'}
 					</Text>
-					{onboardingStep === 2 && (
+
+					{onboardingStep === 3 && (
 						<>
 							<Space h={8} />
 
@@ -964,43 +1148,83 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							)}
 						</>
 					)}
+					{onboardingStep > 3 && discordInfo && (
+						<>
+							<>
+								<Space h={16} />
+								<div className={meemTheme.row}>
+									<Button className={meemTheme.buttonWhite}>
+										{`Bot added to ${discordInfo?.Discord?.name}`}
+									</Button>
+								</div>
+							</>
+						</>
+					)}
 				</>
 			}
 		/>
 	)
 
-	const setupCompleteState = (
-		<>
-			<Space h={48} />
-			<Center>
-				<Text className={meemTheme.tLargeBold} color={colorGreen}>
-					Installation Complete!
-				</Text>
-			</Center>
-			<Space h={24} />
-			<Center>
-				<Text>
-					Add your first proposal rule to start publishing with
-					Symphony.
-				</Text>
-			</Center>
-			<Space h={36} />
+	const stepFiveConnectSlack = (
+		<Stepper.Step
+			label={'Connect Slack'}
+			description={
+				<>
+					<Text className={meemTheme.tExtraSmall}>
+						{isSlackInputEnabled
+							? `Please authorize Symphony to manage your Slack workspace.`
+							: onboardingStep < 4
+							? 'Select Slack to use this functionality'
+							: 'This step has been skipped'}
+					</Text>
 
-			<Center>
-				<Button
-					className={meemTheme.buttonBlack}
-					onClick={() => {
-						analytics.track('Symphony Onboarding Completed', {
-							communityId: chosenAgreement?.id,
-							communityName: chosenAgreement?.name
-						})
-						router.push(`/${chosenAgreement?.slug}/e/symphony`)
-					}}
-				>
-					Manage Symphony
-				</Button>
-			</Center>
-		</>
+					{onboardingStep === 4 && (
+						<>
+							<Space h={8} />
+							<Button
+								className={meemTheme.buttonBlack}
+								onClick={() => {
+									handleAuthSlack()
+								}}
+								leftIcon={<IconBrandSlack />}
+							>
+								{`Connect Symphony`}
+							</Button>
+						</>
+					)}
+					{onboardingStep > 4 && slackInfo && (
+						<>
+							<Space h={8} />
+							<div className={meemTheme.row}>
+								<Button className={meemTheme.buttonWhite}>
+									{`Connected to ${slackInfo?.Slack?.name}`}
+								</Button>
+							</div>
+						</>
+					)}
+				</>
+			}
+		/>
+	)
+
+	const stepSixSetupComplete = (
+		<Stepper.Step
+			label={'Installation complete!'}
+			description={
+				<>
+					{onboardingStep === 5 && (
+						<>
+							<Space h={16} />
+							<div className={meemTheme.row}>
+								<Button className={meemTheme.buttonWhite}>
+									{`Start using Symphony`}
+								</Button>
+							</div>
+						</>
+					)}
+				</>
+			}
+		/>
 	)
 
 	return (
@@ -1018,8 +1242,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			{/* Page header */}
 			{pageState !== PageState.Loading && <>{pageHeader}</>}
 
-			{pageState === PageState.SetupComplete && <>{setupCompleteState}</>}
-
 			{pageState === PageState.Onboarding && (
 				<>
 					<Space h={32} />
@@ -1036,8 +1258,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									orientation="vertical"
 								>
 									{stepOneAgreementName}
-									{stepTwoConnectPublishingAccount}
-									{stepThreeInviteBot}
+									{stepTwoSelectPublishingAccount}
+									{stepThreeSelectProposalAccounts}
+									{stepFourInviteBot}
+									{stepFiveConnectSlack}
+									{stepSixSetupComplete}
 								</Stepper>
 							</div>
 							<div
@@ -1053,9 +1278,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									}}
 								>
 									<Text className={meemTheme.tExtraSmallBold}>
-										Symphony lets your community use Discord
-										to decide what to Tweet from a shared
-										account.
+										Symphony lets your community automate
+										its publishing flows.
 									</Text>
 									<Space h={16} />
 									<Text className={meemTheme.tExtraSmallBold}>
@@ -1064,26 +1288,26 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									<Space h={16} />
 
 									<Text className={meemTheme.tExtraSmall}>
-										1. You decide rules for how your
-										community wants to publish
+										1. Set logic to automate your
+										community’s publishing flows
 									</Text>
 									<Space h={8} />
 									<Text className={meemTheme.tExtraSmall}>
-										2. Community members propose Tweets on
-										Discord
-									</Text>
-									<Space h={8} />
-
-									<Text className={meemTheme.tExtraSmall}>
-										3. Your community decides what to
-										publish based on the rules you’ve set
+										2. Propose posts on the platforms you’re
+										already using (Discord, Slack)
 									</Text>
 									<Space h={8} />
 
 									<Text className={meemTheme.tExtraSmall}>
-										4. Tweets are published to your shared
-										Twitter account based on community
-										members’ input
+										3. Use emoji reactions to weigh in on
+										what get’s published
+									</Text>
+									<Space h={8} />
+
+									<Text className={meemTheme.tExtraSmall}>
+										4. When the conditions you set are met,
+										posts are automatically published to the
+										community accounts you choose
 									</Text>
 								</div>
 							</div>
