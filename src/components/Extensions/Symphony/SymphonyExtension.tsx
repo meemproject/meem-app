@@ -30,7 +30,6 @@ import { SymphonyConnectionsModal } from './Modals/SymphonyConnectionsModal'
 import { SymphonyInputOutputModal } from './Modals/SymphonyInputOutputModal'
 import {
 	SymphonyConnection,
-	SymphonyConnectionPlatform,
 	SymphonyConnectionType,
 	SymphonyRule
 } from './Model/symphony'
@@ -131,7 +130,7 @@ export const SymphonyExtension: React.FC = () => {
 					id: c.id,
 					name: `Discord: ${c.Discord?.name}`,
 					type: SymphonyConnectionType.InputOnly,
-					platform: SymphonyConnectionPlatform.Discord,
+					platform: API.RuleIo.Discord,
 					icon: c.Discord?.icon ?? ''
 				}
 				conns.push(con)
@@ -142,7 +141,7 @@ export const SymphonyExtension: React.FC = () => {
 					id: c.id,
 					name: `Twitter: ${c.Twitter?.username}`,
 					type: SymphonyConnectionType.OutputOnly,
-					platform: SymphonyConnectionPlatform.Twitter
+					platform: API.RuleIo.Twitter
 				}
 				conns.push(con)
 			})
@@ -152,7 +151,7 @@ export const SymphonyExtension: React.FC = () => {
 					id: c.id,
 					name: `Slack: ${c.Slack?.name}`,
 					type: SymphonyConnectionType.InputOnly,
-					platform: SymphonyConnectionPlatform.Slack
+					platform: API.RuleIo.Slack
 				}
 				conns.push(con)
 			})
@@ -162,7 +161,7 @@ export const SymphonyExtension: React.FC = () => {
 				id: 'webhook',
 				name: 'Add a custom Webhook',
 				type: SymphonyConnectionType.OutputOnly,
-				platform: SymphonyConnectionPlatform.WebHook
+				platform: API.RuleIo.Webhook
 			}
 			conns.push(webhookCon)
 
@@ -195,18 +194,20 @@ export const SymphonyExtension: React.FC = () => {
 					id: rule.id,
 					agreementId: rule.agreementId,
 					definition: rule.definition,
+					description: rule.description,
+					abridgedDescription: rule.abridgedDescription,
 					input: {
 						id: 'discord',
 						name: `Discord: (serverName)`, // todo
 						type: SymphonyConnectionType.InputOnly,
-						platform: SymphonyConnectionPlatform.Discord,
+						platform: API.RuleIo.Discord,
 						discordServerId: '' // todo
 					},
 					output: {
 						id: 'twitter',
 						name: `Twitter: (username)`, // todo
 						type: SymphonyConnectionType.OutputOnly,
-						platform: SymphonyConnectionPlatform.Twitter,
+						platform: API.RuleIo.Twitter,
 						twitterUsername: '' // todo
 					}
 				}
@@ -263,6 +264,10 @@ export const SymphonyExtension: React.FC = () => {
 									<Text
 										className={meemTheme.tSmallBold}
 									>{`Discord to Twitter flow`}</Text>
+									<Space h={8} />
+									<Text className={meemTheme.tSmall}>
+										{rule.abridgedDescription}
+									</Text>
 								</div>
 								<Space w={24} />
 								{agreement?.isCurrentUserAgreementAdmin && (
@@ -319,7 +324,7 @@ export const SymphonyExtension: React.FC = () => {
 	)
 
 	const connectionSummaryGridItem = (
-		connectionPlatform: SymphonyConnectionPlatform,
+		connectionPlatform: API.RuleIo,
 		connectionCount: number
 	) => (
 		<>
@@ -327,11 +332,9 @@ export const SymphonyExtension: React.FC = () => {
 				<div className={meemTheme.centeredRow}>
 					<Image
 						src={
-							connectionPlatform ===
-							SymphonyConnectionPlatform.Discord
+							connectionPlatform === API.RuleIo.Discord
 								? '/connect-discord.png'
-								: connectionPlatform ===
-								  SymphonyConnectionPlatform.Slack
+								: connectionPlatform === API.RuleIo.Slack
 								? '/connect-slack.png'
 								: '/connect-twitter.png'
 						}
@@ -342,11 +345,9 @@ export const SymphonyExtension: React.FC = () => {
 						}}
 					/>
 					<Text className={meemTheme.tSmallBold}>
-						{connectionPlatform ===
-						SymphonyConnectionPlatform.Discord
+						{connectionPlatform === API.RuleIo.Discord
 							? 'Discord'
-							: connectionPlatform ===
-							  SymphonyConnectionPlatform.Slack
+							: connectionPlatform === API.RuleIo.Slack
 							? 'Slack'
 							: 'Twitter'}
 					</Text>
@@ -362,21 +363,18 @@ export const SymphonyExtension: React.FC = () => {
 	)
 
 	const connectedDiscordAccounts = symphonyConnections
-		? symphonyConnections.filter(
-				c => c.platform === SymphonyConnectionPlatform.Discord
-		  ).length
+		? symphonyConnections.filter(c => c.platform === API.RuleIo.Discord)
+				.length
 		: 0
 
 	const connectedTwitterAccounts = symphonyConnections
-		? symphonyConnections.filter(
-				c => c.platform === SymphonyConnectionPlatform.Twitter
-		  ).length
+		? symphonyConnections.filter(c => c.platform === API.RuleIo.Twitter)
+				.length
 		: 0
 
 	const connectedSlackAccounts = symphonyConnections
-		? symphonyConnections.filter(
-				c => c.platform === SymphonyConnectionPlatform.Slack
-		  ).length
+		? symphonyConnections.filter(c => c.platform === API.RuleIo.Slack)
+				.length
 		: 0
 
 	const mainState = (
@@ -397,10 +395,10 @@ export const SymphonyExtension: React.FC = () => {
 									<Grid.Col
 										xs={12}
 										md={6}
-										key={SymphonyConnectionPlatform.Discord.toString()}
+										key={API.RuleIo.Discord.toString()}
 									>
 										{connectionSummaryGridItem(
-											SymphonyConnectionPlatform.Discord,
+											API.RuleIo.Discord,
 											connectedDiscordAccounts
 										)}
 									</Grid.Col>
@@ -409,10 +407,10 @@ export const SymphonyExtension: React.FC = () => {
 									<Grid.Col
 										xs={12}
 										md={6}
-										key={SymphonyConnectionPlatform.Twitter.toString()}
+										key={API.RuleIo.Twitter.toString()}
 									>
 										{connectionSummaryGridItem(
-											SymphonyConnectionPlatform.Twitter,
+											API.RuleIo.Twitter,
 											connectedTwitterAccounts
 										)}
 									</Grid.Col>
@@ -421,10 +419,10 @@ export const SymphonyExtension: React.FC = () => {
 									<Grid.Col
 										xs={12}
 										md={6}
-										key={SymphonyConnectionPlatform.Slack.toString()}
+										key={API.RuleIo.Slack.toString()}
 									>
 										{connectionSummaryGridItem(
-											SymphonyConnectionPlatform.Slack,
+											API.RuleIo.Slack,
 											connectedSlackAccounts
 										)}
 									</Grid.Col>

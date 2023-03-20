@@ -481,7 +481,7 @@ export namespace API {
 			export const method = HttpMethod.Get
 
 			export interface IQueryParams {
-				agreementId: string
+				agreementSlackId: string
 				jwt: string
 			}
 

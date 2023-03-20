@@ -98,6 +98,8 @@ export const SUB_RULES = gql`
 			id
 			agreementId
 			definition
+			description
+			abridgedDescription
 		}
 	}
 `
