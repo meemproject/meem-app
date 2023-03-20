@@ -32,9 +32,10 @@ import {
 } from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme, colorOrangeRed } from '../../../Styles/MeemTheme'
-import { SymphonyRule } from '../Model/symphony'
+import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
 import { SUB_TWITTER, SUB_DISCORD } from '../symphony.gql'
 import { API } from '../symphonyTypes.generated'
+import { SymphonyRuleBuilderConnections } from './SymphonyRuleBuilderConnections'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -42,8 +43,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export interface IProps {
 	rule?: SymphonyRule
-	discordId: string
-	twitterId: string
+	input?: SymphonyConnection
+	output?: SymphonyConnection
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -74,8 +75,8 @@ export interface IOnSave extends IFormValues {
 
 export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
-	discordId,
-	twitterId,
+	input,
+	output,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -118,7 +119,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
 			variables: {
 				agreementId: agreement?.id,
-				twitterId
+				twitterId: rule?.output?.id ?? output?.id ?? ''
 			},
 			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
@@ -128,7 +129,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
 			variables: {
 				agreementId: agreement?.id,
-				discordId
+				discordId: rule?.input?.id ?? input?.id ?? ''
 			},
 			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
@@ -150,7 +151,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetDiscordChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementDiscordId: discordId
+					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
 			{
@@ -174,7 +175,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetDiscordRoles.method
 				})(url, {
 					jwt: jwt as string,
-					agreementDiscordId: discordId
+					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
 			{
@@ -354,10 +355,13 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			/>
 			<Space h={'lg'} /> */}
 
-						<Text className={meemTheme.tExtraSmallLabel}>
-							CONNECTIONS
-						</Text>
-						<Space h={4} />
+						<SymphonyRuleBuilderConnections
+							input={rule?.input ?? input}
+							output={rule?.output ?? output}
+							onChangeConnectionsPressed={function (): void {
+								onModalClosed()
+							}}
+						/>
 
 						<Text className={meemTheme.tExtraSmallLabel}>
 							CHANNELS
