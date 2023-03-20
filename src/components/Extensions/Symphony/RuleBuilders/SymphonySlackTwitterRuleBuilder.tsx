@@ -100,10 +100,8 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 		setSymphonyClient(c)
 	}, [])
 
-	// TODO: Use this for SymphonyDiscordSlackRuleBuilder
-	const { data: slackData } = useSubscription<SubSlackSubscription>(
-		SUB_SLACK,
-		{
+	const { data: slackData, loading: loadingSlackData } =
+		useSubscription<SubSlackSubscription>(SUB_SLACK, {
 			variables: {
 				agreementId: agreement?.id,
 				slackId: rule?.input?.id ?? input?.id ?? ''
@@ -114,8 +112,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 				!agreement?.id ||
 				!isOpened,
 			client: symphonyClient
-		}
-	)
+		})
 
 	const { data: twitterData, loading: loadingTwitterData } =
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
@@ -127,31 +124,31 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 			client: symphonyClient
 		})
 
-	// TODO: update these to use slack roles + channels
-	// const { data: channelsData, isLoading: loadingChannelsData } =
-	// 	useSWR<API.v1.GetDiscordChannels.IResponseBody>(
-	// 		agreement?.id && jwt
-	// 			? `${
-	// 					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-	// 			  }${API.v1.GetDiscordChannels.path()}`
-	// 			: null,
-	// 		url => {
-	// 			return makeFetcher<
-	// 				API.v1.GetDiscordChannels.IQueryParams,
-	// 				API.v1.GetDiscordChannels.IRequestBody,
-	// 				API.v1.GetDiscordChannels.IResponseBody
-	// 			>({
-	// 				method: API.v1.GetDiscordChannels.method
-	// 			})(url, {
-	// 				jwt: jwt as string,
-	// 				agreementDiscordId: discordId
-	// 			})
-	// 		},
-	// 		{
-	// 			shouldRetryOnError: false
-	// 		}
-	// 	)
-
+	const { data: channelsData, isLoading: loadingChannelsData } =
+		useSWR<API.v1.GetSlackChannels.IResponseBody>(
+			agreement?.id && jwt
+				? `${
+						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+				  }${API.v1.GetSlackChannels.path()}`
+				: null,
+			url => {
+				return makeFetcher<
+					API.v1.GetSlackChannels.IQueryParams,
+					API.v1.GetSlackChannels.IRequestBody,
+					API.v1.GetSlackChannels.IResponseBody
+				>({
+					method: API.v1.GetSlackChannels.method
+				})(url, {
+					jwt: jwt as string,
+					agreementId: agreement?.id ?? '',
+					agreementSlackId: rule?.input?.id ?? input?.id ?? ''
+				})
+			},
+			{
+				shouldRetryOnError: false
+			}
+		)
+	// TODO: update this to use slack roles
 	// const { data: rolesData, isLoading: loadingRolesData } =
 	// 	useSWR<API.v1.GetDiscordRoles.IResponseBody>(
 	// 		agreement?.id && jwt
@@ -283,7 +280,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	let isProposalChannelGated = false
 
 	if (
-		discordData?.AgreementDiscords[0] &&
+		slackData?.AgreementSlacks[0] &&
 		form.values.proposalChannels &&
 		form.values.proposalChannels.length > 0
 	) {
@@ -309,7 +306,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	const modalContents = (
 		<>
 			{(loadingChannelsData ||
-				loadingDiscordData ||
+				loadingSlackData ||
 				loadingTwitterData ||
 				loadingRolesData) && (
 				<>
@@ -320,7 +317,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 					<Space h={32} />
 				</>
 			)}
-			{discordData && channelsData && twitterData && rolesData && (
+			{slackData && channelsData && twitterData && rolesData && (
 				<>
 					<form
 						onSubmit={form.onSubmit(values =>
