@@ -23,6 +23,7 @@ import {
 } from '../../../../generated/graphql'
 import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
+import { toTitleCase } from '../../../utils/strings'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
@@ -90,25 +91,29 @@ export const SymphonyExtension: React.FC = () => {
 		}
 	)
 
-	const { data: discordConnectionData } =
-		useSubscription<SubDiscordsSubscription>(SUB_DISCORDS, {
-			variables: {
-				agreementId: agreement?.id
-			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
-		})
+	const {
+		data: discordConnectionData,
+		loading: isFetchingDiscordConnections
+	} = useSubscription<SubDiscordsSubscription>(SUB_DISCORDS, {
+		variables: {
+			agreementId: agreement?.id
+		},
+		skip: !symphonyClient || !agreement?.id,
+		client: symphonyClient
+	})
 
-	const { data: twitterConnectionData } =
-		useSubscription<SubTwittersSubscription>(SUB_TWITTERS, {
-			variables: {
-				agreementId: agreement?.id
-			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
-		})
+	const {
+		data: twitterConnectionData,
+		loading: isFetchingTwitterConnections
+	} = useSubscription<SubTwittersSubscription>(SUB_TWITTERS, {
+		variables: {
+			agreementId: agreement?.id
+		},
+		skip: !symphonyClient || !agreement?.id,
+		client: symphonyClient
+	})
 
-	const { data: slackConnectionData } =
+	const { data: slackConnectionData, loading: isFetchingSlackConnections } =
 		useSubscription<SubSlacksSubscription>(SUB_SLACKS, {
 			variables: {
 				agreementId: agreement?.id
@@ -170,7 +175,7 @@ export const SymphonyExtension: React.FC = () => {
 				setPreviousConnectionsDataString(jsonConns)
 				setSymphonyConnections(conns)
 				setHasFetchedConnections(true)
-				setIsFetchingConnections(true)
+				setIsFetchingConnections(false)
 			}
 		}
 	}, [
@@ -184,32 +189,19 @@ export const SymphonyExtension: React.FC = () => {
 
 	// Parse rules from subscription
 	useEffect(() => {
-		// TODO: Will need to be refactored to support per-rule connections
-
 		const newRules: SymphonyRule[] = []
 		if (rulesData) {
 			rulesData.Rules.forEach(rule => {
-				// Hardcoded as Discord input to Twitter output until APIs are updated
 				const newRule: SymphonyRule = {
 					id: rule.id,
 					agreementId: rule.agreementId,
+					inputPlatformString: rule.input ?? '',
+					inputId: rule.inputRef,
 					definition: rule.definition,
+					outputPlatformString: rule.output ?? '',
+					outputId: rule.outputRef,
 					description: rule.description,
-					abridgedDescription: rule.abridgedDescription,
-					input: {
-						id: 'discord',
-						name: `Discord: (serverName)`, // todo
-						type: SymphonyConnectionType.InputOnly,
-						platform: API.RuleIo.Discord,
-						discordServerId: '' // todo
-					},
-					output: {
-						id: 'twitter',
-						name: `Twitter: (username)`, // todo
-						type: SymphonyConnectionType.OutputOnly,
-						platform: API.RuleIo.Twitter,
-						twitterUsername: '' // todo
-					}
+					abridgedDescription: rule.abridgedDescription
 				}
 
 				newRules.push(newRule)
@@ -257,13 +249,17 @@ export const SymphonyExtension: React.FC = () => {
 						<div
 							key={`rule-${rule.id}`}
 							className={meemTheme.gridItem}
-							style={{ marginBottom: 16 }}
+							style={{ marginBottom: 16, cursor: 'auto' }}
 						>
 							<div className={meemTheme.row}>
 								<div>
 									<Text
 										className={meemTheme.tSmallBold}
-									>{`Discord to Twitter flow`}</Text>
+									>{`${toTitleCase(
+										rule.inputPlatformString ?? ''
+									)} to ${toTitleCase(
+										rule.outputPlatformString ?? ''
+									)} flow`}</Text>
 									<Space h={8} />
 									<Text className={meemTheme.tSmall}>
 										{rule.abridgedDescription}
@@ -387,49 +383,63 @@ export const SymphonyExtension: React.FC = () => {
 						CONNECTED ACCOUNTS
 					</Text>
 
-					{symphonyConnections && (
+					{(isFetchingDiscordConnections ||
+						isFetchingSlackConnections ||
+						isFetchingTwitterConnections ||
+						isFetchingConnections) && (
 						<>
 							<Space h={24} />
-							<Grid>
-								{connectedDiscordAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={API.RuleIo.Discord.toString()}
-									>
-										{connectionSummaryGridItem(
-											API.RuleIo.Discord,
-											connectedDiscordAccounts
-										)}
-									</Grid.Col>
-								)}
-								{connectedTwitterAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={API.RuleIo.Twitter.toString()}
-									>
-										{connectionSummaryGridItem(
-											API.RuleIo.Twitter,
-											connectedTwitterAccounts
-										)}
-									</Grid.Col>
-								)}
-								{connectedSlackAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={API.RuleIo.Slack.toString()}
-									>
-										{connectionSummaryGridItem(
-											API.RuleIo.Slack,
-											connectedSlackAccounts
-										)}
-									</Grid.Col>
-								)}
-							</Grid>
+							<Loader variant="oval" color="cyan" />
 						</>
 					)}
+
+					{symphonyConnections &&
+						!isFetchingConnections &&
+						!isFetchingDiscordConnections &&
+						!isFetchingSlackConnections &&
+						!isFetchingTwitterConnections && (
+							<>
+								<Space h={24} />
+								<Grid>
+									{connectedDiscordAccounts > 0 && (
+										<Grid.Col
+											xs={12}
+											md={6}
+											key={API.RuleIo.Discord.toString()}
+										>
+											{connectionSummaryGridItem(
+												API.RuleIo.Discord,
+												connectedDiscordAccounts
+											)}
+										</Grid.Col>
+									)}
+									{connectedTwitterAccounts > 0 && (
+										<Grid.Col
+											xs={12}
+											md={6}
+											key={API.RuleIo.Twitter.toString()}
+										>
+											{connectionSummaryGridItem(
+												API.RuleIo.Twitter,
+												connectedTwitterAccounts
+											)}
+										</Grid.Col>
+									)}
+									{connectedSlackAccounts > 0 && (
+										<Grid.Col
+											xs={12}
+											md={6}
+											key={API.RuleIo.Slack.toString()}
+										>
+											{connectionSummaryGridItem(
+												API.RuleIo.Slack,
+												connectedSlackAccounts
+											)}
+										</Grid.Col>
+									)}
+								</Grid>
+							</>
+						)}
 
 					<Space h={24} />
 					<Button
@@ -507,18 +517,15 @@ export const SymphonyExtension: React.FC = () => {
 						}}
 					/>
 
-					{isNewRuleModalOpen && (
-						<>
-							<SymphonyInputOutputModal
-								isOpened={isNewRuleModalOpen}
-								connections={symphonyConnections}
-								existingRule={selectedRule}
-								onModalClosed={function (): void {
-									setIsNewRuleModalOpen(false)
-								}}
-							/>
-						</>
-					)}
+					<SymphonyInputOutputModal
+						isOpened={isNewRuleModalOpen}
+						connections={symphonyConnections}
+						existingRule={selectedRule}
+						onModalClosed={function (): void {
+							setIsNewRuleModalOpen(false)
+							setSelectedRule(undefined)
+						}}
+					/>
 				</>
 			)}
 		</div>

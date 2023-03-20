@@ -4,24 +4,11 @@ import {
 	NormalizedCacheObject,
 	useSubscription
 } from '@apollo/client'
-import {
-	Text,
-	Space,
-	Button,
-	Modal,
-	Select,
-	MultiSelect,
-	NumberInput,
-	Switch,
-	Center,
-	Loader
-} from '@mantine/core'
+import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth } from '@meemproject/react'
 import { createApolloClient, makeFetcher } from '@meemproject/sdk'
-import { Emoji } from 'emoji-picker-react'
 import type { EmojiClickData } from 'emoji-picker-react'
-import { WarningCircle } from 'iconoir-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -31,10 +18,15 @@ import {
 	SubSlackSubscription
 } from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
-import { useMeemTheme, colorOrangeRed } from '../../../Styles/MeemTheme'
+import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
 import { SUB_TWITTER, SUB_SLACK } from '../symphony.gql'
 import { API } from '../symphonyTypes.generated'
+import { SymphRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/SymphRuleBuilderApproverEmojis'
+import { SymphRuleBuilderVotesCount } from './RuleBuilderSections/Generic/SymphRuleBuilderVotesCount'
+import { SymphSlackInputRBProposals } from './RuleBuilderSections/SlackInput/SymphSlackInputRBProposals'
+import { SymphSlackInputRBVetoes } from './RuleBuilderSections/SlackInput/SymphSlackInputRBVetoes'
+import { SymphTwitterOutputAutoReply } from './RuleBuilderSections/TwitterOutput/SymphTwitterOutputAutoReply'
 import { SymphonyRuleBuilderConnections } from './SymphonyRuleBuilderConnections'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
@@ -100,7 +92,6 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 		setSymphonyClient(c)
 	}, [])
 
-	// TODO: Use this for SymphonyDiscordSlackRuleBuilder
 	const { data: slackData, loading: isLoadingSlackData } =
 		useSubscription<SubSlackSubscription>(SUB_SLACK, {
 			variables: {
@@ -126,7 +117,6 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 			client: symphonyClient
 		})
 
-	// TODO: update these to use slack roles + channels
 	const { data: channelsData, isLoading: isLoadingChannelsData } =
 		useSWR<API.v1.GetSlackChannels.IResponseBody>(
 			agreement?.id && jwt && input?.id
@@ -143,7 +133,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetSlackChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementSlackId: input?.id ?? ''
+					agreementSlackId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
 			{
@@ -270,6 +260,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	// 	})
 	// }
 
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 	const isShareChannelGated = false
 
 	// if (channelsData?.channels && form.values.proposalShareChannel) {
@@ -301,27 +292,6 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 							handleFormSubmit(values)
 						)}
 					>
-						{/* <Text className={meemTheme.tExtraSmallLabel}>RULE TYPE</Text>
-			<Space h={4} />
-			<Text className={meemTheme.tExtraSmall}>
-				What rule type should we follow?
-			</Text>
-			<Space h={8} />
-			<Select
-				data={[
-					{
-						value: API.PublishType.PublishImmediately,
-						label: 'Publish Immediately'
-					},
-					{
-						value: API.PublishType.Proposal,
-						label: 'Proposal Flow'
-					}
-				]}
-				{...form.getInputProps('publishType')}
-			/>
-			<Space h={'lg'} /> */}
-
 						<SymphonyRuleBuilderConnections
 							input={rule?.input ?? input}
 							output={rule?.output ?? output}
@@ -329,397 +299,49 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 								onModalClosed()
 							}}
 						/>
-						<Text className={meemTheme.tExtraSmallLabel}>
-							CHANNELS
-						</Text>
-						<Space h={4} />
 
-						<Text className={meemTheme.tExtraSmall}>
-							{form.values.publishType ===
-							API.PublishType.PublishImmediately
-								? 'From what channels should we publish?'
-								: 'In what channels can a proposal be submitted?'}
-						</Text>
-
-						{channelsData.channels && (
-							<>
-								<Space h={8} />
-								<MultiSelect
-									data={[
-										...channelsData.channels.map(c => ({
-											value: c.id,
-											label: c.name
-										}))
-									]}
-									{...form.getInputProps('proposalChannels')}
-								/>
-								{isProposalChannelGated && (
-									<>
-										<Space h={8} />
-										<div
-											style={{
-												display: 'flex',
-												flexDirection: 'row',
-												alignItems: 'center'
-											}}
-										>
-											<WarningCircle
-												color={colorOrangeRed}
-												height={16}
-												width={16}
-											/>
-											<Space w={4} />
-											<Text
-												className={meemTheme.tBadgeText}
-												style={{
-													color: colorOrangeRed
-												}}
-											>
-												Please ensure Symphony Bot has
-												full access to channels in
-												Discord
-											</Text>
-										</div>
-									</>
-								)}
-							</>
-						)}
-
-						{form.values.publishType ===
-							API.PublishType.Proposal && (
-							<>
-								<Space h={'lg'} />
-								<Text className={meemTheme.tExtraSmallLabel}>
-									PROPOSALS
-								</Text>
-								{/* <Space h={4} />
-								<Text className={meemTheme.tExtraSmall}>
-									Who can propose a post?
-								</Text> */}
-								{/* {rolesData?.roles && (
-									<>
-										<Space h={8} />
-
-										<MultiSelect
-											multiple
-											data={rolesData.roles.map(c => ({
-												value: c.id,
-												label: c.name
-											}))}
-											{...form.getInputProps(
-												'proposerRoles'
-											)}
-										/>
-									</>
-								)} */}
-								<Space h={'lg'} />
-								<Text className={meemTheme.tExtraSmall}>
-									Which emojis will create a proposal?
-								</Text>
-								{proposerEmojis.length > 0 && (
-									<>
-										<div
-											style={{
-												display: 'flex',
-												flexDirection: 'row',
-												marginTop: 4
-											}}
-										>
-											{proposerEmojis.map(e => (
-												<div
-													style={{
-														display: 'flex',
-														flexDirection: 'row'
-													}}
-													key={`proposerEmoji-${e}`}
-													onClick={() => {
-														setProposerEmojis(
-															proposerEmojis.filter(
-																pe => pe !== e
-															)
-														)
-													}}
-												>
-													<Emoji
-														unified={e}
-														size={25}
-													/>
-													<Space w="xs" />
-												</div>
-											))}
-										</div>
-									</>
-								)}
-								<Space h={8} />
-								<Button
-									className={meemTheme.buttonWhite}
-									onClick={() => {
-										setEmojiSelectType(
-											EmojiSelectType.Proposer
-										)
-										setIsEmojiPickerOpen(true)
-									}}
-								>
-									+ Add emoji
-								</Button>
-
-								<Space h={'lg'} />
-								<Text className={meemTheme.tExtraSmall}>
-									{'How many proposal reactions?'}
-								</Text>
-								<Space h={8} />
-								<NumberInput
-									{...form.getInputProps('proposeVotes')}
-								/>
-							</>
-						)}
-						<Space h="lg" />
+						<SymphSlackInputRBProposals
+							form={form}
+							channelsData={channelsData}
+							isProposalChannelGated={isProposalChannelGated}
+						/>
 
 						<Text className={meemTheme.tExtraSmallLabel}>
 							VOTES
 						</Text>
 						<Space h={4} />
 
-						{/* <Text className={meemTheme.tExtraSmall}>
-							Who can vote to approve new posts for publication?
-						</Text>
-						<Space h={8} />
-						{rolesData.roles && (
-							<MultiSelect
-								multiple
-								data={rolesData.roles.map(c => ({
-									value: c.id,
-									label: c.name
-								}))}
-								{...form.getInputProps('approverRoles')}
-							/>
-						)}
-						<Space h="lg" /> */}
-						<Text className={meemTheme.tExtraSmall}>
-							Which emojis will count as affirmative votes?
-						</Text>
-						{approverEmojis.length > 0 && (
-							<div
-								style={{
-									display: 'flex',
-									flexDirection: 'row',
-									marginTop: 4
-								}}
-							>
-								{approverEmojis.map(e => (
-									<div
-										key={`approvalEmoji-${e}`}
-										style={{
-											display: 'flex',
-											flexDirection: 'row',
-											cursor: 'pointer'
-										}}
-										onClick={() => {
-											setApproverEmojis(
-												approverEmojis.filter(
-													ae => ae !== e
-												)
-											)
-										}}
-									>
-										<Emoji unified={e} size={25} />
-										<Space w="xs" />
-									</div>
-								))}
-							</div>
-						)}
-						<Space h={8} />
-						<Button
-							className={meemTheme.buttonWhite}
-							onClick={() => {
+						<SymphRuleBuilderApproverEmojis
+							approverEmojis={approverEmojis}
+							onApproverEmojisSet={function (
+								emojis: string[]
+							): void {
+								setApproverEmojis(emojis)
+							}}
+							onAddEmojisPressed={function (): void {
 								setEmojiSelectType(EmojiSelectType.Approver)
 								setIsEmojiPickerOpen(true)
 							}}
-						>
-							+ Add emoji
-						</Button>
-						<Space h="lg" />
-						<Text className={meemTheme.tExtraSmall}>
-							{
-								"How many affirmative votes must a proposed post receive before it's approved?"
-							}
-						</Text>
-						<Space h={8} />
-						<NumberInput {...form.getInputProps('votes')} />
-						{form.values.publishType ===
-							API.PublishType.Proposal && (
-							<>
-								<Space h={'lg'} />
-								<Text className={meemTheme.tExtraSmallLabel}>
-									DISCORD CHANNEL FOR PROPOSALS
-								</Text>
-								<Space h={4} />
-								<Text className={meemTheme.tExtraSmall}>
-									What Discord channel will new proposals be
-									shared in?
-								</Text>
-								{channelsData.channels && (
-									<>
-										<Space h={8} />
-
-										<Select
-											data={channelsData.channels.map(
-												c => ({
-													value: c.id,
-													label: c.name
-												})
-											)}
-											{...form.getInputProps(
-												'proposalShareChannel'
-											)}
-										/>
-
-										{isShareChannelGated && (
-											<>
-												<Space h={8} />
-												<div
-													style={{
-														display: 'flex',
-														flexDirection: 'row',
-														alignItems: 'center'
-													}}
-												>
-													<WarningCircle
-														color={colorOrangeRed}
-														height={16}
-														width={16}
-													/>
-													<Space w={4} />
-													<Text
-														className={
-															meemTheme.tBadgeText
-														}
-														style={{
-															color: colorOrangeRed
-														}}
-													>
-														Please ensure Symphony
-														Bot has full access to
-														channels in Discord
-													</Text>
-												</div>
-											</>
-										)}
-									</>
-								)}
-							</>
-						)}
-
-						<Space h={'lg'} />
-						<Text className={meemTheme.tExtraSmallLabel}>
-							VETOES
-						</Text>
-						<Space h={4} />
-						<Text className={meemTheme.tExtraSmall}>
-							Can posts be vetoed?
-						</Text>
-						<Space h={8} />
-
-						<Switch
-							label="Yes, posts can be vetoed"
-							{...form.getInputProps('canVeto', {
-								type: 'checkbox'
-							})}
 						/>
-						{form.values.canVeto && (
-							<>
-								<Space h={'lg'} />
 
-								{/* <Text className={meemTheme.tExtraSmall}>
-									Who can veto?
-								</Text>
-								<Space h={8} />
-								{rolesData.roles && (
-									<MultiSelect
-										multiple
-										data={rolesData.roles.map(c => ({
-											value: c.id,
-											label: c.name
-										}))}
-										{...form.getInputProps('vetoerRoles')}
-									/>
-								)}
-								<Space h="lg" /> */}
-								<Text className={meemTheme.tExtraSmall}>
-									Which emojis will count as a veto?
-								</Text>
-								{vetoerEmojis.length > 0 && (
-									<>
-										<Space h="xs" />
-										<div
-											style={{
-												display: 'flex',
-												flexDirection: 'row'
-											}}
-										>
-											{vetoerEmojis.map(e => (
-												<div
-													style={{
-														display: 'flex',
-														flexDirection: 'row'
-													}}
-													key={`vetoerEmoji-${e}`}
-													onClick={() => {
-														setVetoerEmojis(
-															vetoerEmojis.filter(
-																ve => ve !== e
-															)
-														)
-													}}
-												>
-													<Emoji
-														unified={e}
-														size={25}
-													/>
-													<Space w="xs" />
-												</div>
-											))}
-										</div>
-									</>
-								)}
-								<Space h={8} />
-								<Button
-									className={meemTheme.buttonWhite}
-									onClick={() => {
-										setEmojiSelectType(
-											EmojiSelectType.Vetoer
-										)
-										setIsEmojiPickerOpen(true)
-									}}
-								>
-									+ Add emoji
-								</Button>
-								<Space h="lg" />
-								<Text className={meemTheme.tExtraSmall}>
-									{'How many vetoes are required?'}
-								</Text>
-								<Space h={8} />
-								<NumberInput
-									{...form.getInputProps('vetoVotes')}
-								/>
-							</>
-						)}
-						<Space h={'lg'} />
-						<Text className={meemTheme.tExtraSmallLabel}>
-							AUTO REPLY
-						</Text>
-						<Space h={4} />
-						<Text className={meemTheme.tExtraSmall}>
-							Would you like Symphony to reply to approved
-							proposals with a link to the published tweet?
-						</Text>
-						<Space h={8} />
-						<Switch
-							label="Yes, reply with a link"
-							{...form.getInputProps('shouldReply', {
-								type: 'checkbox'
-							})}
+						<SymphRuleBuilderVotesCount form={form} />
+
+						<SymphSlackInputRBVetoes
+							form={form}
+							vetoerEmojis={vetoerEmojis}
+							onVetoerEmojisSet={function (
+								emojis: string[]
+							): void {
+								setVetoerEmojis(emojis)
+							}}
+							onAddEmojisPressed={function (): void {
+								setEmojiSelectType(EmojiSelectType.Vetoer)
+								setIsEmojiPickerOpen(true)
+							}}
 						/>
+
+						<SymphTwitterOutputAutoReply form={form} />
+
 						<Modal
 							withCloseButton={true}
 							closeOnClickOutside={false}
