@@ -24,7 +24,7 @@ import { SUB_TWITTER, SUB_DISCORD } from '../symphony.gql'
 import { API } from '../symphonyTypes.generated'
 import { SymphDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/SymphDiscordInputRBProposals'
 import { SymphDiscordInputRBVetoes } from './RuleBuilderSections/DiscordInput/SymphDiscordInputRBVetoes'
-import { SymphRuleBuilderVetoerEmojis } from './RuleBuilderSections/Generic/SymphRuleBuilderApproverEmojis'
+import { SymphRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/SymphRuleBuilderApproverEmojis'
 import { SymphRuleBuilderVotesCount } from './RuleBuilderSections/Generic/SymphRuleBuilderVotesCount'
 import { SymphTwitterOutputAutoReply } from './RuleBuilderSections/TwitterOutput/SymphTwitterOutputAutoReply'
 import { SymphonyRuleBuilderConnections } from './SymphonyRuleBuilderConnections'
@@ -315,7 +315,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 							isProposalChannelGated={isProposalChannelGated}
 						/>
 
-						<SymphRuleBuilderVetoerEmojis
+						<SymphRuleBuilderApproverEmojis
 							approverEmojis={approverEmojis}
 							onApproverEmojisSet={function (
 								emojis: string[]
