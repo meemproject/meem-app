@@ -353,6 +353,12 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				{...form.getInputProps('publishType')}
 			/>
 			<Space h={'lg'} /> */}
+
+						<Text className={meemTheme.tExtraSmallLabel}>
+							CONNECTIONS
+						</Text>
+						<Space h={4} />
+
 						<Text className={meemTheme.tExtraSmallLabel}>
 							CHANNELS
 						</Text>

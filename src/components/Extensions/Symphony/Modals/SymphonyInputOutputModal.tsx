@@ -1,4 +1,5 @@
 import {
+	ActionIcon,
 	Button,
 	Center,
 	Loader,
@@ -7,13 +8,16 @@ import {
 	// eslint-disable-next-line import/named
 	SelectItem,
 	Space,
-	Text
+	Text,
+	TextInput
 } from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
 import { makeRequest, MeemAPI } from '@meemproject/sdk'
+import { IconCopy } from '@tabler/icons'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAnalytics } from '../../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
+import { showSuccessNotification } from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import {
@@ -63,6 +67,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const [selectedOutputValue, setSelectedOutputValue] = useState<
 		string | null
 	>(null)
+	const [webhookUrl, setWebhookUrl] = useState('')
+	const [webhookPrivateKey, setWebhookPrivateKey] = useState('')
 	const [hasFetchedIO, setHasFetchedIO] = useState(false)
 	const [isSavingRule, setIsSavingRule] = useState(false)
 
@@ -190,6 +196,9 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		}
 
 		if (isOpened && !hasFetchedIO && connections) {
+			// TODO: fetch private key
+			setWebhookPrivateKey('private key')
+
 			const filteredInputs = connections.filter(
 				c => c.type === SymphonyConnectionType.InputOnly
 			)
@@ -232,6 +241,12 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		selectedInput,
 		selectedOutput
 	])
+
+	const shouldShowNext =
+		selectedInput &&
+		selectedOutput &&
+		(selectedOutput.platform !== SymphonyConnectionPlatform.WebHook ||
+			(webhookUrl && webhookUrl.includes('https://')))
 
 	const modalContents = (
 		<>
@@ -302,7 +317,70 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 							}
 						}}
 					/>
-					{selectedInput && selectedOutput && (
+					{selectedOutput &&
+						selectedOutput.platform ===
+							SymphonyConnectionPlatform.WebHook && (
+							<>
+								<Space h={24} />
+								<Text className={meemTheme.tSmallBold}>
+									Webhook URL
+								</Text>
+								<Space h={8} />
+								<Text className={meemTheme.tSmall}>
+									Read more about setting up webhooks in our{' '}
+									<span
+										onClick={() => {
+											window.open(
+												'https://docs.meem.wtf/meem-protocol/symphony/webhooks'
+											)
+										}}
+										className={meemTheme.tSmallBold}
+										style={{ cursor: 'pointer' }}
+									>
+										dev docs.
+									</span>
+								</Text>
+								<Space h={8} />
+								<TextInput
+									radius="lg"
+									size="md"
+									value={webhookUrl}
+									onChange={event =>
+										setWebhookUrl(event.currentTarget.value)
+									}
+								/>
+								<Space h={24} />
+								<Text className={meemTheme.tSmallBold}>
+									Private Key
+								</Text>
+								<Space h={8} />
+								<div className={meemTheme.centeredRow}>
+									<TextInput
+										style={{ maxWidth: 250 }}
+										radius="lg"
+										size="md"
+										disabled
+										value={webhookPrivateKey}
+									/>
+									<Space w={8} />
+									<ActionIcon
+										variant="outline"
+										onClick={() => {
+											navigator.clipboard.writeText(
+												webhookPrivateKey
+											)
+											showSuccessNotification(
+												'Private Key copied',
+												`The Webhook Private Key was copied to your clipboard.`
+											)
+										}}
+									>
+										<IconCopy size="1.125rem" />
+									</ActionIcon>
+								</div>
+							</>
+						)}
+					{shouldShowNext && (
 						<>
 							<Space h={24} />
 							<Button
