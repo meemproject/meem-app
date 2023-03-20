@@ -32,9 +32,10 @@ import {
 } from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme, colorOrangeRed } from '../../../Styles/MeemTheme'
-import { SymphonyRule } from '../Model/symphony'
+import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
 import { SUB_TWITTER, SUB_SLACK } from '../symphony.gql'
 import { API } from '../symphonyTypes.generated'
+import { SymphonyRuleBuilderConnections } from './SymphonyRuleBuilderConnections'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -42,8 +43,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export interface IProps {
 	rule?: SymphonyRule
-	slackId: string
-	twitterId: string
+	input?: SymphonyConnection
+	output?: SymphonyConnection
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -74,8 +75,8 @@ export interface IOnSave extends IFormValues {
 
 export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
-	slackId,
-	twitterId,
+	input,
+	output,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -107,7 +108,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	} = useSubscription<SubSlackSubscription>(SUB_SLACK, {
 		variables: {
 			agreementId: agreement?.id,
-			slackId
+			slackId: rule?.input.id
 		},
 		skip:
 			process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
@@ -121,7 +122,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
 			variables: {
 				agreementId: agreement?.id,
-				twitterId
+				twitterId: rule?.output?.id ?? output?.id ?? ''
 			},
 			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
@@ -130,7 +131,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	// TODO: update these to use slack roles + channels
 	const { data: channelsData, isLoading: isLoadingChannelsData } =
 		useSWR<API.v1.GetSlackChannels.IResponseBody>(
-			agreement?.id && jwt
+			agreement?.id && jwt && rule?.input.id
 				? `${
 						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
 				  }${API.v1.GetSlackChannels.path()}`
@@ -144,7 +145,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 					method: API.v1.GetSlackChannels.method
 				})(url, {
 					jwt: jwt as string,
-					agreementSlackId: slackId
+					agreementSlackId: rule?.input.id as string
 				})
 			},
 			{
@@ -331,6 +332,14 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 				{...form.getInputProps('publishType')}
 			/>
 			<Space h={'lg'} /> */}
+
+						<SymphonyRuleBuilderConnections
+							input={rule?.input ?? input}
+							output={rule?.output ?? output}
+							onChangeConnectionsPressed={function (): void {
+								onModalClosed()
+							}}
+						/>
 						<Text className={meemTheme.tExtraSmallLabel}>
 							CHANNELS
 						</Text>

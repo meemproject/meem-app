@@ -156,6 +156,15 @@ export const SymphonyExtension: React.FC = () => {
 				conns.push(con)
 			})
 
+			// Add Webhook connection
+			const webhookCon: SymphonyConnection = {
+				id: 'webhook',
+				name: 'Add a custom Webhook',
+				type: SymphonyConnectionType.OutputOnly,
+				platform: API.RuleIo.Webhook
+			}
+			conns.push(webhookCon)
+
 			const jsonConns = JSON.stringify(conns)
 			if (jsonConns !== previousConnectionsDataString) {
 				setPreviousConnectionsDataString(jsonConns)
