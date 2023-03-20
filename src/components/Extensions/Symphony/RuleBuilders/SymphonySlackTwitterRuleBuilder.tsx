@@ -32,9 +32,10 @@ import {
 } from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme, colorOrangeRed } from '../../../Styles/MeemTheme'
-import { SymphonyRule } from '../Model/symphony'
+import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
 import { SUB_TWITTER, SUB_SLACK } from '../symphony.gql'
 import { API } from '../symphonyTypes.generated'
+import { SymphonyRuleBuilderConnections } from './SymphonyRuleBuilderConnections'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -42,8 +43,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 
 export interface IProps {
 	rule?: SymphonyRule
-	slackId: string
-	twitterId: string
+	input?: SymphonyConnection
+	output?: SymphonyConnection
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -74,8 +75,8 @@ export interface IOnSave extends IFormValues {
 
 export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
-	slackId,
-	twitterId,
+	input,
+	output,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -105,7 +106,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 		{
 			variables: {
 				agreementId: agreement?.id,
-				slackId
+				slackId: rule?.input?.id ?? input?.id ?? ''
 			},
 			skip:
 				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
@@ -120,7 +121,7 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
 			variables: {
 				agreementId: agreement?.id,
-				twitterId
+				twitterId: rule?.output?.id ?? output?.id ?? ''
 			},
 			skip: !symphonyClient || !agreement?.id || !isOpened,
 			client: symphonyClient
@@ -346,6 +347,14 @@ export const SymphonySlackTwitterRulesBuilder: React.FC<IProps> = ({
 				{...form.getInputProps('publishType')}
 			/>
 			<Space h={'lg'} /> */}
+
+						<SymphonyRuleBuilderConnections
+							input={rule?.input ?? input}
+							output={rule?.output ?? output}
+							onChangeConnectionsPressed={function (): void {
+								onModalClosed()
+							}}
+						/>
 						<Text className={meemTheme.tExtraSmallLabel}>
 							CHANNELS
 						</Text>
