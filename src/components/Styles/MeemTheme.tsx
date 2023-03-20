@@ -430,6 +430,13 @@ export const useMeemTheme = createStyles(theme => ({
 		borderRadius: 8,
 		padding: 16
 	},
+	gridItemBlue: {
+		cursor: 'pointer',
+		border: `1px solid ${colorBlue}`,
+		alignItems: 'center',
+		borderRadius: 8,
+		padding: 16
+	},
 	gridItemFlatSelected: {
 		cursor: 'pointer',
 		border: `1px solid ${

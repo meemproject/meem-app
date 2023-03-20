@@ -1,12 +1,12 @@
-// import log from '@kengoldfarb/log'
-import { Space, Modal, Text, Grid, Image } from '@mantine/core'
-// import { useAuth } from '@meemproject/react'
+import { Space, Modal, Text, Grid, Image, Center } from '@mantine/core'
+import { useAuth } from '@meemproject/react'
 import { MoreVert } from 'iconoir-react'
-import React, { useState } from 'react'
-import { useMeemTheme } from '../../../Styles/MeemTheme'
+import { useRouter } from 'next/router'
+import React, { useCallback, useState } from 'react'
+import { useAgreement } from '../../../AgreementHome/AgreementProvider'
+import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 import { SymphonyConnection } from '../Model/symphony'
 import { API } from '../symphonyTypes.generated'
-// import { API } from '../symphonyTypes.generated'
 import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
 import { SymphonyDiscordConnectionModal } from './SymphonyDiscordConnectionModal'
 
@@ -23,9 +23,9 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 }) => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
-	// const { agreement } = useAgreement()
-	// const { jwt } = useAuth()
-	// const router = useRouter()
+	const { agreement } = useAgreement()
+	const { jwt } = useAuth()
+	const router = useRouter()
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 	const [selectedConnection, setSelectedConnection] =
@@ -35,64 +35,40 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 		useState(false)
 	const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
 
-	// Handle authentication for different services
-	// const handleAuthTwitter = useCallback(async () => {
-	// 	if (!agreement?.id || !jwt) {
-	// 		return
-	// 	}
+	//Handle authentication for different services
+	const handleAuthTwitter = useCallback(async () => {
+		if (!agreement?.id || !jwt) {
+			return
+		}
 
-	// 	router.push({
-	// 		pathname: `${
-	// 			process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-	// 		}${API.v1.AuthenticateWithTwitter.path()}`,
-	// 		query: {
-	// 			agreementId: agreement.id,
-	// 			jwt,
-	// 			returnUrl: window.location.toString()
-	// 		}
-	// 	})
-	// }, [router, agreement, jwt])
+		router.push({
+			pathname: `${
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+			}${API.v1.AuthenticateWithTwitter.path()}`,
+			query: {
+				agreementId: agreement.id,
+				jwt,
+				returnUrl: window.location.toString()
+			}
+		})
+	}, [router, agreement, jwt])
 
-	// const handleAuthSlack = useCallback(async () => {
-	// 	if (!agreement?.id || !jwt) {
-	// 		return
-	// 	}
+	const handleAuthSlack = useCallback(async () => {
+		if (!agreement?.id || !jwt) {
+			return
+		}
 
-	// 	router.push({
-	// 		pathname: `${
-	// 			process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-	// 		}${API.v1.AuthenticateWithSlack.path()}`,
-	// 		query: {
-	// 			agreementId: agreement.id,
-	// 			jwt,
-	// 			returnUrl: window.location.toString()
-	// 		}
-	// 	})
-	// }, [router, agreement, jwt])
-
-	// const handleReauthenticate = useCallback(async () => {
-	// 	if (selectedConnection) {
-	// 		switch (selectedConnection.platform) {
-	// 			case API.RuleIo.Discord:
-	// 				setIsConnectDiscordModalOpen(true)
-	// 				break
-
-	// 			case API.RuleIo.Twitter:
-	// 				handleAuthTwitter()
-	// 				break
-
-	// 			case API.RuleIo.Slack:
-	// 				handleAuthSlack()
-	// 				break
-
-	// 			default:
-	// 				log.warn(
-	// 					`No matching selectedConnection for ${selectedConnection}`
-	// 				)
-	// 				break
-	// 		}
-	// 	}
-	// }, [selectedConnection, handleAuthTwitter, handleAuthSlack])
+		router.push({
+			pathname: `${
+				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
+			}${API.v1.AuthenticateWithSlack.path()}`,
+			query: {
+				agreementId: agreement.id,
+				jwt,
+				returnUrl: window.location.toString()
+			}
+		})
+	}, [router, agreement, jwt])
 
 	interface SectionHeaderProps {
 		icon: string
@@ -121,6 +97,50 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 		)
 	}
 
+	interface AddNewConnectionTileProps {
+		platform: API.RuleIo
+	}
+
+	const AddNewConnectionTile = ({ platform }: AddNewConnectionTileProps) => {
+		return (
+			<div
+				className={meemTheme.gridItemBlue}
+				onClick={() => {
+					switch (platform) {
+						case API.RuleIo.Discord:
+							setIsConnectDiscordModalOpen(true)
+							break
+						case API.RuleIo.Twitter:
+							handleAuthTwitter()
+							break
+						case API.RuleIo.Slack:
+							handleAuthSlack()
+							break
+					}
+				}}
+			>
+				<Center>
+					<Text
+						className={meemTheme.tSmallBold}
+						style={{
+							color: colorBlue,
+							paddingTop: 8,
+							paddingBottom: 6
+						}}
+					>
+						{`+ Connect Another ${
+							platform === API.RuleIo.Discord
+								? 'Server'
+								: platform === API.RuleIo.Slack
+								? 'Workspace'
+								: 'Account'
+						}`}
+					</Text>
+				</Center>
+			</div>
+		)
+	}
+
 	const ConnectionTile = ({ connection }: ConnectionTileProps) => {
 		return (
 			<div className={meemTheme.gridItemFlat}>
@@ -144,17 +164,24 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 	interface ConnectionsGridProps {
 		conns: SymphonyConnection[]
+		platform: API.RuleIo
 	}
 
-	const ConnectionsGrid = ({ conns }: ConnectionsGridProps) => {
+	const ConnectionsGrid = ({ conns, platform }: ConnectionsGridProps) => {
 		return (
-			<Grid>
-				{conns.map(connection => (
-					<Grid.Col xs={12} md={6} key={connection.id}>
-						<ConnectionTile connection={connection} />
+			<>
+				<Space h={4} />
+				<Grid>
+					{conns.map(connection => (
+						<Grid.Col xs={12} md={6} key={connection.id}>
+							<ConnectionTile connection={connection} />
+						</Grid.Col>
+					))}
+					<Grid.Col xs={12} md={6} key={platform}>
+						<AddNewConnectionTile platform={platform} />
 					</Grid.Col>
-				))}
-			</Grid>
+				</Grid>
+			</>
 		)
 	}
 
@@ -177,37 +204,34 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 		return (
 			<>
-				{twitterConnections && twitterConnections.length > 0 && (
-					<>
-						<SectionHeader
-							icon="/connect-twitter.png"
-							text="Twitter Accounts"
-						/>
-						<ConnectionsGrid conns={twitterConnections} />
-					</>
-				)}
+				<SectionHeader
+					icon="/connect-twitter.png"
+					text="Twitter Accounts"
+				/>
+				<ConnectionsGrid
+					conns={twitterConnections ?? []}
+					platform={API.RuleIo.Twitter}
+				/>
 
-				{discordConnections && discordConnections.length > 0 && (
-					<>
-						<Space h={24} />
-						<SectionHeader
-							icon="/connect-discord.png"
-							text="Discord Servers"
-						/>
-						<ConnectionsGrid conns={discordConnections} />
-					</>
-				)}
+				<Space h={32} />
+				<SectionHeader
+					icon="/connect-discord.png"
+					text="Discord Servers"
+				/>
+				<ConnectionsGrid
+					conns={discordConnections ?? []}
+					platform={API.RuleIo.Discord}
+				/>
 
-				{slackConnections && slackConnections.length > 0 && (
-					<>
-						<Space h={24} />
-						<SectionHeader
-							icon="/connect-slack.png"
-							text="Slack Workspaces"
-						/>
-						<ConnectionsGrid conns={slackConnections} />
-					</>
-				)}
+				<Space h={32} />
+				<SectionHeader
+					icon="/connect-slack.png"
+					text="Slack Workspaces"
+				/>
+				<ConnectionsGrid
+					conns={slackConnections ?? []}
+					platform={API.RuleIo.Slack}
+				/>
 			</>
 		)
 	}
