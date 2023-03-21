@@ -299,11 +299,9 @@ export const SymphonyExtension: React.FC = () => {
 			{!agreement?.isCurrentUserAgreementAdmin &&
 				agreement?.isCurrentUserAgreementMember &&
 				(!rules || (rules && rules.length === 0)) && (
-					<Center>
-						<Text className={meemTheme.tSmallBold}>
-							This community has no Symphony rules set up yet.
-						</Text>
-					</Center>
+					<Text className={meemTheme.tSmallBold}>
+						This community has no Symphony rules set up yet.
+					</Text>
 				)}
 
 			{agreement?.isCurrentUserAgreementAdmin && (
@@ -377,87 +375,96 @@ export const SymphonyExtension: React.FC = () => {
 		<>
 			{agreement?.isCurrentUserAgreementMember && (
 				<>
-					<Text className={meemTheme.tMediumBold}>Connections</Text>
-					<Space h={24} />
-					<Text className={meemTheme.tExtraSmallLabel}>
-						CONNECTED ACCOUNTS
-					</Text>
-
-					{(isFetchingDiscordConnections ||
-						isFetchingSlackConnections ||
-						isFetchingTwitterConnections ||
-						isFetchingConnections) && (
+					{agreement?.isCurrentUserAgreementAdmin && (
 						<>
+							<Text className={meemTheme.tMediumBold}>
+								Connections
+							</Text>
 							<Space h={24} />
-							<Loader variant="oval" color="cyan" />
+							<Text className={meemTheme.tExtraSmallLabel}>
+								CONNECTED ACCOUNTS
+							</Text>
+
+							{(isFetchingDiscordConnections ||
+								isFetchingSlackConnections ||
+								isFetchingTwitterConnections ||
+								isFetchingConnections) && (
+								<>
+									<Space h={24} />
+									<Loader variant="oval" color="cyan" />
+								</>
+							)}
+
+							{symphonyConnections &&
+								!isFetchingConnections &&
+								!isFetchingDiscordConnections &&
+								!isFetchingSlackConnections &&
+								!isFetchingTwitterConnections && (
+									<>
+										<Space h={24} />
+										<Grid>
+											{connectedDiscordAccounts > 0 && (
+												<Grid.Col
+													xs={12}
+													md={6}
+													key={API.RuleIo.Discord.toString()}
+												>
+													{connectionSummaryGridItem(
+														API.RuleIo.Discord,
+														connectedDiscordAccounts
+													)}
+												</Grid.Col>
+											)}
+											{connectedTwitterAccounts > 0 && (
+												<Grid.Col
+													xs={12}
+													md={6}
+													key={API.RuleIo.Twitter.toString()}
+												>
+													{connectionSummaryGridItem(
+														API.RuleIo.Twitter,
+														connectedTwitterAccounts
+													)}
+												</Grid.Col>
+											)}
+											{connectedSlackAccounts > 0 && (
+												<Grid.Col
+													xs={12}
+													md={6}
+													key={API.RuleIo.Slack.toString()}
+												>
+													{connectionSummaryGridItem(
+														API.RuleIo.Slack,
+														connectedSlackAccounts
+													)}
+												</Grid.Col>
+											)}
+										</Grid>
+									</>
+								)}
+
+							<Space h={24} />
+							<Button
+								className={meemTheme.buttonWhite}
+								onClick={() => {
+									setIsManageConnectionsModalOpen(true)
+									analytics.track(
+										'Symphony Manage Connections',
+										{
+											communityId: agreement.id,
+											communityName: agreement?.name
+										}
+									)
+								}}
+							>
+								Manage Connections
+							</Button>
+							<Space h={32} />
+
+							<Divider />
+							<Space h={32} />
 						</>
 					)}
-
-					{symphonyConnections &&
-						!isFetchingConnections &&
-						!isFetchingDiscordConnections &&
-						!isFetchingSlackConnections &&
-						!isFetchingTwitterConnections && (
-							<>
-								<Space h={24} />
-								<Grid>
-									{connectedDiscordAccounts > 0 && (
-										<Grid.Col
-											xs={12}
-											md={6}
-											key={API.RuleIo.Discord.toString()}
-										>
-											{connectionSummaryGridItem(
-												API.RuleIo.Discord,
-												connectedDiscordAccounts
-											)}
-										</Grid.Col>
-									)}
-									{connectedTwitterAccounts > 0 && (
-										<Grid.Col
-											xs={12}
-											md={6}
-											key={API.RuleIo.Twitter.toString()}
-										>
-											{connectionSummaryGridItem(
-												API.RuleIo.Twitter,
-												connectedTwitterAccounts
-											)}
-										</Grid.Col>
-									)}
-									{connectedSlackAccounts > 0 && (
-										<Grid.Col
-											xs={12}
-											md={6}
-											key={API.RuleIo.Slack.toString()}
-										>
-											{connectionSummaryGridItem(
-												API.RuleIo.Slack,
-												connectedSlackAccounts
-											)}
-										</Grid.Col>
-									)}
-								</Grid>
-							</>
-						)}
-
-					<Space h={24} />
-					<Button
-						className={meemTheme.buttonWhite}
-						onClick={() => {
-							setIsManageConnectionsModalOpen(true)
-							analytics.track('Symphony Manage Connections', {
-								communityId: agreement.id,
-								communityName: agreement?.name
-							})
-						}}
-					>
-						Manage Connections
-					</Button>
-					<Space h={32} />
-
-					<Divider />
-					<Space h={32} />
 					<Text className={meemTheme.tMediumBold}>
 						Publishing Flows
 					</Text>

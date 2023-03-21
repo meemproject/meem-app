@@ -225,7 +225,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					wallet.accounts[0]
 				)
 
-				if (possibleAgreement.name) {
+				if (
+					possibleAgreement.name &&
+					possibleAgreement.isCurrentUserAgreementAdmin
+				) {
 					agrs.push(possibleAgreement)
 				}
 			})
@@ -447,7 +450,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		if (
 			isLoadingMyAgreements ||
 			extensionsLoading ||
-			(pageState !== PageState.Onboarding &&
+			(onboardingStep !== 0 &&
 				(twitterDataLoading ||
 					discordInfoLoading ||
 					slackInfoLoading)) ||
@@ -492,18 +495,42 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				setOnboardingStep(0)
 			} else if (chosenAgreement) {
 				if (!twitterUsername && !isSkippingTwitterAuth) {
+					// Pick publishing platform(s)
 					setOnboardingStep(1)
 				} else {
-					if (!haveOutputsBeenSelected) {
+					if (
+						!haveOutputsBeenSelected &&
+						!discordInfo?.Discord?.name &&
+						!slackInfo?.Slack?.name
+					) {
+						// Pick proposal platform(s)
 						setOnboardingStep(2)
 					} else {
+						// Proposal platform has been picked
+						// OR we already have discord or slack data.
+
 						if (
-							isDiscordInputEnabled &&
-							(!discordInviteUrl || !botCode)
+							!discordInfo?.Discord?.name &&
+							isDiscordInputEnabled
 						) {
-							getDiscordInviteAndBotCode()
+							// Connect discord if we haven't already
+							if (
+								isDiscordInputEnabled &&
+								(!discordInviteUrl || !botCode)
+							) {
+								getDiscordInviteAndBotCode()
+							}
+							setOnboardingStep(3)
+						} else if (
+							!slackInfo?.Slack?.name &&
+							isSlackInputEnabled
+						) {
+							// Connect slack if we haven't already
+							setOnboardingStep(4)
+						} else {
+							// Setup is complete!
+							setOnboardingStep(5)
 						}
-						setOnboardingStep(3)
 					}
 				}
 			}
@@ -515,6 +542,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					log.debug(
 						'found cookie, re-choosing existing agreement to continue flow...'
 					)
+					setIsTwitterOutputEnabled(true)
 					setChosenAgreement(agr)
 					Cookies.remove(CookieKeys.symphonyOnboardingAgreementSlug)
 				}
@@ -550,7 +578,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		slackData,
 		isSkippingTwitterAuth,
 		isDiscordInputEnabled,
-		haveOutputsBeenSelected
+		haveOutputsBeenSelected,
+		isSlackInputEnabled,
+		onboardingStep
 	])
 
 	const chooseAgreementAndEnableExtension = useCallback(
@@ -565,7 +595,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				})
 				if (isExtensionEnabled) {
 					log.debug('extension already enabled for this community')
-					setChosenAgreement(chosen)
+					router.push(`/${chosen?.slug}`)
 					return
 				}
 			}
@@ -619,7 +649,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				setIsEnablingExtension(false)
 			}
 		},
-		[availableExtensionsData, extensionName, sdk.agreementExtension]
+		[availableExtensionsData, router, sdk.agreementExtension]
 	)
 
 	// Handle Transaction state changes
@@ -710,6 +740,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			return
 		}
 
+		Cookies.set(
+			CookieKeys.symphonyOnboardingAgreementSlug,
+			chosenAgreement?.slug ?? ''
+		)
+
+		const setCookie = Cookies.get(
+			CookieKeys.symphonyOnboardingAgreementSlug
+		)
+
+		log.debug(`set redirect agreement slug to ${setCookie}`)
+
 		router.push({
 			pathname: `${
 				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
@@ -765,6 +806,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 						<TextInput
 							radius="lg"
 							size="md"
+							disabled={
+								chosenAgreement !== undefined ||
+								isCreatingNewCommunity
+							}
 							value={newAgreementName ?? ''}
 							onChange={(event: {
 								target: {
@@ -1052,7 +1097,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			description={
 				<>
 					<Text className={meemTheme.tExtraSmall}>
-						{isDiscordInputEnabled
+						{isDiscordInputEnabled || discordInfo
 							? `Please invite the Symphony bot to manage your Discord server.`
 							: onboardingStep < 4
 							? 'Select Discord to use this functionality'
@@ -1143,7 +1188,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 										</Text>
 									</div>
 
-									<Space h={16} />
+									<Space h={24} />
 								</>
 							)}
 						</>
@@ -1157,6 +1202,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 										{`Bot added to ${discordInfo?.Discord?.name}`}
 									</Button>
 								</div>
+								<Space h={16} />
 							</>
 						</>
 					)}
@@ -1171,7 +1217,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			description={
 				<>
 					<Text className={meemTheme.tExtraSmall}>
-						{isSlackInputEnabled
+						{isSlackInputEnabled || slackInfo
 							? `Please authorize Symphony to manage your Slack workspace.`
 							: onboardingStep < 4
 							? 'Select Slack to use this functionality'
@@ -1190,6 +1236,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							>
 								{`Connect Symphony`}
 							</Button>
+							<Space h={16} />
 						</>
 					)}
 					{onboardingStep > 4 && slackInfo && (
@@ -1214,9 +1261,16 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<>
 					{onboardingStep === 5 && (
 						<>
-							<Space h={16} />
+							<Space h={8} />
 							<div className={meemTheme.row}>
-								<Button className={meemTheme.buttonWhite}>
+								<Button
+									className={meemTheme.buttonDarkBlue}
+									onClick={() => {
+										router.push(
+											`/${chosenAgreement?.slug}/e/symphony`
+										)
+									}}
+								>
 									{`Start using Symphony`}
 								</Button>
 							</div>
@@ -1229,6 +1283,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 	return (
 		<>
+			{/* Page header */}
+			{pageHeader}
+
 			{/* Loading state */}
 			{pageState === PageState.Loading && (
 				<>
@@ -1238,9 +1295,6 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					</Center>
 				</>
 			)}
-
-			{/* Page header */}
-			{pageState !== PageState.Loading && <>{pageHeader}</>}
 
 			{pageState === PageState.Onboarding && (
 				<>
@@ -1324,6 +1378,15 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							className={meemTheme.tLargeBold}
 						>
 							{`Which community will use ${extensionName}?`}
+						</Text>
+					</Center>
+					<Space h={4} />
+					<Center>
+						<Text
+							style={{ paddingLeft: 24, paddingRight: 24 }}
+							className={meemTheme.tSmall}
+						>
+							{`Only showing communities where you are an admin`}
 						</Text>
 					</Center>
 					<Space h={48} />
