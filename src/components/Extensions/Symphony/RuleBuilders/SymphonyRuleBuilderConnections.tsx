@@ -31,7 +31,7 @@ export const SymphonyRuleBuilderConnections: React.FC<IProps> = ({
 			? '/connect-twitter.png'
 			: '/connect-webhook.png'
 
-	const isOutputWebhook = output?.platform === API.RuleIo.Webhook
+	const isOutputWebhook = webhookUrl && webhookPrivateKey
 
 	return (
 		<>
