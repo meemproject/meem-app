@@ -109,10 +109,6 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 		setIsSavingRule(true)
 
-		if (webhookUrl && webhookPrivateKey) {
-			// TODO: Save webhook url and private key here
-		}
-
 		await makeRequest<API.v1.SaveRule.IDefinition>(
 			`${
 				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
@@ -137,7 +133,9 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 							selectedOutput?.id ??
 							'',
 						isEnabled: true,
-						ruleId: existingRule?.id ?? rule?.id
+						ruleId: existingRule?.id ?? rule?.id,
+						webhookUrl,
+						webhookSecret: webhookPrivateKey
 					}
 				}
 			}
