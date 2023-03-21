@@ -1,10 +1,10 @@
-import { Space, Modal, Text, Grid, Image, Center } from '@mantine/core'
+import { Space, Modal, Text, Grid, Image, Center, Menu } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import { MoreVert } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
-import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import { colorBlue, colorRed, useMeemTheme } from '../../../Styles/MeemTheme'
 import { SymphonyConnection } from '../Model/symphony'
 import { API } from '../symphonyTypes.generated'
 import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
@@ -156,10 +156,26 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 							{connection.name}
 						</Text>
 					</div>
-					<MoreVert
-						style={{ cursor: 'pointer' }}
-						onClick={() => {}}
-					/>
+					<Menu radius={8} shadow={'lg'}>
+						<Menu.Target>
+							<MoreVert style={{ cursor: 'pointer' }} />
+						</Menu.Target>
+						<Menu.Dropdown>
+							<Menu.Item
+								onClick={() => {
+									setSelectedConnection(connection)
+									setIsDisconnectModalOpen(true)
+								}}
+							>
+								<Text
+									className={meemTheme.tSmallBold}
+									color={colorRed}
+								>
+									Disconnect
+								</Text>
+							</Menu.Item>
+						</Menu.Dropdown>
+					</Menu>
 				</div>
 			</div>
 		)
