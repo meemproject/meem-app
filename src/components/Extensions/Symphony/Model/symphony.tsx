@@ -21,9 +21,6 @@ export interface SymphonyConnection {
 
 	// Slack
 	slackWorkspaceId?: string
-
-	// WebHook
-	webHookUrl?: string
 }
 
 export interface SymphonyRule {
@@ -38,4 +35,6 @@ export interface SymphonyRule {
 	definition: API.IRule
 	description?: string | null
 	abridgedDescription?: string | null
+	webhookUrl?: string
+	webhookPrivateKey?: string
 }
