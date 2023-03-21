@@ -143,7 +143,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 	const ConnectionTile = ({ connection }: ConnectionTileProps) => {
 		return (
-			<div className={meemTheme.gridItemFlat}>
+			<div className={meemTheme.gridItemFlat} style={{ cursor: 'auto' }}>
 				<div className={meemTheme.spacedRowCentered}>
 					<div className={meemTheme.centeredRow}>
 						<Image
@@ -156,7 +156,10 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 							{connection.name}
 						</Text>
 					</div>
-					<MoreVert />
+					<MoreVert
+						style={{ cursor: 'pointer' }}
+						onClick={() => {}}
+					/>
 				</div>
 			</div>
 		)

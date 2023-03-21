@@ -245,13 +245,43 @@ export const SymphonyExtension: React.FC = () => {
 		<>
 			{rules &&
 				rules.map(rule => {
+					const matchingInput = symphonyConnections.filter(
+						c => c.id === rule.inputId
+					)
+
+					const matchingOutput = symphonyConnections.filter(
+						c => c.id === rule.outputId
+					)
+
+					if (
+						!matchingInput ||
+						matchingInput.length === 0 ||
+						!matchingOutput ||
+						matchingOutput.length === 0
+					) {
+						return <div key={`rule-${rule.id}`} />
+					}
+
+					const inputIcon =
+						matchingInput[0].platform === API.RuleIo.Discord
+							? '/connect-discord.png'
+							: '/connect-slack.png'
+
+					const outputIcon =
+						matchingOutput[0].platform === API.RuleIo.Twitter
+							? '/connect-twitter.png'
+							: '/connect-webhook.png'
+
+					const isOutputWebhook =
+						rule?.webhookUrl && rule?.webhookPrivateKey
+
 					return (
 						<div
 							key={`rule-${rule.id}`}
-							className={meemTheme.gridItem}
+							className={meemTheme.gridItemFlat}
 							style={{ marginBottom: 16, cursor: 'auto' }}
 						>
-							<div className={meemTheme.row}>
+							<div className={meemTheme.spacedRow}>
 								<div>
 									<Text
 										className={meemTheme.tSmallBold}
@@ -261,15 +291,54 @@ export const SymphonyExtension: React.FC = () => {
 										rule.outputPlatformString ?? ''
 									)} flow`}</Text>
 									<Space h={8} />
-									<Text className={meemTheme.tSmall}>
+									<Text className={meemTheme.tExtraSmall}>
 										{rule.abridgedDescription}
 									</Text>
+
+									<Space h={16} />
+									<div className={meemTheme.centeredRow}>
+										<Image
+											width={18}
+											height={18}
+											src={inputIcon}
+										/>
+										<Space w={8} />
+										<Text className={meemTheme.tExtraSmall}>
+											Proposals in{' '}
+											<span
+												className={meemTheme.tSmallBold}
+											>
+												{matchingInput[0].name}
+											</span>
+										</Text>
+									</div>
+									<Space h={8} />
+									<div className={meemTheme.centeredRow}>
+										<Image
+											width={18}
+											height={18}
+											src={outputIcon}
+										/>
+										<Space w={8} />
+										<Text className={meemTheme.tSmall}>
+											Publishing to{' '}
+											<span
+												className={
+													meemTheme.tExtraSmallBold
+												}
+											>
+												{!isOutputWebhook
+													? matchingOutput[0]?.name
+													: `Custom Webhook`}
+											</span>
+										</Text>
+									</div>
 								</div>
 								<Space w={24} />
 								{agreement?.isCurrentUserAgreementAdmin && (
-									<div>
+									<div className={meemTheme.row}>
 										<Button
-											className={meemTheme.buttonWhite}
+											className={meemTheme.buttonBlack}
 											onClick={() => {
 												setSelectedRule(rule)
 												setIsNewRuleModalOpen(true)
@@ -277,11 +346,9 @@ export const SymphonyExtension: React.FC = () => {
 										>
 											Edit
 										</Button>
-										<Space h={8} />
+										<Space w={8} />
 										<Button
-											className={
-												meemTheme.buttonOrangeRedBordered
-											}
+											className={meemTheme.buttonRed}
 											onClick={() => {
 												removeRule(rule.id)
 											}}
