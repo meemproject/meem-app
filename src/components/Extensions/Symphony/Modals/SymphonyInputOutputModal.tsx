@@ -547,7 +547,6 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						}}
 						input={existingRule?.input ?? selectedInput}
 						webhookUrl={webhookUrl}
-						webhookPrivateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isDiscordWebhookRuleBuilderOpened}
 						onModalClosed={function (): void {
@@ -588,7 +587,6 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						}}
 						input={existingRule?.input ?? selectedInput}
 						webhookUrl={webhookUrl}
-						webhookPrivateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isSlackWebhookRuleBuilderOpened}
 						onModalClosed={function (): void {
