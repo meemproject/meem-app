@@ -1,3 +1,4 @@
+import log from '@kengoldfarb/log'
 import {
 	ActionIcon,
 	Button,
@@ -177,50 +178,50 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		setIsSavingRule(false)
 	}
 
-	const openRuleBuilder = useCallback(() => {
-		if (selectedInput && selectedOutput) {
+	const openRuleBuilder = useCallback(
+		(input: SymphonyConnection, output: SymphonyConnection) => {
 			if (
-				selectedInput.platform === API.RuleIo.Discord &&
-				selectedOutput.platform === API.RuleIo.Twitter &&
+				input.platform === API.RuleIo.Discord &&
+				output.platform === API.RuleIo.Twitter &&
 				!isDiscordTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
 				setIsDiscordTwitterRuleBuilderOpened(true)
 			} else if (
-				selectedInput.platform === API.RuleIo.Slack &&
-				selectedOutput.platform === API.RuleIo.Twitter &&
+				input.platform === API.RuleIo.Slack &&
+				output.platform === API.RuleIo.Twitter &&
 				!isSlackTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
 				setIsSlackTwitterRuleBuilderOpened(true)
 			} else if (
-				selectedInput.platform === API.RuleIo.Discord &&
-				selectedOutput.platform === API.RuleIo.Webhook &&
+				input.platform === API.RuleIo.Discord &&
+				output.platform === API.RuleIo.Webhook &&
 				!isDiscordWebhookRuleBuilderOpened
 			) {
 				// Discord to Webhook flow
 				setIsDiscordWebhookRuleBuilderOpened(true)
 			} else if (
-				selectedInput.platform === API.RuleIo.Slack &&
-				selectedOutput.platform === API.RuleIo.Webhook &&
+				input.platform === API.RuleIo.Slack &&
+				output.platform === API.RuleIo.Webhook &&
 				!isSlackWebhookRuleBuilderOpened
 			) {
 				// Slack to Webhook flow
 				setIsSlackWebhookRuleBuilderOpened(true)
 			}
-		}
-	}, [
-		isDiscordTwitterRuleBuilderOpened,
-		isDiscordWebhookRuleBuilderOpened,
-		isSlackTwitterRuleBuilderOpened,
-		isSlackWebhookRuleBuilderOpened,
-		selectedInput,
-		selectedOutput
-	])
+		},
+		[
+			isDiscordTwitterRuleBuilderOpened,
+			isDiscordWebhookRuleBuilderOpened,
+			isSlackTwitterRuleBuilderOpened,
+			isSlackWebhookRuleBuilderOpened
+		]
+	)
 
 	useEffect(() => {
 		function fetchConnectionsForNewRule() {
 			if (!connections) {
+				log.debug('no connections available')
 				return
 			}
 			// TODO: fetch private key
@@ -263,9 +264,9 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		function fetchConnectionsForExistingRule() {
 			if (!connections) {
 				onModalClosed()
+				log.debug('no connections available for this rule')
 				return
 			}
-			setHasFetchedIO(true)
 
 			// Find input
 			const filteredInput = connections.filter(
@@ -276,10 +277,12 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			)
 			// TODO: Set webhook url and private key for existing rules here
 			if (filteredInput.length > 0 && filteredOutput.length > 0) {
+				log.debug('found inputs and outputs for existing rule')
 				// Find output
 				setSelectedInput(filteredInput[0])
 				setSelectedOutput(filteredOutput[0])
-				openRuleBuilder()
+				openRuleBuilder(filteredInput[0], filteredOutput[0])
+				setHasFetchedIO(true)
 			} else {
 				showErrorNotification(
 					'Oops!',
@@ -291,15 +294,18 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 		// Handle editing
 		if (isOpened && !hasFetchedIO && existingRule && connections) {
+			log.debug('fetchConnectionsForExistingRule')
 			fetchConnectionsForExistingRule()
 		}
 
 		// Reset state so that new data can be fetched upon refresh
 		if (!isOpened && hasFetchedIO) {
+			log.debug('closed modal, set has fetched io = false')
 			setHasFetchedIO(false)
 		}
 
-		if (isOpened && !hasFetchedIO && connections) {
+		if (isOpened && !hasFetchedIO && !existingRule && connections) {
+			log.debug('fetchConnectionsForNewRule')
 			fetchConnectionsForNewRule()
 		}
 	}, [
@@ -456,7 +462,10 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 							<Button
 								className={meemTheme.buttonBlack}
 								onClick={() => {
-									openRuleBuilder()
+									openRuleBuilder(
+										selectedInput,
+										selectedOutput
+									)
 								}}
 							>
 								Next

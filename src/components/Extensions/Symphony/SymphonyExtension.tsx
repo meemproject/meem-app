@@ -308,6 +308,7 @@ export const SymphonyExtension: React.FC = () => {
 				<Button
 					className={meemTheme.buttonDarkGrey}
 					onClick={() => {
+						setSelectedRule(undefined)
 						setIsNewRuleModalOpen(true)
 					}}
 				>
