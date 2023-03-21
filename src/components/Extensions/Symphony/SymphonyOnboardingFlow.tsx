@@ -225,7 +225,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					wallet.accounts[0]
 				)
 
-				if (possibleAgreement.name) {
+				if (
+					possibleAgreement.name &&
+					possibleAgreement.isCurrentUserAgreementAdmin
+				) {
 					agrs.push(possibleAgreement)
 				}
 			})
@@ -447,9 +450,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		if (
 			isLoadingMyAgreements ||
 			extensionsLoading ||
-			twitterDataLoading ||
-			discordInfoLoading ||
-			slackInfoLoading ||
+			(onboardingStep !== 0 &&
+				(twitterDataLoading ||
+					discordInfoLoading ||
+					slackInfoLoading)) ||
 			(!chosenAgreement && twitterAuthRedirectAgreementSlug)
 		) {
 			setPageState(PageState.Loading)
@@ -575,7 +579,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		isSkippingTwitterAuth,
 		isDiscordInputEnabled,
 		haveOutputsBeenSelected,
-		isSlackInputEnabled
+		isSlackInputEnabled,
+		onboardingStep
 	])
 
 	const chooseAgreementAndEnableExtension = useCallback(
@@ -801,6 +806,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 						<TextInput
 							radius="lg"
 							size="md"
+							disabled={
+								chosenAgreement !== undefined ||
+								isCreatingNewCommunity
+							}
 							value={newAgreementName ?? ''}
 							onChange={(event: {
 								target: {
@@ -1369,6 +1378,15 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 							className={meemTheme.tLargeBold}
 						>
 							{`Which community will use ${extensionName}?`}
+						</Text>
+					</Center>
+					<Space h={4} />
+					<Center>
+						<Text
+							style={{ paddingLeft: 24, paddingRight: 24 }}
+							className={meemTheme.tSmall}
+						>
+							{`Only showing communities where you are an admin`}
 						</Text>
 					</Center>
 					<Space h={48} />
