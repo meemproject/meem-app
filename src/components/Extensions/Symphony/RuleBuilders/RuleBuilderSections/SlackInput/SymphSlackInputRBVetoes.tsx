@@ -135,7 +135,6 @@ export const SymphSlackInputRBVetoes: React.FC<IProps> = ({
 					<NumberInput {...form.getInputProps('vetoVotes')} />
 				</>
 			)}
-			<Space h={'lg'} />
 		</>
 	)
 }

@@ -74,7 +74,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		string | null
 	>(null)
 	const [webhookUrl, setWebhookUrl] = useState('')
-	const webhookPrivateKey = uuidv4()
+	const [webhookPrivateKey, setWebHookPrivateKey] = useState('')
 	const [hasFetchedIO, setHasFetchedIO] = useState(false)
 	const [isSavingRule, setIsSavingRule] = useState(false)
 
@@ -226,6 +226,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				return
 			}
 
+			setWebHookPrivateKey(uuidv4())
+
 			const filteredInputs = connections.filter(
 				c => c.type === SymphonyConnectionType.InputOnly
 			)
@@ -266,6 +268,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				log.debug('no connections available for this rule')
 				return
 			}
+
+			setWebHookPrivateKey(uuidv4())
 
 			// Find input
 			const filteredInput = connections.filter(
