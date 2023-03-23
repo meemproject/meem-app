@@ -243,6 +243,17 @@ export const SymphonyExtension: React.FC = () => {
 
 	const rulesSection = () => (
 		<>
+			<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
+			{agreement?.isCurrentUserAgreementAdmin && (
+				<>
+					<Space h={8} />
+					<Text className={meemTheme.tExtraSmall}>
+						{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
+					</Text>
+				</>
+			)}
+			<Space h={16} />
+
 			{rules &&
 				rules.map(rule => {
 					const matchingInput = symphonyConnections.filter(
@@ -253,27 +264,23 @@ export const SymphonyExtension: React.FC = () => {
 						c => c.id === rule.outputId
 					)
 
-					if (
-						!matchingInput ||
-						matchingInput.length === 0 ||
-						!matchingOutput ||
-						matchingOutput.length === 0
-					) {
+					if (!matchingInput || matchingInput.length === 0) {
 						return <div key={`rule-${rule.id}`} />
 					}
+
+					const isOutputWebhook =
+						rule.outputPlatformString === 'webhook'
 
 					const inputIcon =
 						matchingInput[0].platform === API.RuleIo.Discord
 							? '/connect-discord.png'
 							: '/connect-slack.png'
 
-					const outputIcon =
-						matchingOutput[0].platform === API.RuleIo.Twitter
-							? '/connect-twitter.png'
-							: '/connect-webhook.png'
-
-					const isOutputWebhook =
-						rule?.webhookUrl && rule?.webhookPrivateKey
+					const outputIcon = isOutputWebhook
+						? '/connect-webhook.png'
+						: matchingOutput[0].platform === API.RuleIo.Twitter
+						? '/connect-twitter.png'
+						: '/connect-webhook.png'
 
 					return (
 						<div
@@ -306,7 +313,9 @@ export const SymphonyExtension: React.FC = () => {
 										<Text className={meemTheme.tExtraSmall}>
 											Proposals in{' '}
 											<span
-												className={meemTheme.tSmallBold}
+												className={
+													meemTheme.tExtraSmallBold
+												}
 											>
 												{matchingInput[0].name}
 											</span>
@@ -320,7 +329,7 @@ export const SymphonyExtension: React.FC = () => {
 											src={outputIcon}
 										/>
 										<Space w={8} />
-										<Text className={meemTheme.tSmall}>
+										<Text className={meemTheme.tExtraSmall}>
 											Publishing to{' '}
 											<span
 												className={
@@ -361,10 +370,8 @@ export const SymphonyExtension: React.FC = () => {
 						</div>
 					)
 				})}
-			{rulesData && <Space h={16} />}
 
-			{!agreement?.isCurrentUserAgreementAdmin &&
-				agreement?.isCurrentUserAgreementMember &&
+			{agreement?.isCurrentUserAgreementMember &&
 				(!rules || (rules && rules.length === 0)) && (
 					<Text className={meemTheme.tSmallBold}>
 						This community has no Symphony rules set up yet.
@@ -372,15 +379,18 @@ export const SymphonyExtension: React.FC = () => {
 				)}
 
 			{agreement?.isCurrentUserAgreementAdmin && (
-				<Button
-					className={meemTheme.buttonDarkGrey}
-					onClick={() => {
-						setSelectedRule(undefined)
-						setIsNewRuleModalOpen(true)
-					}}
-				>
-					+ Add New Flow
-				</Button>
+				<>
+					<Space h={16} />
+					<Button
+						className={meemTheme.buttonDarkGrey}
+						onClick={() => {
+							setSelectedRule(undefined)
+							setIsNewRuleModalOpen(true)
+						}}
+					>
+						+ Add New Flow
+					</Button>
+				</>
 			)}
 		</>
 	)
@@ -539,17 +549,6 @@ export const SymphonyExtension: React.FC = () => {
 								Publishing Flows
 							</Text>
 							<Space h={40} />
-						</>
-					)}
-
-					<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
-					{agreement.isCurrentUserAgreementAdmin && (
-						<>
-							<Space h={8} />
-							<Text className={meemTheme.tExtraSmall}>
-								{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
-							</Text>
-							<Space h={16} />
 						</>
 					)}
 
