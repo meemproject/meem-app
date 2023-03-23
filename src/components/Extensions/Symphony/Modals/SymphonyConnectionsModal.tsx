@@ -4,7 +4,11 @@ import { MoreVert } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
-import { colorBlue, colorRed, useMeemTheme } from '../../../Styles/MeemTheme'
+import {
+	colorDarkBlue,
+	colorRed,
+	useMeemTheme
+} from '../../../Styles/MeemTheme'
 import { SymphonyConnection } from '../Model/symphony'
 import { API } from '../symphonyTypes.generated'
 import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
@@ -121,9 +125,9 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 			>
 				<Center>
 					<Text
-						className={meemTheme.tSmallBold}
+						className={meemTheme.tExtraSmallBold}
 						style={{
-							color: colorBlue,
+							color: colorDarkBlue,
 							paddingTop: 8,
 							paddingBottom: 6
 						}}
@@ -147,9 +151,14 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 				<div className={meemTheme.spacedRowCentered}>
 					<div className={meemTheme.centeredRow}>
 						<Image
-							src={'/meem-icon.png'}
+							src={
+								connection.icon && connection.icon.length > 0
+									? connection.icon
+									: '/meem-icon.png'
+							}
 							width={36}
 							height={36}
+							radius={18}
 							style={{ marginRight: 12 }}
 						/>
 						<Text weight={500} style={{ marginRight: 'auto' }}>

@@ -16,6 +16,7 @@ import { useSDK, useAuth } from '@meemproject/react'
 import { makeRequest, MeemAPI } from '@meemproject/sdk'
 import { IconCopy } from '@tabler/icons'
 import React, { useCallback, useEffect, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { useAnalytics } from '../../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
 import {
@@ -23,7 +24,7 @@ import {
 	showSuccessNotification
 } from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../../../Styles/MeemTheme'
+import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 import {
 	SymphonyConnection,
 	SymphonyConnectionType,
@@ -73,7 +74,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		string | null
 	>(null)
 	const [webhookUrl, setWebhookUrl] = useState('')
-	const [webhookPrivateKey, setWebhookPrivateKey] = useState('')
+	const webhookPrivateKey = uuidv4()
 	const [hasFetchedIO, setHasFetchedIO] = useState(false)
 	const [isSavingRule, setIsSavingRule] = useState(false)
 
@@ -224,8 +225,6 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				log.debug('no connections available')
 				return
 			}
-			// TODO: fetch private key
-			setWebhookPrivateKey('private key')
 
 			const filteredInputs = connections.filter(
 				c => c.type === SymphonyConnectionType.InputOnly
@@ -351,6 +350,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 					<Select
 						placeholder="Pick proposal source"
 						data={inputValues}
+						radius={12}
+						size={'md'}
 						value={selectedInputValue}
 						onChange={event => {
 							if (event) {
@@ -383,6 +384,8 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						placeholder="Pick publishing destination"
 						data={outputValues}
 						value={selectedOutputValue}
+						radius={12}
+						size={'md'}
 						onChange={event => {
 							if (event) {
 								setSelectedOutputValue(event)
@@ -411,7 +414,10 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 											)
 										}}
 										className={meemTheme.tSmallBold}
-										style={{ cursor: 'pointer' }}
+										style={{
+											cursor: 'pointer',
+											color: colorDarkBlue
+										}}
 									>
 										dev docs.
 									</span>
@@ -547,6 +553,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						}}
 						input={existingRule?.input ?? selectedInput}
 						webhookUrl={webhookUrl}
+						privateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isDiscordWebhookRuleBuilderOpened}
 						onModalClosed={function (): void {
@@ -587,6 +594,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						}}
 						input={existingRule?.input ?? selectedInput}
 						webhookUrl={webhookUrl}
+						privateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isSlackWebhookRuleBuilderOpened}
 						onModalClosed={function (): void {

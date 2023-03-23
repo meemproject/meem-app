@@ -27,7 +27,7 @@ export const JoinLeaveAgreementModal: React.FC<IProps> = ({
 				<Text
 					className={meemTheme.tMediumBold}
 					styles={{ textAlign: 'center' }}
-				>{`Please wait while we add you to this on-chain community!\nThis could take a minute.`}</Text>
+				>{`Please wait while we add you to this community!\nThis could take a minute.`}</Text>
 			</div>
 			<Space h={8} />
 		</>
