@@ -533,17 +533,26 @@ export const SymphonyExtension: React.FC = () => {
 							<Space h={32} />
 						</>
 					)}
-					<Text className={meemTheme.tMediumBold}>
-						Publishing Flows
-					</Text>
-					<Space h={24} />
-					<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
-					<Space h={4} />
-					<Text className={meemTheme.tExtraSmall}>
-						{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
-					</Text>
+					{agreement.isCurrentUserAgreementAdmin && (
+						<>
+							<Text className={meemTheme.tMediumBold}>
+								Publishing Flows
+							</Text>
+							<Space h={24} />
+						</>
+					)}
 
-					<Space h={16} />
+					<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
+					{agreement.isCurrentUserAgreementAdmin && (
+						<>
+							<Space h={4} />
+							<Text className={meemTheme.tExtraSmall}>
+								{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
+							</Text>
+							<Space h={16} />
+						</>
+					)}
+
 					{rulesSection()}
 				</>
 			)}
@@ -551,7 +560,7 @@ export const SymphonyExtension: React.FC = () => {
 				<>
 					<Center>
 						<Text className={meemTheme.tSmallBold}>
-							Symphony rules are only available to community
+							Symphony rules are only visible to community
 							members.
 						</Text>
 					</Center>
