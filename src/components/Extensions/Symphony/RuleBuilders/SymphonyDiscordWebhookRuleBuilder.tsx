@@ -33,6 +33,7 @@ export interface IProps {
 	rule?: SymphonyRule
 	input?: SymphonyConnection
 	webhookUrl?: string
+	privateKey?: string
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -65,6 +66,7 @@ export const SymphonyDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 	rule,
 	input,
 	webhookUrl,
+	privateKey,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -288,6 +290,7 @@ export const SymphonyDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 						<SymphonyRuleBuilderConnections
 							input={rule?.input ?? input}
 							webhookUrl={webhookUrl}
+							webhookPrivateKey={privateKey}
 							onChangeConnectionsPressed={function (): void {
 								onModalClosed()
 							}}

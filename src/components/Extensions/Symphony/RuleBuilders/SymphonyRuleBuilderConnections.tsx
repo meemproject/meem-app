@@ -16,6 +16,7 @@ export const SymphonyRuleBuilderConnections: React.FC<IProps> = ({
 	input,
 	output,
 	webhookUrl,
+	webhookPrivateKey,
 	onChangeConnectionsPressed
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
@@ -51,10 +52,25 @@ export const SymphonyRuleBuilderConnections: React.FC<IProps> = ({
 				<Text className={meemTheme.tSmall}>
 					Publishing to{' '}
 					<span className={meemTheme.tSmallBold}>
-						{!isOutputWebhook ? output?.name : `Custom Webhook`}
+						{!isOutputWebhook
+							? output?.name
+							: `Custom Webhook: ${webhookUrl}`}
 					</span>
 				</Text>
 			</div>
+			{isOutputWebhook && (
+				<>
+					<Space h={8} />
+					<div style={{ marginLeft: 32 }}>
+						<Text className={meemTheme.tSmallFaded}>
+							Private Key:{' '}
+							<span className={meemTheme.tSmallBoldFaded}>
+								{webhookPrivateKey}
+							</span>
+						</Text>
+					</div>
+				</>
+			)}
 
 			<Space h={18} />
 			<Button

@@ -68,6 +68,7 @@
 		"@tiptap/react": "2.0.0-beta.217",
 		"@tiptap/starter-kit": "^2.0.0-beta.217",
 		"@types/superagent": "^4.1.15",
+		"@types/uuid": "^9.0.1",
 		"abort-controller": "^3.0.0",
 		"blob-util": "^2.0.2",
 		"dayjs": "^1.11.0",
@@ -92,7 +93,8 @@
 		"superagent": "^7.1.6",
 		"swr": "^2.0.1",
 		"twitter-intent": "^0.0.3",
-		"use-file-picker": "^1.4.2"
+		"use-file-picker": "^1.4.2",
+		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
 		"@graphql-codegen/cli": "^2.6.2",
