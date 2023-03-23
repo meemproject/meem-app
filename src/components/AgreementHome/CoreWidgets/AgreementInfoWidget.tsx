@@ -371,34 +371,41 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					</Text>
 				</Center>
 				<Space h={16} />
-				{!agreement.isLaunched && (
-					<>
-						<Space
-							h={16}
-							className={meemTheme.visibleDesktopOnly}
-						/>
-						<Space h={4} className={meemTheme.visibleMobileOnly} />
+				{!agreement.isLaunched &&
+					agreement.isCurrentUserAgreementAdmin && (
+						<>
+							<Space
+								h={16}
+								className={meemTheme.visibleDesktopOnly}
+							/>
+							<Space
+								h={4}
+								className={meemTheme.visibleMobileOnly}
+							/>
 
-						<Center>
-							<Link
-								href={`/${agreement.slug}/admin?tab=details`}
-								legacyBehavior
-								passHref
-							>
-								<a className={meemTheme.unstyledLink}>
-									<Button className={meemTheme.buttonAsh}>
-										Edit info
-									</Button>
-								</a>
-							</Link>
-						</Center>
-						<Space
-							h={16}
-							className={meemTheme.visibleDesktopOnly}
-						/>
-						<Space h={4} className={meemTheme.visibleMobileOnly} />
-					</>
-				)}
+							<Center>
+								<Link
+									href={`/${agreement.slug}/admin?tab=details`}
+									legacyBehavior
+									passHref
+								>
+									<a className={meemTheme.unstyledLink}>
+										<Button className={meemTheme.buttonAsh}>
+											Edit info
+										</Button>
+									</a>
+								</Link>
+							</Center>
+							<Space
+								h={16}
+								className={meemTheme.visibleDesktopOnly}
+							/>
+							<Space
+								h={4}
+								className={meemTheme.visibleMobileOnly}
+							/>
+						</>
+					)}
 				{agreement.isLaunched && (
 					<>
 						<Center>

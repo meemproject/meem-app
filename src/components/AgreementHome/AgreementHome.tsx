@@ -322,90 +322,140 @@ export const AgreementHome: React.FC = () => {
 						</Container>
 					</>
 				)}
-			{!isLoadingAgreement &&
-				agreement?.name &&
-				(agreement.isLaunched ||
-					agreement.isCurrentUserAgreementAdmin) && (
-					<div>
-						{!agreement.isLaunched && (
-							<div className={meemTheme.communityLaunchHeader}>
-								<Center>
-									<Text
-										className={meemTheme.tMediumBold}
-										color={'black'}
+			{!isLoadingAgreement && agreement?.name && (
+				<div>
+					{!agreement.isLaunched && (
+						<>
+							{!agreement.isCurrentUserAgreementAdmin && (
+								<>
+									<div
+										className={
+											meemTheme.communityLaunchHeader
+										}
 									>
-										Customize your community page
-									</Text>
-								</Center>
-								<Space h={8} />
+										<Center>
+											<Text
+												className={
+													meemTheme.tMediumBold
+												}
+												color={'black'}
+											>
+												This community is not visible to
+												the public yet!
+											</Text>
+										</Center>
+										<Space h={8} />
 
-								<Center>
-									<Text
-										className={meemTheme.tExtraSmall}
-										style={{
-											paddingLeft: 16,
-											paddingRight: 16,
-											textAlign: 'center'
-										}}
-										color={'black'}
+										<Center>
+											<Text
+												className={
+													meemTheme.tExtraSmall
+												}
+												style={{
+													paddingLeft: 16,
+													paddingRight: 16,
+													textAlign: 'center'
+												}}
+												color={'black'}
+											>
+												An administrator must publish
+												this community.
+											</Text>
+										</Center>
+									</div>
+								</>
+							)}
+							{agreement.isCurrentUserAgreementAdmin && (
+								<>
+									<div
+										className={
+											meemTheme.communityLaunchHeader
+										}
 									>
-										Add membership requirements, define
-										roles & rules for members, and connect
-										your tools.
-									</Text>
-								</Center>
+										<Center>
+											<Text
+												className={
+													meemTheme.tMediumBold
+												}
+												color={'black'}
+											>
+												Customize your community page
+											</Text>
+										</Center>
+										<Space h={8} />
 
-								<Space h={16} />
+										<Center>
+											<Text
+												className={
+													meemTheme.tExtraSmall
+												}
+												style={{
+													paddingLeft: 16,
+													paddingRight: 16,
+													textAlign: 'center'
+												}}
+												color={'black'}
+											>
+												Add membership requirements,
+												define roles & rules for
+												members, and connect your tools.
+											</Text>
+										</Center>
 
-								<Center>
-									<Button
-										className={meemTheme.buttonBlack}
-										loading={isLaunching}
-										disabled={isLaunching}
-										onClick={() => {
-											launchCommunity()
-										}}
-									>
-										Publish Changes
-									</Button>
-								</Center>
-							</div>
-						)}
-						<div className={meemTheme.visibleMobileOnly}>
-							<Container
-								size={1000}
-								className={
-									meemTheme.pageZeroPaddingMobileContainer
-								}
-							>
-								{mobileHomeLayout}
-							</Container>
-						</div>
+										<Space h={16} />
 
-						<div
-							className={meemTheme.visibleDesktopOnly}
-							style={{ position: 'relative' }}
+										<Center>
+											<Button
+												className={
+													meemTheme.buttonBlack
+												}
+												loading={isLaunching}
+												disabled={isLaunching}
+												onClick={() => {
+													launchCommunity()
+												}}
+											>
+												Publish Changes
+											</Button>
+										</Center>
+									</div>
+								</>
+							)}
+						</>
+					)}
+					<div className={meemTheme.visibleMobileOnly}>
+						<Container
+							size={1000}
+							className={meemTheme.pageZeroPaddingMobileContainer}
 						>
-							<div
-								style={{
-									backgroundColor: isDarkTheme
-										? 'transparent'
-										: colorLightestGrey,
-									position: 'absolute',
-									top: 0,
-									left: '50%',
-									right: 0,
-									bottom: 0,
-									zIndex: -1
-								}}
-							/>
-
-							<Center style={{ marginBottom: -64 }}>
-								{desktopHomeLayout}
-							</Center>
-						</div>
+							{mobileHomeLayout}
+						</Container>
 					</div>
-				)}
+
+					<div
+						className={meemTheme.visibleDesktopOnly}
+						style={{ position: 'relative' }}
+					>
+						<div
+							style={{
+								backgroundColor: isDarkTheme
+									? 'transparent'
+									: colorLightestGrey,
+								position: 'absolute',
+								top: 0,
+								left: '50%',
+								right: 0,
+								bottom: 0,
+								zIndex: -1
+							}}
+						/>
+
+						<Center style={{ marginBottom: -64 }}>
+							{desktopHomeLayout}
+						</Center>
+					</div>
+				</div>
+			)}
 		</>
 	)
 }

@@ -31,7 +31,7 @@ export const SymphonyRuleBuilderConnections: React.FC<IProps> = ({
 			? '/connect-twitter.png'
 			: '/connect-webhook.png'
 
-	const isOutputWebhook = webhookUrl && webhookPrivateKey
+	const isOutputWebhook = webhookUrl
 
 	return (
 		<>
@@ -71,6 +71,7 @@ export const SymphonyRuleBuilderConnections: React.FC<IProps> = ({
 					</div>
 				</>
 			)}
+
 			<Space h={18} />
 			<Button
 				className={meemTheme.buttonWhite}

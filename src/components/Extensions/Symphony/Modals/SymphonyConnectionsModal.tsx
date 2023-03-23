@@ -1,11 +1,15 @@
-import { Space, Modal, Text, Grid, Image, Center } from '@mantine/core'
+import { Space, Modal, Text, Grid, Image, Center, Menu } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { MoreVert } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
-import { colorBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import {
+	colorDarkBlue,
+	colorRed,
+	useMeemTheme
+} from '../../../Styles/MeemTheme'
 import { SymphonyConnection } from '../Model/symphony'
 import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
 import { SymphonyDiscordConnectionModal } from './SymphonyDiscordConnectionModal'
@@ -121,9 +125,9 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 			>
 				<Center>
 					<Text
-						className={meemTheme.tSmallBold}
+						className={meemTheme.tExtraSmallBold}
 						style={{
-							color: colorBlue,
+							color: colorDarkBlue,
 							paddingTop: 8,
 							paddingBottom: 6
 						}}
@@ -143,20 +147,44 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 	const ConnectionTile = ({ connection }: ConnectionTileProps) => {
 		return (
-			<div className={meemTheme.gridItemFlat}>
+			<div className={meemTheme.gridItemFlat} style={{ cursor: 'auto' }}>
 				<div className={meemTheme.spacedRowCentered}>
 					<div className={meemTheme.centeredRow}>
 						<Image
-							src={'/meem-icon.png'}
+							src={
+								connection.icon && connection.icon.length > 0
+									? connection.icon
+									: '/meem-icon.png'
+							}
 							width={36}
 							height={36}
+							radius={18}
 							style={{ marginRight: 12 }}
 						/>
 						<Text weight={500} style={{ marginRight: 'auto' }}>
 							{connection.name}
 						</Text>
 					</div>
-					<MoreVert />
+					<Menu radius={8} shadow={'lg'}>
+						<Menu.Target>
+							<MoreVert style={{ cursor: 'pointer' }} />
+						</Menu.Target>
+						<Menu.Dropdown>
+							<Menu.Item
+								onClick={() => {
+									setSelectedConnection(connection)
+									setIsDisconnectModalOpen(true)
+								}}
+							>
+								<Text
+									className={meemTheme.tSmallBold}
+									color={colorRed}
+								>
+									Disconnect
+								</Text>
+							</Menu.Item>
+						</Menu.Dropdown>
+					</Menu>
 				</div>
 			</div>
 		)

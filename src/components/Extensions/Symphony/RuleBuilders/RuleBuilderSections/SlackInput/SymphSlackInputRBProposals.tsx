@@ -80,7 +80,7 @@ export const SymphSlackInputRBProposals: React.FC<IProps> = ({
 				</>
 			)}
 
-			<Space h="lg" />
+			{/* <Space h="lg" />
 
 			<Text className={meemTheme.tExtraSmallBold}>
 				{'Who can vote to approve new posts for publishing?'}
@@ -90,8 +90,8 @@ export const SymphSlackInputRBProposals: React.FC<IProps> = ({
 				className={meemTheme.tExtraSmallFaded}
 				style={{ fontWeight: 500 }}
 			>
-				{'Please choose as many Discord roles as you want.'}
-			</Text>
+				{'Please choose as many Slack roles as you want.'}
+			</Text> */}
 			{/* <Space h={12} />
 
 			{rolesData.roles && (

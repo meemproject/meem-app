@@ -143,119 +143,146 @@ export const AgreementPreLaunchAddExtensions: React.FC<IProps> = ({
 	])
 
 	return (
-		<div className={meemTheme.widgetExtension} style={{ padding: 32 }}>
-			<Text className={meemTheme.tMediumBold}>Add extensions</Text>
-			{loading && (
+		<>
+			{agreement.isCurrentUserAgreementAdmin && (
 				<>
-					<Space h={32} />
-					<Center>
-						<Loader variant="oval" color="cyan" />
-					</Center>
-					<Space h={24} />
-				</>
-			)}
-			{!loading && availableExtensionsData && (
-				<>
-					<Space h={32} />
+					<div
+						className={meemTheme.widgetExtension}
+						style={{ padding: 32 }}
+					>
+						<Text className={meemTheme.tMediumBold}>
+							Add extensions
+						</Text>
+						{loading && (
+							<>
+								<Space h={32} />
+								<Center>
+									<Loader variant="oval" color="cyan" />
+								</Center>
+								<Space h={24} />
+							</>
+						)}
+						{!loading && availableExtensionsData && (
+							<>
+								<Space h={32} />
 
-					{extensionCategories.map(cat => (
-						<div key={cat.title}>
-							<Text className={meemTheme.tExtraSmallLabel}>
-								{`${cat.title.toUpperCase()}`}
-							</Text>
-							<Space h={16} />
-							<Grid>
-								{cat.extensions.map(extension => (
-									<Grid.Col
-										xs={8}
-										sm={8}
-										md={6}
-										lg={6}
-										xl={6}
-										key={extension.name}
-									>
-										<div
-											style={{ position: 'relative' }}
-											onClick={() => {
-												toggleExtensionSelected(
-													extension
-												)
-											}}
+								{extensionCategories.map(cat => (
+									<div key={cat.title}>
+										<Text
+											className={
+												meemTheme.tExtraSmallLabel
+											}
 										>
-											<div
-												className={
-													meemTheme.extensionGridItem
-												}
-												style={{
-													position: 'relative'
-												}}
-											>
-												<div
-													className={
-														meemTheme.extensionGridItemHeader
-													}
+											{`${cat.title.toUpperCase()}`}
+										</Text>
+										<Space h={16} />
+										<Grid>
+											{cat.extensions.map(extension => (
+												<Grid.Col
+													xs={8}
+													sm={8}
+													md={6}
+													lg={6}
+													xl={6}
+													key={extension.name}
 												>
-													<Image
-														src={`/${
-															isDarkTheme
-																? `${extension.icon?.replace(
-																		'.png',
-																		'-white.png'
-																  )}`
-																: extension.icon
-														}`}
-														width={24}
-														height={24}
-														fit={'contain'}
-													/>
-													<Space w={8} />
-													<Text>{`${extension.name}`}</Text>
-												</div>
+													<div
+														style={{
+															position: 'relative'
+														}}
+														onClick={() => {
+															toggleExtensionSelected(
+																extension
+															)
+														}}
+													>
+														<div
+															className={
+																meemTheme.extensionGridItem
+															}
+															style={{
+																position:
+																	'relative'
+															}}
+														>
+															<div
+																className={
+																	meemTheme.extensionGridItemHeader
+																}
+															>
+																<Image
+																	src={`/${
+																		isDarkTheme
+																			? `${extension.icon?.replace(
+																					'.png',
+																					'-white.png'
+																			  )}`
+																			: extension.icon
+																	}`}
+																	width={24}
+																	height={24}
+																	fit={
+																		'contain'
+																	}
+																/>
+																<Space w={8} />
+																<Text>{`${extension.name}`}</Text>
+															</div>
 
-												<Text
-													className={
-														meemTheme.tExtraSmallFaded
-													}
-													style={{
-														marginTop: 12
-													}}
-												>
-													{extension.description}
-												</Text>
-											</div>
-											<div
-												style={{
-													position: 'absolute',
-													top: 8,
-													right: 8
-												}}
-											>
-												{chosenExtensions.includes(
-													extension.id
-												) && (
-													<CheckCircle
-														color={colorGreen}
-													/>
-												)}
-											</div>
-										</div>
-									</Grid.Col>
+															<Text
+																className={
+																	meemTheme.tExtraSmallFaded
+																}
+																style={{
+																	marginTop: 12
+																}}
+															>
+																{
+																	extension.description
+																}
+															</Text>
+														</div>
+														<div
+															style={{
+																position:
+																	'absolute',
+																top: 8,
+																right: 8
+															}}
+														>
+															{chosenExtensions.includes(
+																extension.id
+															) && (
+																<CheckCircle
+																	color={
+																		colorGreen
+																	}
+																/>
+															)}
+														</div>
+													</div>
+												</Grid.Col>
+											))}
+										</Grid>
+										<Space h={24} />
+									</div>
 								))}
-							</Grid>
-							<Space h={24} />
-						</div>
-					))}
-					<Space h={24} />
-					<DeveloperPortalButton
-						portalButtonText={`Don't see your app?`}
-						modalTitle={'Build your own apps and extensions'}
-						modalText={`We're always looking for more 3rd party apps and extensions to integrate with us. Meem is open source and ready for contributions!`}
-						devDocsLink={`https://docs.meem.wtf/meem-protocol/meem-web-app/developers/building-an-extension`}
-						githubLink={`https://github.com/meemproject/meem-app`}
-					/>
-					<Space h={16} />
+								<Space h={24} />
+								<DeveloperPortalButton
+									portalButtonText={`Don't see your app?`}
+									modalTitle={
+										'Build your own apps and extensions'
+									}
+									modalText={`We're always looking for more 3rd party apps and extensions to integrate with us. Meem is open source and ready for contributions!`}
+									devDocsLink={`https://docs.meem.wtf/meem-protocol/meem-web-app/developers/building-an-extension`}
+									githubLink={`https://github.com/meemproject/meem-app`}
+								/>
+								<Space h={16} />
+							</>
+						)}
+					</div>
 				</>
 			)}
-		</div>
+		</>
 	)
 }
