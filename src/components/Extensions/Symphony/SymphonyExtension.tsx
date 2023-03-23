@@ -448,7 +448,7 @@ export const SymphonyExtension: React.FC = () => {
 							<Text className={meemTheme.tMediumBold}>
 								Connections
 							</Text>
-							<Space h={24} />
+							<Space h={40} />
 							<Text className={meemTheme.tExtraSmallLabel}>
 								CONNECTED ACCOUNTS
 							</Text>
@@ -538,14 +538,14 @@ export const SymphonyExtension: React.FC = () => {
 							<Text className={meemTheme.tMediumBold}>
 								Publishing Flows
 							</Text>
-							<Space h={24} />
+							<Space h={40} />
 						</>
 					)}
 
 					<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
 					{agreement.isCurrentUserAgreementAdmin && (
 						<>
-							<Space h={4} />
+							<Space h={8} />
 							<Text className={meemTheme.tExtraSmall}>
 								{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
 							</Text>
