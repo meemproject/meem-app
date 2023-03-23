@@ -211,36 +211,39 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 							<Space h={24} />
 						</>
 					)}
-				{members.length > 0 && !agreement.isLaunched && (
-					<>
-						<Space h={24} />
-						<Center>
-							<Link
-								href={`/${agreement.slug}/admin?tab=airdrops`}
-								legacyBehavior
-								passHref
-							>
-								<a className={meemTheme.unstyledLink}>
-									<Button
-										className={meemTheme.buttonAsh}
-										onClick={() => {
-											analytics.track(
-												'Invite Members Clicked',
-												{
-													communityId: agreement.id,
-													communityName:
-														agreement.name
-												}
-											)
-										}}
-									>
-										Invite members
-									</Button>
-								</a>
-							</Link>
-						</Center>
-					</>
-				)}
+				{members.length > 0 &&
+					!agreement.isLaunched &&
+					agreement.isCurrentUserAgreementAdmin && (
+						<>
+							<Space h={24} />
+							<Center>
+								<Link
+									href={`/${agreement.slug}/admin?tab=airdrops`}
+									legacyBehavior
+									passHref
+								>
+									<a className={meemTheme.unstyledLink}>
+										<Button
+											className={meemTheme.buttonAsh}
+											onClick={() => {
+												analytics.track(
+													'Invite Members Clicked',
+													{
+														communityId:
+															agreement.id,
+														communityName:
+															agreement.name
+													}
+												)
+											}}
+										>
+											Invite members
+										</Button>
+									</a>
+								</Link>
+							</Center>
+						</>
+					)}
 			</div>
 		</>
 	)
