@@ -180,31 +180,31 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	}
 
 	const openRuleBuilder = useCallback(
-		(input: SymphonyConnection, output: SymphonyConnection) => {
+		(input: SymphonyConnection, output?: SymphonyConnection) => {
 			if (
 				input.platform === API.RuleIo.Discord &&
-				output.platform === API.RuleIo.Twitter &&
+				output?.platform === API.RuleIo.Twitter &&
 				!isDiscordTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
 				setIsDiscordTwitterRuleBuilderOpened(true)
 			} else if (
 				input.platform === API.RuleIo.Slack &&
-				output.platform === API.RuleIo.Twitter &&
+				output?.platform === API.RuleIo.Twitter &&
 				!isSlackTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
 				setIsSlackTwitterRuleBuilderOpened(true)
 			} else if (
 				input.platform === API.RuleIo.Discord &&
-				output.platform === API.RuleIo.Webhook &&
+				output?.platform === API.RuleIo.Webhook &&
 				!isDiscordWebhookRuleBuilderOpened
 			) {
 				// Discord to Webhook flow
 				setIsDiscordWebhookRuleBuilderOpened(true)
 			} else if (
 				input.platform === API.RuleIo.Slack &&
-				output.platform === API.RuleIo.Webhook &&
+				output?.platform === API.RuleIo.Webhook &&
 				!isSlackWebhookRuleBuilderOpened
 			) {
 				// Slack to Webhook flow
@@ -269,8 +269,6 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				return
 			}
 
-			setWebHookPrivateKey(rule?.webhookPrivateKey ?? '')
-
 			// Find input
 			const filteredInput = connections.filter(
 				c => c.id === existingRule?.inputId
@@ -278,13 +276,33 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			const filteredOutput = connections.filter(
 				c => c.id === existingRule?.outputId
 			)
-			// TODO: Set webhook url and private key for existing rules here
-			if (filteredInput.length > 0 && filteredOutput.length > 0) {
+			if (
+				filteredInput.length > 0 &&
+				(filteredOutput.length > 0 || existingRule?.webhookUrl)
+			) {
 				log.debug('found inputs and outputs for existing rule')
-				// Find output
 				setSelectedInput(filteredInput[0])
-				setSelectedOutput(filteredOutput[0])
-				openRuleBuilder(filteredInput[0], filteredOutput[0])
+
+				// If this is a regular rule, it'll have an output connection
+				if (filteredOutput[0]) {
+					setSelectedOutput(filteredOutput[0])
+					openRuleBuilder(filteredInput[0], filteredOutput[0])
+				} else {
+					// If it's a webhook rule, it'll not have an output
+					// so we'll want to set our webhook props instead
+					// and create a synthetic 'selected output'
+					const syntheticOutput: SymphonyConnection = {
+						id: 'webhook',
+						name: 'Webhook',
+						type: SymphonyConnectionType.OutputOnly,
+						platform: API.RuleIo.Webhook
+					}
+					setSelectedOutput(syntheticOutput)
+					setWebHookPrivateKey(existingRule?.webhookPrivateKey ?? '')
+					setWebhookUrl(existingRule?.webhookUrl ?? '')
+					openRuleBuilder(filteredInput[0], syntheticOutput)
+				}
+
 				setHasFetchedIO(true)
 			} else {
 				showErrorNotification(
@@ -319,8 +337,10 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		onModalClosed,
 		openRuleBuilder,
 		rule?.webhookPrivateKey,
+		rule?.webhookUrl,
 		selectedInput,
-		selectedOutput
+		selectedOutput,
+		webhookUrl
 	])
 
 	const shouldShowNext =
