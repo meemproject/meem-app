@@ -7,7 +7,7 @@ import {
 import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth } from '@meemproject/react'
-import { createApolloClient, makeFetcher } from '@meemproject/sdk'
+import { createApolloClient, makeFetcher, MeemAPI } from '@meemproject/sdk'
 import type { EmojiClickData } from 'emoji-picker-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
@@ -21,7 +21,6 @@ import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
 import { SUB_TWITTER, SUB_DISCORD } from '../symphony.gql'
-import { API } from '../symphonyTypes.generated'
 import { SymphDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/SymphDiscordInputRBProposals'
 import { SymphDiscordInputRBVetoes } from './RuleBuilderSections/DiscordInput/SymphDiscordInputRBVetoes'
 import { SymphRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/SymphRuleBuilderApproverEmojis'
@@ -50,7 +49,7 @@ export enum EmojiSelectType {
 
 export interface IFormValues
 	extends Omit<
-		API.IRule,
+		MeemAPI.IRule,
 		| 'proposerEmojis'
 		| 'approverEmojis'
 		| 'vetoerEmojis'
@@ -113,21 +112,20 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		})
 
 	const { data: channelsData, isLoading: loadingChannelsData } =
-		useSWR<API.v1.GetDiscordChannels.IResponseBody>(
+		useSWR<MeemAPI.v1.GetDiscordChannels.IResponseBody>(
 			agreement?.id && jwt
 				? `${
-						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				  }${API.v1.GetDiscordChannels.path()}`
+						process.env.NEXT_PUBLIC_API_URL
+				  }${MeemAPI.v1.GetDiscordChannels.path()}`
 				: null,
 			url => {
 				return makeFetcher<
-					API.v1.GetDiscordChannels.IQueryParams,
-					API.v1.GetDiscordChannels.IRequestBody,
-					API.v1.GetDiscordChannels.IResponseBody
+					MeemAPI.v1.GetDiscordChannels.IQueryParams,
+					MeemAPI.v1.GetDiscordChannels.IRequestBody,
+					MeemAPI.v1.GetDiscordChannels.IResponseBody
 				>({
-					method: API.v1.GetDiscordChannels.method
+					method: MeemAPI.v1.GetDiscordChannels.method
 				})(url, {
-					jwt: jwt as string,
 					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
@@ -137,21 +135,20 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		)
 
 	const { data: rolesData, isLoading: loadingRolesData } =
-		useSWR<API.v1.GetDiscordRoles.IResponseBody>(
+		useSWR<MeemAPI.v1.GetDiscordRoles.IResponseBody>(
 			agreement?.id && jwt
 				? `${
-						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				  }${API.v1.GetDiscordRoles.path()}`
+						process.env.NEXT_PUBLIC_API_URL
+				  }${MeemAPI.v1.GetDiscordRoles.path()}`
 				: null,
 			url => {
 				return makeFetcher<
-					API.v1.GetDiscordRoles.IQueryParams,
-					API.v1.GetDiscordRoles.IRequestBody,
-					API.v1.GetDiscordRoles.IResponseBody
+					MeemAPI.v1.GetDiscordRoles.IQueryParams,
+					MeemAPI.v1.GetDiscordRoles.IRequestBody,
+					MeemAPI.v1.GetDiscordRoles.IResponseBody
 				>({
-					method: API.v1.GetDiscordRoles.method
+					method: MeemAPI.v1.GetDiscordRoles.method
 				})(url, {
-					jwt: jwt as string,
 					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
@@ -162,7 +159,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 
 	const form = useForm({
 		initialValues: {
-			publishType: API.PublishType.PublishImmediately,
+			publishType: MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles ?? [],
 			approverRoles: rule?.definition.approverRoles ?? [],
 			vetoerRoles: rule?.definition.vetoerRoles ?? [],
@@ -176,20 +173,20 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		},
 		validate: {
 			proposerRoles: (val, current) =>
-				current.publishType === API.PublishType.Proposal &&
+				current.publishType === MeemAPI.PublishType.Proposal &&
 				val.length === 0
 					? 'Proposer is required'
 					: null,
 			approverRoles: val =>
 				val.length === 0 ? 'Approver is required' : null,
 			proposalChannels: (val, current) =>
-				current.publishType === API.PublishType.Proposal &&
+				current.publishType === MeemAPI.PublishType.Proposal &&
 				val.length === 0
 					? 'Proposal Channels must be selected required'
 					: null,
 			votes: val => (val < 1 ? 'Votes must be at least 1' : null),
 			proposalShareChannel: (val, current) =>
-				current.publishType === API.PublishType.Proposal &&
+				current.publishType === MeemAPI.PublishType.Proposal &&
 				val &&
 				val.length === 0
 					? 'Proposer channel is required'
@@ -250,7 +247,7 @@ export const SymphonyDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		form.setValues({
 			publishType:
 				rule?.definition.publishType ??
-				API.PublishType.PublishImmediately,
+				MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles,
 			approverRoles: rule?.definition.approverRoles,
 			proposalChannels: rule?.definition.proposalChannels,

@@ -7,7 +7,7 @@ import {
 import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth } from '@meemproject/react'
-import { createApolloClient, makeFetcher } from '@meemproject/sdk'
+import { createApolloClient, makeFetcher, MeemAPI } from '@meemproject/sdk'
 import type { EmojiClickData } from 'emoji-picker-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
@@ -18,7 +18,6 @@ import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
 import { SUB_SLACK } from '../symphony.gql'
-import { API } from '../symphonyTypes.generated'
 import { SymphRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/SymphRuleBuilderApproverEmojis'
 import { SymphRuleBuilderVotesCount } from './RuleBuilderSections/Generic/SymphRuleBuilderVotesCount'
 import { SymphSlackInputRBProposals } from './RuleBuilderSections/SlackInput/SymphSlackInputRBProposals'
@@ -47,7 +46,7 @@ export enum EmojiSelectType {
 
 export interface IFormValues
 	extends Omit<
-		API.IRule,
+		MeemAPI.IRule,
 		| 'proposerEmojis'
 		| 'approverEmojis'
 		| 'vetoerEmojis'
@@ -106,21 +105,20 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 		})
 
 	const { data: channelsData, isLoading: isLoadingChannelsData } =
-		useSWR<API.v1.GetSlackChannels.IResponseBody>(
+		useSWR<MeemAPI.v1.GetSlackChannels.IResponseBody>(
 			agreement?.id && jwt && input?.id
 				? `${
-						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				  }${API.v1.GetSlackChannels.path()}`
+						process.env.NEXT_PUBLIC_API_URL
+				  }${MeemAPI.v1.GetSlackChannels.path()}`
 				: null,
 			url => {
 				return makeFetcher<
-					API.v1.GetSlackChannels.IQueryParams,
-					API.v1.GetSlackChannels.IRequestBody,
-					API.v1.GetSlackChannels.IResponseBody
+					MeemAPI.v1.GetSlackChannels.IQueryParams,
+					MeemAPI.v1.GetSlackChannels.IRequestBody,
+					MeemAPI.v1.GetSlackChannels.IResponseBody
 				>({
-					method: API.v1.GetSlackChannels.method
+					method: MeemAPI.v1.GetSlackChannels.method
 				})(url, {
-					jwt: jwt as string,
 					agreementSlackId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
@@ -131,7 +129,7 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 
 	const form = useForm({
 		initialValues: {
-			publishType: API.PublishType.PublishImmediately,
+			publishType: MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles ?? [],
 			approverRoles: rule?.definition.approverRoles ?? [],
 			vetoerRoles: rule?.definition.vetoerRoles ?? [],
@@ -145,20 +143,20 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 		},
 		validate: {
 			proposerRoles: (val, current) =>
-				current.publishType === API.PublishType.Proposal &&
+				current.publishType === MeemAPI.PublishType.Proposal &&
 				val.length === 0
 					? 'Proposer is required'
 					: null,
 			// approverRoles: val =>
 			// 	val.length === 0 ? 'Approver is required' : null,
 			proposalChannels: (val, current) =>
-				current.publishType === API.PublishType.Proposal &&
+				current.publishType === MeemAPI.PublishType.Proposal &&
 				val.length === 0
 					? 'Proposal Channels must be selected required'
 					: null,
 			votes: val => (val < 1 ? 'Votes must be at least 1' : null),
 			proposalShareChannel: (val, current) =>
-				current.publishType === API.PublishType.Proposal &&
+				current.publishType === MeemAPI.PublishType.Proposal &&
 				val &&
 				val.length === 0
 					? 'Proposer channel is required'
@@ -219,7 +217,7 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 		form.setValues({
 			publishType:
 				rule?.definition.publishType ??
-				API.PublishType.PublishImmediately,
+				MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles,
 			approverRoles: rule?.definition.approverRoles,
 			proposalChannels: rule?.definition.proposalChannels,

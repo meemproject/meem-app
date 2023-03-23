@@ -13,7 +13,7 @@ import {
 	Image
 } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
-import { createApolloClient, makeRequest } from '@meemproject/sdk'
+import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import {
 	SubDiscordsSubscription,
@@ -40,7 +40,6 @@ import {
 	SUB_SLACKS,
 	SUB_TWITTERS
 } from './symphony.gql'
-import { API } from './symphonyTypes.generated'
 
 export const SymphonyExtension: React.FC = () => {
 	// General params
@@ -135,7 +134,7 @@ export const SymphonyExtension: React.FC = () => {
 					id: c.id,
 					name: `Discord: ${c.Discord?.name}`,
 					type: SymphonyConnectionType.InputOnly,
-					platform: API.RuleIo.Discord,
+					platform: MeemAPI.RuleIo.Discord,
 					icon: c.Discord?.icon ?? ''
 				}
 				conns.push(con)
@@ -146,7 +145,7 @@ export const SymphonyExtension: React.FC = () => {
 					id: c.id,
 					name: `Twitter: ${c.Twitter?.username}`,
 					type: SymphonyConnectionType.OutputOnly,
-					platform: API.RuleIo.Twitter
+					platform: MeemAPI.RuleIo.Twitter
 				}
 				conns.push(con)
 			})
@@ -156,7 +155,7 @@ export const SymphonyExtension: React.FC = () => {
 					id: c.id,
 					name: `Slack: ${c.Slack?.name}`,
 					type: SymphonyConnectionType.InputOnly,
-					platform: API.RuleIo.Slack
+					platform: MeemAPI.RuleIo.Slack
 				}
 				conns.push(con)
 			})
@@ -166,7 +165,7 @@ export const SymphonyExtension: React.FC = () => {
 				id: 'webhook',
 				name: 'Add a custom Webhook',
 				type: SymphonyConnectionType.OutputOnly,
-				platform: API.RuleIo.Webhook
+				platform: MeemAPI.RuleIo.Webhook
 			}
 			conns.push(webhookCon)
 
@@ -221,14 +220,13 @@ export const SymphonyExtension: React.FC = () => {
 			return
 		}
 
-		await makeRequest<API.v1.RemoveRules.IDefinition>(
+		await makeRequest<MeemAPI.v1.RemoveRules.IDefinition>(
 			`${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.RemoveRules.path()}`,
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.RemoveRules.path()}`,
 			{
-				method: API.v1.RemoveRules.method,
+				method: MeemAPI.v1.RemoveRules.method,
 				body: {
-					jwt,
 					agreementId: agreement.id,
 					ruleIds: [ruleId]
 				}
@@ -319,7 +317,7 @@ export const SymphonyExtension: React.FC = () => {
 	)
 
 	const connectionSummaryGridItem = (
-		connectionPlatform: API.RuleIo,
+		connectionPlatform: MeemAPI.RuleIo,
 		connectionCount: number
 	) => (
 		<>
@@ -327,9 +325,9 @@ export const SymphonyExtension: React.FC = () => {
 				<div className={meemTheme.centeredRow}>
 					<Image
 						src={
-							connectionPlatform === API.RuleIo.Discord
+							connectionPlatform === MeemAPI.RuleIo.Discord
 								? '/connect-discord.png'
-								: connectionPlatform === API.RuleIo.Slack
+								: connectionPlatform === MeemAPI.RuleIo.Slack
 								? '/connect-slack.png'
 								: '/connect-twitter.png'
 						}
@@ -340,9 +338,9 @@ export const SymphonyExtension: React.FC = () => {
 						}}
 					/>
 					<Text className={meemTheme.tSmallBold}>
-						{connectionPlatform === API.RuleIo.Discord
+						{connectionPlatform === MeemAPI.RuleIo.Discord
 							? 'Discord'
-							: connectionPlatform === API.RuleIo.Slack
+							: connectionPlatform === MeemAPI.RuleIo.Slack
 							? 'Slack'
 							: 'Twitter'}
 					</Text>
@@ -358,17 +356,17 @@ export const SymphonyExtension: React.FC = () => {
 	)
 
 	const connectedDiscordAccounts = symphonyConnections
-		? symphonyConnections.filter(c => c.platform === API.RuleIo.Discord)
+		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Discord)
 				.length
 		: 0
 
 	const connectedTwitterAccounts = symphonyConnections
-		? symphonyConnections.filter(c => c.platform === API.RuleIo.Twitter)
+		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Twitter)
 				.length
 		: 0
 
 	const connectedSlackAccounts = symphonyConnections
-		? symphonyConnections.filter(c => c.platform === API.RuleIo.Slack)
+		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Slack)
 				.length
 		: 0
 
@@ -408,10 +406,10 @@ export const SymphonyExtension: React.FC = () => {
 												<Grid.Col
 													xs={12}
 													md={6}
-													key={API.RuleIo.Discord.toString()}
+													key={MeemAPI.RuleIo.Discord.toString()}
 												>
 													{connectionSummaryGridItem(
-														API.RuleIo.Discord,
+														MeemAPI.RuleIo.Discord,
 														connectedDiscordAccounts
 													)}
 												</Grid.Col>
@@ -420,10 +418,10 @@ export const SymphonyExtension: React.FC = () => {
 												<Grid.Col
 													xs={12}
 													md={6}
-													key={API.RuleIo.Twitter.toString()}
+													key={MeemAPI.RuleIo.Twitter.toString()}
 												>
 													{connectionSummaryGridItem(
-														API.RuleIo.Twitter,
+														MeemAPI.RuleIo.Twitter,
 														connectedTwitterAccounts
 													)}
 												</Grid.Col>
@@ -432,10 +430,10 @@ export const SymphonyExtension: React.FC = () => {
 												<Grid.Col
 													xs={12}
 													md={6}
-													key={API.RuleIo.Slack.toString()}
+													key={MeemAPI.RuleIo.Slack.toString()}
 												>
 													{connectionSummaryGridItem(
-														API.RuleIo.Slack,
+														MeemAPI.RuleIo.Slack,
 														connectedSlackAccounts
 													)}
 												</Grid.Col>

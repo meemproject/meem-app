@@ -69,7 +69,6 @@ import {
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 import { SUB_DISCORDS, SUB_SLACKS, SUB_TWITTERS } from './symphony.gql'
-import { API } from './symphonyTypes.generated'
 
 enum PageState {
 	Loading,
@@ -405,11 +404,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			return
 		}
 		const { code, inviteUrl } =
-			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
+			await makeRequest<MeemAPI.v1.InviteDiscordBot.IDefinition>(
 				`${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				}${API.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: chosenAgreement?.id, jwt } }
+					process.env.NEXT_PUBLIC_API_URL
+				}${MeemAPI.v1.InviteDiscordBot.path()}`,
+				{ query: { agreementId: chosenAgreement?.id } }
 			)
 
 		setDiscordBotCode(code)
@@ -725,8 +724,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 		router.push({
 			pathname: `${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.AuthenticateWithTwitter.path()}`,
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.AuthenticateWithTwitter.path()}`,
 			query: {
 				agreementId: chosenAgreement.id,
 				jwt,
@@ -753,8 +752,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 		router.push({
 			pathname: `${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.AuthenticateWithSlack.path()}`,
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.AuthenticateWithSlack.path()}`,
 			query: {
 				agreementId: chosenAgreement.id,
 				jwt,

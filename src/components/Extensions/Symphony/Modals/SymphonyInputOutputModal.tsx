@@ -36,7 +36,6 @@ import {
 import { SymphonyDiscordWebhookRulesBuilder } from '../RuleBuilders/SymphonyDiscordWebhookRuleBuilder'
 import { SymphonySlackTwitterRulesBuilder } from '../RuleBuilders/SymphonySlackTwitterRuleBuilder'
 import { SymphonySlackWebhookRulesBuilder } from '../RuleBuilders/SymphonySlackWebhookRuleBuilder'
-import { API } from '../symphonyTypes.generated'
 
 interface IProps {
 	existingRule?: SymphonyRule
@@ -109,14 +108,11 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 		setIsSavingRule(true)
 
-		await makeRequest<API.v1.SaveRule.IDefinition>(
-			`${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.SaveRule.path()}`,
+		await makeRequest<MeemAPI.v1.SaveRule.IDefinition>(
+			`${process.env.NEXT_PUBLIC_API_URL}${MeemAPI.v1.SaveRule.path()}`,
 			{
-				method: API.v1.SaveRule.method,
+				method: MeemAPI.v1.SaveRule.method,
 				body: {
-					jwt,
 					agreementId: agreement.id,
 					rule: {
 						...values,
@@ -181,29 +177,29 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const openRuleBuilder = useCallback(
 		(input: SymphonyConnection, output: SymphonyConnection) => {
 			if (
-				input.platform === API.RuleIo.Discord &&
-				output.platform === API.RuleIo.Twitter &&
+				input.platform === MeemAPI.RuleIo.Discord &&
+				output.platform === MeemAPI.RuleIo.Twitter &&
 				!isDiscordTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
 				setIsDiscordTwitterRuleBuilderOpened(true)
 			} else if (
-				input.platform === API.RuleIo.Slack &&
-				output.platform === API.RuleIo.Twitter &&
+				input.platform === MeemAPI.RuleIo.Slack &&
+				output.platform === MeemAPI.RuleIo.Twitter &&
 				!isSlackTwitterRuleBuilderOpened
 			) {
 				// Discord to Twitter flow
 				setIsSlackTwitterRuleBuilderOpened(true)
 			} else if (
-				input.platform === API.RuleIo.Discord &&
-				output.platform === API.RuleIo.Webhook &&
+				input.platform === MeemAPI.RuleIo.Discord &&
+				output.platform === MeemAPI.RuleIo.Webhook &&
 				!isDiscordWebhookRuleBuilderOpened
 			) {
 				// Discord to Webhook flow
 				setIsDiscordWebhookRuleBuilderOpened(true)
 			} else if (
-				input.platform === API.RuleIo.Slack &&
-				output.platform === API.RuleIo.Webhook &&
+				input.platform === MeemAPI.RuleIo.Slack &&
+				output.platform === MeemAPI.RuleIo.Webhook &&
 				!isSlackWebhookRuleBuilderOpened
 			) {
 				// Slack to Webhook flow
@@ -275,6 +271,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			const filteredOutput = connections.filter(
 				c => c.id === existingRule?.outputId
 			)
+
 			// TODO: Set webhook url and private key for existing rules here
 			if (filteredInput.length > 0 && filteredOutput.length > 0) {
 				log.debug('found inputs and outputs for existing rule')
@@ -322,7 +319,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const shouldShowNext =
 		selectedInput &&
 		selectedOutput &&
-		(selectedOutput.platform !== API.RuleIo.Webhook ||
+		(selectedOutput.platform !== MeemAPI.RuleIo.Webhook ||
 			(webhookUrl && webhookUrl.includes('https://')))
 
 	const modalContents = (
@@ -395,7 +392,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						}}
 					/>
 					{selectedOutput &&
-						selectedOutput.platform === API.RuleIo.Webhook && (
+						selectedOutput.platform === MeemAPI.RuleIo.Webhook && (
 							<>
 								<Space h={24} />
 								<Text className={meemTheme.tSmallBold}>
@@ -522,14 +519,14 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			{isOpened && isDiscordTwitterRuleBuilderOpened && (
 				<>
 					<SymphonyDiscordTwitterRulesBuilder
-						onSave={function (values: IOnSave): void {
+						onSave={values => {
 							handleRuleSave(values)
 						}}
 						input={existingRule?.input ?? selectedInput}
 						output={existingRule?.output ?? selectedOutput}
 						rule={existingRule}
 						isOpened={isDiscordTwitterRuleBuilderOpened}
-						onModalClosed={function (): void {
+						onModalClosed={() => {
 							setIsDiscordTwitterRuleBuilderOpened(false)
 							if (existingRule) {
 								onModalClosed()
@@ -542,7 +539,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			{isOpened && isDiscordWebhookRuleBuilderOpened && (
 				<>
 					<SymphonyDiscordWebhookRulesBuilder
-						onSave={function (values: IOnSave): void {
+						onSave={values => {
 							handleRuleSave(values)
 						}}
 						input={existingRule?.input ?? selectedInput}
@@ -550,7 +547,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						webhookPrivateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isDiscordWebhookRuleBuilderOpened}
-						onModalClosed={function (): void {
+						onModalClosed={() => {
 							setIsDiscordWebhookRuleBuilderOpened(false)
 							if (existingRule) {
 								onModalClosed()
@@ -563,7 +560,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			{isOpened && isSlackTwitterRuleBuilderOpened && (
 				<>
 					<SymphonySlackTwitterRulesBuilder
-						onSave={function (values: IOnSave): void {
+						onSave={values => {
 							handleRuleSave(values)
 						}}
 						input={existingRule?.input ?? selectedInput}
@@ -583,7 +580,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			{isOpened && isSlackWebhookRuleBuilderOpened && (
 				<>
 					<SymphonySlackWebhookRulesBuilder
-						onSave={function (values: IOnSave): void {
+						onSave={values => {
 							handleRuleSave(values)
 						}}
 						input={existingRule?.input ?? selectedInput}
@@ -591,7 +588,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 						webhookPrivateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isSlackWebhookRuleBuilderOpened}
-						onModalClosed={function (): void {
+						onModalClosed={() => {
 							setIsSlackWebhookRuleBuilderOpened(false)
 							if (existingRule) {
 								onModalClosed()

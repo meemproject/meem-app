@@ -1,7 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Button, Center } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
-import { makeRequest } from '@meemproject/sdk'
+import { makeRequest, MeemAPI } from '@meemproject/sdk'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useCallback } from 'react'
 import {
@@ -11,7 +11,6 @@ import {
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SymphonyConnection, SymphonyConnectionType } from '../Model/symphony'
-import { API } from '../symphonyTypes.generated'
 
 interface IProps {
 	connection?: SymphonyConnection
@@ -36,15 +35,14 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 		try {
 			// TODO: Slack
 			switch (connection.platform) {
-				case API.RuleIo.Discord:
-					await makeRequest<API.v1.DisconnectDiscord.IDefinition>(
+				case MeemAPI.RuleIo.Discord:
+					await makeRequest<MeemAPI.v1.DisconnectDiscord.IDefinition>(
 						`${
-							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-						}${API.v1.DisconnectDiscord.path()}`,
+							process.env.NEXT_PUBLIC_API_URL
+						}${MeemAPI.v1.DisconnectDiscord.path()}`,
 						{
-							method: API.v1.DisconnectDiscord.method,
+							method: MeemAPI.v1.DisconnectDiscord.method,
 							body: {
-								jwt,
 								agreementDiscordId: connection.id
 							}
 						}
@@ -57,15 +55,14 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 
 					break
 
-				case API.RuleIo.Twitter:
-					await makeRequest<API.v1.DisconnectTwitter.IDefinition>(
+				case MeemAPI.RuleIo.Twitter:
+					await makeRequest<MeemAPI.v1.DisconnectTwitter.IDefinition>(
 						`${
-							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-						}${API.v1.DisconnectTwitter.path()}`,
+							process.env.NEXT_PUBLIC_API_URL
+						}${MeemAPI.v1.DisconnectTwitter.path()}`,
 						{
-							method: API.v1.DisconnectTwitter.method,
+							method: MeemAPI.v1.DisconnectTwitter.method,
 							body: {
-								jwt,
 								agreementTwitterId: connection.id
 							}
 						}
@@ -113,10 +110,11 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 								style={{ textAlign: 'center' }}
 							>
 								{`Are you sure you want to disconnect ${
-									connection.platform === API.RuleIo.Discord
+									connection.platform ===
+									MeemAPI.RuleIo.Discord
 										? 'Discord'
 										: connection.platform ===
-										  API.RuleIo.Twitter
+										  MeemAPI.RuleIo.Twitter
 										? 'Twitter'
 										: 'Slack'
 								} from

@@ -1,13 +1,13 @@
 import { Text, Space, MultiSelect } from '@mantine/core'
+import { MeemAPI } from '@meemproject/sdk'
 import { WarningCircle } from 'iconoir-react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
 import { colorOrangeRed, useMeemTheme } from '../../../../../Styles/MeemTheme'
-import { API } from '../../../symphonyTypes.generated'
 
 interface IProps {
 	form: any
-	channelsData: API.v1.GetSlackChannels.IResponseBody
+	channelsData: MeemAPI.v1.GetSlackChannels.IResponseBody
 	//rolesData: API.v1.GetDiscordRoles.IResponseBody
 	isProposalChannelGated: boolean
 }

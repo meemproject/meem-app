@@ -41,7 +41,7 @@ import {
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import { ExtensionPageHeader } from '../ExtensionPageHeader'
 import { DiscussionCommentComponent } from './DiscussionComment'
-import { calculateVotes, rowToDiscussionPost } from './DiscussionHome'
+import { calculateVotes } from './DiscussionHome'
 import { useDiscussions } from './DiscussionProvider'
 
 export interface IProps {
@@ -50,13 +50,13 @@ export interface IProps {
 
 export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const [hasFetchedPost, setHasFetchedPost] = useState(false)
+	const [hasFetchedPost] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [canReact, setCanReact] = useState(false)
-	const [post, setPost] = useState<DiscussionPost>()
+	const [post] = useState<DiscussionPost>()
 	const [votes, setVotes] = useState(0)
 	const [commentCount, setCommentCount] = useState(0)
-	const { accounts, chainId, me, loginState } = useAuth()
+	const { chainId, me, loginState } = useAuth()
 	const { sdk } = useSDK()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const { privateKey } = useDiscussions()
@@ -104,35 +104,37 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 				}
 				setIsLoading(true)
 
-				const createdAt = Math.floor(new Date().getTime() / 1000)
-				const gun = sdk.storage.getGunInstance()
+				log.debug({ reaction })
 
-				const { item } = await sdk.storage.encryptAndWrite({
-					path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/reactions`,
-					key: privateKey,
-					writeColumns: {
-						createdAt
-					},
-					data: {
-						reaction,
-						userId: me?.user.id,
-						walletAddress: me?.address
-					}
-				})
+				// const createdAt = Math.floor(new Date().getTime() / 1000)
+				// const gun = sdk.storage.getGunInstance()
 
-				gun?.get(
-					`meem/${agreement.id}/extensions/discussion/posts/${postId}`
-				)
-					// @ts-ignore
-					.get('reactions')
-					// @ts-ignore
-					.set(item)
+				// const { item } = await sdk.storage.encryptAndWrite({
+				// 	path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/reactions`,
+				// 	key: privateKey,
+				// 	writeColumns: {
+				// 		createdAt
+				// 	},
+				// 	data: {
+				// 		reaction,
+				// 		userId: me?.user.id,
+				// 		walletAddress: me?.address
+				// 	}
+				// })
+
+				// gun?.get(
+				// 	`meem/${agreement.id}/extensions/discussion/posts/${postId}`
+				// )
+				// 	// @ts-ignore
+				// 	.get('reactions')
+				// 	// @ts-ignore
+				// 	.set(item)
 			} catch (err) {
 				log.crit(err)
 			}
 			setIsLoading(false)
 		},
-		[agreement, sdk, chainId, me, postId, privateKey]
+		[agreement, chainId, postId, privateKey]
 	)
 
 	const handleCommentSubmit = useCallback(async () => {
@@ -151,33 +153,33 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			}
 			setIsLoading(true)
 
-			const createdAt = Math.floor(new Date().getTime() / 1000)
-			const gun = sdk.storage.getGunInstance()
+			// const createdAt = Math.floor(new Date().getTime() / 1000)
+			// const gun = sdk.storage.getGunInstance()
 
-			const { item } = await sdk.storage.encryptAndWrite({
-				path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/comments`,
-				writeColumns: {
-					createdAt
-				},
-				key: privateKey,
-				data: {
-					body: editor?.getHTML(),
-					walletAddress: accounts[0],
-					userId: me?.user.id,
-					displayName: me?.user.displayName,
-					profilePicUrl: me?.user.profilePicUrl,
-					ens: me?.user.DefaultWallet.ens,
-					agreementSlug: agreement?.slug
-				}
-			})
+			// const { item } = await sdk.storage.encryptAndWrite({
+			// 	path: `meem/${agreement.id}/extensions/discussion/posts/${postId}/comments`,
+			// 	writeColumns: {
+			// 		createdAt
+			// 	},
+			// 	key: privateKey,
+			// 	data: {
+			// 		body: editor?.getHTML(),
+			// 		walletAddress: accounts[0],
+			// 		userId: me?.user.id,
+			// 		displayName: me?.user.displayName,
+			// 		profilePicUrl: me?.user.profilePicUrl,
+			// 		ens: me?.user.DefaultWallet.ens,
+			// 		agreementSlug: agreement?.slug
+			// 	}
+			// })
 
-			gun?.get(
-				`meem/${agreement.id}/extensions/discussion/posts/${postId}`
-			)
-				// @ts-ignore
-				.get('comments')
-				// @ts-ignore
-				.set(item)
+			// gun?.get(
+			// 	`meem/${agreement.id}/extensions/discussion/posts/${postId}`
+			// )
+			// 	// @ts-ignore
+			// 	.get('comments')
+			// 	// @ts-ignore
+			// 	.set(item)
 
 			editor?.commands.clearContent()
 
@@ -189,39 +191,39 @@ export const DiscussionPostComponent: React.FC<IProps> = ({ postId }) => {
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}, [editor, agreement, sdk, accounts, me, postId, privateKey])
+	}, [editor, agreement, postId, privateKey])
 
 	useEffect(() => {
 		if (!sdk.id.hasInitialized || !chainId || !privateKey) {
 			return
 		}
 
-		const path = `meem/${agreement?.id}/extensions/discussion/posts/${postId}`
+		// const path = `meem/${agreement?.id}/extensions/discussion/posts/${postId}`
 
-		const handlePostData = (items: any) => {
-			let builtItem: Record<string, any> = {}
-			Object.keys(items).forEach(k => {
-				const item = items[k]
-				if (/^#/.test(k)) {
-					builtItem = { ...builtItem, ...item }
-				} else {
-					builtItem = {
-						[k]: item,
-						...builtItem
-					}
-				}
-			})
+		// const handlePostData = (items: any) => {
+		// 	let builtItem: Record<string, any> = {}
+		// 	Object.keys(items).forEach(k => {
+		// 		const item = items[k]
+		// 		if (/^#/.test(k)) {
+		// 			builtItem = { ...builtItem, ...item }
+		// 		} else {
+		// 			builtItem = {
+		// 				[k]: item,
+		// 				...builtItem
+		// 			}
+		// 		}
+		// 	})
 
-			setPost(rowToDiscussionPost({ row: builtItem, agreement }))
-			setHasFetchedPost(true)
-		}
+		// 	setPost(rowToDiscussionPost({ row: builtItem, agreement }))
+		// 	setHasFetchedPost(true)
+		// }
 
-		sdk.storage.on({
-			chainId,
-			privateKey,
-			path,
-			cb: handlePostData
-		})
+		// sdk.storage.on({
+		// 	chainId,
+		// 	privateKey,
+		// 	path,
+		// 	cb: handlePostData
+		// })
 	}, [
 		hasFetchedPost,
 		agreement,

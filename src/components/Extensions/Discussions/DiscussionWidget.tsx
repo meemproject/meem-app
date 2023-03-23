@@ -10,7 +10,6 @@ import { DiscussionPost } from '../../../model/agreement/extensions/discussion/d
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionSettingsModal } from '../ExtensionSettingsModal'
 import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
-import { rowToDiscussionPost } from './DiscussionHome'
 import { DiscussionPostPreview } from './DiscussionPostPreview'
 import { useDiscussions } from './DiscussionProvider'
 interface IProps {
@@ -21,7 +20,7 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	const [hasFetchedData, setHasFetchedData] = useState(false)
-	const [posts, setPosts] = useState<DiscussionPost[]>([])
+	const [posts] = useState<DiscussionPost[]>([])
 
 	const { sdk } = useSDK()
 	const { privateKey } = useDiscussions()
@@ -36,46 +35,46 @@ export const DiscussionWidget: React.FC<IProps> = ({ agreement }) => {
 				return
 			}
 
-			const path = `meem/${agreement?.id}/extensions/discussion/posts`
+			// const path = `meem/${agreement?.id}/extensions/discussion/posts`
 
-			sdk.storage.on({
-				privateKey,
-				path,
-				cb: (items: any) => {
-					const newPosts: DiscussionPost[] = []
+			// sdk.storage.on({
+			// 	privateKey,
+			// 	path,
+			// 	cb: (items: any) => {
+			// 		const newPosts: DiscussionPost[] = []
 
-					Object.keys(items).forEach(k => {
-						const item = items[k]
-						if (typeof item.data === 'object') {
-							const p = rowToDiscussionPost({
-								row: { ...item, id: k },
-								agreement
-							})
-							if (p && p.title && p.body) {
-								newPosts.push(p)
-							}
-						}
-					})
+			// 		Object.keys(items).forEach(k => {
+			// 			const item = items[k]
+			// 			if (typeof item.data === 'object') {
+			// 				const p = rowToDiscussionPost({
+			// 					row: { ...item, id: k },
+			// 					agreement
+			// 				})
+			// 				if (p && p.title && p.body) {
+			// 					newPosts.push(p)
+			// 				}
+			// 			}
+			// 		})
 
-					newPosts.sort((a, b) => {
-						if (!a.createdAt) {
-							return 1
-						}
-						if (!b.createdAt) {
-							return -1
-						}
-						if (a.createdAt > b.createdAt) {
-							return -1
-						}
-						if (a.createdAt < b.createdAt) {
-							return 1
-						}
-						return 0
-					})
+			// 		newPosts.sort((a, b) => {
+			// 			if (!a.createdAt) {
+			// 				return 1
+			// 			}
+			// 			if (!b.createdAt) {
+			// 				return -1
+			// 			}
+			// 			if (a.createdAt > b.createdAt) {
+			// 				return -1
+			// 			}
+			// 			if (a.createdAt < b.createdAt) {
+			// 				return 1
+			// 			}
+			// 			return 0
+			// 		})
 
-					setPosts(newPosts.slice(0, 3))
-				}
-			})
+			// 		setPosts(newPosts.slice(0, 3))
+			// 	}
+			// })
 
 			setHasFetchedData(true)
 		}

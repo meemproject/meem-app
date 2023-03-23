@@ -9,13 +9,12 @@ import {
 	Image
 } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
-import { makeRequest } from '@meemproject/sdk'
+import { makeRequest, MeemAPI } from '@meemproject/sdk'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useCallback, useState } from 'react'
 import { showSuccessNotification } from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { API } from '../symphonyTypes.generated'
 
 interface IProps {
 	isOpened: boolean
@@ -38,11 +37,11 @@ export const SymphonyDiscordConnectionModal: React.FC<IProps> = ({
 			return
 		}
 		const { code, inviteUrl } =
-			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
+			await makeRequest<MeemAPI.v1.InviteDiscordBot.IDefinition>(
 				`${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				}${API.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: agreement?.id, jwt } }
+					process.env.NEXT_PUBLIC_API_URL
+				}${MeemAPI.v1.InviteDiscordBot.path()}`,
+				{ query: { agreementId: agreement?.id } }
 			)
 
 		setBotCode(code)
