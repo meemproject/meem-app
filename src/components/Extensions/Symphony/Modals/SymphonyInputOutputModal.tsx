@@ -269,7 +269,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 				return
 			}
 
-			setWebHookPrivateKey(uuidv4())
+			setWebHookPrivateKey(rule?.webhookPrivateKey ?? '')
 
 			// Find input
 			const filteredInput = connections.filter(
@@ -318,6 +318,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		isOpened,
 		onModalClosed,
 		openRuleBuilder,
+		rule?.webhookPrivateKey,
 		selectedInput,
 		selectedOutput
 	])
