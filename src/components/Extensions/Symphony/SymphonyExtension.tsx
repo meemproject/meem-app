@@ -201,7 +201,11 @@ export const SymphonyExtension: React.FC = () => {
 					outputPlatformString: rule.output ?? '',
 					outputId: rule.outputRef,
 					description: rule.description,
-					abridgedDescription: rule.abridgedDescription
+					abridgedDescription: rule.abridgedDescription,
+					// webhookUrl: rule.webhookUrl,
+					// webhookPrivateKey: rule.webhookSecret
+					webhookUrl: 'example url',
+					webhookPrivateKey: 'example private key'
 				}
 
 				newRules.push(newRule)
@@ -268,15 +272,12 @@ export const SymphonyExtension: React.FC = () => {
 						return <div key={`rule-${rule.id}`} />
 					}
 
-					const isOutputWebhook =
-						rule.outputPlatformString === 'webhook'
-
 					const inputIcon =
 						matchingInput[0].platform === API.RuleIo.Discord
 							? '/connect-discord.png'
 							: '/connect-slack.png'
 
-					const outputIcon = isOutputWebhook
+					const outputIcon = !matchingOutput[0]
 						? '/connect-webhook.png'
 						: matchingOutput[0].platform === API.RuleIo.Twitter
 						? '/connect-twitter.png'
@@ -336,7 +337,7 @@ export const SymphonyExtension: React.FC = () => {
 													meemTheme.tExtraSmallBold
 												}
 											>
-												{!isOutputWebhook
+												{matchingOutput[0]
 													? matchingOutput[0]?.name
 													: `Custom Webhook: ${rule.webhookUrl}`}
 											</span>
