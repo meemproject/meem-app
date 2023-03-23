@@ -428,24 +428,25 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 						))}
 					</>
 				)}
-				{!agreement.isLaunched && (
-					<>
-						<Space h={16} />
-						<Center>
-							<Link
-								href={`/${agreement.slug}/admin?tab=membershiprequirements`}
-								legacyBehavior
-								passHref
-							>
-								<a className={meemTheme.unstyledLink}>
-									<Button className={meemTheme.buttonAsh}>
-										Edit requirements
-									</Button>
-								</a>
-							</Link>
-						</Center>
-					</>
-				)}
+				{!agreement.isLaunched &&
+					agreement.isCurrentUserAgreementAdmin && (
+						<>
+							<Space h={16} />
+							<Center>
+								<Link
+									href={`/${agreement.slug}/admin?tab=membershiprequirements`}
+									legacyBehavior
+									passHref
+								>
+									<a className={meemTheme.unstyledLink}>
+										<Button className={meemTheme.buttonAsh}>
+											Edit requirements
+										</Button>
+									</a>
+								</Link>
+							</Center>
+						</>
+					)}
 			</div>
 		</>
 	)

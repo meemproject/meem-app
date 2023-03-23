@@ -329,7 +329,7 @@ export const SymphonyExtension: React.FC = () => {
 											>
 												{!isOutputWebhook
 													? matchingOutput[0]?.name
-													: `Custom Webhook`}
+													: `Custom Webhook: ${rule.webhookUrl}`}
 											</span>
 										</Text>
 									</div>
