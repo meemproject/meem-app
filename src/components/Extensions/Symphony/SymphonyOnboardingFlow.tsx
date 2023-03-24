@@ -941,13 +941,13 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 											if (isWebhookOutputEnabled) {
 												analytics.track(
-													'Webhook Output Connected',
+													'Symphony Output Connected',
 													{
 														communityId:
 															chosenAgreement?.id,
 														communityName:
 															chosenAgreement?.name,
-														outputType: 'Twitter'
+														outputType: 'Webhook'
 													}
 												)
 											}
@@ -972,13 +972,13 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 											onClick={() => {
 												setIsSkippingTwitterAuth(true)
 												analytics.track(
-													'Webhook Output Connected',
+													'Symphony Output Connected',
 													{
 														communityId:
 															chosenAgreement?.id,
 														communityName:
 															chosenAgreement?.name,
-														outputType: 'Twitter'
+														outputType: 'Webhook'
 													}
 												)
 											}}
@@ -1209,6 +1209,15 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								className={meemTheme.buttonBlack}
 								onClick={() => {
 									handleAuthSlack()
+									analytics.track(
+										'Symphony Input Connected',
+										{
+											communityId: chosenAgreement?.id,
+											communityName:
+												chosenAgreement?.name,
+											inputType: 'Slack'
+										}
+									)
 								}}
 								leftIcon={<IconBrandSlack />}
 							>

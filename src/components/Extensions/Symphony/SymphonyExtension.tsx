@@ -215,9 +215,18 @@ export const SymphonyExtension: React.FC = () => {
 			return
 		}
 
+		const rule = rules?.find(r => r.id === ruleId)
+
 		await sdk.symphony.removeRules({
 			agreementId: agreement.id,
 			ruleIds: [ruleId]
+		})
+
+		analytics.track('Symphony Flow Deleted', {
+			communityId: agreement.id,
+			communityName: agreement?.name,
+			inputType: rule?.input?.platform,
+			outputType: rule?.output?.platform
 		})
 
 		setSelectedRule(undefined)

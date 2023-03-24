@@ -125,19 +125,24 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			}
 		})
 
+		const inputPlatform =
+			existingRule?.input?.platform ?? selectedInput.platform
+		const outputPlatform =
+			existingRule?.output?.platform ?? selectedOutput.platform
+
 		if (!existingRule) {
 			analytics.track('Symphony Flow Created', {
 				communityId: agreement?.id,
 				communityName: agreement?.name,
-				inputType: 'Discord',
-				outputType: 'Twitter'
+				inputType: inputPlatform,
+				outputType: outputPlatform
 			})
 		} else {
 			analytics.track('Symphony Flow Edited', {
 				communityId: agreement?.id,
 				communityName: agreement?.name,
-				inputType: 'Discord',
-				outputType: 'Twitter',
+				inputType: inputPlatform,
+				outputType: outputPlatform,
 				ruleId: existingRule.id
 			})
 		}
