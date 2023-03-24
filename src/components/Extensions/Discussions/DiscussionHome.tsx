@@ -195,7 +195,7 @@ export function rowToDiscussionPost(options: {
 
 export const DiscussionHome: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
-	const [posts, setPosts] = useState<DiscussionPost[]>([])
+	const [posts] = useState<DiscussionPost[]>([])
 	const [filteredPosts, setFilteredPosts] = useState<DiscussionPost[]>([])
 	const [sortOrder, setSortOrder] = useState(1)
 	const [hasInitialized, setHasInitialized] = useState(false)
@@ -240,32 +240,32 @@ export const DiscussionHome: React.FC = () => {
 				return
 			}
 
-			const path = `meem/${agreement?.id}/extensions/discussion/posts`
+			// const path = `meem/${agreement?.id}/extensions/discussion/posts`
 
-			sdk.storage.on({
-				privateKey,
-				path,
-				cb: (items: any) => {
-					let newPosts: DiscussionPost[] = []
+			// sdk.storage.on({
+			// 	privateKey,
+			// 	path,
+			// 	cb: (items: any) => {
+			// 		let newPosts: DiscussionPost[] = []
 
-					Object.keys(items).forEach(k => {
-						const item = items[k]
-						if (typeof item.data === 'object') {
-							const p = rowToDiscussionPost({
-								row: { ...item, id: k },
-								agreement
-							})
-							if (p && p.title && p.body) {
-								newPosts.push(p)
-							}
-						}
-					})
+			// 		Object.keys(items).forEach(k => {
+			// 			const item = items[k]
+			// 			if (typeof item.data === 'object') {
+			// 				const p = rowToDiscussionPost({
+			// 					row: { ...item, id: k },
+			// 					agreement
+			// 				})
+			// 				if (p && p.title && p.body) {
+			// 					newPosts.push(p)
+			// 				}
+			// 			}
+			// 		})
 
-					newPosts = sortPosts(newPosts)
+			// 		newPosts = sortPosts(newPosts)
 
-					setPosts(newPosts)
-				}
-			})
+			// 		setPosts(newPosts)
+			// 	}
+			// })
 
 			setHasInitialized(true)
 		}

@@ -6,15 +6,15 @@ import {
 	NumberInput,
 	Switch
 } from '@mantine/core'
+import { MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
 import { useMeemTheme } from '../../../../../Styles/MeemTheme'
-import { API } from '../../../symphonyTypes.generated'
 
 interface IProps {
 	form: any
-	rolesData: API.v1.GetDiscordRoles.IResponseBody
+	rolesData: MeemAPI.v1.GetDiscordRoles.IResponseBody
 	vetoerEmojis: string[]
 	onVetoerEmojisSet: (emojis: string[]) => void
 	onAddEmojisPressed: () => void

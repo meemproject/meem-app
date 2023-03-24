@@ -1,4 +1,4 @@
-import { API } from '../symphonyTypes.generated'
+import { MeemAPI } from '@meemproject/sdk'
 
 export enum SymphonyConnectionType {
 	InputOnly,
@@ -10,7 +10,7 @@ export interface SymphonyConnection {
 	id: string
 	name: string
 	type: SymphonyConnectionType
-	platform: API.RuleIo
+	platform: MeemAPI.RuleIo
 	icon?: string
 
 	// Twitter
@@ -32,7 +32,7 @@ export interface SymphonyRule {
 	outputId?: string
 	outputPlatformString?: string
 	agreementId: string
-	definition: API.IRule
+	definition: MeemAPI.IRule
 	description?: string | null
 	abridgedDescription?: string | null
 	webhookUrl?: string

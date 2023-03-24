@@ -1,8 +1,8 @@
 import { Text, Space, Image, Button } from '@mantine/core'
+import { MeemAPI } from '@meemproject/sdk'
 import React from 'react'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SymphonyConnection } from '../Model/symphony'
-import { API } from '../symphonyTypes.generated'
 
 interface IProps {
 	input?: SymphonyConnection
@@ -22,12 +22,12 @@ export const SymphonyRuleBuilderConnections: React.FC<IProps> = ({
 	const { classes: meemTheme } = useMeemTheme()
 
 	const inputIcon =
-		input?.platform === API.RuleIo.Discord
+		input?.platform === MeemAPI.RuleIo.Discord
 			? '/connect-discord.png'
 			: '/connect-slack.png'
 
 	const outputIcon =
-		output?.platform === API.RuleIo.Twitter
+		output?.platform === MeemAPI.RuleIo.Twitter
 			? '/connect-twitter.png'
 			: '/connect-webhook.png'
 

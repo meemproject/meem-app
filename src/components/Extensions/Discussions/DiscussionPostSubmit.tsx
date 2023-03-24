@@ -11,7 +11,7 @@ import {
 	Divider
 } from '@mantine/core'
 import { RichTextEditor } from '@mantine/tiptap'
-import { useMeemUser, useSDK, useWallet } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
 import Highlight from '@tiptap/extension-highlight'
 import { Link as TipTapLink } from '@tiptap/extension-link'
 import Subscript from '@tiptap/extension-subscript'
@@ -43,10 +43,6 @@ export const DiscussionPostSubmit: React.FC = () => {
 	const { agreement, isLoadingAgreement } = useAgreement()
 
 	const agreementExtension = extensionFromSlug('discussions', agreement)
-
-	const { user } = useMeemUser()
-
-	const { sdk } = useSDK()
 
 	const [postTitle, setPostTitle] = useState('')
 
@@ -167,51 +163,37 @@ export const DiscussionPostSubmit: React.FC = () => {
 				return
 			}
 
-			const now = Math.floor(new Date().getTime() / 1000)
+			// const now = Math.floor(new Date().getTime() / 1000)
 
-			const { id } = await sdk.storage.encryptAndWrite({
-				path: `meem/${agreement.id}/extensions/discussion/posts`,
-				data: {
-					title: postTitle,
-					body: editor?.getHTML(),
-					tags: postTags.split(' ').map(tag => tag.trim()),
-					walletAddress: wallet.accounts[0],
-					userId: user?.id,
-					displayName: user?.displayName ?? user?.DefaultWallet?.ens,
-					profilePicUrl: user?.profilePicUrl,
-					ens: user?.DefaultWallet?.ens,
-					agreementSlug: agreement?.slug,
-					attachment:
-						postAttachment && postAttachment.length > 0
-							? postAttachment
-							: null
-				},
-				writeColumns: {
-					createdAt: now
-				},
-				key: privateKey
-			})
+			// const { id } = await sdk.storage.encryptAndWrite({
+			// 	path: `meem/${agreement.id}/extensions/discussion/posts`,
+			// 	data: {
+			// 		title: postTitle,
+			// 		body: editor?.getHTML(),
+			// 		tags: postTags.split(' ').map(tag => tag.trim()),
+			// 		walletAddress: wallet.accounts[0],
+			// 		userId: user?.id,
+			// 		displayName: user?.displayName ?? user?.DefaultWallet?.ens,
+			// 		profilePicUrl: user?.profilePicUrl,
+			// 		ens: user?.DefaultWallet?.ens,
+			// 		agreementSlug: agreement?.slug,
+			// 		attachment:
+			// 			postAttachment && postAttachment.length > 0
+			// 				? postAttachment
+			// 				: null
+			// 	},
+			// 	writeColumns: {
+			// 		createdAt: now
+			// 	},
+			// 	key: privateKey
+			// })
 
-			router.push(`/${agreement.slug}/e/discussions/${id}`)
+			// router.push(`/${agreement.slug}/e/discussions/${id}`)
 		} catch (e) {
 			log.crit(e)
 			setIsLoading(false)
 		}
-	}, [
-		wallet,
-		agreement,
-		postTitle,
-		editor,
-		privateKey,
-		sdk.storage,
-		postTags,
-		user?.id,
-		user?.displayName,
-		user?.profilePicUrl,
-		user?.DefaultWallet?.ens,
-		postAttachment,
-		router
-	])
+	}, [wallet, agreement, postTitle, editor, privateKey, router])
 
 	return (
 		<>

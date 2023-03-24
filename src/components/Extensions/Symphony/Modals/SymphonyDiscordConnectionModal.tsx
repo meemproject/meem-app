@@ -8,14 +8,11 @@ import {
 	Stepper,
 	Image
 } from '@mantine/core'
-import { useAuth } from '@meemproject/react'
-import { makeRequest } from '@meemproject/sdk'
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { useSDK } from '@meemproject/react'
 import React, { useCallback, useState } from 'react'
 import { showSuccessNotification } from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { API } from '../symphonyTypes.generated'
 
 interface IProps {
 	isOpened: boolean
@@ -31,24 +28,20 @@ export const SymphonyDiscordConnectionModal: React.FC<IProps> = ({
 	const [botCode, setBotCode] = useState<string>('')
 
 	const { agreement } = useAgreement()
-	const { jwt } = useAuth()
+	const { sdk } = useSDK()
 
 	const handleInviteBot = useCallback(async () => {
-		if (!agreement?.id || !jwt) {
+		if (!agreement?.id) {
 			return
 		}
-		const { code, inviteUrl } =
-			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
-				`${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				}${API.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: agreement?.id, jwt } }
-			)
+		const { code, inviteUrl } = await sdk.symphony.inviteDiscordBot({
+			agreementId: agreement?.id
+		})
 
 		setBotCode(code)
 
 		window.open(inviteUrl, '_blank')
-	}, [agreement, jwt])
+	}, [agreement, sdk])
 
 	return (
 		<>

@@ -1,5 +1,6 @@
 import { Space, Modal, Text, Grid, Image, Center, Menu } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { MoreVert } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
@@ -10,7 +11,6 @@ import {
 	useMeemTheme
 } from '../../../Styles/MeemTheme'
 import { SymphonyConnection } from '../Model/symphony'
-import { API } from '../symphonyTypes.generated'
 import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
 import { SymphonyDiscordConnectionModal } from './SymphonyDiscordConnectionModal'
 
@@ -47,8 +47,8 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 		router.push({
 			pathname: `${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.AuthenticateWithTwitter.path()}`,
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.AuthenticateWithTwitter.path()}`,
 			query: {
 				agreementId: agreement.id,
 				jwt,
@@ -64,8 +64,8 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 		router.push({
 			pathname: `${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.AuthenticateWithSlack.path()}`,
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.AuthenticateWithSlack.path()}`,
 			query: {
 				agreementId: agreement.id,
 				jwt,
@@ -102,7 +102,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	}
 
 	interface AddNewConnectionTileProps {
-		platform: API.RuleIo
+		platform: MeemAPI.RuleIo
 	}
 
 	const AddNewConnectionTile = ({ platform }: AddNewConnectionTileProps) => {
@@ -111,13 +111,13 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 				className={meemTheme.gridItemBlue}
 				onClick={() => {
 					switch (platform) {
-						case API.RuleIo.Discord:
+						case MeemAPI.RuleIo.Discord:
 							setIsConnectDiscordModalOpen(true)
 							break
-						case API.RuleIo.Twitter:
+						case MeemAPI.RuleIo.Twitter:
 							handleAuthTwitter()
 							break
-						case API.RuleIo.Slack:
+						case MeemAPI.RuleIo.Slack:
 							handleAuthSlack()
 							break
 					}
@@ -133,9 +133,9 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 						}}
 					>
 						{`+ Connect Another ${
-							platform === API.RuleIo.Discord
+							platform === MeemAPI.RuleIo.Discord
 								? 'Server'
-								: platform === API.RuleIo.Slack
+								: platform === MeemAPI.RuleIo.Slack
 								? 'Workspace'
 								: 'Account'
 						}`}
@@ -192,7 +192,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 	interface ConnectionsGridProps {
 		conns: SymphonyConnection[]
-		platform: API.RuleIo
+		platform: MeemAPI.RuleIo
 	}
 
 	const ConnectionsGrid = ({ conns, platform }: ConnectionsGridProps) => {
@@ -219,15 +219,15 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 	const ConnectionsList = () => {
 		const twitterConnections = connections?.filter(
-			c => c.platform === API.RuleIo.Twitter
+			c => c.platform === MeemAPI.RuleIo.Twitter
 		)
 
 		const discordConnections = connections?.filter(
-			c => c.platform === API.RuleIo.Discord
+			c => c.platform === MeemAPI.RuleIo.Discord
 		)
 
 		const slackConnections = connections?.filter(
-			c => c.platform === API.RuleIo.Slack
+			c => c.platform === MeemAPI.RuleIo.Slack
 		)
 
 		return (
@@ -238,7 +238,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 				/>
 				<ConnectionsGrid
 					conns={twitterConnections ?? []}
-					platform={API.RuleIo.Twitter}
+					platform={MeemAPI.RuleIo.Twitter}
 				/>
 
 				<Space h={32} />
@@ -248,7 +248,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 				/>
 				<ConnectionsGrid
 					conns={discordConnections ?? []}
-					platform={API.RuleIo.Discord}
+					platform={MeemAPI.RuleIo.Discord}
 				/>
 
 				<Space h={32} />
@@ -258,7 +258,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 				/>
 				<ConnectionsGrid
 					conns={slackConnections ?? []}
-					platform={API.RuleIo.Slack}
+					platform={MeemAPI.RuleIo.Slack}
 				/>
 			</>
 		)
