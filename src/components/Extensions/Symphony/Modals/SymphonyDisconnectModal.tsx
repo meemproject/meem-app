@@ -1,7 +1,7 @@
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Button, Center, Loader } from '@mantine/core'
-import { useAuth } from '@meemproject/react'
-import { makeRequest, MeemAPI } from '@meemproject/sdk'
+import { useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React, { useCallback, useState } from 'react'
 import {
@@ -27,10 +27,10 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 	const [isDisconnecting, setIsDisconnecting] = useState(false)
 
 	const { agreement } = useAgreement()
-	const { jwt } = useAuth()
+	const { sdk } = useSDK()
 
 	const handleDisconnect = useCallback(async () => {
-		if (!jwt || !agreement?.id || !connection) {
+		if (!agreement?.id || !connection) {
 			return
 		}
 
@@ -40,17 +40,9 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 			// TODO: Slack
 			switch (connection.platform) {
 				case MeemAPI.RuleIo.Discord:
-					await makeRequest<MeemAPI.v1.DisconnectDiscord.IDefinition>(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.DisconnectDiscord.path()}`,
-						{
-							method: MeemAPI.v1.DisconnectDiscord.method,
-							body: {
-								agreementDiscordId: connection.id
-							}
-						}
-					)
+					await sdk.symphony.disconnectDiscord({
+						agreementDiscordId: connection.id
+					})
 					showSuccessNotification(
 						'Discord Disconnected',
 						'Discord has been disconnected'
@@ -60,17 +52,9 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 					break
 
 				case MeemAPI.RuleIo.Twitter:
-					await makeRequest<MeemAPI.v1.DisconnectTwitter.IDefinition>(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.DisconnectTwitter.path()}`,
-						{
-							method: MeemAPI.v1.DisconnectTwitter.method,
-							body: {
-								agreementTwitterId: connection.id
-							}
-						}
-					)
+					await sdk.symphony.disconnectTwitter({
+						agreementTwitterId: connection.id
+					})
 					showSuccessNotification(
 						'Twitter Disconnected',
 						'Twitter has been disconnected'
@@ -81,17 +65,9 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 					break
 
 				case MeemAPI.RuleIo.Slack:
-					await makeRequest<MeemAPI.v1.DisconnectSlack.IDefinition>(
-						`${
-							process.env.NEXT_PUBLIC_API_URL
-						}${MeemAPI.v1.DisconnectSlack.path()}`,
-						{
-							method: MeemAPI.v1.DisconnectSlack.method,
-							body: {
-								agreementSlackId: connection.id
-							}
-						}
-					)
+					await sdk.symphony.disconnectSlack({
+						agreementSlackId: connection.id
+					})
 					showSuccessNotification(
 						'Slack Disconnected',
 						'Slack has been disconnected'
@@ -111,7 +87,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 			showErrorNotification('Something went wrong', 'Please try again ')
 			setIsDisconnecting(false)
 		}
-	}, [jwt, agreement?.id, connection, onModalClosed])
+	}, [agreement?.id, connection, onModalClosed, sdk])
 
 	return (
 		<>

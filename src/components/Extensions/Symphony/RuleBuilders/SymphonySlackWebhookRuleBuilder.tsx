@@ -1,13 +1,8 @@
-import {
-	ApolloClient,
-	// eslint-disable-next-line import/named
-	NormalizedCacheObject,
-	useSubscription
-} from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useAuth } from '@meemproject/react'
-import { createApolloClient, makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { useAuth, useMeemApollo } from '@meemproject/react'
+import { makeFetcher, MeemAPI } from '@meemproject/sdk'
 import type { EmojiClickData } from 'emoji-picker-react'
 import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
@@ -77,17 +72,7 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 	const { jwt } = useAuth()
 
 	// GraphQL Subscriptions
-	const [symphonyClient, setSymphonyClient] =
-		useState<ApolloClient<NormalizedCacheObject>>()
-
-	useEffect(() => {
-		const c = createApolloClient({
-			httpUrl: `https://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`,
-			wsUri: `wss://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`
-		})
-
-		setSymphonyClient(c)
-	}, [])
+	const { mutualMembersClient } = useMeemApollo()
 
 	const { data: slackData, loading: isLoadingSlackData } =
 		useSubscription<SubSlackSubscription>(SUB_SLACK, {
@@ -97,11 +82,11 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 			},
 			skip:
 				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-				!symphonyClient ||
+				!mutualMembersClient ||
 				!agreement?.id ||
 				!isOpened ||
 				!input?.id,
-			client: symphonyClient
+			client: mutualMembersClient
 		})
 
 	const { data: channelsData, isLoading: isLoadingChannelsData } =

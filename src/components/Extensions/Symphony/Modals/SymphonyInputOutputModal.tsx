@@ -13,7 +13,7 @@ import {
 	TextInput
 } from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
-import { makeRequest, MeemAPI } from '@meemproject/sdk'
+import { MeemAPI } from '@meemproject/sdk'
 import { IconCopy } from '@tabler/icons'
 import React, { useCallback, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -109,34 +109,21 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 		setIsSavingRule(true)
 
-		await makeRequest<MeemAPI.v1.SaveRule.IDefinition>(
-			`${process.env.NEXT_PUBLIC_API_URL}${MeemAPI.v1.SaveRule.path()}`,
-			{
-				method: MeemAPI.v1.SaveRule.method,
-				body: {
-					agreementId: agreement.id,
-					rule: {
-						...values,
-						input:
-							existingRule?.input?.platform ??
-							selectedInput.platform,
-						inputRef:
-							existingRule?.input?.id ?? selectedInput?.id ?? '',
-						output:
-							existingRule?.output?.platform ??
-							selectedOutput.platform,
-						outputRef:
-							existingRule?.output?.id ??
-							selectedOutput?.id ??
-							'',
-						isEnabled: true,
-						ruleId: existingRule?.id ?? rule?.id,
-						webhookUrl,
-						webhookSecret: webhookPrivateKey
-					}
-				}
+		await sdk.symphony.saveRule({
+			agreementId: agreement.id,
+			rule: {
+				...values,
+				input: existingRule?.input?.platform ?? selectedInput.platform,
+				inputRef: existingRule?.input?.id ?? selectedInput?.id ?? '',
+				output:
+					existingRule?.output?.platform ?? selectedOutput.platform,
+				outputRef: existingRule?.output?.id ?? selectedOutput?.id ?? '',
+				isEnabled: true,
+				ruleId: existingRule?.id ?? rule?.id,
+				webhookUrl,
+				webhookSecret: webhookPrivateKey
 			}
-		)
+		})
 
 		if (!existingRule) {
 			analytics.track('Symphony Flow Created', {

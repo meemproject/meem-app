@@ -1,5 +1,4 @@
-import { ApolloClient, useSubscription } from '@apollo/client'
-import type { NormalizedCacheObject } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Container,
@@ -12,8 +11,8 @@ import {
 	Grid,
 	Image
 } from '@mantine/core'
-import { useAuth } from '@meemproject/react'
-import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
+import { useAuth, useMeemApollo, useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import React, { useEffect, useState } from 'react'
 import {
 	SubDiscordsSubscription,
@@ -50,18 +49,6 @@ export const SymphonyExtension: React.FC = () => {
 	const analytics = useAnalytics()
 
 	// Extension data
-	const [symphonyClient, setSymphonyClient] =
-		useState<ApolloClient<NormalizedCacheObject>>()
-
-	useEffect(() => {
-		const c = createApolloClient({
-			httpUrl: `https://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`,
-			wsUri: `wss://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`
-		})
-
-		setSymphonyClient(c)
-	}, [])
-
 	const [previousRulesDataString, setPreviousRulesDataString] = useState('')
 	const [rules, setRules] = useState<SymphonyRule[]>()
 	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
@@ -74,10 +61,14 @@ export const SymphonyExtension: React.FC = () => {
 		SymphonyConnection[]
 	>([])
 
+	const { sdk } = useSDK()
+
 	// Page state
 	const [isManageConnectionsModalOpen, setIsManageConnectionsModalOpen] =
 		useState(false)
 	const [isNewRuleModalOpen, setIsNewRuleModalOpen] = useState(false)
+
+	const { mutualMembersClient } = useMeemApollo()
 
 	const { data: rulesData } = useSubscription<SubRulesSubscription>(
 		SUB_RULES,
@@ -85,8 +76,8 @@ export const SymphonyExtension: React.FC = () => {
 			variables: {
 				agreementId: agreement?.id
 			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
+			skip: !agreement?.id,
+			client: mutualMembersClient
 		}
 	)
 
@@ -97,8 +88,8 @@ export const SymphonyExtension: React.FC = () => {
 		variables: {
 			agreementId: agreement?.id
 		},
-		skip: !symphonyClient || !agreement?.id,
-		client: symphonyClient
+		skip: !mutualMembersClient || !agreement?.id,
+		client: mutualMembersClient
 	})
 
 	const {
@@ -108,8 +99,8 @@ export const SymphonyExtension: React.FC = () => {
 		variables: {
 			agreementId: agreement?.id
 		},
-		skip: !symphonyClient || !agreement?.id,
-		client: symphonyClient
+		skip: !mutualMembersClient || !agreement?.id,
+		client: mutualMembersClient
 	})
 
 	const { data: slackConnectionData, loading: isFetchingSlackConnections } =
@@ -117,8 +108,8 @@ export const SymphonyExtension: React.FC = () => {
 			variables: {
 				agreementId: agreement?.id
 			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
+			skip: !mutualMembersClient || !agreement?.id,
+			client: mutualMembersClient
 		})
 
 	// Parse connections from subscription
@@ -193,7 +184,7 @@ export const SymphonyExtension: React.FC = () => {
 			rulesData.Rules.forEach(rule => {
 				const newRule: SymphonyRule = {
 					id: rule.id,
-					agreementId: rule.agreementId,
+					agreementId: rule.AgreementId,
 					inputPlatformString: rule.input ?? '',
 					inputId: rule.inputRef,
 					definition: rule.definition,
@@ -220,18 +211,10 @@ export const SymphonyExtension: React.FC = () => {
 			return
 		}
 
-		await makeRequest<MeemAPI.v1.RemoveRules.IDefinition>(
-			`${
-				process.env.NEXT_PUBLIC_API_URL
-			}${MeemAPI.v1.RemoveRules.path()}`,
-			{
-				method: MeemAPI.v1.RemoveRules.method,
-				body: {
-					agreementId: agreement.id,
-					ruleIds: [ruleId]
-				}
-			}
-		)
+		await sdk.symphony.removeRules({
+			agreementId: agreement.id,
+			ruleIds: [ruleId]
+		})
 
 		setSelectedRule(undefined)
 	}
@@ -261,12 +244,12 @@ export const SymphonyExtension: React.FC = () => {
 					}
 
 					const inputIcon =
-						matchingInput[0].platform === API.RuleIo.Discord
+						matchingInput[0].platform === MeemAPI.RuleIo.Discord
 							? '/connect-discord.png'
 							: '/connect-slack.png'
 
 					const outputIcon =
-						matchingOutput[0].platform === API.RuleIo.Twitter
+						matchingOutput[0].platform === MeemAPI.RuleIo.Twitter
 							? '/connect-twitter.png'
 							: '/connect-webhook.png'
 

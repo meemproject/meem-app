@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-import { ApolloClient, useQuery, useSubscription } from '@apollo/client'
-import type { NormalizedCacheObject } from '@apollo/client'
+import { useQuery, useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Text,
@@ -27,7 +23,7 @@ import {
 	LoginState,
 	useAuth
 } from '@meemproject/react'
-import { createApolloClient, makeRequest, MeemAPI } from '@meemproject/sdk'
+import { MeemAPI } from '@meemproject/sdk'
 import { IconBrandSlack } from '@tabler/icons'
 import { Group } from 'iconoir-react'
 import Cookies from 'js-cookie'
@@ -64,7 +60,6 @@ import {
 	colorBlack,
 	colorBlue,
 	colorDarkerGrey,
-	colorGreen,
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -107,12 +102,10 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const [shouldShowCreateNewCommunity, setShouldShowCreateNewCommunity] =
 		useState(false)
 	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
-	const [isWaitingForStateChangeDelay, setIsWaitingForStateChangeDelay] =
-		useState(false)
+	const [isWaitingForStateChangeDelay] = useState(false)
 
 	// Which input connections have been selected?
-	const [haveOutputsBeenSelected, setHaveOutputsBeenSelected] =
-		useState(false)
+	const [hasOutputsBeenSelected, setHasOutputsBeenSelected] = useState(false)
 	const [isDiscordInputEnabled, setIsDiscordInputEnabled] = useState(false)
 	const [isSlackInputEnabled, setIsSlackInputEnabled] = useState(false)
 
@@ -128,7 +121,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	// Bot code / invite data
 	const [discordInviteUrl, setDiscordInviteUrl] = useState('')
 	const [botCode, setDiscordBotCode] = useState<string | undefined>()
-	const [shouldActivateBot, setShouldActivateBot] = useState(false)
+	const [shouldActivateBot] = useState(false)
 
 	// Subscriptions
 	const {
@@ -149,51 +142,39 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		}
 	)
 
-	const { loading: extensionsLoading, data: availableExtensionsData } =
+	const { loading: isExtensionsLoading, data: availableExtensionsData } =
 		useQuery<GetExtensionsQuery>(GET_EXTENSIONS, {
 			client: anonClient
 		})
 
-	const [symphonyClient, setSymphonyClient] =
-		useState<ApolloClient<NormalizedCacheObject>>()
-
-	useEffect(() => {
-		const c = createApolloClient({
-			httpUrl: `https://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`,
-			wsUri: `wss://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`
-		})
-
-		setSymphonyClient(c)
-	}, [])
-
-	const { data: twitterData, loading: twitterDataLoading } =
+	const { data: twitterData, loading: isTwitterDataLoading } =
 		useSubscription<SubTwitterSubscription>(SUB_TWITTERS, {
 			variables: {
 				agreementId: chosenAgreement?.id
 			},
-			skip: !symphonyClient || !chosenAgreement?.id,
-			client: symphonyClient
+			skip: !mutualMembersClient || !chosenAgreement?.id,
+			client: mutualMembersClient
 		})
 
-	const { data: discordData, loading: discordInfoLoading } =
+	const { data: discordData, loading: isDiscordInfoLoading } =
 		useSubscription<SubDiscordSubscription>(SUB_DISCORDS, {
 			variables: {
 				agreementId: chosenAgreement?.id
 			},
-			skip: !symphonyClient || !chosenAgreement?.id,
-			client: symphonyClient
+			skip: !mutualMembersClient || !chosenAgreement?.id,
+			client: mutualMembersClient
 		})
 
-	const { data: slackData, loading: slackInfoLoading } =
+	const { data: slackData, loading: isSlackInfoLoading } =
 		useSubscription<SubSlackSubscription>(SUB_SLACKS, {
 			variables: {
 				agreementId: chosenAgreement?.id
 			},
 			skip:
 				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-				!symphonyClient ||
+				!mutualMembersClient ||
 				!chosenAgreement?.id,
-			client: symphonyClient
+			client: mutualMembersClient
 		})
 
 	const [transactionIds, setTransactionIds] = useState<string[]>([])
@@ -204,15 +185,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		mintTxId?: string
 	}>({})
 
-	const { error, data: transactions } =
-		useSubscription<GetTransactionsSubscription>(SUB_TRANSACTIONS, {
+	const { data: transactions } = useSubscription<GetTransactionsSubscription>(
+		SUB_TRANSACTIONS,
+		{
 			variables: {
 				transactionIds
 			},
 			// @ts-ignore
 			client: anonClient,
 			skip: !isCreatingNewCommunity || transactionIds.length === 0
-		})
+		}
+	)
 
 	useEffect(() => {
 		if (!myAgreements && myAgreementsData) {
@@ -261,7 +244,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		}
 
 		// Step 2 - check if agreement name already exists
-		let agreementNameExists = false
+		let doesAgreementNameExist = false
 		if (anonClient) {
 			const agreementCollisions = await anonClient.query({
 				query: GET_AGREEMENT_EXISTS,
@@ -275,11 +258,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			})
 
 			if (agreementCollisions.data.Agreements.length > 0) {
-				agreementNameExists = true
+				doesAgreementNameExist = true
 			}
 		}
 
-		if (agreementNameExists) {
+		if (doesAgreementNameExist) {
 			log.debug('agreement already exists...')
 			setIsCreatingNewCommunity(false)
 			showErrorNotification(
@@ -400,42 +383,38 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	])
 
 	const getDiscordInviteAndBotCode = useCallback(async () => {
-		if (!chosenAgreement?.id || !jwt) {
+		if (!chosenAgreement?.id) {
 			return
 		}
-		const { code, inviteUrl } =
-			await makeRequest<MeemAPI.v1.InviteDiscordBot.IDefinition>(
-				`${
-					process.env.NEXT_PUBLIC_API_URL
-				}${MeemAPI.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: chosenAgreement?.id } }
-			)
+		const { code, inviteUrl } = await sdk.symphony.inviteDiscordBot({
+			agreementId: chosenAgreement?.id
+		})
 
 		setDiscordBotCode(code)
 		setDiscordInviteUrl(inviteUrl)
-	}, [chosenAgreement?.id, jwt])
+	}, [chosenAgreement?.id, sdk])
 
 	// Intregrations data
 	const twitterUsername =
 		twitterData?.AgreementTwitters[0] &&
 		twitterData?.AgreementTwitters[0].Twitter?.username
 	const discordInfo = discordData?.AgreementDiscords[0]
-	const discordHasName =
+	const hasDiscordName =
 		discordInfo &&
 		discordData?.AgreementDiscords[0].Discord?.name !== undefined
 	const slackInfo = slackData?.AgreementSlacks[0]
 
-	const twitterConnExists =
-		!!twitterData?.AgreementTwitters[0] &&
-		!!twitterData?.AgreementTwitters[0].Twitter?.username
+	// const twitterConnExists =
+	// 	!!twitterData?.AgreementTwitters[0] &&
+	// 	!!twitterData?.AgreementTwitters[0].Twitter?.username
 
-	const discordConnExists =
-		!!discordData?.AgreementDiscords[0] &&
-		typeof discordData?.AgreementDiscords[0].Discord?.name === 'string'
+	// const discordConnExists =
+	// 	!!discordData?.AgreementDiscords[0] &&
+	// 	typeof discordData?.AgreementDiscords[0].Discord?.name === 'string'
 
-	const slackConnExists =
-		!!slackData?.AgreementSlacks[0] &&
-		typeof slackData?.AgreementSlacks[0].Slack?.name === 'string'
+	// const slackConnExists =
+	// 	!!slackData?.AgreementSlacks[0] &&
+	// 	typeof slackData?.AgreementSlacks[0].Slack?.name === 'string'
 
 	// Handle page state changes
 	useEffect(() => {
@@ -448,17 +427,17 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		// Set page state
 		if (
 			isLoadingMyAgreements ||
-			extensionsLoading ||
+			isExtensionsLoading ||
 			(onboardingStep !== 0 &&
-				(twitterDataLoading ||
-					discordInfoLoading ||
-					slackInfoLoading)) ||
+				(isTwitterDataLoading ||
+					isDiscordInfoLoading ||
+					isSlackInfoLoading)) ||
 			(!chosenAgreement && twitterAuthRedirectAgreementSlug)
 		) {
 			setPageState(PageState.Loading)
 			log.debug(`set page state = loading`)
 			log.debug(
-				`reason: isLoadingMyAgreements: ${isLoadingMyAgreements}, extLoad=${extensionsLoading} twitterLoad=${twitterDataLoading} discordLoad=${discordInfoLoading} slackLoad=${slackInfoLoading} chosenAgr=${
+				`reason: isLoadingMyAgreements: ${isLoadingMyAgreements}, extLoad=${isExtensionsLoading} twitterLoad=${isTwitterDataLoading} discordLoad=${isDiscordInfoLoading} slackLoad=${isSlackInfoLoading} chosenAgr=${
 					chosenAgreement !== undefined
 				} twitterAuthSlug=${
 					twitterAuthRedirectAgreementSlug !== undefined
@@ -498,7 +477,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					setOnboardingStep(1)
 				} else {
 					if (
-						!haveOutputsBeenSelected &&
+						!hasOutputsBeenSelected &&
 						!discordInfo?.Discord?.name &&
 						!slackInfo?.Slack?.name
 					) {
@@ -552,7 +531,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		isLoadingMyAgreements,
 		myAgreements?.length,
 		myAgreementsError,
-		extensionsLoading,
+		isExtensionsLoading,
 		pageState,
 		chosenAgreement,
 		twitterUsername,
@@ -561,11 +540,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		myAgreements,
 		slackInfo,
 		router,
-		twitterDataLoading,
-		discordInfoLoading,
-		slackInfoLoading,
+		isTwitterDataLoading,
+		isDiscordInfoLoading,
+		isSlackInfoLoading,
 		botCode,
-		discordHasName,
+		hasDiscordName,
 		isWaitingForStateChangeDelay,
 		shouldShowCreateNewCommunity,
 		isCreatingNewCommunity,
@@ -577,7 +556,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		slackData,
 		isSkippingTwitterAuth,
 		isDiscordInputEnabled,
-		haveOutputsBeenSelected,
+		hasOutputsBeenSelected,
 		isSlackInputEnabled,
 		onboardingStep
 	])
@@ -1073,7 +1052,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									<Space h={16} />
 									<Button
 										onClick={() => {
-											setHaveOutputsBeenSelected(true)
+											setHasOutputsBeenSelected(true)
 										}}
 										className={meemTheme.buttonBlack}
 									>
@@ -1490,7 +1469,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 												</div>
 											</div>
 											{(isEnablingExtension ||
-												extensionsLoading) &&
+												isExtensionsLoading) &&
 												chosenAgreement &&
 												chosenAgreement.slug ===
 													existingAgreement.slug && (

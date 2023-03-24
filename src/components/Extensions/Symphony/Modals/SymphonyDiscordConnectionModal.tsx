@@ -8,9 +8,7 @@ import {
 	Stepper,
 	Image
 } from '@mantine/core'
-import { useAuth } from '@meemproject/react'
-import { makeRequest, MeemAPI } from '@meemproject/sdk'
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { useSDK } from '@meemproject/react'
 import React, { useCallback, useState } from 'react'
 import { showSuccessNotification } from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
@@ -30,24 +28,20 @@ export const SymphonyDiscordConnectionModal: React.FC<IProps> = ({
 	const [botCode, setBotCode] = useState<string>('')
 
 	const { agreement } = useAgreement()
-	const { jwt } = useAuth()
+	const { sdk } = useSDK()
 
 	const handleInviteBot = useCallback(async () => {
-		if (!agreement?.id || !jwt) {
+		if (!agreement?.id) {
 			return
 		}
-		const { code, inviteUrl } =
-			await makeRequest<MeemAPI.v1.InviteDiscordBot.IDefinition>(
-				`${
-					process.env.NEXT_PUBLIC_API_URL
-				}${MeemAPI.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: agreement?.id } }
-			)
+		const { code, inviteUrl } = await sdk.symphony.inviteDiscordBot({
+			agreementId: agreement?.id
+		})
 
 		setBotCode(code)
 
 		window.open(inviteUrl, '_blank')
-	}, [agreement, jwt])
+	}, [agreement, sdk])
 
 	return (
 		<>
