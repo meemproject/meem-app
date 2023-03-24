@@ -104,6 +104,8 @@ export const SUB_RULES = gql`
 			inputRef
 			output
 			outputRef
+			# webhookUrl
+			# webhookSecret
 		}
 	}
 `
