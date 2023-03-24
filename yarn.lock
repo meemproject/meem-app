@@ -2418,10 +2418,10 @@
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.10.5.tgz#ad620d714e545c6efb7f69d94ce46e3fd2fe01fb"
   integrity sha512-FGMq4dGs5HhDAtI0z46uzxzKKPmZ3h5uKUyKg1ZHoFR1mBtcUMbB6FylFmHqKFRWlJ5IXqX9dwmiVrLYUOfTmA==
 
-"@meemproject/meem-contracts@0.19.11-pre-9b42525.0", "@meemproject/meem-contracts@^0.19.11-pre-9b42525.0":
-  version "0.19.11-pre-9b42525.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.19.11-pre-9b42525.0.tgz#8d73cfd20647861aa9a1398049cf866b9dd3f1b8"
-  integrity sha512-4V4f6G/TuosRdpR/W3de2nsZwS71RMhMVwTbtyXTQS6JPP2xsBXqm4UpXSgjJZY6AuqRAKOA/7z8Lptslue6vA==
+"@meemproject/meem-contracts@^0.20.0":
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.20.0.tgz#f0e63fc9a99ae618b8a596002385d3de8e970793"
+  integrity sha512-U/0/Kq2iRNI6ps/FNfeBehMJqqpEMqBT3gPxPqAqU/hQT8e3sOfpE8BerCDqCLi4CHBnUILvUS15c3WNbDZCIA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@openzeppelin/contracts" "^4.7.3"
@@ -2430,10 +2430,10 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@0.19.11-pre-9b42525.0":
-  version "0.19.11-pre-9b42525.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.19.11-pre-9b42525.0.tgz#9f9d541f1791c3c83f1947d307e5bddedc8c3744"
-  integrity sha512-veS4HIQJnljA4KcuNU8TpZ1u9p4popVr4JpRetfrkxUXBN+h6ozCUoLaxVXGZaHF5C88pKj6APmNdrZwKSwpvw==
+"@meemproject/react@^0.20.0":
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.20.0.tgz#acdb71566c1b0e5a3abcbb3143cea0c40d66d520"
+  integrity sha512-oCUFAVG3G7oCo7j71e8rku9Ipv4m65/OWdlnsJLJlo+GLddZdqoCfB5ox2p2BRBQfl03lrnaGVI/8Vw3gFGGJQ==
   dependencies:
     "@apollo/client" "^3.7.10"
     "@auth0/auth0-react" "^1.12.0"
@@ -2443,9 +2443,9 @@
     "@magic-ext/connect" "^6.1.0"
     "@mantine/core" "^5.10.0"
     "@mantine/hooks" "^5.10.0"
-    "@meemproject/meem-contracts" "^0.19.11-pre-9b42525.0"
-    "@meemproject/sdk" "^0.19.11-pre-9b42525.0"
-    "@meemproject/utils" "^0.19.11-pre-9b42525.0"
+    "@meemproject/meem-contracts" "^0.20.0"
+    "@meemproject/sdk" "^0.20.0"
+    "@meemproject/utils" "^0.20.0"
     "@walletconnect/ethereum-provider" "^2.4.7"
     buffer-alloc "^1.2.0"
     ethers "^5.6.4"
@@ -2461,17 +2461,17 @@
     swr "^1.3.0"
     web3modal "^1.9.12"
 
-"@meemproject/sdk@0.19.11-pre-9b42525.0", "@meemproject/sdk@^0.19.11-pre-9b42525.0":
-  version "0.19.11-pre-9b42525.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.19.11-pre-9b42525.0.tgz#13fcded2aa1db4027981ab57d2c0bdfe2d39d671"
-  integrity sha512-DNDyONfjabX4DoCk2WgbbRkkgrzCqXkwqNVPlhsh00BoV5OwJFZ5LCJZCt0G2ueM/foOzU81y761Tmn+RqhtSA==
+"@meemproject/sdk@^0.20.0":
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.20.0.tgz#9b81b673885ae15fe8ae7bb753239eecadb4ac7c"
+  integrity sha512-MIydxR3qFkZ9DNE3PcsH7gut+hJMvJBYc6Hr2/mii8qlp2QgvMxFSpHfwohXKPsQkqz9ngN4GvIrzxdOQtmDpQ==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@kengoldfarb/log" "^1.0.5"
     "@lit-protocol/constants" "^2.0.35"
     "@lit-protocol/lit-node-client" "^2.0.35"
-    "@meemproject/meem-contracts" "^0.19.11-pre-9b42525.0"
-    "@meemproject/utils" "^0.19.11-pre-9b42525.0"
+    "@meemproject/meem-contracts" "^0.20.0"
+    "@meemproject/utils" "^0.20.0"
     "@peculiar/webcrypto" "^1.4.1"
     "@tableland/sdk" "^3.1.5"
     "@typechain/ethers-v5" "^10.0.0"
@@ -2493,13 +2493,13 @@
     typed-emitter "^2.1.0"
     uuid "^9.0.0"
 
-"@meemproject/utils@^0.19.11-pre-9b42525.0":
-  version "0.19.11-pre-9b42525.0"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.19.11-pre-9b42525.0.tgz#19a6d52afc8d6cc96c19527cd3eb6f576c5e985f"
-  integrity sha512-bc59ip+bsO4UaghTMTchoKD/wd2ZzHtkWQ+BjNk43Df4IGOHqQwnEpb6M9RHoL6U6Hfhyp6Zdw6ed+e3KrDdvA==
+"@meemproject/utils@^0.20.0":
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.20.0.tgz#08c8b0e3bf0ac019f8b387291433d19eb7561475"
+  integrity sha512-zXPK7aSwIDAPh+h6STDD4IOKhiBav79wbIZs+C3rjBwVHNt/GwW6p4FL8gd/1rJH4BXd4fns9lxooHcqWtFplQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.19.11-pre-9b42525.0"
+    "@meemproject/meem-contracts" "^0.20.0"
     ethers "^5.6.4"
 
 "@morgan-stanley/ts-mocking-bird@^0.6.2":
