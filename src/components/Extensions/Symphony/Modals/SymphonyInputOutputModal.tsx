@@ -335,7 +335,9 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 		selectedInput &&
 		selectedOutput &&
 		(selectedOutput.platform !== MeemAPI.RuleIo.Webhook ||
-			(webhookUrl && webhookUrl.includes('https://')))
+			(webhookUrl &&
+				(webhookUrl.toLowerCase().includes('https://') ||
+					webhookUrl.toLowerCase().includes('localhost'))))
 
 	const modalContents = (
 		<>
