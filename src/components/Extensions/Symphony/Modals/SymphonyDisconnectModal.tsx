@@ -109,7 +109,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 					</Center>
 				)}
 
-				{isDisconnecting && (
+				{!isDisconnecting && (
 					<>
 						{!connection && (
 							<Center>
