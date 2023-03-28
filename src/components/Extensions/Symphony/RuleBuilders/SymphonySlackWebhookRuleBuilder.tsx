@@ -242,10 +242,13 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 	// 		isShareChannelGated = true
 	// 	}
 	// }
+	const isLoading = isLoadingChannelsData || isLoadingSlackData
+	const hasAllRequiredData = !isLoading && slackData && channelsData
+	const isMissingRequiredData = !isLoading && (!slackData || !channelsData)
 
 	const modalContents = (
 		<>
-			{(isLoadingChannelsData || isLoadingSlackData) && (
+			{isLoading && (
 				<>
 					<Space h={32} />
 					<Center>
@@ -254,7 +257,29 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 					<Space h={32} />
 				</>
 			)}
-			{slackData && channelsData && (
+			{isMissingRequiredData && (
+				<>
+					<Space h={32} />
+					<Center>
+						<Text className={meemTheme.tSmallBold}>
+							Unable to retrieve data
+						</Text>
+					</Center>
+					<Space h={8} />
+					<Center>
+						<Text className={meemTheme.tSmall}>
+							{!slackData &&
+								'Slack workspace data was not found.'}{' '}
+							{!slackData && 'Slack channel data was not found.'}{' '}
+							{
+								'Contact us using the button in the top right of this page.'
+							}
+						</Text>
+					</Center>
+					<Space h={32} />
+				</>
+			)}
+			{hasAllRequiredData && (
 				<>
 					<form
 						onSubmit={form.onSubmit(values =>
