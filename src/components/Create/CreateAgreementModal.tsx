@@ -7,7 +7,6 @@ import { GetAgreementExistsQuery } from '../../../generated/graphql'
 import { GET_AGREEMENT_EXISTS } from '../../graphql/agreements'
 import { Agreement } from '../../model/agreement/agreements'
 import { showErrorNotification } from '../../utils/notifications'
-import { hostnameToChainId } from '../App'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { CreationProgressModal } from './CreationProgressModal'
 
@@ -22,7 +21,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const { web3Provider, isConnected, connectWallet, chainId } = useWallet()
+	const { web3Provider, isConnected, connectWallet } = useWallet()
 
 	const [shouldCheckAgreementName, setShouldCheckAgreementName] =
 		useState(false)
@@ -52,11 +51,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 					.toString()
 					.replaceAll(' ', '-')
 					.toLowerCase(),
-				chainId:
-					chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					)
+				chainId: process.env.NEXT_PUBLIC_CHAIN_ID
 			},
 			skip: !shouldCheckAgreementName || !isOpened
 		})
@@ -145,15 +140,6 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				className={meemTheme.buttonBlack}
 				onClick={() => {
 					checkName(agreementName)
-					const dataLayer = (window as any).dataLayer ?? null
-
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Create Your Community',
-							action: 'Create Community'
-						}
-					})
 				}}
 			>
 				Next

@@ -107,16 +107,30 @@ export const useMeemTheme = createStyles(theme => ({
 		borderRadius: 24
 	},
 	buttonBlue: {
-		color: colorBlack,
+		color: colorWhite,
 		backgroundColor: colorBlue,
 		'&:hover': {
-			backgroundColor: colorBlueHover
+			backgroundColor: colorDarkBlue
 		},
 		'&:loading': {
-			backgroundColor: colorBlueHover
+			backgroundColor: colorDarkBlue
 		},
 		'&:disabled': {
-			backgroundColor: colorBlueHover
+			backgroundColor: colorDarkBlue
+		},
+		borderRadius: 24
+	},
+	buttonDarkBlue: {
+		color: colorWhite,
+		backgroundColor: colorDarkBlue,
+		'&:hover': {
+			backgroundColor: colorBlue
+		},
+		'&:loading': {
+			backgroundColor: colorBlue
+		},
+		'&:disabled': {
+			backgroundColor: colorBlue
 		},
 		borderRadius: 24
 	},
@@ -419,6 +433,33 @@ export const useMeemTheme = createStyles(theme => ({
 		paddingTop: 20,
 		alignItems: 'center',
 		textAlign: 'center'
+	},
+	gridItemFlat: {
+		cursor: 'pointer',
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
+		borderRadius: 8,
+		padding: 16
+	},
+	gridItemBlue: {
+		cursor: 'pointer',
+		border: `1px solid ${colorBlue}`,
+		alignItems: 'center',
+		borderRadius: 8,
+		padding: 16
+	},
+	gridItemFlatSelected: {
+		cursor: 'pointer',
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorWhite : colorBlack
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
+		borderRadius: 8,
+		padding: 16
 	},
 	extensionGridItem: {
 		display: 'flex',

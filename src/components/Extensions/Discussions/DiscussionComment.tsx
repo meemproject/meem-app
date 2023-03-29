@@ -10,7 +10,7 @@ import {
 	Tooltip
 } from '@mantine/core'
 import { RichTextEditor } from '@mantine/tiptap'
-import { useAuth, useSDK, useWallet } from '@meemproject/react'
+import { useAuth } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
@@ -47,13 +47,13 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 	path
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const { sdk } = useSDK()
+	// const { sdk } = useSDK()
 	const { me } = useAuth()
 	const { agreement } = useAgreement()
 	const { privateKey } = useDiscussions()
 	const [votes, setVotes] = useState(0)
 	const [canReact, setCanReact] = useState(false)
-	const { accounts } = useWallet()
+	// const { accounts } = useWallet()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -95,27 +95,29 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 				}
 				setIsLoading(true)
 
-				const createdAt = Math.floor(new Date().getTime() / 1000)
-				const gun = sdk.storage.getGunInstance()
+				log.debug({ reaction })
 
-				const { item } = await sdk.storage.encryptAndWrite({
-					path: `${path}/comments/${comment.id}/reactions`,
-					key: privateKey,
-					writeColumns: {
-						createdAt
-					},
-					data: {
-						reaction,
-						userId: me?.user.id,
-						walletAddress: me?.address
-					}
-				})
+				// const createdAt = Math.floor(new Date().getTime() / 1000)
+				// const gun = sdk.storage.getGunInstance()
 
-				gun?.get(`${path}/comments/${comment.id}`)
-					// @ts-ignore
-					.get('reactions')
-					// @ts-ignore
-					.set(item)
+				// const { item } = await sdk.storage.encryptAndWrite({
+				// 	path: `${path}/comments/${comment.id}/reactions`,
+				// 	key: privateKey,
+				// 	writeColumns: {
+				// 		createdAt
+				// 	},
+				// 	data: {
+				// 		reaction,
+				// 		userId: me?.user.id,
+				// 		walletAddress: me?.address
+				// 	}
+				// })
+
+				// gun?.get(`${path}/comments/${comment.id}`)
+				// 	// @ts-ignore
+				// 	.get('reactions')
+				// 	// @ts-ignore
+				// 	.set(item)
 
 				if (onReaction) {
 					onReaction()
@@ -125,7 +127,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 			}
 			setIsLoading(false)
 		},
-		[sdk, me, agreement, onReaction, privateKey, path, comment]
+		[agreement, onReaction, privateKey, comment]
 	)
 
 	const handleCommentSubmit = useCallback(async () => {
@@ -148,28 +150,28 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 			}
 			setIsLoading(true)
 
-			const createdAt = Math.floor(new Date().getTime() / 1000)
-			const gun = sdk.storage.getGunInstance()
+			// const createdAt = Math.floor(new Date().getTime() / 1000)
+			// const gun = sdk.storage.getGunInstance()
 
-			const { item } = await sdk.storage.encryptAndWrite({
-				path: `${path}/comments/${comment.id}/comments`,
-				writeColumns: {
-					createdAt
-				},
-				key: privateKey,
-				data: {
-					body: editor?.getHTML(),
-					walletAddress: accounts[0],
-					userId: me?.user.id,
-					displayName: me?.user.displayName,
-					profilePicUrl: me?.user.profilePicUrl,
-					ens: me?.user.DefaultWallet.ens,
-					agreementSlug: agreement?.slug
-				}
-			})
+			// const { item } = await sdk.storage.encryptAndWrite({
+			// 	path: `${path}/comments/${comment.id}/comments`,
+			// 	writeColumns: {
+			// 		createdAt
+			// 	},
+			// 	key: privateKey,
+			// 	data: {
+			// 		body: editor?.getHTML(),
+			// 		walletAddress: accounts[0],
+			// 		userId: me?.user.id,
+			// 		displayName: me?.user.displayName,
+			// 		profilePicUrl: me?.user.profilePicUrl,
+			// 		ens: me?.user.DefaultWallet.ens,
+			// 		agreementSlug: agreement?.slug
+			// 	}
+			// })
 
-			// @ts-ignore
-			gun?.get(`${path}/comments/${comment.id}`).get('comments').set(item)
+			// // @ts-ignore
+			// gun?.get(`${path}/comments/${comment.id}`).get('comments').set(item)
 
 			editor?.commands.clearContent()
 
@@ -183,7 +185,7 @@ export const DiscussionCommentComponent: React.FC<IProps> = ({
 			log.crit(e)
 		}
 		setIsLoading(false)
-	}, [editor, agreement, sdk, accounts, me, path, privateKey, comment])
+	}, [editor, agreement, path, privateKey, comment])
 
 	useEffect(() => {
 		const { votes: v, userVotes } = calculateVotes(comment)

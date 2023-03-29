@@ -25,7 +25,6 @@ import {
 	isJwtError as isJwtError
 } from '../../../model/agreement/agreements'
 import { CookieKeys } from '../../../utils/cookies'
-import { hostnameToChainId } from '../../App'
 import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
 	colorBlack,
@@ -55,11 +54,7 @@ export const MyAgreementsComponent: React.FC = () => {
 		SUB_MY_AGREEMENTS,
 		{
 			variables: {
-				chainId:
-					wallet.chainId ??
-					hostnameToChainId(
-						global.window ? global.window.location.host : ''
-					),
+				chainId: process.env.NEXT_PUBLIC_CHAIN_ID,
 				walletAddress:
 					wallet.accounts &&
 					wallet.accounts[0] &&
@@ -313,16 +308,6 @@ export const MyAgreementsComponent: React.FC = () => {
 								className={meemTheme.gridItemCenteredAsh}
 								onClick={() => {
 									setIsCreationModalOpen(true)
-									const dataLayer =
-										(window as any).dataLayer ?? null
-
-									dataLayer?.push({
-										event: 'event',
-										eventProps: {
-											category: 'My Communities',
-											action: 'Launch a New Community'
-										}
-									})
 								}}
 							>
 								<Space h={16} />

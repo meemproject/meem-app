@@ -11,6 +11,11 @@ import {
 } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import {
+	correctChainIdName,
+	isWrongChainId,
+	SwitchChainsModal
+} from '../../Authenticate/SwitchChainsModal'
 
 interface IProps {
 	agreement?: Agreement
@@ -35,6 +40,9 @@ export const ChangeMeemProtocolPermissionsComponent: React.FC<IProps> = ({
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
+	const [isSwitchChainsModalOpened, setIsSwitchChainsModalOpened] =
+		useState(false)
+
 	const closeModal = useCallback(() => {
 		onModalClosed()
 		setIsSavingChanges(false)
@@ -44,6 +52,10 @@ export const ChangeMeemProtocolPermissionsComponent: React.FC<IProps> = ({
 		async function changeMeemProtocolPermissions() {
 			if (!wallet.web3Provider || !agreement) {
 				log.debug('no web3provider or agreement')
+				showErrorNotification(
+					'Unable to change Meem protocol permissions.',
+					`Make sure you are connected to the ${correctChainIdName()} network.`
+				)
 				return
 			}
 
@@ -57,6 +69,13 @@ export const ChangeMeemProtocolPermissionsComponent: React.FC<IProps> = ({
 					)
 					closeModal()
 				}
+
+				if (isWrongChainId(wallet.chainId ?? 0)) {
+					log.debug(`wrong chain id for action.`)
+					setIsSwitchChainsModalOpened(true)
+					return
+				}
+
 				setIsSavingChanges(true)
 
 				try {
@@ -120,5 +139,14 @@ export const ChangeMeemProtocolPermissionsComponent: React.FC<IProps> = ({
 		watchTransactions
 	])
 
-	return <></>
+	return (
+		<>
+			<SwitchChainsModal
+				isOpened={isSwitchChainsModalOpened}
+				onModalClosed={function (): void {
+					setIsSwitchChainsModalOpened(false)
+				}}
+			/>
+		</>
+	)
 }

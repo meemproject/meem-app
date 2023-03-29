@@ -12,6 +12,7 @@ import { useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
+import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
 import { useMeemTheme } from '../Styles/MeemTheme'
@@ -20,6 +21,7 @@ import { LoginForm } from './LoginModal'
 const MAuthenticate: React.FC = () => {
 	const wallet = useAuth()
 	const router = useRouter()
+	const analytics = useAnalytics()
 	const { login } = useSDK()
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -36,9 +38,17 @@ const MAuthenticate: React.FC = () => {
 					uri: window.location.href
 				})
 
+				analytics.track('Account Connected', {
+					walletType: wallet.walletType
+				})
+
 				const redirect = Cookies.get(CookieKeys.authRedirectUrl)
 
-				if (redirect && !redirect?.includes('authenticate')) {
+				if (
+					redirect &&
+					!redirect?.includes('authenticate') &&
+					!redirect?.includes('undefined')
+				) {
 					const fixedPathName = redirect.replaceAll('%3F', '?')
 					log.debug(`fixed path name = ${fixedPathName}`)
 					router.push(fixedPathName)
@@ -54,7 +64,7 @@ const MAuthenticate: React.FC = () => {
 			)
 			log.crit(e)
 		}
-	}, [wallet, router, login])
+	}, [wallet, router, login, analytics])
 
 	return (
 		<Center>

@@ -8,7 +8,7 @@ import {
 	useMantineColorScheme,
 	Tooltip
 } from '@mantine/core'
-import { useAuth, useSDK } from '@meemproject/react'
+import { useAuth } from '@meemproject/react'
 import { normalizeImageUrl } from '@meemproject/sdk'
 import { Message, NavArrowDown, NavArrowUp } from 'iconoir-react'
 import { DateTime } from 'luxon'
@@ -39,7 +39,6 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 
 	const { privateKey } = useDiscussions()
 
-	const { sdk } = useSDK()
 	const { me } = useAuth()
 
 	const { colorScheme } = useMantineColorScheme()
@@ -63,29 +62,31 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 				}
 				setIsLoading(true)
 
-				const createdAt = Math.floor(new Date().getTime() / 1000)
-				const gun = sdk.storage.getGunInstance()
+				log.debug({ reaction })
 
-				const { item } = await sdk.storage.encryptAndWrite({
-					path: `meem/${agreement.id}/extensions/discussion/posts/${post.id}/reactions`,
-					key: privateKey,
-					writeColumns: {
-						createdAt
-					},
-					data: {
-						reaction,
-						userId: me?.user.id,
-						walletAddress: me?.address
-					}
-				})
+				// const createdAt = Math.floor(new Date().getTime() / 1000)
+				// const gun = sdk.storage.getGunInstance()
 
-				gun?.get(
-					`meem/${agreement.id}/extensions/discussion/posts/${post.id}`
-				)
-					// @ts-ignore
-					.get('reactions')
-					// @ts-ignore
-					.set(item)
+				// const { item } = await sdk.storage.encryptAndWrite({
+				// 	path: `meem/${agreement.id}/extensions/discussion/posts/${post.id}/reactions`,
+				// 	key: privateKey,
+				// 	writeColumns: {
+				// 		createdAt
+				// 	},
+				// 	data: {
+				// 		reaction,
+				// 		userId: me?.user.id,
+				// 		walletAddress: me?.address
+				// 	}
+				// })
+
+				// gun?.get(
+				// 	`meem/${agreement.id}/extensions/discussion/posts/${post.id}`
+				// )
+				// 	// @ts-ignore
+				// 	.get('reactions')
+				// 	// @ts-ignore
+				// 	.set(item)
 
 				if (onReaction) {
 					onReaction()
@@ -95,7 +96,7 @@ export const DiscussionPostPreview: React.FC<IProps> = ({
 			}
 			setIsLoading(false)
 		},
-		[agreement, sdk, me, post.id, privateKey, onReaction]
+		[agreement, post.id, privateKey, onReaction]
 	)
 
 	useEffect(() => {

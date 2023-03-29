@@ -1,5 +1,4 @@
-import { ApolloClient, useSubscription } from '@apollo/client'
-import type { NormalizedCacheObject } from '@apollo/client'
+import { useSubscription } from '@apollo/client'
 import log from '@kengoldfarb/log'
 import {
 	Container,
@@ -7,127 +6,69 @@ import {
 	Space,
 	Center,
 	Button,
-	Image,
-	Modal,
-	Menu,
 	Loader,
-	useMantineColorScheme,
-	Stepper,
-	Code
+	Divider,
+	Grid,
+	Image
 } from '@mantine/core'
-import { useAuth, useSDK } from '@meemproject/react'
+import { useAuth, useMeemApollo, useSDK } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
+import React, { useEffect, useState } from 'react'
 import {
-	createApolloClient,
-	makeFetcher,
-	makeRequest,
-	MeemAPI
-} from '@meemproject/sdk'
-import { Emoji } from 'emoji-picker-react'
-import { Discord, LogOut, Twitter } from 'iconoir-react'
-import { useRouter } from 'next/router'
-import React, { useCallback, useEffect, useState } from 'react'
-import useSWR from 'swr'
-import {
-	SubDiscordSubscription,
+	SubDiscordsSubscription,
 	SubRulesSubscription,
-	SubSlackSubscription,
-	SubTwitterSubscription
+	SubSlacksSubscription,
+	SubTwittersSubscription
 } from '../../../../generated/graphql'
+import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
-import {
-	showErrorNotification,
-	showSuccessNotification
-} from '../../../utils/notifications'
+import { toTitleCase } from '../../../utils/strings'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import {
-	colorBlue,
-	colorDarkBlue,
-	colorRed,
-	useMeemTheme
-} from '../../Styles/MeemTheme'
+import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { SUB_DISCORD, SUB_RULES, SUB_SLACK, SUB_TWITTER } from './symphony.gql'
-import { IOnSave, SymphonyRuleBuilder } from './SymphonyRuleBuilder'
-import { API } from './symphonyTypes.generated'
-
-export enum SelectedConnection {
-	ConnectionDiscord = 'discord',
-	ConnectionTwitter = 'twitter',
-	ConnectionSlack = 'slack'
-}
+import { SymphonyConnectionsModal } from './Modals/SymphonyConnectionsModal'
+import { SymphonyInputOutputModal } from './Modals/SymphonyInputOutputModal'
+import {
+	SymphonyConnection,
+	SymphonyConnectionType,
+	SymphonyRule
+} from './Model/symphony'
+import {
+	SUB_DISCORDS,
+	SUB_RULES,
+	SUB_SLACKS,
+	SUB_TWITTERS
+} from './symphony.gql'
 
 export const SymphonyExtension: React.FC = () => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
-	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { agreement, isLoadingAgreement } = useAgreement()
 	const agreementExtension = extensionFromSlug('symphony', agreement)
-	const router = useRouter()
+	const analytics = useAnalytics()
 
 	// Extension data
-	const [symphonyClient, setSymphonyClient] =
-		useState<ApolloClient<NormalizedCacheObject>>()
-	const [selectedConnection, setSelectedConnection] =
-		useState<SelectedConnection>()
-	const [selectedRule, setSelectedRule] =
-		useState<SubRulesSubscription['Rules'][0]>()
-	const [botCode, setBotCode] = useState<string>('')
+	const [previousRulesDataString, setPreviousRulesDataString] = useState('')
+	const [rules, setRules] = useState<SymphonyRule[]>()
+	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
+
+	const [previousConnectionsDataString, setPreviousConnectionsDataString] =
+		useState('')
+	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
+	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
+	const [symphonyConnections, setSymphonyConnections] = useState<
+		SymphonyConnection[]
+	>([])
+
+	const { sdk } = useSDK()
 
 	// Page state
-	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
+	const [isManageConnectionsModalOpen, setIsManageConnectionsModalOpen] =
 		useState(false)
-	const [connectDiscordStep, setConnectDiscordStep] = useState(0)
-	const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
-	const [isRuleBuilderOpen, setIsRuleBuilderOpen] = useState(false)
-	const { colorScheme } = useMantineColorScheme()
-	const isDarkTheme = colorScheme === 'dark'
+	const [isNewRuleModalOpen, setIsNewRuleModalOpen] = useState(false)
 
-	// GraphQL Subscriptions
-	useEffect(() => {
-		const c = createApolloClient({
-			httpUrl: `https://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`,
-			wsUri: `wss://${process.env.NEXT_PUBLIC_SYMPHONY_GQL_HOST}`
-		})
-
-		setSymphonyClient(c)
-	}, [])
-
-	const { data: twitterData } = useSubscription<SubTwitterSubscription>(
-		SUB_TWITTER,
-		{
-			variables: {
-				agreementId: agreement?.id
-			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
-		}
-	)
-
-	const { data: discordData } = useSubscription<SubDiscordSubscription>(
-		SUB_DISCORD,
-		{
-			variables: {
-				agreementId: agreement?.id
-			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
-		}
-	)
-
-	const { data: slackData } = useSubscription<SubSlackSubscription>(
-		SUB_SLACK,
-		{
-			variables: {
-				agreementId: agreement?.id
-			},
-			skip:
-				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-				!symphonyClient ||
-				!agreement?.id,
-			client: symphonyClient
-		}
-	)
+	const { mutualMembersClient } = useMeemApollo()
 
 	const { data: rulesData } = useSubscription<SubRulesSubscription>(
 		SUB_RULES,
@@ -135,283 +76,138 @@ export const SymphonyExtension: React.FC = () => {
 			variables: {
 				agreementId: agreement?.id
 			},
-			skip: !symphonyClient || !agreement?.id,
-			client: symphonyClient
+			skip: !agreement?.id,
+			client: mutualMembersClient
 		}
 	)
 
-	// console.log({ twitterData, discordData, slackData, rulesData })
-
-	const { data: channelsData } =
-		useSWR<API.v1.GetDiscordChannels.IResponseBody>(
-			agreement?.id && jwt
-				? `${
-						process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				  }${API.v1.GetDiscordChannels.path()}`
-				: null,
-			url => {
-				return makeFetcher<
-					API.v1.GetDiscordChannels.IQueryParams,
-					API.v1.GetDiscordChannels.IRequestBody,
-					API.v1.GetDiscordChannels.IResponseBody
-				>({
-					method: API.v1.GetDiscordChannels.method
-				})(url, {
-					jwt: jwt as string,
-					agreementId: agreement?.id as string
-				})
-			},
-			{
-				shouldRetryOnError: false
-			}
-		)
-
-	const { data: rolesData } = useSWR<API.v1.GetDiscordRoles.IResponseBody>(
-		agreement?.id && jwt
-			? `${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			  }${API.v1.GetDiscordRoles.path()}`
-			: null,
-		url => {
-			return makeFetcher<
-				API.v1.GetDiscordRoles.IQueryParams,
-				API.v1.GetDiscordRoles.IRequestBody,
-				API.v1.GetDiscordRoles.IResponseBody
-			>({
-				method: API.v1.GetDiscordRoles.method
-			})(url, {
-				jwt: jwt as string,
-				agreementId: agreement?.id as string
-			})
+	const {
+		data: discordConnectionData,
+		loading: isFetchingDiscordConnections
+	} = useSubscription<SubDiscordsSubscription>(SUB_DISCORDS, {
+		variables: {
+			agreementId: agreement?.id
 		},
-		{
-			shouldRetryOnError: false
-		}
-	)
+		skip: !mutualMembersClient || !agreement?.id,
+		client: mutualMembersClient
+	})
 
-	// Handle authentication for different services
-	const handleInviteBot = useCallback(async () => {
-		if (!agreement?.id || !jwt) {
-			return
-		}
-		const { code, inviteUrl } =
-			await makeRequest<API.v1.InviteDiscordBot.IDefinition>(
-				`${
-					process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-				}${API.v1.InviteDiscordBot.path()}`,
-				{ query: { agreementId: agreement?.id, jwt } }
-			)
+	const {
+		data: twitterConnectionData,
+		loading: isFetchingTwitterConnections
+	} = useSubscription<SubTwittersSubscription>(SUB_TWITTERS, {
+		variables: {
+			agreementId: agreement?.id
+		},
+		skip: !mutualMembersClient || !agreement?.id,
+		client: mutualMembersClient
+	})
 
-		setBotCode(code)
-
-		window.open(inviteUrl, '_blank')
-	}, [agreement, jwt])
-
-	const handleAuthTwitter = useCallback(async () => {
-		if (!agreement?.id || !jwt) {
-			return
-		}
-
-		router.push({
-			pathname: `${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.AuthenticateWithTwitter.path()}`,
-			query: {
-				agreementId: agreement.id,
-				jwt,
-				returnUrl: window.location.toString()
-			}
+	const { data: slackConnectionData, loading: isFetchingSlackConnections } =
+		useSubscription<SubSlacksSubscription>(SUB_SLACKS, {
+			variables: {
+				agreementId: agreement?.id
+			},
+			skip: !mutualMembersClient || !agreement?.id,
+			client: mutualMembersClient
 		})
-	}, [router, agreement, jwt])
 
-	const handleAuthSlack = useCallback(async () => {
-		if (!agreement?.id || !jwt) {
-			return
-		}
+	// Parse connections from subscription
+	useEffect(() => {
+		if (
+			discordConnectionData &&
+			twitterConnectionData &&
+			slackConnectionData
+		) {
+			const conns: SymphonyConnection[] = []
+			discordConnectionData.AgreementDiscords.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Discord: ${c.Discord?.name}`,
+					type: SymphonyConnectionType.InputOnly,
+					platform: MeemAPI.RuleIo.Discord,
+					icon: c.Discord?.icon ?? ''
+				}
+				conns.push(con)
+			})
 
-		router.push({
-			pathname: `${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.AuthenticateWithSlack.path()}`,
-			query: {
-				agreementId: agreement.id,
-				jwt,
-				returnUrl: window.location.toString()
+			twitterConnectionData.AgreementTwitters.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Twitter: ${c.Twitter?.username}`,
+					type: SymphonyConnectionType.OutputOnly,
+					platform: MeemAPI.RuleIo.Twitter
+				}
+				conns.push(con)
+			})
+
+			slackConnectionData.AgreementSlacks.forEach(c => {
+				const con: SymphonyConnection = {
+					id: c.id,
+					name: `Slack: ${c.Slack?.name}`,
+					type: SymphonyConnectionType.InputOnly,
+					platform: MeemAPI.RuleIo.Slack
+				}
+				conns.push(con)
+			})
+
+			// Add Webhook connection
+			const webhookCon: SymphonyConnection = {
+				id: 'webhook',
+				name: 'Add a custom Webhook',
+				type: SymphonyConnectionType.OutputOnly,
+				platform: MeemAPI.RuleIo.Webhook
 			}
-		})
-	}, [router, agreement, jwt])
+			conns.push(webhookCon)
 
-	const handleReauthenticate = useCallback(async () => {
-		const dataLayer = (window as any).dataLayer ?? null
-
-		switch (selectedConnection) {
-			case SelectedConnection.ConnectionDiscord:
-				handleInviteBot()
-				dataLayer?.push({
-					event: 'event',
-					eventProps: {
-						category: 'Symphony Extension',
-						action: 'Manage Connection',
-						label: 'Reconnect Discord'
-					}
-				})
-				break
-
-			case SelectedConnection.ConnectionTwitter:
-				handleAuthTwitter()
-				dataLayer?.push({
-					event: 'event',
-					eventProps: {
-						category: 'Symphony Extension',
-						action: 'Manage Connection',
-						label: 'Reconnect Twitter'
-					}
-				})
-				break
-
-			case SelectedConnection.ConnectionSlack:
-				handleAuthSlack()
-				dataLayer?.push({
-					event: 'event',
-					eventProps: {
-						category: 'Symphony Extension',
-						action: 'Manage Connection',
-						label: 'Reconnect Slack'
-					}
-				})
-				break
-
-			default:
-				log.warn(
-					`No matching selectedConnection for ${selectedConnection}`
-				)
-				break
+			const jsonConns = JSON.stringify(conns)
+			if (jsonConns !== previousConnectionsDataString) {
+				setPreviousConnectionsDataString(jsonConns)
+				setSymphonyConnections(conns)
+				setHasFetchedConnections(true)
+				setIsFetchingConnections(false)
+			}
 		}
 	}, [
-		selectedConnection,
-		handleAuthTwitter,
-		handleInviteBot,
-		handleAuthSlack
+		discordConnectionData,
+		hasFetchedConnections,
+		isFetchingConnections,
+		previousConnectionsDataString,
+		slackConnectionData,
+		twitterConnectionData
 	])
 
-	const handleDisconnect = useCallback(async () => {
-		const dataLayer = (window as any).dataLayer ?? null
-
-		if (!jwt || !agreement?.id) {
-			return
-		}
-		try {
-			switch (selectedConnection) {
-				case SelectedConnection.ConnectionDiscord:
-					await makeRequest<API.v1.DisconnectDiscord.IDefinition>(
-						`${
-							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-						}${API.v1.DisconnectDiscord.path()}`,
-						{
-							method: API.v1.DisconnectDiscord.method,
-							body: {
-								jwt,
-								agreementId: agreement?.id
-							}
-						}
-					)
-					showSuccessNotification(
-						'Discord Disconnected',
-						'Discord has been disconnected'
-					)
-					setIsDisconnectModalOpen(false)
-
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Manage Connection',
-							label: 'Disconnect Discord'
-						}
-					})
-					break
-
-				case SelectedConnection.ConnectionTwitter:
-					await makeRequest<API.v1.DisconnectTwitter.IDefinition>(
-						`${
-							process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-						}${API.v1.DisconnectTwitter.path()}`,
-						{
-							method: API.v1.DisconnectTwitter.method,
-							body: {
-								jwt,
-								agreementId: agreement?.id
-							}
-						}
-					)
-					showSuccessNotification(
-						'Twitter Disconnected',
-						'Twitter has been disconnected'
-					)
-					setIsDisconnectModalOpen(false)
-					dataLayer?.push({
-						event: 'event',
-						eventProps: {
-							category: 'Symphony Extension',
-							action: 'Manage Connection',
-							label: 'Disconnect Twitter'
-						}
-					})
-					break
-
-				default:
-					log.warn('Invalid case for handleDisconnect')
-					break
-			}
-		} catch (e) {
-			showErrorNotification('Something went wrong', 'Please try again ')
-		}
-	}, [selectedConnection, agreement, jwt])
-
-	const handleRuleSave = async (values: IOnSave) => {
-		if (!agreement?.id || !jwt) {
-			return
-		}
-
-		await makeRequest<API.v1.SaveRules.IDefinition>(
-			`${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.SaveRules.path()}`,
-			{
-				method: API.v1.SaveRules.method,
-				body: {
-					jwt,
-					agreementId: agreement.id,
-					rules: [
-						{
-							...values,
-							action: API.PublishAction.Tweet,
-							isEnabled: true,
-							ruleId: selectedRule?.id
-						}
-					]
+	// Parse rules from subscription
+	useEffect(() => {
+		const newRules: SymphonyRule[] = []
+		if (rulesData) {
+			rulesData.Rules.forEach(rule => {
+				const newRule: SymphonyRule = {
+					id: rule.id,
+					agreementId: rule.AgreementId,
+					inputPlatformString: rule.input ?? '',
+					inputId: rule.inputRef,
+					definition: rule.definition,
+					outputPlatformString: rule.output ?? '',
+					outputId: rule.outputRef,
+					description: rule.description,
+					abridgedDescription: rule.abridgedDescription,
+					// webhookUrl: rule.webhookUrl,
+					// webhookPrivateKey: rule.webhookSecret
+					webhookUrl: 'example url',
+					webhookPrivateKey: 'example private key'
 				}
-			}
-		)
 
-		// If extension is not yet marked as 'setup complete', set as complete
-		if (!agreementExtension?.isSetupComplete) {
-			// Note: we don't need to await this request
-			sdk.agreementExtension.updateAgreementExtension({
-				agreementId: agreement?.id ?? '',
-				isSetupComplete: true,
-				agreementExtensionId: agreementExtension?.id,
-				widget: {
-					isEnabled: true,
-					visibility:
-						MeemAPI.AgreementExtensionVisibility.TokenHolders
-				}
+				newRules.push(newRule)
 			})
 		}
 
-		setSelectedRule(undefined)
-		setIsRuleBuilderOpen(false)
-	}
+		const rulesToJson = JSON.stringify(newRules)
+		if (rulesToJson !== previousRulesDataString) {
+			setRules(newRules)
+			setPreviousRulesDataString(rulesToJson)
+		}
+	}, [previousRulesDataString, rulesData])
 
 	const removeRule = async (ruleId: string) => {
 		if (!agreement?.id || !jwt) {
@@ -419,601 +215,140 @@ export const SymphonyExtension: React.FC = () => {
 			return
 		}
 
-		await makeRequest<API.v1.RemoveRules.IDefinition>(
-			`${
-				process.env.NEXT_PUBLIC_SYMPHONY_API_URL
-			}${API.v1.RemoveRules.path()}`,
-			{
-				method: API.v1.RemoveRules.method,
-				body: {
-					jwt,
-					agreementId: agreement.id,
-					ruleIds: [ruleId]
-				}
-			}
-		)
+		const rule = rules?.find(r => r.id === ruleId)
+
+		await sdk.symphony.removeRules({
+			agreementId: agreement.id,
+			ruleIds: [ruleId]
+		})
+
+		analytics.track('Symphony Flow Deleted', {
+			communityId: agreement.id,
+			communityName: agreement?.name,
+			inputType: rule?.input?.platform,
+			outputType: rule?.output?.platform
+		})
+
+		setSelectedRule(undefined)
 	}
 
 	// Integration data states
-	const twitterUsername =
-		twitterData?.Twitters[0] && twitterData?.Twitters[0].username
-	const rules = rulesData?.Rules
-	const discordInfo = discordData?.Discords[0]
-	// const slackInfo = slackData?.Slacks[0]
-	const hasFetchedData =
-		!!twitterData &&
-		!!rulesData &&
-		!!discordData &&
-		(process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-			!!slackData)
-
-	useEffect(() => {
-		if (discordInfo && typeof discordData?.Discords[0].name === 'string') {
-			// if discord is connected, hide the discord connect modal
-			setIsConnectDiscordModalOpen(false)
-			setConnectDiscordStep(0)
-		}
-	}, [discordData?.Discords, discordInfo])
-
-	const integrationsSection = () => (
-		<>
-			<Space h={24} className={meemTheme.visibleDesktopOnly} />
-
-			<div className={meemTheme.rowResponsive}>
-				<div>
-					<Text className={meemTheme.tExtraSmallLabel}>
-						TWITTER ACCOUNT
-					</Text>
-					<Space h={16} />
-					{!twitterUsername && (
-						<Button
-							leftIcon={<Twitter height={16} width={16} />}
-							className={meemTheme.buttonWhite}
-							onClick={() => {
-								handleAuthTwitter()
-							}}
-						>
-							Connect Twitter
-						</Button>
-					)}
-					{twitterUsername && (
-						<>
-							<div className={meemTheme.centeredRow}>
-								<Image
-									width={24}
-									src={
-										isDarkTheme
-											? `/integration-twitter-white.png`
-											: `/integration-twitter.png`
-									}
-								/>
-								<Space w={16} />
-								<div>
-									<Text
-										className={meemTheme.tSmall}
-									>{`Connected as ${twitterUsername}`}</Text>
-									<Space h={4} />
-									<Menu shadow="md" width={200}>
-										<Menu.Target>
-											<Text
-												className={meemTheme.tSmallBold}
-												style={{
-													cursor: 'pointer',
-													color: isDarkTheme
-														? colorBlue
-														: colorDarkBlue
-												}}
-											>
-												Manage Connection
-											</Text>
-										</Menu.Target>
-
-										<Menu.Dropdown>
-											<Menu.Item
-												onClick={() => {
-													setSelectedConnection(
-														SelectedConnection.ConnectionTwitter
-													)
-													handleReauthenticate()
-												}}
-											>
-												Re-authenticate
-											</Menu.Item>
-											<Menu.Item
-												icon={
-													<LogOut
-														height={14}
-														width={14}
-													/>
-												}
-												color={colorRed}
-												onClick={() => {
-													setSelectedConnection(
-														SelectedConnection.ConnectionTwitter
-													)
-													setIsDisconnectModalOpen(
-														true
-													)
-												}}
-											>
-												Disconnect
-											</Menu.Item>
-										</Menu.Dropdown>
-									</Menu>
-								</div>
-							</div>
-						</>
-					)}
-				</div>
-				<Space w={64} />
-				<Space h={32} />
-				<div>
-					<Text className={meemTheme.tExtraSmallLabel}>
-						DISCORD SERVER
-					</Text>
-					<Space h={16} />
-					{(!discordInfo || !discordInfo.guildId) && (
-						<Button
-							leftIcon={<Discord height={16} width={16} />}
-							className={meemTheme.buttonWhite}
-							onClick={() => {
-								setIsConnectDiscordModalOpen(true)
-							}}
-						>
-							Connect Discord
-						</Button>
-					)}
-					{discordInfo && discordInfo.guildId && (
-						<>
-							<div className={meemTheme.centeredRow}>
-								{discordInfo?.icon && (
-									<>
-										<Image
-											width={24}
-											src={discordInfo?.icon}
-										/>
-										<Space w={16} />
-									</>
-								)}
-
-								<div>
-									<Text
-										className={meemTheme.tSmall}
-									>{`Connected as ${discordInfo?.name}`}</Text>
-									<Space h={4} />
-									<Menu shadow="md" width={200}>
-										<Menu.Target>
-											<Text
-												className={meemTheme.tSmallBold}
-												style={{
-													cursor: 'pointer',
-													color: isDarkTheme
-														? colorBlue
-														: colorDarkBlue
-												}}
-											>
-												Manage Connection
-											</Text>
-										</Menu.Target>
-
-										<Menu.Dropdown>
-											<Menu.Item
-												onClick={() => {
-													setSelectedConnection(
-														SelectedConnection.ConnectionDiscord
-													)
-													setIsConnectDiscordModalOpen(
-														true
-													)
-
-													const dataLayer =
-														(window as any)
-															.dataLayer ?? null
-
-													dataLayer?.push({
-														event: 'event',
-														eventProps: {
-															category:
-																'Symphony Extension',
-															action: 'Manage Connection',
-															label: 'Reconnect Discord'
-														}
-													})
-												}}
-											>
-												Re-authenticate
-											</Menu.Item>
-											<Menu.Item
-												icon={
-													<LogOut
-														height={14}
-														width={14}
-													/>
-												}
-												color={colorRed}
-												onClick={() => {
-													setSelectedConnection(
-														SelectedConnection.ConnectionDiscord
-													)
-													setIsDisconnectModalOpen(
-														true
-													)
-												}}
-											>
-												Disconnect
-											</Menu.Item>
-										</Menu.Dropdown>
-									</Menu>
-								</div>
-							</div>
-						</>
-					)}
-				</div>
-				{/* {process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK === 'true' && (
-					<>
-						<Space w={64} />
-						<Space h={32} />
-
-						<div>
-							<Text className={meemTheme.tExtraSmallLabel}>
-								SLACK SERVER
-							</Text>
-							<Space h={16} />
-							{!slackInfo && (
-								<Button
-									leftIcon={<IconBrandSlack size={16} />}
-									className={meemTheme.buttonWhite}
-									onClick={() => {
-										handleAuthSlack()
-									}}
-								>
-									Connect Slack
-								</Button>
-							)}
-							{slackInfo && (
-								<div className={meemTheme.centeredRow}>
-									{slackInfo?.icon && (
-										<>
-											<Image
-												width={24}
-												src={slackInfo?.icon}
-											/>
-											<Space w={16} />
-										</>
-									)}
-
-									<div>
-										<Text
-											className={meemTheme.tSmall}
-										>{`Connected as ${slackInfo?.name}`}</Text>
-										<Space h={4} />
-										<Menu shadow="md" width={200}>
-											<Menu.Target>
-												<Text
-													className={
-														meemTheme.tSmallBold
-													}
-													style={{
-														cursor: 'pointer',
-														color: isDarkTheme
-															? colorBlue
-															: colorDarkBlue
-													}}
-												>
-													Manage Connection
-												</Text>
-											</Menu.Target>
-
-											<Menu.Dropdown>
-												<Menu.Item
-													onClick={() => {
-														setSelectedConnection(
-															SelectedConnection.ConnectionSlack
-														)
-														handleReauthenticate()
-													}}
-												>
-													Re-authenticate
-												</Menu.Item>
-												<Menu.Item
-													icon={
-														<LogOut
-															height={14}
-															width={14}
-														/>
-													}
-													color={colorRed}
-													onClick={() => {
-														setSelectedConnection(
-															SelectedConnection.ConnectionSlack
-														)
-														setIsDisconnectModalOpen(
-															true
-														)
-													}}
-												>
-													Disconnect
-												</Menu.Item>
-											</Menu.Dropdown>
-										</Menu>
-									</div>
-								</div>
-							)}
-						</div>
-					</>
-				)} */}
-			</div>
-			<Modal
-				opened={isConnectDiscordModalOpen}
-				onClose={() => setIsConnectDiscordModalOpen(false)}
-				overlayBlur={8}
-				withCloseButton={false}
-				radius={16}
-				size={'lg'}
-				padding={'sm'}
-			>
-				<Space h={16} />
-
-				<Center>
-					<Text
-						className={meemTheme.tMediumBold}
-						style={{ textAlign: 'center' }}
-					>
-						{`Connect to Discord`}
-					</Text>
-				</Center>
-				<Space h={24} />
-				<Stepper
-					active={connectDiscordStep}
-					breakpoint="sm"
-					orientation="vertical"
-				>
-					<Stepper.Step
-						label="Invite Symphony bot"
-						description={
-							<>
-								<Text className={meemTheme.tExtraSmall}>
-									{connectDiscordStep === 1
-										? `You've invited the Symphony bot to your Discord server.`
-										: `Please invite the Symphony bot to manage your Discord server.`}
-								</Text>
-								{connectDiscordStep === 0 && (
-									<>
-										<Space h={16} />
-										<div className={meemTheme.row}>
-											<Button
-												leftIcon={
-													<Image
-														width={16}
-														src={`/integration-discord-white.png`}
-													/>
-												}
-												className={
-													meemTheme.buttonDiscordBlue
-												}
-												onClick={() => {
-													handleInviteBot()
-												}}
-											>
-												{`Invite Symphony Bot`}
-											</Button>
-										</div>
-										<Space h={16} />
-
-										{botCode && (
-											<>
-												<div className={meemTheme.row}>
-													<Button
-														className={
-															meemTheme.buttonBlack
-														}
-														onClick={() => {
-															setConnectDiscordStep(
-																1
-															)
-														}}
-													>
-														{`Next`}
-													</Button>
-												</div>
-												<Space h={16} />
-											</>
-										)}
-									</>
-								)}
-							</>
-						}
-					/>
-					<Stepper.Step
-						label="Activate Symphony in Discord"
-						description={
-							<>
-								<Text className={meemTheme.tExtraSmall}>
-									Type{' '}
-									<span style={{ fontWeight: '600' }}>
-										/activate
-									</span>{' '}
-									in any public channel of your Discord
-									server, then enter the code below:
-								</Text>
-								{connectDiscordStep === 1 && (
-									<>
-										<Space h={16} />
-										<Code
-											style={{ cursor: 'pointer' }}
-											onClick={() => {
-												navigator.clipboard.writeText(
-													`${botCode}`
-												)
-												showSuccessNotification(
-													'Copied to clipboard',
-													`The code was copied to your clipboard.`
-												)
-											}}
-											block
-										>{`${botCode}`}</Code>
-										<Space h={16} />
-
-										<div className={meemTheme.centeredRow}>
-											<Loader
-												variant="oval"
-												color="cyan"
-												size={24}
-											/>
-											<Space w={8} />
-											<Text
-												className={
-													meemTheme.tExtraExtraSmall
-												}
-											>
-												Waiting for activation...
-											</Text>
-										</div>
-									</>
-								)}
-							</>
-						}
-					></Stepper.Step>
-				</Stepper>
-			</Modal>
-			<Modal
-				opened={isDisconnectModalOpen}
-				onClose={() => setIsDisconnectModalOpen(false)}
-				overlayBlur={8}
-				withCloseButton={false}
-				radius={16}
-				size={'lg'}
-				padding={'sm'}
-			>
-				<Space h={16} />
-
-				<Center>
-					<Text
-						className={meemTheme.tMediumBold}
-						style={{ textAlign: 'center' }}
-					>
-						{`Are you sure you want to disconnect ${
-							selectedConnection ===
-							SelectedConnection.ConnectionDiscord
-								? 'Discord'
-								: selectedConnection ===
-								  SelectedConnection.ConnectionTwitter
-								? 'Twitter'
-								: 'Slack'
-						} from
-					Symphony?`}
-					</Text>
-				</Center>
-				<Space h={24} />
-				<Center>
-					<Text
-						className={meemTheme.tSmallFaded}
-						style={{ textAlign: 'center', lineHeight: 1.4 }}
-					>
-						{`Symphony will not be able to publish any community
-						tweets unless connection is restored. ${
-							selectedConnection ===
-							SelectedConnection.ConnectionDiscord
-								? 'All Discord-related rules will also be deleted.'
-								: ''
-						}`}
-					</Text>
-				</Center>
-				<Space h={24} />
-				<Center>
-					<Button
-						className={meemTheme.buttonRed}
-						onClick={() => {
-							handleDisconnect()
-						}}
-					>
-						Disconnect
-					</Button>
-				</Center>
-				<Space h={16} />
-				<Center>
-					<Button
-						className={meemTheme.buttonGrey}
-						onClick={() => {
-							setIsDisconnectModalOpen(false)
-						}}
-					>
-						Cancel
-					</Button>
-				</Center>
-				<Space h={16} />
-			</Modal>
-		</>
-	)
+	const hasFetchedData = !!rulesData
 
 	const rulesSection = () => (
 		<>
-			{rolesData &&
-				rules &&
-				rules.map(rule => {
-					const roleNames = rule.definition.approverRoles.map(
-						(id: string) => {
-							const role = rolesData.roles.find(r => r.id === id)
+			<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
+			{agreement?.isCurrentUserAgreementAdmin && (
+				<>
+					<Space h={8} />
+					<Text className={meemTheme.tExtraSmall}>
+						{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
+					</Text>
+				</>
+			)}
+			<Space h={16} />
 
-							return role?.name ?? ''
-						}
+			{rules &&
+				rules.map(rule => {
+					const matchingInput = symphonyConnections.filter(
+						c => c.id === rule.inputId
 					)
+
+					const matchingOutput = symphonyConnections.filter(
+						c => c.id === rule.outputId
+					)
+
+					if (!matchingInput || matchingInput.length === 0) {
+						return <div key={`rule-${rule.id}`} />
+					}
+
+					const inputIcon =
+						matchingInput[0].platform === MeemAPI.RuleIo.Discord
+							? '/connect-discord.png'
+							: '/connect-slack.png'
+
+					const outputIcon = !matchingOutput[0]
+						? '/connect-webhook.png'
+						: matchingOutput[0].platform === MeemAPI.RuleIo.Twitter
+						? '/connect-twitter.png'
+						: '/connect-webhook.png'
+
 					return (
 						<div
-							key={`rule-${rule.definition.ruleId}`}
-							className={meemTheme.gridItem}
-							style={{ marginBottom: 16 }}
+							key={`rule-${rule.id}`}
+							className={meemTheme.gridItemFlat}
+							style={{ marginBottom: 16, cursor: 'auto' }}
 						>
-							<div className={meemTheme.row}>
+							<div className={meemTheme.spacedRow}>
 								<div>
 									<Text
 										className={meemTheme.tSmallBold}
-									>{`Publish to Twitter when users with any of these roles: ${roleNames.join(
-										', '
-									)} react with ${
-										rule.definition.votes
-									} of these emoji:`}</Text>
-									<Space h="xs" />
-									<div
-										style={{
-											display: 'flex',
-											flexDirection: 'row'
-										}}
-									>
-										{rule.definition.approverEmojis.map(
-											(emojiCode: string) => (
-												<div
-													key={`emoji-${rule.id}-${emojiCode}`}
-													style={{
-														marginRight: '8px'
-													}}
-												>
-													<Emoji
-														unified={emojiCode}
-													/>
-												</div>
-											)
-										)}
+									>{`${toTitleCase(
+										rule.inputPlatformString ?? ''
+									)} to ${toTitleCase(
+										rule.outputPlatformString ?? ''
+									)} flow`}</Text>
+									<Space h={8} />
+									<Text className={meemTheme.tExtraSmall}>
+										{rule.abridgedDescription}
+									</Text>
+
+									<Space h={16} />
+									<div className={meemTheme.centeredRow}>
+										<Image
+											width={18}
+											height={18}
+											src={inputIcon}
+										/>
+										<Space w={8} />
+										<Text className={meemTheme.tExtraSmall}>
+											Proposals in{' '}
+											<span
+												className={
+													meemTheme.tExtraSmallBold
+												}
+											>
+												{matchingInput[0].name}
+											</span>
+										</Text>
 									</div>
-									<Space h="xs" />
+									<Space h={8} />
+									<div className={meemTheme.centeredRow}>
+										<Image
+											width={18}
+											height={18}
+											src={outputIcon}
+										/>
+										<Space w={8} />
+										<Text className={meemTheme.tExtraSmall}>
+											Publishing to{' '}
+											<span
+												className={
+													meemTheme.tExtraSmallBold
+												}
+											>
+												{matchingOutput[0]
+													? matchingOutput[0]?.name
+													: `Custom Webhook: ${rule.webhookUrl}`}
+											</span>
+										</Text>
+									</div>
 								</div>
 								<Space w={24} />
 								{agreement?.isCurrentUserAgreementAdmin && (
-									<div>
+									<div className={meemTheme.row}>
 										<Button
-											className={meemTheme.buttonWhite}
+											className={meemTheme.buttonBlack}
 											onClick={() => {
 												setSelectedRule(rule)
-												setIsRuleBuilderOpen(true)
+												setIsNewRuleModalOpen(true)
 											}}
 										>
 											Edit
 										</Button>
-										<Space h={8} />
+										<Space w={8} />
 										<Button
-											className={
-												meemTheme.buttonOrangeRedBordered
-											}
+											className={meemTheme.buttonRed}
 											onClick={() => {
 												removeRule(rule.id)
 											}}
@@ -1026,119 +361,196 @@ export const SymphonyExtension: React.FC = () => {
 						</div>
 					)
 				})}
-			{rolesData && <Space h={16} />}
 
-			{!agreement?.isCurrentUserAgreementAdmin &&
-				agreement?.isCurrentUserAgreementMember &&
-				(!rolesData || !rules || (rules && rules.length === 0)) && (
-					<Center>
-						<Text className={meemTheme.tSmallBold}>
-							This community has no Symphony rules set up yet.
-						</Text>
-					</Center>
+			{agreement?.isCurrentUserAgreementMember &&
+				(!rules || (rules && rules.length === 0)) && (
+					<Text className={meemTheme.tSmallBold}>
+						This community has no Symphony rules set up yet.
+					</Text>
 				)}
 
 			{agreement?.isCurrentUserAgreementAdmin && (
-				<Button
-					className={meemTheme.buttonDarkGrey}
-					disabled={!discordInfo}
-					onClick={() => {
-						setIsRuleBuilderOpen(true)
-						const dataLayer = (window as any).dataLayer ?? null
-
-						dataLayer?.push({
-							event: 'event',
-							eventProps: {
-								category: 'Symphony Extension',
-								action: 'Add Rule'
-							}
-						})
-					}}
-				>
-					+ Add rule
-				</Button>
+				<>
+					<Space h={16} />
+					<Button
+						className={meemTheme.buttonDarkGrey}
+						onClick={() => {
+							setSelectedRule(undefined)
+							setIsNewRuleModalOpen(true)
+						}}
+					>
+						+ Add New Flow
+					</Button>
+				</>
 			)}
-			<Modal
-				title={
-					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
-				}
-				className={meemTheme.visibleDesktopOnly}
-				padding={24}
-				overlayBlur={8}
-				radius={16}
-				size={'lg'}
-				opened={isRuleBuilderOpen}
-				onClose={() => {
-					setSelectedRule(undefined)
-					setIsRuleBuilderOpen(false)
-				}}
-			>
-				<SymphonyRuleBuilder
-					channels={channelsData?.channels}
-					selectedRule={selectedRule}
-					roles={rolesData?.roles}
-					onSave={handleRuleSave}
-				/>
-			</Modal>
-			<Modal
-				title={
-					<Text className={meemTheme.tMediumBold}>Add New Rule</Text>
-				}
-				className={meemTheme.visibleMobileOnly}
-				padding={24}
-				fullScreen
-				size={'lg'}
-				opened={isRuleBuilderOpen}
-				onClose={() => {
-					setSelectedRule(undefined)
-					setIsRuleBuilderOpen(false)
-				}}
-			>
-				<SymphonyRuleBuilder
-					channels={channelsData?.channels}
-					selectedRule={selectedRule}
-					roles={rolesData?.roles}
-					onSave={handleRuleSave}
-				/>
-			</Modal>
 		</>
 	)
 
+	const connectionSummaryGridItem = (
+		connectionPlatform: MeemAPI.RuleIo,
+		connectionCount: number
+	) => (
+		<>
+			<div className={meemTheme.gridItemFlat} style={{ cursor: 'auto' }}>
+				<div className={meemTheme.centeredRow}>
+					<Image
+						src={
+							connectionPlatform === MeemAPI.RuleIo.Discord
+								? '/connect-discord.png'
+								: connectionPlatform === MeemAPI.RuleIo.Slack
+								? '/connect-slack.png'
+								: '/connect-twitter.png'
+						}
+						width={24}
+						height={24}
+						style={{
+							marginRight: 8
+						}}
+					/>
+					<Text className={meemTheme.tSmallBold}>
+						{connectionPlatform === MeemAPI.RuleIo.Discord
+							? 'Discord'
+							: connectionPlatform === MeemAPI.RuleIo.Slack
+							? 'Slack'
+							: 'Twitter'}
+					</Text>
+				</div>
+				<Space h={16} />
+				<Text
+					className={meemTheme.tExtraSmallFaded}
+				>{`${connectionCount} ${
+					connectionCount === 1 ? `account` : 'accounts'
+				} connected`}</Text>
+			</div>
+		</>
+	)
+
+	const connectedDiscordAccounts = symphonyConnections
+		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Discord)
+				.length
+		: 0
+
+	const connectedTwitterAccounts = symphonyConnections
+		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Twitter)
+				.length
+		: 0
+
+	const connectedSlackAccounts = symphonyConnections
+		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Slack)
+				.length
+		: 0
+
 	const mainState = (
 		<>
-			{agreement?.isCurrentUserAgreementAdmin && (
+			{agreement?.isCurrentUserAgreementMember && (
 				<>
-					{integrationsSection()}
-					<Space h={40} />
-					<Text className={meemTheme.tExtraSmallLabel}>
-						PERMISSIONS
-					</Text>
-					<Space h={4} />
-					{discordInfo && (
-						<Text className={meemTheme.tExtraSmall}>
-							{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
-						</Text>
+					{agreement?.isCurrentUserAgreementAdmin && (
+						<>
+							<Text className={meemTheme.tMediumBold}>
+								Connections
+							</Text>
+							<Space h={40} />
+							<Text className={meemTheme.tExtraSmallLabel}>
+								CONNECTED ACCOUNTS
+							</Text>
+
+							{(isFetchingDiscordConnections ||
+								isFetchingSlackConnections ||
+								isFetchingTwitterConnections ||
+								isFetchingConnections) && (
+								<>
+									<Space h={24} />
+									<Loader variant="oval" color="cyan" />
+								</>
+							)}
+
+							{symphonyConnections &&
+								!isFetchingConnections &&
+								!isFetchingDiscordConnections &&
+								!isFetchingSlackConnections &&
+								!isFetchingTwitterConnections && (
+									<>
+										<Space h={24} />
+										<Grid>
+											{connectedDiscordAccounts > 0 && (
+												<Grid.Col
+													xs={12}
+													md={6}
+													key={MeemAPI.RuleIo.Discord.toString()}
+												>
+													{connectionSummaryGridItem(
+														MeemAPI.RuleIo.Discord,
+														connectedDiscordAccounts
+													)}
+												</Grid.Col>
+											)}
+											{connectedTwitterAccounts > 0 && (
+												<Grid.Col
+													xs={12}
+													md={6}
+													key={MeemAPI.RuleIo.Twitter.toString()}
+												>
+													{connectionSummaryGridItem(
+														MeemAPI.RuleIo.Twitter,
+														connectedTwitterAccounts
+													)}
+												</Grid.Col>
+											)}
+											{connectedSlackAccounts > 0 && (
+												<Grid.Col
+													xs={12}
+													md={6}
+													key={MeemAPI.RuleIo.Slack.toString()}
+												>
+													{connectionSummaryGridItem(
+														MeemAPI.RuleIo.Slack,
+														connectedSlackAccounts
+													)}
+												</Grid.Col>
+											)}
+										</Grid>
+									</>
+								)}
+
+							<Space h={24} />
+							<Button
+								className={meemTheme.buttonWhite}
+								onClick={() => {
+									setIsManageConnectionsModalOpen(true)
+									analytics.track(
+										'Symphony Manage Connections',
+										{
+											communityId: agreement.id,
+											communityName: agreement?.name
+										}
+									)
+								}}
+							>
+								Manage Connections
+							</Button>
+							<Space h={32} />
+
+							<Divider />
+							<Space h={32} />
+						</>
 					)}
-					{!discordInfo && (
-						<Text className={meemTheme.tExtraSmall}>
-							<span style={{ fontWeight: 600 }}>
-								Connect a Discord server to add your first rule.
-							</span>{' '}
-							Rules are logic to dictate how new posts will be
-							proposed and published, as well as which community
-							members will manage each part of the process.
-						</Text>
+					{agreement.isCurrentUserAgreementAdmin && (
+						<>
+							<Text className={meemTheme.tMediumBold}>
+								Publishing Flows
+							</Text>
+							<Space h={40} />
+						</>
 					)}
-					<Space h={16} />
+
+					{rulesSection()}
 				</>
 			)}
-
-			{agreement?.isCurrentUserAgreementMember && <>{rulesSection()}</>}
 			{!agreement?.isCurrentUserAgreementMember && (
 				<>
 					<Center>
 						<Text className={meemTheme.tSmallBold}>
-							Symphony rules are only available to community
+							Symphony rules are only visible to community
 							members.
 						</Text>
 					</Center>
@@ -1171,6 +583,23 @@ export const SymphonyExtension: React.FC = () => {
 							</>
 						)}
 					</div>
+					<SymphonyConnectionsModal
+						connections={symphonyConnections}
+						isOpened={isManageConnectionsModalOpen}
+						onModalClosed={function (): void {
+							setIsManageConnectionsModalOpen(false)
+						}}
+					/>
+
+					<SymphonyInputOutputModal
+						isOpened={isNewRuleModalOpen}
+						connections={symphonyConnections}
+						existingRule={selectedRule}
+						onModalClosed={function (): void {
+							setIsNewRuleModalOpen(false)
+							setSelectedRule(undefined)
+						}}
+					/>
 				</>
 			)}
 		</div>

@@ -7,13 +7,6 @@ module.exports = {
 					'x-hasura-admin-secret': process.env.HASURA_SECRET
 				}
 			}
-		},
-		{
-			'https://alpha-gql-symphony.meem.wtf/v1/graphql': {
-				headers: {
-					'x-hasura-admin-secret': process.env.SYMPHONY_HASURA_SECRET
-				}
-			}
 		}
 	],
 	documents: ['./src/**/*.tsx', './src/**/*.ts'],

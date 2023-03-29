@@ -12,6 +12,7 @@ import {
 import { Search, Star } from 'iconoir-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
 import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
 import { colorOrangeRed, useMeemTheme } from '../../Styles/MeemTheme'
@@ -21,6 +22,7 @@ interface IProps {
 
 export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
+	const analytics = useAnalytics()
 
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
@@ -209,24 +211,39 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 							<Space h={24} />
 						</>
 					)}
-				{members.length > 0 && !agreement.isLaunched && (
-					<>
-						<Space h={24} />
-						<Center>
-							<Link
-								href={`/${agreement.slug}/admin?tab=airdrops`}
-								legacyBehavior
-								passHref
-							>
-								<a className={meemTheme.unstyledLink}>
-									<Button className={meemTheme.buttonAsh}>
-										Invite members
-									</Button>
-								</a>
-							</Link>
-						</Center>
-					</>
-				)}
+				{members.length > 0 &&
+					!agreement.isLaunched &&
+					agreement.isCurrentUserAgreementAdmin && (
+						<>
+							<Space h={24} />
+							<Center>
+								<Link
+									href={`/${agreement.slug}/admin?tab=airdrops`}
+									legacyBehavior
+									passHref
+								>
+									<a className={meemTheme.unstyledLink}>
+										<Button
+											className={meemTheme.buttonAsh}
+											onClick={() => {
+												analytics.track(
+													'Invite Members Clicked',
+													{
+														communityId:
+															agreement.id,
+														communityName:
+															agreement.name
+													}
+												)
+											}}
+										>
+											Invite members
+										</Button>
+									</a>
+								</Link>
+							</Center>
+						</>
+					)}
 			</div>
 		</>
 	)
