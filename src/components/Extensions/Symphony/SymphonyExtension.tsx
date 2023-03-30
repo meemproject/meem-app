@@ -128,7 +128,9 @@ export const SymphonyExtension: React.FC = () => {
 					platform: MeemAPI.RuleIo.Discord,
 					icon: c.Discord?.icon ?? ''
 				}
-				conns.push(con)
+				if (c.Discord?.name) {
+					conns.push(con)
+				}
 			})
 
 			twitterConnectionData.AgreementTwitters.forEach(c => {
