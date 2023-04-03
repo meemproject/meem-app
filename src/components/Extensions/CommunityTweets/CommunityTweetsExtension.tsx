@@ -34,11 +34,7 @@ import {
 } from './communityTweetsGql'
 import { CTConnectionsModal } from './Modals/CTConnectionsModal'
 import { CTInputOutputModal } from './Modals/CTInputOutputModal'
-import {
-	ComTweetsConnection,
-	ComTweetsConnectionType,
-	ComTweetsRule
-} from './Model/communityTweets'
+import { CTConnection, CTConnectionType, CTRule } from './Model/communityTweets'
 
 export const CommunityTweetsExtension: React.FC = () => {
 	// General params
@@ -50,15 +46,15 @@ export const CommunityTweetsExtension: React.FC = () => {
 
 	// Extension data
 	const [previousRulesDataString, setPreviousRulesDataString] = useState('')
-	const [rules, setRules] = useState<ComTweetsRule[]>()
-	const [selectedRule, setSelectedRule] = useState<ComTweetsRule>()
+	const [rules, setRules] = useState<CTRule[]>()
+	const [selectedRule, setSelectedRule] = useState<CTRule>()
 
 	const [previousConnectionsDataString, setPreviousConnectionsDataString] =
 		useState('')
 	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
 	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
 	const [communityTweetsConnections, setCommunityTweetsConnections] =
-		useState<ComTweetsConnection[]>([])
+		useState<CTConnection[]>([])
 
 	const { sdk } = useSDK()
 
@@ -118,12 +114,12 @@ export const CommunityTweetsExtension: React.FC = () => {
 			twitterConnectionData &&
 			slackConnectionData
 		) {
-			const conns: ComTweetsConnection[] = []
+			const conns: CTConnection[] = []
 			discordConnectionData.AgreementDiscords.forEach(c => {
-				const con: ComTweetsConnection = {
+				const con: CTConnection = {
 					id: c.id,
 					name: `Discord: ${c.Discord?.name}`,
-					type: ComTweetsConnectionType.InputOnly,
+					type: CTConnectionType.InputOnly,
 					platform: MeemAPI.RuleIo.Discord,
 					icon: c.Discord?.icon ?? ''
 				}
@@ -133,30 +129,30 @@ export const CommunityTweetsExtension: React.FC = () => {
 			})
 
 			twitterConnectionData.AgreementTwitters.forEach(c => {
-				const con: ComTweetsConnection = {
+				const con: CTConnection = {
 					id: c.id,
 					name: `Twitter: ${c.Twitter?.username}`,
-					type: ComTweetsConnectionType.OutputOnly,
+					type: CTConnectionType.OutputOnly,
 					platform: MeemAPI.RuleIo.Twitter
 				}
 				conns.push(con)
 			})
 
 			slackConnectionData.AgreementSlacks.forEach(c => {
-				const con: ComTweetsConnection = {
+				const con: CTConnection = {
 					id: c.id,
 					name: `Slack: ${c.Slack?.name}`,
-					type: ComTweetsConnectionType.InputOnly,
+					type: CTConnectionType.InputOnly,
 					platform: MeemAPI.RuleIo.Slack
 				}
 				conns.push(con)
 			})
 
 			// Add Webhook connection
-			const webhookCon: ComTweetsConnection = {
+			const webhookCon: CTConnection = {
 				id: 'webhook',
 				name: 'Add a custom Webhook',
-				type: ComTweetsConnectionType.OutputOnly,
+				type: CTConnectionType.OutputOnly,
 				platform: MeemAPI.RuleIo.Webhook
 			}
 			conns.push(webhookCon)
@@ -180,10 +176,10 @@ export const CommunityTweetsExtension: React.FC = () => {
 
 	// Parse rules from subscription
 	useEffect(() => {
-		const newRules: ComTweetsRule[] = []
+		const newRules: CTRule[] = []
 		if (rulesData) {
 			rulesData.Rules.forEach(rule => {
-				const newRule: ComTweetsRule = {
+				const newRule: CTRule = {
 					id: rule.id,
 					agreementId: rule.AgreementId,
 					inputPlatformString: rule.input ?? '',

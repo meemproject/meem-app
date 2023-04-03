@@ -12,7 +12,7 @@ import { SubSlackSubscription } from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SUB_SLACK } from '../communityTweetsGql'
-import { ComTweetsConnection, ComTweetsRule } from '../Model/communityTweets'
+import { CTConnection, CTRule } from '../Model/communityTweets'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
 import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
 import { CTRuleBuilderVotesCount } from './RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
@@ -24,8 +24,8 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 })
 
 export interface IProps {
-	rule?: ComTweetsRule
-	input?: ComTweetsConnection
+	rule?: CTRule
+	input?: CTConnection
 	webhookUrl?: string
 	privateKey?: string
 	isOpened: boolean
