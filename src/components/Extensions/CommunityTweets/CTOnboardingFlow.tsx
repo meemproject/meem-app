@@ -73,7 +73,7 @@ enum PageState {
 	SetupComplete
 }
 
-export const CTOboardingFlow: React.FC = () => {
+export const CTOnboardingFlow: React.FC = () => {
 	// General imports
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
@@ -91,9 +91,9 @@ export const CTOboardingFlow: React.FC = () => {
 	const [chosenAgreement, setChosenAgreement] = useState<Agreement>()
 
 	// Extension vars
-	const extensionSlug = 'communityTweets'
-	const extensionName = 'CommunityTweets'
-	const extensionIcon = `ext-communityTweets.png`
+	const extensionSlug = 'community-tweets'
+	const extensionName = 'Communitytweets'
+	const extensionIcon = `ext-symphony.png`
 
 	// Page state
 	const [pageState, setPageState] = useState<PageState>(PageState.Loading)
@@ -370,7 +370,7 @@ export const CTOboardingFlow: React.FC = () => {
 			isJwtError(myAgreementsError) ||
 			wallet.loginState === LoginState.NotLoggedIn
 		) {
-			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/communitytweets`)
+			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/community-tweets`)
 			router.push('/authenticate')
 		}
 	}, [
@@ -1250,7 +1250,7 @@ export const CTOboardingFlow: React.FC = () => {
 									className={meemTheme.buttonDarkBlue}
 									onClick={() => {
 										router.push(
-											`/${chosenAgreement?.slug}/e/communitytweets`
+											`/${chosenAgreement?.slug}/e/community-tweets`
 										)
 									}}
 								>

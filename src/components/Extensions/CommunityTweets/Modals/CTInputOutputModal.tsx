@@ -56,7 +56,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { agreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('communityTweets', agreement)
+	const agreementExtension = extensionFromSlug('community-tweets', agreement)
 	const analytics = useAnalytics()
 
 	// Inputs and outputs for the provisional publishing flow (rule)

@@ -29,7 +29,7 @@ export const CTExtensionOnboarding: React.FC = () => {
 
 						<Image
 							className={meemTheme.copyIcon}
-							src={`/ext-communityTweets.png`}
+							src={`/ext-symphony.png`}
 							fit={'contain'}
 							width={180}
 							height={40}

@@ -45,7 +45,7 @@ export const MeemPromoWidgets: React.FC = () => {
 								color: colorBlue
 							}}
 							onClick={() => {
-								router.push('/onboard/communitytweets')
+								router.push('/onboard/community-tweets')
 							}}
 						>
 							CommunityTweets

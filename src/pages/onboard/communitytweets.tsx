@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { CommunityTweetsOnboardingFlow } from '../../components/Extensions/CommunityTweets/CommunityTweetsOnboardingFlow'
+import { CTOnboardingFlow } from '../../components/Extensions/CommunityTweets/CTOnboardingFlow'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<CommunityTweetsOnboardingFlow />
+			<CTOnboardingFlow />
 			<MeemFooter />
 		</>
 	)

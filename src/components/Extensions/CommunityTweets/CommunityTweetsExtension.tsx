@@ -45,7 +45,7 @@ export const CommunityTweetsExtension: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { jwt } = useAuth()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('communityTweets', agreement)
+	const agreementExtension = extensionFromSlug('community-tweets', agreement)
 	const analytics = useAnalytics()
 
 	// Extension data

@@ -140,7 +140,7 @@ export const AgreementHome: React.FC = () => {
 									// TODO: here, checking against the slug you chose for your extension.
 									<div key={extension.id}>
 										{extension.Extension?.slug ===
-											'communityTweets' && (
+											'community-tweets' && (
 											<>
 												<CommunityTweetsWidget />
 											</>

@@ -5,13 +5,13 @@ import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
 import { CommunityTweetsExtension } from './CommunityTweetsExtension'
 
 export const CommunityTweetsWidget: React.FC = () => {
-	const extensionSlug = 'communityTweets'
+	const extensionSlug = 'community-tweets'
 	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
 
 	return (
 		<>
 			<ExtensionWidgetContainer
-				extensionSlug={extensionSlug}
+				extensionSlug={'community-tweets'}
 				onSettingsOpened={function (): void {
 					setIsSettingsModalOpened(true)
 				}}
