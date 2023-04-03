@@ -56,8 +56,9 @@ export const RemoveMemberComponent: React.FC<IProps> = ({
 				agreementId: agreement?.id ?? '',
 				tokenIds: [tokenId]
 			})
-
-			watchTransactions([result.txId])
+			if (result?.txId) {
+				watchTransactions([result?.txId])
+			}
 			closeModal()
 		} catch (e) {
 			log.crit(e)

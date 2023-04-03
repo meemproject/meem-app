@@ -252,7 +252,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 										tokens: addressesToMint
 									}
 								)
-							txs.push(bulkMint.txId)
+							if (bulkMint.txId) {
+								txs.push(bulkMint.txId)
+							}
 						}
 
 						if (toBurn.length > 0) {
@@ -291,7 +293,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 										tokenIds: roleTokenIdsToBurn
 									}
 								)
-							txs.push(bulkBurn.txId)
+							if (bulkBurn.txId) {
+								txs.push(bulkBurn.txId)
+							}
 						}
 
 						log.debug('All operations complete. Awaiting tx...')
