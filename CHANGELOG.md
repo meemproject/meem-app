@@ -13,7 +13,7 @@
 ### Bug Fixes
 
 * attempt to fix og tags using a more failsafe way to get the current slug ([9dd48f8](https://github.com/meemproject/meem-app/commit/9dd48f8))
-* display of text in symphony ext for non-admins when there are no symphony rules ([fe7ee8f](https://github.com/meemproject/meem-app/commit/fe7ee8f))
+* display of text in communityTweets ext for non-admins when there are no communityTweets rules ([fe7ee8f](https://github.com/meemproject/meem-app/commit/fe7ee8f))
 
 
 ### Features
@@ -83,10 +83,10 @@
 * make sure some external links open in a new tab ([5ccced9](https://github.com/meemproject/meem-app/commit/5ccced9))
 * meem logo in header now links to meem website homepage ([b38926e](https://github.com/meemproject/meem-app/commit/b38926e))
 * nav bar visible above modals + switch network dialog ([55c6564](https://github.com/meemproject/meem-app/commit/55c6564))
-* only show 'connected' state in symphony settings if guildId !== null ([5fc3f8a](https://github.com/meemproject/meem-app/commit/5fc3f8a))
+* only show 'connected' state in communityTweets settings if guildId !== null ([5fc3f8a](https://github.com/meemproject/meem-app/commit/5fc3f8a))
 * Refactor authentication to use cookies rather than return query (more reliable) ([7005f7b](https://github.com/meemproject/meem-app/commit/7005f7b))
 * remove 'all' as option for selecting channels ([f804cbd](https://github.com/meemproject/meem-app/commit/f804cbd))
-* remove onboarding state from symphony settings page ([50ee094](https://github.com/meemproject/meem-app/commit/50ee094))
+* remove onboarding state from communityTweets settings page ([50ee094](https://github.com/meemproject/meem-app/commit/50ee094))
 * responsive extension settings modal ([f66fca1](https://github.com/meemproject/meem-app/commit/f66fca1))
 * selected extensions check icon ([0cf5f63](https://github.com/meemproject/meem-app/commit/0cf5f63))
 * use a different calculation of what extensions are visible to the public ([4d9c708](https://github.com/meemproject/meem-app/commit/4d9c708))
@@ -100,19 +100,19 @@
 * combine steps 3 and 4 of onboarding ([56fafcf](https://github.com/meemproject/meem-app/commit/56fafcf))
 * discussions and guild using new widget architecture ([90f079e](https://github.com/meemproject/meem-app/commit/90f079e))
 * expandable widget accordion container, useful for all extension widgets ([c69f1cd](https://github.com/meemproject/meem-app/commit/c69f1cd))
-* handle reconnecting discord from the symphony settings page ([d6a7c30](https://github.com/meemproject/meem-app/commit/d6a7c30))
+* handle reconnecting discord from the communityTweets settings page ([d6a7c30](https://github.com/meemproject/meem-app/commit/d6a7c30))
 * hide extension settings access for non-admins ([6d23bd2](https://github.com/meemproject/meem-app/commit/6d23bd2))
 * hide some widget content for non-members / non-admins ([01f45f5](https://github.com/meemproject/meem-app/commit/01f45f5))
-* hide symphony settings from community members, hide symphony rules from non members ([6729d33](https://github.com/meemproject/meem-app/commit/6729d33))
+* hide communityTweets settings from community members, hide communityTweets rules from non members ([6729d33](https://github.com/meemproject/meem-app/commit/6729d33))
 * onboarding sidebar ([016281a](https://github.com/meemproject/meem-app/commit/016281a))
-* refactor symphony onboarding agreement creation to use internal logic, revert modals to original state (no quiet mode) ([f5b3c29](https://github.com/meemproject/meem-app/commit/f5b3c29))
+* refactor communityTweets onboarding agreement creation to use internal logic, revert modals to original state (no quiet mode) ([f5b3c29](https://github.com/meemproject/meem-app/commit/f5b3c29))
 * remember expanded / collapsed state of every widget for every community ([2c6bf78](https://github.com/meemproject/meem-app/commit/2c6bf78))
 * remove all support for link extensions ([fd5daa6](https://github.com/meemproject/meem-app/commit/fd5daa6))
 * remove extension settings from admin page ([ce90862](https://github.com/meemproject/meem-app/commit/ce90862))
-* responsive symphony settings + rules ([c5f12ed](https://github.com/meemproject/meem-app/commit/c5f12ed))
-* single-page symphony onboarding ([4ef440d](https://github.com/meemproject/meem-app/commit/4ef440d))
+* responsive communityTweets settings + rules ([c5f12ed](https://github.com/meemproject/meem-app/commit/c5f12ed))
+* single-page communityTweets onboarding ([4ef440d](https://github.com/meemproject/meem-app/commit/4ef440d))
 * switch network screen is now a modal ([d1daddc](https://github.com/meemproject/meem-app/commit/d1daddc))
-* symphony extension settings now extracted into its own component ([5616142](https://github.com/meemproject/meem-app/commit/5616142))
+* communityTweets extension settings now extracted into its own component ([5616142](https://github.com/meemproject/meem-app/commit/5616142))
 
 ## [1.23.4](https://github.com/meemproject/meem-app/compare/v1.23.3...v1.23.4) (2023-02-14)
 
@@ -124,7 +124,7 @@
 ### Bug Fixes
 
 * Remove reference to easter egg ([c4f13eb](https://github.com/meemproject/meem-app/commit/c4f13eb))
-* symphony sign in redirect flow ([1727b9c](https://github.com/meemproject/meem-app/commit/1727b9c))
+* communityTweets sign in redirect flow ([1727b9c](https://github.com/meemproject/meem-app/commit/1727b9c))
 
 ## [1.23.1](https://github.com/meemproject/meem-app/compare/v1.23.0...v1.23.1) (2023-02-14)
 
@@ -166,15 +166,15 @@
 
 ### Bug Fixes
 
-* make symphony exit button clickable ([7f1a18c](https://github.com/meemproject/meem-app/commit/7f1a18c))
-* remove 'save changes' from symphony settings ([9ccaace](https://github.com/meemproject/meem-app/commit/9ccaace))
+* make communityTweets exit button clickable ([7f1a18c](https://github.com/meemproject/meem-app/commit/7f1a18c))
+* remove 'save changes' from communityTweets settings ([9ccaace](https://github.com/meemproject/meem-app/commit/9ccaace))
 * robust redirect for communities with extensions already enabled ([463a49c](https://github.com/meemproject/meem-app/commit/463a49c))
-* symphony loading now waits for all gun data to be available ([ba1789f](https://github.com/meemproject/meem-app/commit/ba1789f))
+* communityTweets loading now waits for all gun data to be available ([ba1789f](https://github.com/meemproject/meem-app/commit/ba1789f))
 
 
 ### Features
 
-* better symphony widget ([0188348](https://github.com/meemproject/meem-app/commit/0188348))
+* better communityTweets widget ([0188348](https://github.com/meemproject/meem-app/commit/0188348))
 
 # [1.21.0](https://github.com/meemproject/meem-app/compare/v1.20.0...v1.21.0) (2023-02-10)
 
@@ -184,7 +184,7 @@
 * onboarding steps ([d90cd8b](https://github.com/meemproject/meem-app/commit/d90cd8b))
 * re-add tabler icon as they're a mantine dependency ([bb72d35](https://github.com/meemproject/meem-app/commit/bb72d35))
 * refactor icons in the app to only use iconnoir ([86248a3](https://github.com/meemproject/meem-app/commit/86248a3))
-* update copy in meem faq and symphony onboarding ([3f4d67c](https://github.com/meemproject/meem-app/commit/3f4d67c))
+* update copy in meem faq and communityTweets onboarding ([3f4d67c](https://github.com/meemproject/meem-app/commit/3f4d67c))
 
 
 ### Features
@@ -200,7 +200,7 @@
 * onboarding steps ([d90cd8b](https://github.com/meemproject/meem-app/commit/d90cd8b))
 * re-add tabler icon as they're a mantine dependency ([bb72d35](https://github.com/meemproject/meem-app/commit/bb72d35))
 * refactor icons in the app to only use iconnoir ([86248a3](https://github.com/meemproject/meem-app/commit/86248a3))
-* update copy in meem faq and symphony onboarding ([3f4d67c](https://github.com/meemproject/meem-app/commit/3f4d67c))
+* update copy in meem faq and communityTweets onboarding ([3f4d67c](https://github.com/meemproject/meem-app/commit/3f4d67c))
 
 # [1.20.0](https://github.com/meemproject/meem-app/compare/v1.19.3...v1.20.0) (2023-02-08)
 
@@ -215,9 +215,9 @@
 
 ### Features
 
-* onboarding banner in symphony settings ([3ab7fc1](https://github.com/meemproject/meem-app/commit/3ab7fc1))
+* onboarding banner in communityTweets settings ([3ab7fc1](https://github.com/meemproject/meem-app/commit/3ab7fc1))
 * show warning when adding to gated discord channels ([83277bb](https://github.com/meemproject/meem-app/commit/83277bb))
-* symphony widget for unlaunched communities ([a4b751d](https://github.com/meemproject/meem-app/commit/a4b751d))
+* communityTweets widget for unlaunched communities ([a4b751d](https://github.com/meemproject/meem-app/commit/a4b751d))
 
 ## [1.19.3](https://github.com/meemproject/meem-app/compare/v1.19.2...v1.19.3) (2023-02-07)
 
@@ -242,7 +242,7 @@
 
 ### Features
 
-* enhanced symphony onboarding flow ([88f6737](https://github.com/meemproject/meem-app/commit/88f6737))
+* enhanced communityTweets onboarding flow ([88f6737](https://github.com/meemproject/meem-app/commit/88f6737))
 * extension setup / onboarding + community creation flow ([069f2e3](https://github.com/meemproject/meem-app/commit/069f2e3))
 
 # [1.18.0](https://github.com/meemproject/meem-app/compare/v1.17.0...v1.18.0) (2023-02-06)
@@ -290,7 +290,7 @@
 * improve page loads by ~1.5 seconds by streaming in member-only data when ready rather than waiting for anon queries first ([deff5e8](https://github.com/meemproject/meem-app/commit/deff5e8))
 * margins ([d9ed88c](https://github.com/meemproject/meem-app/commit/d9ed88c))
 * only check for tx in remove member modal if opened ([cc5369f](https://github.com/meemproject/meem-app/commit/cc5369f))
-* refactor steward to symphony ([36b801a](https://github.com/meemproject/meem-app/commit/36b801a))
+* refactor steward to communityTweets ([36b801a](https://github.com/meemproject/meem-app/commit/36b801a))
 * small edge case where loading an anonymous agreement could temporarily show 'this community does not exist' ([d8aa919](https://github.com/meemproject/meem-app/commit/d8aa919))
 * small ui fixes, revert authenticate as it's being worked on ([56506f9](https://github.com/meemproject/meem-app/commit/56506f9))
 * token polygonscan link fixed, also now opens correctly in new tab ([1bf6e4a](https://github.com/meemproject/meem-app/commit/1bf6e4a))
@@ -300,7 +300,7 @@
 
 * magic link wallet link moved into user dropdown ([c0e9699](https://github.com/meemproject/meem-app/commit/c0e9699))
 * remove members from community via hover card ([deff4e7](https://github.com/meemproject/meem-app/commit/deff4e7))
-* symphony styles ([af0c876](https://github.com/meemproject/meem-app/commit/af0c876))
+* communityTweets styles ([af0c876](https://github.com/meemproject/meem-app/commit/af0c876))
 
 ## [1.15.1](https://github.com/meemproject/meem-app/compare/v1.15.0...v1.15.1) (2023-01-27)
 

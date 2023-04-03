@@ -19,9 +19,9 @@ import React, { useState } from 'react'
 import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
+import { CommunityTweetsWidget } from '../Extensions/CommunityTweets/CommunityTweetsWidget'
 import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
 import { GuildWidget } from '../Extensions/Guild/GuildWidget'
-import { SymphonyWidget } from '../Extensions/Symphony/SymphonyWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
 import { AgreementAddExtensionsWidget } from './CoreWidgets/AgreementAddExtensionsWidget'
@@ -140,9 +140,9 @@ export const AgreementHome: React.FC = () => {
 									// TODO: here, checking against the slug you chose for your extension.
 									<div key={extension.id}>
 										{extension.Extension?.slug ===
-											'symphony' && (
+											'community-tweets' && (
 											<>
-												<SymphonyWidget />
+												<CommunityTweetsWidget />
 											</>
 										)}
 										{extension.Extension?.slug ===
