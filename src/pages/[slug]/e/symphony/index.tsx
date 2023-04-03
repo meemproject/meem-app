@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const SymphonySetupPage: NextPage<IProps> = ({ agreementName }) => {
-	const pageTitle = `Symphony Setup | ${agreementName} | Meem`
+	const pageTitle = `Community Tweets Setup | ${agreementName} | Meem`
 	const pageDescription =
 		'Collaborative publishing tools for portable communities'
 

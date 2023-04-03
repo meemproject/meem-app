@@ -71,8 +71,8 @@ export const SymphDiscordInputRBProposals: React.FC<IProps> = ({
 										color: colorOrangeRed
 									}}
 								>
-									Please ensure Symphony Bot has full access
-									to channels in Discord
+									Please ensure Community Tweets Bot has full
+									access to channels in Discord
 								</Text>
 							</div>
 						</>

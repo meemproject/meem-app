@@ -43,7 +43,7 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 			<Text className={meemTheme.tMediumBold}>{`What's Symphony?`}</Text>
 			<Space h={16} />
 			<Text className={meemTheme.tSmall}>
-				{`Symphony is an extension that lets your community publish together. Today, Symphony lets you use Discord to decide what to Tweet from a shared account. Coming soon, we’ll be adding even more platforms in which you can collaborate, more platforms to which you can publish, and advanced publishing and editing capabilities.`}
+				{`Community Tweets is an extension that lets your community publish together. Today, Community Tweets lets you use Discord to decide what to Tweet from a shared account. Coming soon, we’ll be adding even more platforms in which you can collaborate, more platforms to which you can publish, and advanced publishing and editing capabilities.`}
 			</Text>
 			<Space h={24} />
 			<Text className={meemTheme.tMediumBold}>

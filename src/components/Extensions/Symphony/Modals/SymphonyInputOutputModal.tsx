@@ -131,14 +131,14 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			existingRule?.output?.platform ?? selectedOutput.platform
 
 		if (!existingRule) {
-			analytics.track('Symphony Flow Created', {
+			analytics.track('Community Tweets Flow Created', {
 				communityId: agreement?.id,
 				communityName: agreement?.name,
 				inputType: inputPlatform,
 				outputType: outputPlatform
 			})
 		} else {
-			analytics.track('Symphony Flow Edited', {
+			analytics.track('Community Tweets Flow Edited', {
 				communityId: agreement?.id,
 				communityName: agreement?.name,
 				inputType: inputPlatform,
@@ -425,7 +425,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 									<span
 										onClick={() => {
 											window.open(
-												'https://docs.meem.wtf/meem-protocol/symphony/webhooks'
+												'https://docs.meem.wtf/meem-protocol/community-publishing/webhooks'
 											)
 										}}
 										className={meemTheme.tSmallBold}

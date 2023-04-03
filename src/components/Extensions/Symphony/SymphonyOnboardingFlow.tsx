@@ -900,7 +900,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								{connectionGridItem(
 									'Twitter',
 									'/connect-twitter.png',
-									'You’ll need to log into Twitter to connect Symphony.',
+									'You’ll need to log into Twitter to connect Community Tweets.',
 									isTwitterOutputEnabled,
 									() => {
 										setIsTwitterOutputEnabled(
@@ -929,7 +929,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 											handleAuthTwitter()
 
 											analytics.track(
-												'Symphony Output Connected',
+												'Community Tweets Output Connected',
 												{
 													communityId:
 														chosenAgreement?.id,
@@ -941,7 +941,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 											if (isWebhookOutputEnabled) {
 												analytics.track(
-													'Symphony Output Connected',
+													'Community Tweets Output Connected',
 													{
 														communityId:
 															chosenAgreement?.id,
@@ -972,7 +972,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 											onClick={() => {
 												setIsSkippingTwitterAuth(true)
 												analytics.track(
-													'Symphony Output Connected',
+													'Community Tweets Output Connected',
 													{
 														communityId:
 															chosenAgreement?.id,
@@ -1011,7 +1011,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 	const stepThreeSelectProposalAccounts = (
 		<Stepper.Step
-			label="Please select the platform(s) you’ll use to draft posts with Symphony."
+			label="Please select the platform(s) you’ll use to draft posts with Community Tweets."
 			description={
 				<>
 					{
@@ -1026,7 +1026,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								{connectionGridItem(
 									'Discord',
 									'/connect-discord.png',
-									'You’ll need Discord permissions that allow you to add the Symphony bot to your server.',
+									'You’ll need Discord permissions that allow you to add the Community Tweets bot to your server.',
 									isDiscordInputEnabled,
 									() => {
 										setIsDiscordInputEnabled(
@@ -1071,12 +1071,12 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 	const stepFourInviteBot = (
 		<Stepper.Step
-			label={'Invite Symphony bot and activate'}
+			label={'Invite Community Tweets bot and activate'}
 			description={
 				<>
 					<Text className={meemTheme.tExtraSmall}>
 						{isDiscordInputEnabled || discordInfo
-							? `Please invite the Symphony bot to manage your Discord server.`
+							? `Please invite the Community Tweets bot to manage your Discord server.`
 							: onboardingStep < 4
 							? 'Select Discord to use this functionality'
 							: 'This step has been skipped'}
@@ -1109,7 +1109,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 												)
 
 												analytics.track(
-													'Symphony Input Connected',
+													'Community Tweets Input Connected',
 													{
 														communityId:
 															chosenAgreement?.id,
@@ -1120,7 +1120,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 												)
 											}}
 										>
-											{`Invite Symphony Bot`}
+											{`Invite Community Tweets Bot`}
 										</Button>
 									</div>
 									<Space h={24} />
@@ -1196,7 +1196,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 				<>
 					<Text className={meemTheme.tExtraSmall}>
 						{isSlackInputEnabled || slackInfo
-							? `Please authorize Symphony to manage your Slack workspace.`
+							? `Please authorize Community Tweets to manage your Slack workspace.`
 							: onboardingStep < 4
 							? 'Select Slack to use this functionality'
 							: 'This step has been skipped'}
@@ -1210,7 +1210,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								onClick={() => {
 									handleAuthSlack()
 									analytics.track(
-										'Symphony Input Connected',
+										'Community Tweets Input Connected',
 										{
 											communityId: chosenAgreement?.id,
 											communityName:
@@ -1319,8 +1319,8 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									}}
 								>
 									<Text className={meemTheme.tExtraSmallBold}>
-										Symphony lets your community automate
-										its publishing flows.
+										Community Tweets lets your community
+										automate its publishing flows.
 									</Text>
 									<Space h={16} />
 									<Text className={meemTheme.tExtraSmallBold}>

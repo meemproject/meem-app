@@ -224,7 +224,7 @@ export const SymphonyExtension: React.FC = () => {
 			ruleIds: [ruleId]
 		})
 
-		analytics.track('Symphony Flow Deleted', {
+		analytics.track('Community Tweets Flow Deleted', {
 			communityId: agreement.id,
 			communityName: agreement?.name,
 			inputType: rule?.input?.platform,
@@ -367,7 +367,7 @@ export const SymphonyExtension: React.FC = () => {
 			{agreement?.isCurrentUserAgreementMember &&
 				(!rules || (rules && rules.length === 0)) && (
 					<Text className={meemTheme.tSmallBold}>
-						This community has no Symphony rules set up yet.
+						This community has no Community Tweets rules set up yet.
 					</Text>
 				)}
 
@@ -520,7 +520,7 @@ export const SymphonyExtension: React.FC = () => {
 								onClick={() => {
 									setIsManageConnectionsModalOpen(true)
 									analytics.track(
-										'Symphony Manage Connections',
+										'Community Tweets Manage Connections',
 										{
 											communityId: agreement.id,
 											communityName: agreement?.name
@@ -552,7 +552,7 @@ export const SymphonyExtension: React.FC = () => {
 				<>
 					<Center>
 						<Text className={meemTheme.tSmallBold}>
-							Symphony rules are only visible to community
+							Community Tweets rules are only visible to community
 							members.
 						</Text>
 					</Center>

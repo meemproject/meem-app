@@ -6,7 +6,7 @@ import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 
 const Home: NextPage = () => {
-	const pageTitle = `Symphony | Meem`
+	const pageTitle = `Community Tweets | Meem`
 	const pageDescription =
 		'Collaborative publishing tools for portable communities'
 

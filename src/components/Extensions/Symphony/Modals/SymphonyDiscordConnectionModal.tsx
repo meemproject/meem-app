@@ -71,13 +71,13 @@ export const SymphonyDiscordConnectionModal: React.FC<IProps> = ({
 					orientation="vertical"
 				>
 					<Stepper.Step
-						label="Invite Symphony bot"
+						label="Invite Community Tweets bot"
 						description={
 							<>
 								<Text className={meemTheme.tExtraSmall}>
 									{connectDiscordStep === 1
-										? `You've invited the Symphony bot to your Discord server.`
-										: `Please invite the Symphony bot to manage your Discord server.`}
+										? `You've invited the Community Tweets bot to your Discord server.`
+										: `Please invite the Community Tweets bot to manage your Discord server.`}
 								</Text>
 								{connectDiscordStep === 0 && (
 									<>
@@ -97,7 +97,7 @@ export const SymphonyDiscordConnectionModal: React.FC<IProps> = ({
 													handleInviteBot()
 												}}
 											>
-												{`Invite Symphony Bot`}
+												{`Invite Community Tweets Bot`}
 											</Button>
 										</div>
 										<Space h={16} />
@@ -127,7 +127,7 @@ export const SymphonyDiscordConnectionModal: React.FC<IProps> = ({
 						}
 					/>
 					<Stepper.Step
-						label="Activate Symphony in Discord"
+						label="Activate Community Tweets in Discord"
 						description={
 							<>
 								<Text className={meemTheme.tExtraSmall}>

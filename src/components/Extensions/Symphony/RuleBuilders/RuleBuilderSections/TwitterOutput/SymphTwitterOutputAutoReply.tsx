@@ -18,8 +18,8 @@ export const SymphTwitterOutputAutoReply: React.FC<IProps> = ({
 			<Text className={meemTheme.tExtraSmallLabel}>PUBLISHING</Text>
 			<Space h={24} />
 			<Text className={meemTheme.tExtraSmallBold}>
-				Would you like Symphony to reply to approved proposals with a
-				link to the published tweet?
+				Would you like Community Tweets to reply to approved proposals
+				with a link to the published tweet?
 			</Text>
 			<Space h={8} />
 			<Switch
