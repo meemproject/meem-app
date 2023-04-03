@@ -26,9 +26,9 @@ import {
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 import {
-	ComTweetsConnection,
-	ComTweetsConnectionType,
-	ComTweetsRule
+	CTConnection,
+	CTConnectionType,
+	CTRule
 } from '../Model/communityTweets'
 import {
 	IOnSave,
@@ -39,8 +39,8 @@ import { CTSlackTwitterRulesBuilder } from '../RuleBuilders/CTSlackTwitterRuleBu
 import { CTSlackWebhookRulesBuilder } from '../RuleBuilders/CTSlackWebhookRuleBuilder'
 
 interface IProps {
-	existingRule?: ComTweetsRule
-	connections?: ComTweetsConnection[]
+	existingRule?: CTRule
+	connections?: CTConnection[]
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -60,15 +60,15 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 	const analytics = useAnalytics()
 
 	// Inputs and outputs for the provisional publishing flow (rule)
-	const [inputs, setInputs] = useState<ComTweetsConnection[]>([])
+	const [inputs, setInputs] = useState<CTConnection[]>([])
 	const [inputValues, setInputValues] = useState<SelectItem[]>([])
-	const [selectedInput, setSelectedInput] = useState<ComTweetsConnection>()
+	const [selectedInput, setSelectedInput] = useState<CTConnection>()
 	const [selectedInputValue, setSelectedInputValue] = useState<string | null>(
 		null
 	)
-	const [outputs, setOutputs] = useState<ComTweetsConnection[]>([])
+	const [outputs, setOutputs] = useState<CTConnection[]>([])
 	const [outputValues, setOutputValues] = useState<SelectItem[]>([])
-	const [selectedOutput, setSelectedOutput] = useState<ComTweetsConnection>()
+	const [selectedOutput, setSelectedOutput] = useState<CTConnection>()
 	const [selectedOutputValue, setSelectedOutputValue] = useState<
 		string | null
 	>(null)
@@ -78,7 +78,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 	const [isSavingRule, setIsSavingRule] = useState(false)
 
 	// The complete rule to save (returned from the rule builder)
-	const [rule, setRule] = useState<ComTweetsRule>()
+	const [rule, setRule] = useState<CTRule>()
 
 	// Rule builder modal states
 	const [
@@ -168,7 +168,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 	}
 
 	const openRuleBuilder = useCallback(
-		(input: ComTweetsConnection, output?: ComTweetsConnection) => {
+		(input: CTConnection, output?: CTConnection) => {
 			if (
 				input.platform === MeemAPI.RuleIo.Discord &&
 				output?.platform === MeemAPI.RuleIo.Twitter &&
@@ -217,7 +217,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 			setWebHookPrivateKey(uuidv4())
 
 			const filteredInputs = connections.filter(
-				c => c.type === ComTweetsConnectionType.InputOnly
+				c => c.type === CTConnectionType.InputOnly
 			)
 
 			const filteredInputValues: SelectItem[] = []
@@ -233,7 +233,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 			setInputValues(filteredInputValues)
 
 			const filteredOutputs = connections.filter(
-				c => c.type === ComTweetsConnectionType.OutputOnly
+				c => c.type === CTConnectionType.OutputOnly
 			)
 
 			const filteredOutputValues: SelectItem[] = []
@@ -279,10 +279,10 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 					// If it's a webhook rule, it'll not have an output
 					// so we'll want to set our webhook props instead
 					// and create a synthetic 'selected output'
-					const syntheticOutput: ComTweetsConnection = {
+					const syntheticOutput: CTConnection = {
 						id: 'webhook',
 						name: 'Webhook',
-						type: ComTweetsConnectionType.OutputOnly,
+						type: CTConnectionType.OutputOnly,
 						platform: MeemAPI.RuleIo.Webhook
 					}
 					setSelectedOutput(syntheticOutput)

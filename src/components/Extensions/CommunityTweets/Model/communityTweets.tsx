@@ -1,15 +1,16 @@
 import { MeemAPI } from '@meemproject/sdk'
 
-export enum ComTweetsConnectionType {
+// eslint-disable-next-line kengoldfarb/prefer-pascal-case-enums
+export enum CTConnectionType {
 	InputOnly,
 	InputAndOutput,
 	OutputOnly
 }
 
-export interface ComTweetsConnection {
+export interface CTConnection {
 	id: string
 	name: string
-	type: ComTweetsConnectionType
+	type: CTConnectionType
 	platform: MeemAPI.RuleIo
 	icon?: string
 
@@ -23,12 +24,12 @@ export interface ComTweetsConnection {
 	slackWorkspaceId?: string
 }
 
-export interface ComTweetsRule {
+export interface CTRule {
 	id: string
-	input?: ComTweetsConnection
+	input?: CTConnection
 	inputId?: string
 	inputPlatformString?: string
-	output?: ComTweetsConnection
+	output?: CTConnection
 	outputId?: string
 	outputPlatformString?: string
 	agreementId: string

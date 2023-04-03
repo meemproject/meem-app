@@ -15,7 +15,7 @@ import {
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SUB_TWITTER, SUB_DISCORD } from '../communityTweetsGql'
-import { ComTweetsConnection, ComTweetsRule } from '../Model/communityTweets'
+import { CTConnection, CTRule } from '../Model/communityTweets'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
 import { CTDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
 import { CTDiscordInputRBVetoes } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBVetoes'
@@ -28,9 +28,9 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 })
 
 export interface IProps {
-	rule?: ComTweetsRule
-	input?: ComTweetsConnection
-	output?: ComTweetsConnection
+	rule?: CTRule
+	input?: CTConnection
+	output?: CTConnection
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void

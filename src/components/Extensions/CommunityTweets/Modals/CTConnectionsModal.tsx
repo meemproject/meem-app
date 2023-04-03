@@ -10,12 +10,12 @@ import {
 	colorRed,
 	useMeemTheme
 } from '../../../Styles/MeemTheme'
-import { ComTweetsConnection } from '../Model/communityTweets'
+import { CTConnection } from '../Model/communityTweets'
 import { CTDisconnectModal } from './CTDisconnectModal'
 import { CTDiscordConnectionModal } from './CTDiscordConnectionModal'
 
 interface IProps {
-	connections?: ComTweetsConnection[]
+	connections?: CTConnection[]
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -32,8 +32,7 @@ export const CTConnectionsModal: React.FC<IProps> = ({
 	const router = useRouter()
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-	const [selectedConnection, setSelectedConnection] =
-		useState<ComTweetsConnection>()
+	const [selectedConnection, setSelectedConnection] = useState<CTConnection>()
 
 	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
 		useState(false)
@@ -191,7 +190,7 @@ export const CTConnectionsModal: React.FC<IProps> = ({
 	}
 
 	interface ConnectionsGridProps {
-		conns: ComTweetsConnection[]
+		conns: CTConnection[]
 		platform: MeemAPI.RuleIo
 	}
 
@@ -214,7 +213,7 @@ export const CTConnectionsModal: React.FC<IProps> = ({
 	}
 
 	interface ConnectionTileProps {
-		connection: ComTweetsConnection
+		connection: CTConnection
 	}
 
 	const ConnectionsList = () => {
