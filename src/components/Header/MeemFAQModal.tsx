@@ -40,7 +40,7 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 				{`Set nuanced, intuitive membership logic to determine who can participate in your community and how they can join. Create multiple roles for members and set rules and permissions for each. Using Meem’s native extensions, discuss and publish content together across platforms. Finally, connect a wide range of Web2 and Web3 tools to use with your community, ensuring they respect the roles and rules you’ve already established.`}
 			</Text>
 			<Space h={24} />
-			<Text className={meemTheme.tMediumBold}>{`What's Symphony?`}</Text>
+			<Text className={meemTheme.tMediumBold}>{`What's CommunityTweets?`}</Text>
 			<Space h={16} />
 			<Text className={meemTheme.tSmall}>
 				{`Community Tweets is an extension that lets your community publish together. Today, Community Tweets lets you use Discord to decide what to Tweet from a shared account. Coming soon, we’ll be adding even more platforms in which you can collaborate, more platforms to which you can publish, and advanced publishing and editing capabilities.`}

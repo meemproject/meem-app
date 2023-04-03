@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
-import { SymphonyExtension } from './SymphonyExtension'
+import { CommunityTweetsExtension } from './CommunityTweetsExtension'
 
 export enum SelectedConnection {
 	ConnectionDiscord = 'discord',
@@ -12,7 +12,7 @@ export enum SelectedConnection {
 	ConnectionSlack = 'slack'
 }
 
-export const SymphonyExtensionOnboarding: React.FC = () => {
+export const CTExtensionOnboarding: React.FC = () => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement } = useAgreement()
@@ -29,7 +29,7 @@ export const SymphonyExtensionOnboarding: React.FC = () => {
 
 						<Image
 							className={meemTheme.copyIcon}
-							src={`/ext-symphony.png`}
+							src={`/ext-communityTweets.png`}
 							fit={'contain'}
 							width={180}
 							height={40}
@@ -57,7 +57,7 @@ export const SymphonyExtensionOnboarding: React.FC = () => {
 		<div>
 			{pageHeader}
 			<Container>
-				<SymphonyExtension />
+				<CommunityTweetsExtension />
 			</Container>
 		</div>
 	)

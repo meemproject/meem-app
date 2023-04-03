@@ -7,7 +7,7 @@ interface IProps {
 	form: any
 }
 
-export const SymphRuleBuilderVotesCount: React.FC<IProps> = ({ form }) => {
+export const CTRuleBuilderVotesCount: React.FC<IProps> = ({ form }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	return (

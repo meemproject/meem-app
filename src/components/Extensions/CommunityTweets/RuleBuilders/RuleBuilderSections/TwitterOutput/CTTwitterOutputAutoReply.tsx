@@ -7,7 +7,7 @@ interface IProps {
 	form: any
 }
 
-export const SymphTwitterOutputAutoReply: React.FC<IProps> = ({
+export const CTTwitterOutputAutoReply: React.FC<IProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-shadow
 	form
 }) => {

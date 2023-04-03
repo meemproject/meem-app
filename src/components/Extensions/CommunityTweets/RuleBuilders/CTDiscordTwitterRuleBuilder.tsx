@@ -8,26 +8,29 @@ import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
-import { SubSlackSubscription } from '../../../../../generated/graphql'
+import {
+	SubTwitterSubscription,
+	SubDiscordSubscription
+} from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { SymphonyConnection, SymphonyRule } from '../Model/symphony'
-import { SUB_SLACK } from '../symphony.gql'
-import { SymphRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/SymphRuleBuilderApproverEmojis'
-import { SymphRuleBuilderVotesCount } from './RuleBuilderSections/Generic/SymphRuleBuilderVotesCount'
-import { SymphSlackInputRBProposals } from './RuleBuilderSections/SlackInput/SymphSlackInputRBProposals'
-import { SymphSlackInputRBVetoes } from './RuleBuilderSections/SlackInput/SymphSlackInputRBVetoes'
-import { SymphonyRuleBuilderConnections } from './SymphonyRuleBuilderConnections'
+import { SUB_TWITTER, SUB_DISCORD } from '../communityTweetsGql'
+import { ComTweetsConnection, ComTweetsRule } from '../Model/communityTweets'
+import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
+import { CTDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
+import { CTDiscordInputRBVetoes } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBVetoes'
+import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
+import { CTRuleBuilderVotesCount } from './RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
+import { CTTwitterOutputAutoReply } from './RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
 })
 
 export interface IProps {
-	rule?: SymphonyRule
-	input?: SymphonyConnection
-	webhookUrl?: string
-	privateKey?: string
+	rule?: ComTweetsRule
+	input?: ComTweetsConnection
+	output?: ComTweetsConnection
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -56,11 +59,10 @@ export interface IOnSave extends IFormValues {
 	vetoerEmojis: string[]
 }
 
-export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
+export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
 	input,
-	webhookUrl,
-	privateKey,
+	output,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -74,37 +76,65 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 	// GraphQL Subscriptions
 	const { mutualMembersClient } = useMeemApollo()
 
-	const { data: slackData, loading: isLoadingSlackData } =
-		useSubscription<SubSlackSubscription>(SUB_SLACK, {
+	const { data: twitterData, loading: loadingTwitterData } =
+		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
 			variables: {
 				agreementId: agreement?.id,
-				slackId: input?.id
+				twitterId: rule?.output?.id ?? output?.id ?? ''
 			},
-			skip:
-				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
-				!mutualMembersClient ||
-				!agreement?.id ||
-				!isOpened ||
-				!input?.id,
+			skip: !mutualMembersClient || !agreement?.id || !isOpened,
 			client: mutualMembersClient
 		})
 
-	const { data: channelsData, isLoading: isLoadingChannelsData } =
-		useSWR<MeemAPI.v1.GetSlackChannels.IResponseBody>(
-			agreement?.id && jwt && input?.id
+	const { data: discordData, loading: loadingDiscordData } =
+		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
+			variables: {
+				agreementId: agreement?.id,
+				discordId: rule?.input?.id ?? input?.id ?? ''
+			},
+			skip: !mutualMembersClient || !agreement?.id || !isOpened,
+			client: mutualMembersClient
+		})
+
+	const { data: channelsData, isLoading: loadingChannelsData } =
+		useSWR<MeemAPI.v1.GetDiscordChannels.IResponseBody>(
+			agreement?.id && jwt
 				? `${
 						process.env.NEXT_PUBLIC_API_URL
-				  }${MeemAPI.v1.GetSlackChannels.path()}`
+				  }${MeemAPI.v1.GetDiscordChannels.path()}`
 				: null,
 			url => {
 				return makeFetcher<
-					MeemAPI.v1.GetSlackChannels.IQueryParams,
-					MeemAPI.v1.GetSlackChannels.IRequestBody,
-					MeemAPI.v1.GetSlackChannels.IResponseBody
+					MeemAPI.v1.GetDiscordChannels.IQueryParams,
+					MeemAPI.v1.GetDiscordChannels.IRequestBody,
+					MeemAPI.v1.GetDiscordChannels.IResponseBody
 				>({
-					method: MeemAPI.v1.GetSlackChannels.method
+					method: MeemAPI.v1.GetDiscordChannels.method
 				})(url, {
-					agreementSlackId: rule?.input?.id ?? input?.id ?? ''
+					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
+				})
+			},
+			{
+				shouldRetryOnError: false
+			}
+		)
+
+	const { data: rolesData, isLoading: loadingRolesData } =
+		useSWR<MeemAPI.v1.GetDiscordRoles.IResponseBody>(
+			agreement?.id && jwt
+				? `${
+						process.env.NEXT_PUBLIC_API_URL
+				  }${MeemAPI.v1.GetDiscordRoles.path()}`
+				: null,
+			url => {
+				return makeFetcher<
+					MeemAPI.v1.GetDiscordRoles.IQueryParams,
+					MeemAPI.v1.GetDiscordRoles.IRequestBody,
+					MeemAPI.v1.GetDiscordRoles.IResponseBody
+				>({
+					method: MeemAPI.v1.GetDiscordRoles.method
+				})(url, {
+					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
 			{
@@ -132,8 +162,8 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 				val.length === 0
 					? 'Proposer is required'
 					: null,
-			// approverRoles: val =>
-			// 	val.length === 0 ? 'Approver is required' : null,
+			approverRoles: val =>
+				val.length === 0 ? 'Approver is required' : null,
 			proposalChannels: (val, current) =>
 				current.publishType === MeemAPI.PublishType.Proposal &&
 				val.length === 0
@@ -216,39 +246,27 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule])
 
-	const isProposalChannelGated = false
+	let isProposalChannelGated = false
 
-	// if (
-	// 	slackData?.AgreementSlacks[0] &&
-	// 	form.values.proposalChannels &&
-	// 	form.values.proposalChannels.length > 0
-	// ) {
-	// 	form.values.proposalChannels.forEach((c: string) => {
-	// 		const channel = channelsData.channels?.find(ch => ch.id === c)
-	// 		if (channel && (!channel.canSend || !channel.canView)) {
-	// 			isProposalChannelGated = true
-	// 		}
-	// 	})
-	// }
-
-	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-	const isShareChannelGated = false
-
-	// if (channelsData?.channels && form.values.proposalShareChannel) {
-	// 	const channel = channelsData.channels.find(
-	// 		ch => ch.id === form.values.proposalShareChannel
-	// 	)
-	// 	if (channel && (!channel.canSend || !channel.canView)) {
-	// 		isShareChannelGated = true
-	// 	}
-	// }
-	const isLoading = isLoadingChannelsData || isLoadingSlackData
-	const hasAllRequiredData = !isLoading && slackData && channelsData
-	const isMissingRequiredData = !isLoading && (!slackData || !channelsData)
+	if (
+		discordData?.AgreementDiscords[0] &&
+		form.values.proposalChannels &&
+		form.values.proposalChannels.length > 0
+	) {
+		form.values.proposalChannels.forEach((c: string) => {
+			const channel = channelsData.channels?.find(ch => ch.id === c)
+			if (channel && (!channel.canSend || !channel.canView)) {
+				isProposalChannelGated = true
+			}
+		})
+	}
 
 	const modalContents = (
 		<>
-			{isLoading && (
+			{(loadingChannelsData ||
+				loadingDiscordData ||
+				loadingTwitterData ||
+				loadingRolesData) && (
 				<>
 					<Space h={32} />
 					<Center>
@@ -257,56 +275,29 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 					<Space h={32} />
 				</>
 			)}
-			{isMissingRequiredData && (
-				<>
-					<Space h={32} />
-					<Center>
-						<Text className={meemTheme.tSmallBold}>
-							Unable to retrieve data
-						</Text>
-					</Center>
-					<Space h={8} />
-					<Center>
-						<Text className={meemTheme.tSmall}>
-							{!slackData &&
-								'Slack workspace data was not found.'}{' '}
-							{!slackData && 'Slack channel data was not found.'}{' '}
-							{
-								'Contact us using the button in the top right of this page.'
-							}
-						</Text>
-					</Center>
-					<Space h={32} />
-				</>
-			)}
-			{hasAllRequiredData && (
+			{discordData && channelsData && twitterData && rolesData && (
 				<>
 					<form
 						onSubmit={form.onSubmit(values =>
 							handleFormSubmit(values)
 						)}
 					>
-						<SymphonyRuleBuilderConnections
+						<CTRuleBuilderConnections
 							input={rule?.input ?? input}
-							webhookUrl={webhookUrl}
-							webhookPrivateKey={privateKey}
+							output={rule?.output ?? output}
 							onChangeConnectionsPressed={function (): void {
 								onModalClosed()
 							}}
 						/>
 
-						<SymphSlackInputRBProposals
+						<CTDiscordInputRBProposals
 							form={form}
 							channelsData={channelsData}
+							rolesData={rolesData}
 							isProposalChannelGated={isProposalChannelGated}
 						/>
 
-						<Text className={meemTheme.tExtraSmallLabel}>
-							VOTES
-						</Text>
-						<Space h={4} />
-
-						<SymphRuleBuilderApproverEmojis
+						<CTRuleBuilderApproverEmojis
 							approverEmojis={approverEmojis}
 							onApproverEmojisSet={function (
 								emojis: string[]
@@ -319,10 +310,11 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 							}}
 						/>
 
-						<SymphRuleBuilderVotesCount form={form} />
+						<CTRuleBuilderVotesCount form={form} />
 
-						<SymphSlackInputRBVetoes
+						<CTDiscordInputRBVetoes
 							form={form}
+							rolesData={rolesData}
 							vetoerEmojis={vetoerEmojis}
 							onVetoerEmojisSet={function (
 								emojis: string[]
@@ -334,6 +326,8 @@ export const SymphonySlackWebhookRulesBuilder: React.FC<IProps> = ({
 								setIsEmojiPickerOpen(true)
 							}}
 						/>
+
+						<CTTwitterOutputAutoReply form={form} />
 
 						<Modal
 							withCloseButton={true}

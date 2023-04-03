@@ -26,26 +26,26 @@ import {
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 import {
-	SymphonyConnection,
-	SymphonyConnectionType,
-	SymphonyRule
-} from '../Model/symphony'
+	ComTweetsConnection,
+	ComTweetsConnectionType,
+	ComTweetsRule
+} from '../Model/communityTweets'
 import {
 	IOnSave,
-	SymphonyDiscordTwitterRulesBuilder
-} from '../RuleBuilders/SymphonyDiscordTwitterRuleBuilder'
-import { SymphonyDiscordWebhookRulesBuilder } from '../RuleBuilders/SymphonyDiscordWebhookRuleBuilder'
-import { SymphonySlackTwitterRulesBuilder } from '../RuleBuilders/SymphonySlackTwitterRuleBuilder'
-import { SymphonySlackWebhookRulesBuilder } from '../RuleBuilders/SymphonySlackWebhookRuleBuilder'
+	CTDiscordTwitterRulesBuilder
+} from '../RuleBuilders/CTDiscordTwitterRuleBuilder'
+import { CTDiscordWebhookRulesBuilder } from '../RuleBuilders/CTDiscordWebhookRuleBuilder'
+import { CTSlackTwitterRulesBuilder } from '../RuleBuilders/CTSlackTwitterRuleBuilder'
+import { CTSlackWebhookRulesBuilder } from '../RuleBuilders/CTSlackWebhookRuleBuilder'
 
 interface IProps {
-	existingRule?: SymphonyRule
-	connections?: SymphonyConnection[]
+	existingRule?: ComTweetsRule
+	connections?: ComTweetsConnection[]
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
-export const SymphonyInputOutputModal: React.FC<IProps> = ({
+export const CTInputOutputModal: React.FC<IProps> = ({
 	existingRule,
 	connections,
 	isOpened,
@@ -56,19 +56,19 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { agreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('symphony', agreement)
+	const agreementExtension = extensionFromSlug('communityTweets', agreement)
 	const analytics = useAnalytics()
 
 	// Inputs and outputs for the provisional publishing flow (rule)
-	const [inputs, setInputs] = useState<SymphonyConnection[]>([])
+	const [inputs, setInputs] = useState<ComTweetsConnection[]>([])
 	const [inputValues, setInputValues] = useState<SelectItem[]>([])
-	const [selectedInput, setSelectedInput] = useState<SymphonyConnection>()
+	const [selectedInput, setSelectedInput] = useState<ComTweetsConnection>()
 	const [selectedInputValue, setSelectedInputValue] = useState<string | null>(
 		null
 	)
-	const [outputs, setOutputs] = useState<SymphonyConnection[]>([])
+	const [outputs, setOutputs] = useState<ComTweetsConnection[]>([])
 	const [outputValues, setOutputValues] = useState<SelectItem[]>([])
-	const [selectedOutput, setSelectedOutput] = useState<SymphonyConnection>()
+	const [selectedOutput, setSelectedOutput] = useState<ComTweetsConnection>()
 	const [selectedOutputValue, setSelectedOutputValue] = useState<
 		string | null
 	>(null)
@@ -78,7 +78,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	const [isSavingRule, setIsSavingRule] = useState(false)
 
 	// The complete rule to save (returned from the rule builder)
-	const [rule, setRule] = useState<SymphonyRule>()
+	const [rule, setRule] = useState<ComTweetsRule>()
 
 	// Rule builder modal states
 	const [
@@ -168,7 +168,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 	}
 
 	const openRuleBuilder = useCallback(
-		(input: SymphonyConnection, output?: SymphonyConnection) => {
+		(input: ComTweetsConnection, output?: ComTweetsConnection) => {
 			if (
 				input.platform === MeemAPI.RuleIo.Discord &&
 				output?.platform === MeemAPI.RuleIo.Twitter &&
@@ -217,7 +217,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			setWebHookPrivateKey(uuidv4())
 
 			const filteredInputs = connections.filter(
-				c => c.type === SymphonyConnectionType.InputOnly
+				c => c.type === ComTweetsConnectionType.InputOnly
 			)
 
 			const filteredInputValues: SelectItem[] = []
@@ -233,7 +233,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 			setInputValues(filteredInputValues)
 
 			const filteredOutputs = connections.filter(
-				c => c.type === SymphonyConnectionType.OutputOnly
+				c => c.type === ComTweetsConnectionType.OutputOnly
 			)
 
 			const filteredOutputValues: SelectItem[] = []
@@ -279,10 +279,10 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 					// If it's a webhook rule, it'll not have an output
 					// so we'll want to set our webhook props instead
 					// and create a synthetic 'selected output'
-					const syntheticOutput: SymphonyConnection = {
+					const syntheticOutput: ComTweetsConnection = {
 						id: 'webhook',
 						name: 'Webhook',
-						type: SymphonyConnectionType.OutputOnly,
+						type: ComTweetsConnectionType.OutputOnly,
 						platform: MeemAPI.RuleIo.Webhook
 					}
 					setSelectedOutput(syntheticOutput)
@@ -542,7 +542,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 			{isOpened && isDiscordTwitterRuleBuilderOpened && (
 				<>
-					<SymphonyDiscordTwitterRulesBuilder
+					<CTDiscordTwitterRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}
@@ -562,7 +562,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 			{isOpened && isDiscordWebhookRuleBuilderOpened && (
 				<>
-					<SymphonyDiscordWebhookRulesBuilder
+					<CTDiscordWebhookRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}
@@ -583,7 +583,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 			{isOpened && isSlackTwitterRuleBuilderOpened && (
 				<>
-					<SymphonySlackTwitterRulesBuilder
+					<CTSlackTwitterRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}
@@ -603,7 +603,7 @@ export const SymphonyInputOutputModal: React.FC<IProps> = ({
 
 			{isOpened && isSlackWebhookRuleBuilderOpened && (
 				<>
-					<SymphonySlackWebhookRulesBuilder
+					<CTSlackWebhookRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}

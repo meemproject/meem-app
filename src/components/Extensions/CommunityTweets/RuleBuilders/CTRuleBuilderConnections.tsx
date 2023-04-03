@@ -2,17 +2,17 @@ import { Text, Space, Image, Button } from '@mantine/core'
 import { MeemAPI } from '@meemproject/sdk'
 import React from 'react'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { SymphonyConnection } from '../Model/symphony'
+import { ComTweetsConnection } from '../Model/communityTweets'
 
 interface IProps {
-	input?: SymphonyConnection
-	output?: SymphonyConnection
+	input?: ComTweetsConnection
+	output?: ComTweetsConnection
 	webhookUrl?: string
 	webhookPrivateKey?: string
 	onChangeConnectionsPressed?: () => void
 }
 
-export const SymphonyRuleBuilderConnections: React.FC<IProps> = ({
+export const CTRuleBuilderConnections: React.FC<IProps> = ({
 	input,
 	output,
 	webhookUrl,

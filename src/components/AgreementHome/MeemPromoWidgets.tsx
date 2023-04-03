@@ -45,10 +45,10 @@ export const MeemPromoWidgets: React.FC = () => {
 								color: colorBlue
 							}}
 							onClick={() => {
-								router.push('/onboard/symphony')
+								router.push('/onboard/communitytweets')
 							}}
 						>
-							Symphony
+							CommunityTweets
 						</span>
 						, lets communities decide together to Tweet something.
 					</Text>

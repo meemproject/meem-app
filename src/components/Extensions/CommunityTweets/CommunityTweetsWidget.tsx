@@ -2,10 +2,10 @@ import { Space } from '@mantine/core'
 import React, { useState } from 'react'
 import { ExtensionSettingsModal } from '../ExtensionSettingsModal'
 import { ExtensionWidgetContainer } from '../ExtensionWidgetContainer'
-import { SymphonyExtension } from './SymphonyExtension'
+import { CommunityTweetsExtension } from './CommunityTweetsExtension'
 
-export const SymphonyWidget: React.FC = () => {
-	const extensionSlug = 'symphony'
+export const CommunityTweetsWidget: React.FC = () => {
+	const extensionSlug = 'communityTweets'
 	const [isSettingsModalOpened, setIsSettingsModalOpened] = useState(false)
 
 	return (
@@ -17,7 +17,7 @@ export const SymphonyWidget: React.FC = () => {
 				}}
 			>
 				<div>
-					<SymphonyExtension />
+					<CommunityTweetsExtension />
 					<Space h={16} />
 				</div>
 			</ExtensionWidgetContainer>

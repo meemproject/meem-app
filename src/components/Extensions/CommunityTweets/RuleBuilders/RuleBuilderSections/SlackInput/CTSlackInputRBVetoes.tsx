@@ -13,7 +13,7 @@ interface IProps {
 	onAddEmojisPressed: () => void
 }
 
-export const SymphSlackInputRBVetoes: React.FC<IProps> = ({
+export const CTSlackInputRBVetoes: React.FC<IProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-shadow
 	form,
 	// rolesData,

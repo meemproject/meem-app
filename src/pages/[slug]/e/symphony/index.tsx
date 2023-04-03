@@ -3,7 +3,7 @@ import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { SymphonyExtensionOnboarding } from '../../../../components/Extensions/Symphony/SymphonyExtensionOnboarding'
+import { CTExtensionOnboarding } from '../../../../components/Extensions/CommunityTweets/CTExtensionOnboarding'
 import { MeemFooter } from '../../../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../../../components/Header/Header'
 import { deslugify } from '../../../../utils/strings'
@@ -12,7 +12,7 @@ interface IProps {
 	agreementName: string
 }
 
-const SymphonySetupPage: NextPage<IProps> = ({ agreementName }) => {
+const CommunityTweetsSetupPage: NextPage<IProps> = ({ agreementName }) => {
 	const pageTitle = `Community Tweets Setup | ${agreementName} | Meem`
 	const pageDescription =
 		'Collaborative publishing tools for portable communities'
@@ -56,7 +56,7 @@ const SymphonySetupPage: NextPage<IProps> = ({ agreementName }) => {
 			</Head>
 			<HeaderMenu />
 
-			<SymphonyExtensionOnboarding />
+			<CTExtensionOnboarding />
 			<Space h={64} />
 			<MeemFooter />
 		</>
@@ -71,4 +71,4 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 	}
 }
 
-export default SymphonySetupPage
+export default CommunityTweetsSetupPage

@@ -1,15 +1,15 @@
 import { MeemAPI } from '@meemproject/sdk'
 
-export enum SymphonyConnectionType {
+export enum ComTweetsConnectionType {
 	InputOnly,
 	InputAndOutput,
 	OutputOnly
 }
 
-export interface SymphonyConnection {
+export interface ComTweetsConnection {
 	id: string
 	name: string
-	type: SymphonyConnectionType
+	type: ComTweetsConnectionType
 	platform: MeemAPI.RuleIo
 	icon?: string
 
@@ -23,12 +23,12 @@ export interface SymphonyConnection {
 	slackWorkspaceId?: string
 }
 
-export interface SymphonyRule {
+export interface ComTweetsRule {
 	id: string
-	input?: SymphonyConnection
+	input?: ComTweetsConnection
 	inputId?: string
 	inputPlatformString?: string
-	output?: SymphonyConnection
+	output?: ComTweetsConnection
 	outputId?: string
 	outputPlatformString?: string
 	agreementId: string

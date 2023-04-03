@@ -10,7 +10,7 @@ interface IProps {
 	onAddEmojisPressed: () => void
 }
 
-export const SymphRuleBuilderApproverEmojis: React.FC<IProps> = ({
+export const CTRuleBuilderApproverEmojis: React.FC<IProps> = ({
 	approverEmojis,
 	onApproverEmojisSet,
 	onAddEmojisPressed

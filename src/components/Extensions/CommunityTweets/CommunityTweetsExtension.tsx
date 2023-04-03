@@ -26,40 +26,39 @@ import { toTitleCase } from '../../../utils/strings'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
-import { SymphonyConnectionsModal } from './Modals/SymphonyConnectionsModal'
-import { SymphonyInputOutputModal } from './Modals/SymphonyInputOutputModal'
-import {
-	SymphonyConnection,
-	SymphonyConnectionType,
-	SymphonyRule
-} from './Model/symphony'
 import {
 	SUB_DISCORDS,
 	SUB_RULES,
 	SUB_SLACKS,
 	SUB_TWITTERS
-} from './symphony.gql'
+} from './communityTweetsGql'
+import { CTConnectionsModal } from './Modals/CTConnectionsModal'
+import { CTInputOutputModal } from './Modals/CTInputOutputModal'
+import {
+	ComTweetsConnection,
+	ComTweetsConnectionType,
+	ComTweetsRule
+} from './Model/communityTweets'
 
-export const SymphonyExtension: React.FC = () => {
+export const CommunityTweetsExtension: React.FC = () => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { jwt } = useAuth()
 	const { agreement, isLoadingAgreement } = useAgreement()
-	const agreementExtension = extensionFromSlug('symphony', agreement)
+	const agreementExtension = extensionFromSlug('communityTweets', agreement)
 	const analytics = useAnalytics()
 
 	// Extension data
 	const [previousRulesDataString, setPreviousRulesDataString] = useState('')
-	const [rules, setRules] = useState<SymphonyRule[]>()
-	const [selectedRule, setSelectedRule] = useState<SymphonyRule>()
+	const [rules, setRules] = useState<ComTweetsRule[]>()
+	const [selectedRule, setSelectedRule] = useState<ComTweetsRule>()
 
 	const [previousConnectionsDataString, setPreviousConnectionsDataString] =
 		useState('')
 	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
 	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
-	const [symphonyConnections, setSymphonyConnections] = useState<
-		SymphonyConnection[]
-	>([])
+	const [communityTweetsConnections, setCommunityTweetsConnections] =
+		useState<ComTweetsConnection[]>([])
 
 	const { sdk } = useSDK()
 
@@ -119,12 +118,12 @@ export const SymphonyExtension: React.FC = () => {
 			twitterConnectionData &&
 			slackConnectionData
 		) {
-			const conns: SymphonyConnection[] = []
+			const conns: ComTweetsConnection[] = []
 			discordConnectionData.AgreementDiscords.forEach(c => {
-				const con: SymphonyConnection = {
+				const con: ComTweetsConnection = {
 					id: c.id,
 					name: `Discord: ${c.Discord?.name}`,
-					type: SymphonyConnectionType.InputOnly,
+					type: ComTweetsConnectionType.InputOnly,
 					platform: MeemAPI.RuleIo.Discord,
 					icon: c.Discord?.icon ?? ''
 				}
@@ -134,30 +133,30 @@ export const SymphonyExtension: React.FC = () => {
 			})
 
 			twitterConnectionData.AgreementTwitters.forEach(c => {
-				const con: SymphonyConnection = {
+				const con: ComTweetsConnection = {
 					id: c.id,
 					name: `Twitter: ${c.Twitter?.username}`,
-					type: SymphonyConnectionType.OutputOnly,
+					type: ComTweetsConnectionType.OutputOnly,
 					platform: MeemAPI.RuleIo.Twitter
 				}
 				conns.push(con)
 			})
 
 			slackConnectionData.AgreementSlacks.forEach(c => {
-				const con: SymphonyConnection = {
+				const con: ComTweetsConnection = {
 					id: c.id,
 					name: `Slack: ${c.Slack?.name}`,
-					type: SymphonyConnectionType.InputOnly,
+					type: ComTweetsConnectionType.InputOnly,
 					platform: MeemAPI.RuleIo.Slack
 				}
 				conns.push(con)
 			})
 
 			// Add Webhook connection
-			const webhookCon: SymphonyConnection = {
+			const webhookCon: ComTweetsConnection = {
 				id: 'webhook',
 				name: 'Add a custom Webhook',
-				type: SymphonyConnectionType.OutputOnly,
+				type: ComTweetsConnectionType.OutputOnly,
 				platform: MeemAPI.RuleIo.Webhook
 			}
 			conns.push(webhookCon)
@@ -165,7 +164,7 @@ export const SymphonyExtension: React.FC = () => {
 			const jsonConns = JSON.stringify(conns)
 			if (jsonConns !== previousConnectionsDataString) {
 				setPreviousConnectionsDataString(jsonConns)
-				setSymphonyConnections(conns)
+				setCommunityTweetsConnections(conns)
 				setHasFetchedConnections(true)
 				setIsFetchingConnections(false)
 			}
@@ -181,10 +180,10 @@ export const SymphonyExtension: React.FC = () => {
 
 	// Parse rules from subscription
 	useEffect(() => {
-		const newRules: SymphonyRule[] = []
+		const newRules: ComTweetsRule[] = []
 		if (rulesData) {
 			rulesData.Rules.forEach(rule => {
-				const newRule: SymphonyRule = {
+				const newRule: ComTweetsRule = {
 					id: rule.id,
 					agreementId: rule.AgreementId,
 					inputPlatformString: rule.input ?? '',
@@ -252,11 +251,11 @@ export const SymphonyExtension: React.FC = () => {
 
 			{rules &&
 				rules.map(rule => {
-					const matchingInput = symphonyConnections.filter(
+					const matchingInput = communityTweetsConnections.filter(
 						c => c.id === rule.inputId
 					)
 
-					const matchingOutput = symphonyConnections.filter(
+					const matchingOutput = communityTweetsConnections.filter(
 						c => c.id === rule.outputId
 					)
 
@@ -427,19 +426,22 @@ export const SymphonyExtension: React.FC = () => {
 		</>
 	)
 
-	const connectedDiscordAccounts = symphonyConnections
-		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Discord)
-				.length
+	const connectedDiscordAccounts = communityTweetsConnections
+		? communityTweetsConnections.filter(
+				c => c.platform === MeemAPI.RuleIo.Discord
+		  ).length
 		: 0
 
-	const connectedTwitterAccounts = symphonyConnections
-		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Twitter)
-				.length
+	const connectedTwitterAccounts = communityTweetsConnections
+		? communityTweetsConnections.filter(
+				c => c.platform === MeemAPI.RuleIo.Twitter
+		  ).length
 		: 0
 
-	const connectedSlackAccounts = symphonyConnections
-		? symphonyConnections.filter(c => c.platform === MeemAPI.RuleIo.Slack)
-				.length
+	const connectedSlackAccounts = communityTweetsConnections
+		? communityTweetsConnections.filter(
+				c => c.platform === MeemAPI.RuleIo.Slack
+		  ).length
 		: 0
 
 	const mainState = (
@@ -466,7 +468,7 @@ export const SymphonyExtension: React.FC = () => {
 								</>
 							)}
 
-							{symphonyConnections &&
+							{communityTweetsConnections &&
 								!isFetchingConnections &&
 								!isFetchingDiscordConnections &&
 								!isFetchingSlackConnections &&
@@ -585,17 +587,17 @@ export const SymphonyExtension: React.FC = () => {
 							</>
 						)}
 					</div>
-					<SymphonyConnectionsModal
-						connections={symphonyConnections}
+					<CTConnectionsModal
+						connections={communityTweetsConnections}
 						isOpened={isManageConnectionsModalOpen}
 						onModalClosed={function (): void {
 							setIsManageConnectionsModalOpen(false)
 						}}
 					/>
 
-					<SymphonyInputOutputModal
+					<CTInputOutputModal
 						isOpened={isNewRuleModalOpen}
-						connections={symphonyConnections}
+						connections={communityTweetsConnections}
 						existingRule={selectedRule}
 						onModalClosed={function (): void {
 							setIsNewRuleModalOpen(false)

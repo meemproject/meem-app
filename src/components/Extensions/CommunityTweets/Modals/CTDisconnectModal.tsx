@@ -10,15 +10,18 @@ import {
 } from '../../../../utils/notifications'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { SymphonyConnection, SymphonyConnectionType } from '../Model/symphony'
+import {
+	ComTweetsConnection,
+	ComTweetsConnectionType
+} from '../Model/communityTweets'
 
 interface IProps {
-	connection?: SymphonyConnection
+	connection?: ComTweetsConnection
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
-export const SymphonyDisconnectModal: React.FC<IProps> = ({
+export const CTDisconnectModal: React.FC<IProps> = ({
 	connection,
 	isOpened,
 	onModalClosed
@@ -134,15 +137,15 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 												? 'Twitter'
 												: 'Slack'
 										} from
-					Symphony?`}
+					CommunityTweets?`}
 									</Text>
 								</Center>
 								<Space h={24} />
 								<Center>
 									{(connection.type ===
-										SymphonyConnectionType.InputOnly ||
+										ComTweetsConnectionType.InputOnly ||
 										connection.type ===
-											SymphonyConnectionType.InputAndOutput) && (
+											ComTweetsConnectionType.InputAndOutput) && (
 										<>
 											<Text
 												className={
@@ -158,7 +161,7 @@ export const SymphonyDisconnectModal: React.FC<IProps> = ({
 										</>
 									)}
 									{connection.type ===
-										SymphonyConnectionType.OutputOnly && (
+										ComTweetsConnectionType.OutputOnly && (
 										<>
 											<Text
 												className={

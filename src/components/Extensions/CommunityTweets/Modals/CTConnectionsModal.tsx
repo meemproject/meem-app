@@ -10,17 +10,17 @@ import {
 	colorRed,
 	useMeemTheme
 } from '../../../Styles/MeemTheme'
-import { SymphonyConnection } from '../Model/symphony'
-import { SymphonyDisconnectModal } from './SymphonyDisconnectModal'
-import { SymphonyDiscordConnectionModal } from './SymphonyDiscordConnectionModal'
+import { ComTweetsConnection } from '../Model/communityTweets'
+import { CTDisconnectModal } from './CTDisconnectModal'
+import { CTDiscordConnectionModal } from './CTDiscordConnectionModal'
 
 interface IProps {
-	connections?: SymphonyConnection[]
+	connections?: ComTweetsConnection[]
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
-export const SymphonyConnectionsModal: React.FC<IProps> = ({
+export const CTConnectionsModal: React.FC<IProps> = ({
 	connections,
 	isOpened,
 	onModalClosed
@@ -33,7 +33,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 	const [selectedConnection, setSelectedConnection] =
-		useState<SymphonyConnection>()
+		useState<ComTweetsConnection>()
 
 	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
 		useState(false)
@@ -191,7 +191,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	}
 
 	interface ConnectionsGridProps {
-		conns: SymphonyConnection[]
+		conns: ComTweetsConnection[]
 		platform: MeemAPI.RuleIo
 	}
 
@@ -214,7 +214,7 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 	}
 
 	interface ConnectionTileProps {
-		connection: SymphonyConnection
+		connection: ComTweetsConnection
 	}
 
 	const ConnectionsList = () => {
@@ -268,14 +268,14 @@ export const SymphonyConnectionsModal: React.FC<IProps> = ({
 		<>
 			<ConnectionsList />
 
-			<SymphonyDiscordConnectionModal
+			<CTDiscordConnectionModal
 				isOpened={isConnectDiscordModalOpen}
 				onModalClosed={function (): void {
 					setIsConnectDiscordModalOpen(false)
 				}}
 			/>
 
-			<SymphonyDisconnectModal
+			<CTDisconnectModal
 				connection={selectedConnection}
 				isOpened={isDisconnectModalOpen}
 				onModalClosed={function (): void {

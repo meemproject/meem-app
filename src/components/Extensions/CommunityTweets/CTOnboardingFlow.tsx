@@ -63,7 +63,7 @@ import {
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
-import { SUB_DISCORDS, SUB_SLACKS, SUB_TWITTERS } from './symphony.gql'
+import { SUB_DISCORDS, SUB_SLACKS, SUB_TWITTERS } from './communityTweetsGql'
 
 enum PageState {
 	Loading,
@@ -73,7 +73,7 @@ enum PageState {
 	SetupComplete
 }
 
-export const SymphonyOnboardingFlow: React.FC = () => {
+export const CTOboardingFlow: React.FC = () => {
 	// General imports
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
@@ -91,9 +91,9 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const [chosenAgreement, setChosenAgreement] = useState<Agreement>()
 
 	// Extension vars
-	const extensionSlug = 'symphony'
-	const extensionName = 'Symphony'
-	const extensionIcon = `ext-symphony.png`
+	const extensionSlug = 'communityTweets'
+	const extensionName = 'CommunityTweets'
+	const extensionIcon = `ext-communityTweets.png`
 
 	// Page state
 	const [pageState, setPageState] = useState<PageState>(PageState.Loading)
@@ -370,7 +370,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 			isJwtError(myAgreementsError) ||
 			wallet.loginState === LoginState.NotLoggedIn
 		) {
-			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/symphony`)
+			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/communitytweets`)
 			router.push('/authenticate')
 		}
 	}, [
@@ -421,7 +421,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		// Prevent page state flickering when several variables update simultaneously
 
 		const twitterAuthRedirectAgreementSlug = Cookies.get(
-			CookieKeys.symphonyOnboardingAgreementSlug
+			CookieKeys.ctOnboardingAgreementSlug
 		)
 
 		// Set page state
@@ -522,7 +522,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 					)
 					setIsTwitterOutputEnabled(true)
 					setChosenAgreement(agr)
-					Cookies.remove(CookieKeys.symphonyOnboardingAgreementSlug)
+					Cookies.remove(CookieKeys.ctOnboardingAgreementSlug)
 				}
 			})
 		}
@@ -564,7 +564,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 	const chooseAgreementAndEnableExtension = useCallback(
 		async (chosen?: Agreement) => {
 			if (chosen) {
-				// Agreement exists already. Let's see if it already has symphony enabled...
+				// Agreement exists already. Let's see if it already has communityTweets enabled...
 				let isExtensionEnabled = false
 				chosen.extensions?.forEach(ext => {
 					if (ext.Extension?.slug === extensionSlug) {
@@ -691,13 +691,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		}
 
 		Cookies.set(
-			CookieKeys.symphonyOnboardingAgreementSlug,
+			CookieKeys.ctOnboardingAgreementSlug,
 			chosenAgreement?.slug ?? ''
 		)
 
-		const setCookie = Cookies.get(
-			CookieKeys.symphonyOnboardingAgreementSlug
-		)
+		const setCookie = Cookies.get(CookieKeys.ctOnboardingAgreementSlug)
 
 		log.debug(`set redirect agreement slug to ${setCookie}`)
 
@@ -719,13 +717,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 		}
 
 		Cookies.set(
-			CookieKeys.symphonyOnboardingAgreementSlug,
+			CookieKeys.ctOnboardingAgreementSlug,
 			chosenAgreement?.slug ?? ''
 		)
 
-		const setCookie = Cookies.get(
-			CookieKeys.symphonyOnboardingAgreementSlug
-		)
+		const setCookie = Cookies.get(CookieKeys.ctOnboardingAgreementSlug)
 
 		log.debug(`set redirect agreement slug to ${setCookie}`)
 
@@ -1221,7 +1217,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 								}}
 								leftIcon={<IconBrandSlack />}
 							>
-								{`Connect Symphony`}
+								{`Connect CommunityTweets`}
 							</Button>
 							<Space h={16} />
 						</>
@@ -1254,11 +1250,11 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 									className={meemTheme.buttonDarkBlue}
 									onClick={() => {
 										router.push(
-											`/${chosenAgreement?.slug}/e/symphony`
+											`/${chosenAgreement?.slug}/e/communitytweets`
 										)
 									}}
 								>
-									{`Start using Symphony`}
+									{`Start using CommunityTweets`}
 								</Button>
 							</div>
 						</>
