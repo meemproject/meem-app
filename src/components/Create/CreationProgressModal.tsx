@@ -176,13 +176,17 @@ export const CreationProgressModal: React.FC<IProps> = ({
 						cutTxId: response.cutTxId,
 						mintTxId: response.mintTxId
 					})
+					if (response.deployContractTxId && response.cutTxId) {
+						const tIds = [
+							response.deployContractTxId,
+							response.cutTxId
+						]
+						if (response.mintTxId) {
+							tIds.push(response.mintTxId)
+						}
 
-					const tIds = [response.deployContractTxId, response.cutTxId]
-					if (response.mintTxId) {
-						tIds.push(response.mintTxId)
+						setTransactionIds(tIds)
 					}
-
-					setTransactionIds(tIds)
 				}
 
 				log.debug('finish fetcher')

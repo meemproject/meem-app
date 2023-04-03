@@ -338,7 +338,7 @@ export const SymphonyOnboardingFlow: React.FC = () => {
 
 			log.debug(JSON.stringify(response))
 
-			if (response) {
+			if (response && response.deployContractTxId && response.cutTxId) {
 				setTransactionState({
 					deployContractTxId: response.deployContractTxId,
 					cutTxId: response.cutTxId,
