@@ -1,4 +1,4 @@
-import { Space, Center, Image, Container } from '@mantine/core'
+import { Center, Image, Container } from '@mantine/core'
 import { DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import React from 'react'
@@ -25,17 +25,13 @@ export const CTExtensionOnboarding: React.FC = () => {
 			>
 				<Center>
 					<div>
-						<Space h={8} />
-
 						<Image
 							className={meemTheme.copyIcon}
-							src={`/ext-symphony.png`}
+							src={`/ext-ct.png`}
 							fit={'contain'}
-							width={180}
-							height={40}
+							width={240}
+							height={60}
 						/>
-
-						<Space h={8} />
 					</div>
 				</Center>
 

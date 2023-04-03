@@ -93,7 +93,7 @@ export const CTOnboardingFlow: React.FC = () => {
 	// Extension vars
 	const extensionSlug = 'community-tweets'
 	const extensionName = 'Communitytweets'
-	const extensionIcon = `ext-symphony.png`
+	const extensionIcon = `ext-ct.png`
 
 	// Page state
 	const [pageState, setPageState] = useState<PageState>(PageState.Loading)
@@ -745,8 +745,8 @@ export const CTOnboardingFlow: React.FC = () => {
 						className={meemTheme.copyIcon}
 						src={`/${extensionIcon}`}
 						fit={'contain'}
-						width={180}
-						height={40}
+						width={360}
+						height={80}
 					/>
 				</div>
 			</Container>
@@ -1360,7 +1360,7 @@ export const CTOnboardingFlow: React.FC = () => {
 							style={{ paddingLeft: 24, paddingRight: 24 }}
 							className={meemTheme.tLargeBold}
 						>
-							{`Which community will use ${extensionName}?`}
+							{`Which community will use Community Tweets?`}
 						</Text>
 					</Center>
 					<Space h={4} />
