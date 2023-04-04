@@ -22,6 +22,7 @@ const Home: NextPage = () => {
 				<Canvas
 					shadows
 					style={{
+						backgroundColor: 'black',
 						width: '100%',
 						height: '100%',
 						position: 'absolute',
