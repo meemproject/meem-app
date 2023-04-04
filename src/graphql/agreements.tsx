@@ -8,6 +8,7 @@ export const MEEM_PARTS = gql`
 			address
 			name
 			symbol
+			isOnChain
 		}
 	}
 `
@@ -19,6 +20,7 @@ export const MEEM_CONTRACT_PARTS = gql`
 		metadata
 		createdAt
 		name
+		isOnChain
 	}
 `
 
@@ -123,6 +125,7 @@ export const SUB_AGREEMENT = gql`
 			metadata
 			createdAt
 			name
+			isOnChain
 			isLaunched
 			AgreementTokens {
 				Wallet {
@@ -211,6 +214,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 			createdAt
 			name
 			isLaunched
+			isOnChain
 			gnosisSafeAddress
 			OwnerId
 			AgreementTokens {
@@ -313,6 +317,7 @@ export const SUB_AGREEMENTS = gql`
 			createdAt
 			name
 			metadata
+			isOnChain
 			isLaunched
 			AgreementTokens {
 				Wallet {
@@ -400,6 +405,7 @@ export const GET_ALL_AGREEMENTS = gql`
 			address
 			createdAt
 			name
+			isOnChain
 			metadata
 			AgreementTokens {
 				Wallet {
@@ -435,6 +441,7 @@ export const SUB_MY_AGREEMENTS = gql`
 		) {
 			id
 			slug
+			isOnChain
 			address
 			createdAt
 			OwnerId
