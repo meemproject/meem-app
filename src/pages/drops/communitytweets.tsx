@@ -9,8 +9,8 @@ const Home: NextPage = () => {
 	const pageTitle = `Meem`
 
 	const Model = () => {
-		const gltf = useGLTF('/drops/suzanne.gltf')
-		return <primitive object={gltf.scene} scale={2} />
+		const gltf = useGLTF('/drops/ct.glb')
+		return <primitive object={gltf.scene} scale={1} />
 	}
 
 	return (
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
 				<Canvas
 					shadows
 					style={{
-						backgroundColor: 'black',
+						backgroundColor: '#0C0C0C',
 						width: '100%',
 						height: '100%',
 						position: 'absolute',
