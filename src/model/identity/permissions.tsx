@@ -7,6 +7,18 @@ export const PERMISSION_MANAGE_ROLES = 'agreements.admin.manageRoles'
 export const PERMISSION_MANAGE_APPS = 'agreements.apps.manageApps'
 export const PERMISSION_VIEW_APPS = 'agreements.apps.viewApps'
 
+export function userHasPermissionManageContract(agreement: Agreement): boolean {
+	if (
+		agreement.isOnChain &&
+		(agreement.isCurrentUserAgreementAdmin ||
+			agreement.isCurrentUserAgreementOwner)
+	) {
+		return true
+	}
+
+	return false
+}
+
 export function userHasPermissionEditProfile(agreement: Agreement): boolean {
 	if (
 		agreement.isCurrentUserAgreementAdmin ||
@@ -22,8 +34,9 @@ export function userHasPermissionManageMembershipSettings(
 	agreement: Agreement
 ): boolean {
 	if (
-		agreement.isCurrentUserAgreementAdmin ||
-		agreement.isCurrentUserAgreementOwner
+		agreement.isOnChain &&
+		(agreement.isCurrentUserAgreementAdmin ||
+			agreement.isCurrentUserAgreementOwner)
 	) {
 		return true
 	}
@@ -32,28 +45,6 @@ export function userHasPermissionManageMembershipSettings(
 }
 
 export function userHasPermissionManageRoles(agreement: Agreement): boolean {
-	if (
-		agreement.isCurrentUserAgreementAdmin ||
-		agreement.isCurrentUserAgreementOwner
-	) {
-		return true
-	}
-
-	return false
-}
-
-export function userHasPermissionManageApps(agreement: Agreement): boolean {
-	if (
-		agreement.isCurrentUserAgreementAdmin ||
-		agreement.isCurrentUserAgreementOwner
-	) {
-		return true
-	}
-
-	return false
-}
-
-export function userHasPermissionViewApps(agreement: Agreement): boolean {
 	if (
 		agreement.isCurrentUserAgreementAdmin ||
 		agreement.isCurrentUserAgreementOwner
