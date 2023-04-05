@@ -10,7 +10,7 @@ const Home: NextPage = () => {
 
 	const Model = () => {
 		const gltf = useGLTF('/drops/ct.glb')
-		return <primitive object={gltf.scene} scale={1} />
+		return <primitive object={gltf.scene} scale={0.8} />
 	}
 
 	return (
