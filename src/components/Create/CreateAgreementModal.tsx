@@ -7,6 +7,7 @@ import { GetAgreementExistsQuery } from '../../../generated/graphql'
 import { GET_AGREEMENT_EXISTS } from '../../graphql/agreements'
 import { Agreement } from '../../model/agreement/agreements'
 import { showErrorNotification } from '../../utils/notifications'
+import { MeemFAQModal } from '../Header/MeemFAQModal'
 import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { CreationProgressModal } from './CreationProgressModal'
 
@@ -32,6 +33,8 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 		useState(false)
 
 	const [isAgreementOnChain, setIsAgreementOnChain] = useState(false)
+
+	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
 
 	const { anonClient } = useMeemApollo()
 
@@ -152,7 +155,9 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 								color: colorBlue,
 								cursor: 'pointer'
 							}}
-							onClick={() => {}}
+							onClick={() => {
+								setIsMeemFaqModalOpen(true)
+							}}
 						>
 							Learn more.
 						</span>
@@ -221,6 +226,12 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				isOpened={isAgreementCreationModalOpened}
 				onModalClosed={() => {
 					setIsAgreementCreationModalOpened(false)
+				}}
+			/>
+			<MeemFAQModal
+				isOpened={isMeemFaqModalOpen}
+				onModalClosed={function (): void {
+					setIsMeemFaqModalOpen(false)
 				}}
 			/>
 		</>
