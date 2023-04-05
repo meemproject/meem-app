@@ -31,7 +31,14 @@ const Home: NextPage = () => {
 					}}
 				>
 					<Model />
-					<OrbitControls />
+					<OrbitControls
+						enableDamping={false}
+						enablePan={false}
+						enableRotate={false}
+						enableZoom={false}
+						autoRotate
+						autoRotateSpeed={4}
+					/>
 					<Environment preset="forest" />
 				</Canvas>
 			</div>
