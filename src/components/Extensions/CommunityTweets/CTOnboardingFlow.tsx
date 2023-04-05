@@ -854,8 +854,12 @@ export const CTOnboardingFlow: React.FC = () => {
 						{isCreatingNewCommunity && (
 							<>
 								<Space h={24} />
+								{isAgreementOnChain ? (
+									<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute or two, so please don’t close this window or navigate away.`}</Text>
+								) : (
+									<Text>{`Just a moment...`}</Text>
+								)}
 
-								<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute or two, so please don’t close this window or navigate away.`}</Text>
 								<Space h={8} />
 								<Progress
 									value={activeStep * 25}
@@ -1324,11 +1328,11 @@ export const CTOnboardingFlow: React.FC = () => {
 									className={meemTheme.buttonDarkBlue}
 									onClick={() => {
 										router.push(
-											`/${chosenAgreement?.slug}/e/community-tweets`
+											`/${chosenAgreement?.slug}/e/communitytweets`
 										)
 									}}
 								>
-									{`Start using CommunityTweets`}
+									{`Start using Community Tweets`}
 								</Button>
 							</div>
 						</>
@@ -1389,8 +1393,9 @@ export const CTOnboardingFlow: React.FC = () => {
 									}}
 								>
 									<Text className={meemTheme.tExtraSmallBold}>
-										Community Tweets lets your community
-										automate its publishing flows.
+										Community Tweets lets your community use
+										Discord or Slack to decide what to Tweet
+										from a shared account.
 									</Text>
 									<Space h={16} />
 									<Text className={meemTheme.tExtraSmallBold}>
@@ -1411,14 +1416,14 @@ export const CTOnboardingFlow: React.FC = () => {
 
 									<Text className={meemTheme.tExtraSmall}>
 										3. Use emoji reactions to weigh in on
-										what get’s published
+										what gets published
 									</Text>
 									<Space h={8} />
 
 									<Text className={meemTheme.tExtraSmall}>
 										4. When the conditions you set are met,
 										posts are automatically published to the
-										community accounts you choose
+										Twitter accounts you choose
 									</Text>
 								</div>
 							</div>

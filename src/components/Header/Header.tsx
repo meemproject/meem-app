@@ -114,7 +114,7 @@ export function HeaderMenu() {
 							/>
 						</a>
 					</Link>
-					<div className={meemTheme.visibleDesktopOnly}>
+					{/* <div className={meemTheme.visibleDesktopOnly}>
 						<div style={{ display: 'flex' }}>
 							<Space w={24} />
 							<a
@@ -150,7 +150,7 @@ export function HeaderMenu() {
 								</Text>
 							</a>
 						</div>
-					</div>
+					</div> */}
 				</div>
 
 				<div className={meemTheme.siteHeaderRightItems}>
