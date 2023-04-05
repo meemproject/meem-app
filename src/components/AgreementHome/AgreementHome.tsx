@@ -20,10 +20,11 @@ import { DiscussionWidget } from '../Extensions/Discussions/DiscussionWidget'
 import { GuildWidget } from '../Extensions/Guild/GuildWidget'
 import { colorLightestGrey, useMeemTheme } from '../Styles/MeemTheme'
 import { useAgreement } from './AgreementProvider'
+import { AgreementAddExtensionsWidget } from './CoreWidgets/AgreementAddExtensionsWidget'
 import { AgreementInfoWidget } from './CoreWidgets/AgreementInfoWidget'
 import { AgreementMembersWidget } from './CoreWidgets/AgreementMembersWidget'
 import { AgreementRequirementsWidget } from './CoreWidgets/AgreementRequirementsWidget'
-import { MeemCreateCommunityWidget } from './CoreWidgets/MeemCreateCommunityWidget'
+import { MeemColorfulHeaderWidget } from './CoreWidgets/MeemColorfulHeaderWidget'
 import { MeemPromoWidgets } from './MeemPromoWidgets'
 
 export const AgreementHome: React.FC = () => {
@@ -62,12 +63,10 @@ export const AgreementHome: React.FC = () => {
 		<>
 			{agreement && (
 				<>
-					{agreement.slug === 'meem' && (
-						<>
-							<MeemCreateCommunityWidget agreement={agreement} />
-							{/* // Meem promo content here! */}
-						</>
-					)}
+					<>
+						<MeemColorfulHeaderWidget agreement={agreement} />
+						{/* // Meem promo content here! */}
+					</>
 
 					{agreement.extensions && (
 						<>
@@ -122,9 +121,9 @@ export const AgreementHome: React.FC = () => {
 						</>
 					)}
 
-					<MeemPromoWidgets />
+					<AgreementAddExtensionsWidget agreement={agreement} />
 
-					{/* <AgreementAddExtensionsWidget agreement={agreement} /> */}
+					<MeemPromoWidgets />
 				</>
 			)}
 		</>

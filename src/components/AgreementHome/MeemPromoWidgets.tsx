@@ -1,14 +1,39 @@
-import { Space, Text, Divider, Center } from '@mantine/core'
-import { useRouter } from 'next/router'
+import { Space, Text, Divider, Center, Grid, Button } from '@mantine/core'
 import React from 'react'
 import { ExtensionWidgetContainer } from '../Extensions/ExtensionWidgetContainer'
-import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
-import { useAgreement } from './AgreementProvider'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 export const MeemPromoWidgets: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
-	const router = useRouter()
-	const { agreement } = useAgreement()
+
+	const comingSoonGridItem = (title: string, desc: string, attr: string) => (
+		<Grid.Col xs={12} sm={6} md={6} lg={6} xl={6} key={title}>
+			<div
+				className={meemTheme.extensionGridItem}
+				style={{ cursor: 'auto', minHeight: 130 }}
+			>
+				<Text className={meemTheme.tSmallBold}>{title}</Text>
+				<Space h={8} />
+				<Text
+					className={meemTheme.tExtraSmall}
+					style={{ opacity: 0.6 }}
+				>
+					{desc}
+				</Text>
+				<Space h={8} />
+
+				<Text
+					className={meemTheme.tExtraSmall}
+					style={{
+						opacity: 0.6,
+						fontStyle: 'italic'
+					}}
+				>
+					{attr}
+				</Text>
+			</div>
+		</Grid.Col>
+	)
 
 	return (
 		<div>
@@ -29,112 +54,91 @@ export const MeemPromoWidgets: React.FC = () => {
 					customIcon={'/rocket.svg'}
 					onSettingsOpened={function (): void {}}
 				>
-					<Text className={meemTheme.tMediumBold}>
-						🪩 Post across social
+					<Text className={meemTheme.tExtraSmallLabel}>
+						IN DEVELOPMENT
 					</Text>
-					<Space h={4} />
-					<Text className={meemTheme.tSmall}>
-						Collaboratively publish to more shared social channels,
-						such as Farcaster or ActivityPub
+					<Space h={24} />
+					<Grid>
+						{comingSoonGridItem(
+							'Libraries',
+							'Curate media and links together',
+							'with Common Sense[makers]'
+						)}
+						{comingSoonGridItem(
+							'Newsletters',
+							'Send regular updates to your community',
+							'with Jump, PubDAO'
+						)}
+						{comingSoonGridItem(
+							'News',
+							'Manage what gets reported and published',
+							'with JournoDAO'
+						)}
+						{comingSoonGridItem(
+							'Meets',
+							'Manage event details with participants',
+							'with OAK'
+						)}
+						{comingSoonGridItem(
+							'Playlists',
+							'Curate music together',
+							'with Crate'
+						)}
+						{comingSoonGridItem(
+							'Roster',
+							'Help members manage members',
+							'with Kernel'
+						)}
+					</Grid>
+					<Space h={24} />
+					<Text className={meemTheme.tMedium}>
+						Have a community tool you want to build together?
 					</Text>
-					<Space h={16} />
-					<Text className={meemTheme.tMediumBold}>
-						🔨 Build & customize your own tools
-					</Text>
-					<Space h={4} />
-					<Text className={meemTheme.tSmall}>
-						Utilize an SDK to modify or create tools that address
-						unique community publishing needs
-					</Text>
-					<Space h={16} />
-					<Text className={meemTheme.tMediumBold}>
-						📌 Collect & curate
-					</Text>
-					<Space h={4} />
-					<Text className={meemTheme.tSmall}>
-						Ingest select content from social channels into your
-						community spaces (i.e., RSS feeds for your community) &
-						organize into Airtable or other structured formats
-					</Text>
-					<Space h={16} />
-					<Text className={meemTheme.tMediumBold}>
-						🫂 Manage members
-					</Text>
-					<Space h={4} />
-					<Text className={meemTheme.tSmall}>
-						Onboard community members through multiple identity
-						layers, lists (e.g., Twitter lists), or other community
-						token-gaters like Hats or Guild
-					</Text>
-					<Space h={16} />
-					<Text className={meemTheme.tMediumBold}>
-						📰 Publish a newsletter
-					</Text>
-					<Space h={4} />
-					<Text className={meemTheme.tSmall}>
-						Collaboratively edit documents, vote on proposed
-						changes, and publish to longer-form media platforms like{' '}
-						<span
-							style={{
-								fontWeight: 'bold',
-								cursor: 'pointer',
-								color: colorBlue
-							}}
-							onClick={() => {
-								window.open('https://mirror.xyz')
-							}}
-						>
-							Mirror
-						</span>{' '}
-						or Medium
-					</Text>
+					<Space h={24} />
+					<Button
+						className={meemTheme.buttonWhite}
+						onClick={() => {
+							window.open('https://form.typeform.com/to/TyeFu5om')
+						}}
+					>
+						Collaborate with Us
+					</Button>
 					<Space h={16} />
 				</ExtensionWidgetContainer>
-				{agreement && agreement.slug === 'meem' && (
-					<ExtensionWidgetContainer
-						extensionSlug={'What is Meem?'}
-						customIcon={'/chat-bubble-question.svg'}
-						onSettingsOpened={function (): void {}}
-					>
-						<Text className={meemTheme.tSmall}>
-							<span style={{ fontWeight: 'bold' }}>Meem</span>{' '}
-							helps people build tools for{' '}
-							<span style={{ fontWeight: 'bold' }}>
-								portable communities
-							</span>
-							, letting these groups define their community once,
-							then collaborate across the web.
-						</Text>
-						<Space h={16} />
-						<Text className={meemTheme.tSmall}>
-							<span style={{ fontWeight: 'bold' }}>
-								We empower communities
-							</span>{' '}
-							to create their own agreements, freeing them from
-							any single platform. We then help them connect
-							existing tools or build their own to enable
-							collaborative publishing.
-						</Text>
-						<Space h={16} />
-						<Text className={meemTheme.tSmall}>
-							Our first app,{' '}
-							<span
-								style={{
-									fontWeight: 'bold',
-									cursor: 'pointer',
-									color: colorBlue
-								}}
-								onClick={() => {
-									router.push('/onboard/community-tweets')
-								}}
-							>
-								CommunityTweets
-							</span>
-							, lets communities decide together to Tweet
-							something.
-						</Text>
-					</ExtensionWidgetContainer>
-				)}
+				<ExtensionWidgetContainer
+					extensionSlug={'What is Meem?'}
+					customIcon={'/chat-bubble-question.svg'}
+					onSettingsOpened={function (): void {}}
+				>
+					<Text className={meemTheme.tSmall}>
+						We’re building tools by and for communities.
+					</Text>
+					<Space h={16} />
+					<Text className={meemTheme.tSmall}>
+						Meem has several components – input channels, output
+						channels, editorial rules – that can be remixed and
+						extended to create new publishing and curation apps that
+						fit different communities’ specific needs. You can
+						imagine, for example, a remix which enables a community
+						to propose something in Discord that they’d like to
+						publish to multiple public social channels (e.g.,
+						Farcaster, Lens). Or maybe community members are able to
+						suggest an edit, with other members authorized to accept
+						or reject changes.
+					</Text>
+					<Space h={16} />
+					<Text className={meemTheme.tSmall}>
+						We support and work with communities to design and build
+						these new tools and patterns and as we find great use
+						cases, we’ll release new apps together for other
+						communities to use and adapt. We have an exciting slate
+						of tools in development (including collections,
+						newsletters, and events) to which collectors of the
+						Community Tweets collectible will get early access. We
+						hope to inspire others to build together in the same way
+						that the CHORUS drop inspired us.
+					</Text>
+				</ExtensionWidgetContainer>
 			</>
 		</div>
 	)
