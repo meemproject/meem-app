@@ -1,58 +1,29 @@
-import { Space, Text } from '@mantine/core'
+import { Space, Text, Divider, Center } from '@mantine/core'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { ExtensionWidgetContainer } from '../Extensions/ExtensionWidgetContainer'
 import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useAgreement } from './AgreementProvider'
 
 export const MeemPromoWidgets: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const router = useRouter()
+	const { agreement } = useAgreement()
 
 	return (
 		<div>
 			<>
-				<ExtensionWidgetContainer
-					extensionSlug={'What is Meem?'}
-					customIcon={'/chat-bubble-question.svg'}
-					onSettingsOpened={function (): void {}}
-				>
-					<Text className={meemTheme.tSmall}>
-						<span style={{ fontWeight: 'bold' }}>Meem</span> helps
-						people build tools for{' '}
-						<span style={{ fontWeight: 'bold' }}>
-							portable communities
-						</span>
-						, letting these groups define their community once, then
-						collaborate across the web.
+				<Divider />
+				<Space h={24} />
+				<Center>
+					<Text
+						className={meemTheme.tMedium}
+						style={{ opacity: 0.5 }}
+					>
+						More from Meem
 					</Text>
-					<Space h={16} />
-					<Text className={meemTheme.tSmall}>
-						<span style={{ fontWeight: 'bold' }}>
-							We empower communities
-						</span>{' '}
-						to create their own agreements, freeing them from any
-						single platform. We then help them connect existing
-						tools or build their own to enable collaborative
-						publishing.
-					</Text>
-					<Space h={16} />
-					<Text className={meemTheme.tSmall}>
-						Our first app,{' '}
-						<span
-							style={{
-								fontWeight: 'bold',
-								cursor: 'pointer',
-								color: colorBlue
-							}}
-							onClick={() => {
-								router.push('/onboard/community-tweets')
-							}}
-						>
-							CommunityTweets
-						</span>
-						, lets communities decide together to Tweet something.
-					</Text>
-				</ExtensionWidgetContainer>
+				</Center>
+				<Space h={24} />
 				<ExtensionWidgetContainer
 					extensionSlug={'Coming Soon'}
 					customIcon={'/rocket.svg'}
@@ -119,6 +90,51 @@ export const MeemPromoWidgets: React.FC = () => {
 					</Text>
 					<Space h={16} />
 				</ExtensionWidgetContainer>
+				{agreement && agreement.slug === 'meem' && (
+					<ExtensionWidgetContainer
+						extensionSlug={'What is Meem?'}
+						customIcon={'/chat-bubble-question.svg'}
+						onSettingsOpened={function (): void {}}
+					>
+						<Text className={meemTheme.tSmall}>
+							<span style={{ fontWeight: 'bold' }}>Meem</span>{' '}
+							helps people build tools for{' '}
+							<span style={{ fontWeight: 'bold' }}>
+								portable communities
+							</span>
+							, letting these groups define their community once,
+							then collaborate across the web.
+						</Text>
+						<Space h={16} />
+						<Text className={meemTheme.tSmall}>
+							<span style={{ fontWeight: 'bold' }}>
+								We empower communities
+							</span>{' '}
+							to create their own agreements, freeing them from
+							any single platform. We then help them connect
+							existing tools or build their own to enable
+							collaborative publishing.
+						</Text>
+						<Space h={16} />
+						<Text className={meemTheme.tSmall}>
+							Our first app,{' '}
+							<span
+								style={{
+									fontWeight: 'bold',
+									cursor: 'pointer',
+									color: colorBlue
+								}}
+								onClick={() => {
+									router.push('/onboard/community-tweets')
+								}}
+							>
+								CommunityTweets
+							</span>
+							, lets communities decide together to Tweet
+							something.
+						</Text>
+					</ExtensionWidgetContainer>
+				)}
 			</>
 		</div>
 	)
