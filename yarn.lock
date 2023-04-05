@@ -2445,10 +2445,10 @@
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.10.5.tgz#ad620d714e545c6efb7f69d94ce46e3fd2fe01fb"
   integrity sha512-FGMq4dGs5HhDAtI0z46uzxzKKPmZ3h5uKUyKg1ZHoFR1mBtcUMbB6FylFmHqKFRWlJ5IXqX9dwmiVrLYUOfTmA==
 
-"@meemproject/meem-contracts@^0.20.3":
-  version "0.20.3"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.20.3.tgz#bda31cbef977e4964db3d60477919d78ae2a2313"
-  integrity sha512-JPuyBd3KnWj6rdXP5u9rAKMEfztqn8/VMBLSZVTAZ3XJSXEfhStxNlwOKG/D/t7EfZlZeDBg93CbUNBz9Wvlbw==
+"@meemproject/meem-contracts@^0.20.4":
+  version "0.20.4"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.20.4.tgz#759fa44e75e243d344977eca768a81b0b685b97e"
+  integrity sha512-Yxf1yNLwJqWdyIYBiYR2sNG0mW3z/i+HF7L9nZ+onF5xBZg75vPJyilzJcBf2pGyKVCTXvRVsg/ozy7O2vueGQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@openzeppelin/contracts" "^4.7.3"
@@ -2457,10 +2457,10 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.20.3":
-  version "0.20.3"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.20.3.tgz#72c2c99d263762e9a272e7f3eb95adbd2a011a4b"
-  integrity sha512-ZomCA+GXW3ub6HcRDxp6WdIvEnsQn3bQtvRWvSr3/8uZfeQLcSW0lTs0hU/XQ1ZE1+spfz5CTjebEdsCWarg2Q==
+"@meemproject/react@^0.20.4":
+  version "0.20.4"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.20.4.tgz#2bb83c039c33d6826f65530177c2c88bf70d9d5a"
+  integrity sha512-86CBp80oqH/GuO9H8XGwWA4YwpmedU6VYn9Su1vW4utFmBEtANG0wD4qhCDCeUBjxpIjsc+A2p3CeeJYg3uOOw==
   dependencies:
     "@apollo/client" "^3.7.10"
     "@auth0/auth0-react" "^1.12.0"
@@ -2470,9 +2470,9 @@
     "@magic-ext/connect" "^6.1.0"
     "@mantine/core" "^5.10.0"
     "@mantine/hooks" "^5.10.0"
-    "@meemproject/meem-contracts" "^0.20.3"
-    "@meemproject/sdk" "^0.20.3"
-    "@meemproject/utils" "^0.20.3"
+    "@meemproject/meem-contracts" "^0.20.4"
+    "@meemproject/sdk" "^0.20.4"
+    "@meemproject/utils" "^0.20.4"
     "@walletconnect/ethereum-provider" "^2.4.7"
     buffer-alloc "^1.2.0"
     ethers "^5.6.4"
@@ -2488,17 +2488,17 @@
     swr "^1.3.0"
     web3modal "^1.9.12"
 
-"@meemproject/sdk@^0.20.3":
-  version "0.20.3"
-  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.20.3.tgz#c12d63f4821ee39ba80918d70efcc419367c136b"
-  integrity sha512-2paC557EwutmiH0tgkKM1ibkJR6wOPUTw3PknYC7MOf6VKxJ9QkAibNHkwEPf74J6UW5QYwwGdlSk7OTMA/18A==
+"@meemproject/sdk@^0.20.4":
+  version "0.20.4"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.20.4.tgz#3d800597eccc912720b301eb366831ba88098f5d"
+  integrity sha512-eVtBSVg2gBkUobgGWK0MPRcwfzbDCR3HEaw2B8WwjBV/q/RcXtRa8qAmRtd/Y7g9NTLyjQVMsUqh9dHl8sx0KA==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@kengoldfarb/log" "^1.0.5"
     "@lit-protocol/constants" "^2.0.35"
     "@lit-protocol/lit-node-client" "^2.0.35"
-    "@meemproject/meem-contracts" "^0.20.3"
-    "@meemproject/utils" "^0.20.3"
+    "@meemproject/meem-contracts" "^0.20.4"
+    "@meemproject/utils" "^0.20.4"
     "@peculiar/webcrypto" "^1.4.1"
     "@tableland/sdk" "^3.1.5"
     "@typechain/ethers-v5" "^10.0.0"
@@ -2520,13 +2520,13 @@
     typed-emitter "^2.1.0"
     uuid "^9.0.0"
 
-"@meemproject/utils@^0.20.3":
-  version "0.20.3"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.20.3.tgz#a6c605a12eb0a3189fede8646ec083514b832d31"
-  integrity sha512-SGJwmZFYs82ViCQycPMv1DQsoUJ37hV03TDOS32caLUPFNkdAekBaAk1CVciz1R7zyJdpARnQeerny91dGS5CQ==
+"@meemproject/utils@^0.20.4":
+  version "0.20.4"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.20.4.tgz#795f80d34bdaef05533f591a216ce0711f8b1997"
+  integrity sha512-EYjFhAAhleUFcHGtBIfP3YVsYEBQlJ46+F20bctg6btvI9LgkuKSGukow/PifWP4aBGAnHqNkdPk1g5RhNKRIA==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.20.3"
+    "@meemproject/meem-contracts" "^0.20.4"
     ethers "^5.6.4"
 
 "@morgan-stanley/ts-mocking-bird@^0.6.2":

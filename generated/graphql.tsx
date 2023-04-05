@@ -17640,6 +17640,14 @@ export type GetAgreementSubscriptionSubscriptionVariables = Exact<{
 
 export type GetAgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isOnChain: boolean, isLaunched: boolean, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, id: any, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', capabilities: any, slug: string, id: any, icon: string, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
 
+export type GetAgreementAsMemberQueryQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetAgreementAsMemberQueryQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, isOnChain: boolean, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, id: any, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', id: any, metadata?: any | null, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', capabilities: any, id: any, icon: string, name: string, slug: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null, AgreementRoleId?: any | null, id: any, tokenId: string }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
+
 export type GetAgreementAsMemberSubscriptionSubscriptionVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['Int']>;
@@ -18321,6 +18329,134 @@ export function useGetAgreementSubscriptionSubscription(baseOptions?: Apollo.Sub
       }
 export type GetAgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useGetAgreementSubscriptionSubscription>;
 export type GetAgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetAgreementSubscriptionSubscription>;
+export const GetAgreementAsMemberQueryDocument = gql`
+    query GetAgreementAsMemberQuery($slug: String, $chainId: Int) {
+  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    slug
+    address
+    metadata
+    createdAt
+    name
+    isLaunched
+    isOnChain
+    gnosisSafeAddress
+    OwnerId
+    AgreementTokens {
+      OwnerId
+      Wallet {
+        address
+        ens
+        User {
+          displayName
+          profilePicUrl
+          UserIdentities {
+            metadata
+            visibility
+          }
+        }
+        id
+      }
+      tokenId
+      tokenURI
+      mintedAt
+      mintedBy
+    }
+    splits
+    maxSupply
+    mintPermissions
+    symbol
+    id
+    AgreementExtensions {
+      AgreementExtensionLinks(where: {visibility: {_in: ["token-holders", "anyone"]}}) {
+        createdAt
+        id
+        isEnabled
+        updatedAt
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets(
+        where: {visibility: {_in: ["token-holders", "anyone"]}}
+      ) {
+        AgreementExtensionId
+        createdAt
+        id
+        isEnabled
+        metadata
+        updatedAt
+        visibility
+      }
+      id
+      metadata
+      isInitialized
+      isSetupComplete
+      Extension {
+        capabilities
+        id
+        icon
+        name
+        slug
+      }
+    }
+    AgreementRoles {
+      id
+      name
+      isAdminRole
+      address
+      metadata
+      AgreementRoleTokens {
+        OwnerId
+      }
+      Agreement {
+        isTransferrable
+      }
+    }
+    AgreementRoleTokens {
+      OwnerId
+      AgreementRoleId
+      id
+      tokenId
+    }
+    AgreementWallets {
+      role
+      Wallet {
+        address
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementAsMemberQueryQuery__
+ *
+ * To run a query within a React component, call `useGetAgreementAsMemberQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementAsMemberQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementAsMemberQueryQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetAgreementAsMemberQueryQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>(GetAgreementAsMemberQueryDocument, options);
+      }
+export function useGetAgreementAsMemberQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>(GetAgreementAsMemberQueryDocument, options);
+        }
+export type GetAgreementAsMemberQueryQueryHookResult = ReturnType<typeof useGetAgreementAsMemberQueryQuery>;
+export type GetAgreementAsMemberQueryLazyQueryHookResult = ReturnType<typeof useGetAgreementAsMemberQueryLazyQuery>;
+export type GetAgreementAsMemberQueryQueryResult = Apollo.QueryResult<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>;
 export const GetAgreementAsMemberSubscriptionDocument = gql`
     subscription GetAgreementAsMemberSubscription($slug: String, $chainId: Int) {
   Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
