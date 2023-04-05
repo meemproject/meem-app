@@ -75,7 +75,7 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 							)}
 
 							{/* There's already at least one widget that has been set up  */}
-							{agreement.extensions &&
+							{/* {agreement.extensions &&
 								totalExtensions &&
 								totalExtensions > 0 && (
 									<>
@@ -99,7 +99,7 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 										</Center>
 										<Space h={32} />
 									</>
-								)}
+								)} */}
 						</>
 					)}
 

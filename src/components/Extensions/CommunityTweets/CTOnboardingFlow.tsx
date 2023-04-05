@@ -14,7 +14,8 @@ import {
 	Stepper,
 	TextInput,
 	Code,
-	Progress
+	Progress,
+	Checkbox
 } from '@mantine/core'
 import {
 	useWallet,
@@ -39,6 +40,7 @@ import {
 } from '../../../../generated/graphql'
 import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import {
+	GET_AGREEMENT_AS_MEMBER,
 	GET_AGREEMENT_EXISTS,
 	GET_EXTENSIONS,
 	SUB_MY_AGREEMENTS
@@ -116,6 +118,7 @@ export const CTOnboardingFlow: React.FC = () => {
 
 	// Agreement creation
 	const [isCreatingNewCommunity, setIsCreatingNewCommunity] = useState(false)
+	const [isAgreementOnChain, setIsAgreementOnChain] = useState(false)
 	const [activeStep, setActiveStep] = useState(1)
 
 	// Bot code / invite data
@@ -218,6 +221,79 @@ export const CTOnboardingFlow: React.FC = () => {
 		}
 	}, [myAgreements, myAgreementsData, wallet.accounts])
 
+	const chooseAgreementAndEnableExtension = useCallback(
+		async (chosen?: Agreement) => {
+			if (chosen) {
+				// Agreement exists already. Let's see if it already has communityTweets enabled...
+				let isExtensionEnabled = false
+				chosen.extensions?.forEach(ext => {
+					if (ext.Extension?.slug === extensionSlug) {
+						isExtensionEnabled = true
+					}
+				})
+				if (isExtensionEnabled) {
+					log.debug('extension already enabled for this community')
+					router.push(`/${chosen?.slug}`)
+					return
+				}
+			}
+
+			if (availableExtensionsData) {
+				setIsEnablingExtension(true)
+				try {
+					let extensionId = ''
+					availableExtensionsData.Extensions.forEach(ext => {
+						if (ext.slug === extensionSlug) {
+							extensionId = ext.id
+						}
+					})
+
+					if (extensionId.length === 0) {
+						log.debug('no matching extensions to enable...')
+						showErrorNotification(
+							'Oops!',
+							`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+						)
+						setIsEnablingExtension(false)
+						return
+					}
+
+					const enableAgrData = {
+						agreementId: chosen?.id ?? '',
+						extensionId,
+						isInitialized: true,
+						widget: {
+							visibility:
+								MeemAPI.AgreementExtensionVisibility
+									.TokenHolders
+						}
+					}
+					log.debug(JSON.stringify(enableAgrData))
+					await sdk.agreementExtension.createAgreementExtension(
+						enableAgrData
+					)
+					setChosenAgreement(chosen)
+					setIsEnablingExtension(false)
+				} catch (e) {
+					log.debug(e)
+					showErrorNotification(
+						'Oops!',
+						`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+					)
+					setIsEnablingExtension(false)
+				}
+			} else {
+				log.debug('no matching extensions to enable...')
+				showErrorNotification(
+					'Oops!',
+					`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+				)
+				setIsEnablingExtension(false)
+			}
+		},
+		[availableExtensionsData, router, sdk.agreementExtension]
+	)
+
 	async function createAgreement() {
 		if (isCreatingNewCommunity) {
 			log.debug('already creating a new community.')
@@ -315,6 +391,7 @@ export const CTOnboardingFlow: React.FC = () => {
 				admins: wallet.accounts,
 				members: wallet.accounts,
 				minters: wallet.accounts,
+				shouldCreateContract: isAgreementOnChain,
 				maxSupply: '0x00',
 				mintPermissions,
 				splits: [],
@@ -338,21 +415,56 @@ export const CTOnboardingFlow: React.FC = () => {
 
 			log.debug(JSON.stringify(response))
 
-			if (response && response.deployContractTxId && response.cutTxId) {
-				setTransactionState({
-					deployContractTxId: response.deployContractTxId,
-					cutTxId: response.cutTxId,
-					mintTxId: response.mintTxId
-				})
+			if (isAgreementOnChain) {
+				log.debug('agreement is on chain, subscribe to tx updates...')
 
-				const tIds = [response.deployContractTxId, response.cutTxId]
-				if (response.mintTxId) {
-					tIds.push(response.mintTxId)
+				if (
+					response &&
+					response.deployContractTxId &&
+					response.cutTxId
+				) {
+					setTransactionState({
+						deployContractTxId: response.deployContractTxId,
+						cutTxId: response.cutTxId,
+						mintTxId: response.mintTxId
+					})
+
+					const tIds = [response.deployContractTxId, response.cutTxId]
+					if (response.mintTxId) {
+						tIds.push(response.mintTxId)
+					}
+
+					setTransactionIds(tIds)
+
+					log.debug('finish fetcher')
 				}
+			} else {
+				if (!response) {
+					log.debug('no response from server...')
+					setIsCreatingNewCommunity(false)
+					return
+				}
+				log.debug('agreement is off chain, skip tx listening')
 
-				setTransactionIds(tIds)
+				log.debug(`fetching agreement with slug ${response.slug}`)
 
-				log.debug('finish fetcher')
+				mutualMembersClient
+					?.query({
+						query: GET_AGREEMENT_AS_MEMBER,
+						variables: {
+							slug: response.slug,
+							chainId: process.env.NEXT_PUBLIC_CHAIN_ID
+						}
+					})
+					.then(agree => {
+						const possibleAgreement = agreementSummaryFromDb(
+							agree.data.Agreements[0],
+							wallet.accounts[0]
+						)
+						setChosenAgreement(possibleAgreement)
+						setIsCreatingNewCommunity(false)
+						chooseAgreementAndEnableExtension(possibleAgreement)
+					})
 			}
 		} catch (e) {
 			log.crit(e)
@@ -403,18 +515,6 @@ export const CTOnboardingFlow: React.FC = () => {
 		discordInfo &&
 		discordData?.AgreementDiscords[0].Discord?.name !== undefined
 	const slackInfo = slackData?.AgreementSlacks[0]
-
-	// const twitterConnExists =
-	// 	!!twitterData?.AgreementTwitters[0] &&
-	// 	!!twitterData?.AgreementTwitters[0].Twitter?.username
-
-	// const discordConnExists =
-	// 	!!discordData?.AgreementDiscords[0] &&
-	// 	typeof discordData?.AgreementDiscords[0].Discord?.name === 'string'
-
-	// const slackConnExists =
-	// 	!!slackData?.AgreementSlacks[0] &&
-	// 	typeof slackData?.AgreementSlacks[0].Slack?.name === 'string'
 
 	// Handle page state changes
 	useEffect(() => {
@@ -561,75 +661,6 @@ export const CTOnboardingFlow: React.FC = () => {
 		onboardingStep
 	])
 
-	const chooseAgreementAndEnableExtension = useCallback(
-		async (chosen?: Agreement) => {
-			if (chosen) {
-				// Agreement exists already. Let's see if it already has communityTweets enabled...
-				let isExtensionEnabled = false
-				chosen.extensions?.forEach(ext => {
-					if (ext.Extension?.slug === extensionSlug) {
-						isExtensionEnabled = true
-					}
-				})
-				if (isExtensionEnabled) {
-					log.debug('extension already enabled for this community')
-					router.push(`/${chosen?.slug}`)
-					return
-				}
-			}
-
-			if (availableExtensionsData) {
-				setIsEnablingExtension(true)
-				try {
-					let extensionId = ''
-					availableExtensionsData.Extensions.forEach(ext => {
-						if (ext.slug === extensionSlug) {
-							extensionId = ext.id
-						}
-					})
-
-					if (extensionId.length === 0) {
-						log.debug('no matching extensions to enable...')
-						showErrorNotification(
-							'Oops!',
-							`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
-						)
-						setIsEnablingExtension(false)
-						return
-					}
-
-					await sdk.agreementExtension.createAgreementExtension({
-						agreementId: chosen?.id ?? '',
-						extensionId,
-						isInitialized: true,
-						widget: {
-							visibility:
-								MeemAPI.AgreementExtensionVisibility
-									.TokenHolders
-						}
-					})
-					setChosenAgreement(chosen)
-					setIsEnablingExtension(false)
-				} catch (e) {
-					log.debug(e)
-					showErrorNotification(
-						'Oops!',
-						`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
-					)
-					setIsEnablingExtension(false)
-				}
-			} else {
-				log.debug('no matching extensions to enable...')
-				showErrorNotification(
-					'Oops!',
-					`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
-				)
-				setIsEnablingExtension(false)
-			}
-		},
-		[availableExtensionsData, router, sdk.agreementExtension]
-	)
-
 	// Handle Transaction state changes
 	useEffect(() => {
 		let newActiveStep = 1
@@ -759,24 +790,7 @@ export const CTOnboardingFlow: React.FC = () => {
 			description={
 				onboardingStep === 0 ? (
 					<>
-						<Text className={meemTheme.tExtraSmall}>
-							We’ll create an on-chain community agreement so you
-							can take your group’s roles and rules everywhere.{' '}
-							<span
-								style={{
-									textDecoration: 'underline',
-									fontWeight: 'bold',
-									color: colorBlue,
-									cursor: 'pointer'
-								}}
-								onClick={() => {
-									setIsMeemFaqModalOpen(true)
-								}}
-							>
-								Learn more.
-							</span>
-						</Text>
-						<Space h={16} />
+						<Space h={8} />
 						<TextInput
 							radius="lg"
 							size="md"
@@ -793,6 +807,35 @@ export const CTOnboardingFlow: React.FC = () => {
 								setNewAgreementName(event.target.value)
 							}}
 						/>
+						<Space h={16} />
+						<Checkbox
+							onChange={event =>
+								setIsAgreementOnChain(
+									event.currentTarget.checked
+								)
+							}
+							checked={isAgreementOnChain}
+							label={
+								<Text className={meemTheme.tExtraSmall}>
+									Create an on-chain community agreement to
+									make your community portable.{' '}
+									<span
+										style={{
+											textDecoration: 'underline',
+											fontWeight: 'bold',
+											color: colorBlue,
+											cursor: 'pointer'
+										}}
+										onClick={() => {
+											setIsMeemFaqModalOpen(true)
+										}}
+									>
+										Learn more.
+									</span>
+								</Text>
+							}
+						/>
+
 						{!isCreatingNewCommunity && (
 							<>
 								<Space h={16} />
@@ -811,8 +854,12 @@ export const CTOnboardingFlow: React.FC = () => {
 						{isCreatingNewCommunity && (
 							<>
 								<Space h={24} />
+								{isAgreementOnChain ? (
+									<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute or two, so please don’t close this window or navigate away.`}</Text>
+								) : (
+									<Text>{`Just a moment...`}</Text>
+								)}
 
-								<Text>{`Hang tight while we create an on-chain community agreement for you. This might take a minute or two, so please don’t close this window or navigate away.`}</Text>
 								<Space h={8} />
 								<Progress
 									value={activeStep * 25}
@@ -827,6 +874,8 @@ export const CTOnboardingFlow: React.FC = () => {
 					</>
 				) : (
 					<>
+						<Space h={8} />
+
 						<TextInput
 							radius="lg"
 							size="md"
@@ -834,6 +883,35 @@ export const CTOnboardingFlow: React.FC = () => {
 							disabled
 						/>
 						<Space h={16} />
+						{isAgreementOnChain && (
+							<>
+								<Checkbox
+									disabled
+									checked={true}
+									label={
+										<Text className={meemTheme.tExtraSmall}>
+											Create an on-chain community
+											agreement to make your community
+											portable.{' '}
+											<span
+												style={{
+													textDecoration: 'underline',
+													fontWeight: 'bold',
+													color: colorBlue,
+													cursor: 'pointer'
+												}}
+												onClick={() => {
+													setIsMeemFaqModalOpen(true)
+												}}
+											>
+												Learn more.
+											</span>
+										</Text>
+									}
+								/>
+								<Space h={16} />
+							</>
+						)}
 					</>
 				)
 			}
@@ -1250,11 +1328,11 @@ export const CTOnboardingFlow: React.FC = () => {
 									className={meemTheme.buttonDarkBlue}
 									onClick={() => {
 										router.push(
-											`/${chosenAgreement?.slug}/e/community-tweets`
+											`/${chosenAgreement?.slug}/e/communitytweets`
 										)
 									}}
 								>
-									{`Start using CommunityTweets`}
+									{`Start using Community Tweets`}
 								</Button>
 							</div>
 						</>
@@ -1286,7 +1364,7 @@ export const CTOnboardingFlow: React.FC = () => {
 						<div className={meemTheme.rowResponsive}>
 							<div className={meemTheme.pageLeftWideColumn}>
 								<Text className={meemTheme.tExtraSmallLabel}>
-									SET UP SYMPHONY
+									SET UP COMMUNITY TWEETS
 								</Text>
 								<Space h={24} />
 								<Stepper
@@ -1315,8 +1393,9 @@ export const CTOnboardingFlow: React.FC = () => {
 									}}
 								>
 									<Text className={meemTheme.tExtraSmallBold}>
-										Community Tweets lets your community
-										automate its publishing flows.
+										Community Tweets lets your community use
+										Discord or Slack to decide what to Tweet
+										from a shared account.
 									</Text>
 									<Space h={16} />
 									<Text className={meemTheme.tExtraSmallBold}>
@@ -1337,14 +1416,14 @@ export const CTOnboardingFlow: React.FC = () => {
 
 									<Text className={meemTheme.tExtraSmall}>
 										3. Use emoji reactions to weigh in on
-										what get’s published
+										what gets published
 									</Text>
 									<Space h={8} />
 
 									<Text className={meemTheme.tExtraSmall}>
 										4. When the conditions you set are met,
 										posts are automatically published to the
-										community accounts you choose
+										Twitter accounts you choose
 									</Text>
 								</div>
 							</div>

@@ -10,7 +10,7 @@ const Home: NextPage = () => {
 
 	const Model = () => {
 		const gltf = useGLTF('/drops/ct.glb')
-		return <primitive object={gltf.scene} scale={1} />
+		return <primitive object={gltf.scene} scale={0.8} />
 	}
 
 	return (
@@ -31,7 +31,14 @@ const Home: NextPage = () => {
 					}}
 				>
 					<Model />
-					<OrbitControls />
+					<OrbitControls
+						enableDamping={false}
+						enablePan={false}
+						enableRotate={false}
+						enableZoom={false}
+						autoRotate
+						autoRotateSpeed={4}
+					/>
 					<Environment preset="forest" />
 				</Canvas>
 			</div>
