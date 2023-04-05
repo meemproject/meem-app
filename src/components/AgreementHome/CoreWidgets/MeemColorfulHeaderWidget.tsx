@@ -1,18 +1,15 @@
 import { Button, Center, Space, Text } from '@mantine/core'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
-import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import { colorBlack, useMeemTheme } from '../../Styles/MeemTheme'
 interface IProps {
 	agreement: Agreement
 }
 
-export const MeemCreateCommunityWidget: React.FC<IProps> = ({ agreement }) => {
+export const MeemColorfulHeaderWidget: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	useEffect(() => {}, [agreement])
-
-	const [isCreationModalOpen, setIsCreationModalOpen] = useState(false)
 
 	return (
 		<div>
@@ -25,7 +22,7 @@ export const MeemCreateCommunityWidget: React.FC<IProps> = ({ agreement }) => {
 							className={meemTheme.tMediumBold}
 							color={colorBlack}
 						>
-							{`Use Meem to power your community`}
+							{`Have a community tool you want to build together?`}
 						</Text>
 					</Center>
 					<Space h={16} />
@@ -33,22 +30,17 @@ export const MeemCreateCommunityWidget: React.FC<IProps> = ({ agreement }) => {
 						<Button
 							className={meemTheme.buttonBlack}
 							onClick={() => {
-								setIsCreationModalOpen(true)
+								window.open(
+									'https://form.typeform.com/to/TyeFu5om'
+								)
 							}}
 						>
-							Connect my community
+							Collaborate with Us
 						</Button>
 					</Center>
 					<Space h={16} />
 				</div>
 			</>
-
-			<CreateAgreementModal
-				isOpened={isCreationModalOpen}
-				onModalClosed={function (): void {
-					setIsCreationModalOpen(false)
-				}}
-			/>
 		</div>
 	)
 }

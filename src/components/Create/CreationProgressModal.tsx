@@ -18,6 +18,7 @@ import {
 import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	agreementName: string
+	isAgreementOnChain: boolean
 	isOpened: boolean
 	onModalClosed: (status: string, agreement?: Agreement) => void
 }
@@ -25,6 +26,7 @@ interface IProps {
 export const CreationProgressModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
+	isAgreementOnChain,
 	agreementName
 }) => {
 	const router = useRouter()
@@ -138,6 +140,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 					external_url: ''
 				},
 				shouldCreateAdminRole: true,
+				shouldCreateContract: isAgreementOnChain,
 				name: agreementName,
 				admins: wallet.accounts,
 				members: wallet.accounts,
@@ -155,8 +158,6 @@ export const CreationProgressModal: React.FC<IProps> = ({
 					external_url: ''
 				},
 				chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID)
-				// TODO: Set this based on the user's selection (default is false)
-				// isOnChain: false
 			}
 
 			log.debug(JSON.stringify(data))
@@ -202,9 +203,12 @@ export const CreationProgressModal: React.FC<IProps> = ({
 			setHasStartedCreating(false)
 		}
 	}, [
-		wallet,
+		wallet.web3Provider,
+		wallet.chainId,
+		wallet.accounts,
 		closeModal,
 		agreementName,
+		isAgreementOnChain,
 		sdk.agreement,
 		finishAgreementCreation
 	])
@@ -360,34 +364,38 @@ export const CreationProgressModal: React.FC<IProps> = ({
 
 	return (
 		<>
-			<Modal
-				className={meemTheme.visibleDesktopOnly}
-				centered
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				withCloseButton={false}
-				radius={16}
-				size={'60%'}
-				overlayBlur={8}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal('failure')}
-			>
-				{modalContents}
-			</Modal>
-			<Modal
-				className={meemTheme.visibleMobileOnly}
-				centered
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				withCloseButton={false}
-				fullScreen={true}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal('failure')}
-			>
-				{modalContents}
-			</Modal>
+			{isAgreementOnChain && (
+				<>
+					<Modal
+						className={meemTheme.visibleDesktopOnly}
+						centered
+						closeOnClickOutside={false}
+						closeOnEscape={false}
+						withCloseButton={false}
+						radius={16}
+						size={'60%'}
+						overlayBlur={8}
+						padding={'lg'}
+						opened={isOpened}
+						onClose={() => closeModal('failure')}
+					>
+						{modalContents}
+					</Modal>
+					<Modal
+						className={meemTheme.visibleMobileOnly}
+						centered
+						closeOnClickOutside={false}
+						closeOnEscape={false}
+						withCloseButton={false}
+						fullScreen={true}
+						padding={'lg'}
+						opened={isOpened}
+						onClose={() => closeModal('failure')}
+					>
+						{modalContents}
+					</Modal>
+				</>
+			)}
 		</>
 	)
 }

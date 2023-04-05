@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Space, Modal, Button, TextInput } from '@mantine/core'
+import { Text, Space, Modal, Button, TextInput, Checkbox } from '@mantine/core'
 import { useMeemApollo, useWallet } from '@meemproject/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetAgreementExistsQuery } from '../../../generated/graphql'
 import { GET_AGREEMENT_EXISTS } from '../../graphql/agreements'
 import { Agreement } from '../../model/agreement/agreements'
 import { showErrorNotification } from '../../utils/notifications'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { CreationProgressModal } from './CreationProgressModal'
 
 interface IProps {
@@ -30,6 +30,8 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 
 	const [isAgreementCreationModalOpened, setIsAgreementCreationModalOpened] =
 		useState(false)
+
+	const [isAgreementOnChain, setIsAgreementOnChain] = useState(false)
 
 	const { anonClient } = useMeemApollo()
 
@@ -134,6 +136,30 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				}}
 			/>
 			<Space h={24} />
+			<Checkbox
+				onChange={event =>
+					setIsAgreementOnChain(event.currentTarget.checked)
+				}
+				checked={isAgreementOnChain}
+				label={
+					<Text className={meemTheme.tExtraSmall}>
+						Create an on-chain community agreement to make your
+						community portable.{' '}
+						<span
+							style={{
+								textDecoration: 'underline',
+								fontWeight: 'bold',
+								color: colorBlue,
+								cursor: 'pointer'
+							}}
+							onClick={() => {}}
+						>
+							Learn more.
+						</span>
+					</Text>
+				}
+			/>
+			<Space h={24} />
 			<Button
 				loading={isCheckingName || isAgreementCreationModalOpened}
 				disabled={isCheckingName || isAgreementCreationModalOpened}
@@ -191,6 +217,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			</Modal>
 			<CreationProgressModal
 				agreementName={agreementName}
+				isAgreementOnChain={isAgreementOnChain}
 				isOpened={isAgreementCreationModalOpened}
 				onModalClosed={() => {
 					setIsAgreementCreationModalOpened(false)

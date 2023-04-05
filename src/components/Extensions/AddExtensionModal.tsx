@@ -292,6 +292,7 @@ export const AddExtensionModal: React.FC<IProps> = ({
 							<Center>
 								<Loader color="cyan" variant="oval" />
 							</Center>
+							<Space h={24} />
 						</>
 					)}
 					{!loading && error && (
