@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
@@ -57,7 +56,6 @@ const CommunityTweetsSetupPage: NextPage<IProps> = ({ agreementName }) => {
 			<HeaderMenu />
 
 			<CTExtensionOnboarding />
-			<Space h={64} />
 			<MeemFooter />
 		</>
 	)

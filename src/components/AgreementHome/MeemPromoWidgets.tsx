@@ -2,9 +2,11 @@ import { Space, Text, Divider, Center, Grid, Button } from '@mantine/core'
 import React from 'react'
 import { ExtensionWidgetContainer } from '../Extensions/ExtensionWidgetContainer'
 import { useMeemTheme } from '../Styles/MeemTheme'
+import { useAgreement } from './AgreementProvider'
 
 export const MeemPromoWidgets: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
+	const { agreement } = useAgreement()
 
 	const comingSoonGridItem = (title: string, desc: string, attr: string) => (
 		<Grid.Col xs={12} sm={6} md={6} lg={6} xl={6} key={title}>
@@ -38,17 +40,21 @@ export const MeemPromoWidgets: React.FC = () => {
 	return (
 		<div>
 			<>
-				<Divider />
-				<Space h={24} />
-				<Center>
-					<Text
-						className={meemTheme.tMedium}
-						style={{ opacity: 0.5 }}
-					>
-						More from Meem
-					</Text>
-				</Center>
-				<Space h={24} />
+				{agreement && agreement.slug !== 'meem' && (
+					<>
+						<Divider />
+						<Space h={24} />
+						<Center>
+							<Text
+								className={meemTheme.tMedium}
+								style={{ opacity: 0.5 }}
+							>
+								More from Meem
+							</Text>
+						</Center>
+						<Space h={24} />
+					</>
+				)}
 				<ExtensionWidgetContainer
 					extensionSlug={'Coming Soon'}
 					customIcon={'/rocket.svg'}

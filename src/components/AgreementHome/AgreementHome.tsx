@@ -63,11 +63,6 @@ export const AgreementHome: React.FC = () => {
 		<>
 			{agreement && (
 				<>
-					<>
-						<MeemColorfulHeaderWidget agreement={agreement} />
-						{/* // Meem promo content here! */}
-					</>
-
 					{agreement.extensions && (
 						<>
 							{agreement.extensions
@@ -122,8 +117,6 @@ export const AgreementHome: React.FC = () => {
 					)}
 
 					<AgreementAddExtensionsWidget agreement={agreement} />
-
-					<MeemPromoWidgets />
 				</>
 			)}
 		</>
@@ -144,7 +137,16 @@ export const AgreementHome: React.FC = () => {
 					<Divider orientation="vertical" />
 					<div className={meemTheme.pageRightColumn}>
 						<div className={meemTheme.pageRightColumnInner}>
-							{communityExtensionsContents}
+							<>
+								<MeemColorfulHeaderWidget
+									agreement={agreement}
+								/>
+								{/* // Meem promo content here! */}
+							</>
+							{agreement.slug !== 'meem' && (
+								<>{communityExtensionsContents}</>
+							)}
+							<MeemPromoWidgets />
 						</div>
 					</div>
 				</div>
@@ -178,7 +180,14 @@ export const AgreementHome: React.FC = () => {
 						</Tabs.List>
 
 						<Tabs.Panel value="widgets">
+							<>
+								<MeemColorfulHeaderWidget
+									agreement={agreement}
+								/>
+								{/* // Meem promo content here! */}
+							</>
 							{communityExtensionsContents}
+							<MeemPromoWidgets />
 						</Tabs.Panel>
 
 						<Tabs.Panel value="community">
