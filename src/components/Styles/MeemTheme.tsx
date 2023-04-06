@@ -638,7 +638,7 @@ export const useMeemTheme = createStyles(theme => ({
 		}
 	},
 	pageLeftWideColumn: {
-		width: 680,
+		width: 600,
 		paddingRight: 32,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%',
@@ -659,7 +659,7 @@ export const useMeemTheme = createStyles(theme => ({
 		}
 	},
 	pageRightNarrowColumnInner: {
-		width: 320,
+		width: 400,
 		paddingLeft: 40,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			width: '100%',

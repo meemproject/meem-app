@@ -1392,39 +1392,33 @@ export const CTOnboardingFlow: React.FC = () => {
 											: colorAshLight
 									}}
 								>
-									<Text className={meemTheme.tExtraSmallBold}>
-										Community Tweets lets your community use
-										Discord or Slack to decide what to Tweet
-										from a shared account.
-									</Text>
-									<Space h={16} />
-									<Text className={meemTheme.tExtraSmallBold}>
+									<Text className={meemTheme.tSmallBold}>
 										How it works:
 									</Text>
 									<Space h={16} />
 
 									<Text className={meemTheme.tExtraSmall}>
-										1. Set logic to automate your
-										community’s publishing flows
+										1. Connect the bot and set up your
+										publishing logic
 									</Text>
-									<Space h={8} />
+									<Space h={16} />
+									<Image src="/hiw1.png" />
+									<Space h={24} />
 									<Text className={meemTheme.tExtraSmall}>
-										2. Propose posts on the platforms you’re
-										already using (Discord, Slack)
+										2. Draft tweets together on Discord or
+										Slack
 									</Text>
-									<Space h={8} />
+									<Space h={16} />
+									<Image src="/hiw2.png" />
+									<Space h={24} />
 
 									<Text className={meemTheme.tExtraSmall}>
-										3. Use emoji reactions to weigh in on
-										what gets published
+										3. Automatically post approved tweets
+										from your community account
 									</Text>
+									<Space h={16} />
+									<Image src="/hiw3.png" />
 									<Space h={8} />
-
-									<Text className={meemTheme.tExtraSmall}>
-										4. When the conditions you set are met,
-										posts are automatically published to the
-										Twitter accounts you choose
-									</Text>
 								</div>
 							</div>
 						</div>
