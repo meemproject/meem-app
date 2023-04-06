@@ -35,7 +35,7 @@ export const MeemColorfulHeaderWidget: React.FC<IProps> = ({ agreement }) => {
 								)
 							}}
 						>
-							Collaborate with Us
+							Collaborate with us
 						</Button>
 					</Center>
 					<Space h={16} />
