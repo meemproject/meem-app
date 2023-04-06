@@ -139,31 +139,32 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				}}
 			/>
 			<Space h={24} />
-			<Checkbox
-				onChange={event =>
-					setIsAgreementOnChain(event.currentTarget.checked)
-				}
-				checked={isAgreementOnChain}
-				label={
-					<Text className={meemTheme.tExtraSmall}>
-						Create an on-chain community agreement to make your
-						community portable.{' '}
-						<span
-							style={{
-								textDecoration: 'underline',
-								fontWeight: 'bold',
-								color: colorBlue,
-								cursor: 'pointer'
-							}}
-							onClick={() => {
-								setIsMeemFaqModalOpen(true)
-							}}
-						>
-							Learn more.
-						</span>
-					</Text>
-				}
-			/>
+			<div className={meemTheme.row}>
+				<Checkbox
+					onChange={event =>
+						setIsAgreementOnChain(event.currentTarget.checked)
+					}
+					checked={isAgreementOnChain}
+				/>
+				<Space w={8} />
+				<Text className={meemTheme.tExtraSmall}>
+					Create an on-chain community agreement to make your
+					community portable.{' '}
+					<span
+						style={{
+							textDecoration: 'underline',
+							fontWeight: 'bold',
+							color: colorBlue,
+							cursor: 'pointer'
+						}}
+						onClick={() => {
+							setIsMeemFaqModalOpen(true)
+						}}
+					>
+						Learn more.
+					</span>
+				</Text>
+			</div>
 			<Space h={24} />
 			<Button
 				loading={isCheckingName || isAgreementCreationModalOpened}

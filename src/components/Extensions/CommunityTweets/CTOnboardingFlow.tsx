@@ -808,33 +808,35 @@ export const CTOnboardingFlow: React.FC = () => {
 							}}
 						/>
 						<Space h={16} />
-						<Checkbox
-							onChange={event =>
-								setIsAgreementOnChain(
-									event.currentTarget.checked
-								)
-							}
-							checked={isAgreementOnChain}
-							label={
-								<Text className={meemTheme.tExtraSmall}>
-									Create an on-chain community agreement to
-									make your community portable.{' '}
-									<span
-										style={{
-											textDecoration: 'underline',
-											fontWeight: 'bold',
-											color: colorBlue,
-											cursor: 'pointer'
-										}}
-										onClick={() => {
-											setIsMeemFaqModalOpen(true)
-										}}
-									>
-										Learn more.
-									</span>
-								</Text>
-							}
-						/>
+
+						<div className={meemTheme.row}>
+							<Checkbox
+								onChange={event =>
+									setIsAgreementOnChain(
+										event.currentTarget.checked
+									)
+								}
+								checked={isAgreementOnChain}
+							/>
+							<Space w={8} />
+							<Text className={meemTheme.tExtraSmall}>
+								Create an on-chain community agreement to make
+								your community portable.{' '}
+								<span
+									style={{
+										textDecoration: 'underline',
+										fontWeight: 'bold',
+										color: colorBlue,
+										cursor: 'pointer'
+									}}
+									onClick={() => {
+										setIsMeemFaqModalOpen(true)
+									}}
+								>
+									Learn more.
+								</span>
+							</Text>
+						</div>
 
 						{!isCreatingNewCommunity && (
 							<>
@@ -885,30 +887,27 @@ export const CTOnboardingFlow: React.FC = () => {
 						<Space h={16} />
 						{isAgreementOnChain && (
 							<>
-								<Checkbox
-									disabled
-									checked={true}
-									label={
-										<Text className={meemTheme.tExtraSmall}>
-											Create an on-chain community
-											agreement to make your community
-											portable.{' '}
-											<span
-												style={{
-													textDecoration: 'underline',
-													fontWeight: 'bold',
-													color: colorBlue,
-													cursor: 'pointer'
-												}}
-												onClick={() => {
-													setIsMeemFaqModalOpen(true)
-												}}
-											>
-												Learn more.
-											</span>
-										</Text>
-									}
-								/>
+								<div className={meemTheme.row}>
+									<Checkbox disabled checked={true} />
+									<Space w={8} />
+									<Text className={meemTheme.tExtraSmall}>
+										Create an on-chain community agreement
+										to make your community portable.{' '}
+										<span
+											style={{
+												textDecoration: 'underline',
+												fontWeight: 'bold',
+												color: colorBlue,
+												cursor: 'pointer'
+											}}
+											onClick={() => {
+												setIsMeemFaqModalOpen(true)
+											}}
+										>
+											Learn more.
+										</span>
+									</Text>
+								</div>
 								<Space h={16} />
 							</>
 						)}
