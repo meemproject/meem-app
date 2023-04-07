@@ -35,6 +35,14 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 				{`Community Tweets is an open-source tool which lets communities use Discord or Slack to decide what to Tweet from a shared account. Set the rules for how your community wants to publish, then collectively approve proposed Tweets using emojis.`}
 			</Text>
 			<Space h={24} />
+			<Text
+				className={meemTheme.tMediumBold}
+			>{`What can I do with my Meem community agreement?`}</Text>
+			<Space h={16} />
+			<Text className={meemTheme.tSmall}>
+				{`Bring your community to any token-gated dApp and ensure members have the right access. Set nuanced, intuitive membership logic to determine who can participate in your community and how they can join. Create multiple roles for members and set rules and permissions for each.`}
+			</Text>
+			<Space h={24} />
 			<Text className={meemTheme.tMediumBold}>
 				{`What's next for Meem?`}
 			</Text>

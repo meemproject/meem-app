@@ -44,7 +44,7 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 			setIsSavingChanges(false)
 			showErrorNotification(
 				'Oops!',
-				'You entered an invalid community name. Please choose a longer or shorter name.'
+				'You entered an invalid community name. Names must be between 3 and 50 characters.'
 			)
 			return
 		}
@@ -56,7 +56,7 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 			// Agreement name invalid
 			showErrorNotification(
 				'Oops!',
-				'You entered an invalid community description. Please choose a longer or shorter description.'
+				'You entered an invalid community description. Descriptions must be between 3 and 140 characters.'
 			)
 			return
 		}
