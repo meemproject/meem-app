@@ -313,7 +313,7 @@ export const CTOnboardingFlow: React.FC = () => {
 			setIsCreatingNewCommunity(false)
 			showErrorNotification(
 				'Oops!',
-				'You entered an invalid community name. Please choose a longer or shorter name.'
+				'You entered an invalid community name. Names must be between 3 and 50 characters.'
 			)
 
 			return
@@ -821,7 +821,8 @@ export const CTOnboardingFlow: React.FC = () => {
 							<Space w={8} />
 							<Text className={meemTheme.tExtraSmall}>
 								Create an on-chain community agreement to make
-								your community portable.{' '}
+								your community portable. This could take up to a
+								few minutes to complete.{' '}
 								<span
 									style={{
 										textDecoration: 'underline',
@@ -1455,7 +1456,7 @@ export const CTOnboardingFlow: React.FC = () => {
 									md={6}
 									lg={6}
 									xl={6}
-									key={existingAgreement.address}
+									key={existingAgreement.slug}
 								>
 									<div
 										onClick={() => {

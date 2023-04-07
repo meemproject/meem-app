@@ -215,6 +215,7 @@ export const GET_AGREEMENT_AS_MEMBER = gql`
 			OwnerId
 			AgreementTokens {
 				OwnerId
+				id
 				Wallet {
 					address
 					ens
@@ -322,6 +323,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 			OwnerId
 			AgreementTokens {
 				OwnerId
+				id
 				Wallet {
 					address
 					ens

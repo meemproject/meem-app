@@ -136,7 +136,7 @@ export const MyAgreementsComponent: React.FC = () => {
 								md={6}
 								lg={6}
 								xl={6}
-								key={agreement.address}
+								key={agreement.slug}
 							>
 								<Link
 									href={`/${agreement.slug}`}

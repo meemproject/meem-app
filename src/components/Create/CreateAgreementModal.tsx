@@ -73,7 +73,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				// Agreement name invalid
 				showErrorNotification(
 					'Oops!',
-					'You entered an invalid community name. Please choose a longer or shorter name.'
+					'You entered an invalid community name. Names must be between 3 and 50 characters.'
 				)
 
 				return
@@ -149,7 +149,8 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				<Space w={8} />
 				<Text className={meemTheme.tExtraSmall}>
 					Create an on-chain community agreement to make your
-					community portable.{' '}
+					community portable. This could take up to a few minutes to
+					complete.{' '}
 					<span
 						style={{
 							textDecoration: 'underline',

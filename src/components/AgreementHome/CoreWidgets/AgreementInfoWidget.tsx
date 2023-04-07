@@ -262,9 +262,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
-		setIsLeavingAgreement(true)
 		try {
 			if (agreement?.isOnChain) {
+				setIsLeavingAgreement(true)
+
 				const agreementContract = new Contract(
 					agreement?.address ?? '',
 					bundleData?.Bundles[0].abi,
@@ -276,9 +277,11 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					)
 					// @ts-ignore
 					await tx.wait()
+					setIsLeavingAgreement(false)
+				} else {
+					setIsLeavingAgreement(false)
 				}
 			} else {
-				let tokenId = ''
 				let member: AgreementMember | undefined
 
 				agreement?.members?.forEach(m => {
@@ -287,18 +290,20 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					}
 				})
 
-				agreement?.rawAgreement?.AgreementTokens.forEach(token => {
-					if (token.OwnerId === member?.ownerId) {
-						tokenId = token.tokenId
-					}
-				})
-				if (tokenId) {
+				const relevantToken =
+					agreement?.rawAgreement?.AgreementTokens.filter(
+						t => t?.OwnerId === member?.ownerId
+					)
+
+				if (relevantToken && relevantToken.length > 0) {
 					const data = {
 						agreementId: agreement?.id ?? '',
-						tokenIds: [tokenId]
+						tokenIds: [relevantToken[0].id]
 					}
 					log.debug(`bulk burning with data: ${JSON.stringify(data)}`)
 					await sdk.agreement.bulkBurn(data)
+				} else {
+					log.debug('unable to find relevant token')
 				}
 			}
 		} catch (e) {
