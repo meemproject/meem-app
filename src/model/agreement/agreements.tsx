@@ -97,7 +97,6 @@ export interface Agreement {
 	isCurrentUserAgreementAdmin?: boolean
 	isCurrentUserAgreementMember?: boolean
 	isCurrentUserAgreementOwner?: boolean
-	isLaunched?: boolean
 	isOnChain?: boolean
 	isValid?: boolean
 	memberCount?: number
@@ -335,7 +334,6 @@ export function agreementSummaryFromDb(
 			image: agreementData.metadata ? agreementData.metadata.image : '',
 			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
 			isCurrentUserAgreementMember: true,
-			isLaunched: agreementData.isLaunched,
 			isOnChain: agreementData.isOnChain,
 			isValid: agreementData.mintPermissions !== undefined,
 			memberCount: members.length,
@@ -830,7 +828,6 @@ export default async function agreementFromDb(
 			admins,
 			isCurrentUserAgreementAdmin: iAmAgreementAdmin,
 			isCurrentUserAgreementOwner: iAmAgreementOwner,
-			isLaunched: agreementData.isLaunched,
 			isOnChain: agreementData.isOnChain,
 			agreementOwner,
 			slug: agreementData.slug,

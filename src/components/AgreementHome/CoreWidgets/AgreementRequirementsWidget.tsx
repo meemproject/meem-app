@@ -1,5 +1,5 @@
 import log from '@kengoldfarb/log'
-import { Text, Space, Loader, Center, Button } from '@mantine/core'
+import { Text, Space, Loader } from '@mantine/core'
 import { useMeemUser, useWallet } from '@meemproject/react'
 import { BigNumber } from 'ethers'
 import { CheckCircle, DeleteCircle, Settings } from 'iconoir-react'
@@ -356,7 +356,7 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 					<Text className={meemTheme.tMediumBold}>Requirements</Text>
 					<div className={meemTheme.centeredRow}>
 						{agreement.isCurrentUserAgreementAdmin &&
-							agreement.isLaunched && (
+							agreement.isOnChain && (
 								<div className={meemTheme.row}>
 									<Space w={8} />
 									<Link
@@ -428,25 +428,6 @@ export const AgreementRequirementsWidget: React.FC<IProps> = ({
 						))}
 					</>
 				)}
-				{!agreement.isLaunched &&
-					agreement.isCurrentUserAgreementAdmin && (
-						<>
-							<Space h={16} />
-							<Center>
-								<Link
-									href={`/${agreement.slug}/admin?tab=membershiprequirements`}
-									legacyBehavior
-									passHref
-								>
-									<a className={meemTheme.unstyledLink}>
-										<Button className={meemTheme.buttonAsh}>
-											Edit requirements
-										</Button>
-									</a>
-								</Link>
-							</Center>
-						</>
-					)}
 			</div>
 		</>
 	)

@@ -253,20 +253,6 @@ export const AgreementHome: React.FC = () => {
 
 			{!isLoadingAgreement && agreement?.name && (
 				<div>
-					{!agreement.isCurrentUserAgreementMember && (
-						<>
-							<Container>
-								<Space h={120} />
-								<Center>
-									<Text>
-										This community has not been published
-										yet. Check back later!
-									</Text>
-								</Center>
-							</Container>
-						</>
-					)}
-
 					<div className={meemTheme.visibleMobileOnly}>
 						<Container
 							size={1000}

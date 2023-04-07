@@ -371,182 +371,136 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					</Text>
 				</Center>
 				<Space h={16} />
-				{!agreement.isLaunched &&
-					agreement.isCurrentUserAgreementAdmin && (
-						<>
-							<Space
-								h={16}
-								className={meemTheme.visibleDesktopOnly}
-							/>
-							<Space
-								h={4}
-								className={meemTheme.visibleMobileOnly}
-							/>
 
-							<Center>
-								<Link
-									href={`/${agreement.slug}/admin?tab=details`}
-									legacyBehavior
-									passHref
-								>
-									<a className={meemTheme.unstyledLink}>
-										<Button className={meemTheme.buttonAsh}>
-											Edit info
-										</Button>
-									</a>
-								</Link>
-							</Center>
-							<Space
-								h={16}
-								className={meemTheme.visibleDesktopOnly}
-							/>
-							<Space
-								h={4}
-								className={meemTheme.visibleMobileOnly}
-							/>
-						</>
-					)}
-				{agreement.isLaunched && (
-					<>
-						<Center>
-							<Text
-								className={meemTheme.tSmall}
-								style={{ textAlign: 'center' }}
-							>
-								{agreement.description &&
-								agreement.description?.length > 0
-									? agreement.description
-									: 'A Meem community'}
-							</Text>
-						</Center>
-						<Space h={24} />
-						<Center>
-							<div style={{ width: 200 }}>
-								{agreement.isCurrentUserAgreementMember && (
-									<Button
-										fullWidth
-										className={
-											meemTheme.buttonYellowBordered
-										}
-										disabled={isLeavingAgreement}
-										loading={isLeavingAgreement}
-										onClick={() => {
-											leaveAgreement()
-										}}
-									>
-										Leave Community
-									</Button>
-								)}
-								{!agreement.isCurrentUserAgreementMember && (
-									<>
-										{user.user && !reqsChecked && (
-											<>
-												<Center>
-													<Loader
-														height={24}
-														variant={'oval'}
-														color={'cyan'}
-													/>
-												</Center>
-											</>
-										)}
-										{((user.user && reqsChecked) ||
-											(!user.user &&
-												!user.isLoading)) && (
-											<Button
-												fullWidth
-												className={
-													meemTheme.buttonYellow
-												}
-												disabled={
-													isJoiningAgreement ||
-													(!meetsReqs &&
-														user.user &&
-														!user.isLoading)
-												}
-												loading={isJoiningAgreement}
-												onClick={() => {
-													joinAgreement()
-												}}
-											>
-												{meetsReqs ||
-												(!user.user && !user.isLoading)
-													? `Join ${
-															agreement
-																.membershipSettings
-																?.costToJoin &&
-															agreement
-																.membershipSettings
-																?.costToJoin > 0
-																? `(${agreement.membershipSettings.costToJoin} MATIC)`
-																: ''
-													  }`
-													: 'Requirements Not Met'}
-											</Button>
-										)}
-									</>
-								)}
-							</div>
-						</Center>
-
-						{!agreement.isCurrentUserAgreementMember &&
-							agreement.membershipSettings?.membershipQuantity !==
-								undefined &&
-							agreement.membershipSettings.membershipQuantity >
-								0 && (
-								<>
-									<Space h={8} />
-									<Center>
-										<Text
-											className={meemTheme.tExtraSmall}
-											style={{ color: colorLightGrey }}
-										>{`${agreement.members?.length} of ${agreement.membershipSettings.membershipQuantity}`}</Text>
-									</Center>
-								</>
-							)}
-						<Space h={16} />
-
-						<Center>
-							<div style={{ width: 200 }}>
-								<Button
-									style={{
-										margin:
-											agreement.extensions &&
-											agreement.extensions?.length > 0
-												? 3
-												: 0
-									}}
-									fullWidth
-									className={
-										agreement.isCurrentUserAgreementMember
-											? meemTheme.buttonYellow
-											: meemTheme.buttonYellowBordered
-									}
-									onClick={() => {
-										setIsQrModalOpened(true)
-									}}
-								>
-									<QrCode />
-									<Space w={4} />
-									<Text>Scan Code</Text>
-								</Button>
-							</div>
-						</Center>
-
-						<Space h={32} />
-						<Center>
-							<Text
-								className={meemTheme.tExtraSmallBold}
-								style={{ cursor: 'pointer' }}
+				<Center>
+					<Text
+						className={meemTheme.tSmall}
+						style={{ textAlign: 'center' }}
+					>
+						{agreement.description &&
+						agreement.description?.length > 0
+							? agreement.description
+							: 'A Meem community'}
+					</Text>
+				</Center>
+				<Space h={24} />
+				<Center>
+					<div style={{ width: 200 }}>
+						{agreement.isCurrentUserAgreementMember && (
+							<Button
+								fullWidth
+								className={meemTheme.buttonYellowBordered}
+								disabled={isLeavingAgreement}
+								loading={isLeavingAgreement}
 								onClick={() => {
-									setIsAgreementDetailsModalOpen(true)
+									leaveAgreement()
 								}}
 							>
-								View Details
-							</Text>
-						</Center>
-					</>
-				)}
+								Leave Community
+							</Button>
+						)}
+						{!agreement.isCurrentUserAgreementMember && (
+							<>
+								{user.user && !reqsChecked && (
+									<>
+										<Center>
+											<Loader
+												height={24}
+												variant={'oval'}
+												color={'cyan'}
+											/>
+										</Center>
+									</>
+								)}
+								{((user.user && reqsChecked) ||
+									(!user.user && !user.isLoading)) && (
+									<Button
+										fullWidth
+										className={meemTheme.buttonYellow}
+										disabled={
+											isJoiningAgreement ||
+											(!meetsReqs &&
+												user.user &&
+												!user.isLoading)
+										}
+										loading={isJoiningAgreement}
+										onClick={() => {
+											joinAgreement()
+										}}
+									>
+										{meetsReqs ||
+										(!user.user && !user.isLoading)
+											? `Join ${
+													agreement.membershipSettings
+														?.costToJoin &&
+													agreement.membershipSettings
+														?.costToJoin > 0
+														? `(${agreement.membershipSettings.costToJoin} MATIC)`
+														: ''
+											  }`
+											: 'Requirements Not Met'}
+									</Button>
+								)}
+							</>
+						)}
+					</div>
+				</Center>
+
+				{!agreement.isCurrentUserAgreementMember &&
+					agreement.membershipSettings?.membershipQuantity !==
+						undefined &&
+					agreement.membershipSettings.membershipQuantity > 0 && (
+						<>
+							<Space h={8} />
+							<Center>
+								<Text
+									className={meemTheme.tExtraSmall}
+									style={{ color: colorLightGrey }}
+								>{`${agreement.members?.length} of ${agreement.membershipSettings.membershipQuantity}`}</Text>
+							</Center>
+						</>
+					)}
+				<Space h={16} />
+
+				<Center>
+					<div style={{ width: 200 }}>
+						<Button
+							style={{
+								margin:
+									agreement.extensions &&
+									agreement.extensions?.length > 0
+										? 3
+										: 0
+							}}
+							fullWidth
+							className={
+								agreement.isCurrentUserAgreementMember
+									? meemTheme.buttonYellow
+									: meemTheme.buttonYellowBordered
+							}
+							onClick={() => {
+								setIsQrModalOpened(true)
+							}}
+						>
+							<QrCode />
+							<Space w={4} />
+							<Text>Scan Code</Text>
+						</Button>
+					</div>
+				</Center>
+
+				<Space h={32} />
+				<Center>
+					<Text
+						className={meemTheme.tExtraSmallBold}
+						style={{ cursor: 'pointer' }}
+						onClick={() => {
+							setIsAgreementDetailsModalOpen(true)
+						}}
+					>
+						View Details
+					</Text>
+				</Center>
 
 				{agreement.isCurrentUserAgreementAdmin && (
 					<Link

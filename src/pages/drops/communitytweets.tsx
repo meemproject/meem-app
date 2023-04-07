@@ -20,7 +20,6 @@ const Home: NextPage = () => {
 			</Head>
 			<div>
 				<Canvas
-					shadows
 					style={{
 						backgroundColor: '#0C0C0C',
 						width: '100%',
@@ -39,7 +38,7 @@ const Home: NextPage = () => {
 						autoRotate
 						autoRotateSpeed={4}
 					/>
-					<Environment preset="forest" />
+					<Environment preset="warehouse" />
 				</Canvas>
 			</div>
 		</>
