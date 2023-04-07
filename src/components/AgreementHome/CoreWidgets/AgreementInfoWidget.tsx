@@ -298,7 +298,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 				if (relevantToken && relevantToken.length > 0) {
 					const data = {
 						agreementId: agreement?.id ?? '',
-						tokenIds: [relevantToken[0].id]
+						tokenIds: [relevantToken[0].tokenId]
 					}
 					log.debug(`bulk burning with data: ${JSON.stringify(data)}`)
 					await sdk.agreement.bulkBurn(data)
