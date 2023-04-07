@@ -132,19 +132,17 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						})`}</Text>
 					</div>
 
-					{agreement.isLaunched && (
-						<Link
-							href={`/${agreement.slug}/members`}
-							legacyBehavior
-							passHref
-						>
-							<a className={meemTheme.unstyledLink}>
-								<Button className={meemTheme.buttonBlack}>
-									View All
-								</Button>
-							</a>
-						</Link>
-					)}
+					<Link
+						href={`/${agreement.slug}/members`}
+						legacyBehavior
+						passHref
+					>
+						<a className={meemTheme.unstyledLink}>
+							<Button className={meemTheme.buttonBlack}>
+								View All
+							</Button>
+						</a>
+					</Link>
 				</div>
 				<Space h={24} />
 
@@ -212,10 +210,9 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 						</>
 					)}
 				{members.length > 0 &&
-					!agreement.isLaunched &&
 					agreement.isCurrentUserAgreementAdmin && (
 						<>
-							<Space h={24} />
+							<Space h={16} />
 							<Center>
 								<Link
 									href={`/${agreement.slug}/admin?tab=airdrops`}

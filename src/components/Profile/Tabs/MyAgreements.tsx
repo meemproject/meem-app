@@ -29,9 +29,7 @@ import { CreateAgreementModal } from '../../Create/CreateAgreementModal'
 import {
 	colorBlack,
 	colorDarkerGrey,
-	colorDarkerYellow,
 	colorWhite,
-	colorYellow,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 
@@ -261,33 +259,6 @@ export const MyAgreementsComponent: React.FC = () => {
 																	?.length
 															}
 														</Badge>
-														{!agreement.isLaunched &&
-															agreement.isCurrentUserAgreementAdmin && (
-																<>
-																	<Space
-																		w={8}
-																	/>
-																	<Badge
-																		gradient={{
-																			from: isDarkTheme
-																				? colorDarkerYellow
-																				: colorYellow,
-																			to: isDarkTheme
-																				? colorDarkerYellow
-																				: colorYellow,
-																			deg: 35
-																		}}
-																		classNames={{
-																			inner: meemTheme.tBadgeText
-																		}}
-																		variant={
-																			'gradient'
-																		}
-																	>
-																		Draft
-																	</Badge>
-																</>
-															)}
 													</div>
 												</div>
 											</div>
