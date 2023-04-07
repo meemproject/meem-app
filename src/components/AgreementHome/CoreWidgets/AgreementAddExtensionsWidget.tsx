@@ -99,33 +99,6 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 				</>
 			)}
 
-			{!agreement.isCurrentUserAgreementAdmin &&
-				agreement.slug !== 'meem' && (
-					<>
-						{totalExtensions === 0 && (
-							<div
-								className={meemTheme.widgetExtension}
-								style={{ padding: 32 }}
-							>
-								<Space h={16} />
-								<Center>
-									<Text className={meemTheme.tMediumBold}>
-										Under construction
-									</Text>
-								</Center>
-								<Space h={16} />
-								<Center>
-									<Text className={meemTheme.tSmall}>
-										This community is not using any
-										extensions yet. Check back later!
-									</Text>
-								</Center>
-								<Space h={16} />
-							</div>
-						)}
-					</>
-				)}
-
 			<AddExtensionModal
 				agreement={agreement}
 				onModalClosed={() => {
