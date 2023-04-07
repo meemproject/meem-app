@@ -289,7 +289,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 				agreement?.rawAgreement?.AgreementTokens.forEach(token => {
 					if (token.OwnerId === member?.ownerId) {
-						tokenId = token.tokenId
+						tokenId = token.id
 					}
 				})
 				if (tokenId) {
@@ -299,6 +299,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					}
 					log.debug(`bulk burning with data: ${JSON.stringify(data)}`)
 					await sdk.agreement.bulkBurn(data)
+					setIsLeavingAgreement(false)
 				}
 			}
 		} catch (e) {

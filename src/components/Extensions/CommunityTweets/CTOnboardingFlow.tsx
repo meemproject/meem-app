@@ -1455,7 +1455,7 @@ export const CTOnboardingFlow: React.FC = () => {
 									md={6}
 									lg={6}
 									xl={6}
-									key={existingAgreement.address}
+									key={existingAgreement.slug}
 								>
 									<div
 										onClick={() => {
