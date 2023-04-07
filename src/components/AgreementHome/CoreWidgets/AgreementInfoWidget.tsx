@@ -28,7 +28,7 @@ import React, { useEffect, useState } from 'react'
 import QRCode from 'react-qr-code'
 import { GetBundleByIdQuery } from '../../../../generated/graphql'
 import { GET_BUNDLE_BY_ID } from '../../../graphql/agreements'
-import { Agreement } from '../../../model/agreement/agreements'
+import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
 import { CookieKeys } from '../../../utils/cookies'
 import {
 	showErrorNotification,
@@ -264,17 +264,42 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 		setIsLeavingAgreement(true)
 		try {
-			const agreementContract = new Contract(
-				agreement?.address ?? '',
-				bundleData?.Bundles[0].abi,
-				wallet.web3Provider.getSigner()
-			)
-			if (agreement && agreement.membershipToken) {
-				const tx = await agreementContract?.burn(
-					agreement?.membershipToken
+			if (agreement?.isOnChain) {
+				const agreementContract = new Contract(
+					agreement?.address ?? '',
+					bundleData?.Bundles[0].abi,
+					wallet.web3Provider.getSigner()
 				)
-				// @ts-ignore
-				await tx.wait()
+				if (agreement && agreement.membershipToken) {
+					const tx = await agreementContract?.burn(
+						agreement?.membershipToken
+					)
+					// @ts-ignore
+					await tx.wait()
+				}
+			} else {
+				let tokenId = ''
+				let member: AgreementMember | undefined
+
+				agreement?.members?.forEach(m => {
+					if (m.wallet === wallet.accounts[0]) {
+						member = m
+					}
+				})
+
+				agreement?.rawAgreement?.AgreementTokens.forEach(token => {
+					if (token.OwnerId === member?.ownerId) {
+						tokenId = token.tokenId
+					}
+				})
+				if (tokenId) {
+					const data = {
+						agreementId: agreement?.id ?? '',
+						tokenIds: [tokenId]
+					}
+					log.debug(`bulk burning with data: ${JSON.stringify(data)}`)
+					await sdk.agreement.bulkBurn(data)
+				}
 			}
 		} catch (e) {
 			setIsLeavingAgreement(false)
@@ -526,6 +551,7 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 
 			<JoinLeaveAgreementModal
 				isOpened={isJoiningAgreement || isLeavingAgreement}
+				isLeaving={isLeavingAgreement}
 				onModalClosed={() => {}}
 			/>
 			<Modal

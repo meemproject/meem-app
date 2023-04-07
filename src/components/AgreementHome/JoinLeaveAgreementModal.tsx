@@ -5,11 +5,13 @@ import { useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	isOpened: boolean
+	isLeaving: boolean
 	onModalClosed: () => void
 }
 
 export const JoinLeaveAgreementModal: React.FC<IProps> = ({
 	isOpened,
+	isLeaving,
 	onModalClosed
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
@@ -27,7 +29,11 @@ export const JoinLeaveAgreementModal: React.FC<IProps> = ({
 				<Text
 					className={meemTheme.tMediumBold}
 					styles={{ textAlign: 'center' }}
-				>{`Please wait while we add you to this community!\nThis could take a minute.`}</Text>
+				>
+					{isLeaving
+						? `Please wait while we remove you from this community!\nThis could take a minute.`
+						: `Please wait while we add you to this community!\nThis could take a minute.`}
+				</Text>
 			</div>
 			<Space h={8} />
 		</>
