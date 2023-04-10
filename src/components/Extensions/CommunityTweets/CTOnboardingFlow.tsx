@@ -482,7 +482,7 @@ export const CTOnboardingFlow: React.FC = () => {
 			isJwtError(myAgreementsError) ||
 			wallet.loginState === LoginState.NotLoggedIn
 		) {
-			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/community-tweets`)
+			Cookies.set(CookieKeys.authRedirectUrl, `/onboard/communitytweets`)
 			router.push('/authenticate')
 		}
 	}, [
