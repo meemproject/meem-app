@@ -6,7 +6,7 @@ const Home: NextPage = () => {
 	const router = useRouter()
 
 	useEffect(() => {
-		router.push(`/onboard/community-tweets`)
+		router.push(`/onboard/communitytweets`)
 	})
 
 	return <></>
