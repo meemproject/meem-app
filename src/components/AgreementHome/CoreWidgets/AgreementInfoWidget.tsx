@@ -121,9 +121,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
-		if (agreement.isOnChain) {
-			setIsJoiningAgreement(true)
-		}
+		setIsJoiningAgreement(true)
+
 		try {
 			if (
 				agreement &&
@@ -207,23 +206,17 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			}
 		} catch (e) {
 			log.crit(e)
-			const error: any = JSON.parse(
-				(e as any).toString().split('Error: ')[1]
-			)
 
-			if (error.code) {
-				log.debug(error.code)
-				if (error.code === 'TX_LIMIT_EXCEEDED') {
-					showErrorNotification(
-						'Transaction limit exceeded',
-						`Come back tomorrow or contact us using the top-right link on this page.`
-					)
-				} else {
-					showErrorNotification(
-						'Unable to join this community.',
-						`Make sure you meet all of the community's requirements!`
-					)
-				}
+			if ((e as any).toString().includes('TX_LIMIT_EXCEEDED')) {
+				showErrorNotification(
+					'Transaction limit exceeded',
+					`Come back tomorrow or contact us using the top-right link on this page.`
+				)
+			} else {
+				showErrorNotification(
+					'Unable to join this community.',
+					`Make sure you meet all of the community's requirements!`
+				)
 			}
 
 			setIsJoiningAgreement(false)
@@ -264,10 +257,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
+		setIsLeavingAgreement(true)
+
 		try {
 			if (agreement?.isOnChain) {
-				setIsLeavingAgreement(true)
-
 				const agreementContract = new Contract(
 					agreement?.address ?? '',
 					bundleData?.Bundles[0].abi,
@@ -279,7 +272,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					)
 					// @ts-ignore
 					await tx.wait()
-					setIsLeavingAgreement(false)
 				} else {
 					setIsLeavingAgreement(false)
 				}
@@ -304,8 +296,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					}
 					log.debug(`bulk burning with data: ${JSON.stringify(data)}`)
 					await sdk.agreement.bulkBurn(data)
+					router.reload()
 				} else {
 					log.debug('unable to find relevant token')
+					setIsLeavingAgreement(false)
 				}
 			}
 		} catch (e) {
@@ -557,7 +551,11 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			</div>
 
 			<JoinLeaveAgreementModal
-				isOpened={isJoiningAgreement || isLeavingAgreement}
+				isOpened={
+					((isJoiningAgreement || isLeavingAgreement) &&
+						agreement?.isOnChain) ??
+					false
+				}
 				isLeaving={isLeavingAgreement}
 				onModalClosed={() => {}}
 			/>
