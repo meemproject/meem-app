@@ -28,6 +28,7 @@ import { MeemAPI } from '@meemproject/sdk'
 import { IconBrandSlack } from '@tabler/icons'
 import { Group } from 'iconoir-react'
 import Cookies from 'js-cookie'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
@@ -1322,16 +1323,28 @@ export const CTOnboardingFlow: React.FC = () => {
 						<>
 							<Space h={8} />
 							<div className={meemTheme.row}>
-								<Button
-									className={meemTheme.buttonDarkBlue}
-									onClick={() => {
-										router.push(
-											`/${chosenAgreement?.slug}/e/communitytweets`
-										)
-									}}
+								<Link
+									href={`/${chosenAgreement?.slug}/e/communitytweets`}
+									legacyBehavior
+									passHref
 								>
-									{`Start using Community Tweets`}
-								</Button>
+									<a className={meemTheme.unstyledLink}>
+										<div
+											className={
+												meemTheme.pageHeaderImage
+											}
+											style={{ cursor: 'pointer' }}
+										>
+											<Button
+												className={
+													meemTheme.buttonDarkBlue
+												}
+											>
+												{`Start using Community Tweets`}
+											</Button>
+										</div>
+									</a>
+								</Link>
 							</div>
 						</>
 					)}
