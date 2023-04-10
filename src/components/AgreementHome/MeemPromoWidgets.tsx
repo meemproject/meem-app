@@ -8,11 +8,11 @@ export const MeemPromoWidgets: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement } = useAgreement()
 
-	const comingSoonGridItem = (title: string, desc: string, attr: string) => (
+	const comingSoonGridItem = (title: string, desc: string) => (
 		<Grid.Col xs={12} sm={6} md={6} lg={6} xl={6} key={title}>
 			<div
 				className={meemTheme.extensionGridItem}
-				style={{ cursor: 'auto', minHeight: 130 }}
+				style={{ cursor: 'auto', minHeight: 100 }}
 			>
 				<Text className={meemTheme.tSmallBold}>{title}</Text>
 				<Space h={8} />
@@ -21,17 +21,6 @@ export const MeemPromoWidgets: React.FC = () => {
 					style={{ opacity: 0.6 }}
 				>
 					{desc}
-				</Text>
-				<Space h={8} />
-
-				<Text
-					className={meemTheme.tExtraSmall}
-					style={{
-						opacity: 0.6,
-						fontStyle: 'italic'
-					}}
-				>
-					{attr}
 				</Text>
 			</div>
 		</Grid.Col>
@@ -67,33 +56,27 @@ export const MeemPromoWidgets: React.FC = () => {
 					<Grid>
 						{comingSoonGridItem(
 							'Libraries',
-							'Curate media and links together',
-							'with Common Sense[makers]'
+							'Curate media and links together'
 						)}
 						{comingSoonGridItem(
 							'Newsletters',
-							'Send regular updates to your community',
-							'with Jump, PubDAO'
+							'Send regular updates to your community'
 						)}
 						{comingSoonGridItem(
 							'News',
-							'Manage what gets reported and published',
-							'with JournoDAO'
+							'Manage what gets reported and published'
 						)}
 						{comingSoonGridItem(
 							'Meets',
-							'Manage event details with participants',
-							'with OAK'
+							'Manage event details with participants'
 						)}
 						{comingSoonGridItem(
-							'Playlists',
-							'Curate music together',
-							'with Crate'
+							'Community Markets',
+							'Curate music together'
 						)}
 						{comingSoonGridItem(
 							'Roster',
-							'Help members manage members',
-							'with Kernel'
+							'Help members manage members'
 						)}
 					</Grid>
 					<Space h={24} />
