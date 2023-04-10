@@ -135,7 +135,7 @@ export const DiscussionPostSubmit: React.FC = () => {
 				// Agreement name invalid
 				showErrorNotification(
 					'Oops!',
-					'You entered an invalid post title. Please choose a longer or shorter post title.'
+					'You entered an invalid post title. Post titles must be between 3 and 140 characters.'
 				)
 				return
 			}

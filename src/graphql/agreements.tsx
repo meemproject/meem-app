@@ -8,6 +8,7 @@ export const MEEM_PARTS = gql`
 			address
 			name
 			symbol
+			isOnChain
 		}
 	}
 `
@@ -19,6 +20,7 @@ export const MEEM_CONTRACT_PARTS = gql`
 		metadata
 		createdAt
 		name
+		isOnChain
 	}
 `
 
@@ -123,6 +125,7 @@ export const SUB_AGREEMENT = gql`
 			metadata
 			createdAt
 			name
+			isOnChain
 			isLaunched
 			AgreementTokens {
 				Wallet {
@@ -196,6 +199,110 @@ export const SUB_AGREEMENT = gql`
 		}
 	}
 `
+export const GET_AGREEMENT_AS_MEMBER = gql`
+	query GetAgreementAsMemberQuery($slug: String, $chainId: Int) {
+		Agreements(
+			where: { slug: { _eq: $slug }, chainId: { _eq: $chainId } }
+		) {
+			slug
+			address
+			metadata
+			createdAt
+			name
+			isLaunched
+			isOnChain
+			gnosisSafeAddress
+			OwnerId
+			AgreementTokens {
+				OwnerId
+				id
+				Wallet {
+					address
+					ens
+					User {
+						displayName
+						profilePicUrl
+						UserIdentities {
+							metadata
+							visibility
+						}
+					}
+					id
+				}
+				tokenId
+				tokenURI
+				mintedAt
+				mintedBy
+			}
+			splits
+			maxSupply
+			mintPermissions
+			symbol
+			id
+			AgreementExtensions {
+				AgreementExtensionLinks(
+					where: { visibility: { _in: ["token-holders", "anyone"] } }
+				) {
+					createdAt
+					id
+					isEnabled
+					updatedAt
+					label
+					url
+					AgreementExtensionId
+					visibility
+				}
+				AgreementExtensionWidgets(
+					where: { visibility: { _in: ["token-holders", "anyone"] } }
+				) {
+					AgreementExtensionId
+					createdAt
+					id
+					isEnabled
+					metadata
+					updatedAt
+					visibility
+				}
+				id
+				metadata
+				isInitialized
+				isSetupComplete
+				Extension {
+					capabilities
+					id
+					icon
+					name
+					slug
+				}
+			}
+			AgreementRoles {
+				id
+				name
+				isAdminRole
+				address
+				metadata
+				AgreementRoleTokens {
+					OwnerId
+				}
+				Agreement {
+					isTransferrable
+				}
+			}
+			AgreementRoleTokens {
+				OwnerId
+				AgreementRoleId
+				id
+				tokenId
+			}
+			AgreementWallets {
+				role
+				Wallet {
+					address
+				}
+			}
+		}
+	}
+`
 
 export const SUB_AGREEMENT_AS_MEMBER = gql`
 	subscription GetAgreementAsMemberSubscription(
@@ -211,10 +318,12 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 			createdAt
 			name
 			isLaunched
+			isOnChain
 			gnosisSafeAddress
 			OwnerId
 			AgreementTokens {
 				OwnerId
+				id
 				Wallet {
 					address
 					ens
@@ -313,6 +422,7 @@ export const SUB_AGREEMENTS = gql`
 			createdAt
 			name
 			metadata
+			isOnChain
 			isLaunched
 			AgreementTokens {
 				Wallet {
@@ -400,6 +510,7 @@ export const GET_ALL_AGREEMENTS = gql`
 			address
 			createdAt
 			name
+			isOnChain
 			metadata
 			AgreementTokens {
 				Wallet {
@@ -435,6 +546,7 @@ export const SUB_MY_AGREEMENTS = gql`
 		) {
 			id
 			slug
+			isOnChain
 			address
 			createdAt
 			OwnerId

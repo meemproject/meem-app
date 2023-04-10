@@ -5,3 +5,4 @@ local_modules
 storybook-static
 generated
 exampleextension
+src/components/Drops

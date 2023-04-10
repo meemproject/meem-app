@@ -20,6 +20,7 @@ import React, { useEffect, useState } from 'react'
 import { isJwtError } from '../../model/agreement/agreements'
 import {
 	userHasPermissionEditProfile,
+	userHasPermissionManageContract,
 	userHasPermissionManageMembershipSettings,
 	userHasPermissionManageRoles
 } from '../../model/identity/permissions'
@@ -54,7 +55,9 @@ export const AgreementAdminComponent: React.FC = () => {
 
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
-	const [currentTab, setCurrentTab] = useState<Tab>(Tab.ContractManagement)
+	const [currentTab, setCurrentTab] = useState<Tab>(
+		agreement && agreement.isOnChain ? Tab.ContractManagement : Tab.Details
+	)
 	const [mobileNavBarVisible, setMobileNavBarVisible] = useState(false)
 
 	useEffect(() => {
@@ -236,22 +239,29 @@ export const AgreementAdminComponent: React.FC = () => {
 								>
 									MANAGE AGREEMENT
 								</Text>
-								<NavLink
-									className={meemTheme.pagePanelLayoutNavItem}
-									active={
-										currentTab === Tab.ContractManagement
-									}
-									label={'Contract Management'}
-									onClick={() => {
-										setCurrentTab(Tab.ContractManagement)
-										router.push(
-											`/${agreement.slug}/admin?tab=contractmanagement`,
-											undefined,
-											{ shallow: true }
-										)
-										setMobileNavBarVisible(false)
-									}}
-								/>
+								{userHasPermissionManageContract(agreement) && (
+									<NavLink
+										className={
+											meemTheme.pagePanelLayoutNavItem
+										}
+										active={
+											currentTab ===
+											Tab.ContractManagement
+										}
+										label={'Contract Management'}
+										onClick={() => {
+											setCurrentTab(
+												Tab.ContractManagement
+											)
+											router.push(
+												`/${agreement.slug}/admin?tab=contractmanagement`,
+												undefined,
+												{ shallow: true }
+											)
+											setMobileNavBarVisible(false)
+										}}
+									/>
+								)}
 								{userHasPermissionManageMembershipSettings(
 									agreement
 								) && (

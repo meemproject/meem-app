@@ -30,52 +30,48 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 
 	return (
 		<div>
-			{agreement.isLaunched && (
+			{agreement.isCurrentUserAgreementAdmin && (
 				<>
-					{agreement.isCurrentUserAgreementAdmin && (
-						<>
-							{/* No extensions at all */}
-							{totalExtensions === 0 && (
-								<div
-									className={meemTheme.widgetExtension}
-									style={{ padding: 32 }}
+					{/* No extensions at all */}
+					{totalExtensions === 0 && (
+						<div
+							className={meemTheme.widgetExtension}
+							style={{ padding: 32 }}
+						>
+							<Space h={16} />
+
+							<Center>
+								<Text className={meemTheme.tLargeBold}>
+									Get started
+								</Text>
+							</Center>
+							<Space h={16} />
+							<Center>
+								<Text className={meemTheme.tSmall}>
+									Your community does not have any extensions
+									yet. Extensions are apps you can add which
+									enable functionality for your community,
+									such as discussions, events and more.
+								</Text>
+							</Center>
+							<Space h={32} />
+
+							<Center>
+								<Button
+									className={meemTheme.buttonAsh}
+									onClick={() => {
+										setIsAddExtensionModalOpen(true)
+									}}
 								>
-									<Space h={16} />
+									+ Add your first extension
+								</Button>
+							</Center>
+							<Space h={24} />
+						</div>
+					)}
 
-									<Center>
-										<Text className={meemTheme.tLargeBold}>
-											Get started
-										</Text>
-									</Center>
-									<Space h={16} />
-									<Center>
-										<Text className={meemTheme.tSmall}>
-											Your community does not have any
-											extensions yet. Extensions are apps
-											you can add which enable
-											functionality for your community,
-											such as discussions, events and
-											more.
-										</Text>
-									</Center>
-									<Space h={32} />
-
-									<Center>
-										<Button
-											className={meemTheme.buttonAsh}
-											onClick={() => {
-												setIsAddExtensionModalOpen(true)
-											}}
-										>
-											+ Add your first extension
-										</Button>
-									</Center>
-									<Space h={24} />
-								</div>
-							)}
-
-							{/* There's already at least one widget that has been set up  */}
-							{agreement.extensions &&
+					{/* There's already at least one widget that has been set up  */}
+					{/* {agreement.extensions &&
 								totalExtensions &&
 								totalExtensions > 0 && (
 									<>
@@ -99,43 +95,10 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 										</Center>
 										<Space h={32} />
 									</>
-								)}
-						</>
-					)}
-
-					{!agreement.isCurrentUserAgreementAdmin &&
-						agreement.slug !== 'meem' && (
-							<>
-								{totalExtensions === 0 && (
-									<div
-										className={meemTheme.widgetExtension}
-										style={{ padding: 32 }}
-									>
-										<Space h={16} />
-										<Center>
-											<Text
-												className={
-													meemTheme.tMediumBold
-												}
-											>
-												Under construction
-											</Text>
-										</Center>
-										<Space h={16} />
-										<Center>
-											<Text className={meemTheme.tSmall}>
-												This community is not using any
-												extensions yet. Check back
-												later!
-											</Text>
-										</Center>
-										<Space h={16} />
-									</div>
-								)}
-							</>
-						)}
+								)} */}
 				</>
 			)}
+
 			<AddExtensionModal
 				agreement={agreement}
 				onModalClosed={() => {

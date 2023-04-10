@@ -88,7 +88,8 @@ export const ExtensionWidgetContainer: React.FC<IProps> = ({
 								</div>
 							</Accordion.Control>
 							{agreement?.isCurrentUserAgreementAdmin &&
-								!extensionSlug.includes('Meem') && (
+								!extensionSlug.includes('Meem') &&
+								!extensionSlug.includes('Coming Soon') && (
 									<Settings
 										className={meemTheme.clickable}
 										onClick={() => {

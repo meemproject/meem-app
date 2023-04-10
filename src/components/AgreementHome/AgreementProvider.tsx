@@ -152,6 +152,13 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		})
 
 	useEffect(() => {
+		if (userAgreementMemberError) {
+			log.debug('Checking if user is member of agreement failed:')
+			log.debug(JSON.stringify(userAgreementMemberError))
+			setOriginalSlug(slug ?? '')
+			setIsLoadingAgreement(false)
+		}
+
 		if (errorAnonAgreement) {
 			log.debug('Loading anonymous agreement failed:')
 			log.debug(JSON.stringify(errorAnonAgreement))
@@ -238,6 +245,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			const agreementData = memberAgreementData ?? anonAgreementData
 
 			if (!agreementData) {
+				log.debug('no agremeent data found')
 				return
 			}
 
@@ -246,6 +254,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				anonAgreementData &&
 				anonAgreementData.Agreements.length === 0
 			) {
+				log.debug('agreement does not exist')
 				setIsLoadingAgreement(false)
 				setOriginalSlug(slug ?? '')
 				return
@@ -259,6 +268,13 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 					return
 				}
 			}
+
+			if (!agreementData.Agreements[0]) {
+				log.debug('no agreement data')
+				setIsLoadingAgreement(false)
+				return
+			}
+
 			const possibleAgreement = await agreementFromDb(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',

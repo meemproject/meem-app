@@ -2,7 +2,7 @@ import { Text, Space, Modal, Divider } from '@mantine/core'
 import Link from 'next/link'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 
 interface IProps {
 	isOpened: boolean
@@ -20,39 +20,47 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 			<Space h={16} />
 			<Text
 				className={meemTheme.tSmall}
-			>{`At Meem, we’re enabling a future of portable communities — that is, groups of people linked by their desire to do something together, not by the platforms on which they operate.
-	`}</Text>
+			>{`Meem is a (co-)operating system for community apps. We’re collaborating to build tools by and for communities.`}</Text>
 			<Space h={16} />
 			<Text
 				className={meemTheme.tSmall}
-			>{`We’re letting communities decide for themselves who’s in their group, what those members’ roles and rules are, and what tools they want to use together. And we’re stitching together a multitude of Web2 and Web3 platforms to let communities collaboratively publish.
-	`}</Text>
-			<Space h={16} />
+			>{`We partner to design, develop, and release new apps for communities to use and adapt. In partnership with a myriad of collaborators, we have an exciting slate of tools in development that’ll let communities publish together according to their unique needs.`}</Text>
+
+			<Space h={24} />
 			<Text
-				className={meemTheme.tSmall}
-			>{`We do this through community agreements — Meem smart contracts deployed, owned, and controlled by the communities themselves.`}</Text>
-			<Space h={24} />
-			<Text className={meemTheme.tMediumBold}>
-				What can I do with my Meem community agreement?
-			</Text>
+				className={meemTheme.tMediumBold}
+			>{`What's Community Tweets?`}</Text>
 			<Space h={16} />
 			<Text className={meemTheme.tSmall}>
-				{`Set nuanced, intuitive membership logic to determine who can participate in your community and how they can join. Create multiple roles for members and set rules and permissions for each. Using Meem’s native extensions, discuss and publish content together across platforms. Finally, connect a wide range of Web2 and Web3 tools to use with your community, ensuring they respect the roles and rules you’ve already established.`}
+				{`Community Tweets is an open-source tool which lets communities use Discord or Slack to decide what to Tweet from a shared account. Set the rules for how your community wants to publish, then collectively approve proposed Tweets using emojis.`}
 			</Text>
 			<Space h={24} />
-			<Text className={meemTheme.tMediumBold}>{`What's Symphony?`}</Text>
+			<Text
+				className={meemTheme.tMediumBold}
+			>{`What can I do with my Meem community agreement?`}</Text>
 			<Space h={16} />
 			<Text className={meemTheme.tSmall}>
-				{`Symphony is an extension that lets your community publish together. Today, Symphony lets you use Discord to decide what to Tweet from a shared account. Coming soon, we’ll be adding even more platforms in which you can collaborate, more platforms to which you can publish, and advanced publishing and editing capabilities.`}
+				{`Bring your community to any token-gated dApp and ensure members have the right access. Set nuanced, intuitive membership logic to determine who can participate in your community and how they can join. Create multiple roles for members and set rules and permissions for each.`}
 			</Text>
 			<Space h={24} />
 			<Text className={meemTheme.tMediumBold}>
 				{`What's next for Meem?`}
 			</Text>
 			<Space h={16} />
-			<Text
-				className={meemTheme.tSmall}
-			>{`We’ll be building more open-source extensions and expanding our SDK, allowing developers to create and modify even more apps. We’ll also be integrating with other Web2 and Web3 tools to make communities’ existing apps more interoperable.`}</Text>
+			<Text className={meemTheme.tSmall}>
+				We’re collaborating to launch even more publishing tools by and
+				for communities, including newsletters, libraries, calendars,
+				and more. We’d love to have you{' '}
+				<span
+					style={{ color: colorBlue, cursor: 'pointer' }}
+					onClick={() => {
+						window.open('https://form.typeform.com/to/TyeFu5om')
+					}}
+				>
+					join us
+				</span>{' '}
+				on these projects (or dream up one of your own)!
+			</Text>
 			<Space h={24} />
 			<Text className={meemTheme.tMediumBold}>
 				Have an idea or suggestion?

@@ -18,6 +18,7 @@ import {
 import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	agreementName: string
+	isAgreementOnChain: boolean
 	isOpened: boolean
 	onModalClosed: (status: string, agreement?: Agreement) => void
 }
@@ -25,6 +26,7 @@ interface IProps {
 export const CreationProgressModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed,
+	isAgreementOnChain,
 	agreementName
 }) => {
 	const router = useRouter()
@@ -81,18 +83,19 @@ export const CreationProgressModal: React.FC<IProps> = ({
 	)
 
 	const finishAgreementCreation = useCallback(
-		async (agreement: Agreement) => {
-			if (hasStartedCreating) {
-				// Successfully created agreement
-				log.debug('agreement creation complete')
+		async (slug: string) => {
+			log.debug('Finishing agreement creation...', { hasStartedCreating })
+			// if (hasStartedCreating) {
+			// Successfully created agreement
+			log.debug('agreement creation complete')
 
-				showSuccessNotification(
-					'Success!',
-					`Your community has been created.`
-				)
+			showSuccessNotification(
+				'Success!',
+				`Your community has been created.`
+			)
 
-				router.push(`/${agreement.slug}`)
-			}
+			router.push(`/${slug}`)
+			// }
 		},
 		[hasStartedCreating, router]
 	)
@@ -137,6 +140,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 					external_url: ''
 				},
 				shouldCreateAdminRole: true,
+				shouldCreateContract: isAgreementOnChain,
 				name: agreementName,
 				admins: wallet.accounts,
 				members: wallet.accounts,
@@ -162,21 +166,29 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				...data
 			})
 
-			log.debug(JSON.stringify(response))
+			log.debug(response)
 
 			if (response) {
-				setTransactionState({
-					deployContractTxId: response.deployContractTxId,
-					cutTxId: response.cutTxId,
-					mintTxId: response.mintTxId
-				})
+				if (response.slug) {
+					finishAgreementCreation(response.slug)
+				} else {
+					setTransactionState({
+						deployContractTxId: response.deployContractTxId,
+						cutTxId: response.cutTxId,
+						mintTxId: response.mintTxId
+					})
+					if (response.deployContractTxId && response.cutTxId) {
+						const tIds = [
+							response.deployContractTxId,
+							response.cutTxId
+						]
+						if (response.mintTxId) {
+							tIds.push(response.mintTxId)
+						}
 
-				const tIds = [response.deployContractTxId, response.cutTxId]
-				if (response.mintTxId) {
-					tIds.push(response.mintTxId)
+						setTransactionIds(tIds)
+					}
 				}
-
-				setTransactionIds(tIds)
 
 				log.debug('finish fetcher')
 			}
@@ -190,7 +202,16 @@ export const CreationProgressModal: React.FC<IProps> = ({
 			closeModal('failure')
 			setHasStartedCreating(false)
 		}
-	}, [wallet, closeModal, agreementName, sdk.agreement])
+	}, [
+		wallet.web3Provider,
+		wallet.chainId,
+		wallet.accounts,
+		closeModal,
+		agreementName,
+		isAgreementOnChain,
+		sdk.agreement,
+		finishAgreementCreation
+	])
 
 	useEffect(() => {
 		// Create the agreement
@@ -230,7 +251,14 @@ export const CreationProgressModal: React.FC<IProps> = ({
 					cutTransaction?.Agreements[0],
 					wallet.accounts[0]
 				)
-				finishAgreementCreation(possibleAgreement)
+				if (!possibleAgreement.slug) {
+					showErrorNotification(
+						'Error creating community',
+						'Please try again.'
+					)
+					return
+				}
+				finishAgreementCreation(possibleAgreement.slug)
 			} else {
 				// TODO: Handle edge case error
 				showErrorNotification(
@@ -336,34 +364,38 @@ export const CreationProgressModal: React.FC<IProps> = ({
 
 	return (
 		<>
-			<Modal
-				className={meemTheme.visibleDesktopOnly}
-				centered
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				withCloseButton={false}
-				radius={16}
-				size={'60%'}
-				overlayBlur={8}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal('failure')}
-			>
-				{modalContents}
-			</Modal>
-			<Modal
-				className={meemTheme.visibleMobileOnly}
-				centered
-				closeOnClickOutside={false}
-				closeOnEscape={false}
-				withCloseButton={false}
-				fullScreen={true}
-				padding={'lg'}
-				opened={isOpened}
-				onClose={() => closeModal('failure')}
-			>
-				{modalContents}
-			</Modal>
+			{isAgreementOnChain && (
+				<>
+					<Modal
+						className={meemTheme.visibleDesktopOnly}
+						centered
+						closeOnClickOutside={false}
+						closeOnEscape={false}
+						withCloseButton={false}
+						radius={16}
+						size={'60%'}
+						overlayBlur={8}
+						padding={'lg'}
+						opened={isOpened}
+						onClose={() => closeModal('failure')}
+					>
+						{modalContents}
+					</Modal>
+					<Modal
+						className={meemTheme.visibleMobileOnly}
+						centered
+						closeOnClickOutside={false}
+						closeOnEscape={false}
+						withCloseButton={false}
+						fullScreen={true}
+						padding={'lg'}
+						opened={isOpened}
+						onClose={() => closeModal('failure')}
+					>
+						{modalContents}
+					</Modal>
+				</>
+			)}
 		</>
 	)
 }

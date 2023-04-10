@@ -1,8 +1,7 @@
 export class CookieKeys {
 	public static authRedirectUrl = 'authRedirectUrl'
 
-	public static symphonyOnboardingAgreementSlug =
-		'symphonyOnboardingAgreementSlug'
+	public static ctOnboardingAgreementSlug = 'ctOnboardingAgreementSlug'
 
 	public static agreementName = 'agreementName'
 
