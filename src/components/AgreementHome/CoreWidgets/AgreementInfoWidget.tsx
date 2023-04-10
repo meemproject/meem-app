@@ -121,9 +121,8 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
-		if (agreement.isOnChain) {
-			setIsJoiningAgreement(true)
-		}
+		setIsJoiningAgreement(true)
+
 		try {
 			if (
 				agreement &&
@@ -258,10 +257,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
+		setIsLeavingAgreement(true)
+
 		try {
 			if (agreement?.isOnChain) {
-				setIsLeavingAgreement(true)
-
 				const agreementContract = new Contract(
 					agreement?.address ?? '',
 					bundleData?.Bundles[0].abi,
@@ -273,7 +272,6 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					)
 					// @ts-ignore
 					await tx.wait()
-					setIsLeavingAgreement(false)
 				} else {
 					setIsLeavingAgreement(false)
 				}
@@ -298,8 +296,10 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 					}
 					log.debug(`bulk burning with data: ${JSON.stringify(data)}`)
 					await sdk.agreement.bulkBurn(data)
+					router.reload()
 				} else {
 					log.debug('unable to find relevant token')
+					setIsLeavingAgreement(false)
 				}
 			}
 		} catch (e) {
@@ -551,7 +551,11 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			</div>
 
 			<JoinLeaveAgreementModal
-				isOpened={isJoiningAgreement || isLeavingAgreement}
+				isOpened={
+					((isJoiningAgreement || isLeavingAgreement) &&
+						agreement?.isOnChain) ??
+					false
+				}
 				isLeaving={isLeavingAgreement}
 				onModalClosed={() => {}}
 			/>
