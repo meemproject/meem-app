@@ -1,9 +1,9 @@
-import { Center, Image, Container, Space, Text, Button } from '@mantine/core'
+import { Center, Image } from '@mantine/core'
 import { DeleteCircle } from 'iconoir-react'
 import Link from 'next/link'
 import React from 'react'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { colorAshLight, colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
+import { colorWhite, useMeemTheme } from '../../Styles/MeemTheme'
 import { CommunityTweetsExtension } from './CommunityTweetsExtension'
 
 export enum SelectedConnection {
@@ -52,39 +52,7 @@ export const CTExtensionOnboarding: React.FC = () => {
 	return (
 		<div>
 			{pageHeader}
-			<Container>
-				<CommunityTweetsExtension />
-			</Container>
-			<Space h={64} />
-
-			<div style={{ backgroundColor: colorAshLight }}>
-				<Space h={64} />
-				<Center>
-					<Text className={meemTheme.tMediumBold}>
-						Community Tweets is just the beginning!
-					</Text>
-				</Center>
-				<Space h={16} />
-				<Center>
-					<Text>
-						See what other products are in the works or kick off
-						something new.
-					</Text>
-				</Center>
-				<Space h={40} />
-				<Center>
-					<Link href={`/meem`} legacyBehavior passHref>
-						<a className={meemTheme.unstyledLink}>
-							<div>
-								<Button
-									className={meemTheme.buttonBlack}
-								>{`View Meem's Roadmap`}</Button>
-							</div>
-						</a>
-					</Link>
-				</Center>
-				<Space h={64} />
-			</div>
+			<CommunityTweetsExtension isStandalone />
 		</div>
 	)
 }
