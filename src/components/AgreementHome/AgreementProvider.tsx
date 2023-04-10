@@ -152,6 +152,13 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 		})
 
 	useEffect(() => {
+		if (userAgreementMemberError) {
+			log.debug('Checking if user is member of agreement failed:')
+			log.debug(JSON.stringify(userAgreementMemberError))
+			setOriginalSlug(slug ?? '')
+			setIsLoadingAgreement(false)
+		}
+
 		if (errorAnonAgreement) {
 			log.debug('Loading anonymous agreement failed:')
 			log.debug(JSON.stringify(errorAnonAgreement))

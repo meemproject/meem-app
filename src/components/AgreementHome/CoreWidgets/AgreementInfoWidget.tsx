@@ -207,23 +207,17 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			}
 		} catch (e) {
 			log.crit(e)
-			const error: any = JSON.parse(
-				(e as any).toString().split('Error: ')[1]
-			)
 
-			if (error.code) {
-				log.debug(error.code)
-				if (error.code === 'TX_LIMIT_EXCEEDED') {
-					showErrorNotification(
-						'Transaction limit exceeded',
-						`Come back tomorrow or contact us using the top-right link on this page.`
-					)
-				} else {
-					showErrorNotification(
-						'Unable to join this community.',
-						`Make sure you meet all of the community's requirements!`
-					)
-				}
+			if ((e as any).toString().includes('TX_LIMIT_EXCEEDED')) {
+				showErrorNotification(
+					'Transaction limit exceeded',
+					`Come back tomorrow or contact us using the top-right link on this page.`
+				)
+			} else {
+				showErrorNotification(
+					'Unable to join this community.',
+					`Make sure you meet all of the community's requirements!`
+				)
 			}
 
 			setIsJoiningAgreement(false)
