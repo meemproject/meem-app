@@ -121,7 +121,9 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 			return
 		}
 
-		setIsJoiningAgreement(true)
+		if (agreement.isOnChain) {
+			setIsJoiningAgreement(true)
+		}
 		try {
 			if (
 				agreement &&
@@ -192,9 +194,9 @@ export const AgreementInfoWidget: React.FC<IProps> = ({
 						]
 					})
 
-					// TODO: Watch for transaction to complete
-
-					log.debug(`Minting w/ transaction id: ${txId}`)
+					if (agreement?.isOnChain) {
+						log.debug(`Minting w/ transaction id: ${txId}`)
+					}
 				} else {
 					setIsJoiningAgreement(false)
 					showErrorNotification(
