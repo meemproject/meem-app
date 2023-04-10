@@ -93,7 +93,6 @@ export const CTOnboardingFlow: React.FC = () => {
 
 	// Extension vars
 	const extensionSlug = 'community-tweets'
-	const extensionName = 'Communitytweets'
 	const extensionIcon = `ext-ct.png`
 
 	// Page state
@@ -251,7 +250,7 @@ export const CTOnboardingFlow: React.FC = () => {
 						log.debug('no matching extensions to enable...')
 						showErrorNotification(
 							'Oops!',
-							`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+							`There was an error enabling Community Tweets on this community. Contact us using the top-right link on this page.`
 						)
 						setIsEnablingExtension(false)
 						return
@@ -277,7 +276,7 @@ export const CTOnboardingFlow: React.FC = () => {
 					log.debug(e)
 					showErrorNotification(
 						'Oops!',
-						`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+						`There was an error enabling Community Tweets on this community. Contact us using the top-right link on this page.`
 					)
 					setIsEnablingExtension(false)
 				}
@@ -285,7 +284,7 @@ export const CTOnboardingFlow: React.FC = () => {
 				log.debug('no matching extensions to enable...')
 				showErrorNotification(
 					'Oops!',
-					`There was an error enabling ${extensionName} on this community. Contact us using the top-right link on this page.`
+					`There was an error enabling Community Tweets on this community. Contact us using the top-right link on this page.`
 				)
 				setIsEnablingExtension(false)
 			}
@@ -1294,7 +1293,7 @@ export const CTOnboardingFlow: React.FC = () => {
 								}}
 								leftIcon={<IconBrandSlack />}
 							>
-								{`Connect CommunityTweets`}
+								{`Connect Community Tweets`}
 							</Button>
 							<Space h={16} />
 						</>
