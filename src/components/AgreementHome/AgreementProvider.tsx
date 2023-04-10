@@ -238,6 +238,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			const agreementData = memberAgreementData ?? anonAgreementData
 
 			if (!agreementData) {
+				log.debug('no agremeent data found')
 				return
 			}
 
@@ -246,6 +247,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 				anonAgreementData &&
 				anonAgreementData.Agreements.length === 0
 			) {
+				log.debug('agreement does not exist')
 				setIsLoadingAgreement(false)
 				setOriginalSlug(slug ?? '')
 				return
@@ -259,6 +261,13 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 					return
 				}
 			}
+
+			if (!agreementData.Agreements[0]) {
+				log.debug('no agreement data')
+				setIsLoadingAgreement(false)
+				return
+			}
+
 			const possibleAgreement = await agreementFromDb(
 				wallet,
 				wallet.isConnected ? wallet.accounts[0] : '',
