@@ -71,8 +71,7 @@ enum PageState {
 	Loading,
 	Error,
 	PickCommunity,
-	Onboarding,
-	SetupComplete
+	Onboarding
 }
 
 export const CTOnboardingFlow: React.FC = () => {
@@ -1425,6 +1424,7 @@ export const CTOnboardingFlow: React.FC = () => {
 					</Container>
 				</>
 			)}
+
 			{pageState === PageState.PickCommunity && (
 				<>
 					<Space h={32} />
@@ -1592,6 +1592,21 @@ export const CTOnboardingFlow: React.FC = () => {
 							</Grid.Col>
 						</Grid>
 					</Center>
+				</>
+			)}
+
+			{pageState === PageState.Error && (
+				<>
+					<Space h={48} />
+					<Container>
+						<Center>
+							<Text
+								className={meemTheme.tSmall}
+							>{`Error: ${JSON.stringify(
+								myAgreementsError
+							)}`}</Text>
+						</Center>
+					</Container>
 				</>
 			)}
 
