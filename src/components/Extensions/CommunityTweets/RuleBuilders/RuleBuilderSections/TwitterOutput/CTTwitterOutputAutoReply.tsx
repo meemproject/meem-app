@@ -15,6 +15,8 @@ export const CTTwitterOutputAutoReply: React.FC<IProps> = ({
 
 	return (
 		<>
+			<Space h={32} />
+
 			<Text className={meemTheme.tExtraSmallLabel}>PUBLISHING</Text>
 			<Space h={24} />
 			<Text className={meemTheme.tExtraSmallBold}>

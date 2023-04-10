@@ -13,6 +13,7 @@ import {
 } from '@mantine/core'
 import { useAuth, useMeemApollo, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
+import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import {
 	SubDiscordsSubscription,
@@ -24,7 +25,7 @@ import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../model/agreement/agreements'
 import { toTitleCase } from '../../../utils/strings'
 import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../../Styles/MeemTheme'
+import { colorAshLight, useMeemTheme } from '../../Styles/MeemTheme'
 import { ExtensionBlankSlate, extensionIsReady } from '../ExtensionBlankSlate'
 import {
 	SUB_DISCORDS,
@@ -36,7 +37,13 @@ import { CTConnectionsModal } from './Modals/CTConnectionsModal'
 import { CTInputOutputModal } from './Modals/CTInputOutputModal'
 import { CTConnection, CTConnectionType, CTRule } from './Model/communityTweets'
 
-export const CommunityTweetsExtension: React.FC = () => {
+interface IProps {
+	isStandalone?: boolean
+}
+
+export const CommunityTweetsExtension: React.FC<IProps> = ({
+	isStandalone
+}) => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { jwt } = useAuth()
@@ -579,10 +586,14 @@ export const CommunityTweetsExtension: React.FC = () => {
 						)}
 						{hasFetchedData && (
 							<>
-								<>{mainState}</>
+								{!isStandalone && <>{mainState}</>}
+								{isStandalone && (
+									<Container>{mainState}</Container>
+								)}
 							</>
 						)}
 					</div>
+
 					<CTConnectionsModal
 						connections={communityTweetsConnections}
 						isOpened={isManageConnectionsModalOpen}
@@ -602,6 +613,52 @@ export const CommunityTweetsExtension: React.FC = () => {
 					/>
 				</>
 			)}
+			{isStandalone &&
+				hasFetchedData &&
+				extensionIsReady(
+					isLoadingAgreement,
+					agreement,
+					agreementExtension
+				) && (
+					<>
+						<Space h={64} />
+
+						<div
+							style={{
+								backgroundColor: colorAshLight
+							}}
+						>
+							<Space h={64} />
+							<Center>
+								<Text className={meemTheme.tMediumBold}>
+									Community Tweets is just the beginning!
+								</Text>
+							</Center>
+							<Space h={16} />
+							<Center>
+								<Text>
+									See what other products are in the works or
+									kick off something new.
+								</Text>
+							</Center>
+							<Space h={40} />
+							<Center>
+								<Link href={`/meem`} legacyBehavior passHref>
+									<a className={meemTheme.unstyledLink}>
+										<div>
+											<Button
+												className={
+													meemTheme.buttonBlack
+												}
+											>{`View Meem's Roadmap`}</Button>
+										</div>
+									</a>
+								</Link>
+							</Center>
+							<Space h={64} />
+						</div>
+					</>
+				)}
 		</div>
 	)
 }
