@@ -1,3 +1,27 @@
+# [1.28.0](https://github.com/meemproject/meem-app/compare/v1.27.2...v1.28.0) (2023-03-29)
+
+
+### Bug Fixes
+
+* allow localhost urls in symphony webhooks ([8ea24d9](https://github.com/meemproject/meem-app/commit/8ea24d9))
+* cleanup rules visibility for non-members ([096a2ab](https://github.com/meemproject/meem-app/commit/096a2ab))
+* create a synthetic output for webhook rules so they behave consistently in the ui ([5023e18](https://github.com/meemproject/meem-app/commit/5023e18))
+* design QA on connections modal + symphony settings page ([2c2527c](https://github.com/meemproject/meem-app/commit/2c2527c))
+* disconnection modal not showing up ([87c0b5f](https://github.com/meemproject/meem-app/commit/87c0b5f))
+* display of webhook based rules (discord inputs only currently(?)), display of agr. homepage ([5c4dc04](https://github.com/meemproject/meem-app/commit/5c4dc04))
+* generate uuid private key, show private key + url again in symphony rule builders / IO modal ([27d62c5](https://github.com/meemproject/meem-app/commit/27d62c5))
+* issue where private key updates on each re-draw + unnecessary roles section in slack input component ([0102798](https://github.com/meemproject/meem-app/commit/0102798))
+* members can now view agreements that have not launched yet ([a2a6aa4](https://github.com/meemproject/meem-app/commit/a2a6aa4))
+* optimize png asset size ([d2b232c](https://github.com/meemproject/meem-app/commit/d2b232c))
+* remove references to ethdenver, upgrade packages ([af345d4](https://github.com/meemproject/meem-app/commit/af345d4))
+* use private key for existing rule ([9230879](https://github.com/meemproject/meem-app/commit/9230879))
+* when either slack channel or workspace data is not found, show an error message. ([5866da4](https://github.com/meemproject/meem-app/commit/5866da4))
+
+
+### Features
+
+* chain agnosticism ([bbb6ae5](https://github.com/meemproject/meem-app/commit/bbb6ae5))
+
 ## [1.27.2](https://github.com/meemproject/meem-app/compare/v1.27.1...v1.27.2) (2023-02-28)
 
 ## [1.27.1](https://github.com/meemproject/meem-app/compare/v1.27.0...v1.27.1) (2023-02-24)
