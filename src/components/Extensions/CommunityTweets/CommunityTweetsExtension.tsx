@@ -196,10 +196,8 @@ export const CommunityTweetsExtension: React.FC<IProps> = ({
 					outputId: rule.outputRef,
 					description: rule.description,
 					abridgedDescription: rule.abridgedDescription,
-					// webhookUrl: rule.webhookUrl,
-					// webhookPrivateKey: rule.webhookSecret
-					webhookUrl: 'example url',
-					webhookPrivateKey: 'example private key'
+					webhookUrl: rule.webhookUrl ?? '',
+					webhookPrivateKey: rule.webhookSecret ?? ''
 				}
 
 				newRules.push(newRule)
