@@ -120,8 +120,9 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 				outputRef: existingRule?.output?.id ?? selectedOutput?.id ?? '',
 				isEnabled: true,
 				ruleId: existingRule?.id ?? rule?.id,
-				webhookUrl,
-				webhookSecret: webhookPrivateKey
+				webhookUrl: existingRule?.webhookUrl ?? webhookUrl,
+				webhookSecret:
+					existingRule?.webhookPrivateKey ?? webhookPrivateKey
 			}
 		})
 
