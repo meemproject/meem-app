@@ -273,6 +273,7 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 							input={rule?.input ?? input}
 							webhookUrl={webhookUrl}
 							webhookPrivateKey={privateKey}
+							existingRule={rule !== undefined}
 							onChangeConnectionsPressed={function (): void {
 								onModalClosed()
 							}}
@@ -347,7 +348,9 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 				padding={'lg'}
 				opened={isOpened}
 				title={
-					<Text className={meemTheme.tMediumBold}>Add New Flow</Text>
+					<Text className={meemTheme.tMediumBold}>
+						{rule ? 'Edit Flow' : 'Add New Flow'}
+					</Text>
 				}
 				onClose={() => {
 					onModalClosed()
@@ -361,7 +364,9 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 				padding={'lg'}
 				opened={isOpened}
 				title={
-					<Text className={meemTheme.tMediumBold}>Add New Flow</Text>
+					<Text className={meemTheme.tMediumBold}>
+						{rule ? 'Edit Flow' : 'Add New Flow'}
+					</Text>
 				}
 				onClose={() => {
 					onModalClosed()

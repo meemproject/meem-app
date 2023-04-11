@@ -9,6 +9,7 @@ interface IProps {
 	output?: CTConnection
 	webhookUrl?: string
 	webhookPrivateKey?: string
+	existingRule?: boolean
 	onChangeConnectionsPressed?: () => void
 }
 
@@ -17,6 +18,7 @@ export const CTRuleBuilderConnections: React.FC<IProps> = ({
 	output,
 	webhookUrl,
 	webhookPrivateKey,
+	existingRule,
 	onChangeConnectionsPressed
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
@@ -72,17 +74,22 @@ export const CTRuleBuilderConnections: React.FC<IProps> = ({
 				</>
 			)}
 
-			<Space h={18} />
-			<Button
-				className={meemTheme.buttonWhite}
-				onClick={() => {
-					if (onChangeConnectionsPressed) {
-						onChangeConnectionsPressed()
-					}
-				}}
-			>
-				Change Connections
-			</Button>
+			{!existingRule && (
+				<>
+					<Space h={18} />
+					<Button
+						className={meemTheme.buttonWhite}
+						onClick={() => {
+							if (onChangeConnectionsPressed) {
+								onChangeConnectionsPressed()
+							}
+						}}
+					>
+						Change Connections
+					</Button>
+				</>
+			)}
+
 			<Space h={32} />
 		</>
 	)
