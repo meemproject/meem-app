@@ -101,6 +101,16 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 		setIsSlackWebhookRuleBuilderOpened
 	] = useState(false)
 
+	function clear() {
+		setRule(undefined)
+		setSelectedInput(undefined)
+		setSelectedInputValue(null)
+		setSelectedOutput(undefined)
+		setSelectedOutputValue(null)
+		setHasFetchedIO(false)
+		setWebhookUrl('')
+	}
+
 	// Save the rule
 	const handleRuleSave = async (values: IOnSave) => {
 		if (!agreement?.id || !jwt || !selectedInput || !selectedOutput) {
@@ -109,7 +119,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 
 		setIsSavingRule(true)
 
-		await sdk.symphony.saveRule({
+		const ruleData = {
 			agreementId: agreement.id,
 			rule: {
 				...values,
@@ -124,48 +134,60 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 				webhookSecret:
 					existingRule?.webhookPrivateKey ?? webhookPrivateKey
 			}
-		})
-
-		const inputPlatform =
-			existingRule?.input?.platform ?? selectedInput.platform
-		const outputPlatform =
-			existingRule?.output?.platform ?? selectedOutput.platform
-
-		if (!existingRule) {
-			analytics.track('Community Tweets Flow Created', {
-				communityId: agreement?.id,
-				communityName: agreement?.name,
-				inputType: inputPlatform,
-				outputType: outputPlatform
-			})
-		} else {
-			analytics.track('Community Tweets Flow Edited', {
-				communityId: agreement?.id,
-				communityName: agreement?.name,
-				inputType: inputPlatform,
-				outputType: outputPlatform,
-				ruleId: existingRule.id
-			})
 		}
 
-		// If extension is not yet marked as 'setup complete', set as complete
-		if (!agreementExtension?.isSetupComplete) {
-			// Note: we don't need to await this request
-			sdk.agreementExtension.updateAgreementExtension({
-				agreementId: agreement?.id ?? '',
-				isSetupComplete: true,
-				agreementExtensionId: agreementExtension?.id,
-				widget: {
-					isEnabled: true,
-					visibility:
-						MeemAPI.AgreementExtensionVisibility.TokenHolders
-				}
-			})
-		}
+		try {
+			log.debug(`saving rule with data ${JSON.stringify(ruleData)}`)
+			await sdk.symphony.saveRule(ruleData)
 
-		setRule(undefined)
-		onModalClosed()
-		setIsSavingRule(false)
+			const inputPlatform =
+				existingRule?.input?.platform ?? selectedInput.platform
+			const outputPlatform =
+				existingRule?.output?.platform ?? selectedOutput.platform
+
+			if (!existingRule) {
+				analytics.track('Community Tweets Flow Created', {
+					communityId: agreement?.id,
+					communityName: agreement?.name,
+					inputType: inputPlatform,
+					outputType: outputPlatform
+				})
+			} else {
+				analytics.track('Community Tweets Flow Edited', {
+					communityId: agreement?.id,
+					communityName: agreement?.name,
+					inputType: inputPlatform,
+					outputType: outputPlatform,
+					ruleId: existingRule.id
+				})
+			}
+
+			// If extension is not yet marked as 'setup complete', set as complete
+			if (!agreementExtension?.isSetupComplete) {
+				// Note: we don't need to await this request
+				sdk.agreementExtension.updateAgreementExtension({
+					agreementId: agreement?.id ?? '',
+					isSetupComplete: true,
+					agreementExtensionId: agreementExtension?.id,
+					widget: {
+						isEnabled: true,
+						visibility:
+							MeemAPI.AgreementExtensionVisibility.TokenHolders
+					}
+				})
+			}
+
+			clear()
+			onModalClosed()
+			setIsSavingRule(false)
+		} catch (e) {
+			log.debug(e)
+			setIsSavingRule(false)
+			showErrorNotification(
+				'Error saving this rule',
+				'There was an error saving this rule. Please let us know using the link in the top right of this page.'
+			)
+		}
 	}
 
 	const openRuleBuilder = useCallback(
@@ -254,6 +276,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 		function fetchConnectionsForExistingRule() {
 			if (!connections) {
 				onModalClosed()
+				clear()
 				log.debug('no connections available for this rule')
 				return
 			}
@@ -298,6 +321,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 					'Oops!',
 					'This rule is invalid. Please delete it and create a new one.'
 				)
+				clear()
 				onModalClosed()
 			}
 		}
@@ -517,6 +541,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 							</Text>
 						}
 						onClose={() => {
+							clear()
 							onModalClosed()
 						}}
 					>
@@ -533,6 +558,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 							</Text>
 						}
 						onClose={() => {
+							clear()
 							onModalClosed()
 						}}
 					>
@@ -554,6 +580,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 						onModalClosed={() => {
 							setIsDiscordTwitterRuleBuilderOpened(false)
 							if (existingRule) {
+								clear()
 								onModalClosed()
 							}
 						}}
@@ -575,6 +602,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 						onModalClosed={() => {
 							setIsDiscordWebhookRuleBuilderOpened(false)
 							if (existingRule) {
+								clear()
 								onModalClosed()
 							}
 						}}
@@ -595,6 +623,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 						onModalClosed={function (): void {
 							setIsSlackTwitterRuleBuilderOpened(false)
 							if (existingRule) {
+								clear()
 								onModalClosed()
 							}
 						}}
@@ -616,6 +645,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 						onModalClosed={() => {
 							setIsSlackWebhookRuleBuilderOpened(false)
 							if (existingRule) {
+								clear()
 								onModalClosed()
 							}
 						}}
