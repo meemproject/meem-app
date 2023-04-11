@@ -285,6 +285,7 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 						<CTRuleBuilderConnections
 							input={rule?.input ?? input}
 							output={rule?.output ?? output}
+							existingRule={rule !== undefined}
 							onChangeConnectionsPressed={function (): void {
 								onModalClosed()
 							}}
@@ -361,7 +362,9 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				padding={'lg'}
 				opened={isOpened}
 				title={
-					<Text className={meemTheme.tMediumBold}>Add New Flow</Text>
+					<Text className={meemTheme.tMediumBold}>
+						{rule ? 'Edit Flow' : 'Add New Flow'}
+					</Text>
 				}
 				onClose={() => {
 					onModalClosed()
@@ -375,7 +378,9 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				padding={'lg'}
 				opened={isOpened}
 				title={
-					<Text className={meemTheme.tMediumBold}>Add New Flow</Text>
+					<Text className={meemTheme.tMediumBold}>
+						{rule ? 'Edit Flow' : 'Add New Flow'}
+					</Text>
 				}
 				onClose={() => {
 					onModalClosed()
