@@ -191,35 +191,51 @@ export const AdminMembershipSettings: React.FC<IProps> = ({ agreement }) => {
 				</Text>
 				<Space h={32} />
 
-				<Text className={meemTheme.tSmallBoldFaded}>Price</Text>
+				{agreement?.isOnChain && (
+					<>
+						<Text className={meemTheme.tSmallBoldFaded}>Price</Text>
 
-				<Text className={meemTheme.tMedium} style={{ lineHeight: 2 }}>
-					Our community{' '}
-					{isNaN(costToJoin) || costToJoin === 0 ? 'is' : 'costs'}{' '}
-					<a onClick={openMembershipCostModal}>
-						<span className={meemTheme.fBlueSelectableSpan}>
+						<Text
+							className={meemTheme.tMedium}
+							style={{ lineHeight: 2 }}
+						>
+							Our community{' '}
 							{isNaN(costToJoin) || costToJoin === 0
-								? 'free'
-								: costToJoin}
-							{isNaN(costToJoin) || costToJoin === 0
-								? ''
-								: ' MATIC'}
-						</span>
-					</a>{' '}
-					to join.{' '}
-					{membershipFundsAddress.length > 0 && costToJoin > 0 && (
-						<>
-							Funds will be sent to{' '}
+								? 'is'
+								: 'costs'}{' '}
 							<a onClick={openMembershipCostModal}>
 								<span className={meemTheme.fBlueSelectableSpan}>
-									{quickTruncate(membershipFundsAddress)}
+									{isNaN(costToJoin) || costToJoin === 0
+										? 'free'
+										: costToJoin}
+									{isNaN(costToJoin) || costToJoin === 0
+										? ''
+										: ' MATIC'}
 								</span>
-							</a>
-							.
-						</>
-					)}
-				</Text>
-				<Space h="lg" />
+							</a>{' '}
+							to join.{' '}
+							{membershipFundsAddress.length > 0 &&
+								costToJoin > 0 && (
+									<>
+										Funds will be sent to{' '}
+										<a onClick={openMembershipCostModal}>
+											<span
+												className={
+													meemTheme.fBlueSelectableSpan
+												}
+											>
+												{quickTruncate(
+													membershipFundsAddress
+												)}
+											</span>
+										</a>
+										.
+									</>
+								)}
+						</Text>
+						<Space h="lg" />
+					</>
+				)}
 
 				<Text className={meemTheme.tSmallBoldFaded}>Capacity</Text>
 				<Text
