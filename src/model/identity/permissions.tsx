@@ -34,9 +34,8 @@ export function userHasPermissionManageMembershipSettings(
 	agreement: Agreement
 ): boolean {
 	if (
-		agreement.isOnChain &&
-		(agreement.isCurrentUserAgreementAdmin ||
-			agreement.isCurrentUserAgreementOwner)
+		agreement.isCurrentUserAgreementAdmin ||
+		agreement.isCurrentUserAgreementOwner
 	) {
 		return true
 	}
