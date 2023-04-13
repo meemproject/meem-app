@@ -67,16 +67,8 @@ export const MeemPromoWidgets: React.FC = () => {
 							'Manage what gets reported and published'
 						)}
 						{comingSoonGridItem(
-							'Meets',
-							'Manage event details with participants'
-						)}
-						{comingSoonGridItem(
 							'Community Markets',
 							'Curate music together'
-						)}
-						{comingSoonGridItem(
-							'Roster',
-							'Help members manage members'
 						)}
 					</Grid>
 					<Space h={24} />
