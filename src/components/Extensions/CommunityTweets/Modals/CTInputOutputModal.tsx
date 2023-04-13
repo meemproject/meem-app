@@ -107,6 +107,10 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 		setSelectedInputValue(null)
 		setSelectedOutput(undefined)
 		setSelectedOutputValue(null)
+		setIsSlackTwitterRuleBuilderOpened(false)
+		setIsSlackWebhookRuleBuilderOpened(false)
+		setIsDiscordTwitterRuleBuilderOpened(false)
+		setIsDiscordWebhookRuleBuilderOpened(false)
 		setHasFetchedIO(false)
 		setWebhookUrl('')
 	}
