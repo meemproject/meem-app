@@ -257,7 +257,7 @@ export function HeaderMenu() {
 									router.push('/authenticate')
 								}}
 							>
-								Join Meem
+								Connect
 							</a>
 						</Text>
 					)}

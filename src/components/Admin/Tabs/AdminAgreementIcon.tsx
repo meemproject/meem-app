@@ -180,7 +180,7 @@ export const AdminAgreementIcon: React.FC<IProps> = ({ agreement }) => {
 						className={meemTheme.buttonWhite}
 						onClick={() => openEmojiPicker()}
 					>
-						Choose emoji
+						Choose Emoji
 					</Button>
 				</div>
 			)}

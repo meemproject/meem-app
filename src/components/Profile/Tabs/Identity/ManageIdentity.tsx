@@ -226,7 +226,7 @@ export const ManageIdentityComponent: React.FC = () => {
 							className={meemTheme.buttonWhite}
 							onClick={() => openEmojiPicker()}
 						>
-							Choose emoji
+							Choose Emoji
 						</Button>
 					</div>
 				</div>

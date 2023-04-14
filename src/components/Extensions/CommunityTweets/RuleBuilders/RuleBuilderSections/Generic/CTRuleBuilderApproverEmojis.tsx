@@ -64,7 +64,7 @@ export const CTRuleBuilderApproverEmojis: React.FC<IProps> = ({
 					onAddEmojisPressed()
 				}}
 			>
-				+ Add emoji
+				+ Add Emoji
 			</Button>
 			<Space h="lg" />
 		</>
