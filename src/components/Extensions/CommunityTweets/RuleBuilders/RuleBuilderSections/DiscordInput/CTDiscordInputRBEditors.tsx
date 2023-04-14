@@ -147,7 +147,7 @@ export const CTDiscordInputRBEditors: React.FC<IProps> = ({
 							onAddEmojisPressed()
 						}}
 					>
-						+ Add emoji
+						+ Add Emoji
 					</Button>
 					<Space h="lg" />
 					<Text className={meemTheme.tExtraSmallBold}>

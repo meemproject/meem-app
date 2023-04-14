@@ -686,110 +686,120 @@ export const AdminMembershipRequirements: React.FC<IProps> = ({
 						/>
 					</div>
 					<Space h={32} />
-					<Button
-						disabled={isCheckingRequirement}
-						loading={isCheckingRequirement}
-						onClick={async () => {
-							if (
-								currentRequirement?.type ===
-								MembershipReqType.TokenHolders
-							) {
-								// Validate token
-								setIsCheckingRequirement(true)
+					<div className={meemTheme.row}>
+						<Button
+							disabled={isCheckingRequirement}
+							loading={isCheckingRequirement}
+							onClick={async () => {
+								if (
+									currentRequirement?.type ===
+									MembershipReqType.TokenHolders
+								) {
+									// Validate token
+									setIsCheckingRequirement(true)
 
-								if (currentRequirement?.tokenMinQuantity <= 0) {
-									showErrorNotification(
-										'Oops!',
-										'Please enter a quantity greater than 0.'
-									)
-									setIsCheckingRequirement(false)
-
-									return
-								}
-
-								setIsCheckingRequirement(false)
-
-								const token = await tokenFromContractAddress(
-									currentRequirement?.tokenContractAddress,
-									wallet
-								)
-
-								if (!token) {
-									showErrorNotification(
-										'Oops!',
-										'That token is not valid. Check the contract address and try again.'
-									)
-									setIsCheckingRequirement(false)
-									return
-								} else {
-									setIsCheckingRequirement(false)
-									if (currentRequirement) {
-										currentRequirement.tokenName =
-											token.name
-										updateMembershipRequirement(
-											currentRequirement
-										)
-									}
-								}
-							}
-							let doesApplicantsListContainAdmin = false
-
-							switch (currentRequirement?.type) {
-								case MembershipReqType.ApprovedApplicants:
-									// Make sure there's no admin addresses in here
-									if (agreement && agreement.adminAddresses) {
-										agreement?.adminAddresses.forEach(
-											admin => {
-												if (
-													currentRequirement?.approvedAddressesString
-														.toLowerCase()
-														.includes(
-															admin.toLowerCase()
-														)
-												) {
-													doesApplicantsListContainAdmin =
-														true
-												}
-											}
-										)
-									}
-									if (doesApplicantsListContainAdmin) {
-										showErrorNotification(
-											'Oops!',
-											'You cannot add an administrator as an approved address. Manage admins in the Roles tab instead.'
-										)
-										return
-									}
-
-									break
-								case MembershipReqType.TokenHolders:
 									if (
-										currentRequirement?.tokenMinQuantity ===
+										currentRequirement?.tokenMinQuantity <=
 										0
 									) {
 										showErrorNotification(
 											'Oops!',
-											'Please enter a minimum token quantity.'
+											'Please enter a quantity greater than 0.'
 										)
+										setIsCheckingRequirement(false)
+
 										return
 									}
-									break
-							}
 
-							setMembershipReqModalOpened(false)
-						}}
-						className={meemTheme.buttonBlack}
-					>
-						Done
-					</Button>
-					<Button
-						onClick={() => {
-							setMembershipReqModalOpened(false)
-						}}
-						className={meemTheme.buttonGrey}
-					>
-						Cancel
-					</Button>
+									setIsCheckingRequirement(false)
+
+									const token =
+										await tokenFromContractAddress(
+											currentRequirement?.tokenContractAddress,
+											wallet
+										)
+
+									if (!token) {
+										showErrorNotification(
+											'Oops!',
+											'That token is not valid. Check the contract address and try again.'
+										)
+										setIsCheckingRequirement(false)
+										return
+									} else {
+										setIsCheckingRequirement(false)
+										if (currentRequirement) {
+											currentRequirement.tokenName =
+												token.name
+											updateMembershipRequirement(
+												currentRequirement
+											)
+										}
+									}
+								}
+								let doesApplicantsListContainAdmin = false
+
+								switch (currentRequirement?.type) {
+									case MembershipReqType.ApprovedApplicants:
+										// Make sure there's no admin addresses in here
+										if (
+											agreement &&
+											agreement.adminAddresses
+										) {
+											agreement?.adminAddresses.forEach(
+												admin => {
+													if (
+														currentRequirement?.approvedAddressesString
+															.toLowerCase()
+															.includes(
+																admin.toLowerCase()
+															)
+													) {
+														doesApplicantsListContainAdmin =
+															true
+													}
+												}
+											)
+										}
+										if (doesApplicantsListContainAdmin) {
+											showErrorNotification(
+												'Oops!',
+												'You cannot add an administrator as an approved address. Manage admins in the Roles tab instead.'
+											)
+											return
+										}
+
+										break
+									case MembershipReqType.TokenHolders:
+										if (
+											currentRequirement?.tokenMinQuantity ===
+											0
+										) {
+											showErrorNotification(
+												'Oops!',
+												'Please enter a minimum token quantity.'
+											)
+											return
+										}
+										break
+								}
+
+								setMembershipReqModalOpened(false)
+							}}
+							className={meemTheme.buttonBlack}
+						>
+							Done
+						</Button>
+						<Space w={8} />
+						<Button
+							onClick={() => {
+								setMembershipReqModalOpened(false)
+							}}
+							className={meemTheme.buttonGrey}
+						>
+							Cancel
+						</Button>
+					</div>
 				</Modal>
 
 				<AgreementAdminChangesComponent

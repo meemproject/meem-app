@@ -217,7 +217,7 @@ export const AgreementHome: React.FC = () => {
 					</Center>
 				</Container>
 			)}
-			{!isLoadingAgreement && error && (
+			{!isLoadingAgreement && error && !agreement?.name && (
 				<Container>
 					<Space h={120} />
 					<Center>
