@@ -96,7 +96,7 @@ export const AgreementDetailsModal: React.FC<IProps> = ({
 					className={meemTheme.buttonWhite}
 					onClick={() => setIsAgreementDataVisible(o => !o)}
 				>
-					{isAgreementDataVisible ? `Hide data` : `Show data`}
+					{isAgreementDataVisible ? `Hide Data` : `Show Data`}
 				</Button>
 			</Center>
 
