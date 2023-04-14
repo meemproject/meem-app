@@ -234,7 +234,7 @@ export const AgreementMembersWidget: React.FC<IProps> = ({ agreement }) => {
 												)
 											}}
 										>
-											Invite members
+											Invite Members
 										</Button>
 									</a>
 								</Link>

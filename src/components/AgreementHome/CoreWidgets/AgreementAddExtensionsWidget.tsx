@@ -63,7 +63,7 @@ export const AgreementAddExtensionsWidget: React.FC<IProps> = ({
 										setIsAddExtensionModalOpen(true)
 									}}
 								>
-									+ Add your first extension
+									+ Add Extension
 								</Button>
 							</Center>
 							<Space h={24} />
