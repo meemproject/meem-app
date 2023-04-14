@@ -4,7 +4,7 @@ import {
 	MultiSelect,
 	Button,
 	NumberInput,
-	Switch
+	Radio
 } from '@mantine/core'
 import { MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
@@ -15,42 +15,67 @@ import { useMeemTheme } from '../../../../../Styles/MeemTheme'
 interface IProps {
 	form: any
 	rolesData: MeemAPI.v1.GetDiscordRoles.IResponseBody
-	vetoerEmojis: string[]
-	onVetoerEmojisSet: (emojis: string[]) => void
+	editorEmojis: string[]
+	onEditorEmojisSet: (emojis: string[]) => void
 	onAddEmojisPressed: () => void
 }
 
-export const CTDiscordInputRBVetoes: React.FC<IProps> = ({
+export const CTDiscordInputRBEditors: React.FC<IProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-shadow
 	form,
 	rolesData,
-	vetoerEmojis,
-	onVetoerEmojisSet,
+	editorEmojis,
+	onEditorEmojisSet,
 	onAddEmojisPressed
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	return (
 		<>
-			<Text className={meemTheme.tExtraSmallLabel}>VETOES</Text>
-			<Space h={24} />
 			<Text className={meemTheme.tExtraSmallBold}>
-				Can proposals be vetoed?
+				When are posts published?
 			</Text>
 			<Space h={8} />
 
-			<Switch
-				label="Yes, posts can be vetoed"
-				{...form.getInputProps('canVeto', {
-					type: 'checkbox'
-				})}
-			/>
-			{form.values.canVeto && (
+			<Radio.Group
+				orientation="vertical"
+				spacing={10}
+				size="sm"
+				color="dark"
+				value={form.values.publishType}
+				onChange={(value: any) => {
+					form.setFieldValue('publishType', value)
+				}}
+				required
+			>
+				<Radio
+					value={MeemAPI.PublishType.PublishImmediately}
+					label="Posts are automatically published when they’ve received enough votes"
+				/>
+				<Radio
+					value={MeemAPI.PublishType.PublishAfterApproval}
+					label="Posts require editor approval before publishing"
+				/>
+				<Radio
+					value={
+						MeemAPI.PublishType.PublishImmediatelyOrEditorApproval
+					}
+					label="Posts are published when they’ve received enough votes OR have received editor approval"
+				/>
+			</Radio.Group>
+
+			{(form.values.publishType ===
+				MeemAPI.PublishType.PublishAfterApproval ||
+				form.values.publishType ===
+					MeemAPI.PublishType.PublishImmediatelyOrEditorApproval) && (
 				<>
 					<Space h={'lg'} />
-
+					<Text className={meemTheme.tExtraSmallLabel}>
+						EDITOR APPROVAL
+					</Text>
+					<Space h={24} />
 					<Text className={meemTheme.tExtraSmallBold}>
-						{'Who can veto a proposal?'}
+						{'Who must approve new posts for publishing?'}
 					</Text>
 					<Space h={4} />
 					<Text
@@ -67,13 +92,13 @@ export const CTDiscordInputRBVetoes: React.FC<IProps> = ({
 								value: c.id,
 								label: c.name
 							}))}
-							{...form.getInputProps('vetoerRoles')}
+							{...form.getInputProps('editorRoles')}
 						/>
 					)}
 					<Space h="lg" />
 
 					<Text className={meemTheme.tExtraSmallBold}>
-						Which emojis will count as vetos?
+						Which emojis will count as affirmative votes?
 					</Text>
 					<Space h={4} />
 					<Text
@@ -83,7 +108,7 @@ export const CTDiscordInputRBVetoes: React.FC<IProps> = ({
 						{'Please choose as many emojis as you want.'}
 					</Text>
 
-					{vetoerEmojis.length > 0 && (
+					{editorEmojis.length > 0 && (
 						<>
 							<Space h={4} />
 
@@ -93,16 +118,16 @@ export const CTDiscordInputRBVetoes: React.FC<IProps> = ({
 									flexDirection: 'row'
 								}}
 							>
-								{vetoerEmojis.map(e => (
+								{editorEmojis.map(e => (
 									<div
 										style={{
 											display: 'flex',
 											flexDirection: 'row'
 										}}
-										key={`vetoerEmoji-${e}`}
+										key={`editorEmoji-${e}`}
 										onClick={() => {
-											onVetoerEmojisSet(
-												vetoerEmojis.filter(
+											onEditorEmojisSet(
+												editorEmojis.filter(
 													ve => ve !== e
 												)
 											)
@@ -127,7 +152,7 @@ export const CTDiscordInputRBVetoes: React.FC<IProps> = ({
 					<Space h="lg" />
 					<Text className={meemTheme.tExtraSmallBold}>
 						{
-							'How many vetoes must a proposed post receive before it’s rejected?'
+							'How many affirmative votes must a proposed post receive before it’s approved for publishing?'
 						}
 					</Text>
 					<Space h={4} />
@@ -139,7 +164,7 @@ export const CTDiscordInputRBVetoes: React.FC<IProps> = ({
 					</Text>
 
 					<Space h={12} />
-					<NumberInput {...form.getInputProps('vetoVotes')} />
+					<NumberInput {...form.getInputProps('editorVotes')} />
 				</>
 			)}
 		</>

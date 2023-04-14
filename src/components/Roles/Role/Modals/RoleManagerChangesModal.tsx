@@ -141,7 +141,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 											agreement.address
 									}
 								})
-							txs.push(reinit.txId)
+							txs.push(reinit?.txId ?? '')
 						} else {
 							log.debug(
 								'role name not changed, skipping reinitialize...'

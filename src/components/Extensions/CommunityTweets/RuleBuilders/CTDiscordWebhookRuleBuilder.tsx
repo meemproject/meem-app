@@ -14,8 +14,8 @@ import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SUB_DISCORD } from '../communityTweetsGql'
 import { CTConnection, CTRule } from '../Model/communityTweets'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
+import { CTDiscordInputRBEditors } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
 import { CTDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
-import { CTDiscordInputRBVetoes } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBVetoes'
 import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
 import { CTRuleBuilderVotesCount } from './RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
 
@@ -36,7 +36,7 @@ export interface IProps {
 export enum EmojiSelectType {
 	Proposer = 'proposer',
 	Approver = 'approver',
-	Vetoer = 'vetoer'
+	Editor = 'editor'
 }
 
 export interface IFormValues
@@ -44,6 +44,7 @@ export interface IFormValues
 		MeemAPI.IRule,
 		| 'proposerEmojis'
 		| 'approverEmojis'
+		| 'editorEmojis'
 		| 'vetoerEmojis'
 		| 'action'
 		| 'ruleId'
@@ -53,6 +54,7 @@ export interface IFormValues
 export interface IOnSave extends IFormValues {
 	proposerEmojis: string[]
 	approverEmojis: string[]
+	editorEmojis: string[]
 	vetoerEmojis: string[]
 }
 
@@ -135,14 +137,17 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 			publishType: MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles ?? [],
 			approverRoles: rule?.definition.approverRoles ?? [],
-			vetoerRoles: rule?.definition.vetoerRoles ?? [],
+			editorRoles: rule?.definition.editorRoles ?? [],
 			proposalChannels: rule?.definition.proposalChannels ?? [],
 			proposalShareChannel: rule?.definition.proposalShareChannel ?? '',
 			votes: rule?.definition.votes ?? 1,
-			vetoVotes: rule?.definition.vetoVotes ?? 1,
+			editorVotes: rule?.definition.editorVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
 			shouldReply: rule?.definition.shouldReply ?? true,
-			canVeto: rule?.definition.canVeto ?? false
+			// Required to support IRule
+			vetoerRoles: [],
+			vetoVotes: 0,
+			canVeto: false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -173,8 +178,8 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 	const [proposerEmojis, setProposerEmojis] = useState<string[]>(
 		rule?.definition.proposerEmojis ?? []
 	)
-	const [vetoerEmojis, setVetoerEmojis] = useState<string[]>(
-		rule?.definition.vetoerEmojis ?? []
+	const [editorEmojis, setEditorEmojis] = useState<string[]>(
+		rule?.definition.editorEmojis ?? []
 	)
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
 		EmojiSelectType.Approver
@@ -196,23 +201,24 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 					)
 					break
 
-				case EmojiSelectType.Vetoer:
-					setVetoerEmojis(
-						uniq([...vetoerEmojis, emojiObject.unified])
+				case EmojiSelectType.Editor:
+					setEditorEmojis(
+						uniq([...editorEmojis, emojiObject.unified])
 					)
 					break
 			}
 			setIsEmojiPickerOpen(false)
 		},
-		[emojiSelectType, approverEmojis, proposerEmojis, vetoerEmojis]
+		[emojiSelectType, approverEmojis, proposerEmojis, editorEmojis]
 	)
 
 	const handleFormSubmit = async (values: IFormValues) => {
 		onSave({
 			...values,
 			approverEmojis,
-			vetoerEmojis,
-			proposerEmojis
+			editorEmojis,
+			proposerEmojis,
+			vetoerEmojis: []
 		})
 	}
 
@@ -223,13 +229,13 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 				MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles,
 			approverRoles: rule?.definition.approverRoles,
+			editorRoles: rule?.definition.editorRoles,
 			proposalChannels: rule?.definition.proposalChannels,
 			proposalShareChannel: rule?.definition.proposalShareChannel,
 			votes: rule?.definition.votes,
-			vetoVotes: rule?.definition.vetoVotes,
+			editorVotes: rule?.definition.editorVotes,
 			proposeVotes: rule?.definition.proposeVotes,
-			shouldReply: rule?.definition.shouldReply,
-			canVeto: rule?.definition.canVeto
+			shouldReply: rule?.definition.shouldReply
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule])
@@ -301,17 +307,17 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 
 						<CTRuleBuilderVotesCount form={form} />
 
-						<CTDiscordInputRBVetoes
+						<CTDiscordInputRBEditors
 							form={form}
 							rolesData={rolesData}
-							vetoerEmojis={vetoerEmojis}
-							onVetoerEmojisSet={function (
+							editorEmojis={editorEmojis}
+							onEditorEmojisSet={function (
 								emojis: string[]
 							): void {
-								setVetoerEmojis(emojis)
+								setEditorEmojis(emojis)
 							}}
 							onAddEmojisPressed={function (): void {
-								setEmojiSelectType(EmojiSelectType.Vetoer)
+								setEmojiSelectType(EmojiSelectType.Editor)
 								setIsEmojiPickerOpen(true)
 							}}
 						/>
