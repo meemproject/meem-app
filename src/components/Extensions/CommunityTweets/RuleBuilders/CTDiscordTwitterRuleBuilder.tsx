@@ -17,7 +17,7 @@ import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SUB_TWITTER, SUB_DISCORD } from '../communityTweetsGql'
 import { CTConnection, CTRule } from '../Model/communityTweets'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
-import { CTDiscordInputRBeditores as CTDiscordInputRBEditors } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
+import { CTDiscordInputRBEditors } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
 import { CTDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
 import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
 import { CTRuleBuilderVotesCount } from './RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
@@ -48,6 +48,7 @@ export interface IFormValues
 		| 'proposerEmojis'
 		| 'approverEmojis'
 		| 'editorEmojis'
+		| 'vetoerEmojis'
 		| 'action'
 		| 'ruleId'
 		| 'isEnabled'
@@ -56,7 +57,8 @@ export interface IFormValues
 export interface IOnSave extends IFormValues {
 	proposerEmojis: string[]
 	approverEmojis: string[]
-	editorEmojis: string[]
+	editorEmojis?: string[]
+	vetoerEmojis: string[]
 }
 
 export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
@@ -153,7 +155,11 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			votes: rule?.definition.votes ?? 1,
 			editorVotes: rule?.definition.editorVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
-			shouldReply: rule?.definition.shouldReply ?? true
+			shouldReply: rule?.definition.shouldReply ?? true,
+			// Required to support IRule
+			vetoerRoles: [],
+			vetoVotes: 0,
+			canVeto: false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -223,7 +229,8 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			...values,
 			approverEmojis,
 			editorEmojis,
-			proposerEmojis
+			proposerEmojis,
+			vetoerEmojis: []
 		})
 	}
 

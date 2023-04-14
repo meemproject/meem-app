@@ -45,6 +45,7 @@ export interface IFormValues
 		| 'proposerEmojis'
 		| 'approverEmojis'
 		| 'editorEmojis'
+		| 'vetoerEmojis'
 		| 'action'
 		| 'ruleId'
 		| 'isEnabled'
@@ -54,6 +55,7 @@ export interface IOnSave extends IFormValues {
 	proposerEmojis: string[]
 	approverEmojis: string[]
 	editorEmojis: string[]
+	vetoerEmojis: string[]
 }
 
 export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
@@ -142,7 +144,10 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 			editorVotes: rule?.definition.editorVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
 			shouldReply: rule?.definition.shouldReply ?? true,
-			caneditor: rule?.definition.caneditor ?? false
+			// Required to support IRule
+			vetoerRoles: [],
+			vetoVotes: 0,
+			canVeto: false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -212,7 +217,8 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 			...values,
 			approverEmojis,
 			editorEmojis,
-			proposerEmojis
+			proposerEmojis,
+			vetoerEmojis: []
 		})
 	}
 
