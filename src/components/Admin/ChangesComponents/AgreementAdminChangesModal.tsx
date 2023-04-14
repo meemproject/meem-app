@@ -182,7 +182,7 @@ export const AgreementAdminChangesComponent: React.FC<IProps> = ({
 					log.debug(data)
 					const { txId } = await sdk.agreement.reInitialize(data)
 
-					watchTransactions([txId])
+					watchTransactions([txId ?? ''])
 					completeRequest()
 
 					log.debug(`Reinitializing agreement w/ txId: ${txId}`)
