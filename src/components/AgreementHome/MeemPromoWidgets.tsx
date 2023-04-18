@@ -55,20 +55,16 @@ export const MeemPromoWidgets: React.FC = () => {
 					<Space h={24} />
 					<Grid>
 						{comingSoonGridItem(
-							'Libraries',
-							'Curate media and links together'
-						)}
-						{comingSoonGridItem(
-							'Newsletters',
-							'Send regular updates to your community'
-						)}
-						{comingSoonGridItem(
-							'News',
+							'Community News',
 							'Manage what gets reported and published'
 						)}
 						{comingSoonGridItem(
+							'Community Libraries',
+							'Curate media and links together'
+						)}
+						{comingSoonGridItem(
 							'Community Markets',
-							'Curate music together'
+							'Curate media and links together'
 						)}
 					</Grid>
 					<Space h={24} />
