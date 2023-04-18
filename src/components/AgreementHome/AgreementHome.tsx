@@ -143,7 +143,9 @@ export const AgreementHome: React.FC = () => {
 								/>
 								{/* // Meem promo content here! */}
 							</>
-							{agreement.slug !== 'meem' && (
+							{(agreement.slug !== 'meem' ||
+								(agreement.slug === 'meem' &&
+									agreement.isCurrentUserAgreementAdmin)) && (
 								<>{communityExtensionsContents}</>
 							)}
 							<MeemPromoWidgets />
