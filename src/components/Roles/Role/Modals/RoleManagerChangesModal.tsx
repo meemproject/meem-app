@@ -141,7 +141,9 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 											agreement.address
 									}
 								})
-							txs.push(reinit.txId)
+							if (agreement.isOnChain) {
+								txs.push(reinit.txId ?? '')
+							}
 						} else {
 							log.debug(
 								'role name not changed, skipping reinitialize...'
@@ -252,7 +254,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 										tokens: addressesToMint
 									}
 								)
-							if (bulkMint.txId) {
+							if (bulkMint.txId && agreement.isOnChain) {
 								txs.push(bulkMint.txId)
 							}
 						}
@@ -293,12 +295,16 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 										tokenIds: roleTokenIdsToBurn
 									}
 								)
-							if (bulkBurn.txId) {
+							if (bulkBurn.txId && agreement.isOnChain) {
 								txs.push(bulkBurn.txId)
 							}
 						}
 
-						log.debug('All operations complete. Awaiting tx...')
+						if (agreement.isOnChain) {
+							log.debug('All operations complete. Awaiting tx...')
+						} else {
+							onRoleChangesSaved()
+						}
 					} catch (e) {
 						log.debug(e)
 						showErrorNotification(
