@@ -9,7 +9,8 @@ import {
 	Navbar,
 	NavLink,
 	MediaQuery,
-	Burger
+	Burger,
+	Select
 } from '@mantine/core'
 import { useMeemApollo, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
@@ -20,8 +21,10 @@ import {
 	SubDiscordsSubscription,
 	SubTwittersSubscription,
 	SubSlacksSubscription,
-	SubRulesSubscription
+	SubRulesSubscription,
+	MyAgreementsSubscriptionSubscription
 } from '../../../generated/graphql'
+import { SUB_MY_AGREEMENTS } from '../../graphql/agreements'
 import {
 	SUB_DISCORDS,
 	SUB_TWITTERS,
@@ -93,6 +96,19 @@ export const DashboardComponent: React.FC = () => {
 				break
 		}
 	}, [router.query.tab])
+
+	// Communities
+	const { data: communitiesData, loading: isFetchingCommunities } =
+		useSubscription<MyAgreementsSubscriptionSubscription>(
+			SUB_MY_AGREEMENTS,
+			{
+				variables: {
+					agreementId: agreement?.id
+				},
+				skip: !mutualMembersClient || !agreement?.id,
+				client: mutualMembersClient
+			}
+		)
 
 	// Flows and connections
 	const [previousRulesDataString, setPreviousRulesDataString] = useState('')
@@ -291,6 +307,16 @@ export const DashboardComponent: React.FC = () => {
 							withBorder={false}
 							p="xs"
 						>
+							<Select
+								placeholder="Pick one"
+								size="lg"
+								data={[
+									{ value: 'react', label: 'React' },
+									{ value: 'ng', label: 'Angular' },
+									{ value: 'svelte', label: 'Svelte' },
+									{ value: 'vue', label: 'Vue' }
+								]}
+							/>
 							<NavLink
 								className={meemTheme.pagePanelLayoutNavItem}
 								active={currentTab === Tab.Flows}
