@@ -15,8 +15,8 @@ import { useMeemTheme } from '../../../../../Styles/MeemTheme'
 interface IProps {
 	form: any
 	rolesData: MeemAPI.v1.GetDiscordRoles.IResponseBody
-	editorEmojis: string[]
-	onEditorEmojisSet: (emojis: string[]) => void
+	editorEmojis: MeemAPI.IEmoji[]
+	onEditorEmojisSet: (emojis: MeemAPI.IEmoji[]) => void
 	onAddEmojisPressed: () => void
 }
 
@@ -124,16 +124,31 @@ export const CTDiscordInputRBEditors: React.FC<IProps> = ({
 											display: 'flex',
 											flexDirection: 'row'
 										}}
-										key={`editorEmoji-${e}`}
+										key={`editorEmoji-${e.id}`}
 										onClick={() => {
 											onEditorEmojisSet(
 												editorEmojis.filter(
-													ve => ve !== e
+													ve => ve.id !== e.id
 												)
 											)
 										}}
 									>
-										<Emoji unified={e} size={25} />
+										{e.unified && e.unified.length > 0 && (
+											<Emoji
+												unified={e.unified}
+												size={25}
+											/>
+										)}
+										{e.url && (
+											<img
+												src={e.url}
+												alt={e.name}
+												style={{
+													width: 25,
+													height: 25
+												}}
+											/>
+										)}
 										<Space w="xs" />
 									</div>
 								))}
