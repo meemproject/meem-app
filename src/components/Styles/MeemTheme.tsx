@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
 import { createStyles } from '@mantine/core'
-import { color } from 'html2canvas/dist/types/css/types/color'
 
 // Primary Palette
 export const colorBlack = '#000000'

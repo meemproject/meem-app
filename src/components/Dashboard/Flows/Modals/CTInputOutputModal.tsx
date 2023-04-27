@@ -14,7 +14,7 @@ import {
 } from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
-import { IconCopy } from '@tabler/icons'
+import { Copy } from 'iconoir-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
@@ -501,7 +501,10 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 											)
 										}}
 									>
-										<IconCopy size="1.125rem" />
+										<Copy
+											height="1.125rem"
+											width="1.125rem"
+										/>
 									</ActionIcon>
 								</div>
 							</>

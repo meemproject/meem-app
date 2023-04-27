@@ -7,7 +7,7 @@ import {
 	useMantineColorScheme
 } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
-import { IconBrowser } from '@tabler/icons'
+import { Internet } from 'iconoir-react'
 import React from 'react'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
@@ -132,7 +132,7 @@ export const LoginForm: React.FC<ILoginFormProps> = ({ onRequestClose }) => {
 									}
 								>
 									<Center>
-										<IconBrowser />
+										<Internet />
 									</Center>
 
 									<Space h={16} />

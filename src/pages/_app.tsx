@@ -16,7 +16,6 @@ import React, { useEffect } from 'react'
 import { App } from '../components/App'
 import { AgreementProvider } from '../components/Providers/AgreementProvider'
 import '@fontsource/inter'
-import 'isomorphic-fetch'
 import { AnalyticsProvider } from '../components/Providers/AnalyticsProvider'
 
 // Fix an issue with SSR / ServerSideProps in NextJS
