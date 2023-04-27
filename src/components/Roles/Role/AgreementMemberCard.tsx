@@ -9,20 +9,17 @@ import {
 } from '@mantine/core'
 import { Copy } from 'iconoir-react'
 import React, { useState } from 'react'
-import {
-	Agreement,
-	AgreementMember
-} from '../../../../model/agreement/agreements'
-import { showSuccessNotification } from '../../../../utils/notifications'
-import { RemoveMemberComponent } from '../../../Dashboard/ChangesComponents/RemoveMemberComponent'
-import { RemoveMemberConfirmationModal } from '../../../Dashboard/Modals/RemoveMemberConfirmationModal'
+import { Agreement, AgreementMember } from '../../../model/agreement/agreements'
+import { showSuccessNotification } from '../../../utils/notifications'
+import { RemoveMemberComponent } from '../../Dashboard/ChangesComponents/RemoveMemberComponent'
+import { RemoveMemberConfirmationModal } from '../../Dashboard/Modals/RemoveMemberConfirmationModal'
 import {
 	colorBlack,
 	colorBlue,
 	colorDarkBlue,
 	colorWhite,
 	useMeemTheme
-} from '../../../Styles/MeemTheme'
+} from '../../Styles/MeemTheme'
 
 interface IProps {
 	agreement?: Agreement
