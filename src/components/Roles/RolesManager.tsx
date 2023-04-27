@@ -3,7 +3,6 @@ import log from '@kengoldfarb/log'
 import {
 	Container,
 	Text,
-	Image,
 	Space,
 	Center,
 	Loader,
@@ -126,30 +125,6 @@ export const RolesManager: React.FC = () => {
 				<>
 					<div className={meemTheme.pageHeader}>
 						<div className={meemTheme.spacedRowCentered}>
-							{agreement.image && (
-								<div
-									className={meemTheme.pageHeaderImage}
-									style={{ cursor: 'pointer' }}
-								>
-									<Link
-										href={`/${agreement.slug}`}
-										legacyBehavior
-										passHref
-									>
-										<a className={meemTheme.unstyledLink}>
-											<Image
-												width={80}
-												height={80}
-												radius={8}
-												className={
-													meemTheme.imageAgreementLogo
-												}
-												src={agreement.image}
-											/>
-										</a>
-									</Link>
-								</div>
-							)}
 							<div className={meemTheme.pageHeaderTitleContainer}>
 								<Text className={meemTheme.tLargeBold}>
 									{agreement.name}
