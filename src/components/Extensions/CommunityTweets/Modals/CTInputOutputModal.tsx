@@ -30,11 +30,11 @@ import {
 	CTConnectionType,
 	CTRule
 } from '../Model/communityTweets'
+import { CTDiscordTwitterRulesBuilder } from '../RuleBuilders/CTDiscordTwitterRuleBuilder'
 import {
-	IOnSave,
-	CTDiscordTwitterRulesBuilder
-} from '../RuleBuilders/CTDiscordTwitterRuleBuilder'
-import { CTDiscordWebhookRulesBuilder } from '../RuleBuilders/CTDiscordWebhookRuleBuilder'
+	CTDiscordWebhookRulesBuilder,
+	IOnSave
+} from '../RuleBuilders/CTDiscordWebhookRuleBuilder'
 import { CTSlackTwitterRulesBuilder } from '../RuleBuilders/CTSlackTwitterRuleBuilder'
 import { CTSlackWebhookRulesBuilder } from '../RuleBuilders/CTSlackWebhookRuleBuilder'
 
