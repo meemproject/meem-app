@@ -349,7 +349,7 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		form.values.proposalChannels.length > 0
 	) {
 		form.values.proposalChannels.forEach((c: string) => {
-			const channel = channelsData.channels?.find(ch => ch.id === c)
+			const channel = channelsData?.channels?.find(ch => ch.id === c)
 			if (channel && (!channel.canSend || !channel.canView)) {
 				isProposalChannelGated = true
 			}
@@ -437,7 +437,7 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 									{
 										id: 'discord',
 										name: `${discordData?.AgreementDiscords[0].Discord?.name}`,
-										emojis: emojisData.emojis.map(e => ({
+										emojis: emojisData?.emojis.map(e => ({
 											id: e.id,
 											name: e.name,
 											keywords: [e.name],

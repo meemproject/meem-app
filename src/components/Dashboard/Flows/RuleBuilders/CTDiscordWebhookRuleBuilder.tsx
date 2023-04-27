@@ -424,7 +424,7 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 									{
 										id: 'discord',
 										name: `${discordData?.AgreementDiscords[0].Discord?.name}`,
-										emojis: emojisData.emojis.map(e => ({
+										emojis: emojisData?.emojis.map(e => ({
 											id: e.id,
 											name: e.name,
 											keywords: [e.name],
