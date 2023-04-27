@@ -7,8 +7,8 @@ meem-web:
         defaultLambda: "nodejs16.x"
         apiLambda: "nodejs16.x"
         imageLambda: "nodejs16.x"
+        roleArn: arn:aws:iam::376705315398:role/2gunlq-8y5tyot
     removeOldLambdaVersions: true
-    roleArn: arn:aws:iam::376705315398:role/2gunlq-8y5tyot
     timeout: 30
     memory: 1024
     useServerlessTraceTarget: true
