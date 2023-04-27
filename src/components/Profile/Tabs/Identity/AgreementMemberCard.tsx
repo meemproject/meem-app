@@ -14,8 +14,8 @@ import {
 	AgreementMember
 } from '../../../../model/agreement/agreements'
 import { showSuccessNotification } from '../../../../utils/notifications'
-import { RemoveMemberComponent } from '../../../Admin/ChangesComponents/RemoveMemberComponent'
-import { RemoveMemberConfirmationModal } from '../../../Admin/Modals/RemoveMemberConfirmationModal'
+import { RemoveMemberComponent } from '../../../Dashboard/ChangesComponents/RemoveMemberComponent'
+import { RemoveMemberConfirmationModal } from '../../../Dashboard/Modals/RemoveMemberConfirmationModal'
 import {
 	colorBlack,
 	colorBlue,

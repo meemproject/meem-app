@@ -2,7 +2,7 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { AgreementAdminComponent } from '../../components/Admin/AgreementAdmin'
+import { DashboardComponent } from '../../components/Dashboard/Dashboard'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { meemCommunityDescription } from '../../utils/sitedescriptions'
@@ -57,7 +57,7 @@ const AgreementAdminPage: NextPage<IProps> = ({ agreementName }) => {
 			</Head>
 			<HeaderMenu />
 
-			<AgreementAdminComponent />
+			<DashboardComponent />
 
 			<MeemFooter />
 		</>

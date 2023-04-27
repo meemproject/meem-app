@@ -14,7 +14,7 @@ import {
 } from '../../../../../generated/graphql'
 import { useAgreement } from '../../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { SUB_TWITTER, SUB_SLACK } from '../communityTweetsGql'
+import { SUB_TWITTER, SUB_SLACK } from '../../../../graphql/rules'
 import { CTConnection, CTRule } from '../Model/communityTweets'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
 import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'

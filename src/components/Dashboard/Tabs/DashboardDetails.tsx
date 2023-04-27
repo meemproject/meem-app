@@ -13,11 +13,8 @@ import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesComponent } from '../ChangesComponents/AgreementAdminChangesModal'
-interface IProps {
-	agreement: Agreement
-}
 
-export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
+export const DashboardDetails: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	const [agreementName, setAgreementName] = useState('')
@@ -25,13 +22,13 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 	const [hasLoadedAgreementData, setHasLoadedAgreementData] = useState(false)
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 
-	const { isTransactionInProgress } = useAgreement()
+	const { isTransactionInProgress, agreement } = useAgreement()
 
 	useEffect(() => {
 		if (!hasLoadedAgreementData) {
 			setHasLoadedAgreementData(true)
-			setAgreementName(agreement.name ?? '')
-			setAgreementDescription(agreement.description ?? '')
+			setAgreementName(agreement?.name ?? '')
+			setAgreementDescription(agreement?.description ?? '')
 		}
 	}, [agreement, hasLoadedAgreementData])
 
@@ -67,7 +64,7 @@ export const AdminAgreementDetails: React.FC<IProps> = ({ agreement }) => {
 		const newAgreement = JSON.parse(oldAgreement)
 		newAgreement.name = agreementName
 		newAgreement.description = agreementDescription
-		newAgreement.image = agreement.image
+		newAgreement.image = agreement?.image
 
 		setNewAgreementData(newAgreement)
 		setIsSavingChanges(true)

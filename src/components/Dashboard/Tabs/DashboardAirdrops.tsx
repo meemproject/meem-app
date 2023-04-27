@@ -4,24 +4,22 @@ import { Text, Button, Textarea, Space } from '@mantine/core'
 import { useSDK } from '@meemproject/react'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
-import { Agreement } from '../../../model/agreement/agreements'
 import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 
-interface IProps {
-	agreement: Agreement
-}
-
-export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
+export const DashboardAirdrops: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 	const { sdk } = useSDK()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
 	const [airdropAddresses, setAirdropAddresses] = useState<string[]>([])
+
+	const { agreement } = useAgreement()
 
 	const parseAirdropAddresses = (rawString: string) => {
 		setAirdropAddressesString(rawString)
@@ -102,7 +100,7 @@ export const AdminBulkMint: React.FC<IProps> = ({ agreement }) => {
 		// Send request
 		try {
 			await sdk.agreement.bulkMint({
-				agreementId: agreement.id ?? '',
+				agreementId: agreement?.id ?? '',
 				tokens: airdrops
 			})
 

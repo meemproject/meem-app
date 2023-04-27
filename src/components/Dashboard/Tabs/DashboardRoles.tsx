@@ -13,7 +13,8 @@ import { Group, Lock, MoreHorizCircle } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { Agreement, AgreementRole } from '../../../model/agreement/agreements'
+import { AgreementRole } from '../../../model/agreement/agreements'
+import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
 import {
@@ -24,11 +25,7 @@ import {
 	useMeemTheme
 } from '../../Styles/MeemTheme'
 
-interface IProps {
-	agreement: Agreement
-}
-
-export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
+export const DashboardRoles: React.FC = () => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	const router = useRouter()
@@ -39,6 +36,8 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 	const { colorScheme } = useMantineColorScheme()
 	const isDarkTheme = colorScheme === 'dark'
 
+	const { agreement } = useAgreement()
+
 	return (
 		<>
 			<div>
@@ -48,7 +47,7 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 
 				<Space h={32} />
 			</div>
-			{agreement.roles && agreement.roles.length > 0 && (
+			{agreement?.roles && agreement.roles.length > 0 && (
 				<>
 					{agreement.roles.map(role => (
 						<div
@@ -197,7 +196,7 @@ export const AdminRoles: React.FC<IProps> = ({ agreement }) => {
 					</Link>
 				</>
 			)}
-			{agreement.roles && agreement.roles.length === 0 && (
+			{agreement?.roles && agreement.roles.length === 0 && (
 				<>
 					<Space h={32} />
 					<Center>

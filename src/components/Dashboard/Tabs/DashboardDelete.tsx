@@ -10,7 +10,7 @@ interface IProps {
 	agreement: Agreement
 }
 
-export const CADeleteAgreement: React.FC<IProps> = ({ agreement }) => {
+export const DashboardDelete: React.FC<IProps> = ({ agreement }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
 	const [isDeleteAgreementModalOpened, setIsDeleteAgreementModalOpened] =
