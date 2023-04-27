@@ -1,11 +1,11 @@
 import { useSubscription } from '@apollo/client'
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth, useMeemApollo } from '@meemproject/react'
 import { makeFetcher, MeemAPI } from '@meemproject/sdk'
-import type { EmojiClickData } from 'emoji-picker-react'
-import { uniq } from 'lodash'
-import dynamic from 'next/dynamic'
+import { uniqBy } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import {
@@ -22,10 +22,6 @@ import { CTSlackInputRBProposals } from '../RuleBuilderSections/SlackInput/CTSla
 import { CTSlackInputRBVetoes } from '../RuleBuilderSections/SlackInput/CTSlackInputRBVetoes'
 import { CTTwitterOutputAutoReply } from '../RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
-
-const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
-	ssr: false
-})
 
 export interface IProps {
 	rule?: CTRule
@@ -48,15 +44,16 @@ export interface IFormValues
 		| 'proposerEmojis'
 		| 'approverEmojis'
 		| 'vetoerEmojis'
+		| 'editorEmojis'
 		| 'action'
 		| 'ruleId'
 		| 'isEnabled'
 	> {}
 
 export interface IOnSave extends IFormValues {
-	proposerEmojis: string[]
-	approverEmojis: string[]
-	vetoerEmojis: string[]
+	proposerEmojis: MeemAPI.IEmoji[]
+	approverEmojis: MeemAPI.IEmoji[]
+	vetoerEmojis: MeemAPI.IEmoji[]
 }
 
 export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
@@ -165,38 +162,110 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 		}
 	})
 
-	const [approverEmojis, setApproverEmojis] = useState<string[]>(
-		rule?.definition.approverEmojis ?? []
+	const [approverEmojis, setApproverEmojis] = useState<MeemAPI.IEmoji[]>(
+		rule?.definition.approverEmojis && rule?.definition.approverEmojis[0]
+			? typeof rule?.definition.approverEmojis[0] === 'string'
+				? (rule?.definition.approverEmojis.map(e => ({
+						id: e,
+						name: e,
+						unified: e,
+						type: MeemAPI.EmojiType.Unified
+				  })) as MeemAPI.IEmoji[])
+				: (rule?.definition.approverEmojis as MeemAPI.IEmoji[])
+			: []
 	)
-	const [proposerEmojis, setProposerEmojis] = useState<string[]>(
-		rule?.definition.proposerEmojis ?? []
+	const [proposerEmojis, setProposerEmojis] = useState<MeemAPI.IEmoji[]>(
+		rule?.definition.proposerEmojis && rule?.definition.proposerEmojis[0]
+			? typeof rule?.definition.proposerEmojis[0] === 'string'
+				? (rule?.definition.proposerEmojis.map(e => ({
+						id: e,
+						name: e,
+						unified: e,
+						type: MeemAPI.EmojiType.Unified
+				  })) as MeemAPI.IEmoji[])
+				: (rule?.definition.proposerEmojis as MeemAPI.IEmoji[])
+			: []
 	)
-	const [vetoerEmojis, setVetoerEmojis] = useState<string[]>(
-		rule?.definition.vetoerEmojis ?? []
+	const [vetoerEmojis, setVetoerEmojis] = useState<MeemAPI.IEmoji[]>(
+		rule?.definition.vetoerEmojis && rule?.definition.vetoerEmojis[0]
+			? typeof rule?.definition.vetoerEmojis[0] === 'string'
+				? (rule?.definition.vetoerEmojis.map(e => ({
+						id: e,
+						name: e,
+						unified: e,
+						type: MeemAPI.EmojiType.Unified
+				  })) as MeemAPI.IEmoji[])
+				: (rule?.definition.vetoerEmojis as MeemAPI.IEmoji[])
+			: []
 	)
+
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
 		EmojiSelectType.Approver
 	)
 	const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
 	const handleEmojiClick = useCallback(
-		async (emojiObject: EmojiClickData) => {
+		async (emojiObject: {
+			id: string
+			keywords: string[]
+			name: string
+			src?: string
+			unified?: string
+			native?: string
+			shortcodes: string
+		}) => {
 			switch (emojiSelectType) {
 				case EmojiSelectType.Approver:
 					setApproverEmojis(
-						uniq([...approverEmojis, emojiObject.unified])
+						uniqBy(
+							[
+								...approverEmojis,
+								{
+									...emojiObject,
+									url: emojiObject.src,
+									type: emojiObject.unified
+										? MeemAPI.EmojiType.Unified
+										: MeemAPI.EmojiType.Discord
+								}
+							],
+							e => e.id
+						)
 					)
 					break
 
 				case EmojiSelectType.Proposer:
 					setProposerEmojis(
-						uniq([...proposerEmojis, emojiObject.unified])
+						uniqBy(
+							[
+								...proposerEmojis,
+								{
+									...emojiObject,
+									url: emojiObject.src,
+									type: emojiObject.unified
+										? MeemAPI.EmojiType.Unified
+										: MeemAPI.EmojiType.Discord
+								}
+							],
+							e => e.id
+						)
 					)
 					break
 
 				case EmojiSelectType.Vetoer:
 					setVetoerEmojis(
-						uniq([...vetoerEmojis, emojiObject.unified])
+						uniqBy(
+							[
+								...vetoerEmojis,
+								{
+									...emojiObject,
+									url: emojiObject.src,
+									type: emojiObject.unified
+										? MeemAPI.EmojiType.Unified
+										: MeemAPI.EmojiType.Discord
+								}
+							],
+							e => e.id
+						)
 					)
 					break
 			}
@@ -301,12 +370,10 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 
 						<CTRuleBuilderApproverEmojis
 							approverEmojis={approverEmojis}
-							onApproverEmojisSet={function (
-								emojis: string[]
-							): void {
+							onApproverEmojisSet={emojis => {
 								setApproverEmojis(emojis)
 							}}
-							onAddEmojisPressed={function (): void {
+							onAddEmojisPressed={() => {
 								setEmojiSelectType(EmojiSelectType.Approver)
 								setIsEmojiPickerOpen(true)
 							}}
@@ -317,12 +384,10 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 						<CTSlackInputRBVetoes
 							form={form}
 							vetoerEmojis={vetoerEmojis}
-							onVetoerEmojisSet={function (
-								emojis: string[]
-							): void {
+							onVetoerEmojisSet={emojis => {
 								setVetoerEmojis(emojis)
 							}}
-							onAddEmojisPressed={function (): void {
+							onAddEmojisPressed={() => {
 								setEmojiSelectType(EmojiSelectType.Vetoer)
 								setIsEmojiPickerOpen(true)
 							}}
@@ -334,12 +399,15 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 							withCloseButton={true}
 							closeOnClickOutside={false}
 							padding={8}
-							overlayBlur={8}
+							overlayProps={{ blur: 8 }}
 							size={366}
 							opened={isEmojiPickerOpen}
 							onClose={() => setIsEmojiPickerOpen(false)}
 						>
-							<EmojiPicker onEmojiClick={handleEmojiClick} />
+							<Picker
+								data={data}
+								onEmojiSelect={handleEmojiClick}
+							/>
 						</Modal>
 						<Space h={'lg'} />
 						<Button className={meemTheme.buttonBlack} type="submit">
@@ -357,7 +425,7 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 				className={meemTheme.visibleDesktopOnly}
 				centered
 				radius={16}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				size={'60%'}
 				padding={'lg'}
 				opened={isOpened}

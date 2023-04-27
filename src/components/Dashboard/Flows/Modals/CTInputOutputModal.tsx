@@ -30,11 +30,11 @@ import {
 	CTConnectionType,
 	CTRule
 } from '../Model/communityTweets'
+import { CTDiscordTwitterRulesBuilder } from '../RuleBuilders/CTDiscordTwitterRuleBuilder'
 import {
-	IOnSave,
-	CTDiscordTwitterRulesBuilder
-} from '../RuleBuilders/CTDiscordTwitterRuleBuilder'
-import { CTDiscordWebhookRulesBuilder } from '../RuleBuilders/CTDiscordWebhookRuleBuilder'
+	CTDiscordWebhookRulesBuilder,
+	IOnSave
+} from '../RuleBuilders/CTDiscordWebhookRuleBuilder'
 import { CTSlackTwitterRulesBuilder } from '../RuleBuilders/CTSlackTwitterRuleBuilder'
 import { CTSlackWebhookRulesBuilder } from '../RuleBuilders/CTSlackWebhookRuleBuilder'
 
@@ -538,7 +538,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 						className={meemTheme.visibleDesktopOnly}
 						centered
 						radius={16}
-						overlayBlur={8}
+						overlayProps={{ blur: 8 }}
 						size={'60%'}
 						padding={'lg'}
 						opened={isOpened}

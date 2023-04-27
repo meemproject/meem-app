@@ -374,7 +374,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 						withCloseButton={false}
 						radius={16}
 						size={'60%'}
-						overlayBlur={8}
+						overlayProps={{ blur: 8 }}
 						padding={'lg'}
 						opened={isOpened}
 						onClose={() => closeModal('failure')}

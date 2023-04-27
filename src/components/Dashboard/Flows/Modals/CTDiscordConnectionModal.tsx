@@ -48,7 +48,7 @@ export const CTDiscordConnectionModal: React.FC<IProps> = ({
 			<Modal
 				opened={isOpened}
 				onClose={() => onModalClosed()}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				withCloseButton={false}
 				radius={16}
 				size={'lg'}

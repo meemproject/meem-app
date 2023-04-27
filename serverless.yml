@@ -7,9 +7,7 @@ meem-web:
         defaultLambda: "nodejs16.x"
         apiLambda: "nodejs16.x"
         imageLambda: "nodejs16.x"
-    # build:
-    #   cmd: echo
-    #   args: ['"Skipping nextjs build"']
+        roleArn: arn:aws:iam::376705315398:role/2gunlq-8y5tyot
     removeOldLambdaVersions: true
     timeout: 30
     memory: 1024

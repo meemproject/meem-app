@@ -1,4 +1,5 @@
 import { Text, Space, Button, NumberInput, Switch } from '@mantine/core'
+import { MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
@@ -7,9 +8,8 @@ import { useMeemTheme } from '../../../../Styles/MeemTheme'
 
 interface IProps {
 	form: any
-	// rolesData: API.v1.GetSlackRoles.IResponseBody
-	vetoerEmojis: string[]
-	onVetoerEmojisSet: (emojis: string[]) => void
+	vetoerEmojis: MeemAPI.IEmoji[]
+	onVetoerEmojisSet: (emojis: MeemAPI.IEmoji[]) => void
 	onAddEmojisPressed: () => void
 }
 
@@ -101,7 +101,22 @@ export const CTSlackInputRBVetoes: React.FC<IProps> = ({
 											)
 										}}
 									>
-										<Emoji unified={e} size={25} />
+										{e.unified && e.unified.length > 0 && (
+											<Emoji
+												unified={e.unified}
+												size={25}
+											/>
+										)}
+										{e.url && (
+											<img
+												src={e.url}
+												alt={e.name}
+												style={{
+													width: 25,
+													height: 25
+												}}
+											/>
+										)}
 										<Space w="xs" />
 									</div>
 								))}

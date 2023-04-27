@@ -204,7 +204,7 @@ export const LoginModal: React.FC<ILoginModalProps> = ({
 			<Modal
 				centered
 				radius={16}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				withCloseButton={!isLoginForced}
 				closeOnClickOutside={!isLoginForced}
 				padding={'lg'}
@@ -225,7 +225,7 @@ export const LoginModal: React.FC<ILoginModalProps> = ({
 			<Modal
 				centered
 				radius={16}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				withCloseButton={!isLoginForced}
 				closeOnClickOutside={!isLoginForced}
 				padding={'lg'}
