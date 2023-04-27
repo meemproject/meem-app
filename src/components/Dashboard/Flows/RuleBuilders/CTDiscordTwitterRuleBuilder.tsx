@@ -12,16 +12,16 @@ import {
 	SubTwitterSubscription,
 	SubDiscordSubscription
 } from '../../../../../generated/graphql'
-import { useAgreement } from '../../../AgreementHome/AgreementProvider'
-import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SUB_TWITTER, SUB_DISCORD } from '../../../../graphql/rules'
+import { useAgreement } from '../../../Providers/AgreementProvider'
+import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { CTConnection, CTRule } from '../Model/communityTweets'
+import { CTDiscordInputRBEditors } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
+import { CTDiscordInputRBProposals } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
+import { CTRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
+import { CTRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
+import { CTTwitterOutputAutoReply } from '../RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
-import { CTDiscordInputRBEditors } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
-import { CTDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
-import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
-import { CTRuleBuilderVotesCount } from './RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
-import { CTTwitterOutputAutoReply } from './RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false

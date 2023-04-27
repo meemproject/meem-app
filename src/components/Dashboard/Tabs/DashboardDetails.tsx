@@ -9,8 +9,8 @@ import {
 import React, { useEffect, useState } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
+import { useAgreement } from '../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesComponent } from '../ChangesComponents/AgreementAdminChangesModal'
 

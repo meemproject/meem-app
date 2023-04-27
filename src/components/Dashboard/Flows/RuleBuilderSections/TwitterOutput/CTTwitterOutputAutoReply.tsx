@@ -1,7 +1,7 @@
 import { Text, Space, Switch } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { useMeemTheme } from '../../../../../Styles/MeemTheme'
+import { useMeemTheme } from '../../../../Styles/MeemTheme'
 
 interface IProps {
 	form: any

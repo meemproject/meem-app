@@ -36,9 +36,9 @@ import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate } from '../../utils/truncated_wallet'
+import { useAnalytics } from '../Providers/AnalyticsProvider'
 import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
 
@@ -184,45 +184,6 @@ export function HeaderMenu() {
 												<Text>My Wallet</Text>
 											</Menu.Item>
 										)}
-
-										<Link
-											href={`/profile?tab=identity`}
-											passHref
-											legacyBehavior
-										>
-											<a
-												className={
-													meemTheme.unstyledLink
-												}
-											>
-												<Menu.Item
-													className={
-														meemTheme.tExtraSmallBold
-													}
-												>
-													<Text>My Profile</Text>
-												</Menu.Item>
-											</a>
-										</Link>
-										<Link
-											href={`/profile?tab=myCommunities`}
-											legacyBehavior
-											passHref
-										>
-											<a
-												className={
-													meemTheme.unstyledLink
-												}
-											>
-												<Menu.Item
-													className={
-														meemTheme.tExtraSmallBold
-													}
-												>
-													<Text>My Communities</Text>
-												</Menu.Item>
-											</a>
-										</Link>
 									</>
 								)}
 								<Menu.Item

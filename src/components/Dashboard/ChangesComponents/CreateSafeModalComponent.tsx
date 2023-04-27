@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 // eslint-disable-next-line import/namespace
 import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../Providers/AgreementProvider'
 
 interface IProps {
 	agreement?: Agreement

@@ -12,12 +12,12 @@ import {
 } from '@mantine/core'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
-import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { Agreement } from '../../../model/agreement/agreements'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { CTConnectionsModal } from '../../Extensions/CommunityTweets/Modals/CTConnectionsModal'
-import { CTConnection } from '../../Extensions/CommunityTweets/Model/communityTweets'
+import { useAgreement } from '../../Providers/AgreementProvider'
+import { useAnalytics } from '../../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { CTConnectionsModal } from '../Flows/Modals/CTConnectionsModal'
+import { CTConnection } from '../Flows/Model/communityTweets'
 import { DeleteAgreementModal } from '../Modals/DeleteAgreementModal'
 
 interface IProps {

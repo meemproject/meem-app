@@ -10,7 +10,7 @@ import {
 	AgreementAdminRole
 } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../Providers/AgreementProvider'
 import {
 	correctChainIdName,
 	isWrongChainId,

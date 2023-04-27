@@ -9,7 +9,7 @@ import {
 	MembershipRequirementToMeemPermission
 } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../Providers/AgreementProvider'
 
 interface IProps {
 	agreement?: Agreement

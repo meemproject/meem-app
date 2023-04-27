@@ -30,13 +30,13 @@ import {
 } from '../../graphql/rules'
 import { isJwtError } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
-import { useAgreement } from '../AgreementHome/AgreementProvider'
+import { useAgreement } from '../Providers/AgreementProvider'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import {
 	CTRule,
 	CTConnection,
 	CTConnectionType
-} from '../Extensions/CommunityTweets/Model/communityTweets'
-import { useMeemTheme } from '../Styles/MeemTheme'
+} from './Flows/Model/communityTweets'
 import { DashboardAccounts } from './Tabs/DashboardAccounts'
 import { DashboardAirdrops } from './Tabs/DashboardAirdrops'
 import { DashboardDetails } from './Tabs/DashboardDetails'
@@ -67,7 +67,7 @@ export const DashboardComponent: React.FC = () => {
 
 	useEffect(() => {
 		if (isJwtError(error)) {
-			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}/admin`)
+			Cookies.set(CookieKeys.authRedirectUrl, `/${agreement?.slug}`)
 			router.push({
 				pathname: '/authenticate'
 			})
@@ -298,7 +298,7 @@ export const DashboardComponent: React.FC = () => {
 								onClick={() => {
 									setCurrentTab(Tab.Flows)
 									router.push(
-										`/${agreement.slug}/admin?tab=flows`,
+										`/${agreement.slug}?tab=flows`,
 										undefined,
 										{ shallow: true }
 									)
@@ -313,7 +313,7 @@ export const DashboardComponent: React.FC = () => {
 								onClick={() => {
 									setCurrentTab(Tab.Accounts)
 									router.push(
-										`/${agreement.slug}/admin?tab=accounts`,
+										`/${agreement.slug}?tab=accounts`,
 										undefined,
 										{ shallow: true }
 									)
@@ -328,7 +328,7 @@ export const DashboardComponent: React.FC = () => {
 								onClick={() => {
 									setCurrentTab(Tab.Roles)
 									router.push(
-										`/${agreement.slug}/admin?tab=roles`,
+										`/${agreement.slug}?tab=roles`,
 										undefined,
 										{ shallow: true }
 									)
@@ -343,7 +343,7 @@ export const DashboardComponent: React.FC = () => {
 								onClick={() => {
 									setCurrentTab(Tab.Airdrops)
 									router.push(
-										`/${agreement.slug}/admin?tab=airdrops`,
+										`/${agreement.slug}?tab=airdrops`,
 										undefined,
 										{ shallow: true }
 									)
@@ -358,7 +358,7 @@ export const DashboardComponent: React.FC = () => {
 								onClick={() => {
 									setCurrentTab(Tab.Details)
 									router.push(
-										`/${agreement.slug}/admin?tab=details`,
+										`/${agreement.slug}?tab=details`,
 										undefined,
 										{ shallow: true }
 									)

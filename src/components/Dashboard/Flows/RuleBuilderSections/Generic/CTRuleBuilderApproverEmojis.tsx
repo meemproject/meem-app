@@ -2,7 +2,7 @@ import { Text, Space, Button } from '@mantine/core'
 import { Emoji } from 'emoji-picker-react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { useMeemTheme } from '../../../../../Styles/MeemTheme'
+import { useMeemTheme } from '../../../../Styles/MeemTheme'
 
 interface IProps {
 	approverEmojis: string[]

@@ -8,16 +8,20 @@ import { uniq } from 'lodash'
 import dynamic from 'next/dynamic'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
-import { SubSlackSubscription } from '../../../../../generated/graphql'
-import { useAgreement } from '../../../AgreementHome/AgreementProvider'
+import {
+	SubTwitterSubscription,
+	SubSlackSubscription
+} from '../../../../../generated/graphql'
+import { SUB_TWITTER, SUB_SLACK } from '../../../../graphql/rules'
+import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { SUB_SLACK } from '../../../../graphql/rules'
 import { CTConnection, CTRule } from '../Model/communityTweets'
+import { CTRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
+import { CTRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
+import { CTSlackInputRBProposals } from '../RuleBuilderSections/SlackInput/CTSlackInputRBProposals'
+import { CTSlackInputRBVetoes } from '../RuleBuilderSections/SlackInput/CTSlackInputRBVetoes'
+import { CTTwitterOutputAutoReply } from '../RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
-import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
-import { CTRuleBuilderVotesCount } from './RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
-import { CTSlackInputRBProposals } from './RuleBuilderSections/SlackInput/CTSlackInputRBProposals'
-import { CTSlackInputRBVetoes } from './RuleBuilderSections/SlackInput/CTSlackInputRBVetoes'
 
 const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 	ssr: false
@@ -26,8 +30,7 @@ const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
 export interface IProps {
 	rule?: CTRule
 	input?: CTConnection
-	webhookUrl?: string
-	privateKey?: string
+	output?: CTConnection
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -56,11 +59,10 @@ export interface IOnSave extends IFormValues {
 	vetoerEmojis: string[]
 }
 
-export const CTSlackWebhookRulesBuilder: React.FC<IProps> = ({
+export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
 	input,
-	webhookUrl,
-	privateKey,
+	output,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -86,6 +88,20 @@ export const CTSlackWebhookRulesBuilder: React.FC<IProps> = ({
 				!agreement?.id ||
 				!isOpened ||
 				!input?.id,
+			client: mutualMembersClient
+		})
+
+	const { data: twitterData, loading: isLoadingTwitterData } =
+		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
+			variables: {
+				agreementId: agreement?.id,
+				twitterId: rule?.output?.id ?? output?.id ?? ''
+			},
+			skip:
+				!mutualMembersClient ||
+				!agreement?.id ||
+				!isOpened ||
+				!output?.id,
 			client: mutualMembersClient
 		})
 
@@ -242,13 +258,12 @@ export const CTSlackWebhookRulesBuilder: React.FC<IProps> = ({
 	// 		isShareChannelGated = true
 	// 	}
 	// }
-	const isLoading = isLoadingChannelsData || isLoadingSlackData
-	const hasAllRequiredData = !isLoading && slackData && channelsData
-	const isMissingRequiredData = !isLoading && (!slackData || !channelsData)
 
 	const modalContents = (
 		<>
-			{isLoading && (
+			{(isLoadingChannelsData ||
+				isLoadingSlackData ||
+				isLoadingTwitterData) && (
 				<>
 					<Space h={32} />
 					<Center>
@@ -257,29 +272,7 @@ export const CTSlackWebhookRulesBuilder: React.FC<IProps> = ({
 					<Space h={32} />
 				</>
 			)}
-			{isMissingRequiredData && (
-				<>
-					<Space h={32} />
-					<Center>
-						<Text className={meemTheme.tSmallBold}>
-							Unable to retrieve data
-						</Text>
-					</Center>
-					<Space h={8} />
-					<Center>
-						<Text className={meemTheme.tSmall}>
-							{!slackData &&
-								'Slack workspace data was not found.'}{' '}
-							{!slackData && 'Slack channel data was not found.'}{' '}
-							{
-								'Contact us using the button in the top right of this page.'
-							}
-						</Text>
-					</Center>
-					<Space h={32} />
-				</>
-			)}
-			{hasAllRequiredData && (
+			{slackData && channelsData && twitterData && (
 				<>
 					<form
 						onSubmit={form.onSubmit(values =>
@@ -288,8 +281,7 @@ export const CTSlackWebhookRulesBuilder: React.FC<IProps> = ({
 					>
 						<CTRuleBuilderConnections
 							input={rule?.input ?? input}
-							webhookUrl={webhookUrl}
-							webhookPrivateKey={privateKey}
+							output={rule?.output ?? output}
 							existingRule={rule !== undefined}
 							onChangeConnectionsPressed={function (): void {
 								onModalClosed()
@@ -335,6 +327,8 @@ export const CTSlackWebhookRulesBuilder: React.FC<IProps> = ({
 								setIsEmojiPickerOpen(true)
 							}}
 						/>
+
+						<CTTwitterOutputAutoReply form={form} />
 
 						<Modal
 							withCloseButton={true}

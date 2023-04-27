@@ -23,7 +23,7 @@ import {
 	emptyRole
 } from '../../model/agreement/agreements'
 import { showSuccessNotification } from '../../utils/notifications'
-import { useAgreement } from '../AgreementHome/AgreementProvider'
+import { useAgreement } from '../Providers/AgreementProvider'
 import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { RolesManagerContent } from './Role/RolesManagerContent'
 interface Tab {
@@ -251,7 +251,7 @@ export const RolesManager: React.FC = () => {
 										}}
 									>
 										<Link
-											href={`/${agreement?.slug}/admin?tab=roles`}
+											href={`/${agreement?.slug}?tab=roles`}
 											legacyBehavior
 											passHref
 										>

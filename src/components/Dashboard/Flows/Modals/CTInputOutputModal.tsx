@@ -17,13 +17,13 @@ import { MeemAPI } from '@meemproject/sdk'
 import { IconCopy } from '@tabler/icons'
 import React, { useCallback, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { useAnalytics } from '../../../../contexts/AnalyticsProvider'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
 import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../../utils/notifications'
-import { useAgreement } from '../../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../../Providers/AgreementProvider'
+import { useAnalytics } from '../../../Providers/AnalyticsProvider'
 import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 import {
 	CTConnection,

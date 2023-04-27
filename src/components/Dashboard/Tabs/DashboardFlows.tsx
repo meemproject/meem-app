@@ -4,15 +4,12 @@ import { Text, Space, Image, Button } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
-import { useAnalytics } from '../../../contexts/AnalyticsProvider'
 import { toTitleCase } from '../../../utils/strings'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
-import { CTInputOutputModal } from '../../Extensions/CommunityTweets/Modals/CTInputOutputModal'
-import {
-	CTConnection,
-	CTRule
-} from '../../Extensions/CommunityTweets/Model/communityTweets'
+import { useAgreement } from '../../Providers/AgreementProvider'
+import { useAnalytics } from '../../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { CTInputOutputModal } from '../Flows/Modals/CTInputOutputModal'
+import { CTConnection, CTRule } from '../Flows/Model/communityTweets'
 
 interface IProps {
 	rules: CTRule[]

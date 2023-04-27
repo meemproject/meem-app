@@ -91,7 +91,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			if (agreement) {
 				if (router.query.createRole) {
 					router.push({
-						pathname: `/${agreement.slug}/admin`,
+						pathname: `/${agreement.slug}`,
 						query: { tab: 'roles' }
 					})
 				} else {

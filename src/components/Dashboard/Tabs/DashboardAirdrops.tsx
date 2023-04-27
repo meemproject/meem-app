@@ -8,7 +8,7 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../../utils/notifications'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 
 export const DashboardAirdrops: React.FC = () => {

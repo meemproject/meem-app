@@ -13,11 +13,11 @@ import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 import React, { useEffect } from 'react'
-import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
 import { App } from '../components/App'
+import { AgreementProvider } from '../components/Providers/AgreementProvider'
 import '@fontsource/inter'
 import 'isomorphic-fetch'
-import { AnalyticsProvider } from '../contexts/AnalyticsProvider'
+import { AnalyticsProvider } from '../components/Providers/AnalyticsProvider'
 
 // Fix an issue with SSR / ServerSideProps in NextJS
 Object.assign(globalThis, {
@@ -64,12 +64,6 @@ function MyApp(props: AppProps) {
 
 	const agreementSlug =
 		router.query.slug === undefined ? undefined : `${router.query.slug}`
-
-	const isMembershipRequired =
-		router.pathname.includes('/admin') ||
-		router.pathname.includes(
-			'/settings' || router.pathname.includes('/roles')
-		)
 
 	return (
 		<>
@@ -121,10 +115,7 @@ function MyApp(props: AppProps) {
 							}}
 						>
 							<NotificationsProvider>
-								<AgreementProvider
-									slug={agreementSlug}
-									isMembersOnly={isMembershipRequired}
-								>
+								<AgreementProvider slug={agreementSlug}>
 									<AnalyticsProvider
 										writeKey={
 											process.env

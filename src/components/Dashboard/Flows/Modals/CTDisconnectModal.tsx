@@ -8,7 +8,7 @@ import {
 	showSuccessNotification,
 	showErrorNotification
 } from '../../../../utils/notifications'
-import { useAgreement } from '../../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { CTConnection, CTConnectionType } from '../Model/communityTweets'
 

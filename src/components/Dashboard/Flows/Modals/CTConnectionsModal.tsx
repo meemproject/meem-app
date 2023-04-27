@@ -4,7 +4,7 @@ import { MeemAPI } from '@meemproject/sdk'
 import { MoreVert } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
-import { useAgreement } from '../../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../../Providers/AgreementProvider'
 import {
 	colorDarkBlue,
 	colorRed,

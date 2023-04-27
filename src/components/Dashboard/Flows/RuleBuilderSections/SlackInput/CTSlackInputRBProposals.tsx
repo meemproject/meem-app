@@ -3,7 +3,7 @@ import { MeemAPI } from '@meemproject/sdk'
 import { WarningCircle } from 'iconoir-react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
-import { colorOrangeRed, useMeemTheme } from '../../../../../Styles/MeemTheme'
+import { colorOrangeRed, useMeemTheme } from '../../../../Styles/MeemTheme'
 
 interface IProps {
 	form: any

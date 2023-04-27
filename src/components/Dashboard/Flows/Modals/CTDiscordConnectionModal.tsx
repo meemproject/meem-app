@@ -11,7 +11,7 @@ import {
 import { useSDK } from '@meemproject/react'
 import React, { useCallback, useState } from 'react'
 import { showSuccessNotification } from '../../../../utils/notifications'
-import { useAgreement } from '../../../AgreementHome/AgreementProvider'
+import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
 
 interface IProps {

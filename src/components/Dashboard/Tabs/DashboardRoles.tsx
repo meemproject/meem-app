@@ -14,8 +14,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { AgreementRole } from '../../../model/agreement/agreements'
-import { useAgreement } from '../../AgreementHome/AgreementProvider'
 import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
+import { useAgreement } from '../../Providers/AgreementProvider'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
 import {
 	colorBlack,
