@@ -104,11 +104,15 @@ export const DashboardAccounts: React.FC<IProps> = ({
 	return (
 		<div className={meemTheme.fullWidth}>
 			<>
-				<Text className={meemTheme.tMediumBold}>Connections</Text>
-				<Space h={40} />
-				<Text className={meemTheme.tExtraSmallLabel}>
-					CONNECTED ACCOUNTS
-				</Text>
+				<div>
+					<Space h={24} />
+
+					<Text className={meemTheme.tLargeBold}>
+						Connected Accounts
+					</Text>
+
+					<Space h={32} />
+				</div>
 
 				{(isFetchingDiscordConnections ||
 					isFetchingSlackConnections ||

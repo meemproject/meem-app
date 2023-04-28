@@ -61,7 +61,13 @@ export const DashboardFlows: React.FC<IProps> = ({
 		<div className={meemTheme.fullWidth}>
 			{' '}
 			<>
-				<Text className={meemTheme.tExtraSmallLabel}>RULES</Text>
+				<div>
+					<Space h={24} />
+
+					<Text className={meemTheme.tLargeBold}>Flows</Text>
+
+					<Space h={32} />
+				</div>
 				{agreement?.isCurrentUserAgreementAdmin && (
 					<>
 						<Space h={8} />

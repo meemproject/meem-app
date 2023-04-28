@@ -41,7 +41,7 @@ export const DashboardRoles: React.FC = () => {
 	return (
 		<>
 			<div>
-				<Space h={12} />
+				<Space h={24} />
 
 				<Text className={meemTheme.tLargeBold}>Roles</Text>
 

@@ -125,10 +125,13 @@ export const DashboardAirdrops: React.FC = () => {
 	return (
 		<>
 			<div>
-				<Space h={12} />
+				<div>
+					<Space h={24} />
 
-				<Text className={meemTheme.tLargeBold}>Airdrops</Text>
-				<Space h={32} />
+					<Text className={meemTheme.tLargeBold}>Airdrops</Text>
+
+					<Space h={32} />
+				</div>
 
 				<Text className={meemTheme.tSmallBold}>
 					Invite others to your community by airdropping them a token.

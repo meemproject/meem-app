@@ -1,11 +1,4 @@
-import {
-	Text,
-	Button,
-	Textarea,
-	Space,
-	TextInput,
-	Divider
-} from '@mantine/core'
+import { Text, Button, Space, TextInput, Divider } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
@@ -72,10 +65,13 @@ export const DashboardDetails: React.FC = () => {
 
 	return (
 		<div className={meemTheme.fullWidth}>
-			<Space h={12} />
+			<div>
+				<Space h={24} />
 
-			<Text className={meemTheme.tLargeBold}>Community Profile</Text>
-			<Space h={32} />
+				<Text className={meemTheme.tLargeBold}>Community Details</Text>
+
+				<Space h={32} />
+			</div>
 
 			<Text
 				className={meemTheme.tMediumBold}
@@ -83,27 +79,10 @@ export const DashboardDetails: React.FC = () => {
 			<Space h={12} />
 			<TextInput
 				radius="lg"
-				size="md"
+				size="lg"
 				value={agreementName}
 				style={{ maxWidth: 800 }}
 				onChange={event => setAgreementName(event.currentTarget.value)}
-			/>
-			<Space h={'xl'} />
-			<Text className={meemTheme.tMediumBold}>
-				In a sentence, describe what your members do together.
-			</Text>
-			<Space h={12} />
-			<Textarea
-				radius="lg"
-				size="md"
-				minRows={2}
-				maxRows={4}
-				maxLength={140}
-				style={{ maxWidth: 800 }}
-				value={agreementDescription}
-				onChange={event =>
-					setAgreementDescription(event.currentTarget.value)
-				}
 			/>
 
 			<Space h={40} />
