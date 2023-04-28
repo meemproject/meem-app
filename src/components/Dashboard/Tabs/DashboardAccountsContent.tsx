@@ -1,30 +1,20 @@
-import { Space, Modal, Text, Grid, Image, Center, Menu } from '@mantine/core'
+import { Space, Text, Grid, Image, Center, Menu } from '@mantine/core'
 import { useAuth } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { MoreVert } from 'iconoir-react'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
-import { useAgreement } from '../../../Providers/AgreementProvider'
-import {
-	colorDarkBlue,
-	colorRed,
-	useMeemTheme
-} from '../../../Styles/MeemTheme'
-import { CTConnection } from '../Model/communityTweets'
-import { CTDisconnectModal } from './CTDisconnectModal'
-import { CTDiscordConnectionModal } from './CTDiscordConnectionModal'
+import { useAgreement } from '../../Providers/AgreementProvider'
+import { colorDarkBlue, colorRed, useMeemTheme } from '../../Styles/MeemTheme'
+import { CTDisconnectModal } from '../Flows/Modals/CTDisconnectModal'
+import { CTDiscordConnectionModal } from '../Flows/Modals/CTDiscordConnectionModal'
+import { CTConnection } from '../Flows/Model/communityTweets'
 
 interface IProps {
 	connections?: CTConnection[]
-	isOpened: boolean
-	onModalClosed: () => void
 }
 
-export const CTConnectionsModal: React.FC<IProps> = ({
-	connections,
-	isOpened,
-	onModalClosed
-}) => {
+export const DashboardAccountsContent: React.FC<IProps> = ({ connections }) => {
 	// General params
 	const { classes: meemTheme } = useMeemTheme()
 	const { agreement } = useAgreement()
@@ -284,43 +274,5 @@ export const CTConnectionsModal: React.FC<IProps> = ({
 		</>
 	)
 
-	return (
-		<>
-			<Modal
-				className={meemTheme.visibleDesktopOnly}
-				centered
-				radius={16}
-				overlayProps={{ blur: 8 }}
-				size={'60%'}
-				padding={'lg'}
-				opened={isOpened}
-				title={
-					<Text className={meemTheme.tMediumBold}>
-						Manage Connections
-					</Text>
-				}
-				onClose={() => {
-					onModalClosed()
-				}}
-			>
-				{modalContents}
-			</Modal>
-			<Modal
-				className={meemTheme.visibleMobileOnly}
-				fullScreen
-				padding={'lg'}
-				opened={isOpened}
-				title={
-					<Text className={meemTheme.tMediumBold}>
-						Manage Connections
-					</Text>
-				}
-				onClose={() => {
-					onModalClosed()
-				}}
-			>
-				{modalContents}
-			</Modal>
-		</>
-	)
+	return <>{modalContents}</>
 }

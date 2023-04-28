@@ -16,9 +16,9 @@ import { Agreement } from '../../../model/agreement/agreements'
 import { useAgreement } from '../../Providers/AgreementProvider'
 import { useAnalytics } from '../../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { CTConnectionsModal } from '../Flows/Modals/CTConnectionsModal'
 import { CTConnection } from '../Flows/Model/communityTweets'
 import { DeleteAgreementModal } from '../Modals/DeleteAgreementModal'
+import { DashboardAccountsContent } from './DashboardAccountsContent'
 
 interface IProps {
 	communityTweetsConnections: CTConnection[]
@@ -111,7 +111,7 @@ export const DashboardAccounts: React.FC<IProps> = ({
 						Connected Accounts
 					</Text>
 
-					<Space h={32} />
+					<Space h={8} />
 				</div>
 
 				{(isFetchingDiscordConnections ||
@@ -131,44 +131,9 @@ export const DashboardAccounts: React.FC<IProps> = ({
 					!isFetchingTwitterConnections && (
 						<>
 							<Space h={24} />
-							<Grid>
-								{connectedDiscordAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={MeemAPI.RuleIo.Discord.toString()}
-									>
-										{connectionSummaryGridItem(
-											MeemAPI.RuleIo.Discord,
-											connectedDiscordAccounts
-										)}
-									</Grid.Col>
-								)}
-								{connectedTwitterAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={MeemAPI.RuleIo.Twitter.toString()}
-									>
-										{connectionSummaryGridItem(
-											MeemAPI.RuleIo.Twitter,
-											connectedTwitterAccounts
-										)}
-									</Grid.Col>
-								)}
-								{connectedSlackAccounts > 0 && (
-									<Grid.Col
-										xs={12}
-										md={6}
-										key={MeemAPI.RuleIo.Slack.toString()}
-									>
-										{connectionSummaryGridItem(
-											MeemAPI.RuleIo.Slack,
-											connectedSlackAccounts
-										)}
-									</Grid.Col>
-								)}
-							</Grid>
+							<DashboardAccountsContent
+								connections={communityTweetsConnections}
+							/>
 						</>
 					)}
 
@@ -186,18 +151,7 @@ export const DashboardAccounts: React.FC<IProps> = ({
 					Manage Connections
 				</Button>
 				<Space h={32} />
-
-				<Divider />
-				<Space h={32} />
 			</>
-
-			<CTConnectionsModal
-				connections={communityTweetsConnections}
-				isOpened={isManageConnectionsModalOpen}
-				onModalClosed={function (): void {
-					setIsManageConnectionsModalOpen(false)
-				}}
-			/>
 		</div>
 	)
 }

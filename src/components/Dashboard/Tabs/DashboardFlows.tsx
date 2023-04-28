@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
-import { Text, Space, Image, Button } from '@mantine/core'
+import { Text, Space, Image, Button, Accordion } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
@@ -68,14 +68,12 @@ export const DashboardFlows: React.FC<IProps> = ({
 
 					<Space h={32} />
 				</div>
-				{agreement?.isCurrentUserAgreementAdmin && (
-					<>
-						<Space h={8} />
-						<Text className={meemTheme.tExtraSmall}>
-							{`Add logic to dictate how new posts will be proposed and published, as well as which community members will manage each part of the process.`}
-						</Text>
-					</>
-				)}
+
+				<Text className={meemTheme.tExtraSmallLabel}>GET STARTED</Text>
+				<Space h={12} />
+				<Text className={meemTheme.tSmallBold}>
+					{`Create a new flow to connect your community’s tools and streamline your processes around News, Libraries and Markets.`}
+				</Text>
 				<Space h={16} />
 
 				{rules &&
@@ -205,14 +203,6 @@ export const DashboardFlows: React.FC<IProps> = ({
 						)
 					})}
 
-				{agreement?.isCurrentUserAgreementMember &&
-					(!rules || (rules && rules.length === 0)) && (
-						<Text className={meemTheme.tSmallBold}>
-							This community has no Community Tweets rules set up
-							yet.
-						</Text>
-					)}
-
 				{agreement?.isCurrentUserAgreementAdmin && (
 					<>
 						<Space h={16} />
@@ -227,6 +217,45 @@ export const DashboardFlows: React.FC<IProps> = ({
 						</Button>
 					</>
 				)}
+
+				<Space h={40} />
+				<Text className={meemTheme.tExtraSmallLabel}>FAQ</Text>
+				<Space h={12} />
+				<Accordion variant="separated" defaultValue="customization">
+					<Accordion.Item value="what">
+						<Accordion.Control>
+							<Text className={meemTheme.tSmallBold}>
+								What’s a flow?
+							</Text>
+						</Accordion.Control>
+						<Accordion.Panel>
+							<Text>Info goes here</Text>
+						</Accordion.Panel>
+					</Accordion.Item>
+
+					<Accordion.Item value="usage">
+						<Accordion.Control>
+							<Text className={meemTheme.tSmallBold}>
+								What can I do with flows?
+							</Text>
+						</Accordion.Control>
+
+						<Accordion.Panel>
+							<Text>Info goes here</Text>
+						</Accordion.Panel>
+					</Accordion.Item>
+
+					<Accordion.Item value="tools">
+						<Accordion.Control>
+							<Text className={meemTheme.tSmallBold}>
+								What tools can I connect?
+							</Text>
+						</Accordion.Control>
+						<Accordion.Panel>
+							<Text>Info goes here</Text>
+						</Accordion.Panel>
+					</Accordion.Item>
+				</Accordion>
 
 				<CTInputOutputModal
 					isOpened={isNewRuleModalOpen}
