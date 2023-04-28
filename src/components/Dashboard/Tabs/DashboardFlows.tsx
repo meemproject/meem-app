@@ -207,7 +207,7 @@ export const DashboardFlows: React.FC<IProps> = ({
 					<>
 						<Space h={16} />
 						<Button
-							className={meemTheme.buttonDarkGrey}
+							className={meemTheme.buttonBlack}
 							onClick={() => {
 								setSelectedRule(undefined)
 								setIsNewRuleModalOpen(true)

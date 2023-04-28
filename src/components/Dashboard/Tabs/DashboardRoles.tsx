@@ -6,15 +6,13 @@ import {
 	Badge,
 	Menu,
 	useMantineColorScheme,
-	Center,
-	Divider
+	Center
 } from '@mantine/core'
 import { Group, Lock, MoreHorizCircle } from 'iconoir-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { AgreementRole } from '../../../model/agreement/agreements'
-import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useAgreement } from '../../Providers/AgreementProvider'
 import { DeleteRoleModal } from '../../Roles/Role/Modals/DeleteRoleModal'
 import {
@@ -51,7 +49,7 @@ export const DashboardRoles: React.FC = () => {
 				<>
 					{agreement.roles.map(role => (
 						<div
-							className={meemTheme.gridItem}
+							className={meemTheme.gridItemFlat}
 							style={{
 								display: 'flex',
 								justifyContent: 'space-between',
@@ -182,7 +180,7 @@ export const DashboardRoles: React.FC = () => {
 							</div>
 						</div>
 					))}
-					<Space h={32} />
+					<Space h={16} />
 					<Link
 						href={`/${agreement.slug}/roles?createRole=true`}
 						legacyBehavior
@@ -207,7 +205,7 @@ export const DashboardRoles: React.FC = () => {
 					</Center>
 				</>
 			)}
-			<Space h={32} />
+			{/* <Space h={32} />
 			<Divider />
 			<Space h={32} />
 			<Text className={meemTheme.tExtraSmallLabel}>DEVELOPER PORTAL</Text>
@@ -217,7 +215,7 @@ export const DashboardRoles: React.FC = () => {
 				modalTitle={'Improving roles'}
 				modalText={`Roles are a core part of what makes the meem protocol so interesting. Because each role is backed by a token, the possibilities are endless. You can contribute by building on the meem app source code. Look for AdminRoles.tsx and get coding! Pull Requests are always welcome.`}
 				githubLink={`https://github.com/meemproject/meem-app`}
-			/>
+			/> */}
 			<Space h={64} />
 			<DeleteRoleModal
 				role={roleToDelete}

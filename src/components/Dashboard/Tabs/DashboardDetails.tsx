@@ -1,8 +1,7 @@
-import { Text, Button, Space, TextInput, Divider } from '@mantine/core'
+import { Text, Button, Space, TextInput } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { Agreement } from '../../../model/agreement/agreements'
 import { showErrorNotification } from '../../../utils/notifications'
-import { DeveloperPortalButton } from '../../Developer/DeveloperPortalButton'
 import { useAgreement } from '../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { AgreementAdminChangesComponent } from '../ChangesComponents/AgreementAdminChangesModal'
@@ -95,7 +94,7 @@ export const DashboardDetails: React.FC = () => {
 				Save Changes
 			</Button>
 			<Space h={32} />
-			<Divider />
+			{/* <Divider />
 			<Space h={32} />
 			<Text className={meemTheme.tExtraSmallLabel}>DEVELOPER PORTAL</Text>
 			<Space h={20} />
@@ -104,7 +103,7 @@ export const DashboardDetails: React.FC = () => {
 				modalTitle={'Add more community details'}
 				modalText={`What other key information might communities want to advertise? You can contribute by building on the meem app source code. Look for AdminAgreementDetails.tsx and get coding! Pull Requests are always welcome.`}
 				githubLink={`https://github.com/meemproject/meem-app`}
-			/>
+			/> */}
 			<Space h={64} />
 			<AgreementAdminChangesComponent
 				agreement={newAgreementData}
