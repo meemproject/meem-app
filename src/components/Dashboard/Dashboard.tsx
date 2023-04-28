@@ -1,5 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	Container,
 	Text,
@@ -10,13 +12,15 @@ import {
 	NavLink,
 	MediaQuery,
 	Burger,
-	Select
+	Select,
+	Divider
 } from '@mantine/core'
 import { useMeemApollo, useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { AccessPoint, MoodSmile, Notes, Send, Wand } from 'tabler-icons-react'
 import {
 	SubDiscordsSubscription,
 	SubTwittersSubscription,
@@ -98,12 +102,17 @@ export const DashboardComponent: React.FC = () => {
 	}, [router.query.tab])
 
 	// Communities
-	const { data: communitiesData, loading: isFetchingCommunities } =
+	const [communities, setCommunities] = useState([])
+	const [community, setCommunity] = useState<string | null>(null)
+	const [previousCommunitiesDataString, setPreviousCommunitiesDataString] =
+		useState('')
+	const { data: communitiesData } =
 		useSubscription<MyAgreementsSubscriptionSubscription>(
 			SUB_MY_AGREEMENTS,
 			{
 				variables: {
-					agreementId: agreement?.id
+					walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+					chainId: process.env.NEXT_PUBLIC_CHAIN_ID
 				},
 				skip: !mutualMembersClient || !agreement?.id,
 				client: mutualMembersClient
@@ -260,6 +269,30 @@ export const DashboardComponent: React.FC = () => {
 		}
 	}, [previousRulesDataString, rulesData])
 
+	useEffect(() => {
+		if (communitiesData) {
+			const data: any = []
+
+			const currentAgSlug = router.query.slug?.toString() ?? ''
+			communitiesData.Agreements.forEach(ag => {
+				data.push({ value: ag.slug, label: ag.name })
+				if (ag.slug === currentAgSlug) {
+					setCommunity(ag.slug)
+				}
+			})
+
+			data.push({ value: 'create-new', label: '+ Create New Community' })
+
+			log.debug(JSON.stringify(data))
+
+			const commsToJson = JSON.stringify(data)
+			if (commsToJson !== previousCommunitiesDataString) {
+				setCommunities(data)
+				setPreviousCommunitiesDataString(commsToJson)
+			}
+		}
+	}, [communitiesData, previousCommunitiesDataString, router.query.slug])
+
 	return (
 		<>
 			{isLoadingAgreement && (
@@ -284,19 +317,16 @@ export const DashboardComponent: React.FC = () => {
 
 			{!isLoadingAgreement && agreement?.name && (
 				<>
+					<MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+						<Burger
+							style={{ marginLeft: 24, marginTop: 24 }}
+							opened={mobileNavBarVisible}
+							onClick={() => setMobileNavBarVisible(o => !o)}
+							size="sm"
+							mr="xl"
+						/>
+					</MediaQuery>
 					<div className={meemTheme.pagePanelLayoutContainer}>
-						<MediaQuery
-							largerThan="sm"
-							styles={{ display: 'none' }}
-						>
-							<Burger
-								style={{ marginLeft: 24 }}
-								opened={mobileNavBarVisible}
-								onClick={() => setMobileNavBarVisible(o => !o)}
-								size="sm"
-								mr="xl"
-							/>
-						</MediaQuery>
 						<Navbar
 							className={meemTheme.pagePanelLayoutNavBar}
 							width={{ base: 288 }}
@@ -307,90 +337,105 @@ export const DashboardComponent: React.FC = () => {
 							withBorder={false}
 							p="xs"
 						>
-							<Select
-								placeholder="Pick one"
-								size="lg"
-								data={[
-									{ value: 'react', label: 'React' },
-									{ value: 'ng', label: 'Angular' },
-									{ value: 'svelte', label: 'Svelte' },
-									{ value: 'vue', label: 'Vue' }
-								]}
-							/>
-							<NavLink
-								className={meemTheme.pagePanelLayoutNavItem}
-								active={currentTab === Tab.Flows}
-								label={'Flows'}
-								onClick={() => {
-									setCurrentTab(Tab.Flows)
-									router.push(
-										`/${agreement.slug}?tab=flows`,
-										undefined,
-										{ shallow: true }
-									)
-									setMobileNavBarVisible(false)
-								}}
-							/>
+							<div style={{ padding: 16 }}>
+								<Select
+									placeholder={community ?? ''}
+									size="lg"
+									value={community}
+									data={communities}
+									onChange={value => {
+										if (value) {
+											if (value === 'create-new') {
+												// TODO: Create new community
+											} else {
+												router.push(`/${value}`)
+											}
+										}
+									}}
+								/>
+								<Space h={24} />
+								<Divider />
+								<Space h={24} />
+								<NavLink
+									className={meemTheme.pagePanelLayoutNavItem}
+									active={currentTab === Tab.Flows}
+									label={'Flows'}
+									icon={<Wand />}
+									onClick={() => {
+										setCurrentTab(Tab.Flows)
+										router.push(
+											`/${agreement.slug}?tab=flows`,
+											undefined,
+											{ shallow: true }
+										)
+										setMobileNavBarVisible(false)
+									}}
+								/>
 
-							<NavLink
-								className={meemTheme.pagePanelLayoutNavItem}
-								active={currentTab === Tab.Accounts}
-								label={'Accounts'}
-								onClick={() => {
-									setCurrentTab(Tab.Accounts)
-									router.push(
-										`/${agreement.slug}?tab=accounts`,
-										undefined,
-										{ shallow: true }
-									)
-									setMobileNavBarVisible(false)
-								}}
-							/>
+								<NavLink
+									className={meemTheme.pagePanelLayoutNavItem}
+									active={currentTab === Tab.Accounts}
+									label={'Connected Accounts'}
+									icon={<AccessPoint />}
+									onClick={() => {
+										setCurrentTab(Tab.Accounts)
+										router.push(
+											`/${agreement.slug}?tab=accounts`,
+											undefined,
+											{ shallow: true }
+										)
+										setMobileNavBarVisible(false)
+									}}
+								/>
 
-							<NavLink
-								className={meemTheme.pagePanelLayoutNavItem}
-								active={currentTab === Tab.Roles}
-								label={'Roles'}
-								onClick={() => {
-									setCurrentTab(Tab.Roles)
-									router.push(
-										`/${agreement.slug}?tab=roles`,
-										undefined,
-										{ shallow: true }
-									)
-									setMobileNavBarVisible(false)
-								}}
-							/>
+								<NavLink
+									className={meemTheme.pagePanelLayoutNavItem}
+									active={currentTab === Tab.Roles}
+									icon={<MoodSmile />}
+									label={'Roles'}
+									onClick={() => {
+										setCurrentTab(Tab.Roles)
+										router.push(
+											`/${agreement.slug}?tab=roles`,
+											undefined,
+											{ shallow: true }
+										)
+										setMobileNavBarVisible(false)
+									}}
+								/>
 
-							<NavLink
-								className={meemTheme.pagePanelLayoutNavItem}
-								active={currentTab === Tab.Airdrops}
-								label={'Airdrops'}
-								onClick={() => {
-									setCurrentTab(Tab.Airdrops)
-									router.push(
-										`/${agreement.slug}?tab=airdrops`,
-										undefined,
-										{ shallow: true }
-									)
-									setMobileNavBarVisible(false)
-								}}
-							/>
+								<NavLink
+									className={meemTheme.pagePanelLayoutNavItem}
+									active={currentTab === Tab.Airdrops}
+									label={'Airdrops'}
+									icon={<Send />}
+									onClick={() => {
+										setCurrentTab(Tab.Airdrops)
+										router.push(
+											`/${agreement.slug}?tab=airdrops`,
+											undefined,
+											{ shallow: true }
+										)
+										setMobileNavBarVisible(false)
+									}}
+								/>
 
-							<NavLink
-								className={meemTheme.pagePanelLayoutNavItem}
-								active={currentTab === Tab.Details}
-								label={'Community Details'}
-								onClick={() => {
-									setCurrentTab(Tab.Details)
-									router.push(
-										`/${agreement.slug}?tab=details`,
-										undefined,
-										{ shallow: true }
-									)
-									setMobileNavBarVisible(false)
-								}}
-							/>
+								<NavLink
+									className={meemTheme.pagePanelLayoutNavItem}
+									active={currentTab === Tab.Details}
+									label={'Community Details'}
+									icon={<Notes />}
+									onClick={() => {
+										setCurrentTab(Tab.Details)
+										router.push(
+											`/${agreement.slug}?tab=details`,
+											undefined,
+											{ shallow: true }
+										)
+										setMobileNavBarVisible(false)
+									}}
+								/>
+							</div>
 						</Navbar>
 						{!mobileNavBarVisible && (
 							<div className={meemTheme.pagePanelLayoutContent}>

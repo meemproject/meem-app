@@ -424,10 +424,11 @@ export const SUB_MY_AGREEMENTS = gql`
 				}
 				chainId: { _eq: $chainId }
 			}
-			order_by: { AgreementTokens_aggregate: { count: desc } }
+			order_by: { name: asc }
 		) {
 			id
 			slug
+			name
 		}
 	}
 `

@@ -363,7 +363,7 @@ export const AgreementProvider: FC<IAgreementProviderProps> = ({
 			title: 'Saving changes',
 			message: 'Please wait...',
 			autoClose: false,
-			disallowClose: true,
+			withCloseButton: false,
 			loading: true
 		})
 	}

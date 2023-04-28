@@ -59,6 +59,7 @@
 		"@segment/analytics-next": "^1.51.2",
 		"@types/three": "^0.150.1",
 		"abort-controller": "^3.0.0",
+		"emoji-mart": "^5.5.2",
 		"emoji-picker-react": "^4.4.9",
 		"ethers": "^5.6.4",
 		"graphql": "^15.7.2",
@@ -74,6 +75,7 @@
 		"react-dom": "^18.2.0",
 		"superagent": "^7.1.6",
 		"swr": "^2.0.1",
+		"tabler-icons-react": "^1.56.0",
 		"three": "^0.151.3",
 		"uuid": "^9.0.0"
 	},

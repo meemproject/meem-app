@@ -674,8 +674,8 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 
 	pagePanelLayoutContent: {
-		marginLeft: 32,
-		marginRight: 32,
+		paddingLeft: 32,
+		paddingRight: 32,
 		width: '100%',
 		maxWidth: 800,
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
@@ -692,7 +692,7 @@ export const useMeemTheme = createStyles(theme => ({
 			paddingTop: 24
 		}
 	},
-	pagePanelLayoutNavItem: { borderRadius: 8 },
+	pagePanelLayoutNavItem: { borderRadius: 8, marginBottom: 16 },
 
 	// Site header bar
 	siteHeader: {

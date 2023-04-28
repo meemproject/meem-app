@@ -6,7 +6,7 @@ import {
 	MantineProvider
 } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
-import { NotificationsProvider } from '@mantine/notifications'
+import { Notifications } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
 import { default as AbortController } from 'abort-controller'
 import type { AppProps } from 'next/app'
@@ -80,21 +80,9 @@ function MyApp(props: AppProps) {
 							withNormalizeCSS
 							theme={{
 								fontFamily: 'Inter, sans-serif',
-								spacing: {
-									xs: 15,
-									sm: 20,
-									md: 25,
-									lg: 30,
-									xl: 40
-								},
+
 								lineHeight: 1,
-								breakpoints: {
-									xs: 500,
-									sm: 800,
-									md: 1000,
-									lg: 1200,
-									xl: 1400
-								},
+
 								colors: {
 									brand: [
 										'#EFF7FF',
@@ -113,21 +101,19 @@ function MyApp(props: AppProps) {
 								primaryColor: 'brand'
 							}}
 						>
-							<NotificationsProvider>
-								<AgreementProvider slug={agreementSlug}>
-									<AnalyticsProvider
-										writeKey={
-											process.env
-												.NEXT_PUBLIC_SEGMENT_WRITE_KEY ??
-											''
-										}
-									>
-										<App>
-											<Component {...pageProps} />
-										</App>
-									</AnalyticsProvider>
-								</AgreementProvider>
-							</NotificationsProvider>
+							<Notifications />
+							<AgreementProvider slug={agreementSlug}>
+								<AnalyticsProvider
+									writeKey={
+										process.env
+											.NEXT_PUBLIC_SEGMENT_WRITE_KEY ?? ''
+									}
+								>
+									<App>
+										<Component {...pageProps} />
+									</App>
+								</AnalyticsProvider>
+							</AgreementProvider>
 						</MantineProvider>
 					</ColorSchemeProvider>
 				</>
