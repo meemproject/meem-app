@@ -131,6 +131,7 @@ export function HeaderMenu() {
 										[meemTheme.siteHeaderUserActive]:
 											isUserMenuOpened
 									})}
+									style={{ marginRight: 16 }}
 								>
 									{!user && isMeLoading && (
 										<Loader

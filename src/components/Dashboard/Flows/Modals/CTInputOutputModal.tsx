@@ -197,6 +197,8 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 
 	const openRuleBuilder = useCallback(
 		(input: ConnectedAccount, output?: ConnectedAccount) => {
+			onModalClosed()
+
 			if (
 				input.platform === MeemAPI.RuleIo.Discord &&
 				output?.platform === MeemAPI.RuleIo.Twitter &&
@@ -231,7 +233,8 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 			isDiscordTwitterRuleBuilderOpened,
 			isDiscordWebhookRuleBuilderOpened,
 			isSlackTwitterRuleBuilderOpened,
-			isSlackWebhookRuleBuilderOpened
+			isSlackWebhookRuleBuilderOpened,
+			onModalClosed
 		]
 	)
 
@@ -584,7 +587,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 				</>
 			)}
 
-			{isOpened && isDiscordTwitterRuleBuilderOpened && (
+			{isDiscordTwitterRuleBuilderOpened && (
 				<>
 					<CTDiscordTwitterRulesBuilder
 						onSave={values => {
@@ -605,7 +608,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 				</>
 			)}
 
-			{isOpened && isDiscordWebhookRuleBuilderOpened && (
+			{isDiscordWebhookRuleBuilderOpened && (
 				<>
 					<CTDiscordWebhookRulesBuilder
 						onSave={values => {
@@ -627,7 +630,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 				</>
 			)}
 
-			{isOpened && isSlackTwitterRuleBuilderOpened && (
+			{isSlackTwitterRuleBuilderOpened && (
 				<>
 					<CTSlackTwitterRulesBuilder
 						onSave={values => {
@@ -648,7 +651,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 				</>
 			)}
 
-			{isOpened && isSlackWebhookRuleBuilderOpened && (
+			{isSlackWebhookRuleBuilderOpened && (
 				<>
 					<CTSlackWebhookRulesBuilder
 						onSave={values => {

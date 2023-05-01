@@ -1,10 +1,19 @@
 import { useSubscription } from '@apollo/client'
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
+import {
+	Text,
+	Space,
+	Button,
+	Modal,
+	Center,
+	Loader,
+	Container
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth, useMeemApollo } from '@meemproject/react'
 import { makeFetcher, MeemAPI } from '@meemproject/sdk'
+import { Cancel } from 'iconoir-react'
 import { uniqBy } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
@@ -346,136 +355,149 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 	}
 
 	const modalContents = (
-		<>
-			{(loadingChannelsData ||
-				loadingDiscordData ||
-				loadingRolesData) && (
-				<>
-					<Space h={32} />
-					<Center>
-						<Loader variant={'oval'} color={'cyan'} />
-					</Center>
-					<Space h={32} />
-				</>
-			)}
-			{discordData && channelsData && rolesData && (
-				<>
-					<form
-						onSubmit={form.onSubmit(values =>
-							handleFormSubmit(values)
-						)}
-					>
-						<CTRuleBuilderConnections
-							input={rule?.input ?? input}
-							webhookUrl={webhookUrl}
-							webhookPrivateKey={privateKey}
-							existingRule={rule !== undefined}
-							onChangeConnectionsPressed={function (): void {
-								onModalClosed()
-							}}
-						/>
+		<div style={{ position: 'relative' }}>
+			<Space h={32} />
+			<Center>
+				<Text className={meemTheme.tLargeBold}>Add New Flow</Text>
+			</Center>
+			<Space h={8} />
+			<Center>
+				<Text>
+					Customize the logic below to create a new publishing flow
+					for your community.
+				</Text>
+			</Center>
 
-						<CTDiscordInputRBProposals
-							form={form}
-							channelsData={channelsData}
-							rolesData={rolesData}
-							isProposalChannelGated={isProposalChannelGated}
-						/>
-
-						<CTRuleBuilderApproverEmojis
-							approverEmojis={approverEmojis}
-							onApproverEmojisSet={emojis => {
-								setApproverEmojis(emojis)
-							}}
-							onAddEmojisPressed={function (): void {
-								setEmojiSelectType(EmojiSelectType.Approver)
-								setIsEmojiPickerOpen(true)
-							}}
-						/>
-
-						<CTRuleBuilderVotesCount form={form} />
-
-						<CTDiscordInputRBEditors
-							form={form}
-							rolesData={rolesData}
-							editorEmojis={editorEmojis}
-							onEditorEmojisSet={emojis => {
-								setEditorEmojis(emojis)
-							}}
-							onAddEmojisPressed={() => {
-								setEmojiSelectType(EmojiSelectType.Editor)
-								setIsEmojiPickerOpen(true)
-							}}
-						/>
-
-						<Modal
-							withCloseButton={true}
-							closeOnClickOutside={false}
-							padding={8}
-							overlayProps={{ blur: 8 }}
-							size={366}
-							opened={isEmojiPickerOpen}
-							onClose={() => setIsEmojiPickerOpen(false)}
+			<Space h={48} />
+			<Container size={'sm'}>
+				{(loadingChannelsData ||
+					loadingDiscordData ||
+					loadingRolesData) && (
+					<>
+						<Space h={32} />
+						<Center>
+							<Loader variant={'oval'} color={'cyan'} />
+						</Center>
+						<Space h={32} />
+					</>
+				)}
+				{discordData && channelsData && rolesData && (
+					<>
+						<form
+							onSubmit={form.onSubmit(values =>
+								handleFormSubmit(values)
+							)}
 						>
-							<Picker
-								data={data}
-								onEmojiSelect={handleEmojiClick}
-								custom={[
-									{
-										id: 'discord',
-										name: `${discordData?.AgreementDiscords[0].Discord?.name}`,
-										emojis: emojisData?.emojis.map(e => ({
-											id: e.id,
-											name: e.name,
-											keywords: [e.name],
-											// @ts-ignore
-											skins: [{ src: e.url }]
-										}))
-									}
-								]}
+							<CTRuleBuilderConnections
+								input={rule?.input ?? input}
+								webhookUrl={webhookUrl}
+								webhookPrivateKey={privateKey}
+								existingRule={rule !== undefined}
+								onChangeConnectionsPressed={function (): void {
+									onModalClosed()
+								}}
 							/>
-						</Modal>
-						<Space h={'lg'} />
-						<Button className={meemTheme.buttonBlack} type="submit">
-							Save
-						</Button>
-					</form>
-				</>
-			)}
-		</>
+
+							<CTDiscordInputRBProposals
+								form={form}
+								channelsData={channelsData}
+								rolesData={rolesData}
+								isProposalChannelGated={isProposalChannelGated}
+							/>
+
+							<CTRuleBuilderApproverEmojis
+								approverEmojis={approverEmojis}
+								onApproverEmojisSet={emojis => {
+									setApproverEmojis(emojis)
+								}}
+								onAddEmojisPressed={function (): void {
+									setEmojiSelectType(EmojiSelectType.Approver)
+									setIsEmojiPickerOpen(true)
+								}}
+							/>
+
+							<CTRuleBuilderVotesCount form={form} />
+
+							<CTDiscordInputRBEditors
+								form={form}
+								rolesData={rolesData}
+								editorEmojis={editorEmojis}
+								onEditorEmojisSet={emojis => {
+									setEditorEmojis(emojis)
+								}}
+								onAddEmojisPressed={() => {
+									setEmojiSelectType(EmojiSelectType.Editor)
+									setIsEmojiPickerOpen(true)
+								}}
+							/>
+
+							<Modal
+								withCloseButton={true}
+								closeOnClickOutside={false}
+								padding={8}
+								overlayProps={{ blur: 8 }}
+								size={366}
+								opened={isEmojiPickerOpen}
+								onClose={() => setIsEmojiPickerOpen(false)}
+							>
+								<Picker
+									data={data}
+									onEmojiSelect={handleEmojiClick}
+									custom={[
+										{
+											id: 'discord',
+											name: `${discordData?.AgreementDiscords[0].Discord?.name}`,
+											emojis: emojisData?.emojis.map(
+												e => ({
+													id: e.id,
+													name: e.name,
+													keywords: [e.name],
+													// @ts-ignore
+													skins: [{ src: e.url }]
+												})
+											)
+										}
+									]}
+								/>
+							</Modal>
+							<Space h={'lg'} />
+							<Button
+								className={meemTheme.buttonBlack}
+								type="submit"
+							>
+								Save
+							</Button>
+						</form>
+					</>
+				)}
+			</Container>
+			<Space h={48} />
+			<Cancel
+				style={{
+					position: 'absolute',
+					top: 8,
+					right: 8,
+					cursor: 'pointer'
+				}}
+				onClick={() => {
+					onModalClosed()
+				}}
+			/>
+		</div>
 	)
 
 	return (
 		<>
 			<Modal
-				className={meemTheme.visibleDesktopOnly}
-				centered
-				radius={16}
-				overlayProps={{ blur: 8 }}
-				size={'60%'}
-				padding={'lg'}
-				opened={isOpened}
-				title={
-					<Text className={meemTheme.tMediumBold}>
-						{rule ? 'Edit Flow' : 'Add New Flow'}
-					</Text>
-				}
-				onClose={() => {
-					onModalClosed()
-				}}
-			>
-				{modalContents}
-			</Modal>
-			<Modal
-				className={meemTheme.visibleMobileOnly}
 				fullScreen
 				padding={'lg'}
+				classNames={{
+					root: meemTheme.backgroundMeem,
+					content: meemTheme.backgroundMeem
+				}}
+				transitionProps={{ transition: 'pop', duration: 0 }}
+				withCloseButton={false}
 				opened={isOpened}
-				title={
-					<Text className={meemTheme.tMediumBold}>
-						{rule ? 'Edit Flow' : 'Add New Flow'}
-					</Text>
-				}
 				onClose={() => {
 					onModalClosed()
 				}}
