@@ -441,6 +441,15 @@ export const useMeemTheme = createStyles(theme => ({
 		borderRadius: 8,
 		padding: 16
 	},
+	gridItemFlowTemplate: {
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
+		borderRadius: 8,
+		padding: 16
+	},
 	gridItemBlue: {
 		cursor: 'pointer',
 		border: `1px solid ${colorBlue}`,
@@ -915,6 +924,10 @@ export const useMeemTheme = createStyles(theme => ({
 		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
 			display: 'none'
 		}
+	},
+	backgroundMeem: {
+		background:
+			'linear-gradient(235deg,hsl(67deg 85% 76%) 0%,hsl(67deg 86% 83%) 14%,hsl(67deg 85% 90%) 29%,hsl(68deg 88% 97%) 43%,hsl(132deg 20% 95%) 57%,hsl(125deg 17% 85%) 71%,hsl(128deg 18% 75%) 86%,hsl(126deg 18% 66%) 100%)'
 	},
 	badge: {
 		paddingLeft: 8,

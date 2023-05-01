@@ -8,10 +8,10 @@ import { useAgreement } from '../../Providers/AgreementProvider'
 import { colorDarkBlue, colorRed, useMeemTheme } from '../../Styles/MeemTheme'
 import { CTDisconnectModal } from '../Flows/Modals/CTDisconnectModal'
 import { CTDiscordConnectionModal } from '../Flows/Modals/CTDiscordConnectionModal'
-import { CTConnection } from '../Flows/Model/communityTweets'
+import { ConnectedAccount } from '../Flows/Model/communityTweets'
 
 interface IProps {
-	connections?: CTConnection[]
+	connections?: ConnectedAccount[]
 }
 
 export const DashboardAccountsContent: React.FC<IProps> = ({ connections }) => {
@@ -22,7 +22,8 @@ export const DashboardAccountsContent: React.FC<IProps> = ({ connections }) => {
 	const router = useRouter()
 
 	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-	const [selectedConnection, setSelectedConnection] = useState<CTConnection>()
+	const [selectedConnection, setSelectedConnection] =
+		useState<ConnectedAccount>()
 
 	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
 		useState(false)
@@ -180,7 +181,7 @@ export const DashboardAccountsContent: React.FC<IProps> = ({ connections }) => {
 	}
 
 	interface ConnectionsGridProps {
-		conns: CTConnection[]
+		conns: ConnectedAccount[]
 		platform: MeemAPI.RuleIo
 	}
 
@@ -203,7 +204,7 @@ export const DashboardAccountsContent: React.FC<IProps> = ({ connections }) => {
 	}
 
 	interface ConnectionTileProps {
-		connection: CTConnection
+		connection: ConnectedAccount
 	}
 
 	const ConnectionsList = () => {

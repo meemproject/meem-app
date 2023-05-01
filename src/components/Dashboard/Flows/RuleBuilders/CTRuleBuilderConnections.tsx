@@ -2,11 +2,11 @@ import { Text, Space, Image, Button } from '@mantine/core'
 import { MeemAPI } from '@meemproject/sdk'
 import React from 'react'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { CTConnection } from '../Model/communityTweets'
+import { ConnectedAccount } from '../Model/communityTweets'
 
 interface IProps {
-	input?: CTConnection
-	output?: CTConnection
+	input?: ConnectedAccount
+	output?: ConnectedAccount
 	webhookUrl?: string
 	webhookPrivateKey?: string
 	existingRule?: boolean

@@ -3,6 +3,7 @@ import {
 	ActionIcon,
 	Button,
 	Center,
+	Container,
 	Loader,
 	Modal,
 	Select,
@@ -14,7 +15,7 @@ import {
 } from '@mantine/core'
 import { useSDK, useAuth } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
-import { Copy } from 'iconoir-react'
+import { Cancel, Copy } from 'iconoir-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
@@ -26,9 +27,9 @@ import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useAnalytics } from '../../../Providers/AnalyticsProvider'
 import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
 import {
-	CTConnection,
-	CTConnectionType,
-	CTRule
+	ConnectedAccount,
+	ConnectedAccountType,
+	Rule
 } from '../Model/communityTweets'
 import { CTDiscordTwitterRulesBuilder } from '../RuleBuilders/CTDiscordTwitterRuleBuilder'
 import {
@@ -39,15 +40,15 @@ import { CTSlackTwitterRulesBuilder } from '../RuleBuilders/CTSlackTwitterRuleBu
 import { CTSlackWebhookRulesBuilder } from '../RuleBuilders/CTSlackWebhookRuleBuilder'
 
 interface IProps {
-	existingRule?: CTRule
-	connections?: CTConnection[]
+	existingRule?: Rule
+	connectedAccounts?: ConnectedAccount[]
 	isOpened: boolean
 	onModalClosed: () => void
 }
 
 export const CTInputOutputModal: React.FC<IProps> = ({
 	existingRule,
-	connections,
+	connectedAccounts: connections,
 	isOpened,
 	onModalClosed
 }) => {
@@ -60,15 +61,15 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 	const analytics = useAnalytics()
 
 	// Inputs and outputs for the provisional publishing flow (rule)
-	const [inputs, setInputs] = useState<CTConnection[]>([])
+	const [inputs, setInputs] = useState<ConnectedAccount[]>([])
 	const [inputValues, setInputValues] = useState<SelectItem[]>([])
-	const [selectedInput, setSelectedInput] = useState<CTConnection>()
+	const [selectedInput, setSelectedInput] = useState<ConnectedAccount>()
 	const [selectedInputValue, setSelectedInputValue] = useState<string | null>(
 		null
 	)
-	const [outputs, setOutputs] = useState<CTConnection[]>([])
+	const [outputs, setOutputs] = useState<ConnectedAccount[]>([])
 	const [outputValues, setOutputValues] = useState<SelectItem[]>([])
-	const [selectedOutput, setSelectedOutput] = useState<CTConnection>()
+	const [selectedOutput, setSelectedOutput] = useState<ConnectedAccount>()
 	const [selectedOutputValue, setSelectedOutputValue] = useState<
 		string | null
 	>(null)
@@ -78,7 +79,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 	const [isSavingRule, setIsSavingRule] = useState(false)
 
 	// The complete rule to save (returned from the rule builder)
-	const [rule, setRule] = useState<CTRule>()
+	const [rule, setRule] = useState<Rule>()
 
 	// Rule builder modal states
 	const [
@@ -195,7 +196,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 	}
 
 	const openRuleBuilder = useCallback(
-		(input: CTConnection, output?: CTConnection) => {
+		(input: ConnectedAccount, output?: ConnectedAccount) => {
 			if (
 				input.platform === MeemAPI.RuleIo.Discord &&
 				output?.platform === MeemAPI.RuleIo.Twitter &&
@@ -244,7 +245,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 			setWebHookPrivateKey(uuidv4())
 
 			const filteredInputs = connections.filter(
-				c => c.type === CTConnectionType.InputOnly
+				c => c.type === ConnectedAccountType.InputOnly
 			)
 
 			const filteredInputValues: SelectItem[] = []
@@ -260,7 +261,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 			setInputValues(filteredInputValues)
 
 			const filteredOutputs = connections.filter(
-				c => c.type === CTConnectionType.OutputOnly
+				c => c.type === ConnectedAccountType.OutputOnly
 			)
 
 			const filteredOutputValues: SelectItem[] = []
@@ -307,10 +308,10 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 					// If it's a webhook rule, it'll not have an output
 					// so we'll want to set our webhook props instead
 					// and create a synthetic 'selected output'
-					const syntheticOutput: CTConnection = {
+					const syntheticOutput: ConnectedAccount = {
 						id: 'webhook',
 						name: 'Webhook',
-						type: CTConnectionType.OutputOnly,
+						type: ConnectedAccountType.OutputOnly,
 						platform: MeemAPI.RuleIo.Webhook
 					}
 					setSelectedOutput(syntheticOutput)
@@ -369,165 +370,194 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 					webhookUrl.toLowerCase().includes('localhost'))))
 
 	const modalContents = (
-		<>
-			{(!hasFetchedIO || isSavingRule) && (
-				<Center>
-					<Loader variant="oval" color="cyan" />
-				</Center>
-			)}
-			{hasFetchedIO && !isSavingRule && (
-				<>
-					<Text className={meemTheme.tExtraSmallLabel}>
-						PROPOSALS
-					</Text>
-					<Space h={24} />
-					<Text className={meemTheme.tSmallBold}>
-						Where will proposals be made?
-					</Text>
-					<Space h={8} />
-					<Text className={meemTheme.tSmall}>
-						Rules can only be made for one account at a time. Create
-						additional rules to accept proposals on multiple
-						platforms or accounts.
-					</Text>
-					<Space h={8} />
-					<Select
-						placeholder="Pick proposal source"
-						data={inputValues}
-						radius={12}
-						size={'md'}
-						value={selectedInputValue}
-						onChange={event => {
-							if (event) {
-								setSelectedInputValue(event)
-								inputs.forEach(i => {
-									if (i.id === event) {
-										setSelectedInput(i)
-									}
-								})
-							}
-						}}
-					/>
-					<Space h={40} />
+		<div style={{ position: 'relative' }}>
+			<Space h={32} />
+			<Center>
+				<Text className={meemTheme.tLargeBold}>Add New Flow</Text>
+			</Center>
+			<Space h={8} />
+			<Center>
+				<Text>
+					Select the accounts you’ll use to propose and publish posts.
+				</Text>
+			</Center>
 
-					<Text className={meemTheme.tExtraSmallLabel}>
-						PUBLISHING
-					</Text>
-					<Space h={24} />
-					<Text className={meemTheme.tSmallBold}>
-						Where will posts be published?
-					</Text>
-					<Space h={8} />
-					<Text className={meemTheme.tSmall}>
-						Rules can only be made for one account at a time. Create
-						additional rules to publish on multiple platforms or
-						accounts.
-					</Text>
-					<Space h={8} />
-					<Select
-						placeholder="Pick publishing destination"
-						data={outputValues}
-						value={selectedOutputValue}
-						radius={12}
-						size={'md'}
-						onChange={event => {
-							if (event) {
-								setSelectedOutputValue(event)
-								outputs.forEach(o => {
-									if (o.id === event) {
-										setSelectedOutput(o)
-									}
-								})
-							}
-						}}
-					/>
-					{selectedOutput &&
-						selectedOutput.platform === MeemAPI.RuleIo.Webhook && (
-							<>
-								<Space h={24} />
-								<Text className={meemTheme.tSmallBold}>
-									Webhook URL
-								</Text>
-								<Space h={8} />
-								<Text className={meemTheme.tSmall}>
-									Read more about setting up webhooks in our{' '}
-									<span
-										onClick={() => {
-											window.open(
-												'https://docs.meem.wtf/meem-protocol/community-publishing/webhooks'
-											)
-										}}
-										className={meemTheme.tSmallBold}
-										style={{
-											cursor: 'pointer',
-											color: colorDarkBlue
-										}}
-									>
-										dev docs.
-									</span>
-								</Text>
-								<Space h={8} />
-								<TextInput
-									radius="lg"
-									size="md"
-									value={webhookUrl}
-									onChange={event =>
-										setWebhookUrl(event.currentTarget.value)
-									}
-								/>
-								<Space h={24} />
-								<Text className={meemTheme.tSmallBold}>
-									Private Key
-								</Text>
-								<Space h={8} />
-								<div className={meemTheme.centeredRow}>
+			<Space h={48} />
+			<Container size={'sm'}>
+				{(!hasFetchedIO || isSavingRule) && (
+					<Center>
+						<Loader variant="oval" color="cyan" />
+					</Center>
+				)}
+				{hasFetchedIO && !isSavingRule && (
+					<>
+						<Text className={meemTheme.tExtraSmallLabel}>
+							PROPOSALS
+						</Text>
+						<Space h={24} />
+						<Text className={meemTheme.tSmallBold}>
+							Where will proposals be made?
+						</Text>
+						<Space h={8} />
+						<Text className={meemTheme.tSmall}>
+							Rules can only be made for one account at a time.
+							Create additional rules to accept proposals on
+							multiple platforms or accounts.
+						</Text>
+						<Space h={8} />
+						<Select
+							placeholder="Pick proposal source"
+							data={inputValues}
+							radius={12}
+							size={'md'}
+							value={selectedInputValue}
+							onChange={event => {
+								if (event) {
+									setSelectedInputValue(event)
+									inputs.forEach(i => {
+										if (i.id === event) {
+											setSelectedInput(i)
+										}
+									})
+								}
+							}}
+						/>
+						<Space h={40} />
+
+						<Text className={meemTheme.tExtraSmallLabel}>
+							PUBLISHING
+						</Text>
+						<Space h={24} />
+						<Text className={meemTheme.tSmallBold}>
+							Where will posts be published?
+						</Text>
+						<Space h={8} />
+						<Text className={meemTheme.tSmall}>
+							Rules can only be made for one account at a time.
+							Create additional rules to publish on multiple
+							platforms or accounts.
+						</Text>
+						<Space h={8} />
+						<Select
+							placeholder="Pick publishing destination"
+							data={outputValues}
+							value={selectedOutputValue}
+							radius={12}
+							size={'md'}
+							onChange={event => {
+								if (event) {
+									setSelectedOutputValue(event)
+									outputs.forEach(o => {
+										if (o.id === event) {
+											setSelectedOutput(o)
+										}
+									})
+								}
+							}}
+						/>
+						{selectedOutput &&
+							selectedOutput.platform ===
+								MeemAPI.RuleIo.Webhook && (
+								<>
+									<Space h={24} />
+									<Text className={meemTheme.tSmallBold}>
+										Webhook URL
+									</Text>
+									<Space h={8} />
+									<Text className={meemTheme.tSmall}>
+										Read more about setting up webhooks in
+										our{' '}
+										<span
+											onClick={() => {
+												window.open(
+													'https://docs.meem.wtf/meem-protocol/community-publishing/webhooks'
+												)
+											}}
+											className={meemTheme.tSmallBold}
+											style={{
+												cursor: 'pointer',
+												color: colorDarkBlue
+											}}
+										>
+											dev docs.
+										</span>
+									</Text>
+									<Space h={8} />
 									<TextInput
-										style={{ maxWidth: 250 }}
 										radius="lg"
 										size="md"
-										disabled
-										value={webhookPrivateKey}
+										value={webhookUrl}
+										onChange={event =>
+											setWebhookUrl(
+												event.currentTarget.value
+											)
+										}
 									/>
-									<Space w={8} />
-									<ActionIcon
-										variant="outline"
-										onClick={() => {
-											navigator.clipboard.writeText(
-												webhookPrivateKey
-											)
-											showSuccessNotification(
-												'Private Key copied',
-												`The Webhook Private Key was copied to your clipboard.`
-											)
-										}}
-									>
-										<Copy
-											height="1.125rem"
-											width="1.125rem"
+									<Space h={24} />
+									<Text className={meemTheme.tSmallBold}>
+										Private Key
+									</Text>
+									<Space h={8} />
+									<div className={meemTheme.centeredRow}>
+										<TextInput
+											style={{ maxWidth: 250 }}
+											radius="lg"
+											size="md"
+											disabled
+											value={webhookPrivateKey}
 										/>
-									</ActionIcon>
-								</div>
+										<Space w={8} />
+										<ActionIcon
+											variant="outline"
+											onClick={() => {
+												navigator.clipboard.writeText(
+													webhookPrivateKey
+												)
+												showSuccessNotification(
+													'Private Key copied',
+													`The Webhook Private Key was copied to your clipboard.`
+												)
+											}}
+										>
+											<Copy
+												height="1.125rem"
+												width="1.125rem"
+											/>
+										</ActionIcon>
+									</div>
+								</>
+							)}
+						{shouldShowNext && (
+							<>
+								<Space h={24} />
+								<Button
+									className={meemTheme.buttonBlack}
+									onClick={() => {
+										openRuleBuilder(
+											selectedInput,
+											selectedOutput
+										)
+									}}
+								>
+									Next
+								</Button>
 							</>
 						)}
-					{shouldShowNext && (
-						<>
-							<Space h={24} />
-							<Button
-								className={meemTheme.buttonBlack}
-								onClick={() => {
-									openRuleBuilder(
-										selectedInput,
-										selectedOutput
-									)
-								}}
-							>
-								Next
-							</Button>
-						</>
-					)}
-				</>
-			)}
-		</>
+					</>
+				)}
+			</Container>
+			<Cancel
+				style={{
+					position: 'absolute',
+					top: 8,
+					right: 8,
+					cursor: 'pointer'
+				}}
+				onClick={() => {
+					onModalClosed()
+				}}
+			/>
+		</div>
 	)
 
 	return (
@@ -535,35 +565,15 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 			{!existingRule && (
 				<>
 					<Modal
-						className={meemTheme.visibleDesktopOnly}
-						centered
-						radius={16}
-						overlayProps={{ blur: 8 }}
-						size={'60%'}
-						padding={'lg'}
-						opened={isOpened}
-						title={
-							<Text className={meemTheme.tMediumBold}>
-								Add New Flow
-							</Text>
-						}
-						onClose={() => {
-							clear()
-							onModalClosed()
-						}}
-					>
-						{modalContents}
-					</Modal>
-					<Modal
-						className={meemTheme.visibleMobileOnly}
 						fullScreen
 						padding={'lg'}
+						classNames={{
+							root: meemTheme.backgroundMeem,
+							content: meemTheme.backgroundMeem
+						}}
+						transitionProps={{ transition: 'pop', duration: 0 }}
+						withCloseButton={false}
 						opened={isOpened}
-						title={
-							<Text className={meemTheme.tMediumBold}>
-								Add New Flow
-							</Text>
-						}
 						onClose={() => {
 							clear()
 							onModalClosed()

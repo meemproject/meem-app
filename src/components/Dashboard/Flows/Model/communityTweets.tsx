@@ -1,16 +1,16 @@
 import { MeemAPI } from '@meemproject/sdk'
 
 // eslint-disable-next-line kengoldfarb/prefer-pascal-case-enums
-export enum CTConnectionType {
+export enum ConnectedAccountType {
 	InputOnly,
 	InputAndOutput,
 	OutputOnly
 }
 
-export interface CTConnection {
+export interface ConnectedAccount {
 	id: string
 	name: string
-	type: CTConnectionType
+	type: ConnectedAccountType
 	platform: MeemAPI.RuleIo
 	icon?: string
 
@@ -24,12 +24,12 @@ export interface CTConnection {
 	slackWorkspaceId?: string
 }
 
-export interface CTRule {
+export interface Rule {
 	id: string
-	input?: CTConnection
+	input?: ConnectedAccount
 	inputId?: string
 	inputPlatformString?: string
-	output?: CTConnection
+	output?: ConnectedAccount
 	outputId?: string
 	outputPlatformString?: string
 	agreementId: string

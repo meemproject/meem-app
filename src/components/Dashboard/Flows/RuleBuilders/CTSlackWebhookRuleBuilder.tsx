@@ -12,7 +12,7 @@ import { SubSlackSubscription } from '../../../../../generated/graphql'
 import { SUB_SLACK } from '../../../../graphql/rules'
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { CTConnection, CTRule } from '../Model/communityTweets'
+import { ConnectedAccount, Rule } from '../Model/communityTweets'
 import { CTRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
 import { CTRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
 import { CTSlackInputRBProposals } from '../RuleBuilderSections/SlackInput/CTSlackInputRBProposals'
@@ -20,8 +20,8 @@ import { CTSlackInputRBVetoes } from '../RuleBuilderSections/SlackInput/CTSlackI
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
 
 export interface IProps {
-	rule?: CTRule
-	input?: CTConnection
+	rule?: Rule
+	input?: ConnectedAccount
 	webhookUrl?: string
 	privateKey?: string
 	isOpened: boolean

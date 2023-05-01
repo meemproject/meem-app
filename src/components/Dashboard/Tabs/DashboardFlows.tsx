@@ -8,23 +8,25 @@ import { toTitleCase } from '../../../utils/strings'
 import { useAgreement } from '../../Providers/AgreementProvider'
 import { useAnalytics } from '../../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { FlowChoiceModal } from '../Flows/FlowChoiceModal'
 import { CTInputOutputModal } from '../Flows/Modals/CTInputOutputModal'
-import { CTConnection, CTRule } from '../Flows/Model/communityTweets'
+import { ConnectedAccount, Rule } from '../Flows/Model/communityTweets'
 
 interface IProps {
-	rules: CTRule[]
-	communityTweetsConnections: CTConnection[]
+	rules: Rule[]
+	connectedAccounts: ConnectedAccount[]
 }
 
 export const DashboardFlows: React.FC<IProps> = ({
 	rules,
-	communityTweetsConnections
+	connectedAccounts
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const [selectedRule, setSelectedRule] = useState<CTRule>()
+	const [selectedRule, setSelectedRule] = useState<Rule>()
+	const [isRuleBuilderOpen, setIsRuleBuilderOpen] = useState(false)
 
-	const [isNewRuleModalOpen, setIsNewRuleModalOpen] = useState(false)
+	const [isFlowChoiceModalOpen, setIsFlowChoiceModalOpen] = useState(false)
 
 	const analytics = useAnalytics()
 
@@ -78,14 +80,13 @@ export const DashboardFlows: React.FC<IProps> = ({
 
 				{rules &&
 					rules.map(rule => {
-						const matchingInput = communityTweetsConnections.filter(
+						const matchingInput = connectedAccounts.filter(
 							c => c.id === rule.inputId
 						)
 
-						const matchingOutput =
-							communityTweetsConnections.filter(
-								c => c.id === rule.outputId
-							)
+						const matchingOutput = connectedAccounts.filter(
+							c => c.id === rule.outputId
+						)
 
 						if (!matchingInput || matchingInput.length === 0) {
 							return <div key={`rule-${rule.id}`} />
@@ -182,7 +183,7 @@ export const DashboardFlows: React.FC<IProps> = ({
 												}
 												onClick={() => {
 													setSelectedRule(rule)
-													setIsNewRuleModalOpen(true)
+													setIsRuleBuilderOpen(true)
 												}}
 											>
 												Edit
@@ -210,7 +211,7 @@ export const DashboardFlows: React.FC<IProps> = ({
 							className={meemTheme.buttonBlack}
 							onClick={() => {
 								setSelectedRule(undefined)
-								setIsNewRuleModalOpen(true)
+								setIsFlowChoiceModalOpen(true)
 							}}
 						>
 							+ Add New Flow
@@ -258,12 +259,20 @@ export const DashboardFlows: React.FC<IProps> = ({
 				</Accordion>
 
 				<CTInputOutputModal
-					isOpened={isNewRuleModalOpen}
-					connections={communityTweetsConnections}
+					isOpened={isRuleBuilderOpen}
+					connectedAccounts={connectedAccounts}
 					existingRule={selectedRule}
 					onModalClosed={function (): void {
-						setIsNewRuleModalOpen(false)
+						setIsRuleBuilderOpen(false)
 						setSelectedRule(undefined)
+					}}
+				/>
+
+				<FlowChoiceModal
+					isOpened={isFlowChoiceModalOpen}
+					connectedAccounts={connectedAccounts}
+					onModalClosed={function (): void {
+						setIsFlowChoiceModalOpen(false)
 					}}
 				/>
 			</>

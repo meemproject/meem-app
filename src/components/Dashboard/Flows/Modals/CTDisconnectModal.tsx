@@ -10,10 +10,13 @@ import {
 } from '../../../../utils/notifications'
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { CTConnection, CTConnectionType } from '../Model/communityTweets'
+import {
+	ConnectedAccount,
+	ConnectedAccountType
+} from '../Model/communityTweets'
 
 interface IProps {
-	connection?: CTConnection
+	connection?: ConnectedAccount
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -140,9 +143,9 @@ export const CTDisconnectModal: React.FC<IProps> = ({
 								<Space h={24} />
 								<Center>
 									{(connection.type ===
-										CTConnectionType.InputOnly ||
+										ConnectedAccountType.InputOnly ||
 										connection.type ===
-											CTConnectionType.InputAndOutput) && (
+											ConnectedAccountType.InputAndOutput) && (
 										<>
 											<Text
 												className={
@@ -158,7 +161,7 @@ export const CTDisconnectModal: React.FC<IProps> = ({
 										</>
 									)}
 									{connection.type ===
-										CTConnectionType.OutputOnly && (
+										ConnectedAccountType.OutputOnly && (
 										<>
 											<Text
 												className={

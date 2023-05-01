@@ -12,7 +12,7 @@ import { SubDiscordSubscription } from '../../../../../generated/graphql'
 import { SUB_DISCORD } from '../../../../graphql/rules'
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { CTConnection, CTRule } from '../Model/communityTweets'
+import { ConnectedAccount, Rule } from '../Model/communityTweets'
 import { CTDiscordInputRBEditors } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
 import { CTDiscordInputRBProposals } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
 import { CTRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
@@ -20,8 +20,8 @@ import { CTRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/CTRuleBu
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
 
 export interface IProps {
-	rule?: CTRule
-	input?: CTConnection
+	rule?: Rule
+	input?: ConnectedAccount
 	webhookUrl?: string
 	privateKey?: string
 	isOpened: boolean

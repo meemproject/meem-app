@@ -3,11 +3,11 @@
 import { Text, Space, Loader } from '@mantine/core'
 import React from 'react'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { CTConnection } from '../Flows/Model/communityTweets'
+import { ConnectedAccount } from '../Flows/Model/communityTweets'
 import { DashboardAccountsContent } from './DashboardAccountsContent'
 
 interface IProps {
-	communityTweetsConnections: CTConnection[]
+	connectedAccounts: ConnectedAccount[]
 	isFetchingDiscordConnections: boolean
 	isFetchingSlackConnections: boolean
 	isFetchingTwitterConnections: boolean
@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export const DashboardAccounts: React.FC<IProps> = ({
-	communityTweetsConnections,
+	connectedAccounts,
 	isFetchingConnections,
 	isFetchingDiscordConnections,
 	isFetchingSlackConnections,
@@ -46,7 +46,7 @@ export const DashboardAccounts: React.FC<IProps> = ({
 					</>
 				)}
 
-				{communityTweetsConnections &&
+				{connectedAccounts &&
 					!isFetchingConnections &&
 					!isFetchingDiscordConnections &&
 					!isFetchingSlackConnections &&
@@ -54,7 +54,7 @@ export const DashboardAccounts: React.FC<IProps> = ({
 						<>
 							<Space h={24} />
 							<DashboardAccountsContent
-								connections={communityTweetsConnections}
+								connections={connectedAccounts}
 							/>
 						</>
 					)}

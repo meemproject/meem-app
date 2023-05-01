@@ -40,9 +40,9 @@ import { CookieKeys } from '../../utils/cookies'
 import { useAgreement } from '../Providers/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import {
-	CTRule,
-	CTConnection,
-	CTConnectionType
+	Rule,
+	ConnectedAccount,
+	ConnectedAccountType
 } from './Flows/Model/communityTweets'
 import { DashboardAccounts } from './Tabs/DashboardAccounts'
 import { DashboardAirdrops } from './Tabs/DashboardAirdrops'
@@ -121,14 +121,15 @@ export const DashboardComponent: React.FC = () => {
 
 	// Flows and connections
 	const [previousRulesDataString, setPreviousRulesDataString] = useState('')
-	const [rules, setRules] = useState<CTRule[]>()
+	const [rules, setRules] = useState<Rule[]>()
 
 	const [previousConnectionsDataString, setPreviousConnectionsDataString] =
 		useState('')
 	const [isFetchingConnections, setIsFetchingConnections] = useState(false)
 	const [hasFetchedConnections, setHasFetchedConnections] = useState(false)
-	const [communityTweetsConnections, setCommunityTweetsConnections] =
-		useState<CTConnection[]>([])
+	const [connectedAccounts, setconnectedAccounts] = useState<
+		ConnectedAccount[]
+	>([])
 
 	const {
 		data: discordConnectionData,
@@ -168,12 +169,12 @@ export const DashboardComponent: React.FC = () => {
 			twitterConnectionData &&
 			slackConnectionData
 		) {
-			const conns: CTConnection[] = []
+			const conns: ConnectedAccount[] = []
 			discordConnectionData.AgreementDiscords.forEach(c => {
-				const con: CTConnection = {
+				const con: ConnectedAccount = {
 					id: c.id,
 					name: `Discord: ${c.Discord?.name}`,
-					type: CTConnectionType.InputOnly,
+					type: ConnectedAccountType.InputOnly,
 					platform: MeemAPI.RuleIo.Discord,
 					icon: c.Discord?.icon ?? ''
 				}
@@ -183,30 +184,30 @@ export const DashboardComponent: React.FC = () => {
 			})
 
 			twitterConnectionData.AgreementTwitters.forEach(c => {
-				const con: CTConnection = {
+				const con: ConnectedAccount = {
 					id: c.id,
 					name: `Twitter: ${c.Twitter?.username}`,
-					type: CTConnectionType.OutputOnly,
+					type: ConnectedAccountType.OutputOnly,
 					platform: MeemAPI.RuleIo.Twitter
 				}
 				conns.push(con)
 			})
 
 			slackConnectionData.AgreementSlacks.forEach(c => {
-				const con: CTConnection = {
+				const con: ConnectedAccount = {
 					id: c.id,
 					name: `Slack: ${c.Slack?.name}`,
-					type: CTConnectionType.InputOnly,
+					type: ConnectedAccountType.InputOnly,
 					platform: MeemAPI.RuleIo.Slack
 				}
 				conns.push(con)
 			})
 
 			// Add Webhook connection
-			const webhookCon: CTConnection = {
+			const webhookCon: ConnectedAccount = {
 				id: 'webhook',
 				name: 'Add a custom Webhook',
-				type: CTConnectionType.OutputOnly,
+				type: ConnectedAccountType.OutputOnly,
 				platform: MeemAPI.RuleIo.Webhook
 			}
 			conns.push(webhookCon)
@@ -214,7 +215,7 @@ export const DashboardComponent: React.FC = () => {
 			const jsonConns = JSON.stringify(conns)
 			if (jsonConns !== previousConnectionsDataString) {
 				setPreviousConnectionsDataString(jsonConns)
-				setCommunityTweetsConnections(conns)
+				setconnectedAccounts(conns)
 				setHasFetchedConnections(true)
 				setIsFetchingConnections(false)
 			}
@@ -241,10 +242,10 @@ export const DashboardComponent: React.FC = () => {
 
 	// Parse rules from subscription
 	useEffect(() => {
-		const newRules: CTRule[] = []
+		const newRules: Rule[] = []
 		if (rulesData) {
 			rulesData.Rules.forEach(rule => {
-				const newRule: CTRule = {
+				const newRule: Rule = {
 					id: rule.id,
 					agreementId: rule.AgreementId,
 					inputPlatformString: rule.input ?? '',
@@ -442,16 +443,12 @@ export const DashboardComponent: React.FC = () => {
 								{currentTab === Tab.Flows && (
 									<DashboardFlows
 										rules={rules ?? []}
-										communityTweetsConnections={
-											communityTweetsConnections
-										}
+										connectedAccounts={connectedAccounts}
 									/>
 								)}
 								{currentTab === Tab.Accounts && (
 									<DashboardAccounts
-										communityTweetsConnections={
-											communityTweetsConnections
-										}
+										connectedAccounts={connectedAccounts}
 										isFetchingDiscordConnections={
 											isFetchingDiscordConnections
 										}
