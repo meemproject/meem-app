@@ -38,6 +38,9 @@ import { FlowSlackWebhookRulesBuilder } from '../RuleBuilders/FlowSlackWebhookRu
 interface IProps {
 	existingRule?: Rule
 	connectedAccounts?: ConnectedAccount[]
+	// Templates often have a preset input and output platform passed in
+	templateInputPlatform?: MeemAPI.RuleIo
+	templateOutputPlatform?: MeemAPI.RuleIo
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -45,6 +48,8 @@ interface IProps {
 export const FlowInputOutputModal: React.FC<IProps> = ({
 	existingRule,
 	connectedAccounts: connections,
+	templateInputPlatform,
+	templateOutputPlatform,
 	isOpened,
 	onModalClosed
 }) => {
@@ -243,37 +248,84 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 
 			setWebHookPrivateKey(uuidv4())
 
+			let templateChosenInput: ConnectedAccount | undefined
+			let templateChosenInputValue: string | undefined
+			let templateChosenOutput: ConnectedAccount | undefined
+			let templateChosenOutputValue: string | undefined
+
 			const filteredInputs = connections.filter(
 				c => c.type === ConnectedAccountType.InputOnly
 			)
 
 			const filteredInputValues: SelectItem[] = []
+
+			let hasFoundAppropriateInput = false
+
 			filteredInputs.forEach(inp => {
 				const inputVal = {
 					value: inp.id,
 					label: inp.name
 				}
 				filteredInputValues.push(inputVal)
+				if (
+					templateInputPlatform &&
+					!hasFoundAppropriateInput &&
+					inp.platform === templateInputPlatform
+				) {
+					hasFoundAppropriateInput = true
+					templateChosenInput = inp
+					templateChosenInputValue = inp.id
+					//log.debug(`found appropriate input: ${JSON.stringify(inp)}`)
+				}
 			})
 
 			setInputs(filteredInputs)
 			setInputValues(filteredInputValues)
+			if (templateChosenInputValue) {
+				setSelectedInput(templateChosenInput)
+				setSelectedInputValue(templateChosenInputValue)
+			} else {
+				setSelectedInput(undefined)
+				setSelectedInputValue(null)
+			}
 
 			const filteredOutputs = connections.filter(
 				c => c.type === ConnectedAccountType.OutputOnly
 			)
 
 			const filteredOutputValues: SelectItem[] = []
+
+			let hasFoundAppropriateOutput = false
 			filteredOutputs.forEach(out => {
 				const outVal = {
 					value: out.id,
 					label: out.name
 				}
 				filteredOutputValues.push(outVal)
+				if (
+					templateInputPlatform &&
+					!hasFoundAppropriateOutput &&
+					out.platform === templateOutputPlatform
+				) {
+					hasFoundAppropriateOutput = true
+					templateChosenOutput = out
+					templateChosenOutputValue = out.id
+
+					// log.debug(
+					// 	`found appropriate output: ${JSON.stringify(out)}`
+					// )
+				}
 			})
 
 			setOutputs(filteredOutputs)
 			setOutputValues(filteredOutputValues)
+			if (templateChosenOutputValue) {
+				setSelectedOutput(templateChosenOutput)
+				setSelectedOutputValue(templateChosenOutputValue)
+			} else {
+				setSelectedOutput(undefined)
+				setSelectedOutputValue(null)
+			}
 			setHasFetchedIO(true)
 		}
 
@@ -357,6 +409,8 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 		rule?.webhookUrl,
 		selectedInput,
 		selectedOutput,
+		templateInputPlatform,
+		templateOutputPlatform,
 		webhookUrl
 	])
 

@@ -8,6 +8,7 @@ import {
 	Center
 } from '@mantine/core'
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { MeemAPI } from '@meemproject/sdk'
 import { Cancel } from 'iconoir-react'
 import React, { useState } from 'react'
 import { useMeemTheme } from '../../Styles/MeemTheme'
@@ -28,6 +29,12 @@ export const FlowChoiceModal: React.FC<IProps> = ({
 	const { classes: meemTheme } = useMeemTheme()
 
 	const [isNewRuleModalOpen, setIsNewRuleModalOpen] = useState(false)
+	const [templateInputPlatform, setTemplateInputPlatform] = useState<
+		MeemAPI.RuleIo | undefined
+	>()
+	const [templateOutputPlatform, setTemplateOutputPlatform] = useState<
+		MeemAPI.RuleIo | undefined
+	>()
 
 	const template = (
 		category: string,
@@ -83,14 +90,24 @@ export const FlowChoiceModal: React.FC<IProps> = ({
 						'📰 Community news'.toUpperCase(),
 						'Discord Community Tweets',
 						'Draft tweets on Discord and publish to Twitter',
-						() => {},
+						() => {
+							setTemplateInputPlatform(MeemAPI.RuleIo.Discord)
+							setTemplateOutputPlatform(MeemAPI.RuleIo.Twitter)
+							setIsNewRuleModalOpen(true)
+							onModalClosed()
+						},
 						false
 					)}
 					{template(
 						'📰 Community news'.toUpperCase(),
 						'Slack Community Tweets',
 						'Draft tweets on Slack and publish to Twitter',
-						() => {},
+						() => {
+							setTemplateInputPlatform(MeemAPI.RuleIo.Slack)
+							setTemplateOutputPlatform(MeemAPI.RuleIo.Twitter)
+							setIsNewRuleModalOpen(true)
+							onModalClosed()
+						},
 						false
 					)}
 					{template(
@@ -98,6 +115,8 @@ export const FlowChoiceModal: React.FC<IProps> = ({
 						'Custom Flow',
 						'Choose your own inputs and outputs to build out custom publishing logic',
 						() => {
+							setTemplateInputPlatform(undefined)
+							setTemplateOutputPlatform(undefined)
 							setIsNewRuleModalOpen(true)
 							onModalClosed()
 						},
@@ -167,6 +186,8 @@ export const FlowChoiceModal: React.FC<IProps> = ({
 			<FlowInputOutputModal
 				isOpened={isNewRuleModalOpen}
 				connectedAccounts={connectedAccounts}
+				templateInputPlatform={templateInputPlatform}
+				templateOutputPlatform={templateOutputPlatform}
 				onModalClosed={function (): void {
 					setIsNewRuleModalOpen(false)
 				}}

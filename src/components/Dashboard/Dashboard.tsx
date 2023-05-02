@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useSubscription } from '@apollo/client'
-import log from '@kengoldfarb/log'
 import {
 	Container,
 	Text,
@@ -283,8 +282,6 @@ export const DashboardComponent: React.FC = () => {
 			})
 
 			data.push({ value: 'create-new', label: '+ Create New Community' })
-
-			log.debug(JSON.stringify(data))
 
 			const commsToJson = JSON.stringify(data)
 			if (commsToJson !== previousCommunitiesDataString) {
