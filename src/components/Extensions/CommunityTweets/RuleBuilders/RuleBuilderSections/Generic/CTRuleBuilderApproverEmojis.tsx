@@ -1,12 +1,13 @@
 import { Text, Space, Button } from '@mantine/core'
+import { MeemAPI } from '@meemproject/sdk'
 import { Emoji } from 'emoji-picker-react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import React from 'react'
 import { useMeemTheme } from '../../../../../Styles/MeemTheme'
 
 interface IProps {
-	approverEmojis: string[]
-	onApproverEmojisSet: (emojis: string[]) => void
+	approverEmojis: MeemAPI.IEmoji[]
+	onApproverEmojisSet: (emojis: MeemAPI.IEmoji[]) => void
 	onAddEmojisPressed: () => void
 }
 
@@ -39,7 +40,7 @@ export const CTRuleBuilderApproverEmojis: React.FC<IProps> = ({
 				>
 					{approverEmojis.map(e => (
 						<div
-							key={`approvalEmoji-${e}`}
+							key={`approvalEmoji-${e.id}`}
 							style={{
 								display: 'flex',
 								flexDirection: 'row',
@@ -47,11 +48,21 @@ export const CTRuleBuilderApproverEmojis: React.FC<IProps> = ({
 							}}
 							onClick={() => {
 								onApproverEmojisSet(
-									approverEmojis.filter(ae => ae !== e)
+									approverEmojis.filter(ae => ae.id !== e.id)
 								)
 							}}
 						>
-							<Emoji unified={e} size={25} />
+							{e.unified && e.unified.length > 0 && (
+								<Emoji unified={e.unified} size={25} />
+							)}
+							{e.url && (
+								<img
+									src={e.url}
+									alt={e.name}
+									style={{ width: 25, height: 25 }}
+								/>
+							)}
+
 							<Space w="xs" />
 						</div>
 					))}

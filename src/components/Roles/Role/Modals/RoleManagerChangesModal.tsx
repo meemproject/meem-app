@@ -141,6 +141,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 											agreement.address
 									}
 								})
+
 							if (agreement.isOnChain) {
 								txs.push(reinit.txId ?? '')
 							}

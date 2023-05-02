@@ -740,6 +740,16 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@emoji-mart/data@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/data/-/data-1.1.2.tgz#777c976f8f143df47cbb23a7077c9ca9fe5fc513"
+  integrity sha512-1HP8BxD2azjqWJvxIaWAMyTySeZY0Osr83ukYjltPVkNXeJvTz7yDrPLBtnrD5uqJ3tg4CcLuuBW09wahqL/fg==
+
+"@emoji-mart/react@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@emoji-mart/react/-/react-1.1.1.tgz#ddad52f93a25baf31c5383c3e7e4c6e05554312a"
+  integrity sha512-NMlFNeWgv1//uPsvLxvGQoIerPuVdXwK/EUek8OOkJ6wVOWPUizRBJU0hDqWZCOROVpfBgCemaC3m6jDOXi03g==
+
 "@emotion/babel-plugin@^11.10.6":
   version "11.10.6"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.10.6.tgz#a68ee4b019d661d6f37dec4b8903255766925ead"
@@ -2445,10 +2455,10 @@
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.10.5.tgz#ad620d714e545c6efb7f69d94ce46e3fd2fe01fb"
   integrity sha512-FGMq4dGs5HhDAtI0z46uzxzKKPmZ3h5uKUyKg1ZHoFR1mBtcUMbB6FylFmHqKFRWlJ5IXqX9dwmiVrLYUOfTmA==
 
-"@meemproject/meem-contracts@^0.20.4":
-  version "0.20.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.20.4.tgz#759fa44e75e243d344977eca768a81b0b685b97e"
-  integrity sha512-Yxf1yNLwJqWdyIYBiYR2sNG0mW3z/i+HF7L9nZ+onF5xBZg75vPJyilzJcBf2pGyKVCTXvRVsg/ozy7O2vueGQ==
+"@meemproject/meem-contracts@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@meemproject/meem-contracts/-/meem-contracts-0.20.6.tgz#bf2e82709a09d98a2f0bdc11b5e833b50a61bef7"
+  integrity sha512-CuZFbMqN8yl+mvDmhRQDVooEPC/WocSWJMjVtkrMyNHscUS5nmwXJYwg83LU8EEFxvxePDW6Wx9uUbxGiwBEgQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
     "@openzeppelin/contracts" "^4.7.3"
@@ -2457,10 +2467,10 @@
     merkletreejs "^0.2.32"
     superagent "^8.0.0"
 
-"@meemproject/react@^0.20.4":
-  version "0.20.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.20.4.tgz#2bb83c039c33d6826f65530177c2c88bf70d9d5a"
-  integrity sha512-86CBp80oqH/GuO9H8XGwWA4YwpmedU6VYn9Su1vW4utFmBEtANG0wD4qhCDCeUBjxpIjsc+A2p3CeeJYg3uOOw==
+"@meemproject/react@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@meemproject/react/-/react-0.20.6.tgz#d66504a282e82eeea9d04c951bd49cd3562f3033"
+  integrity sha512-6888Nbncy7WE+rxoDeNMgum4tCm+sY8OuFq2h3g1nmhPY9eVUIseYEECSh0TI+IbthjOI4udrM8cARRUeB1s7w==
   dependencies:
     "@apollo/client" "^3.7.10"
     "@auth0/auth0-react" "^1.12.0"
@@ -2470,9 +2480,9 @@
     "@magic-ext/connect" "^6.1.0"
     "@mantine/core" "^5.10.0"
     "@mantine/hooks" "^5.10.0"
-    "@meemproject/meem-contracts" "^0.20.4"
-    "@meemproject/sdk" "^0.20.4"
-    "@meemproject/utils" "^0.20.4"
+    "@meemproject/meem-contracts" "^0.20.6"
+    "@meemproject/sdk" "^0.20.6"
+    "@meemproject/utils" "^0.20.6"
     "@walletconnect/ethereum-provider" "^2.4.7"
     buffer-alloc "^1.2.0"
     ethers "^5.6.4"
@@ -2488,17 +2498,17 @@
     swr "^1.3.0"
     web3modal "^1.9.12"
 
-"@meemproject/sdk@^0.20.4":
-  version "0.20.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.20.4.tgz#3d800597eccc912720b301eb366831ba88098f5d"
-  integrity sha512-eVtBSVg2gBkUobgGWK0MPRcwfzbDCR3HEaw2B8WwjBV/q/RcXtRa8qAmRtd/Y7g9NTLyjQVMsUqh9dHl8sx0KA==
+"@meemproject/sdk@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@meemproject/sdk/-/sdk-0.20.6.tgz#5279787db772e7b5d2a6c24451839e870a8212f0"
+  integrity sha512-+5FolpPY4CJzPJeE5L3IboDQuG7blMB2axuSzIxoBb7ydPnkdVEv2r3pBGqpBelO/VC7QYg0sbrjDrl95Kjasw==
   dependencies:
     "@apollo/client" "^3.7.1"
     "@kengoldfarb/log" "^1.0.5"
     "@lit-protocol/constants" "^2.0.35"
     "@lit-protocol/lit-node-client" "^2.0.35"
-    "@meemproject/meem-contracts" "^0.20.4"
-    "@meemproject/utils" "^0.20.4"
+    "@meemproject/meem-contracts" "^0.20.6"
+    "@meemproject/utils" "^0.20.6"
     "@peculiar/webcrypto" "^1.4.1"
     "@tableland/sdk" "^3.1.5"
     "@typechain/ethers-v5" "^10.0.0"
@@ -2520,13 +2530,13 @@
     typed-emitter "^2.1.0"
     uuid "^9.0.0"
 
-"@meemproject/utils@^0.20.4":
-  version "0.20.4"
-  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.20.4.tgz#795f80d34bdaef05533f591a216ce0711f8b1997"
-  integrity sha512-EYjFhAAhleUFcHGtBIfP3YVsYEBQlJ46+F20bctg6btvI9LgkuKSGukow/PifWP4aBGAnHqNkdPk1g5RhNKRIA==
+"@meemproject/utils@^0.20.6":
+  version "0.20.6"
+  resolved "https://registry.yarnpkg.com/@meemproject/utils/-/utils-0.20.6.tgz#80531899a1046f7402ddcad480ebbb35c91b8a62"
+  integrity sha512-znA6UKydn89853YSaJuWGJFgG16T1VURsGU17WM5qJTGG8WXPW6JJwiK1cdbmNBI0d9aJWZexUrAk8QnJLZiKQ==
   dependencies:
     "@kengoldfarb/log" "^1.0.5"
-    "@meemproject/meem-contracts" "^0.20.4"
+    "@meemproject/meem-contracts" "^0.20.6"
     ethers "^5.6.4"
 
 "@morgan-stanley/ts-mocking-bird@^0.6.2":
@@ -5153,6 +5163,13 @@
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@types/cookiejar/-/cookiejar-2.1.2.tgz#66ad9331f63fe8a3d3d9d8c6e3906dd10f6446e8"
   integrity sha512-t73xJJrvdTjXrn4jLS9VSGRbz0nUY3cl2DMGDU48lKl+HR9dbbjW2A9r3g40VA++mQpy6uuHg33gy7du2BKpog==
+
+"@types/emoji-mart@^3.0.9":
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/@types/emoji-mart/-/emoji-mart-3.0.9.tgz#2f7ef5d9ec194f28029c46c81a5fc1e5b0efa73c"
+  integrity sha512-qdBo/2Y8MXaJ/2spKjDZocuq79GpnOhkwMHnK2GnVFa8WYFgfA+ei6sil3aeWQPCreOKIx9ogPpR5+7MaOqYAA==
+  dependencies:
+    "@types/react" "*"
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.6"
@@ -8632,10 +8649,15 @@ emittery@^0.8.1:
   resolved "https://registry.yarnpkg.com/emittery/-/emittery-0.8.1.tgz#bb23cc86d03b30aa75a7f734819dee2e1ba70860"
   integrity sha512-uDfvUjVrfGJJhymx/kz6prltenw1u7WrCg1oa94zYY8xxVpLLUu045LAT0dhDZdXG58/EpPL/5kA180fQ/qudg==
 
-emoji-picker-react@^4.4.7:
-  version "4.4.7"
-  resolved "https://registry.yarnpkg.com/emoji-picker-react/-/emoji-picker-react-4.4.7.tgz#faff798cf7acad41c5eb6b103c93480e777f2222"
-  integrity sha512-HcB1Fr57W6M+gLLm/W4YhbAnUQqYBUAhZBOHmPlSQODLtsDI8vecyqNIF9RrStZHfZwzUSLlpZMfY07AA6gxmA==
+emoji-mart@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/emoji-mart/-/emoji-mart-5.5.2.tgz#3ddbaf053139cf4aa217650078bc1c50ca8381af"
+  integrity sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A==
+
+emoji-picker-react@^4.4.9:
+  version "4.4.9"
+  resolved "https://registry.yarnpkg.com/emoji-picker-react/-/emoji-picker-react-4.4.9.tgz#564fc387ae2ce8c8086a12a9231d6fd9567d0ae5"
+  integrity sha512-ef9MfzSJy5xrzihLLv0e1zZmiNtcekubctTBQVfIpvKfsfu4iLBBzcHCmOC2IaUVBCZuUw+GM24BAPj1MdCQXQ==
   dependencies:
     clsx "^1.2.1"
 

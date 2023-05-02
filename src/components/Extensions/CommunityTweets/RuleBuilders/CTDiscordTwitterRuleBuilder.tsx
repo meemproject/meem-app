@@ -1,11 +1,11 @@
 import { useSubscription } from '@apollo/client'
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth, useMeemApollo } from '@meemproject/react'
 import { makeFetcher, MeemAPI } from '@meemproject/sdk'
-import type { EmojiClickData } from 'emoji-picker-react'
-import { uniq } from 'lodash'
-import dynamic from 'next/dynamic'
+import { uniqBy } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
 import {
@@ -17,16 +17,11 @@ import { useMeemTheme } from '../../../Styles/MeemTheme'
 import { SUB_TWITTER, SUB_DISCORD } from '../communityTweetsGql'
 import { CTConnection, CTRule } from '../Model/communityTweets'
 import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
+import { CTDiscordInputRBEditors } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
 import { CTDiscordInputRBProposals } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
-import { CTDiscordInputRBVetoes } from './RuleBuilderSections/DiscordInput/CTDiscordInputRBVetoes'
 import { CTRuleBuilderApproverEmojis } from './RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
 import { CTRuleBuilderVotesCount } from './RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
 import { CTTwitterOutputAutoReply } from './RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
-
-const EmojiPicker = dynamic(() => import('emoji-picker-react'), {
-	ssr: false
-})
-
 export interface IProps {
 	rule?: CTRule
 	input?: CTConnection
@@ -39,7 +34,7 @@ export interface IProps {
 export enum EmojiSelectType {
 	Proposer = 'proposer',
 	Approver = 'approver',
-	Vetoer = 'vetoer'
+	Editor = 'editor'
 }
 
 export interface IFormValues
@@ -47,6 +42,7 @@ export interface IFormValues
 		MeemAPI.IRule,
 		| 'proposerEmojis'
 		| 'approverEmojis'
+		| 'editorEmojis'
 		| 'vetoerEmojis'
 		| 'action'
 		| 'ruleId'
@@ -54,9 +50,10 @@ export interface IFormValues
 	> {}
 
 export interface IOnSave extends IFormValues {
-	proposerEmojis: string[]
-	approverEmojis: string[]
-	vetoerEmojis: string[]
+	proposerEmojis: MeemAPI.IEmoji[]
+	approverEmojis: MeemAPI.IEmoji[]
+	editorEmojis: MeemAPI.IEmoji[]
+	vetoerEmojis: MeemAPI.IEmoji[]
 }
 
 export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
@@ -119,6 +116,29 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			}
 		)
 
+	const { data: emojisData } =
+		useSWR<MeemAPI.v1.GetDiscordEmojis.IResponseBody>(
+			agreement?.id && jwt && (rule?.input?.id ?? input?.id)
+				? `${
+						process.env.NEXT_PUBLIC_API_URL
+				  }${MeemAPI.v1.GetDiscordEmojis.path()}`
+				: null,
+			url => {
+				return makeFetcher<
+					MeemAPI.v1.GetDiscordEmojis.IQueryParams,
+					MeemAPI.v1.GetDiscordEmojis.IRequestBody,
+					MeemAPI.v1.GetDiscordEmojis.IResponseBody
+				>({
+					method: MeemAPI.v1.GetDiscordEmojis.method
+				})(url, {
+					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
+				})
+			},
+			{
+				shouldRetryOnError: false
+			}
+		)
+
 	const { data: rolesData, isLoading: loadingRolesData } =
 		useSWR<MeemAPI.v1.GetDiscordRoles.IResponseBody>(
 			agreement?.id && jwt
@@ -147,14 +167,17 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			publishType: MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles ?? [],
 			approverRoles: rule?.definition.approverRoles ?? [],
-			vetoerRoles: rule?.definition.vetoerRoles ?? [],
+			editorRoles: rule?.definition.editorRoles ?? [],
 			proposalChannels: rule?.definition.proposalChannels ?? [],
 			proposalShareChannel: rule?.definition.proposalShareChannel ?? '',
 			votes: rule?.definition.votes ?? 1,
-			vetoVotes: rule?.definition.vetoVotes ?? 1,
+			editorVotes: rule?.definition.editorVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
 			shouldReply: rule?.definition.shouldReply ?? true,
-			canVeto: rule?.definition.canVeto ?? false
+			// Required to support IRule
+			vetoerRoles: [],
+			vetoVotes: 0,
+			canVeto: false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -179,14 +202,41 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 		}
 	})
 
-	const [approverEmojis, setApproverEmojis] = useState<string[]>(
-		rule?.definition.approverEmojis ?? []
+	const [approverEmojis, setApproverEmojis] = useState<MeemAPI.IEmoji[]>(
+		rule?.definition.approverEmojis && rule?.definition.approverEmojis[0]
+			? typeof rule?.definition.approverEmojis[0] === 'string'
+				? (rule?.definition.approverEmojis.map(e => ({
+						id: e,
+						name: e,
+						unified: e,
+						type: MeemAPI.EmojiType.Unified
+				  })) as MeemAPI.IEmoji[])
+				: (rule?.definition.approverEmojis as MeemAPI.IEmoji[])
+			: []
 	)
-	const [proposerEmojis, setProposerEmojis] = useState<string[]>(
-		rule?.definition.proposerEmojis ?? []
+	const [proposerEmojis, setProposerEmojis] = useState<MeemAPI.IEmoji[]>(
+		rule?.definition.proposerEmojis && rule?.definition.proposerEmojis[0]
+			? typeof rule?.definition.proposerEmojis[0] === 'string'
+				? (rule?.definition.proposerEmojis.map(e => ({
+						id: e,
+						name: e,
+						unified: e,
+						type: MeemAPI.EmojiType.Unified
+				  })) as MeemAPI.IEmoji[])
+				: (rule?.definition.proposerEmojis as MeemAPI.IEmoji[])
+			: []
 	)
-	const [vetoerEmojis, setVetoerEmojis] = useState<string[]>(
-		rule?.definition.vetoerEmojis ?? []
+	const [editorEmojis, setEditorEmojis] = useState<MeemAPI.IEmoji[]>(
+		rule?.definition.editorEmojis && rule?.definition.editorEmojis[0]
+			? typeof rule?.definition.editorEmojis[0] === 'string'
+				? (rule?.definition.editorEmojis.map(e => ({
+						id: e,
+						name: e,
+						unified: e,
+						type: MeemAPI.EmojiType.Unified
+				  })) as MeemAPI.IEmoji[])
+				: (rule?.definition.editorEmojis as MeemAPI.IEmoji[])
+			: []
 	)
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
 		EmojiSelectType.Approver
@@ -194,37 +244,82 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
 	const handleEmojiClick = useCallback(
-		async (emojiObject: EmojiClickData) => {
+		async (emojiObject: {
+			id: string
+			keywords: string[]
+			name: string
+			src?: string
+			unified?: string
+			native?: string
+			shortcodes: string
+		}) => {
 			switch (emojiSelectType) {
 				case EmojiSelectType.Approver:
 					setApproverEmojis(
-						uniq([...approverEmojis, emojiObject.unified])
+						uniqBy(
+							[
+								...approverEmojis,
+								{
+									...emojiObject,
+									url: emojiObject.src,
+									type: emojiObject.unified
+										? MeemAPI.EmojiType.Unified
+										: MeemAPI.EmojiType.Discord
+								}
+							],
+							a => a.id
+						)
 					)
 					break
 
 				case EmojiSelectType.Proposer:
 					setProposerEmojis(
-						uniq([...proposerEmojis, emojiObject.unified])
+						uniqBy(
+							[
+								...proposerEmojis,
+								{
+									...emojiObject,
+									url: emojiObject.src,
+									type: emojiObject.unified
+										? MeemAPI.EmojiType.Unified
+										: MeemAPI.EmojiType.Discord
+								}
+							],
+							a => a.id
+						)
 					)
 					break
 
-				case EmojiSelectType.Vetoer:
-					setVetoerEmojis(
-						uniq([...vetoerEmojis, emojiObject.unified])
+				case EmojiSelectType.Editor:
+					setEditorEmojis(
+						uniqBy(
+							[
+								...editorEmojis,
+								{
+									...emojiObject,
+									url: emojiObject.src,
+									type: emojiObject.unified
+										? MeemAPI.EmojiType.Unified
+										: MeemAPI.EmojiType.Discord
+								}
+							],
+							a => a.id
+						)
 					)
 					break
 			}
 			setIsEmojiPickerOpen(false)
 		},
-		[emojiSelectType, approverEmojis, proposerEmojis, vetoerEmojis]
+		[emojiSelectType, approverEmojis, proposerEmojis, editorEmojis]
 	)
 
 	const handleFormSubmit = async (values: IFormValues) => {
 		onSave({
 			...values,
 			approverEmojis,
-			vetoerEmojis,
-			proposerEmojis
+			editorEmojis,
+			proposerEmojis,
+			vetoerEmojis: []
 		})
 	}
 
@@ -235,13 +330,13 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles,
 			approverRoles: rule?.definition.approverRoles,
+			editorRoles: rule?.definition.editorRoles,
 			proposalChannels: rule?.definition.proposalChannels,
 			proposalShareChannel: rule?.definition.proposalShareChannel,
 			votes: rule?.definition.votes,
-			vetoVotes: rule?.definition.vetoVotes,
+			editorVotes: rule?.definition.editorVotes,
 			proposeVotes: rule?.definition.proposeVotes,
-			shouldReply: rule?.definition.shouldReply,
-			canVeto: rule?.definition.canVeto
+			shouldReply: rule?.definition.shouldReply
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule])
@@ -300,12 +395,10 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 
 						<CTRuleBuilderApproverEmojis
 							approverEmojis={approverEmojis}
-							onApproverEmojisSet={function (
-								emojis: string[]
-							): void {
+							onApproverEmojisSet={emojis => {
 								setApproverEmojis(emojis)
 							}}
-							onAddEmojisPressed={function (): void {
+							onAddEmojisPressed={() => {
 								setEmojiSelectType(EmojiSelectType.Approver)
 								setIsEmojiPickerOpen(true)
 							}}
@@ -313,17 +406,15 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 
 						<CTRuleBuilderVotesCount form={form} />
 
-						<CTDiscordInputRBVetoes
+						<CTDiscordInputRBEditors
 							form={form}
 							rolesData={rolesData}
-							vetoerEmojis={vetoerEmojis}
-							onVetoerEmojisSet={function (
-								emojis: string[]
-							): void {
-								setVetoerEmojis(emojis)
+							editorEmojis={editorEmojis}
+							onEditorEmojisSet={emojis => {
+								setEditorEmojis(emojis)
 							}}
 							onAddEmojisPressed={function (): void {
-								setEmojiSelectType(EmojiSelectType.Vetoer)
+								setEmojiSelectType(EmojiSelectType.Editor)
 								setIsEmojiPickerOpen(true)
 							}}
 						/>
@@ -339,7 +430,23 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 							opened={isEmojiPickerOpen}
 							onClose={() => setIsEmojiPickerOpen(false)}
 						>
-							<EmojiPicker onEmojiClick={handleEmojiClick} />
+							<Picker
+								data={data}
+								onEmojiSelect={handleEmojiClick}
+								custom={[
+									{
+										id: 'discord',
+										name: `${discordData?.AgreementDiscords[0].Discord?.name}`,
+										emojis: emojisData.emojis.map(e => ({
+											id: e.id,
+											name: e.name,
+											keywords: [e.name],
+											// @ts-ignore
+											skins: [{ src: e.url }]
+										}))
+									}
+								]}
+							/>
 						</Modal>
 						<Space h={'lg'} />
 						<Button className={meemTheme.buttonBlack} type="submit">
