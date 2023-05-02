@@ -1,3 +1,10 @@
+# [1.29.0](https://github.com/meemproject/meem-app/compare/v1.28.10...v1.29.0) (2023-05-02)
+
+
+### Features
+
+* custom emoji support ([9906db5](https://github.com/meemproject/meem-app/commit/9906db5))
+
 ## [1.28.10](https://github.com/meemproject/meem-app/compare/v1.28.9...v1.28.10) (2023-04-21)
 
 ## [1.28.9](https://github.com/meemproject/meem-app/compare/v1.28.8...v1.28.9) (2023-04-14)
