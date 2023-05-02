@@ -204,38 +204,17 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 
 	const [approverEmojis, setApproverEmojis] = useState<MeemAPI.IEmoji[]>(
 		rule?.definition.approverEmojis && rule?.definition.approverEmojis[0]
-			? typeof rule?.definition.approverEmojis[0] === 'string'
-				? (rule?.definition.approverEmojis.map(e => ({
-						id: e,
-						name: e,
-						unified: e,
-						type: MeemAPI.EmojiType.Unified
-				  })) as MeemAPI.IEmoji[])
-				: (rule?.definition.approverEmojis as MeemAPI.IEmoji[])
+			? rule?.definition.approverEmojis
 			: []
 	)
 	const [proposerEmojis, setProposerEmojis] = useState<MeemAPI.IEmoji[]>(
 		rule?.definition.proposerEmojis && rule?.definition.proposerEmojis[0]
-			? typeof rule?.definition.proposerEmojis[0] === 'string'
-				? (rule?.definition.proposerEmojis.map(e => ({
-						id: e,
-						name: e,
-						unified: e,
-						type: MeemAPI.EmojiType.Unified
-				  })) as MeemAPI.IEmoji[])
-				: (rule?.definition.proposerEmojis as MeemAPI.IEmoji[])
+			? rule?.definition.proposerEmojis
 			: []
 	)
 	const [editorEmojis, setEditorEmojis] = useState<MeemAPI.IEmoji[]>(
 		rule?.definition.editorEmojis && rule?.definition.editorEmojis[0]
-			? typeof rule?.definition.editorEmojis[0] === 'string'
-				? (rule?.definition.editorEmojis.map(e => ({
-						id: e,
-						name: e,
-						unified: e,
-						type: MeemAPI.EmojiType.Unified
-				  })) as MeemAPI.IEmoji[])
-				: (rule?.definition.editorEmojis as MeemAPI.IEmoji[])
+			? rule?.definition.editorEmojis
 			: []
 	)
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
