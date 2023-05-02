@@ -1,34 +1,25 @@
-/* eslint-disable react/prop-types */
-import { Space } from '@mantine/core'
-import type { GetServerSideProps, NextPage } from 'next'
+import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { DashboardComponent } from '../../components/Dashboard/Dashboard'
-import { MeemFooter } from '../../components/Footer/MeemFooter'
-import { HeaderMenu } from '../../components/Header/Header'
-import { meemCommunityDescription } from '../../utils/sitedescriptions'
-import { deslugify } from '../../utils/strings'
+import { MeemFooter } from '../components/Footer/MeemFooter'
+import { HeaderMenu } from '../components/Header/Header'
+import { OnboardingConnectAccount } from '../components/Onboarding/OnboardingConnectAccount'
+import { meemSiteDescription } from '../utils/sitedescriptions'
 
-interface IProps {
-	agreementName: string
-}
-
-const AgreementDetailPage: NextPage<IProps> = ({ agreementName }) => {
-	const pageTitle = `${agreementName} | Meem`
+const ConnectAccountPage: NextPage = () => {
+	const pageTitle = `Connect Account | Meem`
+	const pageDescription = meemSiteDescription
 
 	return (
 		<>
 			<Head>
 				<title>{pageTitle}</title>
 				<meta name="title" content={pageTitle} />
-				<meta name="description" content={meemCommunityDescription} />
+				<meta name="description" content={pageDescription} />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://app.meem.wtf/" />
 				<meta property="og:title" content={pageTitle} />
-				<meta
-					property="og:description"
-					content={meemCommunityDescription}
-				/>
+				<meta property="og:description" content={pageDescription} />
 				<meta property="twitter:card" content="summary_large_image" />
 				<meta property="twitter:url" content="https://app.meem.wtf/" />
 				<meta property="twitter:title" content={pageTitle} />
@@ -57,21 +48,10 @@ const AgreementDetailPage: NextPage<IProps> = ({ agreementName }) => {
 				/>
 			</Head>
 			<HeaderMenu />
-
-			<DashboardComponent />
-
-			<Space h={96} />
-			<MeemFooter noAgreement={false} />
+			<OnboardingConnectAccount />
+			<MeemFooter noAgreement />
 		</>
 	)
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-	return {
-		props: {
-			agreementName: deslugify(params?.slug?.toString() ?? '')
-		}
-	}
-}
-
-export default AgreementDetailPage
+export default ConnectAccountPage

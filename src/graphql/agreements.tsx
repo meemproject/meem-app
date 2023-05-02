@@ -433,6 +433,24 @@ export const SUB_MY_AGREEMENTS = gql`
 	}
 `
 
+export const GET_MY_AGREEMENTS = gql`
+	query MyAgreementsQuery($walletAddress: String, $chainId: Int) {
+		Agreements(
+			where: {
+				AgreementTokens: {
+					Wallet: { address: { _ilike: $walletAddress } }
+				}
+				chainId: { _eq: $chainId }
+			}
+			order_by: { name: asc }
+		) {
+			id
+			slug
+			name
+		}
+	}
+`
+
 export const GET_BUNDLE_BY_ID = gql`
 	query GetBundleById($id: uuid!) {
 		Bundles(where: { id: { _eq: $id } }) {

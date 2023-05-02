@@ -24,7 +24,6 @@ export const MeemFooter: React.FC<IProps> = ({ noAgreement }) => {
 		<div>
 			{(agreement || noAgreement) && (
 				<>
-					<Space h={32} />
 					<div className={meemTheme.pageFooterContainer}>
 						<Divider />
 						<div className={meemTheme.pageFooterBackground}>

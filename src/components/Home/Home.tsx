@@ -1,53 +1,169 @@
 import { useQuery } from '@apollo/client'
-import { Loader, Center, Space } from '@mantine/core'
+import {
+	Center,
+	Space,
+	Text,
+	Button,
+	Grid,
+	Container,
+	Loader
+} from '@mantine/core'
 import { useMeemApollo, useWallet } from '@meemproject/react'
+import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-// eslint-disable-next-line import/namespace
-import { GetIsMemberOfAgreementQuery } from '../../../generated/graphql'
-import { GET_IS_MEMBER_OF_AGREEMENT } from '../../graphql/agreements'
+import { MyAgreementsQueryQuery } from '../../../generated/graphql'
+import { GET_MY_AGREEMENTS } from '../../graphql/agreements'
+import { CookieKeys } from '../../utils/cookies'
+import { useMeemTheme } from '../Styles/MeemTheme'
 
 export function HomeComponent() {
 	const router = useRouter()
-	const { anonClient } = useMeemApollo()
+
+	const { classes: meemTheme } = useMeemTheme()
+
 	const wallet = useWallet()
 
-	const {
-		data: isMemberData,
-		error: isMemberDataError,
-		loading
-	} = useQuery<GetIsMemberOfAgreementQuery>(GET_IS_MEMBER_OF_AGREEMENT, {
-		variables: {
-			walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-			agreementSlug: 'meem',
-			chainId: process.env.NEXT_PUBLIC_CHAIN_ID
-		},
-		client: anonClient
-	})
+	const { mutualMembersClient } = useMeemApollo()
+
+	const { data: communitiesData, loading } = useQuery<MyAgreementsQueryQuery>(
+		GET_MY_AGREEMENTS,
+		{
+			variables: {
+				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+				chainId: process.env.NEXT_PUBLIC_CHAIN_ID
+			},
+			skip: !mutualMembersClient,
+			client: mutualMembersClient
+		}
+	)
 
 	useEffect(() => {
-		if (!loading && isMemberDataError) {
-			router.push('/meem')
-		} else if (!loading && isMemberData?.AgreementTokens.length === 0) {
-			router.push('/meem')
-		} else if (
+		if (
 			!loading &&
-			isMemberData &&
-			isMemberData?.AgreementTokens.length > 0
+			communitiesData &&
+			communitiesData.Agreements.length > 0
 		) {
 			router.push({
-				pathname: '/profile',
-				query: { tab: 'myCommunities' }
+				pathname: `/${communitiesData.Agreements[0].slug}`
 			})
 		}
-	}, [isMemberData, isMemberDataError, loading, router])
+	}, [communitiesData, loading, router])
+
+	const toolItem = (
+		title: string,
+		description: string,
+		onClick: () => void
+	) => (
+		<Grid.Col xs={12} md={4} key={title}>
+			<div className={meemTheme.gridItemFlowTemplate}>
+				<Text className={meemTheme.tMediumBold}>{title}</Text>
+				<Space h={8} />
+				<Text
+					className={meemTheme.tExtraSmall}
+					style={{ minHeight: 50 }}
+				>
+					{description}
+				</Text>
+				<Space h={8} />
+				<Button className={meemTheme.buttonDarkGrey} onClick={onClick}>
+					Launch
+				</Button>
+			</div>
+		</Grid.Col>
+	)
+
+	const authIfNecessary = () => {
+		Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
+		router.push('/authenticate')
+	}
 
 	return (
-		<div>
-			<Space h={120} />
-			<Center>
-				<Loader variant="oval" color="cyan" />
-			</Center>
+		<div className={meemTheme.backgroundMeem}>
+			{(loading ||
+				(communitiesData &&
+					communitiesData?.Agreements?.length > 0)) && (
+				<>
+					<Space h={120} />
+					<Center>
+						<Loader />
+					</Center>
+					<Space h={600} />
+				</>
+			)}
+			{!loading &&
+				(!communitiesData ||
+					(communitiesData &&
+						communitiesData.Agreements.length === 0)) && (
+					<>
+						<Space h={96} />
+						<Center>
+							<Text
+								className={meemTheme.tLargeBold}
+							>{`Meem is a collective of communities building`}</Text>
+						</Center>
+						<Center>
+							<Text className={meemTheme.tLargeBold}>
+								{`the tools we
+					wish we had.`}
+							</Text>
+						</Center>
+						<Space h={32} />
+						<Center>
+							<Button
+								className={meemTheme.buttonBlack}
+								size={'md'}
+							>
+								Connect My Community
+							</Button>
+						</Center>
+						<Space h={96} />
+						<Center>
+							<Text className={meemTheme.tExtraSmallLabel}>
+								{'Our Tools'.toUpperCase()}
+							</Text>
+						</Center>
+						<Space h={24} />
+						<Container>
+							<Grid>
+								{toolItem(
+									'📰 Community News',
+									'Manage what gets reported and published.',
+									() => {
+										if (!wallet.isConnected) {
+											authIfNecessary()
+											return
+										}
+										router.push('/create')
+									}
+								)}
+								{toolItem(
+									'📚 Community Libraries',
+									'Curate media and links together.',
+									() => {
+										if (!wallet.isConnected) {
+											authIfNecessary()
+											return
+										}
+										router.push('/create')
+									}
+								)}
+								{toolItem(
+									'🛒 Community Markets',
+									'Support local market vendors.',
+									() => {
+										if (!wallet.isConnected) {
+											authIfNecessary()
+											return
+										}
+										router.push('/create')
+									}
+								)}
+							</Grid>
+						</Container>
+						<Space h={48} />
+					</>
+				)}
 		</div>
 	)
 }
