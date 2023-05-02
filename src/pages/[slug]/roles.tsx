@@ -59,7 +59,7 @@ const AgreementRolesPage: NextPage<IProps> = ({ agreementName }) => {
 
 			<RolesManager />
 
-			<MeemFooter />
+			<MeemFooter noAgreement={false} />
 		</>
 	)
 }

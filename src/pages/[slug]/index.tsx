@@ -61,7 +61,7 @@ const AgreementDetailPage: NextPage<IProps> = ({ agreementName }) => {
 			<DashboardComponent />
 
 			<Space h={64} />
-			<MeemFooter />
+			<MeemFooter noAgreement={false} />
 		</>
 	)
 }
