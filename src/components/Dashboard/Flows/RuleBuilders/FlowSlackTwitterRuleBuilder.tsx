@@ -24,13 +24,13 @@ import {
 import { SUB_TWITTER, SUB_SLACK } from '../../../../graphql/rules'
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { ConnectedAccount, Rule } from '../Model/communityTweets'
-import { CTRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
-import { CTRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
-import { CTSlackInputRBProposals } from '../RuleBuilderSections/SlackInput/CTSlackInputRBProposals'
-import { CTSlackInputRBVetoes } from '../RuleBuilderSections/SlackInput/CTSlackInputRBVetoes'
-import { CTTwitterOutputAutoReply } from '../RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
-import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
+import { ConnectedAccount, Rule } from '../Model/flows'
+import { FlowRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/FlowRuleBuilderApproverEmojis'
+import { FlowRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/FlowRuleBuilderVotesCount'
+import { FlowSlackInputRBProposals } from '../RuleBuilderSections/SlackInput/FlowSlackInputRBProposals'
+import { FlowSlackInputRBVetoes } from '../RuleBuilderSections/SlackInput/FlowSlackInputRBVetoes'
+import { FlowTwitterOutputAutoReply } from '../RuleBuilderSections/TwitterOutput/FlowTwitterOutputAutoReply'
+import { FlowRuleBuilderConnections } from './FlowRuleBuilderConnections'
 
 export interface IProps {
 	rule?: Rule
@@ -65,7 +65,7 @@ export interface IOnSave extends IFormValues {
 	vetoerEmojis: MeemAPI.IEmoji[]
 }
 
-export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
+export const FlowSlackTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
 	input,
 	output,
@@ -371,7 +371,7 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 								handleFormSubmit(values)
 							)}
 						>
-							<CTRuleBuilderConnections
+							<FlowRuleBuilderConnections
 								input={rule?.input ?? input}
 								output={rule?.output ?? output}
 								existingRule={rule !== undefined}
@@ -380,7 +380,7 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 								}}
 							/>
 
-							<CTSlackInputRBProposals
+							<FlowSlackInputRBProposals
 								form={form}
 								channelsData={channelsData}
 								isProposalChannelGated={isProposalChannelGated}
@@ -391,7 +391,7 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 							</Text>
 							<Space h={4} />
 
-							<CTRuleBuilderApproverEmojis
+							<FlowRuleBuilderApproverEmojis
 								approverEmojis={approverEmojis}
 								onApproverEmojisSet={emojis => {
 									setApproverEmojis(emojis)
@@ -402,9 +402,9 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 								}}
 							/>
 
-							<CTRuleBuilderVotesCount form={form} />
+							<FlowRuleBuilderVotesCount form={form} />
 
-							<CTSlackInputRBVetoes
+							<FlowSlackInputRBVetoes
 								form={form}
 								vetoerEmojis={vetoerEmojis}
 								onVetoerEmojisSet={emojis => {
@@ -416,7 +416,7 @@ export const CTSlackTwitterRulesBuilder: React.FC<IProps> = ({
 								}}
 							/>
 
-							<CTTwitterOutputAutoReply form={form} />
+							<FlowTwitterOutputAutoReply form={form} />
 
 							<Modal
 								withCloseButton={true}

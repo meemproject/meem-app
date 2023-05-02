@@ -17,24 +17,22 @@ import { Cancel } from 'iconoir-react'
 import { uniqBy } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
-import {
-	SubTwitterSubscription,
-	SubDiscordSubscription
-} from '../../../../../generated/graphql'
-import { SUB_TWITTER, SUB_DISCORD } from '../../../../graphql/rules'
+import { SubSlackSubscription } from '../../../../../generated/graphql'
+import { SUB_SLACK } from '../../../../graphql/rules'
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { ConnectedAccount, Rule } from '../Model/communityTweets'
-import { CTDiscordInputRBEditors } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
-import { CTDiscordInputRBProposals } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
-import { CTRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
-import { CTRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
-import { CTTwitterOutputAutoReply } from '../RuleBuilderSections/TwitterOutput/CTTwitterOutputAutoReply'
-import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
+import { ConnectedAccount, Rule } from '../Model/flows'
+import { FlowRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/FlowRuleBuilderApproverEmojis'
+import { FlowRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/FlowRuleBuilderVotesCount'
+import { FlowSlackInputRBProposals } from '../RuleBuilderSections/SlackInput/FlowSlackInputRBProposals'
+import { FlowSlackInputRBVetoes } from '../RuleBuilderSections/SlackInput/FlowSlackInputRBVetoes'
+import { FlowRuleBuilderConnections } from './FlowRuleBuilderConnections'
+
 export interface IProps {
 	rule?: Rule
 	input?: ConnectedAccount
-	output?: ConnectedAccount
+	webhookUrl?: string
+	privateKey?: string
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -43,7 +41,7 @@ export interface IProps {
 export enum EmojiSelectType {
 	Proposer = 'proposer',
 	Approver = 'approver',
-	Editor = 'editor'
+	Vetoer = 'vetoer'
 }
 
 export interface IFormValues
@@ -51,8 +49,8 @@ export interface IFormValues
 		MeemAPI.IRule,
 		| 'proposerEmojis'
 		| 'approverEmojis'
-		| 'editorEmojis'
 		| 'vetoerEmojis'
+		| 'editorEmojis'
 		| 'action'
 		| 'ruleId'
 		| 'isEnabled'
@@ -61,14 +59,14 @@ export interface IFormValues
 export interface IOnSave extends IFormValues {
 	proposerEmojis: MeemAPI.IEmoji[]
 	approverEmojis: MeemAPI.IEmoji[]
-	editorEmojis: MeemAPI.IEmoji[]
 	vetoerEmojis: MeemAPI.IEmoji[]
 }
 
-export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
+export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 	rule,
 	input,
-	output,
+	webhookUrl,
+	privateKey,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -82,88 +80,37 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	// GraphQL Subscriptions
 	const { mutualMembersClient } = useMeemApollo()
 
-	const { data: twitterData, loading: loadingTwitterData } =
-		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
+	const { data: slackData, loading: isLoadingSlackData } =
+		useSubscription<SubSlackSubscription>(SUB_SLACK, {
 			variables: {
 				agreementId: agreement?.id,
-				twitterId: rule?.output?.id ?? output?.id ?? ''
+				slackId: input?.id
 			},
-			skip: !mutualMembersClient || !agreement?.id || !isOpened,
+			skip:
+				process.env.NEXT_PUBLIC_SYMPHONY_ENABLE_SLACK !== 'true' ||
+				!mutualMembersClient ||
+				!agreement?.id ||
+				!isOpened ||
+				!input?.id,
 			client: mutualMembersClient
 		})
 
-	const { data: discordData, loading: loadingDiscordData } =
-		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
-			variables: {
-				agreementId: agreement?.id,
-				discordId: rule?.input?.id ?? input?.id ?? ''
-			},
-			skip: !mutualMembersClient || !agreement?.id || !isOpened,
-			client: mutualMembersClient
-		})
-
-	const { data: channelsData, isLoading: loadingChannelsData } =
-		useSWR<MeemAPI.v1.GetDiscordChannels.IResponseBody>(
-			agreement?.id && jwt
+	const { data: channelsData, isLoading: isLoadingChannelsData } =
+		useSWR<MeemAPI.v1.GetSlackChannels.IResponseBody>(
+			agreement?.id && jwt && input?.id
 				? `${
 						process.env.NEXT_PUBLIC_API_URL
-				  }${MeemAPI.v1.GetDiscordChannels.path()}`
+				  }${MeemAPI.v1.GetSlackChannels.path()}`
 				: null,
 			url => {
 				return makeFetcher<
-					MeemAPI.v1.GetDiscordChannels.IQueryParams,
-					MeemAPI.v1.GetDiscordChannels.IRequestBody,
-					MeemAPI.v1.GetDiscordChannels.IResponseBody
+					MeemAPI.v1.GetSlackChannels.IQueryParams,
+					MeemAPI.v1.GetSlackChannels.IRequestBody,
+					MeemAPI.v1.GetSlackChannels.IResponseBody
 				>({
-					method: MeemAPI.v1.GetDiscordChannels.method
+					method: MeemAPI.v1.GetSlackChannels.method
 				})(url, {
-					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
-				})
-			},
-			{
-				shouldRetryOnError: false
-			}
-		)
-
-	const { data: emojisData } =
-		useSWR<MeemAPI.v1.GetDiscordEmojis.IResponseBody>(
-			agreement?.id && jwt && (rule?.input?.id ?? input?.id)
-				? `${
-						process.env.NEXT_PUBLIC_API_URL
-				  }${MeemAPI.v1.GetDiscordEmojis.path()}`
-				: null,
-			url => {
-				return makeFetcher<
-					MeemAPI.v1.GetDiscordEmojis.IQueryParams,
-					MeemAPI.v1.GetDiscordEmojis.IRequestBody,
-					MeemAPI.v1.GetDiscordEmojis.IResponseBody
-				>({
-					method: MeemAPI.v1.GetDiscordEmojis.method
-				})(url, {
-					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
-				})
-			},
-			{
-				shouldRetryOnError: false
-			}
-		)
-
-	const { data: rolesData, isLoading: loadingRolesData } =
-		useSWR<MeemAPI.v1.GetDiscordRoles.IResponseBody>(
-			agreement?.id && jwt
-				? `${
-						process.env.NEXT_PUBLIC_API_URL
-				  }${MeemAPI.v1.GetDiscordRoles.path()}`
-				: null,
-			url => {
-				return makeFetcher<
-					MeemAPI.v1.GetDiscordRoles.IQueryParams,
-					MeemAPI.v1.GetDiscordRoles.IRequestBody,
-					MeemAPI.v1.GetDiscordRoles.IResponseBody
-				>({
-					method: MeemAPI.v1.GetDiscordRoles.method
-				})(url, {
-					agreementDiscordId: rule?.input?.id ?? input?.id ?? ''
+					agreementSlackId: rule?.input?.id ?? input?.id ?? ''
 				})
 			},
 			{
@@ -176,17 +123,14 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			publishType: MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles ?? [],
 			approverRoles: rule?.definition.approverRoles ?? [],
-			editorRoles: rule?.definition.editorRoles ?? [],
+			vetoerRoles: rule?.definition.vetoerRoles ?? [],
 			proposalChannels: rule?.definition.proposalChannels ?? [],
 			proposalShareChannel: rule?.definition.proposalShareChannel ?? '',
 			votes: rule?.definition.votes ?? 1,
-			editorVotes: rule?.definition.editorVotes ?? 1,
+			vetoVotes: rule?.definition.vetoVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
 			shouldReply: rule?.definition.shouldReply ?? true,
-			// Required to support IRule
-			vetoerRoles: [],
-			vetoVotes: 0,
-			canVeto: false
+			canVeto: rule?.definition.canVeto ?? false
 		},
 		validate: {
 			proposerRoles: (val, current) =>
@@ -194,8 +138,8 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				val.length === 0
 					? 'Proposer is required'
 					: null,
-			approverRoles: val =>
-				val.length === 0 ? 'Approver is required' : null,
+			// approverRoles: val =>
+			// 	val.length === 0 ? 'Approver is required' : null,
 			proposalChannels: (val, current) =>
 				current.publishType === MeemAPI.PublishType.Proposal &&
 				val.length === 0
@@ -235,18 +179,19 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				: (rule?.definition.proposerEmojis as MeemAPI.IEmoji[])
 			: []
 	)
-	const [editorEmojis, setEditorEmojis] = useState<MeemAPI.IEmoji[]>(
-		rule?.definition.editorEmojis && rule?.definition.editorEmojis[0]
-			? typeof rule?.definition.editorEmojis[0] === 'string'
-				? (rule?.definition.editorEmojis.map(e => ({
+	const [vetoerEmojis, setVetoerEmojis] = useState<MeemAPI.IEmoji[]>(
+		rule?.definition.vetoerEmojis && rule?.definition.vetoerEmojis[0]
+			? typeof rule?.definition.vetoerEmojis[0] === 'string'
+				? (rule?.definition.vetoerEmojis.map(e => ({
 						id: e,
 						name: e,
 						unified: e,
 						type: MeemAPI.EmojiType.Unified
 				  })) as MeemAPI.IEmoji[])
-				: (rule?.definition.editorEmojis as MeemAPI.IEmoji[])
+				: (rule?.definition.vetoerEmojis as MeemAPI.IEmoji[])
 			: []
 	)
+
 	const [emojiSelectType, setEmojiSelectType] = useState<EmojiSelectType>(
 		EmojiSelectType.Approver
 	)
@@ -299,11 +244,11 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 					)
 					break
 
-				case EmojiSelectType.Editor:
-					setEditorEmojis(
+				case EmojiSelectType.Vetoer:
+					setVetoerEmojis(
 						uniqBy(
 							[
-								...editorEmojis,
+								...vetoerEmojis,
 								{
 									...emojiObject,
 									url: emojiObject.src,
@@ -319,16 +264,15 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			}
 			setIsEmojiPickerOpen(false)
 		},
-		[emojiSelectType, approverEmojis, proposerEmojis, editorEmojis]
+		[emojiSelectType, approverEmojis, proposerEmojis, vetoerEmojis]
 	)
 
 	const handleFormSubmit = async (values: IFormValues) => {
 		onSave({
 			...values,
 			approverEmojis,
-			editorEmojis,
-			proposerEmojis,
-			vetoerEmojis: []
+			vetoerEmojis,
+			proposerEmojis
 		})
 	}
 
@@ -339,31 +283,46 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 				MeemAPI.PublishType.PublishImmediately,
 			proposerRoles: rule?.definition.proposerRoles,
 			approverRoles: rule?.definition.approverRoles,
-			editorRoles: rule?.definition.editorRoles,
 			proposalChannels: rule?.definition.proposalChannels,
 			proposalShareChannel: rule?.definition.proposalShareChannel,
 			votes: rule?.definition.votes,
-			editorVotes: rule?.definition.editorVotes,
+			vetoVotes: rule?.definition.vetoVotes,
 			proposeVotes: rule?.definition.proposeVotes,
-			shouldReply: rule?.definition.shouldReply
+			shouldReply: rule?.definition.shouldReply,
+			canVeto: rule?.definition.canVeto
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule])
 
-	let isProposalChannelGated = false
+	const isProposalChannelGated = false
 
-	if (
-		discordData?.AgreementDiscords[0] &&
-		form.values.proposalChannels &&
-		form.values.proposalChannels.length > 0
-	) {
-		form.values.proposalChannels.forEach((c: string) => {
-			const channel = channelsData?.channels?.find(ch => ch.id === c)
-			if (channel && (!channel.canSend || !channel.canView)) {
-				isProposalChannelGated = true
-			}
-		})
-	}
+	// if (
+	// 	slackData?.AgreementSlacks[0] &&
+	// 	form.values.proposalChannels &&
+	// 	form.values.proposalChannels.length > 0
+	// ) {
+	// 	form.values.proposalChannels.forEach((c: string) => {
+	// 		const channel = channelsData.channels?.find(ch => ch.id === c)
+	// 		if (channel && (!channel.canSend || !channel.canView)) {
+	// 			isProposalChannelGated = true
+	// 		}
+	// 	})
+	// }
+
+	// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+	const isShareChannelGated = false
+
+	// if (channelsData?.channels && form.values.proposalShareChannel) {
+	// 	const channel = channelsData.channels.find(
+	// 		ch => ch.id === form.values.proposalShareChannel
+	// 	)
+	// 	if (channel && (!channel.canSend || !channel.canView)) {
+	// 		isShareChannelGated = true
+	// 	}
+	// }
+	const isLoading = isLoadingChannelsData || isLoadingSlackData
+	const hasAllRequiredData = !isLoading && slackData && channelsData
+	const isMissingRequiredData = !isLoading && (!slackData || !channelsData)
 
 	const modalContents = (
 		<div style={{ position: 'relative' }}>
@@ -381,10 +340,7 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 
 			<Space h={48} />
 			<Container size={'sm'}>
-				{(loadingChannelsData ||
-					loadingDiscordData ||
-					loadingTwitterData ||
-					loadingRolesData) && (
+				{isLoading && (
 					<>
 						<Space h={32} />
 						<Center>
@@ -393,30 +349,58 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 						<Space h={32} />
 					</>
 				)}
-				{discordData && channelsData && twitterData && rolesData && (
+				{isMissingRequiredData && (
+					<>
+						<Space h={32} />
+						<Center>
+							<Text className={meemTheme.tSmallBold}>
+								Unable to retrieve data
+							</Text>
+						</Center>
+						<Space h={8} />
+						<Center>
+							<Text className={meemTheme.tSmall}>
+								{!slackData &&
+									'Slack workspace data was not found.'}{' '}
+								{!slackData &&
+									'Slack channel data was not found.'}{' '}
+								{
+									'Contact us using the button in the top right of this page.'
+								}
+							</Text>
+						</Center>
+						<Space h={32} />
+					</>
+				)}
+				{hasAllRequiredData && (
 					<>
 						<form
 							onSubmit={form.onSubmit(values =>
 								handleFormSubmit(values)
 							)}
 						>
-							<CTRuleBuilderConnections
+							<FlowRuleBuilderConnections
 								input={rule?.input ?? input}
-								output={rule?.output ?? output}
+								webhookUrl={webhookUrl}
+								webhookPrivateKey={privateKey}
 								existingRule={rule !== undefined}
 								onChangeConnectionsPressed={function (): void {
 									onModalClosed()
 								}}
 							/>
 
-							<CTDiscordInputRBProposals
+							<FlowSlackInputRBProposals
 								form={form}
 								channelsData={channelsData}
-								rolesData={rolesData}
 								isProposalChannelGated={isProposalChannelGated}
 							/>
 
-							<CTRuleBuilderApproverEmojis
+							<Text className={meemTheme.tExtraSmallLabel}>
+								VOTES
+							</Text>
+							<Space h={4} />
+
+							<FlowRuleBuilderApproverEmojis
 								approverEmojis={approverEmojis}
 								onApproverEmojisSet={emojis => {
 									setApproverEmojis(emojis)
@@ -427,22 +411,19 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 								}}
 							/>
 
-							<CTRuleBuilderVotesCount form={form} />
+							<FlowRuleBuilderVotesCount form={form} />
 
-							<CTDiscordInputRBEditors
+							<FlowSlackInputRBVetoes
 								form={form}
-								rolesData={rolesData}
-								editorEmojis={editorEmojis}
-								onEditorEmojisSet={emojis => {
-									setEditorEmojis(emojis)
+								vetoerEmojis={vetoerEmojis}
+								onVetoerEmojisSet={emojis => {
+									setVetoerEmojis(emojis)
 								}}
-								onAddEmojisPressed={function (): void {
-									setEmojiSelectType(EmojiSelectType.Editor)
+								onAddEmojisPressed={() => {
+									setEmojiSelectType(EmojiSelectType.Vetoer)
 									setIsEmojiPickerOpen(true)
 								}}
 							/>
-
-							<CTTwitterOutputAutoReply form={form} />
 
 							<Modal
 								withCloseButton={true}
@@ -456,21 +437,6 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 								<Picker
 									data={data}
 									onEmojiSelect={handleEmojiClick}
-									custom={[
-										{
-											id: 'discord',
-											name: `${discordData?.AgreementDiscords[0].Discord?.name}`,
-											emojis: emojisData?.emojis.map(
-												e => ({
-													id: e.id,
-													name: e.name,
-													keywords: [e.name],
-													// @ts-ignore
-													skins: [{ src: e.url }]
-												})
-											)
-										}
-									]}
 								/>
 							</Modal>
 							<Space h={'lg'} />

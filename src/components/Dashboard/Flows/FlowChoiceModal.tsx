@@ -11,8 +11,8 @@ import {
 import { Cancel } from 'iconoir-react'
 import React, { useState } from 'react'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { CTInputOutputModal } from './Modals/CTInputOutputModal'
-import { ConnectedAccount } from './Model/communityTweets'
+import { FlowInputOutputModal } from './Modals/FlowInputOutputModal'
+import { ConnectedAccount } from './Model/flows'
 
 interface IProps {
 	isOpened: boolean
@@ -164,7 +164,7 @@ export const FlowChoiceModal: React.FC<IProps> = ({
 				{modalContents}
 			</Modal>
 
-			<CTInputOutputModal
+			<FlowInputOutputModal
 				isOpened={isNewRuleModalOpen}
 				connectedAccounts={connectedAccounts}
 				onModalClosed={function (): void {

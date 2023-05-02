@@ -19,7 +19,7 @@ interface IProps {
 	onModalClosed: () => void
 }
 
-export const CTDiscordConnectionModal: React.FC<IProps> = ({
+export const FlowDiscordConnectionModal: React.FC<IProps> = ({
 	isOpened,
 	onModalClosed
 }) => {

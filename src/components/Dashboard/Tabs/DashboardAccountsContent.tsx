@@ -6,9 +6,9 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
 import { useAgreement } from '../../Providers/AgreementProvider'
 import { colorDarkBlue, colorRed, useMeemTheme } from '../../Styles/MeemTheme'
-import { CTDisconnectModal } from '../Flows/Modals/CTDisconnectModal'
-import { CTDiscordConnectionModal } from '../Flows/Modals/CTDiscordConnectionModal'
-import { ConnectedAccount } from '../Flows/Model/communityTweets'
+import { FlowAccountDisconnectModal } from '../Flows/Modals/FlowAccountDisconnectModal'
+import { FlowDiscordConnectionModal } from '../Flows/Modals/FlowDiscordConnectionModal'
+import { ConnectedAccount } from '../Flows/Model/flows'
 
 interface IProps {
 	connections?: ConnectedAccount[]
@@ -258,14 +258,14 @@ export const DashboardAccountsContent: React.FC<IProps> = ({ connections }) => {
 		<>
 			<ConnectionsList />
 
-			<CTDiscordConnectionModal
+			<FlowDiscordConnectionModal
 				isOpened={isConnectDiscordModalOpen}
 				onModalClosed={function (): void {
 					setIsConnectDiscordModalOpen(false)
 				}}
 			/>
 
-			<CTDisconnectModal
+			<FlowAccountDisconnectModal
 				connection={selectedConnection}
 				isOpened={isDisconnectModalOpen}
 				onModalClosed={function (): void {

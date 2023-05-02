@@ -43,7 +43,7 @@ import {
 	Rule,
 	ConnectedAccount,
 	ConnectedAccountType
-} from './Flows/Model/communityTweets'
+} from './Flows/Model/flows'
 import { DashboardAccounts } from './Tabs/DashboardAccounts'
 import { DashboardAirdrops } from './Tabs/DashboardAirdrops'
 import { DashboardDetails } from './Tabs/DashboardDetails'

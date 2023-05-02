@@ -21,7 +21,7 @@ interface IProps {
 	onAddEmojisPressed: () => void
 }
 
-export const CTDiscordInputRBEditors: React.FC<IProps> = ({
+export const FlowDiscordInputRBEditors: React.FC<IProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-shadow
 	form,
 	rolesData,

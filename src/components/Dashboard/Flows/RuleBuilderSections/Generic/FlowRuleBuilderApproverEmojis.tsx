@@ -11,7 +11,7 @@ interface IProps {
 	onAddEmojisPressed: () => void
 }
 
-export const CTRuleBuilderApproverEmojis: React.FC<IProps> = ({
+export const FlowRuleBuilderApproverEmojis: React.FC<IProps> = ({
 	approverEmojis,
 	onApproverEmojisSet,
 	onAddEmojisPressed

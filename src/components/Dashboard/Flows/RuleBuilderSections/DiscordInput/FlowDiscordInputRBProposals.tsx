@@ -12,7 +12,7 @@ interface IProps {
 	isProposalChannelGated: boolean
 }
 
-export const CTDiscordInputRBProposals: React.FC<IProps> = ({
+export const FlowDiscordInputRBProposals: React.FC<IProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-shadow
 	form,
 	channelsData,

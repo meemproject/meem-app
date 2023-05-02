@@ -3,7 +3,7 @@
 import { Text, Space, Loader } from '@mantine/core'
 import React from 'react'
 import { useMeemTheme } from '../../Styles/MeemTheme'
-import { ConnectedAccount } from '../Flows/Model/communityTweets'
+import { ConnectedAccount } from '../Flows/Model/flows'
 import { DashboardAccountsContent } from './DashboardAccountsContent'
 
 interface IProps {

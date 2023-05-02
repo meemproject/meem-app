@@ -10,10 +10,7 @@ import {
 } from '../../../../utils/notifications'
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import {
-	ConnectedAccount,
-	ConnectedAccountType
-} from '../Model/communityTweets'
+import { ConnectedAccount, ConnectedAccountType } from '../Model/flows'
 
 interface IProps {
 	connection?: ConnectedAccount
@@ -21,7 +18,7 @@ interface IProps {
 	onModalClosed: () => void
 }
 
-export const CTDisconnectModal: React.FC<IProps> = ({
+export const FlowAccountDisconnectModal: React.FC<IProps> = ({
 	connection,
 	isOpened,
 	onModalClosed

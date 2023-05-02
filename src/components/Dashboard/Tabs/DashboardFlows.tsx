@@ -9,8 +9,8 @@ import { useAgreement } from '../../Providers/AgreementProvider'
 import { useAnalytics } from '../../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 import { FlowChoiceModal } from '../Flows/FlowChoiceModal'
-import { CTInputOutputModal } from '../Flows/Modals/CTInputOutputModal'
-import { ConnectedAccount, Rule } from '../Flows/Model/communityTweets'
+import { FlowInputOutputModal } from '../Flows/Modals/FlowInputOutputModal'
+import { ConnectedAccount, Rule } from '../Flows/Model/flows'
 
 interface IProps {
 	rules: Rule[]
@@ -258,7 +258,7 @@ export const DashboardFlows: React.FC<IProps> = ({
 					</Accordion.Item>
 				</Accordion>
 
-				<CTInputOutputModal
+				<FlowInputOutputModal
 					isOpened={isRuleBuilderOpen}
 					connectedAccounts={connectedAccounts}
 					existingRule={selectedRule}

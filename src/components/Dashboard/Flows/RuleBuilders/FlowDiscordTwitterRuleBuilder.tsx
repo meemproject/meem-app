@@ -17,22 +17,24 @@ import { Cancel } from 'iconoir-react'
 import { uniqBy } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr'
-import { SubDiscordSubscription } from '../../../../../generated/graphql'
-import { SUB_DISCORD } from '../../../../graphql/rules'
+import {
+	SubTwitterSubscription,
+	SubDiscordSubscription
+} from '../../../../../generated/graphql'
+import { SUB_TWITTER, SUB_DISCORD } from '../../../../graphql/rules'
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { ConnectedAccount, Rule } from '../Model/communityTweets'
-import { CTDiscordInputRBEditors } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBEditors'
-import { CTDiscordInputRBProposals } from '../RuleBuilderSections/DiscordInput/CTDiscordInputRBProposals'
-import { CTRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/CTRuleBuilderApproverEmojis'
-import { CTRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/CTRuleBuilderVotesCount'
-import { CTRuleBuilderConnections } from './CTRuleBuilderConnections'
-
+import { ConnectedAccount, Rule } from '../Model/flows'
+import { FlowDiscordInputRBEditors } from '../RuleBuilderSections/DiscordInput/FlowDiscordInputRBEditors'
+import { FlowDiscordInputRBProposals } from '../RuleBuilderSections/DiscordInput/FlowDiscordInputRBProposals'
+import { FlowRuleBuilderApproverEmojis } from '../RuleBuilderSections/Generic/FlowRuleBuilderApproverEmojis'
+import { FlowRuleBuilderVotesCount } from '../RuleBuilderSections/Generic/FlowRuleBuilderVotesCount'
+import { FlowTwitterOutputAutoReply } from '../RuleBuilderSections/TwitterOutput/FlowTwitterOutputAutoReply'
+import { FlowRuleBuilderConnections } from './FlowRuleBuilderConnections'
 export interface IProps {
 	rule?: Rule
 	input?: ConnectedAccount
-	webhookUrl?: string
-	privateKey?: string
+	output?: ConnectedAccount
 	isOpened: boolean
 	onModalClosed: () => void
 	onSave: (values: IOnSave) => void
@@ -59,15 +61,14 @@ export interface IFormValues
 export interface IOnSave extends IFormValues {
 	proposerEmojis: MeemAPI.IEmoji[]
 	approverEmojis: MeemAPI.IEmoji[]
-	editorEmojis?: MeemAPI.IEmoji[]
+	editorEmojis: MeemAPI.IEmoji[]
 	vetoerEmojis: MeemAPI.IEmoji[]
 }
 
-export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
+export const FlowDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	rule,
 	input,
-	webhookUrl,
-	privateKey,
+	output,
 	isOpened,
 	onModalClosed,
 	onSave
@@ -80,6 +81,16 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 
 	// GraphQL Subscriptions
 	const { mutualMembersClient } = useMeemApollo()
+
+	const { data: twitterData, loading: loadingTwitterData } =
+		useSubscription<SubTwitterSubscription>(SUB_TWITTER, {
+			variables: {
+				agreementId: agreement?.id,
+				twitterId: rule?.output?.id ?? output?.id ?? ''
+			},
+			skip: !mutualMembersClient || !agreement?.id || !isOpened,
+			client: mutualMembersClient
+		})
 
 	const { data: discordData, loading: loadingDiscordData } =
 		useSubscription<SubDiscordSubscription>(SUB_DISCORD, {
@@ -372,6 +383,7 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 			<Container size={'sm'}>
 				{(loadingChannelsData ||
 					loadingDiscordData ||
+					loadingTwitterData ||
 					loadingRolesData) && (
 					<>
 						<Space h={32} />
@@ -381,55 +393,56 @@ export const CTDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 						<Space h={32} />
 					</>
 				)}
-				{discordData && channelsData && rolesData && (
+				{discordData && channelsData && twitterData && rolesData && (
 					<>
 						<form
 							onSubmit={form.onSubmit(values =>
 								handleFormSubmit(values)
 							)}
 						>
-							<CTRuleBuilderConnections
+							<FlowRuleBuilderConnections
 								input={rule?.input ?? input}
-								webhookUrl={webhookUrl}
-								webhookPrivateKey={privateKey}
+								output={rule?.output ?? output}
 								existingRule={rule !== undefined}
 								onChangeConnectionsPressed={function (): void {
 									onModalClosed()
 								}}
 							/>
 
-							<CTDiscordInputRBProposals
+							<FlowDiscordInputRBProposals
 								form={form}
 								channelsData={channelsData}
 								rolesData={rolesData}
 								isProposalChannelGated={isProposalChannelGated}
 							/>
 
-							<CTRuleBuilderApproverEmojis
+							<FlowRuleBuilderApproverEmojis
 								approverEmojis={approverEmojis}
 								onApproverEmojisSet={emojis => {
 									setApproverEmojis(emojis)
 								}}
-								onAddEmojisPressed={function (): void {
+								onAddEmojisPressed={() => {
 									setEmojiSelectType(EmojiSelectType.Approver)
 									setIsEmojiPickerOpen(true)
 								}}
 							/>
 
-							<CTRuleBuilderVotesCount form={form} />
+							<FlowRuleBuilderVotesCount form={form} />
 
-							<CTDiscordInputRBEditors
+							<FlowDiscordInputRBEditors
 								form={form}
 								rolesData={rolesData}
 								editorEmojis={editorEmojis}
 								onEditorEmojisSet={emojis => {
 									setEditorEmojis(emojis)
 								}}
-								onAddEmojisPressed={() => {
+								onAddEmojisPressed={function (): void {
 									setEmojiSelectType(EmojiSelectType.Editor)
 									setIsEmojiPickerOpen(true)
 								}}
 							/>
+
+							<FlowTwitterOutputAutoReply form={form} />
 
 							<Modal
 								withCloseButton={true}

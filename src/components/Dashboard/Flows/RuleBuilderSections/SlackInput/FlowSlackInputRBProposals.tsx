@@ -12,7 +12,7 @@ interface IProps {
 	isProposalChannelGated: boolean
 }
 
-export const CTSlackInputRBProposals: React.FC<IProps> = ({
+export const FlowSlackInputRBProposals: React.FC<IProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-shadow
 	form,
 	channelsData,

@@ -7,7 +7,7 @@ interface IProps {
 	form: any
 }
 
-export const CTTwitterOutputAutoReply: React.FC<IProps> = ({
+export const FlowTwitterOutputAutoReply: React.FC<IProps> = ({
 	// eslint-disable-next-line @typescript-eslint/no-shadow
 	form
 }) => {

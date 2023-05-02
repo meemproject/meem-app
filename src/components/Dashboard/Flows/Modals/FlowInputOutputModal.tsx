@@ -26,18 +26,14 @@ import {
 import { useAgreement } from '../../../Providers/AgreementProvider'
 import { useAnalytics } from '../../../Providers/AnalyticsProvider'
 import { colorDarkBlue, useMeemTheme } from '../../../Styles/MeemTheme'
+import { ConnectedAccount, ConnectedAccountType, Rule } from '../Model/flows'
+import { FlowDiscordTwitterRulesBuilder } from '../RuleBuilders/FlowDiscordTwitterRuleBuilder'
 import {
-	ConnectedAccount,
-	ConnectedAccountType,
-	Rule
-} from '../Model/communityTweets'
-import { CTDiscordTwitterRulesBuilder } from '../RuleBuilders/CTDiscordTwitterRuleBuilder'
-import {
-	CTDiscordWebhookRulesBuilder,
+	FlowDiscordWebhookRulesBuilder,
 	IOnSave
-} from '../RuleBuilders/CTDiscordWebhookRuleBuilder'
-import { CTSlackTwitterRulesBuilder } from '../RuleBuilders/CTSlackTwitterRuleBuilder'
-import { CTSlackWebhookRulesBuilder } from '../RuleBuilders/CTSlackWebhookRuleBuilder'
+} from '../RuleBuilders/FlowDiscordWebhookRuleBuilder'
+import { FlowSlackTwitterRulesBuilder } from '../RuleBuilders/FlowSlackTwitterRuleBuilder'
+import { FlowSlackWebhookRulesBuilder } from '../RuleBuilders/FlowSlackWebhookRuleBuilder'
 
 interface IProps {
 	existingRule?: Rule
@@ -46,7 +42,7 @@ interface IProps {
 	onModalClosed: () => void
 }
 
-export const CTInputOutputModal: React.FC<IProps> = ({
+export const FlowInputOutputModal: React.FC<IProps> = ({
 	existingRule,
 	connectedAccounts: connections,
 	isOpened,
@@ -589,7 +585,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 
 			{isDiscordTwitterRuleBuilderOpened && (
 				<>
-					<CTDiscordTwitterRulesBuilder
+					<FlowDiscordTwitterRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}
@@ -610,7 +606,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 
 			{isDiscordWebhookRuleBuilderOpened && (
 				<>
-					<CTDiscordWebhookRulesBuilder
+					<FlowDiscordWebhookRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}
@@ -632,7 +628,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 
 			{isSlackTwitterRuleBuilderOpened && (
 				<>
-					<CTSlackTwitterRulesBuilder
+					<FlowSlackTwitterRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}
@@ -653,7 +649,7 @@ export const CTInputOutputModal: React.FC<IProps> = ({
 
 			{isSlackWebhookRuleBuilderOpened && (
 				<>
-					<CTSlackWebhookRulesBuilder
+					<FlowSlackWebhookRulesBuilder
 						onSave={values => {
 							handleRuleSave(values)
 						}}

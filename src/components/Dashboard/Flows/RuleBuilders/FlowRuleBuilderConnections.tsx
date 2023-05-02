@@ -2,7 +2,7 @@ import { Text, Space, Image, Button } from '@mantine/core'
 import { MeemAPI } from '@meemproject/sdk'
 import React from 'react'
 import { useMeemTheme } from '../../../Styles/MeemTheme'
-import { ConnectedAccount } from '../Model/communityTweets'
+import { ConnectedAccount } from '../Model/flows'
 
 interface IProps {
 	input?: ConnectedAccount
@@ -13,7 +13,7 @@ interface IProps {
 	onChangeConnectionsPressed?: () => void
 }
 
-export const CTRuleBuilderConnections: React.FC<IProps> = ({
+export const FlowRuleBuilderConnections: React.FC<IProps> = ({
 	input,
 	output,
 	webhookUrl,
