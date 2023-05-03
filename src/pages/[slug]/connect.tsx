@@ -1,13 +1,13 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { MeemFooter } from '../components/Footer/MeemFooter'
-import { HeaderMenu } from '../components/Header/Header'
-import { OnboardingCreate } from '../components/Onboarding/OnboardingCreate'
-import { meemSiteDescription } from '../utils/sitedescriptions'
+import { MeemFooter } from '../../components/Footer/MeemFooter'
+import { HeaderMenu } from '../../components/Header/Header'
+import { OnboardingConnectAccount } from '../../components/Onboarding/OnboardingConnectAccount'
+import { meemSiteDescription } from '../../utils/sitedescriptions'
 
 const CreatePage: NextPage = () => {
-	const pageTitle = `Create | Meem`
+	const pageTitle = `Connect An Account | Meem`
 	const pageDescription = meemSiteDescription
 
 	return (
@@ -48,7 +48,7 @@ const CreatePage: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<OnboardingCreate />
+			<OnboardingConnectAccount />
 			<MeemFooter noAgreement />
 		</>
 	)

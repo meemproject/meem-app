@@ -1,14 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import Authenticate from '../components/Authenticate/Authenticate'
-import { MeemFooter } from '../components/Footer/MeemFooter'
-import { HeaderMenu } from '../components/Header/Header'
-import { meemSiteDescription } from '../utils/sitedescriptions'
+import { MeemFooter } from '../../components/Footer/MeemFooter'
+import { HeaderMenu } from '../../components/Header/Header'
+import { OnboardingQuestions } from '../../components/Onboarding/OnboardingQuestions'
+import { meemSiteDescription } from '../../utils/sitedescriptions'
 
-const AuthenticatePage: NextPage = () => {
-	const pageTitle = `Sign In | Meem`
-	const pageDescription = `Sign in. ${meemSiteDescription}`
+const CreatePage: NextPage = () => {
+	const pageTitle = `About Your Community | Meem`
+	const pageDescription = meemSiteDescription
 
 	return (
 		<>
@@ -48,10 +48,10 @@ const AuthenticatePage: NextPage = () => {
 				/>
 			</Head>
 			<HeaderMenu />
-			<Authenticate />
+			<OnboardingQuestions />
 			<MeemFooter noAgreement />
 		</>
 	)
 }
 
-export default AuthenticatePage
+export default CreatePage

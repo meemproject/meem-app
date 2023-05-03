@@ -94,7 +94,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				`Your community has been created.`
 			)
 
-			router.push(`/${slug}`)
+			router.push(`/${slug}/questions`)
 			// }
 		},
 		[hasStartedCreating, router]

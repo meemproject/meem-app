@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	Center,
 	Space,
@@ -11,10 +12,12 @@ import {
 import { useMeemApollo, useWallet } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MyAgreementsQueryQuery } from '../../../generated/graphql'
 import { GET_MY_AGREEMENTS } from '../../graphql/agreements'
+import { isJwtError } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
+import { CreateAgreementModal } from '../Create/CreateAgreementModal'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 export function HomeComponent() {
@@ -26,17 +29,21 @@ export function HomeComponent() {
 
 	const { mutualMembersClient } = useMeemApollo()
 
-	const { data: communitiesData, loading } = useQuery<MyAgreementsQueryQuery>(
-		GET_MY_AGREEMENTS,
-		{
-			variables: {
-				walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
-				chainId: process.env.NEXT_PUBLIC_CHAIN_ID
-			},
-			skip: !mutualMembersClient,
-			client: mutualMembersClient
-		}
-	)
+	const {
+		data: communitiesData,
+		loading,
+		error
+	} = useQuery<MyAgreementsQueryQuery>(GET_MY_AGREEMENTS, {
+		variables: {
+			walletAddress: wallet.isConnected ? wallet.accounts[0] : '',
+			chainId: process.env.NEXT_PUBLIC_CHAIN_ID
+		},
+		skip: !mutualMembersClient,
+		client: mutualMembersClient
+	})
+
+	const [isCreateAgreementModalOpen, setIsCreateAgreementModalOpen] =
+		useState(false)
 
 	useEffect(() => {
 		if (
@@ -111,6 +118,16 @@ export function HomeComponent() {
 						<Space h={32} />
 						<Center>
 							<Button
+								onClick={() => {
+									if (
+										!wallet.isConnected ||
+										isJwtError(error)
+									) {
+										authIfNecessary()
+										return
+									}
+									setIsCreateAgreementModalOpen(true)
+								}}
 								className={meemTheme.buttonBlack}
 								size={'md'}
 							>
@@ -130,38 +147,53 @@ export function HomeComponent() {
 									'📰 Community News',
 									'Manage what gets reported and published.',
 									() => {
-										if (!wallet.isConnected) {
+										if (
+											!wallet.isConnected ||
+											isJwtError(error)
+										) {
 											authIfNecessary()
 											return
 										}
-										router.push('/create')
+										setIsCreateAgreementModalOpen(true)
 									}
 								)}
 								{toolItem(
 									'📚 Community Libraries',
 									'Curate media and links together.',
 									() => {
-										if (!wallet.isConnected) {
+										if (
+											!wallet.isConnected ||
+											isJwtError(error)
+										) {
 											authIfNecessary()
 											return
 										}
-										router.push('/create')
+										setIsCreateAgreementModalOpen(true)
 									}
 								)}
 								{toolItem(
 									'🛒 Community Markets',
 									'Support local market vendors.',
 									() => {
-										if (!wallet.isConnected) {
+										if (
+											!wallet.isConnected ||
+											isJwtError(error)
+										) {
 											authIfNecessary()
 											return
 										}
-										router.push('/create')
+										setIsCreateAgreementModalOpen(true)
 									}
 								)}
 							</Grid>
 						</Container>
 						<Space h={48} />
+						<CreateAgreementModal
+							isOpened={isCreateAgreementModalOpen}
+							onModalClosed={() => {
+								setIsCreateAgreementModalOpen(false)
+							}}
+						/>
 					</>
 				)}
 		</div>

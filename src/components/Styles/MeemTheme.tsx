@@ -14,6 +14,7 @@ export const colorLightBlue = '#EFF7FF'
 export const colorDarkBlue = '#26699D'
 export const colorLightYellow = `#FEFFE5`
 export const colorYellow = '#F9FF15'
+export const colorTransparentYellow = '#f9ff1599'
 export const colorDarkYellow = '#e0e810'
 export const colorDarkerYellow = '#4d4f08'
 export const colorOrangeRed = '#FF6651'
@@ -921,6 +922,9 @@ export const useMeemTheme = createStyles(theme => ({
 		background:
 			'linear-gradient(235deg,hsl(67deg 85% 76%) 0%,hsl(67deg 86% 83%) 14%,hsl(67deg 85% 90%) 29%,hsl(68deg 88% 97%) 43%,hsl(132deg 20% 95%) 57%,hsl(125deg 17% 85%) 71%,hsl(128deg 18% 75%) 86%,hsl(126deg 18% 66%) 100%)'
 	},
+	backgroundTransparentYellow: {
+		backgroundColor: colorTransparentYellow
+	},
 	badge: {
 		paddingLeft: 8,
 		paddingRight: 8
@@ -940,6 +944,13 @@ export const useMeemTheme = createStyles(theme => ({
 		marginTop: -4,
 		[`@media (max-width: 1000px)`]: {
 			marginRight: 20
+		}
+	},
+	textInputCreate: {
+		width: 600,
+		[`@media (max-width: 1000px)`]: {
+			paddingLeft: 16,
+			paddingRight: 16
 		}
 	},
 	unstyledLink: {
