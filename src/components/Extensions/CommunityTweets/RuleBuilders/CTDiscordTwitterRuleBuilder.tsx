@@ -1,7 +1,15 @@
 import { useSubscription } from '@apollo/client'
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import { Text, Space, Button, Modal, Center, Loader } from '@mantine/core'
+import {
+	Text,
+	Space,
+	Button,
+	Modal,
+	Center,
+	Loader,
+	Checkbox
+} from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth, useMeemApollo } from '@meemproject/react'
 import { makeFetcher, MeemAPI } from '@meemproject/sdk'
@@ -174,6 +182,8 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			editorVotes: rule?.definition.editorVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
 			shouldReply: rule?.definition.shouldReply ?? true,
+			shouldReplyPrivately:
+				rule?.definition.shouldReplyPrivately ?? false,
 			// Required to support IRule
 			vetoerRoles: [],
 			vetoVotes: 0,
@@ -315,7 +325,8 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			votes: rule?.definition.votes,
 			editorVotes: rule?.definition.editorVotes,
 			proposeVotes: rule?.definition.proposeVotes,
-			shouldReply: rule?.definition.shouldReply
+			shouldReply: rule?.definition.shouldReply,
+			shouldReplyPrivately: rule?.definition.shouldReplyPrivately
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule])
@@ -399,6 +410,13 @@ export const CTDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 						/>
 
 						<CTTwitterOutputAutoReply form={form} />
+
+						<Space h={32} />
+
+						<Checkbox
+							label="Make the bot replies private"
+							{...form.getInputProps('shouldReplyPrivately')}
+						/>
 
 						<Modal
 							withCloseButton={true}
