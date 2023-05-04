@@ -8,7 +8,8 @@ import {
 	Modal,
 	Center,
 	Loader,
-	Container
+	Container,
+	Checkbox
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth, useMeemApollo } from '@meemproject/react'
@@ -153,6 +154,8 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 			vetoVotes: rule?.definition.vetoVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
 			shouldReply: rule?.definition.shouldReply ?? true,
+			shouldReplyPrivately:
+				rule?.definition.shouldReplyPrivately ?? false,
 			canVeto: rule?.definition.canVeto ?? false
 		},
 		validate: {
@@ -291,6 +294,7 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 			vetoVotes: rule?.definition.vetoVotes,
 			proposeVotes: rule?.definition.proposeVotes,
 			shouldReply: rule?.definition.shouldReply,
+			shouldReplyPrivately: rule?.definition.shouldReplyPrivately,
 			canVeto: rule?.definition.canVeto
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -424,6 +428,13 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 									setEmojiSelectType(EmojiSelectType.Vetoer)
 									setIsEmojiPickerOpen(true)
 								}}
+							/>
+
+							<Space h={32} />
+
+							<Checkbox
+								label="Make the bot replies private"
+								{...form.getInputProps('shouldReplyPrivately')}
 							/>
 
 							<Modal

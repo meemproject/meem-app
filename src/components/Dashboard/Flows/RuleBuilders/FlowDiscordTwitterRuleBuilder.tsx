@@ -8,7 +8,8 @@ import {
 	Modal,
 	Center,
 	Loader,
-	Container
+	Container,
+	Checkbox
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useAuth, useMeemApollo } from '@meemproject/react'
@@ -183,6 +184,8 @@ export const FlowDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			editorVotes: rule?.definition.editorVotes ?? 1,
 			proposeVotes: rule?.definition.proposeVotes ?? 1,
 			shouldReply: rule?.definition.shouldReply ?? true,
+			shouldReplyPrivately:
+				rule?.definition.shouldReplyPrivately ?? false,
 			// Required to support IRule
 			vetoerRoles: [],
 			vetoVotes: 0,
@@ -324,7 +327,8 @@ export const FlowDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 			votes: rule?.definition.votes,
 			editorVotes: rule?.definition.editorVotes,
 			proposeVotes: rule?.definition.proposeVotes,
-			shouldReply: rule?.definition.shouldReply
+			shouldReply: rule?.definition.shouldReply,
+			shouldReplyPrivately: rule?.definition.shouldReplyPrivately
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [rule])
@@ -422,6 +426,13 @@ export const FlowDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 							/>
 
 							<FlowTwitterOutputAutoReply form={form} />
+
+							<Space h={32} />
+
+							<Checkbox
+								label="Make the bot replies private"
+								{...form.getInputProps('shouldReplyPrivately')}
+							/>
 
 							<Modal
 								withCloseButton={true}
