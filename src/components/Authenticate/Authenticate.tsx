@@ -18,7 +18,7 @@ import { useAnalytics } from '../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { LoginForm } from './LoginModal'
 
-const MAuthenticate: React.FC = () => {
+const Authenticate: React.FC = () => {
 	const wallet = useAuth()
 	const router = useRouter()
 	const analytics = useAnalytics()
@@ -121,4 +121,4 @@ const MAuthenticate: React.FC = () => {
 	)
 }
 
-export default MAuthenticate
+export default Authenticate

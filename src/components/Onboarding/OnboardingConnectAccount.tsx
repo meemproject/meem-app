@@ -25,6 +25,7 @@ import { isJwtError } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
 import { FlowDiscordConnectionModal } from '../Dashboard/Flows/Modals/FlowDiscordConnectionModal'
 import { useAgreement } from '../Providers/AgreementProvider'
+import { useAnalytics } from '../Providers/AnalyticsProvider'
 import { colorGreen, useMeemTheme } from '../Styles/MeemTheme'
 
 export function OnboardingConnectAccount() {
@@ -35,6 +36,8 @@ export function OnboardingConnectAccount() {
 	const wallet = useWallet()
 
 	const { jwt } = useAuth()
+
+	const analytics = useAnalytics()
 
 	const authIfNecessary = () => {
 		Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
@@ -131,7 +134,11 @@ export function OnboardingConnectAccount() {
 				returnUrl: window.location.toString()
 			}
 		})
-	}, [router, agreement, jwt])
+
+		analytics.track('Onboarding Connect Account', {
+			accountType: 'Twitter'
+		})
+	}, [agreement?.id, jwt, router, analytics])
 
 	const handleAuthSlack = useCallback(async () => {
 		if (!agreement?.id || !jwt) {
@@ -148,7 +155,10 @@ export function OnboardingConnectAccount() {
 				returnUrl: window.location.toString()
 			}
 		})
-	}, [router, agreement, jwt])
+		analytics.track('Onboarding Connect Account', {
+			accountType: 'Slack'
+		})
+	}, [router, agreement?.id, jwt, analytics])
 
 	const isLoading =
 		isLoadingAgreement ||
@@ -239,6 +249,12 @@ export function OnboardingConnectAccount() {
 								'Discord',
 								'You’ll need Discord permissions that allow you to add our bot to your server.',
 								() => {
+									analytics.track(
+										'Onboarding Connect Account',
+										{
+											accountType: 'Discord'
+										}
+									)
 									setIsConnectDiscordModalOpen(true)
 								},
 								hasConnectedDiscord
@@ -277,6 +293,8 @@ export function OnboardingConnectAccount() {
 											authIfNecessary()
 											return
 										}
+
+										analytics.track('Onboarding Completed')
 										router.push(`/${agreement?.slug}`)
 									}}
 									className={meemTheme.buttonBlack}

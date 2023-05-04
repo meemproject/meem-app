@@ -16,6 +16,7 @@ import React, { useState } from 'react'
 import { isJwtError } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
 import { useAgreement } from '../Providers/AgreementProvider'
+import { useAnalytics } from '../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 
 export enum OnboardingState {
@@ -29,6 +30,8 @@ export function OnboardingQuestions() {
 	const { classes: meemTheme } = useMeemTheme()
 
 	const wallet = useWallet()
+
+	const analytics = useAnalytics()
 
 	const authIfNecessary = () => {
 		Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
@@ -164,6 +167,10 @@ export function OnboardingQuestions() {
 								return
 							}
 							setCurrentState(OnboardingState.QuestionTwo)
+
+							analytics.track('Onboarding Question Answered', {
+								communityActivities: questionOneAnswer
+							})
 						}}
 						className={meemTheme.buttonBlack}
 					>
@@ -174,7 +181,10 @@ export function OnboardingQuestions() {
 				<Center>
 					<Button
 						onClick={() => {
-							router.push(`/${agreement?.id}/connect`)
+							analytics.track('Onboarding Question Skipped', {
+								question: 1
+							})
+							setCurrentState(OnboardingState.QuestionTwo)
 						}}
 						radius={16}
 						variant={'subtle'}
@@ -263,6 +273,9 @@ export function OnboardingQuestions() {
 				<Center>
 					<Button
 						onClick={() => {
+							analytics.track('Onboarding Question Answered', {
+								communitySize: questionTwoAnswer
+							})
 							router.push(`/${agreement?.slug}/connect`)
 						}}
 						className={meemTheme.buttonBlack}
@@ -274,6 +287,9 @@ export function OnboardingQuestions() {
 				<Center>
 					<Button
 						onClick={() => {
+							analytics.track('Onboarding Question Skipped', {
+								question: 2
+							})
 							router.push(`/${agreement?.slug}/connect`)
 						}}
 						radius={16}
