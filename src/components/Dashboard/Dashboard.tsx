@@ -36,6 +36,7 @@ import {
 } from '../../graphql/rules'
 import { isJwtError } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
+import { CreateAgreementModal } from '../Create/CreateAgreementModal'
 import { useAgreement } from '../Providers/AgreementProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import {
@@ -66,6 +67,9 @@ export const DashboardComponent: React.FC = () => {
 	const { agreement, isLoadingAgreement, error } = useAgreement()
 
 	const { mutualMembersClient } = useMeemApollo()
+
+	const [isCreateAgreementModalOpen, setIsCreateAgreementModalOpen] =
+		useState(false)
 
 	// Navigation
 	const [currentTab, setCurrentTab] = useState<Tab>(Tab.Flows)
@@ -344,7 +348,9 @@ export const DashboardComponent: React.FC = () => {
 									onChange={value => {
 										if (value) {
 											if (value === 'create-new') {
-												// TODO: Create new community
+												setIsCreateAgreementModalOpen(
+													true
+												)
 											} else {
 												router.push(`/${value}`)
 											}
@@ -472,6 +478,12 @@ export const DashboardComponent: React.FC = () => {
 					</div>
 				</>
 			)}
+			<CreateAgreementModal
+				isOpened={isCreateAgreementModalOpen}
+				onModalClosed={() => {
+					setIsCreateAgreementModalOpen(false)
+				}}
+			/>
 		</>
 	)
 }

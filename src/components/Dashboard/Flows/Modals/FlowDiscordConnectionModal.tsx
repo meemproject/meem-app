@@ -71,13 +71,13 @@ export const FlowDiscordConnectionModal: React.FC<IProps> = ({
 					orientation="vertical"
 				>
 					<Stepper.Step
-						label="Invite Community Tweets bot"
+						label="Invite Meem bot"
 						description={
 							<>
 								<Text className={meemTheme.tExtraSmall}>
 									{connectDiscordStep === 1
-										? `You've invited the Community Tweets bot to your Discord server.`
-										: `Please invite the Community Tweets bot to manage your Discord server.`}
+										? `You've invited the Meem bot to your Discord server.`
+										: `Please invite the Meem bot to manage your Discord server.`}
 								</Text>
 								{connectDiscordStep === 0 && (
 									<>
@@ -97,7 +97,7 @@ export const FlowDiscordConnectionModal: React.FC<IProps> = ({
 													handleInviteBot()
 												}}
 											>
-												{`Invite Community Tweets Bot`}
+												{`Invite Meem Bot`}
 											</Button>
 										</div>
 										<Space h={16} />
@@ -127,7 +127,7 @@ export const FlowDiscordConnectionModal: React.FC<IProps> = ({
 						}
 					/>
 					<Stepper.Step
-						label="Activate Community Tweets in Discord"
+						label="Activate Meem in Discord"
 						description={
 							<>
 								<Text className={meemTheme.tExtraSmall}>

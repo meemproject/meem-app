@@ -9,11 +9,12 @@ import {
 	Image,
 	Grid
 } from '@mantine/core'
-import { useMeemApollo, useWallet } from '@meemproject/react'
+import { useAuth, useMeemApollo, useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { CheckCircle } from 'iconoir-react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
 	SubDiscordsSubscription,
 	SubTwittersSubscription,
@@ -22,6 +23,7 @@ import {
 import { SUB_DISCORDS, SUB_TWITTERS, SUB_SLACKS } from '../../graphql/rules'
 import { isJwtError } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
+import { FlowDiscordConnectionModal } from '../Dashboard/Flows/Modals/FlowDiscordConnectionModal'
 import { useAgreement } from '../Providers/AgreementProvider'
 import { colorGreen, useMeemTheme } from '../Styles/MeemTheme'
 
@@ -31,6 +33,8 @@ export function OnboardingConnectAccount() {
 	const { classes: meemTheme } = useMeemTheme()
 
 	const wallet = useWallet()
+
+	const { jwt } = useAuth()
 
 	const authIfNecessary = () => {
 		Cookies.set(CookieKeys.authRedirectUrl, window.location.toString())
@@ -108,6 +112,44 @@ export function OnboardingConnectAccount() {
 		twitterConnectionData
 	])
 
+	const [isConnectDiscordModalOpen, setIsConnectDiscordModalOpen] =
+		useState(false)
+
+	//Handle authentication for different services
+	const handleAuthTwitter = useCallback(async () => {
+		if (!agreement?.id || !jwt) {
+			return
+		}
+
+		router.push({
+			pathname: `${
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.AuthenticateWithTwitter.path()}`,
+			query: {
+				agreementId: agreement.id,
+				jwt,
+				returnUrl: window.location.toString()
+			}
+		})
+	}, [router, agreement, jwt])
+
+	const handleAuthSlack = useCallback(async () => {
+		if (!agreement?.id || !jwt) {
+			return
+		}
+
+		router.push({
+			pathname: `${
+				process.env.NEXT_PUBLIC_API_URL
+			}${MeemAPI.v1.AuthenticateWithSlack.path()}`,
+			query: {
+				agreementId: agreement.id,
+				jwt,
+				returnUrl: window.location.toString()
+			}
+		})
+	}, [router, agreement, jwt])
+
 	const isLoading =
 		isLoadingAgreement ||
 		isFetchingConnections ||
@@ -119,7 +161,8 @@ export function OnboardingConnectAccount() {
 		icon: string,
 		name: string,
 		description: string,
-		onClick: () => void
+		onClick: () => void,
+		showCheck: boolean
 	) => (
 		<Grid.Col xs={12} md={4} key={name}>
 			<div
@@ -136,9 +179,7 @@ export function OnboardingConnectAccount() {
 				<Text className={meemTheme.tSmall} style={{ opacity: 0.7 }}>
 					{description}
 				</Text>
-				{((name === 'Discord' && hasConnectedDiscord) ||
-					(name === 'Slack' && hasConnectedSlack) ||
-					(name === 'Twitter' && hasConnectedTwitter)) && (
+				{showCheck && (
 					<CheckCircle
 						style={{
 							color: colorGreen,
@@ -197,19 +238,28 @@ export function OnboardingConnectAccount() {
 								'/connect-discord.png',
 								'Discord',
 								'You’ll need Discord permissions that allow you to add our bot to your server.',
-								() => {}
+								() => {
+									setIsConnectDiscordModalOpen(true)
+								},
+								hasConnectedDiscord
 							)}
 							{connectionItem(
 								'/connect-slack.png',
 								'Slack',
 								'You’ll need Slack admin permissions that allow you to manage your workspace.',
-								() => {}
+								() => {
+									handleAuthSlack()
+								},
+								hasConnectedSlack
 							)}
 							{connectionItem(
 								'/connect-twitter.png',
 								'Twitter',
 								'You’ll need access to your community’s account.',
-								() => {}
+								() => {
+									handleAuthTwitter()
+								},
+								hasConnectedTwitter
 							)}
 						</Grid>
 						<Space h={48} />
@@ -237,6 +287,12 @@ export function OnboardingConnectAccount() {
 						)}
 						<Space h={128} />
 					</Container>
+					<FlowDiscordConnectionModal
+						isOpened={isConnectDiscordModalOpen}
+						onModalClosed={function (): void {
+							setIsConnectDiscordModalOpen(false)
+						}}
+					/>
 				</>
 			)}
 		</div>
