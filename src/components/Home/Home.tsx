@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client'
-import log from '@kengoldfarb/log'
 import {
 	Center,
 	Space,
