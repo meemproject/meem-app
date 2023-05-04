@@ -3,8 +3,7 @@ import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { AgreementHome } from '../../components/AgreementHome/AgreementHome'
-import { DiscussionsProvider } from '../../components/Extensions/Discussions/DiscussionProvider'
+import { DashboardComponent } from '../../components/Dashboard/Dashboard'
 import { MeemFooter } from '../../components/Footer/MeemFooter'
 import { HeaderMenu } from '../../components/Header/Header'
 import { meemCommunityDescription } from '../../utils/sitedescriptions'
@@ -59,11 +58,10 @@ const AgreementDetailPage: NextPage<IProps> = ({ agreementName }) => {
 			</Head>
 			<HeaderMenu />
 
-			<DiscussionsProvider>
-				<AgreementHome />
-			</DiscussionsProvider>
-			<Space h={64} />
-			<MeemFooter />
+			<DashboardComponent />
+
+			<Space h={96} />
+			<MeemFooter noAgreement={false} />
 		</>
 	)
 }

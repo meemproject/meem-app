@@ -91,7 +91,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 			if (agreement) {
 				if (router.query.createRole) {
 					router.push({
-						pathname: `/${agreement.slug}/admin`,
+						pathname: `/${agreement.slug}`,
 						query: { tab: 'roles' }
 					})
 				} else {
@@ -464,7 +464,7 @@ export const RoleManagerChangesModal: React.FC<IProps> = ({
 				withCloseButton={false}
 				closeOnClickOutside={false}
 				closeOnEscape={false}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				radius={16}
 				size={'lg'}
 				padding={'sm'}

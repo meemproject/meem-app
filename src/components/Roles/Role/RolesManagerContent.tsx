@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import log from '@kengoldfarb/log'
-import { Text, Space, TextInput, Tabs, Button, Radio } from '@mantine/core'
+import {
+	Text,
+	Space,
+	TextInput,
+	Tabs,
+	Button,
+	Radio,
+	Stack
+} from '@mantine/core'
 import { Copy } from 'iconoir-react'
 import React, { useEffect, useState } from 'react'
 import {
@@ -226,8 +234,6 @@ export const RolesManagerContent: React.FC<IProps> = ({
 										<Space h={4} />
 
 										<Radio.Group
-											orientation="vertical"
-											spacing={10}
 											size="sm"
 											color="dark"
 											value={isTokenTransferrable}
@@ -262,14 +268,16 @@ export const RolesManagerContent: React.FC<IProps> = ({
 											}}
 											required
 										>
-											<Radio
-												value="non-transferrable"
-												label="No, this role cannot be transferred"
-											/>
-											<Radio
-												value="transferrable"
-												label="Yes, this role can be transferred to someone else"
-											/>
+											<Stack spacing={10}>
+												<Radio
+													value="non-transferrable"
+													label="No, this role cannot be transferred"
+												/>
+												<Radio
+													value="transferrable"
+													label="Yes, this role can be transferred to someone else"
+												/>
+											</Stack>
 										</Radio.Group>
 									</div>
 								)}

@@ -12,13 +12,13 @@ import { useAuth, useSDK } from '@meemproject/react'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useCallback, useState } from 'react'
-import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { showErrorNotification } from '../../utils/notifications'
+import { useAnalytics } from '../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 import { LoginForm } from './LoginModal'
 
-const MAuthenticate: React.FC = () => {
+const Authenticate: React.FC = () => {
 	const wallet = useAuth()
 	const router = useRouter()
 	const analytics = useAnalytics()
@@ -67,48 +67,58 @@ const MAuthenticate: React.FC = () => {
 	}, [wallet, router, login, analytics])
 
 	return (
-		<Center>
-			<Container>
-				<div className={meemTheme.centered}>
-					<Space h={80} className={meemTheme.visibleDesktopOnly} />
-					<Space h={32} className={meemTheme.visibleMobileOnly} />
+		<div className={meemTheme.backgroundMeem}>
+			<Center>
+				<Container>
+					<div className={meemTheme.centered}>
+						<Space
+							h={80}
+							className={meemTheme.visibleDesktopOnly}
+						/>
+						<Space h={32} className={meemTheme.visibleMobileOnly} />
 
-					<Center>
-						<Image src={'/meem-icon.png'} height={64} width={64} />
-					</Center>
-					<Space h={16} />
+						<Center>
+							<Image
+								src={'/meem-icon.png'}
+								height={64}
+								width={64}
+							/>
+						</Center>
+						<Space h={16} />
 
-					<Text
-						className={meemTheme.tLargeBold}
-					>{`Sign in with Meem`}</Text>
-					<Space h={16} />
+						<Text
+							className={meemTheme.tLargeBold}
+						>{`Sign in with Meem`}</Text>
+						<Space h={16} />
 
-					<div>
-						<Text>
-							{wallet.isConnected
-								? `Please sign the message below.`
-								: `Connect with your wallet or email address.`}
-						</Text>
+						<div>
+							<Text>
+								{wallet.isConnected
+									? `Please sign the message below.`
+									: `Connect with your wallet or email address.`}
+							</Text>
+						</div>
+
+						<Space h={40} />
+
+						{isLoading && <Loader variant="oval" color={'cyan'} />}
+						<div>
+							{!isLoading && !wallet.isConnected && <LoginForm />}
+							{!isLoading && wallet.isConnected && (
+								<Button
+									className={meemTheme.buttonBlack}
+									onClick={sign}
+								>
+									Sign Message
+								</Button>
+							)}
+						</div>
+						<Space h={200} />
 					</div>
-
-					<Space h={40} />
-
-					{isLoading && <Loader variant="oval" color={'cyan'} />}
-					<div>
-						{!isLoading && !wallet.isConnected && <LoginForm />}
-						{!isLoading && wallet.isConnected && (
-							<Button
-								className={meemTheme.buttonBlack}
-								onClick={sign}
-							>
-								Sign Message
-							</Button>
-						)}
-					</div>
-				</div>
-			</Container>
-		</Center>
+				</Container>
+			</Center>
+		</div>
 	)
 }
 
-export default MAuthenticate
+export default Authenticate

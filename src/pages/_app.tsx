@@ -6,18 +6,17 @@ import {
 	MantineProvider
 } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
-import { NotificationsProvider } from '@mantine/notifications'
+import { Notifications } from '@mantine/notifications'
 import { MeemProvider } from '@meemproject/react'
 import { default as AbortController } from 'abort-controller'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 import React, { useEffect } from 'react'
-import { AgreementProvider } from '../components/AgreementHome/AgreementProvider'
 import { App } from '../components/App'
+import { AgreementProvider } from '../components/Providers/AgreementProvider'
 import '@fontsource/inter'
-import 'isomorphic-fetch'
-import { AnalyticsProvider } from '../contexts/AnalyticsProvider'
+import { AnalyticsProvider } from '../components/Providers/AnalyticsProvider'
 
 // Fix an issue with SSR / ServerSideProps in NextJS
 Object.assign(globalThis, {
@@ -65,12 +64,6 @@ function MyApp(props: AppProps) {
 	const agreementSlug =
 		router.query.slug === undefined ? undefined : `${router.query.slug}`
 
-	const isMembershipRequired =
-		router.pathname.includes('/admin') ||
-		router.pathname.includes(
-			'/settings' || router.pathname.includes('/roles')
-		)
-
 	return (
 		<>
 			<MeemProvider
@@ -87,21 +80,9 @@ function MyApp(props: AppProps) {
 							withNormalizeCSS
 							theme={{
 								fontFamily: 'Inter, sans-serif',
-								spacing: {
-									xs: 15,
-									sm: 20,
-									md: 25,
-									lg: 30,
-									xl: 40
-								},
+
 								lineHeight: 1,
-								breakpoints: {
-									xs: 500,
-									sm: 800,
-									md: 1000,
-									lg: 1200,
-									xl: 1400
-								},
+
 								colors: {
 									brand: [
 										'#EFF7FF',
@@ -120,24 +101,19 @@ function MyApp(props: AppProps) {
 								primaryColor: 'brand'
 							}}
 						>
-							<NotificationsProvider>
-								<AgreementProvider
-									slug={agreementSlug}
-									isMembersOnly={isMembershipRequired}
+							<Notifications />
+							<AgreementProvider slug={agreementSlug}>
+								<AnalyticsProvider
+									writeKey={
+										process.env
+											.NEXT_PUBLIC_SEGMENT_WRITE_KEY ?? ''
+									}
 								>
-									<AnalyticsProvider
-										writeKey={
-											process.env
-												.NEXT_PUBLIC_SEGMENT_WRITE_KEY ??
-											''
-										}
-									>
-										<App>
-											<Component {...pageProps} />
-										</App>
-									</AnalyticsProvider>
-								</AgreementProvider>
-							</NotificationsProvider>
+									<App>
+										<Component {...pageProps} />
+									</App>
+								</AnalyticsProvider>
+							</AgreementProvider>
 						</MantineProvider>
 					</ColorSchemeProvider>
 				</>

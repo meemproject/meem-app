@@ -36,9 +36,9 @@ import Cookies from 'js-cookie'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useAnalytics } from '../../contexts/AnalyticsProvider'
 import { CookieKeys } from '../../utils/cookies'
 import { quickTruncate } from '../../utils/truncated_wallet'
+import { useAnalytics } from '../Providers/AnalyticsProvider'
 import { colorDarkBlue, useMeemTheme } from '../Styles/MeemTheme'
 import { MeemFAQModal } from './MeemFAQModal'
 
@@ -95,11 +95,7 @@ export function HeaderMenu() {
 			<div className={meemTheme.siteHeaderInner}>
 				<div className={meemTheme.siteHeaderLeftItems}>
 					<Space w={8} />
-					<Link
-						href={`https://build.meem.wtf`}
-						legacyBehavior
-						passHref
-					>
+					<Link href={`/`} legacyBehavior passHref>
 						<a className={meemTheme.unstyledLink}>
 							<Image
 								className={meemTheme.clickable}
@@ -131,6 +127,7 @@ export function HeaderMenu() {
 										[meemTheme.siteHeaderUserActive]:
 											isUserMenuOpened
 									})}
+									style={{ marginRight: 16 }}
 								>
 									{!user && isMeLoading && (
 										<Loader
@@ -184,45 +181,6 @@ export function HeaderMenu() {
 												<Text>My Wallet</Text>
 											</Menu.Item>
 										)}
-
-										<Link
-											href={`/profile?tab=identity`}
-											passHref
-											legacyBehavior
-										>
-											<a
-												className={
-													meemTheme.unstyledLink
-												}
-											>
-												<Menu.Item
-													className={
-														meemTheme.tExtraSmallBold
-													}
-												>
-													<Text>My Profile</Text>
-												</Menu.Item>
-											</a>
-										</Link>
-										<Link
-											href={`/profile?tab=myCommunities`}
-											legacyBehavior
-											passHref
-										>
-											<a
-												className={
-													meemTheme.unstyledLink
-												}
-											>
-												<Menu.Item
-													className={
-														meemTheme.tExtraSmallBold
-													}
-												>
-													<Text>My Communities</Text>
-												</Menu.Item>
-											</a>
-										</Link>
 									</>
 								)}
 								<Menu.Item

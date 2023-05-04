@@ -49,7 +49,7 @@ const Home: NextPage = () => {
 			</Head>
 			<HeaderMenu />
 			<HomeComponent />
-			<MeemFooter />
+			<MeemFooter noAgreement />
 		</>
 	)
 }
