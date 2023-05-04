@@ -118,6 +118,29 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 			}
 		)
 
+	const { data: emojisData } =
+		useSWR<MeemAPI.v1.GetSlackEmojis.IResponseBody>(
+			agreement?.id && jwt && (rule?.input?.id ?? input?.id)
+				? `${
+						process.env.NEXT_PUBLIC_API_URL
+				  }${MeemAPI.v1.GetSlackEmojis.path()}`
+				: null,
+			url => {
+				return makeFetcher<
+					MeemAPI.v1.GetSlackEmojis.IQueryParams,
+					MeemAPI.v1.GetSlackEmojis.IRequestBody,
+					MeemAPI.v1.GetSlackEmojis.IResponseBody
+				>({
+					method: MeemAPI.v1.GetSlackEmojis.method
+				})(url, {
+					agreementSlackId: rule?.input?.id ?? input?.id ?? ''
+				})
+			},
+			{
+				shouldRetryOnError: false
+			}
+		)
+
 	const form = useForm({
 		initialValues: {
 			publishType: MeemAPI.PublishType.PublishImmediately,
@@ -157,38 +180,17 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 
 	const [approverEmojis, setApproverEmojis] = useState<MeemAPI.IEmoji[]>(
 		rule?.definition.approverEmojis && rule?.definition.approverEmojis[0]
-			? typeof rule?.definition.approverEmojis[0] === 'string'
-				? (rule?.definition.approverEmojis.map(e => ({
-						id: e,
-						name: e,
-						unified: e,
-						type: MeemAPI.EmojiType.Unified
-				  })) as MeemAPI.IEmoji[])
-				: (rule?.definition.approverEmojis as MeemAPI.IEmoji[])
+			? rule?.definition.approverEmojis
 			: []
 	)
 	const [proposerEmojis, setProposerEmojis] = useState<MeemAPI.IEmoji[]>(
 		rule?.definition.proposerEmojis && rule?.definition.proposerEmojis[0]
-			? typeof rule?.definition.proposerEmojis[0] === 'string'
-				? (rule?.definition.proposerEmojis.map(e => ({
-						id: e,
-						name: e,
-						unified: e,
-						type: MeemAPI.EmojiType.Unified
-				  })) as MeemAPI.IEmoji[])
-				: (rule?.definition.proposerEmojis as MeemAPI.IEmoji[])
+			? rule?.definition.proposerEmojis
 			: []
 	)
 	const [vetoerEmojis, setVetoerEmojis] = useState<MeemAPI.IEmoji[]>(
 		rule?.definition.vetoerEmojis && rule?.definition.vetoerEmojis[0]
-			? typeof rule?.definition.vetoerEmojis[0] === 'string'
-				? (rule?.definition.vetoerEmojis.map(e => ({
-						id: e,
-						name: e,
-						unified: e,
-						type: MeemAPI.EmojiType.Unified
-				  })) as MeemAPI.IEmoji[])
-				: (rule?.definition.vetoerEmojis as MeemAPI.IEmoji[])
+			? rule?.definition.vetoerEmojis
 			: []
 	)
 
@@ -218,7 +220,7 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 									url: emojiObject.src,
 									type: emojiObject.unified
 										? MeemAPI.EmojiType.Unified
-										: MeemAPI.EmojiType.Discord
+										: MeemAPI.EmojiType.Slack
 								}
 							],
 							a => a.id
@@ -236,7 +238,7 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 									url: emojiObject.src,
 									type: emojiObject.unified
 										? MeemAPI.EmojiType.Unified
-										: MeemAPI.EmojiType.Discord
+										: MeemAPI.EmojiType.Slack
 								}
 							],
 							a => a.id
@@ -254,7 +256,7 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 									url: emojiObject.src,
 									type: emojiObject.unified
 										? MeemAPI.EmojiType.Unified
-										: MeemAPI.EmojiType.Discord
+										: MeemAPI.EmojiType.Slack
 								}
 							],
 							a => a.id
@@ -388,7 +390,6 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 									onModalClosed()
 								}}
 							/>
-
 							<FlowSlackInputRBProposals
 								form={form}
 								channelsData={channelsData}
@@ -437,6 +438,21 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 								<Picker
 									data={data}
 									onEmojiSelect={handleEmojiClick}
+									custom={[
+										{
+											id: 'discord',
+											name: `${slackData?.AgreementSlacks[0].Slack?.name}`,
+											emojis: emojisData?.emojis.map(
+												e => ({
+													id: e.id,
+													name: e.name,
+													keywords: [e.name],
+													// @ts-ignore
+													skins: [{ src: e.url }]
+												})
+											)
+										}
+									]}
 								/>
 							</Modal>
 							<Space h={'lg'} />

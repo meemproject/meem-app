@@ -1,6 +1,6 @@
 {
 	"name": "@meemproject/meem-web",
-	"version": "1.28.9",
+	"version": "1.28.10",
 	"private": true,
 	"author": "Meem Project",
 	"contributors": [
@@ -50,9 +50,9 @@
 		"@mantine/hooks": "^6.0.9",
 		"@mantine/next": "^6.0.9",
 		"@mantine/notifications": "^6.0.9",
-		"@meemproject/meem-contracts": "^0.20.6",
-		"@meemproject/react": "^0.20.6",
-		"@meemproject/sdk": "^0.20.6",
+		"@meemproject/meem-contracts": "^0.20.7",
+		"@meemproject/react": "^0.20.7",
+		"@meemproject/sdk": "^0.20.7",
 		"@next/bundle-analyzer": "^12.1.4",
 		"@react-three/drei": "^9.62.2",
 		"@react-three/fiber": "^8.12.0",

@@ -144,6 +144,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 
 		try {
 			log.debug(`saving rule with data ${JSON.stringify(ruleData)}`)
+			// @ts-ignore
 			await sdk.symphony.saveRule(ruleData)
 
 			const inputPlatform =
