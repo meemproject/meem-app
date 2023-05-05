@@ -17,7 +17,7 @@ import { isJwtError } from '../../model/agreement/agreements'
 import { CookieKeys } from '../../utils/cookies'
 import { useAgreement } from '../Providers/AgreementProvider'
 import { useAnalytics } from '../Providers/AnalyticsProvider'
-import { useMeemTheme } from '../Styles/MeemTheme'
+import { colorBlack, useMeemTheme } from '../Styles/MeemTheme'
 
 export enum OnboardingState {
 	QuestionOne,
@@ -54,13 +54,13 @@ export function OnboardingQuestions() {
 			<Container>
 				<Space h={64} />
 				<Center>
-					<Text className={meemTheme.tLargeBold}>
+					<Text className={meemTheme.tLargeBold} color={colorBlack}>
 						What does your community do together?
 					</Text>
 				</Center>
 				<Space h={24} />
 				<Center>
-					<Text className={meemTheme.tSmall}>
+					<Text className={meemTheme.tSmall} color={colorBlack}>
 						Please select all that apply.
 					</Text>
 				</Center>
@@ -202,13 +202,13 @@ export function OnboardingQuestions() {
 			<Container>
 				<Space h={64} />
 				<Center>
-					<Text className={meemTheme.tLargeBold}>
+					<Text className={meemTheme.tLargeBold} color={colorBlack}>
 						How big is your community?
 					</Text>
 				</Center>
 				<Space h={24} />
 				<Center>
-					<Text className={meemTheme.tSmall}>
+					<Text className={meemTheme.tSmall} color={colorBlack}>
 						Please make one selection
 					</Text>
 				</Center>
@@ -278,6 +278,7 @@ export function OnboardingQuestions() {
 							})
 							router.push(`/${agreement?.slug}/connect`)
 						}}
+						size={'lg'}
 						className={meemTheme.buttonBlack}
 					>
 						Next
