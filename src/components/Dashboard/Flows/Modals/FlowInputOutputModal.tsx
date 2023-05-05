@@ -5,6 +5,7 @@ import {
 	Center,
 	Container,
 	Loader,
+	MantineProvider,
 	Modal,
 	Select,
 	// eslint-disable-next-line import/named
@@ -615,7 +616,11 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 	)
 
 	return (
-		<>
+		<MantineProvider
+			theme={{
+				colorScheme: 'light'
+			}}
+		>
 			{!existingRule && (
 				<>
 					<Modal
@@ -723,6 +728,6 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 					/>
 				</>
 			)}
-		</>
+		</MantineProvider>
 	)
 }
