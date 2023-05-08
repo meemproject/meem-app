@@ -342,7 +342,7 @@ export const DashboardComponent: React.FC = () => {
 							<div style={{ padding: 16 }}>
 								<Select
 									placeholder={community ?? ''}
-									size="lg"
+									size="sm"
 									value={community}
 									data={communities}
 									onChange={value => {
