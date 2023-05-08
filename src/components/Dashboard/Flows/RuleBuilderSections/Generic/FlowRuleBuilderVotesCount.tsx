@@ -25,7 +25,7 @@ export const FlowRuleBuilderVotesCount: React.FC<IProps> = ({ form }) => {
 				{'Please enter a number greater than 0 below.'}
 			</Text>
 			<Space h={12} />
-			<NumberInput {...form.getInputProps('votes')} />
+			<NumberInput {...form.getInputProps('votes')} defaultValue={1} />
 
 			<Space h={'lg'} />
 		</>
