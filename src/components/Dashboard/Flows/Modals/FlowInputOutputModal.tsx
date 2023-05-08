@@ -202,7 +202,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 
 	const openRuleBuilder = useCallback(
 		(input: ConnectedAccount, output?: ConnectedAccount) => {
-			onModalClosed()
+			//onModalClosed()
 
 			if (
 				input.platform === MeemAPI.RuleIo.Discord &&
@@ -238,8 +238,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 			isDiscordTwitterRuleBuilderOpened,
 			isDiscordWebhookRuleBuilderOpened,
 			isSlackTwitterRuleBuilderOpened,
-			isSlackWebhookRuleBuilderOpened,
-			onModalClosed
+			isSlackWebhookRuleBuilderOpened
 		]
 	)
 

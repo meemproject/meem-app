@@ -232,16 +232,14 @@ export const DashboardComponent: React.FC = () => {
 		twitterConnectionData
 	])
 
-	const { data: rulesData } = useSubscription<SubRulesSubscription>(
-		SUB_RULES,
-		{
+	const { data: rulesData, loading: isLoadingRules } =
+		useSubscription<SubRulesSubscription>(SUB_RULES, {
 			variables: {
 				agreementId: agreement?.id
 			},
 			skip: !agreement?.id,
 			client: mutualMembersClient
-		}
-	)
+		})
 
 	// Parse rules from subscription
 	useEffect(() => {
@@ -446,6 +444,7 @@ export const DashboardComponent: React.FC = () => {
 								{currentTab === Tab.Flows && (
 									<DashboardFlows
 										rules={rules ?? []}
+										isLoadingRules={isLoadingRules}
 										connectedAccounts={connectedAccounts}
 									/>
 								)}
