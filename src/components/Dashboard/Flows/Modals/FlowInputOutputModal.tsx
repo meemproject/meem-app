@@ -42,6 +42,7 @@ interface IProps {
 	// Templates often have a preset input and output platform passed in
 	templateInputPlatform?: MeemAPI.RuleIo
 	templateOutputPlatform?: MeemAPI.RuleIo
+	onChangeConnectionsPressed: () => void
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -52,6 +53,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 	templateInputPlatform,
 	templateOutputPlatform,
 	isOpened,
+	onChangeConnectionsPressed,
 	onModalClosed
 }) => {
 	// General params
@@ -653,6 +655,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						output={existingRule?.output ?? selectedOutput}
 						rule={existingRule}
 						isOpened={isDiscordTwitterRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={() => {
 							setIsDiscordTwitterRuleBuilderOpened(false)
 							if (existingRule) {
@@ -675,6 +680,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						privateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isDiscordWebhookRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={() => {
 							setIsDiscordWebhookRuleBuilderOpened(false)
 							if (existingRule) {
@@ -696,6 +704,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						output={existingRule?.output ?? selectedOutput}
 						rule={existingRule}
 						isOpened={isSlackTwitterRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={function (): void {
 							setIsSlackTwitterRuleBuilderOpened(false)
 							if (existingRule) {
@@ -718,6 +729,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						privateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isSlackWebhookRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={() => {
 							setIsSlackWebhookRuleBuilderOpened(false)
 							if (existingRule) {

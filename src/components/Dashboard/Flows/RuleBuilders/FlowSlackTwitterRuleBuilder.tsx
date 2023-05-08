@@ -39,6 +39,7 @@ export interface IProps {
 	output?: ConnectedAccount
 	isOpened: boolean
 	onModalClosed: () => void
+	onChangeConnectionsPressed: () => void
 	onSave: (values: IOnSave) => void
 }
 
@@ -72,6 +73,7 @@ export const FlowSlackTwitterRulesBuilder: React.FC<IProps> = ({
 	output,
 	isOpened,
 	onModalClosed,
+	onChangeConnectionsPressed,
 	onSave
 }) => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -382,6 +384,7 @@ export const FlowSlackTwitterRulesBuilder: React.FC<IProps> = ({
 								output={rule?.output ?? output}
 								existingRule={rule !== undefined}
 								onChangeConnectionsPressed={function (): void {
+									onChangeConnectionsPressed()
 									onModalClosed()
 								}}
 							/>
