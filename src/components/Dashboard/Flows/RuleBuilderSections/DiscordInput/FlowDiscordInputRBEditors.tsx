@@ -181,7 +181,10 @@ export const FlowDiscordInputRBEditors: React.FC<IProps> = ({
 					</Text>
 
 					<Space h={12} />
-					<NumberInput {...form.getInputProps('editorVotes')} />
+					<NumberInput
+						{...form.getInputProps('editorVotes')}
+						defaultValue={1}
+					/>
 				</>
 			)}
 		</>

@@ -186,7 +186,7 @@ export function HomeComponent() {
 								)}
 							</Grid>
 						</Container>
-						<Space h={48} />
+						<Space h={150} />
 						<CreateAgreementModal
 							isOpened={isCreateAgreementModalOpen}
 							onModalClosed={() => {

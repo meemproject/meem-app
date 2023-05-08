@@ -220,6 +220,9 @@ export const FlowChoiceModal: React.FC<IProps> = ({
 				connectedAccounts={connectedAccounts}
 				templateInputPlatform={templateInputPlatform}
 				templateOutputPlatform={templateOutputPlatform}
+				onChangeConnectionsPressed={() => {
+					setIsNewRuleModalOpen(true)
+				}}
 				onModalClosed={function (): void {
 					setIsNewRuleModalOpen(false)
 				}}

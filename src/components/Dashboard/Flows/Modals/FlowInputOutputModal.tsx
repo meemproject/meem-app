@@ -17,6 +17,7 @@ import {
 import { useSDK, useAuth } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import { Cancel, Copy } from 'iconoir-react'
+import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { extensionFromSlug } from '../../../../model/agreement/agreements'
@@ -42,6 +43,7 @@ interface IProps {
 	// Templates often have a preset input and output platform passed in
 	templateInputPlatform?: MeemAPI.RuleIo
 	templateOutputPlatform?: MeemAPI.RuleIo
+	onChangeConnectionsPressed: () => void
 	isOpened: boolean
 	onModalClosed: () => void
 }
@@ -52,6 +54,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 	templateInputPlatform,
 	templateOutputPlatform,
 	isOpened,
+	onChangeConnectionsPressed,
 	onModalClosed
 }) => {
 	// General params
@@ -59,6 +62,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 	const { sdk } = useSDK()
 	const { jwt } = useAuth()
 	const { agreement } = useAgreement()
+	const router = useRouter()
 	const agreementExtension = extensionFromSlug('community-tweets', agreement)
 	const analytics = useAnalytics()
 
@@ -200,7 +204,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 
 	const openRuleBuilder = useCallback(
 		(input: ConnectedAccount, output?: ConnectedAccount) => {
-			onModalClosed()
+			//onModalClosed()
 
 			if (
 				input.platform === MeemAPI.RuleIo.Discord &&
@@ -236,8 +240,7 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 			isDiscordTwitterRuleBuilderOpened,
 			isDiscordWebhookRuleBuilderOpened,
 			isSlackTwitterRuleBuilderOpened,
-			isSlackWebhookRuleBuilderOpened,
-			onModalClosed
+			isSlackWebhookRuleBuilderOpened
 		]
 	)
 
@@ -454,29 +457,46 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 							Where will proposals be made?
 						</Text>
 						<Space h={8} />
-						<Text className={meemTheme.tSmall}>
+						<Text
+							className={meemTheme.tSmall}
+							style={{ fontWeight: 400 }}
+						>
 							Rules can only be made for one account at a time.
 							Create additional rules to accept proposals on
 							multiple platforms or accounts.
 						</Text>
 						<Space h={8} />
-						<Select
-							placeholder="Pick proposal source"
-							data={inputValues}
-							radius={12}
-							size={'md'}
-							value={selectedInputValue}
-							onChange={event => {
-								if (event) {
-									setSelectedInputValue(event)
-									inputs.forEach(i => {
-										if (i.id === event) {
-											setSelectedInput(i)
-										}
-									})
-								}
-							}}
-						/>
+						{inputValues.length > 0 ? (
+							<Select
+								placeholder="Pick proposal source"
+								data={inputValues}
+								radius={12}
+								size={'md'}
+								value={selectedInputValue}
+								onChange={event => {
+									if (event) {
+										setSelectedInputValue(event)
+										inputs.forEach(i => {
+											if (i.id === event) {
+												setSelectedInput(i)
+											}
+										})
+									}
+								}}
+							/>
+						) : (
+							<Button
+								className={meemTheme.buttonBlack}
+								onClick={() => {
+									router.push(
+										`/${agreement?.slug}?tab=accounts`
+									)
+								}}
+							>
+								Add an Account
+							</Button>
+						)}
+
 						<Space h={40} />
 
 						<Text className={meemTheme.tExtraSmallLabel}>
@@ -487,7 +507,10 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 							Where will posts be published?
 						</Text>
 						<Space h={8} />
-						<Text className={meemTheme.tSmall}>
+						<Text
+							className={meemTheme.tSmall}
+							style={{ fontWeight: 400 }}
+						>
 							Rules can only be made for one account at a time.
 							Create additional rules to publish on multiple
 							platforms or accounts.
@@ -653,6 +676,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						output={existingRule?.output ?? selectedOutput}
 						rule={existingRule}
 						isOpened={isDiscordTwitterRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={() => {
 							setIsDiscordTwitterRuleBuilderOpened(false)
 							if (existingRule) {
@@ -675,6 +701,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						privateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isDiscordWebhookRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={() => {
 							setIsDiscordWebhookRuleBuilderOpened(false)
 							if (existingRule) {
@@ -696,6 +725,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						output={existingRule?.output ?? selectedOutput}
 						rule={existingRule}
 						isOpened={isSlackTwitterRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={function (): void {
 							setIsSlackTwitterRuleBuilderOpened(false)
 							if (existingRule) {
@@ -718,6 +750,9 @@ export const FlowInputOutputModal: React.FC<IProps> = ({
 						privateKey={webhookPrivateKey}
 						rule={existingRule}
 						isOpened={isSlackWebhookRuleBuilderOpened}
+						onChangeConnectionsPressed={() => {
+							onChangeConnectionsPressed()
+						}}
 						onModalClosed={() => {
 							setIsSlackWebhookRuleBuilderOpened(false)
 							if (existingRule) {

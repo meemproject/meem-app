@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import log from '@kengoldfarb/log'
-import { Text, Space, Image, Button, Accordion } from '@mantine/core'
+import { Text, Space, Image, Button, Accordion, Loader } from '@mantine/core'
 import { useAuth, useSDK } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
 import React, { useState } from 'react'
@@ -14,11 +14,13 @@ import { ConnectedAccount, Rule } from '../Flows/Model/flows'
 
 interface IProps {
 	rules: Rule[]
+	isLoadingRules: boolean
 	connectedAccounts: ConnectedAccount[]
 }
 
 export const DashboardFlows: React.FC<IProps> = ({
 	rules,
+	isLoadingRules,
 	connectedAccounts
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
@@ -78,7 +80,16 @@ export const DashboardFlows: React.FC<IProps> = ({
 				</Text>
 				<Space h={16} />
 
-				{rules &&
+				{isLoadingRules && (
+					<>
+						<Space h={16} />
+						<Loader />
+						<Space h={16} />
+					</>
+				)}
+
+				{!isLoadingRules &&
+					rules &&
 					rules.map(rule => {
 						const matchingInput = connectedAccounts.filter(
 							c => c.id === rule.inputId
@@ -262,6 +273,9 @@ export const DashboardFlows: React.FC<IProps> = ({
 					isOpened={isRuleBuilderOpen}
 					connectedAccounts={connectedAccounts}
 					existingRule={selectedRule}
+					onChangeConnectionsPressed={() => {
+						setIsRuleBuilderOpen(true)
+					}}
 					onModalClosed={function (): void {
 						setIsRuleBuilderOpen(false)
 						setSelectedRule(undefined)

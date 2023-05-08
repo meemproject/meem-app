@@ -36,6 +36,7 @@ export interface IProps {
 	privateKey?: string
 	isOpened: boolean
 	onModalClosed: () => void
+	onChangeConnectionsPressed: () => void
 	onSave: (values: IOnSave) => void
 }
 
@@ -71,6 +72,7 @@ export const FlowDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 	privateKey,
 	isOpened,
 	onModalClosed,
+	onChangeConnectionsPressed,
 	onSave
 }) => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -378,6 +380,7 @@ export const FlowDiscordWebhookRulesBuilder: React.FC<IProps> = ({
 								existingRule={rule !== undefined}
 								onChangeConnectionsPressed={function (): void {
 									onModalClosed()
+									onChangeConnectionsPressed()
 								}}
 							/>
 

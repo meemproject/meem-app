@@ -38,6 +38,7 @@ export interface IProps {
 	output?: ConnectedAccount
 	isOpened: boolean
 	onModalClosed: () => void
+	onChangeConnectionsPressed: () => void
 	onSave: (values: IOnSave) => void
 }
 
@@ -72,6 +73,7 @@ export const FlowDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 	output,
 	isOpened,
 	onModalClosed,
+	onChangeConnectionsPressed,
 	onSave
 }) => {
 	// Default extension settings / properties - leave these alone if possible!
@@ -389,6 +391,7 @@ export const FlowDiscordTwitterRulesBuilder: React.FC<IProps> = ({
 								existingRule={rule !== undefined}
 								onChangeConnectionsPressed={function (): void {
 									onModalClosed()
+									onChangeConnectionsPressed()
 								}}
 							/>
 
