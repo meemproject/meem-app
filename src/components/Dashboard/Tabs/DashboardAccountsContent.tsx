@@ -122,7 +122,7 @@ export const DashboardAccountsContent: React.FC<IProps> = ({ connections }) => {
 							paddingBottom: 6
 						}}
 					>
-						{`+ Connect Another ${
+						{`+ Connect ${
 							platform === MeemAPI.RuleIo.Discord
 								? 'Server'
 								: platform === MeemAPI.RuleIo.Slack
