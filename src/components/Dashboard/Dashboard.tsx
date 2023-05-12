@@ -19,7 +19,7 @@ import { MeemAPI } from '@meemproject/sdk'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { AccessPoint, MoodSmile, Notes, Send, Wand } from 'tabler-icons-react'
+import { AccessPoint, MoodSmile, Notes, Wand } from 'tabler-icons-react'
 import {
 	SubDiscordsSubscription,
 	SubTwittersSubscription,
@@ -45,9 +45,9 @@ import {
 	ConnectedAccountType
 } from './Flows/Model/flows'
 import { DashboardAccounts } from './Tabs/DashboardAccounts'
-import { DashboardAirdrops } from './Tabs/DashboardAirdrops'
 import { DashboardDetails } from './Tabs/DashboardDetails'
 import { DashboardFlows } from './Tabs/DashboardFlows'
+import { DashboardMembers } from './Tabs/DashboardMembers'
 import { DashboardRoles } from './Tabs/DashboardRoles'
 
 enum Tab {
@@ -55,7 +55,7 @@ enum Tab {
 	Accounts,
 	Roles,
 	Details,
-	Airdrops
+	Members
 }
 
 export const DashboardComponent: React.FC = () => {
@@ -95,8 +95,8 @@ export const DashboardComponent: React.FC = () => {
 			case 'roles':
 				setCurrentTab(Tab.Roles)
 				break
-			case 'airdrops':
-				setCurrentTab(Tab.Airdrops)
+			case 'members':
+				setCurrentTab(Tab.Members)
 				break
 			case 'details':
 				setCurrentTab(Tab.Details)
@@ -390,7 +390,7 @@ export const DashboardComponent: React.FC = () => {
 									}}
 								/>
 
-								<NavLink
+								{/* <NavLink
 									className={meemTheme.pagePanelLayoutNavItem}
 									active={currentTab === Tab.Roles}
 									icon={<MoodSmile />}
@@ -404,17 +404,17 @@ export const DashboardComponent: React.FC = () => {
 										)
 										setMobileNavBarVisible(false)
 									}}
-								/>
+								/> */}
 
 								<NavLink
 									className={meemTheme.pagePanelLayoutNavItem}
-									active={currentTab === Tab.Airdrops}
-									label={'Airdrops'}
-									icon={<Send />}
+									active={currentTab === Tab.Members}
+									label={'Members'}
+									icon={<MoodSmile />}
 									onClick={() => {
-										setCurrentTab(Tab.Airdrops)
+										setCurrentTab(Tab.Members)
 										router.push(
-											`/${agreement.slug}?tab=airdrops`,
+											`/${agreement.slug}?tab=members`,
 											undefined,
 											{ shallow: true }
 										)
@@ -466,8 +466,8 @@ export const DashboardComponent: React.FC = () => {
 									/>
 								)}
 								{currentTab === Tab.Roles && <DashboardRoles />}
-								{currentTab === Tab.Airdrops && (
-									<DashboardAirdrops />
+								{currentTab === Tab.Members && (
+									<DashboardMembers />
 								)}
 								{currentTab === Tab.Details && (
 									<DashboardDetails />
