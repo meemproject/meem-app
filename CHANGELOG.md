@@ -1,3 +1,11 @@
+# [1.30.0](https://github.com/meemproject/meem-app/compare/v1.29.0...v1.30.0) (2023-05-16)
+
+
+### Features
+
+* flag for private bot replies ([504a638](https://github.com/meemproject/meem-app/commit/504a638))
+* slack emoji ([91736cd](https://github.com/meemproject/meem-app/commit/91736cd))
+
 # [1.29.0](https://github.com/meemproject/meem-app/compare/v1.28.10...v1.29.0) (2023-05-02)
 
 
