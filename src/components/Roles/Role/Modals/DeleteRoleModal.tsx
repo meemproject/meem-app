@@ -66,7 +66,7 @@ export const DeleteRoleModal: React.FC<IProps> = ({
 			<Modal
 				centered
 				radius={16}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				size={'60%'}
 				padding={'lg'}
 				withCloseButton={!isDeletingRole}

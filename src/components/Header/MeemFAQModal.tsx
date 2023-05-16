@@ -91,7 +91,7 @@ export const MeemFAQModal: React.FC<IProps> = ({ isOpened, onModalClosed }) => {
 				className={meemTheme.visibleDesktopOnly}
 				centered
 				radius={16}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				size={'60%'}
 				padding={'lg'}
 				opened={isOpened}

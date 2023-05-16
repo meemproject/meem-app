@@ -7142,6 +7142,82 @@ export enum ChainNonces_Constraint {
   ChainNoncesChainIdKey22 = 'ChainNonces_chainId_key22',
   /** unique or primary key constraint on columns "chainId" */
   ChainNoncesChainIdKey23 = 'ChainNonces_chainId_key23',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey24 = 'ChainNonces_chainId_key24',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey25 = 'ChainNonces_chainId_key25',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey26 = 'ChainNonces_chainId_key26',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey27 = 'ChainNonces_chainId_key27',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey28 = 'ChainNonces_chainId_key28',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey29 = 'ChainNonces_chainId_key29',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey30 = 'ChainNonces_chainId_key30',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey31 = 'ChainNonces_chainId_key31',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey32 = 'ChainNonces_chainId_key32',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey33 = 'ChainNonces_chainId_key33',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey34 = 'ChainNonces_chainId_key34',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey35 = 'ChainNonces_chainId_key35',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey36 = 'ChainNonces_chainId_key36',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey37 = 'ChainNonces_chainId_key37',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey38 = 'ChainNonces_chainId_key38',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey39 = 'ChainNonces_chainId_key39',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey40 = 'ChainNonces_chainId_key40',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey41 = 'ChainNonces_chainId_key41',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey42 = 'ChainNonces_chainId_key42',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey43 = 'ChainNonces_chainId_key43',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey44 = 'ChainNonces_chainId_key44',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey45 = 'ChainNonces_chainId_key45',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey46 = 'ChainNonces_chainId_key46',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey47 = 'ChainNonces_chainId_key47',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey48 = 'ChainNonces_chainId_key48',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey49 = 'ChainNonces_chainId_key49',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey50 = 'ChainNonces_chainId_key50',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey51 = 'ChainNonces_chainId_key51',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey52 = 'ChainNonces_chainId_key52',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey53 = 'ChainNonces_chainId_key53',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey54 = 'ChainNonces_chainId_key54',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey55 = 'ChainNonces_chainId_key55',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey56 = 'ChainNonces_chainId_key56',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey57 = 'ChainNonces_chainId_key57',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey58 = 'ChainNonces_chainId_key58',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey59 = 'ChainNonces_chainId_key59',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey60 = 'ChainNonces_chainId_key60',
+  /** unique or primary key constraint on columns "chainId" */
+  ChainNoncesChainIdKey61 = 'ChainNonces_chainId_key61',
   /** unique or primary key constraint on columns "id" */
   ChainNoncesPkey = 'ChainNonces_pkey'
 }
@@ -11196,6 +11272,82 @@ export enum UserIdentities_Constraint {
   UserIdentitiesExternalIdKey7 = 'UserIdentities_externalId_key7',
   /** unique or primary key constraint on columns "externalId" */
   UserIdentitiesExternalIdKey8 = 'UserIdentities_externalId_key8',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey9 = 'UserIdentities_externalId_key9',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey10 = 'UserIdentities_externalId_key10',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey11 = 'UserIdentities_externalId_key11',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey12 = 'UserIdentities_externalId_key12',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey13 = 'UserIdentities_externalId_key13',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey14 = 'UserIdentities_externalId_key14',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey15 = 'UserIdentities_externalId_key15',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey16 = 'UserIdentities_externalId_key16',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey17 = 'UserIdentities_externalId_key17',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey18 = 'UserIdentities_externalId_key18',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey19 = 'UserIdentities_externalId_key19',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey20 = 'UserIdentities_externalId_key20',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey21 = 'UserIdentities_externalId_key21',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey22 = 'UserIdentities_externalId_key22',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey23 = 'UserIdentities_externalId_key23',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey24 = 'UserIdentities_externalId_key24',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey25 = 'UserIdentities_externalId_key25',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey26 = 'UserIdentities_externalId_key26',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey27 = 'UserIdentities_externalId_key27',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey28 = 'UserIdentities_externalId_key28',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey29 = 'UserIdentities_externalId_key29',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey30 = 'UserIdentities_externalId_key30',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey31 = 'UserIdentities_externalId_key31',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey32 = 'UserIdentities_externalId_key32',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey33 = 'UserIdentities_externalId_key33',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey34 = 'UserIdentities_externalId_key34',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey35 = 'UserIdentities_externalId_key35',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey36 = 'UserIdentities_externalId_key36',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey37 = 'UserIdentities_externalId_key37',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey38 = 'UserIdentities_externalId_key38',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey39 = 'UserIdentities_externalId_key39',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey40 = 'UserIdentities_externalId_key40',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey41 = 'UserIdentities_externalId_key41',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey42 = 'UserIdentities_externalId_key42',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey43 = 'UserIdentities_externalId_key43',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey44 = 'UserIdentities_externalId_key44',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey45 = 'UserIdentities_externalId_key45',
+  /** unique or primary key constraint on columns "externalId" */
+  UserIdentitiesExternalIdKey46 = 'UserIdentities_externalId_key46',
   /** unique or primary key constraint on columns "id" */
   UserIdentitiesPkey = 'UserIdentities_pkey'
 }
@@ -17527,6 +17679,132 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
+export type MeemPartsFragment = { __typename?: 'AgreementTokens', tokenId: string, AgreementId?: any | null, Agreement?: { __typename?: 'Agreements', address: string, name: string, symbol: string, isOnChain: boolean } | null };
+
+export type AgreementPartsFragment = { __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isOnChain: boolean };
+
+export type GetAgreementExistsQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetAgreementExistsQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string }> };
+
+export type GetIsMemberOfAgreementQueryVariables = Exact<{
+  walletAddress?: InputMaybe<Scalars['String']>;
+  agreementSlug?: InputMaybe<Scalars['String']>;
+  chainId: Scalars['Int'];
+}>;
+
+
+export type GetIsMemberOfAgreementQuery = { __typename?: 'query_root', AgreementTokens: Array<{ __typename?: 'AgreementTokens', id: any, tokenId: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type GetIsMemberOfAgreementSubscriptionSubscriptionVariables = Exact<{
+  walletAddress?: InputMaybe<Scalars['String']>;
+  agreementSlug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetIsMemberOfAgreementSubscriptionSubscription = { __typename?: 'subscription_root', AgreementTokens: Array<{ __typename?: 'AgreementTokens', id: any, tokenId: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> };
+
+export type GetAgreementSlugQueryVariables = Exact<{
+  contractAddress?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetAgreementSlugQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string }> };
+
+export type GetAgreementInfoQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetAgreementInfoQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', name: string }> };
+
+export type GetAgreementSubscriptionSubscriptionVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetAgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isOnChain: boolean, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, id: any, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }> }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any }> }> };
+
+export type GetAgreementAsMemberQueryQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetAgreementAsMemberQueryQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, isOnChain: boolean, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, id: any, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, id: any, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', id: any, metadata?: any | null, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', capabilities: any, id: any, icon: string, name: string, slug: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }> }>, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null, AgreementRoleId?: any | null, id: any, tokenId: string }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
+
+export type GetAgreementAsMemberSubscriptionSubscriptionVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type GetAgreementAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isOnChain: boolean, OwnerId?: any | null, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, id: any, tokenId: string, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, id: any, User?: { __typename?: 'Users', displayName?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', id: any, metadata?: any | null, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', id: any, isEnabled: boolean, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, id: any, isEnabled: boolean, metadata?: any | null, visibility: string }> }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null, AgreementRoleId?: any | null, id: any, tokenId: string }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
+
+export type AgreementSubscriptionSubscriptionVariables = Exact<{
+  address?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type AgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, name: string }> };
+
+export type GetExtensionsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', capabilities: any, category: string, createdAt: any, description: string, guideUrl: string, icon: string, id: any, isSetupRequired: boolean, name: string, slug: string, updatedAt: any }> };
+
+export type GetAgreementMembersForRoleQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+  roleId?: InputMaybe<Scalars['uuid']>;
+}>;
+
+
+export type GetAgreementMembersForRoleQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }> }> };
+
+export type MyAgreementsSubscriptionSubscriptionVariables = Exact<{
+  walletAddress?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MyAgreementsSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', id: any, slug: string, name: string }> };
+
+export type MyAgreementsQueryQueryVariables = Exact<{
+  walletAddress?: InputMaybe<Scalars['String']>;
+  chainId?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MyAgreementsQueryQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', id: any, slug: string, name: string }> };
+
+export type GetBundleByIdQueryVariables = Exact<{
+  id: Scalars['uuid'];
+}>;
+
+
+export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, abi: any, BundleContracts: Array<{ __typename?: 'BundleContracts', functionSelectors: any, Contract?: { __typename?: 'Contracts', ContractInstances: Array<{ __typename?: 'ContractInstances', address: string }> } | null }> }> };
+
+export type MeemIdSubscriptionSubscriptionVariables = Exact<{
+  walletAddress?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', profilePicUrl?: string | null, id: any, displayName?: string | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityProviderId?: any | null, IdentityProvider?: { __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string } | null }> }> };
+
+export type GetIdentityProvidersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetIdentityProvidersQuery = { __typename?: 'query_root', IdentityProviders: Array<{ __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
+
 export type SubTwittersSubscriptionVariables = Exact<{
   agreementId?: InputMaybe<Scalars['uuid']>;
 }>;
@@ -17579,141 +17857,6 @@ export type SubRulesSubscriptionVariables = Exact<{
 
 export type SubRulesSubscription = { __typename?: 'subscription_root', Rules: Array<{ __typename?: 'Rules', id: any, AgreementId?: any | null, definition: any, description?: string | null, abridgedDescription?: string | null, input?: string | null, inputRef?: any | null, output?: string | null, outputRef?: any | null, webhookUrl?: string | null, webhookSecret?: string | null }> };
 
-export type MeemPartsFragment = { __typename?: 'AgreementTokens', tokenId: string, AgreementId?: any | null, Agreement?: { __typename?: 'Agreements', address: string, name: string, symbol: string, isOnChain: boolean } | null };
-
-export type AgreementPartsFragment = { __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isOnChain: boolean };
-
-export type GetAgreementExistsQueryVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetAgreementExistsQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string }> };
-
-export type GetIsMemberOfAgreementQueryVariables = Exact<{
-  walletAddress?: InputMaybe<Scalars['String']>;
-  agreementSlug?: InputMaybe<Scalars['String']>;
-  chainId: Scalars['Int'];
-}>;
-
-
-export type GetIsMemberOfAgreementQuery = { __typename?: 'query_root', AgreementTokens: Array<{ __typename?: 'AgreementTokens', id: any, tokenId: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> };
-
-export type GetIsMemberOfAgreementSubscriptionSubscriptionVariables = Exact<{
-  walletAddress?: InputMaybe<Scalars['String']>;
-  agreementSlug?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetIsMemberOfAgreementSubscriptionSubscription = { __typename?: 'subscription_root', AgreementTokens: Array<{ __typename?: 'AgreementTokens', id: any, tokenId: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> };
-
-export type GetAgreementsAutocompleteQueryVariables = Exact<{
-  query?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetAgreementsAutocompleteQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', id: any, name: string, metadata: any, slug: string }> };
-
-export type GetAgreementSlugQueryVariables = Exact<{
-  contractAddress?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type GetAgreementSlugQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string }> };
-
-export type GetAgreementInfoQueryVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetAgreementInfoQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', name: string }> };
-
-export type GetAgreementSubscriptionSubscriptionVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetAgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isOnChain: boolean, isLaunched: boolean, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', metadata?: any | null, id: any, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', capabilities: any, slug: string, id: any, icon: string, name: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }> }> };
-
-export type GetAgreementAsMemberQueryQueryVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetAgreementAsMemberQueryQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, isOnChain: boolean, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, id: any, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, id: any, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', id: any, metadata?: any | null, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', capabilities: any, id: any, icon: string, name: string, slug: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null, AgreementRoleId?: any | null, id: any, tokenId: string }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
-
-export type GetAgreementAsMemberSubscriptionSubscriptionVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type GetAgreementAsMemberSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, metadata: any, createdAt: any, name: string, isLaunched: boolean, isOnChain: boolean, gnosisSafeAddress?: string | null, OwnerId?: any | null, splits: any, maxSupply: string, mintPermissions: any, symbol: string, id: any, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, id: any, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, id: any, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }>, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', id: any, metadata?: any | null, isInitialized?: boolean | null, isSetupComplete: boolean, AgreementExtensionLinks: Array<{ __typename?: 'AgreementExtensionLinks', createdAt: any, id: any, isEnabled: boolean, updatedAt: any, label?: string | null, url: string, AgreementExtensionId?: any | null, visibility: string }>, AgreementExtensionWidgets: Array<{ __typename?: 'AgreementExtensionWidgets', AgreementExtensionId?: any | null, createdAt: any, id: any, isEnabled: boolean, metadata?: any | null, updatedAt: any, visibility: string }>, Extension?: { __typename?: 'Extensions', capabilities: any, id: any, icon: string, name: string, slug: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null, AgreementRoleId?: any | null, id: any, tokenId: string }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', address: string } | null }> }> };
-
-export type AgreementSubscriptionSubscriptionVariables = Exact<{
-  address?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type AgreementSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, createdAt: any, name: string, metadata: any, isOnChain: boolean, isLaunched: boolean, splits: any, mintPermissions: any, symbol: string, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }> }> };
-
-export type GetExtensionsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetExtensionsQuery = { __typename?: 'query_root', Extensions: Array<{ __typename?: 'Extensions', capabilities: any, category: string, createdAt: any, description: string, guideUrl: string, icon: string, id: any, isSetupRequired: boolean, name: string, slug: string, updatedAt: any }> };
-
-export type GetAgreementMembersForRoleQueryVariables = Exact<{
-  slug?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-  roleId?: InputMaybe<Scalars['uuid']>;
-}>;
-
-
-export type GetAgreementMembersForRoleQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null, User?: { __typename?: 'Users', displayName?: string | null, profilePicUrl?: string | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string }> } | null } | null }> }> };
-
-export type AllAgreementsQueryVariables = Exact<{
-  chainId?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type AllAgreementsQuery = { __typename?: 'query_root', Agreements: Array<{ __typename?: 'Agreements', slug: string, address: string, createdAt: any, name: string, isOnChain: boolean, metadata: any, splits: any, mintPermissions: any, symbol: string, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, tokenId: string, tokenURI: string, mintedAt: any, mintedBy: string, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> };
-
-export type MyAgreementsSubscriptionSubscriptionVariables = Exact<{
-  walletAddress?: InputMaybe<Scalars['String']>;
-  chainId?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type MyAgreementsSubscriptionSubscription = { __typename?: 'subscription_root', Agreements: Array<{ __typename?: 'Agreements', id: any, slug: string, isOnChain: boolean, address: string, createdAt: any, OwnerId?: any | null, name: string, metadata: any, isLaunched: boolean, splits: any, gnosisSafeAddress?: string | null, mintPermissions: any, symbol: string, AgreementExtensions: Array<{ __typename?: 'AgreementExtensions', Extension?: { __typename?: 'Extensions', slug: string } | null }>, AgreementWallets: Array<{ __typename?: 'AgreementWallets', role: string, Wallet?: { __typename?: 'Wallets', ens?: string | null, address: string } | null }>, AgreementRoles: Array<{ __typename?: 'AgreementRoles', id: any, name: string, isAdminRole: boolean, address: string, metadata: any, AgreementRoleTokens: Array<{ __typename?: 'AgreementRoleTokens', OwnerId?: any | null }>, Agreement?: { __typename?: 'Agreements', isTransferrable: boolean } | null }>, AgreementTokens: Array<{ __typename?: 'AgreementTokens', OwnerId?: any | null, Wallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null }> }> };
-
-export type GetBundleByIdQueryVariables = Exact<{
-  id: Scalars['uuid'];
-}>;
-
-
-export type GetBundleByIdQuery = { __typename?: 'query_root', Bundles: Array<{ __typename?: 'Bundles', id: any, abi: any, BundleContracts: Array<{ __typename?: 'BundleContracts', functionSelectors: any, Contract?: { __typename?: 'Contracts', ContractInstances: Array<{ __typename?: 'ContractInstances', address: string }> } | null }> }> };
-
-export type MeemIdSubscriptionSubscriptionVariables = Exact<{
-  walletAddress?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type MeemIdSubscriptionSubscription = { __typename?: 'subscription_root', Users: Array<{ __typename?: 'Users', profilePicUrl?: string | null, id: any, displayName?: string | null, createdAt: any, DefaultWallet?: { __typename?: 'Wallets', address: string, ens?: string | null } | null, UserIdentities: Array<{ __typename?: 'UserIdentities', metadata: any, visibility: string, IdentityProviderId?: any | null, IdentityProvider?: { __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string } | null }> }> };
-
-export type GetIdentityProvidersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetIdentityProvidersQuery = { __typename?: 'query_root', IdentityProviders: Array<{ __typename?: 'IdentityProviders', description: string, icon: string, id: any, name: string, connectionName: string, connectionId: string }> };
-
 export type GetTransactionsSubscriptionVariables = Exact<{
   transactionIds?: InputMaybe<Array<Scalars['uuid']> | Scalars['uuid']>;
 }>;
@@ -17743,6 +17886,844 @@ export const AgreementPartsFragmentDoc = gql`
   isOnChain
 }
     `;
+export const GetAgreementExistsDocument = gql`
+    query GetAgreementExists($slug: String, $chainId: Int) {
+  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    slug
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementExistsQuery__
+ *
+ * To run a query within a React component, call `useGetAgreementExistsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementExistsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementExistsQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetAgreementExistsQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>(GetAgreementExistsDocument, options);
+      }
+export function useGetAgreementExistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>(GetAgreementExistsDocument, options);
+        }
+export type GetAgreementExistsQueryHookResult = ReturnType<typeof useGetAgreementExistsQuery>;
+export type GetAgreementExistsLazyQueryHookResult = ReturnType<typeof useGetAgreementExistsLazyQuery>;
+export type GetAgreementExistsQueryResult = Apollo.QueryResult<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>;
+export const GetIsMemberOfAgreementDocument = gql`
+    query GetIsMemberOfAgreement($walletAddress: String, $agreementSlug: String, $chainId: Int!) {
+  AgreementTokens(
+    where: {AgreementId: {_is_null: false}, Agreement: {slug: {_eq: $agreementSlug}, chainId: {_eq: $chainId}}, Wallet: {address: {_ilike: $walletAddress}}}
+  ) {
+    id
+    tokenId
+    Wallet {
+      address
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetIsMemberOfAgreementQuery__
+ *
+ * To run a query within a React component, call `useGetIsMemberOfAgreementQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIsMemberOfAgreementQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIsMemberOfAgreementQuery({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *      agreementSlug: // value for 'agreementSlug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetIsMemberOfAgreementQuery(baseOptions: Apollo.QueryHookOptions<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>(GetIsMemberOfAgreementDocument, options);
+      }
+export function useGetIsMemberOfAgreementLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>(GetIsMemberOfAgreementDocument, options);
+        }
+export type GetIsMemberOfAgreementQueryHookResult = ReturnType<typeof useGetIsMemberOfAgreementQuery>;
+export type GetIsMemberOfAgreementLazyQueryHookResult = ReturnType<typeof useGetIsMemberOfAgreementLazyQuery>;
+export type GetIsMemberOfAgreementQueryResult = Apollo.QueryResult<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>;
+export const GetIsMemberOfAgreementSubscriptionDocument = gql`
+    subscription GetIsMemberOfAgreementSubscription($walletAddress: String, $agreementSlug: String, $chainId: Int) {
+  AgreementTokens(
+    where: {AgreementId: {_is_null: false}, Agreement: {slug: {_eq: $agreementSlug}, chainId: {_eq: $chainId}}, Wallet: {address: {_ilike: $walletAddress}}}
+  ) {
+    id
+    tokenId
+    Wallet {
+      address
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetIsMemberOfAgreementSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useGetIsMemberOfAgreementSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetIsMemberOfAgreementSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIsMemberOfAgreementSubscriptionSubscription({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *      agreementSlug: // value for 'agreementSlug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetIsMemberOfAgreementSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetIsMemberOfAgreementSubscriptionSubscription, GetIsMemberOfAgreementSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetIsMemberOfAgreementSubscriptionSubscription, GetIsMemberOfAgreementSubscriptionSubscriptionVariables>(GetIsMemberOfAgreementSubscriptionDocument, options);
+      }
+export type GetIsMemberOfAgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useGetIsMemberOfAgreementSubscriptionSubscription>;
+export type GetIsMemberOfAgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetIsMemberOfAgreementSubscriptionSubscription>;
+export const GetAgreementSlugDocument = gql`
+    query GetAgreementSlug($contractAddress: String) {
+  Agreements(where: {address: {_eq: $contractAddress}}) {
+    slug
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementSlugQuery__
+ *
+ * To run a query within a React component, call `useGetAgreementSlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementSlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementSlugQuery({
+ *   variables: {
+ *      contractAddress: // value for 'contractAddress'
+ *   },
+ * });
+ */
+export function useGetAgreementSlugQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>(GetAgreementSlugDocument, options);
+      }
+export function useGetAgreementSlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>(GetAgreementSlugDocument, options);
+        }
+export type GetAgreementSlugQueryHookResult = ReturnType<typeof useGetAgreementSlugQuery>;
+export type GetAgreementSlugLazyQueryHookResult = ReturnType<typeof useGetAgreementSlugLazyQuery>;
+export type GetAgreementSlugQueryResult = Apollo.QueryResult<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>;
+export const GetAgreementInfoDocument = gql`
+    query GetAgreementInfo($slug: String, $chainId: Int) {
+  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementInfoQuery__
+ *
+ * To run a query within a React component, call `useGetAgreementInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementInfoQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetAgreementInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>(GetAgreementInfoDocument, options);
+      }
+export function useGetAgreementInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>(GetAgreementInfoDocument, options);
+        }
+export type GetAgreementInfoQueryHookResult = ReturnType<typeof useGetAgreementInfoQuery>;
+export type GetAgreementInfoLazyQueryHookResult = ReturnType<typeof useGetAgreementInfoLazyQuery>;
+export type GetAgreementInfoQueryResult = Apollo.QueryResult<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>;
+export const GetAgreementSubscriptionDocument = gql`
+    subscription GetAgreementSubscription($slug: String, $chainId: Int) {
+  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    slug
+    address
+    metadata
+    createdAt
+    name
+    isOnChain
+    AgreementTokens {
+      Wallet {
+        address
+        ens
+        User {
+          displayName
+          profilePicUrl
+          UserIdentities {
+            metadata
+            visibility
+          }
+        }
+      }
+      tokenId
+      tokenURI
+      mintedAt
+      mintedBy
+    }
+    symbol
+    id
+    AgreementExtensions {
+      AgreementExtensionLinks {
+        createdAt
+        id
+        isEnabled
+        updatedAt
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets {
+        AgreementExtensionId
+        createdAt
+        id
+        isEnabled
+        metadata
+        updatedAt
+        visibility
+      }
+      metadata
+      id
+    }
+    AgreementRoles {
+      id
+      name
+      isAdminRole
+      address
+      metadata
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useGetAgreementSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementSubscriptionSubscription({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetAgreementSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAgreementSubscriptionSubscription, GetAgreementSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetAgreementSubscriptionSubscription, GetAgreementSubscriptionSubscriptionVariables>(GetAgreementSubscriptionDocument, options);
+      }
+export type GetAgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useGetAgreementSubscriptionSubscription>;
+export type GetAgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetAgreementSubscriptionSubscription>;
+export const GetAgreementAsMemberQueryDocument = gql`
+    query GetAgreementAsMemberQuery($slug: String, $chainId: Int) {
+  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    slug
+    address
+    metadata
+    createdAt
+    name
+    isLaunched
+    isOnChain
+    gnosisSafeAddress
+    OwnerId
+    AgreementTokens {
+      OwnerId
+      id
+      Wallet {
+        address
+        ens
+        User {
+          displayName
+          profilePicUrl
+          UserIdentities {
+            metadata
+            visibility
+          }
+        }
+        id
+      }
+      tokenId
+      tokenURI
+      mintedAt
+      mintedBy
+    }
+    splits
+    maxSupply
+    mintPermissions
+    symbol
+    id
+    AgreementExtensions {
+      AgreementExtensionLinks(where: {visibility: {_in: ["token-holders", "anyone"]}}) {
+        createdAt
+        id
+        isEnabled
+        updatedAt
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets(
+        where: {visibility: {_in: ["token-holders", "anyone"]}}
+      ) {
+        AgreementExtensionId
+        createdAt
+        id
+        isEnabled
+        metadata
+        updatedAt
+        visibility
+      }
+      id
+      metadata
+      isInitialized
+      isSetupComplete
+      Extension {
+        capabilities
+        id
+        icon
+        name
+        slug
+      }
+    }
+    AgreementRoles {
+      id
+      name
+      isAdminRole
+      address
+      metadata
+      AgreementRoleTokens {
+        OwnerId
+      }
+    }
+    AgreementRoleTokens {
+      OwnerId
+      AgreementRoleId
+      id
+      tokenId
+    }
+    AgreementWallets {
+      role
+      Wallet {
+        address
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementAsMemberQueryQuery__
+ *
+ * To run a query within a React component, call `useGetAgreementAsMemberQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementAsMemberQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementAsMemberQueryQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetAgreementAsMemberQueryQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>(GetAgreementAsMemberQueryDocument, options);
+      }
+export function useGetAgreementAsMemberQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>(GetAgreementAsMemberQueryDocument, options);
+        }
+export type GetAgreementAsMemberQueryQueryHookResult = ReturnType<typeof useGetAgreementAsMemberQueryQuery>;
+export type GetAgreementAsMemberQueryLazyQueryHookResult = ReturnType<typeof useGetAgreementAsMemberQueryLazyQuery>;
+export type GetAgreementAsMemberQueryQueryResult = Apollo.QueryResult<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>;
+export const GetAgreementAsMemberSubscriptionDocument = gql`
+    subscription GetAgreementAsMemberSubscription($slug: String, $chainId: Int) {
+  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    slug
+    address
+    metadata
+    createdAt
+    name
+    isOnChain
+    OwnerId
+    AgreementTokens {
+      OwnerId
+      id
+      Wallet {
+        address
+        ens
+        User {
+          displayName
+          UserIdentities {
+            metadata
+            visibility
+          }
+        }
+        id
+      }
+      tokenId
+      mintedBy
+    }
+    symbol
+    id
+    AgreementExtensions {
+      AgreementExtensionLinks {
+        id
+        isEnabled
+        label
+        url
+        AgreementExtensionId
+        visibility
+      }
+      AgreementExtensionWidgets {
+        AgreementExtensionId
+        id
+        isEnabled
+        metadata
+        visibility
+      }
+      id
+      metadata
+    }
+    AgreementRoles {
+      id
+      name
+      isAdminRole
+      address
+      metadata
+      AgreementRoleTokens {
+        OwnerId
+      }
+      Agreement {
+        isTransferrable
+      }
+    }
+    AgreementRoleTokens {
+      OwnerId
+      AgreementRoleId
+      id
+      tokenId
+    }
+    AgreementWallets {
+      role
+      Wallet {
+        address
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementAsMemberSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useGetAgreementAsMemberSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementAsMemberSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementAsMemberSubscriptionSubscription({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useGetAgreementAsMemberSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAgreementAsMemberSubscriptionSubscription, GetAgreementAsMemberSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<GetAgreementAsMemberSubscriptionSubscription, GetAgreementAsMemberSubscriptionSubscriptionVariables>(GetAgreementAsMemberSubscriptionDocument, options);
+      }
+export type GetAgreementAsMemberSubscriptionSubscriptionHookResult = ReturnType<typeof useGetAgreementAsMemberSubscriptionSubscription>;
+export type GetAgreementAsMemberSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetAgreementAsMemberSubscriptionSubscription>;
+export const AgreementSubscriptionDocument = gql`
+    subscription AgreementSubscription($address: String, $chainId: Int) {
+  Agreements(where: {address: {_eq: $address}, chainId: {_eq: $chainId}}) {
+    slug
+    name
+  }
+}
+    `;
+
+/**
+ * __useAgreementSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useAgreementSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useAgreementSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAgreementSubscriptionSubscription({
+ *   variables: {
+ *      address: // value for 'address'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useAgreementSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<AgreementSubscriptionSubscription, AgreementSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<AgreementSubscriptionSubscription, AgreementSubscriptionSubscriptionVariables>(AgreementSubscriptionDocument, options);
+      }
+export type AgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useAgreementSubscriptionSubscription>;
+export type AgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<AgreementSubscriptionSubscription>;
+export const GetExtensionsDocument = gql`
+    query GetExtensions {
+  Extensions(order_by: {slug: asc}) {
+    capabilities
+    category
+    createdAt
+    description
+    guideUrl
+    icon
+    id
+    isSetupRequired
+    name
+    slug
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetExtensionsQuery__
+ *
+ * To run a query within a React component, call `useGetExtensionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetExtensionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetExtensionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetExtensionsQuery(baseOptions?: Apollo.QueryHookOptions<GetExtensionsQuery, GetExtensionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetExtensionsQuery, GetExtensionsQueryVariables>(GetExtensionsDocument, options);
+      }
+export function useGetExtensionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetExtensionsQuery, GetExtensionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetExtensionsQuery, GetExtensionsQueryVariables>(GetExtensionsDocument, options);
+        }
+export type GetExtensionsQueryHookResult = ReturnType<typeof useGetExtensionsQuery>;
+export type GetExtensionsLazyQueryHookResult = ReturnType<typeof useGetExtensionsLazyQuery>;
+export type GetExtensionsQueryResult = Apollo.QueryResult<GetExtensionsQuery, GetExtensionsQueryVariables>;
+export const GetAgreementMembersForRoleDocument = gql`
+    query GetAgreementMembersForRole($slug: String, $chainId: Int, $roleId: uuid) {
+  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
+    AgreementTokens(where: {Agreement: {AgreementRoles: {id: {_eq: $roleId}}}}) {
+      OwnerId
+      Wallet {
+        address
+        ens
+        User {
+          displayName
+          profilePicUrl
+          UserIdentities {
+            metadata
+            visibility
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAgreementMembersForRoleQuery__
+ *
+ * To run a query within a React component, call `useGetAgreementMembersForRoleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAgreementMembersForRoleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAgreementMembersForRoleQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *      chainId: // value for 'chainId'
+ *      roleId: // value for 'roleId'
+ *   },
+ * });
+ */
+export function useGetAgreementMembersForRoleQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>(GetAgreementMembersForRoleDocument, options);
+      }
+export function useGetAgreementMembersForRoleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>(GetAgreementMembersForRoleDocument, options);
+        }
+export type GetAgreementMembersForRoleQueryHookResult = ReturnType<typeof useGetAgreementMembersForRoleQuery>;
+export type GetAgreementMembersForRoleLazyQueryHookResult = ReturnType<typeof useGetAgreementMembersForRoleLazyQuery>;
+export type GetAgreementMembersForRoleQueryResult = Apollo.QueryResult<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>;
+export const MyAgreementsSubscriptionDocument = gql`
+    subscription MyAgreementsSubscription($walletAddress: String, $chainId: Int) {
+  Agreements(
+    where: {AgreementTokens: {Wallet: {address: {_ilike: $walletAddress}}}, chainId: {_eq: $chainId}}
+    order_by: {name: asc}
+  ) {
+    id
+    slug
+    name
+  }
+}
+    `;
+
+/**
+ * __useMyAgreementsSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useMyAgreementsSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMyAgreementsSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyAgreementsSubscriptionSubscription({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useMyAgreementsSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MyAgreementsSubscriptionSubscription, MyAgreementsSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MyAgreementsSubscriptionSubscription, MyAgreementsSubscriptionSubscriptionVariables>(MyAgreementsSubscriptionDocument, options);
+      }
+export type MyAgreementsSubscriptionSubscriptionHookResult = ReturnType<typeof useMyAgreementsSubscriptionSubscription>;
+export type MyAgreementsSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MyAgreementsSubscriptionSubscription>;
+export const MyAgreementsQueryDocument = gql`
+    query MyAgreementsQuery($walletAddress: String, $chainId: Int) {
+  Agreements(
+    where: {AgreementTokens: {Wallet: {address: {_ilike: $walletAddress}}}, chainId: {_eq: $chainId}}
+    order_by: {name: asc}
+  ) {
+    id
+    slug
+    name
+  }
+}
+    `;
+
+/**
+ * __useMyAgreementsQueryQuery__
+ *
+ * To run a query within a React component, call `useMyAgreementsQueryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyAgreementsQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyAgreementsQueryQuery({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *      chainId: // value for 'chainId'
+ *   },
+ * });
+ */
+export function useMyAgreementsQueryQuery(baseOptions?: Apollo.QueryHookOptions<MyAgreementsQueryQuery, MyAgreementsQueryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyAgreementsQueryQuery, MyAgreementsQueryQueryVariables>(MyAgreementsQueryDocument, options);
+      }
+export function useMyAgreementsQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyAgreementsQueryQuery, MyAgreementsQueryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyAgreementsQueryQuery, MyAgreementsQueryQueryVariables>(MyAgreementsQueryDocument, options);
+        }
+export type MyAgreementsQueryQueryHookResult = ReturnType<typeof useMyAgreementsQueryQuery>;
+export type MyAgreementsQueryLazyQueryHookResult = ReturnType<typeof useMyAgreementsQueryLazyQuery>;
+export type MyAgreementsQueryQueryResult = Apollo.QueryResult<MyAgreementsQueryQuery, MyAgreementsQueryQueryVariables>;
+export const GetBundleByIdDocument = gql`
+    query GetBundleById($id: uuid!) {
+  Bundles(where: {id: {_eq: $id}}) {
+    id
+    abi
+    BundleContracts {
+      functionSelectors
+      Contract {
+        ContractInstances {
+          address
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBundleByIdQuery__
+ *
+ * To run a query within a React component, call `useGetBundleByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBundleByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBundleByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBundleByIdQuery(baseOptions: Apollo.QueryHookOptions<GetBundleByIdQuery, GetBundleByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBundleByIdQuery, GetBundleByIdQueryVariables>(GetBundleByIdDocument, options);
+      }
+export function useGetBundleByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBundleByIdQuery, GetBundleByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBundleByIdQuery, GetBundleByIdQueryVariables>(GetBundleByIdDocument, options);
+        }
+export type GetBundleByIdQueryHookResult = ReturnType<typeof useGetBundleByIdQuery>;
+export type GetBundleByIdLazyQueryHookResult = ReturnType<typeof useGetBundleByIdLazyQuery>;
+export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, GetBundleByIdQueryVariables>;
+export const MeemIdSubscriptionDocument = gql`
+    subscription MeemIdSubscription($walletAddress: String) {
+  Users(where: {Wallets: {address: {_ilike: $walletAddress}}}) {
+    profilePicUrl
+    id
+    displayName
+    createdAt
+    DefaultWallet {
+      address
+      ens
+    }
+    UserIdentities {
+      metadata
+      visibility
+      IdentityProviderId
+      IdentityProvider {
+        description
+        icon
+        id
+        name
+        connectionName
+        connectionId
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMeemIdSubscriptionSubscription__
+ *
+ * To run a query within a React component, call `useMeemIdSubscriptionSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMeemIdSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMeemIdSubscriptionSubscription({
+ *   variables: {
+ *      walletAddress: // value for 'walletAddress'
+ *   },
+ * });
+ */
+export function useMeemIdSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MeemIdSubscriptionSubscription, MeemIdSubscriptionSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MeemIdSubscriptionSubscription, MeemIdSubscriptionSubscriptionVariables>(MeemIdSubscriptionDocument, options);
+      }
+export type MeemIdSubscriptionSubscriptionHookResult = ReturnType<typeof useMeemIdSubscriptionSubscription>;
+export type MeemIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MeemIdSubscriptionSubscription>;
+export const GetIdentityProvidersDocument = gql`
+    query GetIdentityProviders {
+  IdentityProviders {
+    description
+    icon
+    id
+    name
+    connectionName
+    connectionId
+  }
+}
+    `;
+
+/**
+ * __useGetIdentityProvidersQuery__
+ *
+ * To run a query within a React component, call `useGetIdentityProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIdentityProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIdentityProvidersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetIdentityProvidersQuery(baseOptions?: Apollo.QueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
+      }
+export function useGetIdentityProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
+        }
+export type GetIdentityProvidersQueryHookResult = ReturnType<typeof useGetIdentityProvidersQuery>;
+export type GetIdentityProvidersLazyQueryHookResult = ReturnType<typeof useGetIdentityProvidersLazyQuery>;
+export type GetIdentityProvidersQueryResult = Apollo.QueryResult<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>;
 export const SubTwittersDocument = gql`
     subscription SubTwitters($agreementId: uuid) {
   AgreementTwitters(where: {AgreementId: {_eq: $agreementId}}) {
@@ -18002,1012 +18983,6 @@ export function useSubRulesSubscription(baseOptions?: Apollo.SubscriptionHookOpt
       }
 export type SubRulesSubscriptionHookResult = ReturnType<typeof useSubRulesSubscription>;
 export type SubRulesSubscriptionResult = Apollo.SubscriptionResult<SubRulesSubscription>;
-export const GetAgreementExistsDocument = gql`
-    query GetAgreementExists($slug: String, $chainId: Int) {
-  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
-    slug
-  }
-}
-    `;
-
-/**
- * __useGetAgreementExistsQuery__
- *
- * To run a query within a React component, call `useGetAgreementExistsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementExistsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementExistsQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetAgreementExistsQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>(GetAgreementExistsDocument, options);
-      }
-export function useGetAgreementExistsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>(GetAgreementExistsDocument, options);
-        }
-export type GetAgreementExistsQueryHookResult = ReturnType<typeof useGetAgreementExistsQuery>;
-export type GetAgreementExistsLazyQueryHookResult = ReturnType<typeof useGetAgreementExistsLazyQuery>;
-export type GetAgreementExistsQueryResult = Apollo.QueryResult<GetAgreementExistsQuery, GetAgreementExistsQueryVariables>;
-export const GetIsMemberOfAgreementDocument = gql`
-    query GetIsMemberOfAgreement($walletAddress: String, $agreementSlug: String, $chainId: Int!) {
-  AgreementTokens(
-    where: {AgreementId: {_is_null: false}, Agreement: {slug: {_eq: $agreementSlug}, chainId: {_eq: $chainId}}, Wallet: {address: {_ilike: $walletAddress}}}
-  ) {
-    id
-    tokenId
-    Wallet {
-      address
-    }
-  }
-}
-    `;
-
-/**
- * __useGetIsMemberOfAgreementQuery__
- *
- * To run a query within a React component, call `useGetIsMemberOfAgreementQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetIsMemberOfAgreementQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetIsMemberOfAgreementQuery({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *      agreementSlug: // value for 'agreementSlug'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetIsMemberOfAgreementQuery(baseOptions: Apollo.QueryHookOptions<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>(GetIsMemberOfAgreementDocument, options);
-      }
-export function useGetIsMemberOfAgreementLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>(GetIsMemberOfAgreementDocument, options);
-        }
-export type GetIsMemberOfAgreementQueryHookResult = ReturnType<typeof useGetIsMemberOfAgreementQuery>;
-export type GetIsMemberOfAgreementLazyQueryHookResult = ReturnType<typeof useGetIsMemberOfAgreementLazyQuery>;
-export type GetIsMemberOfAgreementQueryResult = Apollo.QueryResult<GetIsMemberOfAgreementQuery, GetIsMemberOfAgreementQueryVariables>;
-export const GetIsMemberOfAgreementSubscriptionDocument = gql`
-    subscription GetIsMemberOfAgreementSubscription($walletAddress: String, $agreementSlug: String, $chainId: Int) {
-  AgreementTokens(
-    where: {AgreementId: {_is_null: false}, Agreement: {slug: {_eq: $agreementSlug}, chainId: {_eq: $chainId}}, Wallet: {address: {_ilike: $walletAddress}}}
-  ) {
-    id
-    tokenId
-    Wallet {
-      address
-    }
-  }
-}
-    `;
-
-/**
- * __useGetIsMemberOfAgreementSubscriptionSubscription__
- *
- * To run a query within a React component, call `useGetIsMemberOfAgreementSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useGetIsMemberOfAgreementSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetIsMemberOfAgreementSubscriptionSubscription({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *      agreementSlug: // value for 'agreementSlug'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetIsMemberOfAgreementSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetIsMemberOfAgreementSubscriptionSubscription, GetIsMemberOfAgreementSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<GetIsMemberOfAgreementSubscriptionSubscription, GetIsMemberOfAgreementSubscriptionSubscriptionVariables>(GetIsMemberOfAgreementSubscriptionDocument, options);
-      }
-export type GetIsMemberOfAgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useGetIsMemberOfAgreementSubscriptionSubscription>;
-export type GetIsMemberOfAgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetIsMemberOfAgreementSubscriptionSubscription>;
-export const GetAgreementsAutocompleteDocument = gql`
-    query GetAgreementsAutocomplete($query: String, $chainId: Int) {
-  Agreements(where: {name: {_ilike: $query}, chainId: {_eq: $chainId}}) {
-    id
-    name
-    metadata
-    slug
-  }
-}
-    `;
-
-/**
- * __useGetAgreementsAutocompleteQuery__
- *
- * To run a query within a React component, call `useGetAgreementsAutocompleteQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementsAutocompleteQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementsAutocompleteQuery({
- *   variables: {
- *      query: // value for 'query'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetAgreementsAutocompleteQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementsAutocompleteQuery, GetAgreementsAutocompleteQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAgreementsAutocompleteQuery, GetAgreementsAutocompleteQueryVariables>(GetAgreementsAutocompleteDocument, options);
-      }
-export function useGetAgreementsAutocompleteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementsAutocompleteQuery, GetAgreementsAutocompleteQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAgreementsAutocompleteQuery, GetAgreementsAutocompleteQueryVariables>(GetAgreementsAutocompleteDocument, options);
-        }
-export type GetAgreementsAutocompleteQueryHookResult = ReturnType<typeof useGetAgreementsAutocompleteQuery>;
-export type GetAgreementsAutocompleteLazyQueryHookResult = ReturnType<typeof useGetAgreementsAutocompleteLazyQuery>;
-export type GetAgreementsAutocompleteQueryResult = Apollo.QueryResult<GetAgreementsAutocompleteQuery, GetAgreementsAutocompleteQueryVariables>;
-export const GetAgreementSlugDocument = gql`
-    query GetAgreementSlug($contractAddress: String) {
-  Agreements(where: {address: {_eq: $contractAddress}}) {
-    slug
-  }
-}
-    `;
-
-/**
- * __useGetAgreementSlugQuery__
- *
- * To run a query within a React component, call `useGetAgreementSlugQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementSlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementSlugQuery({
- *   variables: {
- *      contractAddress: // value for 'contractAddress'
- *   },
- * });
- */
-export function useGetAgreementSlugQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>(GetAgreementSlugDocument, options);
-      }
-export function useGetAgreementSlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>(GetAgreementSlugDocument, options);
-        }
-export type GetAgreementSlugQueryHookResult = ReturnType<typeof useGetAgreementSlugQuery>;
-export type GetAgreementSlugLazyQueryHookResult = ReturnType<typeof useGetAgreementSlugLazyQuery>;
-export type GetAgreementSlugQueryResult = Apollo.QueryResult<GetAgreementSlugQuery, GetAgreementSlugQueryVariables>;
-export const GetAgreementInfoDocument = gql`
-    query GetAgreementInfo($slug: String, $chainId: Int) {
-  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
-    name
-  }
-}
-    `;
-
-/**
- * __useGetAgreementInfoQuery__
- *
- * To run a query within a React component, call `useGetAgreementInfoQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementInfoQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetAgreementInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>(GetAgreementInfoDocument, options);
-      }
-export function useGetAgreementInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>(GetAgreementInfoDocument, options);
-        }
-export type GetAgreementInfoQueryHookResult = ReturnType<typeof useGetAgreementInfoQuery>;
-export type GetAgreementInfoLazyQueryHookResult = ReturnType<typeof useGetAgreementInfoLazyQuery>;
-export type GetAgreementInfoQueryResult = Apollo.QueryResult<GetAgreementInfoQuery, GetAgreementInfoQueryVariables>;
-export const GetAgreementSubscriptionDocument = gql`
-    subscription GetAgreementSubscription($slug: String, $chainId: Int) {
-  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
-    slug
-    address
-    metadata
-    createdAt
-    name
-    isOnChain
-    isLaunched
-    AgreementTokens {
-      Wallet {
-        address
-        ens
-        User {
-          displayName
-          profilePicUrl
-          UserIdentities {
-            metadata
-            visibility
-          }
-        }
-      }
-      tokenId
-      tokenURI
-      mintedAt
-      mintedBy
-    }
-    splits
-    maxSupply
-    mintPermissions
-    symbol
-    id
-    AgreementExtensions {
-      AgreementExtensionLinks(where: {visibility: {_eq: "anyone"}}) {
-        createdAt
-        id
-        isEnabled
-        updatedAt
-        label
-        url
-        AgreementExtensionId
-        visibility
-      }
-      AgreementExtensionWidgets(where: {visibility: {_eq: "anyone"}}) {
-        AgreementExtensionId
-        createdAt
-        id
-        isEnabled
-        metadata
-        updatedAt
-        visibility
-      }
-      metadata
-      id
-      isInitialized
-      isSetupComplete
-      Extension {
-        capabilities
-        slug
-        id
-        icon
-        name
-      }
-    }
-    AgreementRoles {
-      id
-      name
-      isAdminRole
-      address
-      metadata
-      Agreement {
-        isTransferrable
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetAgreementSubscriptionSubscription__
- *
- * To run a query within a React component, call `useGetAgreementSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementSubscriptionSubscription({
- *   variables: {
- *      slug: // value for 'slug'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetAgreementSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAgreementSubscriptionSubscription, GetAgreementSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<GetAgreementSubscriptionSubscription, GetAgreementSubscriptionSubscriptionVariables>(GetAgreementSubscriptionDocument, options);
-      }
-export type GetAgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useGetAgreementSubscriptionSubscription>;
-export type GetAgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetAgreementSubscriptionSubscription>;
-export const GetAgreementAsMemberQueryDocument = gql`
-    query GetAgreementAsMemberQuery($slug: String, $chainId: Int) {
-  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
-    slug
-    address
-    metadata
-    createdAt
-    name
-    isLaunched
-    isOnChain
-    gnosisSafeAddress
-    OwnerId
-    AgreementTokens {
-      OwnerId
-      id
-      Wallet {
-        address
-        ens
-        User {
-          displayName
-          profilePicUrl
-          UserIdentities {
-            metadata
-            visibility
-          }
-        }
-        id
-      }
-      tokenId
-      tokenURI
-      mintedAt
-      mintedBy
-    }
-    splits
-    maxSupply
-    mintPermissions
-    symbol
-    id
-    AgreementExtensions {
-      AgreementExtensionLinks(where: {visibility: {_in: ["token-holders", "anyone"]}}) {
-        createdAt
-        id
-        isEnabled
-        updatedAt
-        label
-        url
-        AgreementExtensionId
-        visibility
-      }
-      AgreementExtensionWidgets(
-        where: {visibility: {_in: ["token-holders", "anyone"]}}
-      ) {
-        AgreementExtensionId
-        createdAt
-        id
-        isEnabled
-        metadata
-        updatedAt
-        visibility
-      }
-      id
-      metadata
-      isInitialized
-      isSetupComplete
-      Extension {
-        capabilities
-        id
-        icon
-        name
-        slug
-      }
-    }
-    AgreementRoles {
-      id
-      name
-      isAdminRole
-      address
-      metadata
-      AgreementRoleTokens {
-        OwnerId
-      }
-      Agreement {
-        isTransferrable
-      }
-    }
-    AgreementRoleTokens {
-      OwnerId
-      AgreementRoleId
-      id
-      tokenId
-    }
-    AgreementWallets {
-      role
-      Wallet {
-        address
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetAgreementAsMemberQueryQuery__
- *
- * To run a query within a React component, call `useGetAgreementAsMemberQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementAsMemberQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementAsMemberQueryQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetAgreementAsMemberQueryQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>(GetAgreementAsMemberQueryDocument, options);
-      }
-export function useGetAgreementAsMemberQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>(GetAgreementAsMemberQueryDocument, options);
-        }
-export type GetAgreementAsMemberQueryQueryHookResult = ReturnType<typeof useGetAgreementAsMemberQueryQuery>;
-export type GetAgreementAsMemberQueryLazyQueryHookResult = ReturnType<typeof useGetAgreementAsMemberQueryLazyQuery>;
-export type GetAgreementAsMemberQueryQueryResult = Apollo.QueryResult<GetAgreementAsMemberQueryQuery, GetAgreementAsMemberQueryQueryVariables>;
-export const GetAgreementAsMemberSubscriptionDocument = gql`
-    subscription GetAgreementAsMemberSubscription($slug: String, $chainId: Int) {
-  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
-    slug
-    address
-    metadata
-    createdAt
-    name
-    isLaunched
-    isOnChain
-    gnosisSafeAddress
-    OwnerId
-    AgreementTokens {
-      OwnerId
-      id
-      Wallet {
-        address
-        ens
-        User {
-          displayName
-          profilePicUrl
-          UserIdentities {
-            metadata
-            visibility
-          }
-        }
-        id
-      }
-      tokenId
-      tokenURI
-      mintedAt
-      mintedBy
-    }
-    splits
-    maxSupply
-    mintPermissions
-    symbol
-    id
-    AgreementExtensions {
-      AgreementExtensionLinks(where: {visibility: {_in: ["token-holders", "anyone"]}}) {
-        createdAt
-        id
-        isEnabled
-        updatedAt
-        label
-        url
-        AgreementExtensionId
-        visibility
-      }
-      AgreementExtensionWidgets(
-        where: {visibility: {_in: ["token-holders", "anyone"]}}
-      ) {
-        AgreementExtensionId
-        createdAt
-        id
-        isEnabled
-        metadata
-        updatedAt
-        visibility
-      }
-      id
-      metadata
-      isInitialized
-      isSetupComplete
-      Extension {
-        capabilities
-        id
-        icon
-        name
-        slug
-      }
-    }
-    AgreementRoles {
-      id
-      name
-      isAdminRole
-      address
-      metadata
-      AgreementRoleTokens {
-        OwnerId
-      }
-      Agreement {
-        isTransferrable
-      }
-    }
-    AgreementRoleTokens {
-      OwnerId
-      AgreementRoleId
-      id
-      tokenId
-    }
-    AgreementWallets {
-      role
-      Wallet {
-        address
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetAgreementAsMemberSubscriptionSubscription__
- *
- * To run a query within a React component, call `useGetAgreementAsMemberSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementAsMemberSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementAsMemberSubscriptionSubscription({
- *   variables: {
- *      slug: // value for 'slug'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useGetAgreementAsMemberSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAgreementAsMemberSubscriptionSubscription, GetAgreementAsMemberSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<GetAgreementAsMemberSubscriptionSubscription, GetAgreementAsMemberSubscriptionSubscriptionVariables>(GetAgreementAsMemberSubscriptionDocument, options);
-      }
-export type GetAgreementAsMemberSubscriptionSubscriptionHookResult = ReturnType<typeof useGetAgreementAsMemberSubscriptionSubscription>;
-export type GetAgreementAsMemberSubscriptionSubscriptionResult = Apollo.SubscriptionResult<GetAgreementAsMemberSubscriptionSubscription>;
-export const AgreementSubscriptionDocument = gql`
-    subscription AgreementSubscription($address: String, $chainId: Int) {
-  Agreements(where: {address: {_eq: $address}, chainId: {_eq: $chainId}}) {
-    slug
-    address
-    createdAt
-    name
-    metadata
-    isOnChain
-    isLaunched
-    AgreementTokens {
-      Wallet {
-        address
-        ens
-      }
-      OwnerId
-      tokenId
-      tokenURI
-      mintedBy
-    }
-    splits
-    mintPermissions
-    symbol
-    AgreementWallets {
-      role
-      Wallet {
-        ens
-        address
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useAgreementSubscriptionSubscription__
- *
- * To run a query within a React component, call `useAgreementSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useAgreementSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAgreementSubscriptionSubscription({
- *   variables: {
- *      address: // value for 'address'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useAgreementSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<AgreementSubscriptionSubscription, AgreementSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<AgreementSubscriptionSubscription, AgreementSubscriptionSubscriptionVariables>(AgreementSubscriptionDocument, options);
-      }
-export type AgreementSubscriptionSubscriptionHookResult = ReturnType<typeof useAgreementSubscriptionSubscription>;
-export type AgreementSubscriptionSubscriptionResult = Apollo.SubscriptionResult<AgreementSubscriptionSubscription>;
-export const GetExtensionsDocument = gql`
-    query GetExtensions {
-  Extensions(order_by: {slug: asc}) {
-    capabilities
-    category
-    createdAt
-    description
-    guideUrl
-    icon
-    id
-    isSetupRequired
-    name
-    slug
-    updatedAt
-  }
-}
-    `;
-
-/**
- * __useGetExtensionsQuery__
- *
- * To run a query within a React component, call `useGetExtensionsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetExtensionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetExtensionsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetExtensionsQuery(baseOptions?: Apollo.QueryHookOptions<GetExtensionsQuery, GetExtensionsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetExtensionsQuery, GetExtensionsQueryVariables>(GetExtensionsDocument, options);
-      }
-export function useGetExtensionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetExtensionsQuery, GetExtensionsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetExtensionsQuery, GetExtensionsQueryVariables>(GetExtensionsDocument, options);
-        }
-export type GetExtensionsQueryHookResult = ReturnType<typeof useGetExtensionsQuery>;
-export type GetExtensionsLazyQueryHookResult = ReturnType<typeof useGetExtensionsLazyQuery>;
-export type GetExtensionsQueryResult = Apollo.QueryResult<GetExtensionsQuery, GetExtensionsQueryVariables>;
-export const GetAgreementMembersForRoleDocument = gql`
-    query GetAgreementMembersForRole($slug: String, $chainId: Int, $roleId: uuid) {
-  Agreements(where: {slug: {_eq: $slug}, chainId: {_eq: $chainId}}) {
-    AgreementTokens(where: {Agreement: {AgreementRoles: {id: {_eq: $roleId}}}}) {
-      OwnerId
-      Wallet {
-        address
-        ens
-        User {
-          displayName
-          profilePicUrl
-          UserIdentities {
-            metadata
-            visibility
-          }
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetAgreementMembersForRoleQuery__
- *
- * To run a query within a React component, call `useGetAgreementMembersForRoleQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAgreementMembersForRoleQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAgreementMembersForRoleQuery({
- *   variables: {
- *      slug: // value for 'slug'
- *      chainId: // value for 'chainId'
- *      roleId: // value for 'roleId'
- *   },
- * });
- */
-export function useGetAgreementMembersForRoleQuery(baseOptions?: Apollo.QueryHookOptions<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>(GetAgreementMembersForRoleDocument, options);
-      }
-export function useGetAgreementMembersForRoleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>(GetAgreementMembersForRoleDocument, options);
-        }
-export type GetAgreementMembersForRoleQueryHookResult = ReturnType<typeof useGetAgreementMembersForRoleQuery>;
-export type GetAgreementMembersForRoleLazyQueryHookResult = ReturnType<typeof useGetAgreementMembersForRoleLazyQuery>;
-export type GetAgreementMembersForRoleQueryResult = Apollo.QueryResult<GetAgreementMembersForRoleQuery, GetAgreementMembersForRoleQueryVariables>;
-export const AllAgreementsDocument = gql`
-    query AllAgreements($chainId: Int, $limit: Int, $offset: Int) {
-  Agreements(
-    where: {chainId: {_eq: $chainId}}
-    order_by: {AgreementTokens_aggregate: {count: desc}}
-    limit: $limit
-    offset: $offset
-  ) {
-    slug
-    address
-    createdAt
-    name
-    isOnChain
-    metadata
-    AgreementTokens {
-      Wallet {
-        address
-        ens
-      }
-      OwnerId
-      tokenId
-      tokenURI
-      mintedAt
-      mintedBy
-    }
-    splits
-    mintPermissions
-    symbol
-  }
-}
-    `;
-
-/**
- * __useAllAgreementsQuery__
- *
- * To run a query within a React component, call `useAllAgreementsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAllAgreementsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAllAgreementsQuery({
- *   variables: {
- *      chainId: // value for 'chainId'
- *      limit: // value for 'limit'
- *      offset: // value for 'offset'
- *   },
- * });
- */
-export function useAllAgreementsQuery(baseOptions?: Apollo.QueryHookOptions<AllAgreementsQuery, AllAgreementsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AllAgreementsQuery, AllAgreementsQueryVariables>(AllAgreementsDocument, options);
-      }
-export function useAllAgreementsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AllAgreementsQuery, AllAgreementsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AllAgreementsQuery, AllAgreementsQueryVariables>(AllAgreementsDocument, options);
-        }
-export type AllAgreementsQueryHookResult = ReturnType<typeof useAllAgreementsQuery>;
-export type AllAgreementsLazyQueryHookResult = ReturnType<typeof useAllAgreementsLazyQuery>;
-export type AllAgreementsQueryResult = Apollo.QueryResult<AllAgreementsQuery, AllAgreementsQueryVariables>;
-export const MyAgreementsSubscriptionDocument = gql`
-    subscription MyAgreementsSubscription($walletAddress: String, $chainId: Int) {
-  Agreements(
-    where: {AgreementTokens: {Wallet: {address: {_ilike: $walletAddress}}}, chainId: {_eq: $chainId}}
-    order_by: {AgreementTokens_aggregate: {count: desc}}
-  ) {
-    id
-    slug
-    isOnChain
-    address
-    createdAt
-    OwnerId
-    name
-    metadata
-    isLaunched
-    splits
-    gnosisSafeAddress
-    mintPermissions
-    symbol
-    AgreementExtensions {
-      Extension {
-        slug
-      }
-    }
-    AgreementWallets {
-      role
-      Wallet {
-        ens
-        address
-      }
-    }
-    AgreementRoles {
-      id
-      name
-      isAdminRole
-      address
-      metadata
-      AgreementRoleTokens {
-        OwnerId
-      }
-      Agreement {
-        isTransferrable
-      }
-    }
-    AgreementTokens {
-      Wallet {
-        address
-        ens
-      }
-      OwnerId
-    }
-  }
-}
-    `;
-
-/**
- * __useMyAgreementsSubscriptionSubscription__
- *
- * To run a query within a React component, call `useMyAgreementsSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useMyAgreementsSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMyAgreementsSubscriptionSubscription({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *      chainId: // value for 'chainId'
- *   },
- * });
- */
-export function useMyAgreementsSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MyAgreementsSubscriptionSubscription, MyAgreementsSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<MyAgreementsSubscriptionSubscription, MyAgreementsSubscriptionSubscriptionVariables>(MyAgreementsSubscriptionDocument, options);
-      }
-export type MyAgreementsSubscriptionSubscriptionHookResult = ReturnType<typeof useMyAgreementsSubscriptionSubscription>;
-export type MyAgreementsSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MyAgreementsSubscriptionSubscription>;
-export const GetBundleByIdDocument = gql`
-    query GetBundleById($id: uuid!) {
-  Bundles(where: {id: {_eq: $id}}) {
-    id
-    abi
-    BundleContracts {
-      functionSelectors
-      Contract {
-        ContractInstances {
-          address
-        }
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useGetBundleByIdQuery__
- *
- * To run a query within a React component, call `useGetBundleByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetBundleByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetBundleByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetBundleByIdQuery(baseOptions: Apollo.QueryHookOptions<GetBundleByIdQuery, GetBundleByIdQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetBundleByIdQuery, GetBundleByIdQueryVariables>(GetBundleByIdDocument, options);
-      }
-export function useGetBundleByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBundleByIdQuery, GetBundleByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetBundleByIdQuery, GetBundleByIdQueryVariables>(GetBundleByIdDocument, options);
-        }
-export type GetBundleByIdQueryHookResult = ReturnType<typeof useGetBundleByIdQuery>;
-export type GetBundleByIdLazyQueryHookResult = ReturnType<typeof useGetBundleByIdLazyQuery>;
-export type GetBundleByIdQueryResult = Apollo.QueryResult<GetBundleByIdQuery, GetBundleByIdQueryVariables>;
-export const MeemIdSubscriptionDocument = gql`
-    subscription MeemIdSubscription($walletAddress: String) {
-  Users(where: {Wallets: {address: {_ilike: $walletAddress}}}) {
-    profilePicUrl
-    id
-    displayName
-    createdAt
-    DefaultWallet {
-      address
-      ens
-    }
-    UserIdentities {
-      metadata
-      visibility
-      IdentityProviderId
-      IdentityProvider {
-        description
-        icon
-        id
-        name
-        connectionName
-        connectionId
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useMeemIdSubscriptionSubscription__
- *
- * To run a query within a React component, call `useMeemIdSubscriptionSubscription` and pass it any options that fit your needs.
- * When your component renders, `useMeemIdSubscriptionSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMeemIdSubscriptionSubscription({
- *   variables: {
- *      walletAddress: // value for 'walletAddress'
- *   },
- * });
- */
-export function useMeemIdSubscriptionSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MeemIdSubscriptionSubscription, MeemIdSubscriptionSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<MeemIdSubscriptionSubscription, MeemIdSubscriptionSubscriptionVariables>(MeemIdSubscriptionDocument, options);
-      }
-export type MeemIdSubscriptionSubscriptionHookResult = ReturnType<typeof useMeemIdSubscriptionSubscription>;
-export type MeemIdSubscriptionSubscriptionResult = Apollo.SubscriptionResult<MeemIdSubscriptionSubscription>;
-export const GetIdentityProvidersDocument = gql`
-    query GetIdentityProviders {
-  IdentityProviders {
-    description
-    icon
-    id
-    name
-    connectionName
-    connectionId
-  }
-}
-    `;
-
-/**
- * __useGetIdentityProvidersQuery__
- *
- * To run a query within a React component, call `useGetIdentityProvidersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetIdentityProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetIdentityProvidersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetIdentityProvidersQuery(baseOptions?: Apollo.QueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
-      }
-export function useGetIdentityProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>(GetIdentityProvidersDocument, options);
-        }
-export type GetIdentityProvidersQueryHookResult = ReturnType<typeof useGetIdentityProvidersQuery>;
-export type GetIdentityProvidersLazyQueryHookResult = ReturnType<typeof useGetIdentityProvidersLazyQuery>;
-export type GetIdentityProvidersQueryResult = Apollo.QueryResult<GetIdentityProvidersQuery, GetIdentityProvidersQueryVariables>;
 export const GetTransactionsDocument = gql`
     subscription GetTransactions($transactionIds: [uuid!]) {
   Transactions(where: {id: {_in: $transactionIds}}) {

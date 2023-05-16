@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import log from '@kengoldfarb/log'
-import { Text, Space, Modal, Button, TextInput, Checkbox } from '@mantine/core'
+import { Text, Space, Modal, Button, TextInput } from '@mantine/core'
 import { useMeemApollo, useWallet } from '@meemproject/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { GetAgreementExistsQuery } from '../../../generated/graphql'
@@ -8,7 +8,7 @@ import { GET_AGREEMENT_EXISTS } from '../../graphql/agreements'
 import { Agreement } from '../../model/agreement/agreements'
 import { showErrorNotification } from '../../utils/notifications'
 import { MeemFAQModal } from '../Header/MeemFAQModal'
-import { colorBlue, useMeemTheme } from '../Styles/MeemTheme'
+import { useMeemTheme } from '../Styles/MeemTheme'
 import { CreationProgressModal } from './CreationProgressModal'
 
 interface IProps {
@@ -32,7 +32,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 	const [isAgreementCreationModalOpened, setIsAgreementCreationModalOpened] =
 		useState(false)
 
-	const [isAgreementOnChain, setIsAgreementOnChain] = useState(false)
+	//const [isAgreementOnChain, setIsAgreementOnChain] = useState(false)
 
 	const [isMeemFaqModalOpen, setIsMeemFaqModalOpen] = useState(false)
 
@@ -138,7 +138,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 					setAgreementName(event.target.value)
 				}}
 			/>
-			<Space h={24} />
+			{/* <Space h={24} />
 			<div className={meemTheme.row}>
 				<Checkbox
 					onChange={event =>
@@ -165,7 +165,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 						Learn more.
 					</span>
 				</Text>
-			</div>
+			</div> */}
 			<Space h={24} />
 			<Button
 				loading={isCheckingName || isAgreementCreationModalOpened}
@@ -188,9 +188,9 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				closeOnEscape={false}
 				withCloseButton={true}
 				radius={16}
-				overlayBlur={8}
+				overlayProps={{ blur: 8 }}
 				size={'50%'}
-				padding={'sm'}
+				padding={24}
 				opened={isOpened && !isAgreementCreationModalOpened}
 				title={
 					<Text className={meemTheme.tMediumBold}>
@@ -209,7 +209,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 				closeOnEscape={false}
 				withCloseButton={true}
 				fullScreen
-				padding={'sm'}
+				padding={16}
 				opened={isOpened && !isAgreementCreationModalOpened}
 				title={
 					<Text className={meemTheme.tMediumBold}>
@@ -224,7 +224,7 @@ export const CreateAgreementModal: React.FC<IProps> = ({
 			</Modal>
 			<CreationProgressModal
 				agreementName={agreementName}
-				isAgreementOnChain={isAgreementOnChain}
+				isAgreementOnChain={false}
 				isOpened={isAgreementCreationModalOpened}
 				onModalClosed={() => {
 					setIsAgreementCreationModalOpened(false)

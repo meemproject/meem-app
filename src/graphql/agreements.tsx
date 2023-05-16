@@ -84,19 +84,6 @@ export const SUB_IS_MEMBER_OF_AGREEMENT = gql`
 	}
 `
 
-export const GET_AGREEMENTS_AUTOCOMPLETE = gql`
-	query GetAgreementsAutocomplete($query: String, $chainId: Int) {
-		Agreements(
-			where: { name: { _ilike: $query }, chainId: { _eq: $chainId } }
-		) {
-			id
-			name
-			metadata
-			slug
-		}
-	}
-`
-
 export const GET_AGREEMENT_SLUG = gql`
 	query GetAgreementSlug($contractAddress: String) {
 		Agreements(where: { address: { _eq: $contractAddress } }) {
@@ -126,7 +113,6 @@ export const SUB_AGREEMENT = gql`
 			createdAt
 			name
 			isOnChain
-			isLaunched
 			AgreementTokens {
 				Wallet {
 					address
@@ -145,15 +131,10 @@ export const SUB_AGREEMENT = gql`
 				mintedAt
 				mintedBy
 			}
-			splits
-			maxSupply
-			mintPermissions
 			symbol
 			id
 			AgreementExtensions {
-				AgreementExtensionLinks(
-					where: { visibility: { _eq: "anyone" } }
-				) {
+				AgreementExtensionLinks {
 					createdAt
 					id
 					isEnabled
@@ -163,9 +144,7 @@ export const SUB_AGREEMENT = gql`
 					AgreementExtensionId
 					visibility
 				}
-				AgreementExtensionWidgets(
-					where: { visibility: { _eq: "anyone" } }
-				) {
+				AgreementExtensionWidgets {
 					AgreementExtensionId
 					createdAt
 					id
@@ -176,15 +155,6 @@ export const SUB_AGREEMENT = gql`
 				}
 				metadata
 				id
-				isInitialized
-				isSetupComplete
-				Extension {
-					capabilities
-					slug
-					id
-					icon
-					name
-				}
 			}
 			AgreementRoles {
 				id
@@ -192,9 +162,6 @@ export const SUB_AGREEMENT = gql`
 				isAdminRole
 				address
 				metadata
-				Agreement {
-					isTransferrable
-				}
 			}
 		}
 	}
@@ -284,9 +251,6 @@ export const GET_AGREEMENT_AS_MEMBER = gql`
 				AgreementRoleTokens {
 					OwnerId
 				}
-				Agreement {
-					isTransferrable
-				}
 			}
 			AgreementRoleTokens {
 				OwnerId
@@ -317,9 +281,7 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 			metadata
 			createdAt
 			name
-			isLaunched
 			isOnChain
-			gnosisSafeAddress
 			OwnerId
 			AgreementTokens {
 				OwnerId
@@ -329,7 +291,6 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 					ens
 					User {
 						displayName
-						profilePicUrl
 						UserIdentities {
 							metadata
 							visibility
@@ -338,50 +299,28 @@ export const SUB_AGREEMENT_AS_MEMBER = gql`
 					id
 				}
 				tokenId
-				tokenURI
-				mintedAt
 				mintedBy
 			}
-			splits
-			maxSupply
-			mintPermissions
 			symbol
 			id
 			AgreementExtensions {
-				AgreementExtensionLinks(
-					where: { visibility: { _in: ["token-holders", "anyone"] } }
-				) {
-					createdAt
+				AgreementExtensionLinks {
 					id
 					isEnabled
-					updatedAt
 					label
 					url
 					AgreementExtensionId
 					visibility
 				}
-				AgreementExtensionWidgets(
-					where: { visibility: { _in: ["token-holders", "anyone"] } }
-				) {
+				AgreementExtensionWidgets {
 					AgreementExtensionId
-					createdAt
 					id
 					isEnabled
 					metadata
-					updatedAt
 					visibility
 				}
 				id
 				metadata
-				isInitialized
-				isSetupComplete
-				Extension {
-					capabilities
-					id
-					icon
-					name
-					slug
-				}
 			}
 			AgreementRoles {
 				id
@@ -418,32 +357,7 @@ export const SUB_AGREEMENTS = gql`
 			where: { address: { _eq: $address }, chainId: { _eq: $chainId } }
 		) {
 			slug
-			address
-			createdAt
 			name
-			metadata
-			isOnChain
-			isLaunched
-			AgreementTokens {
-				Wallet {
-					address
-					ens
-				}
-				OwnerId
-				tokenId
-				tokenURI
-				mintedBy
-			}
-			splits
-			mintPermissions
-			symbol
-			AgreementWallets {
-				role
-				Wallet {
-					ens
-					address
-				}
-			}
 		}
 	}
 `
@@ -498,38 +412,6 @@ export const GET_MEMBERS_FOR_ROLE = gql`
 	}
 `
 
-export const GET_ALL_AGREEMENTS = gql`
-	query AllAgreements($chainId: Int, $limit: Int, $offset: Int) {
-		Agreements(
-			where: { chainId: { _eq: $chainId } }
-			order_by: { AgreementTokens_aggregate: { count: desc } }
-			limit: $limit
-			offset: $offset
-		) {
-			slug
-			address
-			createdAt
-			name
-			isOnChain
-			metadata
-			AgreementTokens {
-				Wallet {
-					address
-					ens
-				}
-				OwnerId
-				tokenId
-				tokenURI
-				mintedAt
-				mintedBy
-			}
-			splits
-			mintPermissions
-			symbol
-		}
-	}
-`
-
 export const SUB_MY_AGREEMENTS = gql`
 	subscription MyAgreementsSubscription(
 		$walletAddress: String
@@ -542,53 +424,29 @@ export const SUB_MY_AGREEMENTS = gql`
 				}
 				chainId: { _eq: $chainId }
 			}
-			order_by: { AgreementTokens_aggregate: { count: desc } }
+			order_by: { name: asc }
 		) {
 			id
 			slug
-			isOnChain
-			address
-			createdAt
-			OwnerId
 			name
-			metadata
-			isLaunched
-			splits
-			gnosisSafeAddress
-			mintPermissions
-			symbol
-			AgreementExtensions {
-				Extension {
-					slug
+		}
+	}
+`
+
+export const GET_MY_AGREEMENTS = gql`
+	query MyAgreementsQuery($walletAddress: String, $chainId: Int) {
+		Agreements(
+			where: {
+				AgreementTokens: {
+					Wallet: { address: { _ilike: $walletAddress } }
 				}
+				chainId: { _eq: $chainId }
 			}
-			AgreementWallets {
-				role
-				Wallet {
-					ens
-					address
-				}
-			}
-			AgreementRoles {
-				id
-				name
-				isAdminRole
-				address
-				metadata
-				AgreementRoleTokens {
-					OwnerId
-				}
-				Agreement {
-					isTransferrable
-				}
-			}
-			AgreementTokens {
-				Wallet {
-					address
-					ens
-				}
-				OwnerId
-			}
+			order_by: { name: asc }
+		) {
+			id
+			slug
+			name
 		}
 	}
 `

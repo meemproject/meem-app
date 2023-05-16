@@ -18,8 +18,8 @@ import {
 	AgreementMember,
 	AgreementRole
 } from '../../../model/agreement/agreements'
-import { AgreementMemberCard } from '../../Profile/Tabs/Identity/AgreementMemberCard'
 import { useMeemTheme } from '../../Styles/MeemTheme'
+import { AgreementMemberCard } from './AgreementMemberCard'
 import { RoleAddMembersModal } from './Modals/RoleAddMembersModal'
 
 interface IProps {

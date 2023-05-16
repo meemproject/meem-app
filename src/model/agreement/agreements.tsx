@@ -90,7 +90,6 @@ export interface Agreement {
 	agreementOwner?: AgreementMember
 	description?: string
 	extensions?: AgreementExtensions[]
-	gnosisSafeAddress?: string | null
 	id?: string
 	image?: string
 	isAgreementControlledByMeemApi?: boolean
@@ -831,7 +830,6 @@ export default async function agreementFromDb(
 			isOnChain: agreementData.isOnChain,
 			agreementOwner,
 			slug: agreementData.slug,
-			gnosisSafeAddress: agreementData.gnosisSafeAddress,
 			description: agreementData.metadata.description,
 			image: agreementData.metadata.image,
 			roles: agreementRoles,

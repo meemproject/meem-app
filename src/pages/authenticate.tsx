@@ -49,7 +49,7 @@ const AuthenticatePage: NextPage = () => {
 			</Head>
 			<HeaderMenu />
 			<Authenticate />
-			<MeemFooter />
+			<MeemFooter noAgreement />
 		</>
 	)
 }

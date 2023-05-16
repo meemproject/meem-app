@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { Space } from '@mantine/core'
 import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
@@ -58,8 +59,9 @@ const AgreementRolesPage: NextPage<IProps> = ({ agreementName }) => {
 			<HeaderMenu />
 
 			<RolesManager />
+			<Space h={32} />
 
-			<MeemFooter />
+			<MeemFooter noAgreement={false} />
 		</>
 	)
 }

@@ -15,6 +15,7 @@ import {
 	showErrorNotification,
 	showSuccessNotification
 } from '../../utils/notifications'
+import { useAnalytics } from '../Providers/AnalyticsProvider'
 import { useMeemTheme } from '../Styles/MeemTheme'
 interface IProps {
 	agreementName: string
@@ -44,6 +45,8 @@ export const CreationProgressModal: React.FC<IProps> = ({
 	const [hasStartedCreating, setHasStartedCreating] = useState(false)
 
 	const [transactionIds, setTransactionIds] = useState<string[]>([])
+
+	const analytics = useAnalytics()
 
 	const [transactionState, setTransactionState] = useState<{
 		deployContractTxId?: string
@@ -94,10 +97,14 @@ export const CreationProgressModal: React.FC<IProps> = ({
 				`Your community has been created.`
 			)
 
-			router.push(`/${slug}`)
+			analytics.track('Agreement Created', {
+				slug
+			})
+
+			router.push(`/${slug}/questions`)
 			// }
 		},
-		[hasStartedCreating, router]
+		[analytics, hasStartedCreating, router]
 	)
 
 	const create = useCallback(async () => {
@@ -374,7 +381,7 @@ export const CreationProgressModal: React.FC<IProps> = ({
 						withCloseButton={false}
 						radius={16}
 						size={'60%'}
-						overlayBlur={8}
+						overlayProps={{ blur: 8 }}
 						padding={'lg'}
 						opened={isOpened}
 						onClose={() => closeModal('failure')}

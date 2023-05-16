@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
 import { createStyles } from '@mantine/core'
-import { color } from 'html2canvas/dist/types/css/types/color'
 
 // Primary Palette
 export const colorBlack = '#000000'
@@ -17,6 +14,7 @@ export const colorLightBlue = '#EFF7FF'
 export const colorDarkBlue = '#26699D'
 export const colorLightYellow = `#FEFFE5`
 export const colorYellow = '#F9FF15'
+export const colorTransparentYellow = '#f9ff1599'
 export const colorDarkYellow = '#e0e810'
 export const colorDarkerYellow = '#4d4f08'
 export const colorOrangeRed = '#FF6651'
@@ -311,7 +309,7 @@ export const useMeemTheme = createStyles(theme => ({
 	rowResponsive: {
 		display: 'flex',
 		flexDirection: 'row',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			flexDirection: 'column'
 		}
 	},
@@ -330,13 +328,13 @@ export const useMeemTheme = createStyles(theme => ({
 	visibleContainer: { display: 'block' },
 	visibleDesktopOnly: {
 		display: 'block',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			display: 'none'
 		}
 	},
 	visibleMobileOnly: {
 		display: 'none',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			display: 'block'
 		}
 	},
@@ -444,6 +442,15 @@ export const useMeemTheme = createStyles(theme => ({
 		borderRadius: 8,
 		padding: 16
 	},
+	gridItemFlowTemplate: {
+		border: `1px solid ${
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorGrey
+		}`,
+		backgroundColor:
+			theme.colorScheme === 'dark' ? colorDarkGrey : colorLightestGrey,
+		borderRadius: 8,
+		padding: 16
+	},
 	gridItemBlue: {
 		cursor: 'pointer',
 		border: `1px solid ${colorBlue}`,
@@ -536,7 +543,7 @@ export const useMeemTheme = createStyles(theme => ({
 		borderBottomStyle: 'solid',
 		paddingBottom: 32,
 		paddingLeft: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			marginBottom: 32,
 			paddingBottom: 16,
 			paddingLeft: 16,
@@ -546,14 +553,14 @@ export const useMeemTheme = createStyles(theme => ({
 	pageHeaderTitleContainer: {},
 	pageHeaderImage: {
 		marginRight: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			marginRight: 16
 		}
 	},
 	pageHeaderExitButton: {
 		marginRight: 32,
 		marginLeft: 'auto',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			display: 'none'
 		},
 		cursor: 'pointer'
@@ -571,7 +578,7 @@ export const useMeemTheme = createStyles(theme => ({
 		borderBottomWidth: '1px',
 		borderBottomStyle: 'solid',
 		paddingBottom: 40,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			marginBottom: 32,
 			paddingBottom: 16,
 			paddingLeft: 16,
@@ -580,21 +587,14 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 
 	// Page Footer
-	pageFooterContainer: {
-		position: 'fixed',
-		zIndex: 5,
-		bottom: 0,
-		left: 0,
-		right: 0
-	},
+	pageFooterContainer: {},
 	pageFooterBackground: {
-		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
+		backgroundColor: colorBlack,
 		width: '100%',
-		height: 48,
 		paddingTop: 8
 	},
 	pageZeroPaddingMobileContainer: {
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			padding: 0
 		}
 	},
@@ -623,7 +623,7 @@ export const useMeemTheme = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row',
 		marginTop: 0,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			flexDirection: 'column',
 			marginTop: 0
 		}
@@ -632,7 +632,7 @@ export const useMeemTheme = createStyles(theme => ({
 		width: 320,
 		paddingRight: 32,
 		marginTop: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			width: '100%',
 			paddingRight: 0
 		}
@@ -640,7 +640,7 @@ export const useMeemTheme = createStyles(theme => ({
 	pageLeftWideColumn: {
 		width: 600,
 		paddingRight: 32,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			width: '100%',
 			paddingRight: 0
 		}
@@ -654,14 +654,14 @@ export const useMeemTheme = createStyles(theme => ({
 		width: 680,
 		marginTop: 32,
 		paddingLeft: 40,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			width: '100%'
 		}
 	},
 	pageRightNarrowColumnInner: {
 		width: 400,
 		paddingLeft: 40,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			width: '100%',
 			paddingLeft: 0
 		}
@@ -677,25 +677,24 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 
 	pagePanelLayoutContent: {
-		marginLeft: 32,
-		marginRight: 32,
+		paddingLeft: 32,
+		paddingRight: 32,
 		width: '100%',
 		maxWidth: 800,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
-			paddingTop: 8,
-			width: '83%'
+		[`@media (max-width: 1000px)`]: {
+			paddingTop: 8
 		}
 	},
 	pagePanelLayoutNavBar: {
 		minWidth: 288,
-		[`@media (min-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (min-width: 1000px)`]: {
 			paddingLeft: 32
 		},
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			paddingTop: 24
 		}
 	},
-	pagePanelLayoutNavItem: { borderRadius: 8 },
+	pagePanelLayoutNavItem: { borderRadius: 8, marginBottom: 16 },
 
 	// Site header bar
 	siteHeader: {
@@ -719,7 +718,7 @@ export const useMeemTheme = createStyles(theme => ({
 		display: 'flex',
 		flexDirection: 'row',
 		alignItems: 'center',
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			marginRight: 20
 		}
 	},
@@ -768,7 +767,7 @@ export const useMeemTheme = createStyles(theme => ({
 		borderRadius: 16,
 
 		marginBottom: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			borderRadius: 0,
 			boxShadow: '',
 			marginBottom: 0
@@ -781,7 +780,7 @@ export const useMeemTheme = createStyles(theme => ({
 			theme.colorScheme === 'dark' ? colorDarkerGrey : colorAshLight,
 		padding: 24,
 		marginBottom: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',
 			marginBottom: 0,
@@ -800,7 +799,7 @@ export const useMeemTheme = createStyles(theme => ({
 		backgroundColor:
 			theme.colorScheme === 'dark' ? colorDarkerGrey : colorWhite,
 		marginBottom: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',
 			marginBottom: 0,
@@ -819,7 +818,7 @@ export const useMeemTheme = createStyles(theme => ({
 		backgroundColor: theme.colorScheme === 'dark' ? colorBlack : colorWhite,
 		padding: 24,
 		marginBottom: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			marginLeft: 16,
 			marginRight: 16,
 			marginTop: 16
@@ -836,7 +835,7 @@ export const useMeemTheme = createStyles(theme => ({
 			'linear-gradient(117deg, rgba(227,255,191,1) 0%, rgba(229,255,183,0.8477984943977591) 3%, rgba(247,254,113,0.8534007352941176) 31%, rgba(177,220,255,0.8505996148459384) 66%, rgba(133,139,33,0.4724483543417367) 100%)',
 		padding: 24,
 		marginBottom: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			borderRadius: 0,
 			boxShadow: 'none',
 			marginBottom: 0,
@@ -890,7 +889,7 @@ export const useMeemTheme = createStyles(theme => ({
 	imageAgreementLogo: {
 		width: 80,
 		height: 80,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			width: 40,
 			height: 40,
 			minHeight: 40,
@@ -915,9 +914,16 @@ export const useMeemTheme = createStyles(theme => ({
 	backArrow: {
 		cursor: 'pointer',
 		paddingTop: 4,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			display: 'none'
 		}
+	},
+	backgroundMeem: {
+		background:
+			'linear-gradient(235deg,hsl(67deg 85% 76%) 0%,hsl(67deg 86% 83%) 14%,hsl(67deg 85% 90%) 29%,hsl(68deg 88% 97%) 43%,hsl(132deg 20% 95%) 57%,hsl(125deg 17% 85%) 71%,hsl(128deg 18% 75%) 86%,hsl(126deg 18% 66%) 100%)'
+	},
+	backgroundTransparentYellow: {
+		backgroundColor: colorTransparentYellow
 	},
 	badge: {
 		paddingLeft: 8,
@@ -926,7 +932,7 @@ export const useMeemTheme = createStyles(theme => ({
 	communityLaunchHeader: {
 		paddingTop: 24,
 		paddingBottom: 24,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			paddingTop: 16,
 			paddingBottom: 16
 		},
@@ -936,8 +942,15 @@ export const useMeemTheme = createStyles(theme => ({
 	},
 	iconDarkThemeToggle: {
 		marginTop: -4,
-		[`@media (max-width: ${theme.breakpoints.md}px)`]: {
+		[`@media (max-width: 1000px)`]: {
 			marginRight: 20
+		}
+	},
+	textInputCreate: {
+		width: 600,
+		[`@media (max-width: 1000px)`]: {
+			paddingLeft: 16,
+			paddingRight: 16
 		}
 	},
 	unstyledLink: {
