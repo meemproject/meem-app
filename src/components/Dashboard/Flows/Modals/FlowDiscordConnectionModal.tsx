@@ -41,6 +41,7 @@ export const FlowDiscordConnectionModal: React.FC<IProps> = ({
 		setBotCode(code)
 
 		window.open(inviteUrl, '_blank')
+		setConnectDiscordStep(1)
 	}, [agreement, sdk])
 
 	return (
