@@ -147,10 +147,7 @@ export const FlowSlackInputRBVetoes: React.FC<IProps> = ({
 					</Text>
 
 					<Space h={12} />
-					<NumberInput
-						{...form.getInputProps('vetoVotes')}
-						defaultValue={1}
-					/>
+					<NumberInput {...form.getInputProps('vetoVotes')} />
 				</>
 			)}
 		</>
