@@ -292,7 +292,7 @@ export const FlowSlackWebhookRulesBuilder: React.FC<IProps> = ({
 			approverRoles: rule?.definition.approverRoles,
 			proposalChannels: rule?.definition.proposalChannels,
 			proposalShareChannel: rule?.definition.proposalShareChannel,
-			votes: rule?.definition.votes,
+			votes: rule?.definition.votes ?? 1,
 			vetoVotes: rule?.definition.vetoVotes,
 			proposeVotes: rule?.definition.proposeVotes,
 			shouldReply: rule?.definition.shouldReply,
