@@ -1,3 +1,5 @@
+## [1.30.2](https://github.com/meemproject/meem-app/compare/v1.30.1...v1.30.2) (2023-05-23)
+
 ## [1.30.1](https://github.com/meemproject/meem-app/compare/v1.30.0...v1.30.1) (2023-05-19)
 
 # [1.30.0](https://github.com/meemproject/meem-app/compare/v1.29.0...v1.30.0) (2023-05-16)
