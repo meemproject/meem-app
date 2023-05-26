@@ -11,7 +11,6 @@ import { MeemProvider } from '@meemproject/react'
 import { default as AbortController } from 'abort-controller'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
-import Script from 'next/script'
 import React, { useEffect } from 'react'
 import { App } from '../components/App'
 import { AgreementProvider } from '../components/Providers/AgreementProvider'
@@ -118,9 +117,6 @@ function MyApp(props: AppProps) {
 					</ColorSchemeProvider>
 				</>
 			</MeemProvider>
-			{!router.pathname.includes('drops') && (
-				<Script src="https://desk.zoho.com/portal/api/web/inapp/829537000000317001?orgId=803188851" />
-			)}
 		</>
 	)
 }
