@@ -118,9 +118,6 @@ function MyApp(props: AppProps) {
 					</ColorSchemeProvider>
 				</>
 			</MeemProvider>
-			{!router.pathname.includes('drops') && (
-				<Script src="https://desk.zoho.com/portal/api/web/inapp/829537000000317001?orgId=803188851" />
-			)}
 		</>
 	)
 }
