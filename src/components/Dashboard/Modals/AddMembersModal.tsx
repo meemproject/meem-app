@@ -1,9 +1,11 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Button, Textarea } from '@mantine/core'
-import { useSDK } from '@meemproject/react'
+import { useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
+import request from 'superagent'
 import {
 	showErrorNotification,
 	showSuccessNotification
@@ -22,7 +24,7 @@ export const AddMembersModal: React.FC<IProps> = ({
 }) => {
 	const { classes: meemTheme } = useMeemTheme()
 
-	const { sdk } = useSDK()
+	const wallet = useWallet()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
@@ -66,8 +68,6 @@ export const AddMembersModal: React.FC<IProps> = ({
 			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 		)
 
-		const airdrops: any[] = []
-
 		// Convert addresses from ENS
 		const convertedAirdropAddresses: string[] = []
 		let isListValid = true
@@ -92,26 +92,26 @@ export const AddMembersModal: React.FC<IProps> = ({
 			return
 		}
 
-		// Construct airdrop data
-		convertedAirdropAddresses.forEach(address => {
-			airdrops.push({
-				to: address,
-				metadata: {
-					name: agreement?.name ?? '',
-					description: agreement?.description,
-					image: agreement?.image,
-					meem_metadata_type: 'Meem_AgreementToken',
-					meem_metadata_version: '20221116'
-				}
-			})
-		})
-
 		// Send request
 		try {
-			await sdk.agreement.bulkMint({
-				agreementId: agreement?.id ?? '',
-				tokens: airdrops
-			})
+			try {
+				const postData = `${
+					process.env.NEXT_PUBLIC_API_URL
+				}${MeemAPI.v1.SendAgreementInvites.path({
+					agreementId: agreement?.id ?? ''
+				})}`
+				const data = {
+					to: convertedAirdropAddresses
+				}
+				log.debug(JSON.stringify(postData))
+				log.debug(JSON.stringify(data))
+				await request
+					.post(postData)
+					.set('Authorization', `JWT ${wallet.jwt}`)
+					.send(data)
+			} catch (e) {
+				log.debug(JSON.stringify(e))
+			}
 
 			showSuccessNotification(
 				'Success!',
