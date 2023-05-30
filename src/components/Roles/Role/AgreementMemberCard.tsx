@@ -1,5 +1,4 @@
 import {
-	Badge,
 	Button,
 	HoverCard,
 	Image,
@@ -16,7 +15,6 @@ import { RemoveMemberConfirmationModal } from '../../Dashboard/Modals/RemoveMemb
 import {
 	colorBlack,
 	colorBlue,
-	colorDarkBlue,
 	colorWhite,
 	useMeemTheme
 } from '../../Styles/MeemTheme'
@@ -182,7 +180,7 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 						)}
 					</>
 				)}
-				{member.roles && member.roles.length > 0 && (
+				{/* {member.roles && member.roles.length > 0 && (
 					<>
 						<Space h={24} />
 						<Text className={meemTheme.tSmallBold}>{'Roles'}</Text>
@@ -207,7 +205,7 @@ export const AgreementMemberCard: React.FC<IProps> = ({
 							</div>
 						))}
 					</>
-				)}
+				)} */}
 				{agreement?.isCurrentUserAgreementAdmin &&
 					!member.isAgreementOwner && (
 						<>

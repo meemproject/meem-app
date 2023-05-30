@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import log from '@kengoldfarb/log'
 import {
 	Center,
 	Space,
@@ -54,7 +55,11 @@ export function HomeComponent() {
 				pathname: `/${communitiesData.Agreements[0].slug}`
 			})
 		}
-	}, [communitiesData, loading, router])
+
+		if (error) {
+			log.debug(JSON.stringify(error))
+		}
+	}, [communitiesData, error, loading, router])
 
 	const toolItem = (
 		title: string,

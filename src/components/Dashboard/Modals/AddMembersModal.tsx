@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+// eslint-disable-next-line import/no-extraneous-dependencies
 import log from '@kengoldfarb/log'
-import { Text, Button, Textarea, Space } from '@mantine/core'
-import { useSDK } from '@meemproject/react'
+import { Text, Space, Modal, Button, Textarea } from '@mantine/core'
+import { useWallet } from '@meemproject/react'
+import { MeemAPI } from '@meemproject/sdk'
 import { ethers } from 'ethers'
 import React, { useState } from 'react'
+import request from 'superagent'
 import {
 	showErrorNotification,
 	showSuccessNotification
@@ -11,9 +13,18 @@ import {
 import { useAgreement } from '../../Providers/AgreementProvider'
 import { useMeemTheme } from '../../Styles/MeemTheme'
 
-export const DashboardAirdrops: React.FC = () => {
+interface IProps {
+	isOpened: boolean
+	onModalClosed: () => void
+}
+
+export const AddMembersModal: React.FC<IProps> = ({
+	isOpened,
+	onModalClosed
+}) => {
 	const { classes: meemTheme } = useMeemTheme()
-	const { sdk } = useSDK()
+
+	const wallet = useWallet()
 
 	const [isSavingChanges, setIsSavingChanges] = useState(false)
 	const [airdropAddressesString, setAirdropAddressesString] = useState('')
@@ -34,7 +45,7 @@ export const DashboardAirdrops: React.FC = () => {
 		setAirdropAddresses(finalList)
 	}
 
-	const sendAirdrops = async () => {
+	const sendInvites = async () => {
 		setIsSavingChanges(true)
 
 		if (airdropAddresses.length === 0) {
@@ -46,7 +57,7 @@ export const DashboardAirdrops: React.FC = () => {
 		if (airdropAddresses.length > 15) {
 			showErrorNotification(
 				'Oops!',
-				'You can only airdrop to up to 15 addresses at once.'
+				'You can only invite to up to 15 addresses at once.'
 			)
 			setIsSavingChanges(false)
 			return
@@ -56,8 +67,6 @@ export const DashboardAirdrops: React.FC = () => {
 			'mainnet',
 			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 		)
-
-		const airdrops: any[] = []
 
 		// Convert addresses from ENS
 		const convertedAirdropAddresses: string[] = []
@@ -83,30 +92,30 @@ export const DashboardAirdrops: React.FC = () => {
 			return
 		}
 
-		// Construct airdrop data
-		convertedAirdropAddresses.forEach(address => {
-			airdrops.push({
-				to: address,
-				metadata: {
-					name: agreement?.name ?? '',
-					description: agreement?.description,
-					image: agreement?.image,
-					meem_metadata_type: 'Meem_AgreementToken',
-					meem_metadata_version: '20221116'
-				}
-			})
-		})
-
 		// Send request
 		try {
-			await sdk.agreement.bulkMint({
-				agreementId: agreement?.id ?? '',
-				tokens: airdrops
-			})
+			try {
+				const postData = `${
+					process.env.NEXT_PUBLIC_API_URL
+				}${MeemAPI.v1.SendAgreementInvites.path({
+					agreementId: agreement?.id ?? ''
+				})}`
+				const data = {
+					to: convertedAirdropAddresses
+				}
+				log.debug(JSON.stringify(postData))
+				log.debug(JSON.stringify(data))
+				await request
+					.post(postData)
+					.set('Authorization', `JWT ${wallet.jwt}`)
+					.send(data)
+			} catch (e) {
+				log.debug(JSON.stringify(e))
+			}
 
 			showSuccessNotification(
 				'Success!',
-				`Airdrops sent! The wallets you provided should have access to this community in a moment.`
+				`Invites sent! The addresses you provided should have access to this community in a moment.`
 			)
 			setAirdropAddressesString('')
 			setAirdropAddresses([])
@@ -114,7 +123,7 @@ export const DashboardAirdrops: React.FC = () => {
 		} catch (e) {
 			log.debug(e)
 			showSuccessNotification(
-				'Airdrop send failed.',
+				'Invite send failed.',
 				`Contact us using the top-right link on this page.`
 			)
 			setIsSavingChanges(false)
@@ -122,29 +131,20 @@ export const DashboardAirdrops: React.FC = () => {
 		}
 	}
 
-	return (
+	const modalContents = (
 		<>
 			<div>
-				<div>
-					<Space h={24} />
-
-					<Text className={meemTheme.tLargeBold}>Airdrops</Text>
-
-					<Space h={32} />
-				</div>
-
 				<Text className={meemTheme.tSmallBold}>
-					Invite others to your community by airdropping them a token.
-					They will automatically become a community member.
+					Invite others to your community by entering their email or
+					wallet addresses below.
 				</Text>
 				<Space h={16} />
 				<Text className={meemTheme.tSmallFaded}>
-					Add a line break between each address or ENS name.
+					Add a line break between each address or ENS name{' '}
 				</Text>
 				<Space h={24} />
 				<Textarea
-					radius="lg"
-					size="sm"
+					placeholder={`brandon@meem.wtf\n0x6b6e7fb5cd1773e9060a458080a53ddb8390d4e\nbminch.eth`}
 					style={{ maxWidth: 800 }}
 					value={airdropAddressesString}
 					minRows={10}
@@ -157,11 +157,47 @@ export const DashboardAirdrops: React.FC = () => {
 			<Button
 				className={meemTheme.buttonBlack}
 				loading={isSavingChanges}
-				onClick={sendAirdrops}
+				onClick={sendInvites}
 			>
-				Start Airdrop
+				Send Invites
 			</Button>
-			<Space h={64} />
+		</>
+	)
+
+	return (
+		<>
+			<Modal
+				className={meemTheme.visibleDesktopOnly}
+				centered
+				radius={16}
+				overlayProps={{ blur: 8 }}
+				size={'60%'}
+				padding={'xl'}
+				opened={isOpened}
+				title={
+					<Text className={meemTheme.tMediumBold}>Add Members</Text>
+				}
+				onClose={() => {
+					onModalClosed()
+				}}
+			>
+				{modalContents}
+			</Modal>
+			<Modal
+				className={meemTheme.visibleMobileOnly}
+				centered
+				fullScreen
+				padding={'xl'}
+				opened={isOpened}
+				title={
+					<Text className={meemTheme.tMediumBold}>Add Members</Text>
+				}
+				onClose={() => {
+					onModalClosed()
+				}}
+			>
+				{modalContents}
+			</Modal>
 		</>
 	)
 }
