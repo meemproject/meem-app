@@ -3,7 +3,6 @@ import log from '@kengoldfarb/log'
 import { Text, Space, Modal, Button, Textarea } from '@mantine/core'
 import { useWallet } from '@meemproject/react'
 import { MeemAPI } from '@meemproject/sdk'
-import { ethers } from 'ethers'
 import React, { useState } from 'react'
 import request from 'superagent'
 import {
@@ -63,35 +62,6 @@ export const AddMembersModal: React.FC<IProps> = ({
 			return
 		}
 
-		const provider = new ethers.providers.AlchemyProvider(
-			'mainnet',
-			process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-		)
-
-		// Convert addresses from ENS
-		const convertedAirdropAddresses: string[] = []
-		let isListValid = true
-		await Promise.all(
-			airdropAddresses.map(async function (admin) {
-				const name = await provider.resolveName(admin)
-				if (!name) {
-					isListValid = false
-					return
-				} else {
-					convertedAirdropAddresses.push(name)
-				}
-			})
-		)
-
-		if (!isListValid) {
-			showErrorNotification(
-				'Oops!',
-				'One or more addresses are not valid. Double check what you entered and try again.'
-			)
-			setIsSavingChanges(false)
-			return
-		}
-
 		// Send request
 		try {
 			try {
@@ -101,7 +71,7 @@ export const AddMembersModal: React.FC<IProps> = ({
 					agreementId: agreement?.id ?? ''
 				})}`
 				const data = {
-					to: convertedAirdropAddresses
+					to: airdropAddresses
 				}
 				log.debug(JSON.stringify(postData))
 				log.debug(JSON.stringify(data))
